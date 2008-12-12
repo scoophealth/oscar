@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "SatisfactionScale";
@@ -54,134 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Patient Satisfaction Questionnaire (PSQ-18, revised)</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;            
-        }
-
-        .checkbox{
-            height: 25px;
-            width: 25px;    
-            border: 0px solid #A9A9A9;
-            background-color: #FFFFFF;              
-        }
-
-        .checkboxError{
-            height: 25px;
-            width: 25px;   
-            border: 0px solid #A9A9A9;
-            background-color: red;                   
-        }
-        
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: Left;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            font-style: italic;
-            text-align: Left;          
-        }
-        .question{
-            text-align: left;
-        }
-        .scoreHeavy{
-            border-top: 2px solid #A9A9A9;
-            text-align: center;
-        }
-        .scoreHeavyTopBox{
-            border-top: 2px solid #A9A9A9;
-            border-left: 2px solid #A9A9A9;
-            border-right: 2px solid #A9A9A9;
-            text-align: center;
-        }
-        .scoreHeavyBottomBox{
-            border-bottom: 2px solid #A9A9A9;
-            border-left: 2px solid #A9A9A9;
-            border-right: 2px solid #A9A9A9;
-            text-align: center;
-        }
-        
-        .scoreLight{
-            border-top: 1px solid #A9A9A9;
-            text-align: center;
-        }
-        .score{
-            font-size=80%;
-        }
-        .smallTable{
-            border: 2px solid #F2F2F2;
-        }
-        .row{
-            border-bottom: 2px solid #F2F2F2;
-        }
-        
-
-    </style>
+<title>Patient Satisfaction Questionnaire (PSQ-18, revised)</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -241,7 +117,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -251,476 +128,510 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
-    <tr>
-        <th class="subject">Patient Satisfaction Questionnaire (PSQ-18, revised)</th>
-    </tr>    
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                    
-                <tr>
-                    <td colspan="4">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">&nbsp;</td>
-                                <td valign="top" width="95%">
-                                    These next questions are about how you feel about the rehabilitation you have received in the last 18 months. This would include any physiotherapy or occupational therapy services that you received either at Stonechurch Family Health Centre or through any other agency or service like home care, or a clinic.
-                                </td>
-                            </tr>    
-                        </table>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>&nbsp;</td>
-                    <td colspan="3">
-                        We'll begin by getting some background information about the rehabilitation you have received over the last 18 months
-                    </td>
-                </tr>
-                
-                <tr>
-                    <th class="question" width="5%">1.</th>
-                    <th class="question" colspan="3">Do you believe that you were in need of occupational therapy or physiotherapy services over the past 18 months?</th>                    
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td width="5%"></td>
-                    <td width="10%"><input type="checkbox" class="checkbox" name="believe1Y" <%= props.getProperty("believe1Y", "") %>/> Yes</td>
-                    <td width="10%"><input type="checkbox" class="checkbox" name="believe1N" <%= props.getProperty("believe1N", "") %>/> No</td>
-                    <td width="75%"></td>                    
-                </tr> 
-                <tr>
-                    <th class="question" width="5%">2.</th>
-                    <th class="question" colspan="3">Did you receive physiotherapy or occupational therapy in the past 18 months?</th>                    
-                </tr>                
-                <tr bgcolor="white">
-                    <td width="5%"></td>
-                    <td width="10%"><input type="checkbox" class="checkbox" name="receive2Y" <%= props.getProperty("receive2Y", "") %>/> Yes</td>
-                    <td width="10%"><input type="checkbox" class="checkbox" name="receive2N" <%= props.getProperty("receive2N", "") %>/> No</td>
-                    <td width="75%"></td>                    
-                </tr> 
-                <tr>
-                    <th class="question" width="5%">3.</th>
-                    <th class="question" colspan="3">If yes, what services did you receive:</th>                    
-                </tr>
-                
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</dh>
-                    <td colspan="3"><input type="checkbox" class="checkbox" name="receiveOT3Y" <%= props.getProperty("receiveOT3Y", "") %>/> Occupational therapy</td>
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</dh>
-                    <td colspan="3"><input type="checkbox" class="checkbox" name="receiveP3Y" <%= props.getProperty("receiveP3Y", "") %>/> Physiotherapy</td>
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</dh>
-                    <td colspan="3"><input type="checkbox" class="checkbox" name="receiveB3Y" <%= props.getProperty("receiveB3Y", "") %>/> Both occupational therapy and physiotherapy</td>
-                </tr>
-                                     
-                <tr>
-                    <th class="question" width="5%">4.</th>
-                    <th class="question" colspan="3">How many treatments or visits would you estimate that you had with each? </th>                    
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</dh>                    
-                    <td colspan="3"><input type="text" name="otTreats4" size="5" maxLength="2"  value="<%= props.getProperty("otTreats4", "") %>"/> Occupational therapy</td>
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</dh>                    
-                <td colspan="3"><input type="text" name="ptTreats4" size="5" maxLength="2"  value="<%= props.getProperty("ptTreats4", "") %>"/> Physiotherapy</td>
-                </tr>                                
-<!--9-->
-                <tr>
-                    <td colspan="7">
-                    <table height="30"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>            
-        </td>
-    </tr>
-    <tr class="subject">
-        <td></td>
-        <td align="right">
-            <a href="javascript: goToPage2();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="95%">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px"
+				height="10%">
+				<tr>
+					<th class="subject">Patient Satisfaction Questionnaire
+					(PSQ-18, revised)</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="85%"
+				width="740px" id="page1">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td colspan="4">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">&nbsp;</td>
+									<td valign="top" width="95%">These next questions are
+									about how you feel about the rehabilitation you have received
+									in the last 18 months. This would include any physiotherapy or
+									occupational therapy services that you received either at
+									Stonechurch Family Health Centre or through any other agency or
+									service like home care, or a clinic.</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page2" >    
-    <tr>        
-        <td colspan="2">
-           <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                                   
-                <tr>
-                    <td colspan="4">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">&nbsp;</td>
-                                <td valign="top" width="95%">
-                                    Below are some things people say about rehabilitation. Please read
-                                    each one carefully, keeping in mind the rehabilitation you have
-                                    received over the past 18 months. If you have not received
-                                    rehabilitation, think about what you would expect if you needed it
-                                    today. We are interested in your feelings, good and bad, about the
-                                    rehabilitation you have received.
-                                </td>
-                            </tr>    
-                        </table>
-                    </td>
-                </tr>
-           
-                
-                
-                <tr>
-                    <td></td>
-                    <td colspan="3">
-                        How strongly do you agree or disagree with each of the following statements:
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                </tr>
-                
-                <tr> 
-                   <td colspan="4">
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>                    
-                            <td class="scoreHeavyTopBox">Strongly<br/>Agree</td>
-                            <td class="scoreHeavyTopBox">Agree</td>
-                            <td class="scoreHeavyTopBox">Uncertain</td>
-                            <td class="scoreHeavyTopBox">Disagree</td>
-                            <td class="scoreHeavyTopBox">Strongly<br/>Disagree</td>                                        
-                        </tr>
-                        <tr>                    
-                            <td class="scoreHeavyBottomBox">1</td>
-                            <td class="scoreHeavyBottomBox">2</td>
-                            <td class="scoreHeavyBottomBox">3</td>
-                            <td class="scoreHeavyBottomBox">4</td>
-                            <td class="scoreHeavyBottomBox">5</td>                                        
-                        </tr>
-                      </table>
-                   </td>
-                </tr>
-                
-                <tr>
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                </tr>
-                                                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">1.</td>
-                    <td valign="top"  colspan="2">
-                    Rehabilitation professionals are good about explaining the reason for tests and assessments
-                    </td>
-                    <td valign="top" align="center" width="5%">
-                        <input type="text" name="explaining1" size="5"  maxLength="2"  value="<%= props.getProperty("explaining1", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">2.</td>
-                    <td valign="top"  colspan="2">
-                    I think Stonechurch family health centre has everything needed to provide complete rehabilitation
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="everythingNeeded2" size="5"  maxLength="2"  value="<%= props.getProperty("everythingNeeded2", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">3.</td>
-                    <td valign="top"  colspan="2">
-                    The rehabilitation I have been receiving is just about perfect
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="perfect3" size="5" maxLength="2"  value="<%= props.getProperty("perfect3", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">4.</td>
-                    <td valign="top"  colspan="2">
-                    Sometimes rehabilitation professionals make me wonder if their conclusions about my problems are correct
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="wonder4" size="5" maxLength="2" value="<%= props.getProperty("wonder4", "") %>"/>
-                    </td>
-                </tr>
-                     
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">5.</td>
-                    <td valign="top"  colspan="2">
-                    I feel confident that I can get the rehabilitation I need without being set back financially
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="confident5" size="5" maxLength="2"  value="<%= props.getProperty("confident5", "") %>"/>
-                    </td>
-                </tr>
-                                                                           
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">6.</td>
-                    <td valign="top"  colspan="2">
-                    When I go for rehabilitation, they are careful to check everything when treating and examining me
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="careful6" size="5" maxLength="2"  value="<%= props.getProperty("careful6", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">7.</td>
-                    <td valign="top"  colspan="2">
-                    I have to pay for more of my rehabilitation than I can afford
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="afford7" size="5" maxLength="2"  value="<%= props.getProperty("afford7", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">8.</td>
-                    <td valign="top"  colspan="2">
-                    I have easy access to the rehabilitation I need
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="easyaccess8" size="5" maxLength="2"  value="<%= props.getProperty("easyaccess8", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">9.</td>
-                    <td valign="top"  colspan="2">
-                    Where I get rehabilitation, people have to wait too long for treatment
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="toolong9" size="5" maxLength="2"  value="<%= props.getProperty("toolong9", "") %>"/>
-                    </td>
-                </tr>
-                
-                <!--18-->
-                
-                <tr>
-                    <td colspan="7">
-                    <table height="30"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>     
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage1();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage3();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+						<tr>
+							<td>&nbsp;</td>
+							<td colspan="3">We'll begin by getting some background
+							information about the rehabilitation you have received over the
+							last 18 months</td>
+						</tr>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page3" >    
-    <tr>        
-        <td colspan="2">
-           <table width="740px" height="520px" border="0"  cellspacing="0" cellpadding="0" >                                                   
-                
-                <tr>
-                    <td></td>
-                    <td colspan="3">
-                        How strongly do you agree or disagree with each of the following statements:
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                </tr>
-                
-                <tr> 
-                   <td colspan="4">
-                      <table width="100%" cellpadding="0" cellspacing="0">
-                        <tr>                    
-                            <td class="scoreHeavyTopBox">Strongly<br/>Agree</td>
-                            <td class="scoreHeavyTopBox">Agree</td>
-                            <td class="scoreHeavyTopBox">Uncertain</td>
-                            <td class="scoreHeavyTopBox">Disagree</td>
-                            <td class="scoreHeavyTopBox">Strongly<br/>Disagree</td>                                        
-                        </tr>
-                        <tr>                    
-                            <td class="scoreHeavyBottomBox">1</td>
-                            <td class="scoreHeavyBottomBox">2</td>
-                            <td class="scoreHeavyBottomBox">3</td>
-                            <td class="scoreHeavyBottomBox">4</td>
-                            <td class="scoreHeavyBottomBox">5</td>                                        
-                        </tr>
-                      </table>
-                   </td>
-                </tr>
-                
-                <tr>
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                    <td>&nbsp;</td>                    
-                </tr>                                                                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">10.</td>
-                    <td valign="top"  colspan="2">
-                    Rehabilitation professionals act too businesslike and impersonal toward me
-                    </td>
-                    <td valign="top" align="center" width="5%">
-                        <input type="text" name="businesslike10" size="5" maxLength="2"  value="<%= props.getProperty("businesslike10", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">11.</td>
-                    <td valign="top"  colspan="2">
-                    Rehabilitation professionals treat me in a very friendly and courteous manner
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="veryfriendly11" size="5" maxLength="2"  value="<%= props.getProperty("veryfriendly11", "") %>"/>
-                    </td>
-                </tr>
-                
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">12.</td>
-                    <td valign="top"  colspan="2">
-                    Those who provide my rehabilitation sometimes hurry too much when they treat me
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="hurrytoomuch12" size="5" maxLength="2"  value="<%= props.getProperty("hurrytoomuch12", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">13.</td>
-                    <td valign="top"  colspan="2">
-                    Rehabilitation professionals sometimes ignore what I tell them
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="ignore13" size="5" maxLength="2"  value="<%= props.getProperty("ignore13", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">14.</td>
-                    <td valign="top"  colspan="2">
-                    I have some doubts about the ability of the rehabilitation professionals who treat me
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="doubtability14" size="5" maxLength="2"  value="<%= props.getProperty("doubtability14", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">15.</td>
-                    <td valign="top"  colspan="2">
-                    Rehabilitation professionals usually spend plenty of time with me
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="plentyoftime15" size="5" maxLength="2"  value="<%= props.getProperty("plentyoftime15", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">16.</td>
-                    <td valign="top"  colspan="2">
-                    I find it hard to get an appointment for rehabilitation right away
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="hardtogetanappointment16" size="5"  maxLength="2"  value="<%= props.getProperty("hardtogetanappointment16", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">17.</td>
-                    <td valign="top"  colspan="2">
-                    I am dissatisfied with some things about the rehabilitation I receive
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="dissatisfied17" size="5"  maxLength="2"  value="<%= props.getProperty("dissatisfied17", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr bgcolor="white">
-                    <td valign="top" width="5%">18.</td>
-                    <td valign="top"  colspan="2">
-                    I am able to get rehabilitation whenever I need it
-                    </td>
-                    <td valign="top" align="center">
-                        <input type="text" name="abletogetrehabilitation18" size="5"  maxLength="2"  value="<%= props.getProperty("abletogetrehabilitation18", "") %>"/>
-                    </td>
-                </tr>
-                <!--27-->
-                <tr>
-                    <td colspan="7">
-                    <table height="30"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>     
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage2();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            &nbsp;
-        </td>
-    </tr>
-</table>
+						<tr>
+							<th class="question" width="5%">1.</th>
+							<th class="question" colspan="3">Do you believe that you
+							were in need of occupational therapy or physiotherapy services
+							over the past 18 months?</th>
+						</tr>
+
+						<tr bgcolor="white">
+							<td width="5%"></td>
+							<td width="10%"><input type="checkbox" class="checkbox"
+								name="believe1Y" <%= props.getProperty("believe1Y", "") %> />
+							Yes</td>
+							<td width="10%"><input type="checkbox" class="checkbox"
+								name="believe1N" <%= props.getProperty("believe1N", "") %> /> No</td>
+							<td width="75%"></td>
+						</tr>
+						<tr>
+							<th class="question" width="5%">2.</th>
+							<th class="question" colspan="3">Did you receive
+							physiotherapy or occupational therapy in the past 18 months?</th>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%"></td>
+							<td width="10%"><input type="checkbox" class="checkbox"
+								name="receive2Y" <%= props.getProperty("receive2Y", "") %> />
+							Yes</td>
+							<td width="10%"><input type="checkbox" class="checkbox"
+								name="receive2N" <%= props.getProperty("receive2N", "") %> /> No</td>
+							<td width="75%"></td>
+						</tr>
+						<tr>
+							<th class="question" width="5%">3.</th>
+							<th class="question" colspan="3">If yes, what services did
+							you receive:</th>
+						</tr>
+
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</dh>
+							<td colspan="3"><input type="checkbox" class="checkbox"
+								name="receiveOT3Y" <%= props.getProperty("receiveOT3Y", "") %> />
+							Occupational therapy</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</dh>
+							<td colspan="3"><input type="checkbox" class="checkbox"
+								name="receiveP3Y" <%= props.getProperty("receiveP3Y", "") %> />
+							Physiotherapy</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</dh>
+							<td colspan="3"><input type="checkbox" class="checkbox"
+								name="receiveB3Y" <%= props.getProperty("receiveB3Y", "") %> />
+							Both occupational therapy and physiotherapy</td>
+						</tr>
+
+						<tr>
+							<th class="question" width="5%">4.</th>
+							<th class="question" colspan="3">How many treatments or
+							visits would you estimate that you had with each?</th>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</dh>
+							<td colspan="3"><input type="text" name="otTreats4" size="5"
+								maxLength="2" value="<%= props.getProperty("otTreats4", "") %>" />
+							Occupational therapy</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</dh>
+							<td colspan="3"><input type="text" name="ptTreats4" size="5"
+								maxLength="2" value="<%= props.getProperty("ptTreats4", "") %>" />
+							Physiotherapy</td>
+						</tr>
+						<!--9-->
+						<tr>
+							<td colspan="7">
+							<table height="30">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td></td>
+					<td align="right"><a href="javascript: goToPage2();">Next
+					Page >></a></td>
+				</tr>
+			</table>
+
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page2">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td colspan="4">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">&nbsp;</td>
+									<td valign="top" width="95%">Below are some things people
+									say about rehabilitation. Please read each one carefully,
+									keeping in mind the rehabilitation you have received over the
+									past 18 months. If you have not received rehabilitation, think
+									about what you would expect if you needed it today. We are
+									interested in your feelings, good and bad, about the
+									rehabilitation you have received.</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
 
 
-</td></tr>
-<tr><td valign="top">
-<table class="Head" class="hidePrint" height="5%">
-    <tr>
-        <td align="left">
-<%
+
+						<tr>
+							<td></td>
+							<td colspan="3">How strongly do you agree or disagree with
+							each of the following statements:</td>
+						</tr>
+
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+
+						<tr>
+							<td colspan="4">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td class="scoreHeavyTopBox">Strongly<br />
+									Agree</td>
+									<td class="scoreHeavyTopBox">Agree</td>
+									<td class="scoreHeavyTopBox">Uncertain</td>
+									<td class="scoreHeavyTopBox">Disagree</td>
+									<td class="scoreHeavyTopBox">Strongly<br />
+									Disagree</td>
+								</tr>
+								<tr>
+									<td class="scoreHeavyBottomBox">1</td>
+									<td class="scoreHeavyBottomBox">2</td>
+									<td class="scoreHeavyBottomBox">3</td>
+									<td class="scoreHeavyBottomBox">4</td>
+									<td class="scoreHeavyBottomBox">5</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">1.</td>
+							<td valign="top" colspan="2">Rehabilitation professionals
+							are good about explaining the reason for tests and assessments</td>
+							<td valign="top" align="center" width="5%"><input
+								type="text" name="explaining1" size="5" maxLength="2"
+								value="<%= props.getProperty("explaining1", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">2.</td>
+							<td valign="top" colspan="2">I think Stonechurch family
+							health centre has everything needed to provide complete
+							rehabilitation</td>
+							<td valign="top" align="center"><input type="text"
+								name="everythingNeeded2" size="5" maxLength="2"
+								value="<%= props.getProperty("everythingNeeded2", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">3.</td>
+							<td valign="top" colspan="2">The rehabilitation I have been
+							receiving is just about perfect</td>
+							<td valign="top" align="center"><input type="text"
+								name="perfect3" size="5" maxLength="2"
+								value="<%= props.getProperty("perfect3", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">4.</td>
+							<td valign="top" colspan="2">Sometimes rehabilitation
+							professionals make me wonder if their conclusions about my
+							problems are correct</td>
+							<td valign="top" align="center"><input type="text"
+								name="wonder4" size="5" maxLength="2"
+								value="<%= props.getProperty("wonder4", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">5.</td>
+							<td valign="top" colspan="2">I feel confident that I can get
+							the rehabilitation I need without being set back financially</td>
+							<td valign="top" align="center"><input type="text"
+								name="confident5" size="5" maxLength="2"
+								value="<%= props.getProperty("confident5", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">6.</td>
+							<td valign="top" colspan="2">When I go for rehabilitation,
+							they are careful to check everything when treating and examining
+							me</td>
+							<td valign="top" align="center"><input type="text"
+								name="careful6" size="5" maxLength="2"
+								value="<%= props.getProperty("careful6", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">7.</td>
+							<td valign="top" colspan="2">I have to pay for more of my
+							rehabilitation than I can afford</td>
+							<td valign="top" align="center"><input type="text"
+								name="afford7" size="5" maxLength="2"
+								value="<%= props.getProperty("afford7", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">8.</td>
+							<td valign="top" colspan="2">I have easy access to the
+							rehabilitation I need</td>
+							<td valign="top" align="center"><input type="text"
+								name="easyaccess8" size="5" maxLength="2"
+								value="<%= props.getProperty("easyaccess8", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">9.</td>
+							<td valign="top" colspan="2">Where I get rehabilitation,
+							people have to wait too long for treatment</td>
+							<td valign="top" align="center"><input type="text"
+								name="toolong9" size="5" maxLength="2"
+								value="<%= props.getProperty("toolong9", "") %>" /></td>
+						</tr>
+
+						<!--18-->
+
+						<tr>
+							<td colspan="7">
+							<table height="30">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage1();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage3();">Next
+					Page >></a></td>
+				</tr>
+			</table>
+
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page3">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="520px" border="0" cellspacing="0"
+						cellpadding="0">
+
+						<tr>
+							<td></td>
+							<td colspan="3">How strongly do you agree or disagree with
+							each of the following statements:</td>
+						</tr>
+
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+
+						<tr>
+							<td colspan="4">
+							<table width="100%" cellpadding="0" cellspacing="0">
+								<tr>
+									<td class="scoreHeavyTopBox">Strongly<br />
+									Agree</td>
+									<td class="scoreHeavyTopBox">Agree</td>
+									<td class="scoreHeavyTopBox">Uncertain</td>
+									<td class="scoreHeavyTopBox">Disagree</td>
+									<td class="scoreHeavyTopBox">Strongly<br />
+									Disagree</td>
+								</tr>
+								<tr>
+									<td class="scoreHeavyBottomBox">1</td>
+									<td class="scoreHeavyBottomBox">2</td>
+									<td class="scoreHeavyBottomBox">3</td>
+									<td class="scoreHeavyBottomBox">4</td>
+									<td class="scoreHeavyBottomBox">5</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+
+						<tr>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">10.</td>
+							<td valign="top" colspan="2">Rehabilitation professionals
+							act too businesslike and impersonal toward me</td>
+							<td valign="top" align="center" width="5%"><input
+								type="text" name="businesslike10" size="5" maxLength="2"
+								value="<%= props.getProperty("businesslike10", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">11.</td>
+							<td valign="top" colspan="2">Rehabilitation professionals
+							treat me in a very friendly and courteous manner</td>
+							<td valign="top" align="center"><input type="text"
+								name="veryfriendly11" size="5" maxLength="2"
+								value="<%= props.getProperty("veryfriendly11", "") %>" /></td>
+						</tr>
+
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">12.</td>
+							<td valign="top" colspan="2">Those who provide my
+							rehabilitation sometimes hurry too much when they treat me</td>
+							<td valign="top" align="center"><input type="text"
+								name="hurrytoomuch12" size="5" maxLength="2"
+								value="<%= props.getProperty("hurrytoomuch12", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">13.</td>
+							<td valign="top" colspan="2">Rehabilitation professionals
+							sometimes ignore what I tell them</td>
+							<td valign="top" align="center"><input type="text"
+								name="ignore13" size="5" maxLength="2"
+								value="<%= props.getProperty("ignore13", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">14.</td>
+							<td valign="top" colspan="2">I have some doubts about the
+							ability of the rehabilitation professionals who treat me</td>
+							<td valign="top" align="center"><input type="text"
+								name="doubtability14" size="5" maxLength="2"
+								value="<%= props.getProperty("doubtability14", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">15.</td>
+							<td valign="top" colspan="2">Rehabilitation professionals
+							usually spend plenty of time with me</td>
+							<td valign="top" align="center"><input type="text"
+								name="plentyoftime15" size="5" maxLength="2"
+								value="<%= props.getProperty("plentyoftime15", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">16.</td>
+							<td valign="top" colspan="2">I find it hard to get an
+							appointment for rehabilitation right away</td>
+							<td valign="top" align="center"><input type="text"
+								name="hardtogetanappointment16" size="5" maxLength="2"
+								value="<%= props.getProperty("hardtogetanappointment16", "") %>" />
+							</td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">17.</td>
+							<td valign="top" colspan="2">I am dissatisfied with some
+							things about the rehabilitation I receive</td>
+							<td valign="top" align="center"><input type="text"
+								name="dissatisfied17" size="5" maxLength="2"
+								value="<%= props.getProperty("dissatisfied17", "") %>" /></td>
+						</tr>
+
+						<tr bgcolor="white">
+							<td valign="top" width="5%">18.</td>
+							<td valign="top" colspan="2">I am able to get rehabilitation
+							whenever I need it</td>
+							<td valign="top" align="center"><input type="text"
+								name="abletogetrehabilitation18" size="5" maxLength="2"
+								value="<%= props.getProperty("abletogetrehabilitation18", "") %>" />
+							</td>
+						</tr>
+						<!--27-->
+						<tr>
+							<td colspan="7">
+							<table height="30">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage2();"><<
+					Previous Page</a></td>
+					<td align="right">&nbsp;</td>
+				</tr>
+			</table>
+
+
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint" height="5%">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:if(checkBeforeSave()==true) return onSave(); else return false;"/>
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript:if(checkBeforeSave()==true) return onSave(); else return false;" />
+					<input type="submit" value="Save and Exit"
+						onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>    
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

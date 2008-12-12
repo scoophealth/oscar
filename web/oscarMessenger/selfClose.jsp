@@ -1,12 +1,12 @@
 <html>
 
-    
-    <body>
-    
-        <script>
+
+<body>
+
+<script>
             top.window.close();
         </script>
 
-    </body>
+</body>
 </html>
 

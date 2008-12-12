@@ -1,20 +1,20 @@
 .demoNavigatorListWrapper {
-	border:1px solid #dcdbdb;
-	background-color:#f8f8f8;
-	padding:2px;
+	border: 1px solid #dcdbdb;
+	background-color: #f8f8f8;
+	padding: 2px;
 }
 
 .demoNavigatorListContainer {
-	border:1px solid #f0f0f0;
-	background-color:#fff;
-	padding:1em;
+	border: 1px solid #f0f0f0;
+	background-color: #fff;
+	padding: 1em;
 }
 
 .demoNavigator h1 {
 	margin-top: 0px;
 	margin-bottom: 10px;
 	font-size: 1.2em;
-	border-bottom:1px dotted #a9ccf5;
+	border-bottom: 1px dotted #a9ccf5;
 }
 
 .demoNavigator .dojoButton {

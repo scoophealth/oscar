@@ -28,14 +28,16 @@
 if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
 String user_no="";
 user_no = (String) session.getAttribute("user");
-%> 
+%>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 
-<%@ include file="dbINR.jsp" %>
+<%@ include file="dbINR.jsp"%>
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -83,32 +85,36 @@ var awnd=null;
 <link rel="stylesheet" href="../billing.css">
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-      INR Batch Billing </font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0" onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF"> INR Batch Billing </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 <% String providerview=request.getParameter("provider_no")==null?"":request.getParameter("provider_no");
 
  %>
 <table width="100%" border="0" bgcolor="#E6F0F7">
-  <form name="serviceform" method="post" action="<%=oscarVariables.getProperty("isNewONbilling","").equals("true")? "onGenINRbilling.jsp":"genINRbilling.jsp" %>">
-    <tr> 
-      <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
-        provider </font></b></td>
-      <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
-        <select name="provider" onChange="jumpMenu('parent',this,0)">
-        <option value="#"><b>Select
-                Provider</b></option>
-         <option value="reportINR.jsp?provider_no=all" <%=providerview.equals("all")?"selected":""%>><b>All 
-                Provider</b></option>
-          <% String proFirst="";
+	<form name="serviceform" method="post"
+		action="<%=oscarVariables.getProperty("isNewONbilling","").equals("true")? "onGenINRbilling.jsp":"genINRbilling.jsp" %>">
+	<tr>
+		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Select provider </font></b></td>
+		<td width="254"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"> <select name="provider"
+			onChange="jumpMenu('parent',this,0)">
+			<option value="#"><b>Select Provider</b></option>
+			<option value="reportINR.jsp?provider_no=all"
+				<%=providerview.equals("all")?"selected":""%>><b>All
+			Provider</b></option>
+			<% String proFirst="";
            String proLast="";
            String proName="";
             String proName1="";
@@ -133,20 +139,22 @@ providerArr[0] = proOHIP;
 providerArr[1] = proName;
 providerArray.add(providerArr);
  %>
-          <option value="reportINR.jsp?provider_no=<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-          <% 
+			<option value="reportINR.jsp?provider_no=<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
+			<%=proFirst%></option>
+			<% 
 
  }
 // apptMainBean.closePstmtConn(); 
   %>
-        </select>
-        </font></b></td>
-      <td width="254"><font color="#003366"><b><font face="Arial, Helvetica, sans-serif" size="2">Clinic Location:
-        <input type="hidden" name="billcenter" value="G">
-        </font></b><font face="Arial, Helvetica, sans-serif" size="2"> 
-        </font></font></td>
-      <td width="277"> <select name="xml_location" datafld='xml_location'>
-                <% ResultSet rsclinic = null;
+		</select> </font></b></td>
+		<td width="254"><font color="#003366"><b><font
+			face="Arial, Helvetica, sans-serif" size="2">Clinic Location:
+		<input type="hidden" name="billcenter" value="G"> </font></b><font
+			face="Arial, Helvetica, sans-serif" size="2"> </font></font></td>
+		<td width="277"><select name="xml_location"
+			datafld='xml_location'>
+			<% ResultSet rsclinic = null;
              String clinic_location="", clinic_code="";
              rsclinic = null;
              rsclinic = apptMainBean.queryResults("1", "search_clinic_location");
@@ -154,32 +162,32 @@ providerArray.add(providerArr);
              clinic_location = rsclinic.getString("clinic_location_name");
              clinic_code = rsclinic.getString("clinic_location_no");
              %>
-                <option value="<%=clinic_code%>" <%=clinicview.equals(clinic_code)?"selected":""%>><%=clinic_location%></option>
-                <%
+			<option value="<%=clinic_code%>"
+				<%=clinicview.equals(clinic_code)?"selected":""%>><%=clinic_location%></option>
+			<%
              }
              %>
-              </select><font color="#003366"> 
- 
-        <input type="hidden" name="verCode" value="V03">
-        <input type="hidden" name="curUser" value="<%=user_no%>">
-        <input type="hidden" name="curDate" value="<%=nowDate%>">
-                <input type="hidden" name="curTime" value="<%=nowTime%>">
-        </font></td>
-    </tr>
-    <tr>
-    <td colspan=5><table border="0" cellspacing="0" cellpadding="0" width="100%" >
+		</select><font color="#003366"> <input type="hidden" name="verCode"
+			value="V03"> <input type="hidden" name="curUser"
+			value="<%=user_no%>"> <input type="hidden" name="curDate"
+			value="<%=nowDate%>"> <input type="hidden" name="curTime"
+			value="<%=nowTime%>"> </font></td>
+	</tr>
+	<tr>
+		<td colspan=5>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 
- <tr bgcolor="#CCCCFF"> 
-    <td width="12%" height="16">Selection</td>
-  <td width="22%" height="16">Demographic</td>
-   <td width="22%" height="16">Provider</td>
-    <td width="12%" height="16">Service</td>
-     <td width="12%" height="16">Amount</td>
-      <td width="10%" height="16">Diagnostic</td>
-      <td width="10%" height="16">Last Bill Date</td>
-      
-  </tr>
-  <% String demono="",demo_name="",demo_dob="",demo_hin="", billinginr_no="", provider_no="";
+			<tr bgcolor="#CCCCFF">
+				<td width="12%" height="16">Selection</td>
+				<td width="22%" height="16">Demographic</td>
+				<td width="22%" height="16">Provider</td>
+				<td width="12%" height="16">Service</td>
+				<td width="12%" height="16">Amount</td>
+				<td width="10%" height="16">Diagnostic</td>
+				<td width="10%" height="16">Last Bill Date</td>
+
+			</tr>
+			<% String demono="",demo_name="",demo_dob="",demo_hin="", billinginr_no="", provider_no="";
     String provider_ohip_no="", provider_rma_no="", diagnostic_code="", service_code="", billing_amount="";
     String billing_unit="", billdate="", billstatus="";
     int colorCount = 0;
@@ -227,16 +235,21 @@ proName1 = proFirst + " " + proLast;
 	      }
   Count1 = Count1 + 1;  
     %>
-      <tr bgcolor="<%=color%>"> 
-          <td width="12%" height="16"><input type="checkbox" name="inrbilling<%=billinginr_no%>"></td>
-        <td width="22%" height="16"><a href="#" onClick='rs("billinginrupdate","updateINRbilling.jsp?demono=<%=demono%>&billinginr_no=<%=billinginr_no%>&servicecode=<%=service_code%>&billingamount=<%=billing_amount%>&dxcode=<%=diagnostic_code%>&demo_name=<%=URLEncoder.encode(demo_name)%>&provider_name=<%=URLEncoder.encode(proName1)%>","380","300","0")'><%=demo_name%></a></td>
-         <td width="22%" height="16"><%=proName1%></td>
-          <td width="12%" height="16"><%=service_code%></td>
-           <td width="12%" height="16"><%=billing_amount%></td>
-            <td width="10%" height="16"><%=diagnostic_code%></td>
-            <td width="10%" height="16"><% if (billstatus.compareTo("A")==0) {%><%=billdate.substring(0,10)%><%}else{%>Not Available<%}%></td>
-    </tr>
-  <%}
+			<tr bgcolor="<%=color%>">
+				<td width="12%" height="16"><input type="checkbox"
+					name="inrbilling<%=billinginr_no%>"></td>
+				<td width="22%" height="16"><a href="#"
+					onClick='rs("billinginrupdate","updateINRbilling.jsp?demono=<%=demono%>&billinginr_no=<%=billinginr_no%>&servicecode=<%=service_code%>&billingamount=<%=billing_amount%>&dxcode=<%=diagnostic_code%>&demo_name=<%=URLEncoder.encode(demo_name)%>&provider_name=<%=URLEncoder.encode(proName1)%>","380","300","0")'><%=demo_name%></a></td>
+				<td width="22%" height="16"><%=proName1%></td>
+				<td width="12%" height="16"><%=service_code%></td>
+				<td width="12%" height="16"><%=billing_amount%></td>
+				<td width="10%" height="16"><%=diagnostic_code%></td>
+				<td width="10%" height="16">
+				<% if (billstatus.compareTo("A")==0) {%><%=billdate.substring(0,10)%>
+				<%}else{%>Not Available<%}%>
+				</td>
+			</tr>
+			<%}
   } else{
   
   	//String[] billArray = (String[])providerArray.get(i);
@@ -275,29 +288,39 @@ proName1 = proFirst + " " + proLast;
       
   Count1 = Count1 + 1;
   %>
-        <tr bgcolor="<%=color%>"> 
-            <td width="12%" height="16"><input type="checkbox" name="inrbilling<%=billinginr_no%>"></td>
-          <td width="22%" height="16"><a href="#" onClick='rs("billinginrupdate","updateINRbilling.jsp?demono=<%=demono%>&billinginr_no=<%=billinginr_no%>&servicecode=<%=service_code%>&billingamount=<%=billing_amount%>&dxcode=<%=diagnostic_code%>&demo_name=<%=URLEncoder.encode(demo_name)%>&provider_name=<%=URLEncoder.encode(proName1)%>","380","300","0")'><%=demo_name%></a></td>
-           <td width="22%" height="16"><%=proName1%></td>
-            <td width="12%" height="16"><%=service_code%></td>
-             <td width="12%" height="16"><%=billing_amount%></td>
-              <td width="10%" height="16"><%=diagnostic_code%></td>
-                      <td width="10%" height="16"><% if (billstatus.compareTo("A")==0) {%><%=billdate.substring(0,10)%><%}else{%>Not Available<%}%></td>
-    </tr>
-  <%}}%>
-  <% if ( Count1 == 0) { %>
-   <tr bgcolor="#FFFFFF">
-   <td colspan=7>No Match Found</td>
-   </td> 
-   <%} else {%>
-    <tr bgcolor="#FFFFFF">
-      <a href="#" onClick='rs("billingcalendar","../billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0")'>Service 
-              Date:</a> 
-              <input type="text" name="xml_appointment_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>" size="12" datafld='xml_appointment_date'>
-             <td colspan=7><input type="submit" name="submit" value="Generate INR Batch Billing">
-   <input type="hidden" name="rowCount" value="<%=Count1%>">
-   <input type="hidden" name="clinic_no" value="<%=Clinic_no%>"
-   <input type="hidden" name="visittype" value="00"
+			<tr bgcolor="<%=color%>">
+				<td width="12%" height="16"><input type="checkbox"
+					name="inrbilling<%=billinginr_no%>"></td>
+				<td width="22%" height="16"><a href="#"
+					onClick='rs("billinginrupdate","updateINRbilling.jsp?demono=<%=demono%>&billinginr_no=<%=billinginr_no%>&servicecode=<%=service_code%>&billingamount=<%=billing_amount%>&dxcode=<%=diagnostic_code%>&demo_name=<%=URLEncoder.encode(demo_name)%>&provider_name=<%=URLEncoder.encode(proName1)%>","380","300","0")'><%=demo_name%></a></td>
+				<td width="22%" height="16"><%=proName1%></td>
+				<td width="12%" height="16"><%=service_code%></td>
+				<td width="12%" height="16"><%=billing_amount%></td>
+				<td width="10%" height="16"><%=diagnostic_code%></td>
+				<td width="10%" height="16">
+				<% if (billstatus.compareTo("A")==0) {%><%=billdate.substring(0,10)%>
+				<%}else{%>Not Available<%}%>
+				</td>
+			</tr>
+			<%}}%>
+			<% if ( Count1 == 0) { %>
+			<tr bgcolor="#FFFFFF">
+				<td colspan=7>No Match Found</td>
+				</td>
+				<%} else {%>
+			
+			<tr bgcolor="#FFFFFF">
+				<a href="#"
+					onClick='rs("billingcalendar","../billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=service","380","300","0")'>Service
+				Date:</a>
+				<input type="text" name="xml_appointment_date"
+					value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>"
+					size="12" datafld='xml_appointment_date'>
+				<td colspan=7><input type="submit" name="submit"
+					value="Generate INR Batch Billing"> <input type="hidden"
+					name="rowCount" value="<%=Count1%>"> <input type="hidden"
+					name="clinic_no" value="<%=Clinic_no%>"
+					<input type="hidden" name="visittype" value="00"
 
   </td>
    </td>

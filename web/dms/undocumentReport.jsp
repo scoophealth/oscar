@@ -34,16 +34,18 @@
             String userfirstname = (String) session.getAttribute("userfirstname");
             String userlastname = (String) session.getAttribute("userlastname");
 %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="page" />
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
@@ -118,54 +120,30 @@
             }
 %>
 <html:html locale="true">
-    <head>
-    <title><bean:message key="dms.documentReport.title"/></title>
-    <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    
-    <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
-    <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-    <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-    <script type="text/javascript" src="../share/javascript/effects.js"></script>
-    <script type="text/javascript" src="../share/javascript/controls.js"></script>
-        
-    <link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
-    <link rel="stylesheet" type="text/css" href="dms.css" />
-    <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
-    
-    <style type="text/css">
-        div.autocomplete {
-  position:absolute;
-  width:250px;
-  background-color:white;
-  border:1px solid #888;
-  margin:0px;
-  padding:0px;
-}
-div.autocomplete ul {
-  list-style-type:none;
-  margin:0px;
-  padding:0px;
-}
-div.autocomplete ul li.selected { background-color: #ffb;}
-div.autocomplete ul li {
-  list-style-type:none;
-  display:block;
-  margin:0;
-  padding:2px;
-  height:32px;
-  cursor:pointer;
-}
-        label.fields{
-            width:200px;
-        }
+<head>
+<title><bean:message key="dms.documentReport.title" /></title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
 
-    </style>
-    
-    
-    <script type="text/javascript" src="../share/javascript/nifty.js"></script>
-    <script type="text/javascript" src="../phr/phr.js"></script>
-    <script type="text/javascript">
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../share/javascript/effects.js"></script>
+<script type="text/javascript" src="../share/javascript/controls.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="dms.css" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyPrint.css" media="print" />
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+
+<script type="text/javascript" src="../share/javascript/nifty.js"></script>
+<script type="text/javascript" src="../phr/phr.js"></script>
+<script type="text/javascript">
         window.onload=function(){
             if(!NiftyCheck())
                 return;
@@ -368,32 +346,31 @@ div.autocomplete ul li {
     }
     
     </script>
-    
-    
-    </head>
-    <body class="bodystyle">
-        
-        <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
-            <tr class="MainTableRowTop">
-                <td class="MainTableTopRowLeftColumn" width="60px">
-                    eDocs
-                </td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar">
-                        <tr>
-                            <td>Documents</td>
-                            <td>&nbsp;</td>
-                            <td style="text-align: right;">
-                                <a href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | 
-                                <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
-                                <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <%--
+
+
+</head>
+<body class="bodystyle">
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable"
+	style="margin: 0px;">
+	<tr class="MainTableRowTop">
+		<td class="MainTableTopRowLeftColumn" width="60px">eDocs</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Documents</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right;"><a
+					href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | <a
+					href="javascript: popupStart(300, 400, 'About.jsp')">About</a> | <a
+					href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<%--
          <td class="MainTableLeftColumn" valign="top">
              <div class="leftplane">
                   <h3>&nbsp; Tags</h3>
@@ -407,21 +384,16 @@ div.autocomplete ul li {
              </div>
          </td>
                 --%>
-                <td class="MainTableRightColumn" colspan="2" valign="top">
-                    <%-- ul>
+		<td class="MainTableRightColumn" colspan="2" valign="top"><%-- ul>
                         <li>- way to send to a provider (using lab system)</li>
                         <li>+ way to easily add desc and type</li>
                         <li>- if moduleid -1 is keeping the documents here what will keep them here to send to a provider</li>
                         <li>- Once linked with a patient offer to mark a physicians record </li>
                         <li>- clicking on the graphic should pop up the viewer</li>
-                    </ul --%>
-                    
-                    <!--html:form action="/dms/combinePDFs" -->
-                    <input type="hidden" name="curUser" value="<%=curUser%>">
-                    <input type="hidden" name="demoId" value="<%=moduleid%>">
-                    <div class="documentLists">
-                        <%-- STUFF TO DISPLAY --%>
-                        <%
+                    </ul --%> <!--html:form action="/dms/combinePDFs" -->
+		<input type="hidden" name="curUser" value="<%=curUser%>"> <input
+			type="hidden" name="demoId" value="<%=moduleid%>">
+		<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
             ArrayList categories = new ArrayList();
             ArrayList categoryKeys = new ArrayList();
             ArrayList privatedocs = new ArrayList();
@@ -443,26 +415,18 @@ div.autocomplete ul li {
                 String currentkey = (String) categoryKeys.get(i);
                 ArrayList category = (ArrayList) categories.get(i);
                         %>
-                        <div class="doclist">
-                            <div class="headerline">
-                                <div class="docHeading">
-                                    <a id="plusminus<%=i%>" href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
-                                        -- <%= currentkey%> 
-                                    </a>
-                                    <span class="tabs">
-                                        View: <a href="?function=<%=module%>&functionid=<%=moduleid%>">All</a>
-                                        <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
-                                        | <a href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
-                                        <%}%>
-                                    </span>
-                                    
-                                </div>
-                            </div>
-                            <div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
-                                <%-- <table id="privateDocs" class="docTable" --%>
-                                  
-                                    
-                                    <%
+		<div class="doclist">
+		<div class="headerline">
+		<div class="docHeading"><a id="plusminus<%=i%>"
+			href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
+		-- <%= currentkey%> </a> <span class="tabs"> View: <a
+			href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> <% for (int i3 = 0; i3 < doctypes.size(); i3++) {%>
+		| <a
+			href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
+		<%}%> </span></div>
+		</div>
+		<div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
+		<%-- <table id="privateDocs" class="docTable" --%> <%
                                     int tabindex = 1;
                             for (int i2 = 0; i2 < category.size(); i2++) {
                                 EDoc curdoc = (EDoc) category.get(i2);
@@ -479,64 +443,65 @@ div.autocomplete ul li {
                                 
                                 String url = "ManageDocument.do?method=view&doc_no=" + curdoc.getDocId();  
                                     %>
-                                    <div id="document<%=curdoc.getDocId()%>">
-                                    <table class="docTable" >
-                                    <tr >
-                                        
-                                         
-                                        <td colspan="8">
-                                            <img src="<%=url%>" />
-                                        </td>
-                                    
-                                          
-                                        <td align="left" valign="top"  >
-                                           <fieldset  >
-                                                <legend>Document Uploaded :<%=curdoc.getDateTimeStamp() %> - Content Type: <%=contentType%></legend>
-                                                <form id="forms<%=curdoc.getDocId()%>" action="undocumentReport.jsp" onsubmit="return sendToServer('forms<%=curdoc.getDocId()%>');" >
-                                                <input type="hidden" name="method" value="documentUpdate"/>
-                                                <input type="hidden" name="documentId" value="<%=curdoc.getDocId()%>"/>
-                                                   <table>
-                                                      <tr>
-                                                          <td><bean:message key="dms.documentReport.msgDocType"/>:</td>
-                                                          <td>
-                                                            <select tabindex="<%=tabindex++ %>"name="docType" id="docType" >
-                                                                <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
-                                                                <%for (int j=0; j<doctypes.size(); j++) {
-                                                                     String doctype = (String) doctypes.get(j); %>
-                                                                     <option value="<%= doctype%>"<%=(curdoc.getType().equals(doctype))?" selected":""%>><%= doctype%></option>
-                                                                <%}%>
-                                                            </select>
-                                                          </td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td><bean:message key="dms.documentReport.msgDocDesc"/>:</td>
-                                                          <td><input tabindex="<%=tabindex++ %>" type="text" name="documentDescription" value="<%=curdoc.getDescription()%>"/></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td>Observation Date:</td>
-                                                          <td>
-                                                              <input tabindex="<%=tabindex++ %>" id="observationDate" name="observationDate" type="text" value="<%=curdoc.getObservationDate()%>"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
-                                                          </td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td>Demographic:
-                                                          <% if ( request.getParameter("demo_linked_Id") !=  null &&  request.getParameter("demo_linked_Id").equals(curdoc.getDocId()) ) {%>
-                                                              <%=request.getParameter("name")%> 
-                                                          <% } %>
- 
-                                                          </td>
-                                                          <td>
-                                                            <input type="hidden" name="demog" id="demofind<%=curdoc.getDocId()%>"/>
-                                                    <input tabindex="<%=tabindex++ %>" type="text" id="autocompletedemo<%=curdoc.getDocId()%>" name="demographicKeyword"/>
-                                                    <div id="autocomplete_choices<%=curdoc.getDocId()%>" class="autocomplete"></div>
+		<div id="document<%=curdoc.getDocId()%>">
+		<table class="docTable">
+			<tr>
 
-<script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
+
+				<td colspan="8"><img src="<%=url%>" /></td>
+
+
+				<td align="left" valign="top">
+				<fieldset><legend>Document Uploaded :<%=curdoc.getDateTimeStamp() %>
+				- Content Type: <%=contentType%></legend>
+				<form id="forms<%=curdoc.getDocId()%>" action="undocumentReport.jsp"
+					onsubmit="return sendToServer('forms<%=curdoc.getDocId()%>');">
+				<input type="hidden" name="method" value="documentUpdate" /> <input
+					type="hidden" name="documentId" value="<%=curdoc.getDocId()%>" />
+				<table>
+					<tr>
+						<td><bean:message key="dms.documentReport.msgDocType" />:</td>
+						<td><select tabindex="<%=tabindex++ %>" name="docType"
+							id="docType">
+							<option value=""><bean:message
+								key="dms.addDocument.formSelect" /></option>
+							<%for (int j=0; j<doctypes.size(); j++) {
+                                                                     String doctype = (String) doctypes.get(j); %>
+							<option value="<%= doctype%>"
+								<%=(curdoc.getType().equals(doctype))?" selected":""%>><%= doctype%></option>
+							<%}%>
+						</select></td>
+					</tr>
+					<tr>
+						<td><bean:message key="dms.documentReport.msgDocDesc" />:</td>
+						<td><input tabindex="<%=tabindex++ %>" type="text"
+							name="documentDescription" value="<%=curdoc.getDescription()%>" /></td>
+					</tr>
+					<tr>
+						<td>Observation Date:</td>
+						<td><input tabindex="<%=tabindex++ %>" id="observationDate"
+							name="observationDate" type="text"
+							value="<%=curdoc.getObservationDate()%>"><a id="obsdate"><img
+							title="Calendar" src="../images/cal.gif" alt="Calendar"
+							border="0" /></a></td>
+					</tr>
+					<tr>
+						<td>Demographic: <% if ( request.getParameter("demo_linked_Id") !=  null &&  request.getParameter("demo_linked_Id").equals(curdoc.getDocId()) ) {%>
+						<%=request.getParameter("name")%> <% } %>
+						</td>
+						<td><input type="hidden" name="demog"
+							id="demofind<%=curdoc.getDocId()%>" /> <input
+							tabindex="<%=tabindex++ %>" type="text"
+							id="autocompletedemo<%=curdoc.getDocId()%>"
+							name="demographicKeyword" />
+						<div id="autocomplete_choices<%=curdoc.getDocId()%>"
+							class="autocomplete"></div>
+
+						<script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
     new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
-</script>
-                                                          
-                                                          </td>
-                                                      </tr>
-                                                      <%--
+</script></td>
+					</tr>
+					<%--
                                                       <tr>
                                                           <td valign="top">Flag Provider: </td>
                                                           <td> 
@@ -549,75 +514,78 @@ div.autocomplete ul li {
                                                           <div id="providerList"></div>
                                                           </td>
                                                       </tr>
-                                                      --%>                                                           
-                                            
-                                                      <tr>
-                                                          <td><bean:message key="dms.documentReport.msgCreator"/>:</td>
-                                                          <td><%=curdoc.getCreatorName()%></td>
-                                                      </tr>
-                                                        
-                                                      <tr>
-                                                          <td colspan="2" align="right"><input tabindex="<%=tabindex++ %>" type="submit" name="save" value="Save" /></td>
-                                                      </tr>   
-                                                  </table>
+                                                      --%>
 
-                                                </form>
-                                            </fieldset>      
-                                            
-                                            
-                                       
-                                        
-                                        
-                                      
-                                       
-                                       
-                                    </td>
-                                    </tr>
-                                    </table>
-                                    </div>
-                                    <%}
+					<tr>
+						<td><bean:message key="dms.documentReport.msgCreator" />:</td>
+						<td><%=curdoc.getCreatorName()%></td>
+					</tr>
+
+					<tr>
+						<td colspan="2" align="right"><input
+							tabindex="<%=tabindex++ %>" type="submit" name="save"
+							value="Save" /></td>
+					</tr>
+				</table>
+
+				</form>
+				</fieldset>
+
+
+
+
+
+
+
+
+				</td>
+			</tr>
+		</table>
+		</div>
+		<%}
                                     if (category.size() == 0) {%>
-                                    <table>
-                                       <tr><td colspan="6">No documents to display</td></tr>
-                                    </table>
-                                    <%}%>
-                                <%-- /table --%>
-                                
-                            </div>
-                        </div>
-                        <%}%>
-                        
-                    </div>
-                    <div>
-                        <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
-                        <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
-                        <input type="button" value="Combine PDFs" onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');"/>
-                        <%
+		<table>
+			<tr>
+				<td colspan="6">No documents to display</td>
+			</tr>
+		</table>
+		<%}%> <%-- /table --%></div>
+		</div>
+		<%}%>
+		</div>
+		<div><input type="button" name="Button"
+			value="<bean:message key="dms.documentReport.btnDoneClose"/>"
+			onclick=self.close();> <input type="button" name="print"
+			value='<bean:message key="global.btnPrint"/>'
+			onClick="window.print()"> <input type="button"
+			value="Combine PDFs"
+			onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');" />
+		<%
             if (module.equals("demographic")) {
-                        %>
-                        <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                            <indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">    
-                                
-                                <%-- input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/  
+                        %> <oscarProp:oscarPropertiesCheck
+			property="MY_OSCAR" value="yes">
+			<indivo:indivoRegistered demographic="<%=moduleid%>"
+				provider="<%=curUser%>">
+
+				<%-- input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/  
                                 --%>
-                                
-                                <input type="button" onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');" value="Send To PHR"/>
-                                
-                            </indivo:indivoRegistered>
-                        </oscarProp:oscarPropertiesCheck>
-                        <%
+
+				<input type="button"
+					onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');"
+					value="Send To PHR" />
+
+			</indivo:indivoRegistered>
+		</oscarProp:oscarPropertiesCheck> <%
             }
                         %>
-                    </div>
-                    <!-- /html:form -->
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="MainTableBottomRowRightColumn">
-                </td>
-            </tr>
-        </table>
-        
-        
-    </body>
+		</div>
+		<!-- /html:form --></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+
+
+</body>
 </html:html>

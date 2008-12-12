@@ -24,14 +24,16 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@page import="java.util.ArrayList, java.util.Collections, java.util.List, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
-<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.casemgmt.model.CaseManagementNote, org.oscarehr.casemgmt.model.Issue, org.oscarehr.common.model.UserProperty, org.oscarehr.common.dao.UserPropertyDAO, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@page
+	import="java.util.ArrayList, java.util.Collections, java.util.List, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
+<%@page
+	import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.casemgmt.model.CaseManagementNote, org.oscarehr.casemgmt.model.Issue, org.oscarehr.common.model.UserProperty, org.oscarehr.common.dao.UserPropertyDAO, org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -81,11 +83,11 @@ if (demo != null) consultUtil.estPatient(demo);
 consultUtil.estTeams();
 
 if (request.getParameter("error") != null){
-    %> 
-    <SCRIPT LANGUAGE="JavaScript">
+    %>
+<SCRIPT LANGUAGE="JavaScript">
         alert("The form could not be printed due to an error. Please refer to the server logs for more details.");
     </SCRIPT>
-    <%
+<%
 }
 
 java.util.Calendar calender = java.util.Calendar.getInstance();
@@ -97,86 +99,16 @@ String formattedDate = year+"/"+mon+"/"+day;
 OscarProperties props = OscarProperties.getInstance();
 
 %><head>
-<title>
-<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title"/>
+<title><bean:message
+	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
-<html:base/>
-<style type="text/css">
- 
-/* Used for "import from enctounter" button */
-input.btn{
-   color:black;
-   font-family:'trebuchet ms',helvetica,sans-serif;
-   font-size:84%;
-   font-weight:bold;
-   background-color:#B8B8FF;
-   border:1px solid;
-   border-top-color:#696;
-   border-left-color:#696;
-   border-right-color:#363;
-   border-bottom-color:#363;
-}
-    
-.doc {
-    color:blue;
-}
-
-.lab {
-    color: #CC0099;
-}
-td.tite {
-
-background-color: #bbbbFF;
-color : black;
-font-size: 12pt;
-
-}
-
-td.tite1 {
-
-background-color: #ccccFF;
-color : black;
-font-size: 12pt;
-
-}
-
-th,td.tite2 {
-
-background-color: #BFBFFF;
-color : black;
-font-size: 12pt;
-
-}
-
-td.tite3 {
-
-background-color: #B8B8FF;
-color : black;
-font-size: 12pt;
-
-}
-
-td.tite4 {
-
-background-color: #ddddff;
-color : black;
-font-size: 12pt;
-
-}
-
-td.stat{
-font-size: 10pt;
-}
-
-input.righty{
-text-align: right;
-}
-</style>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
 
-<link type="text/javascript" src="../consult.js"/>
+<link type="text/javascript" src="../consult.js" />
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -639,11 +571,13 @@ function fetchAttached() {
           
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields();fetchAttached();">
-<html:errors/>
+<body topmargin="0" leftmargin="0" vlink="#0000FF"
+	onload="window.focus();disableDateFields();fetchAttached();">
+<html:errors />
 
-<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;">        
-        <%
+<html:form action="/oscarEncounter/RequestConsultation"
+	onsubmit="alert('HTHT'); return false;">
+	<%
         oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
         //System.out.println("Requested ID :"+requestId);
@@ -694,542 +628,536 @@ function fetchAttached() {
         
         %>
 
-        <input type="hidden" name="providerNo" value="<%=providerNo%>">
-        <input type="hidden" name="demographicNo" value="<%=demo%>">
-        <input type="hidden" name="requestId" value="<%=requestId%>">
-        <input type="hidden" name="documents" value="">
-<!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Consultation
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=consultUtil.patientName%> <%=consultUtil.patientSex%> <%=consultUtil.patientAge%>                                                                          
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
-            <table>
-               <tr>
-                    <td class="tite4" colspan="2" >
-                    <table>
-                       <tr >
-                            <td class="stat" colspan="2">                       
-                            Created by:                                            
-                            </td>
-                        </tr>
-                        <tr >
-                            <td class="stat" colspan="2" align="right" nowrap>                                           
-                                       <%=consultUtil.getProviderName(consultUtil.providerNo) %>                       
-                            </td>
-                        </tr>
-                      </table>  
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="tite4" colspan="2" >
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus"/>
-                    </td>
-                </tr>                      
-                <tr >
-                    <td class="tite4" colspan="2">
-                        <table>
-                           <tr>
-                              <td class="stat">
-                                 <html:radio property="status" value="1"/>
-                              </td>
-                              <td class="stat">
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth"/>:
-                              </td>
-                           </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr >
-                    <td class="tite4" colspan="2">
-                       <table>
-                          <tr>
-                            <td class="stat">
-                                <html:radio property="status" value="2"/>
-                            </td>
-                            <td class="stat">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall"/>
-                            </td>
-                          </tr>
-                       </table>
-                    </td>
-                </tr>
-                <tr >
-                    <td class="tite4" colspan="2">
-                       <table>
-                          <tr>
-                            <td class="stat">
-                                <html:radio property="status" value="3"/>
-                            </td>
-                            <td class="stat">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall"/>
-                            </td>
-                          </tr>
-                      </table>
-                    </td>
-                </tr>
-                <tr >
-                    <td class="tite4" colspan="2">
-                       <table>
-                          <tr>
-                            <td class="stat">
-                                <html:radio property="status" value="4"/>
-                            </td>
-                            <td class="stat">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted"/>
-                            </td>
-                          </tr>
-                      </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tite4" colspan="2">
-                        <table>
-                            <tr>
-                                <td class="stat">&nbsp;</td>
-                            </tr>                            
-                            <tr>
-                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
-                            </tr>
-                            <tr>
-                                <td style="text-align:center">Currently Attached Files:</td>
-                            </tr>
-                            <tr>
-                                <td id="tdAttachedDocs">                                                                       
-                                </td>                                
-                            </tr>
-                            <tr>
-                                <td style="text-align:center">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend"/><br/>
-                                    <span class="doc"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs"/></span><br/>
-                                    <span class="lab"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs"/></span>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                    
-                </tr>                
-            </table>            
-            </td>
-            <td class="MainTableRightColumn">
-     <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%" border=1>
+	<input type="hidden" name="providerNo" value="<%=providerNo%>">
+	<input type="hidden" name="demographicNo" value="<%=demo%>">
+	<input type="hidden" name="requestId" value="<%=requestId%>">
+	<input type="hidden" name="documents" value="">
+	<!--  -->
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn">Consultation</td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td class="Header"
+						style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
+						NOWRAP><%=consultUtil.patientName%> <%=consultUtil.patientSex%>
+					<%=consultUtil.patientAge%></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr style="vertical-align: top">
+			<td class="MainTableLeftColumn">
+			<table>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat" colspan="2">Created by:</td>
+						</tr>
+						<tr>
+							<td class="stat" colspan="2" align="right" nowrap><%=consultUtil.getProviderName(consultUtil.providerNo) %>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2"><bean:message
+						key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus" />
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat"><html:radio property="status" value="1" />
+							</td>
+							<td class="stat"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth" />:
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat"><html:radio property="status" value="2" />
+							</td>
+							<td class="stat"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall" />
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat"><html:radio property="status" value="3" />
+							</td>
+							<td class="stat"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall" />
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat"><html:radio property="status" value="4" />
+							</td>
+							<td class="stat"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted" />
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+					<table>
+						<tr>
+							<td class="stat">&nbsp;</td>
+						</tr>
+						<tr>
+							<td style="text-align: center" class="stat"><a href="#"
+								onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" /></a></td>
+						</tr>
+						<tr>
+							<td style="text-align: center">Currently Attached Files:</td>
+						</tr>
+						<tr>
+							<td id="tdAttachedDocs"></td>
+						</tr>
+						<tr>
+							<td style="text-align: center"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend" /><br />
+							<span class="doc"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
+							<span class="lab"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+			<td class="MainTableRightColumn">
+			<table cellpadding="0" cellspacing="2"
+				style="border-collapse: collapse" bordercolor="#111111" width="100%"
+				height="100%" border=1>
 
-            <!----Start new rows here-->
-<tr>
-<td colspan=2>
-                <%if (request.getAttribute("id") != null){ %>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');"/>
-                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"  onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');"/>
-                    <%}%>
-                <%}else{%>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); "/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm');"/>
-                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"  onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');"/>
-                    <%}%>
-                <%}%>
-            </td>
+				<!----Start new rows here-->
+				<tr>
+					<td colspan=2>
+					<%if (request.getAttribute("id") != null){ %> <input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>"
+						onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"
+						onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"
+						onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+					<%}%> <%}else{%> <input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>"
+						onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"
+						onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"
+						onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+					<%}%> <%}%>
+					</td>
 
-</tr>
-       <tr>
-        <td>
+				</tr>
+				<tr>
+					<td>
 
-            <table border=0 width="100%">
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate"/>:
-                </td>
-                <td align="right" class="tite1">
-                    <%if ( request.getAttribute("id") != null) {%>
-                    <html:text styleClass="righty" property="referalDate"/>
-                    <%}else{%>
-                    <html:text styleClass="righty" property="referalDate" value="<%=formattedDate%>"/>
-                    <%}%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService"/>:
-                </td>
-                <td align="right" class="tite1">
-                    <html:select property="service" onchange="fillSpecialistSelect(this);">
-    					<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
+					<table border=0 width="100%">
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formRefDate" />:
+							</td>
+							<td align="right" class="tite1">
+							<%if ( request.getAttribute("id") != null) {%> <html:text
+								styleClass="righty" property="referalDate" /> <%}else{%> <html:text
+								styleClass="righty" property="referalDate"
+								value="<%=formattedDate%>" /> <%}%>
+							</td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
+							</td>
+							<td align="right" class="tite1"><html:select
+								property="service" onchange="fillSpecialistSelect(this);">
+								<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
 					<option/>
 				    	<option/>
 			    		<option/>
 		    			<option/> -->
-				    </html:select>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons"/>:
-                </td>
-                <td align="right" class="tite2">
-                    <html:select property="specialist" size="1" onchange="GetExtensionOn(this)">
-		    		    <!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
+							</html:select></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
+							</td>
+							<td align="right" class="tite2"><html:select
+								property="specialist" size="1" onchange="GetExtensionOn(this)">
+								<!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
                                         <option/>
 	    				<option/>
 		    			<option/>
 			    		<option/> -->
-				    </html:select>
-                </td>
-            </tr>
-	    <tr>
-	        <td class="tite4">
-                   <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency"/>
-                </td>
-                <td align="right" class="tite2">
-                    <html:select property="urgency">
-                         <html:option value="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent"/></html:option>
-                         <html:option value="1"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent"/></html:option>
-                         <html:option value="3"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn"/></html:option>
-                    </html:select>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone"/>:
-                </td>
-                <td align="right" class="tite2">
-                    <input type="text" name="phone" class="righty"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4" >
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax"/>:
-                </td>
-                <td align="right" class="tite3">
-                    <input type="text" name="fax" class="righty"/>
-                </td>
-            </tr>
+							</html:select></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" />
+							</td>
+							<td align="right" class="tite2"><html:select
+								property="urgency">
+								<html:option value="2">
+									<bean:message
+										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNUrgent" />
+								</html:option>
+								<html:option value="1">
+									<bean:message
+										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgUrgent" />
+								</html:option>
+								<html:option value="3">
+									<bean:message
+										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgReturn" />
+								</html:option>
+							</html:select></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPhone" />:
+							</td>
+							<td align="right" class="tite2"><input type="text"
+								name="phone" class="righty" /></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formFax" />:
+							</td>
+							<td align="right" class="tite3"><input type="text"
+								name="fax" class="righty" /></td>
+						</tr>
 
-            <tr>
-                <td class="tite4" >
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr"/>:
-                </td>
-                <td align="right" class="tite3">
-                    <textarea name="address" cols=20></textarea>
-                </td>
-            </tr>
-			 <tr>
-              <td class="tite4" >Patient Will Book: </td>
-              <td align="right" class="tite3">
-                <html:checkbox property="patientWillBook" value="1" onclick="disableDateFields()" >
-                </html:checkbox>
-              </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-              <a href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate"/>:</a>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAddr" />:
+							</td>
+							<td align="right" class="tite3"><textarea name="address"
+								cols=20></textarea></td>
+						</tr>
+						<tr>
+							<td class="tite4">Patient Will Book:</td>
+							<td align="right" class="tite3"><html:checkbox
+								property="patientWillBook" value="1"
+								onclick="disableDateFields()">
+							</html:checkbox></td>
+						</tr>
+						<tr>
+							<td class="tite4"><a
+								href="javascript:popupOscarCal(300,380,'https://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/CalendarPopup.jsp?year=<%=year%>&month=<%=mon%>')"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" />:</a>
 
-                </td>
-                <td align="right" class="tite3">
-                    <table bgcolor="white">
-                    <tr>
-                        <th class="tite2">
-                        <bean:message key="global.year"/>
-                        </th>
-                        <th class="tite2">
-                        <bean:message key="global.month"/>
-                        </th>
-                        <th class="tite2">
-                        <bean:message key="global.day"/>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="tite3">
-                            <html:text size="5" maxlength="4" property="appointmentYear" />
-                        </td>
-                        <td class="tite3">
-                            <html:select property="appointmentMonth">
-                                <% for (int i=1; i < 13; i = i + 1){
+							</td>
+							<td align="right" class="tite3">
+							<table bgcolor="white">
+								<tr>
+									<th class="tite2"><bean:message key="global.year" /></th>
+									<th class="tite2"><bean:message key="global.month" /></th>
+									<th class="tite2"><bean:message key="global.day" /></th>
+								</tr>
+								<tr>
+									<td class="tite3"><html:text size="5" maxlength="4"
+										property="appointmentYear" /></td>
+									<td class="tite3"><html:select property="appointmentMonth">
+										<% for (int i=1; i < 13; i = i + 1){
                                     String month = Integer.toString(i);
                                     if (i < 10){ month = "0"+month; }
                                 %>
-                                   <html:option value="<%=month%>"><%=month%></html:option>
-                                <%}%>
-                            </html:select>
-                        </td>
-                        <td class="tite3">
-                            <html:select property="appointmentDay">
-                                <% for (int i=1; i < 32; i = i + 1){
+										<html:option value="<%=month%>"><%=month%></html:option>
+										<%}%>
+									</html:select></td>
+									<td class="tite3"><html:select property="appointmentDay">
+										<% for (int i=1; i < 32; i = i + 1){
                                     String dayOfWeek = Integer.toString(i);
                                     if (i < 10){ dayOfWeek = "0"+dayOfWeek;}
                                 %>
-                                   <html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
-                                <%}%>
+										<html:option value="<%=dayOfWeek%>"><%=dayOfWeek%></html:option>
+										<%}%>
 
-                            </html:select>
-                        </td>
-                    </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime"/>:
-                </td>
-                <td align="right" class="tite3">
-                    <table>
-                        <tr>
-                            <td>
-                                <html:select property="appointmentHour">
-                                <% for (int i=1; i < 13; i = i + 1){
+									</html:select></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
+							</td>
+							<td align="right" class="tite3">
+							<table>
+								<tr>
+									<td><html:select property="appointmentHour">
+										<% for (int i=1; i < 13; i = i + 1){
                                     String hourOfday = Integer.toString(i);
                                 %>
-                                   <html:option value="<%=hourOfday%>"><%=hourOfday%></html:option>
-                                <%}%>
-                                </html:select>
-                            </td>
-                            <td>
-                                <html:select property="appointmentMinute">
-                                <% for (int i=0; i < 60; i = i + 1){
+										<html:option value="<%=hourOfday%>"><%=hourOfday%></html:option>
+										<%}%>
+									</html:select></td>
+									<td><html:select property="appointmentMinute">
+										<% for (int i=0; i < 60; i = i + 1){
                                     String minuteOfhour = Integer.toString(i);
                                     if (i < 10){ minuteOfhour = "0"+minuteOfhour;}
                                 %>
-                                   <html:option value="<%=minuteOfhour%>"><%=minuteOfhour%></html:option>
-                                <%}%>
-                                </html:select>
-                            </td>
-                            <td>
-                                <html:select property="appointmentPm">
-                                  <html:option value="AM">AM</html:option>
-                                  <html:option value="PM">PM</html:option>
-                                </html:select>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            </table>
-        </td>
-        <td valign="top"  cellspacing="1" class="tite4">
-            <table border=0 width="100%" bgcolor="white">
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient"/>:
-                </td>
-                <td class="tite1">
-                    <%=consultUtil.patientName%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgAddress"/>:
-                </td>
-                <td class="tite1">
-                    <%=consultUtil.patientAddress%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPhone"/>:
-                </td >
-                <td class="tite2">
-                    <%=consultUtil.patientPhone%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgWPhone"/>:
-                </td >
-                <td class="tite2">
-                    <%=consultUtil.patientWPhone%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate"/>:
-                </td>
-                <td class="tite2">
-                    <%=consultUtil.patientDOB%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSex"/>:
-                </td>
-                <td class="tite3">
-                    <%=consultUtil.patientSex%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgHealthCard"/>:
-                </td>
-                <td class="tite3">
-                    <%=consultUtil.patientHealthNum%>&nbsp;<%=consultUtil.patientHealthCardVersionCode%>&nbsp;<%=consultUtil.patientHealthCardType%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSendTo"/>:
-                </td>
-                <td class="tite3">
-                    <html:select property="sendTo">
-                        <html:option value="-1">---- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgTeams"/> ----</html:option>
-                        <% for (int i =0; i < consultUtil.teamVec.size();i++){
+										<html:option value="<%=minuteOfhour%>"><%=minuteOfhour%></html:option>
+										<%}%>
+									</html:select></td>
+									<td><html:select property="appointmentPm">
+										<html:option value="AM">AM</html:option>
+										<html:option value="PM">PM</html:option>
+									</html:select></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+					<td valign="top" cellspacing="1" class="tite4">
+					<table border=0 width="100%" bgcolor="white">
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatient" />:
+							</td>
+							<td class="tite1"><%=consultUtil.patientName%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgAddress" />:
+							</td>
+							<td class="tite1"><%=consultUtil.patientAddress%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPhone" />:
+							</td>
+							<td class="tite2"><%=consultUtil.patientPhone%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgWPhone" />:
+							</td>
+							<td class="tite2"><%=consultUtil.patientWPhone%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate" />:
+							</td>
+							<td class="tite2"><%=consultUtil.patientDOB%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSex" />:
+							</td>
+							<td class="tite3"><%=consultUtil.patientSex%></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgHealthCard" />:
+							</td>
+							<td class="tite3"><%=consultUtil.patientHealthNum%>&nbsp;<%=consultUtil.patientHealthCardVersionCode%>&nbsp;<%=consultUtil.patientHealthCardType%>
+							</td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSendTo" />:
+							</td>
+							<td class="tite3"><html:select property="sendTo">
+								<html:option value="-1">---- <bean:message
+										key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgTeams" /> ----</html:option>
+								<% for (int i =0; i < consultUtil.teamVec.size();i++){
                             String te = (String) consultUtil.teamVec.elementAt(i);
                         %>
-                            <html:option value="<%=te%>"><%=te%></html:option>
-                        <%}%>
-                    </html:select>
-                </td>
-            </tr>
+								<html:option value="<%=te%>"><%=te%></html:option>
+								<%}%>
+							</html:select></td>
+						</tr>
 
-            <tr>
-                <td colspan=2 class="tite4">                                        
-                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>:
-                </td>
-                <td style="background-color: #B8B8FF;">   
-                    &nbsp;
-                </td>               
-            </tr>  
-            <tr>
-                <td colspan=2 class="tite3">
-                    <html:textarea cols="50" rows="3" property="appointmentNotes"></html:textarea>
-                </td>
-            </tr>
+						<tr>
+							<td colspan=2 class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes" />:
+							</td>
+							<td style="background-color: #B8B8FF;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan=2 class="tite3"><html:textarea cols="50"
+								rows="3" property="appointmentNotes"></html:textarea></td>
+						</tr>
 
 
-            </table>
-        </td>
-       </tr>
-       <tr>
-            <td colspan=2>
-
-            <td>
-       </tr>
-       <tr>
-            <td colspan="2" class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formReason"/>                
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2>
-                <html:textarea property="reasonForConsultation"  cols="90" rows="3" ></html:textarea>
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2 class="tite4">
-                <table width="100%">
-                    <tr>
-                        <td width="30%" class="tite4">
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf"/>:
-                        </td>
-                        <td>
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
-                        </td>
-                    </tr>
-                </table>
-       </tr>
-       <tr>
-            <td colspan=2>
-                <html:textarea cols="90" rows="10" property="clinicalInformation"></html:textarea>
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2 class="tite4">
-            <table width="100%">
-                    <tr>
-                        <td width="30%" class="tite4">
-                            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2>
+					<td>
+				</tr>
+				<tr>
+					<td colspan="2" class="tite4"><bean:message
+						key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formReason" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea property="reasonForConsultation"
+						cols="90" rows="3"></html:textarea></td>
+				</tr>
+				<tr>
+					<td colspan=2 class="tite4">
+					<table width="100%">
+						<tr>
+							<td width="30%" class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf" />:
+							</td>
+							<td><input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>"
+								onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>"
+								onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>"
+								onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
+								onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>"
+								onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
+							</td>
+						</tr>
+					</table>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea cols="90" rows="10"
+						property="clinicalInformation"></html:textarea></td>
+				</tr>
+				<tr>
+					<td colspan=2 class="tite4">
+					<table width="100%">
+						<tr>
+							<td width="30%" class="tite4">
+							<% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
                                     out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
-                                } else { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems"/>:
-                             <% } %>
-                        </td>
-                        <td>
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
-                        </td>
-                    </tr>
-                </table>
-            
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2>
-                <html:textarea cols="90" rows="3" property="concurrentProblems">
-             
-                </html:textarea>
-            </td>
-       </tr>
-       <tr>
-            <td colspan="2" class="tite4">
-                <table width="100%">
-                    <tr>
-                        <td width="30%" class="tite4">
-                            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
-                                    out.print(props.getProperty("currentMedicationsTitle", ""));
-                               } else { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
-                            <% } %>  
-                        </td>
-                        <td>
-                                <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
-                        </td>
-                    </tr>
-                </table>
-            </td>            
-       </tr>
-       <tr>
-            <td colspan=2 >
-                <html:textarea cols="90" rows="3" property="currentMedications"></html:textarea>
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2 class="tite4">
-                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:               
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2>
-                <html:textarea cols="90" rows="3" property="allergies"></html:textarea>
-            </td>
-       </tr>
+                                } else { %> <bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems" />:
+							<% } %>
+							</td>
+							<td><input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>"
+								onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>"
+								onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>"
+								onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
+								onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
+							<input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>"
+								onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
+							</td>
+						</tr>
+					</table>
 
-       <tr>
-            <td colspan=2>
-	        <input type="hidden" name="submission" value="">
-                <%if (request.getAttribute("id") != null){ %>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');"/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"  onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');"/>
-                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"  onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');"/>
-                    <%}%>
-                <%}else{%>
-      		<input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>" onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); "/>
-                <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"  onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); "/>
-                    <%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
-                        <input type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"  onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');"/>
-                    <%}%>
-                <%}%>
-            </td>
-       </tr>
-       
-       <script type="text/javascript">
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea cols="90" rows="3"
+						property="concurrentProblems">
+
+					</html:textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="tite4">
+					<table width="100%">
+						<tr>
+							<td width="30%" class="tite4">
+							<% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+                                    out.print(props.getProperty("currentMedicationsTitle", ""));
+                               } else { %> <bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications" />:
+							<% } %>
+							</td>
+							<td><input type="button" class="btn"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>"
+								onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea cols="90" rows="3"
+						property="currentMedications"></html:textarea></td>
+				</tr>
+				<tr>
+					<td colspan=2 class="tite4"><bean:message
+						key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies" />:
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea cols="90" rows="3"
+						property="allergies"></html:textarea></td>
+				</tr>
+
+				<tr>
+					<td colspan=2><input type="hidden" name="submission" value="">
+					<%if (request.getAttribute("id") != null){ %> <input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>"
+						onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>"
+						onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>"
+						onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
+					<%}%> <%}else{%> <input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmit"/>"
+						onclick="return checkForm('Submit Consultation Request','EctConsultationFormRequestForm'); " />
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndPrint"/>"
+						onclick="return checkForm('Submit Consultation Request And Print Preview','EctConsultationFormRequestForm'); " />
+					<%if (props.getProperty("faxEnable", "").equalsIgnoreCase("yes")) { %>
+					<input type="button"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndFax"/>"
+						onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
+					<%}%> <%}%>
+					</td>
+				</tr>
+
+				<script type="text/javascript">
         
 	        initMaster();
         	initService('<%=consultUtil.service%>');
@@ -1250,27 +1178,23 @@ function fetchAttached() {
 
 
 
-            <!----End new rows here-->
+				<!----End new rows here-->
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
-    </html:form>
+				<tr height="100%">
+					<td></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
+</html:form>
 </body>
-<script type="text/javascript" src="../../share/javascript/prototype.js"/> 
+<script type="text/javascript" src="../../share/javascript/prototype.js" /> 
+
 <script type="text/javascript" language="javascript">
     
 

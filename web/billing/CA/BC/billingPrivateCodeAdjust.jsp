@@ -25,12 +25,14 @@
 -->
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
-<%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
+<%@page
+	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
 <html:html locale="true">
 <head>
 <title>Adjust Private Billing Codes</title>
-<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
 
@@ -38,70 +40,49 @@
 
 
 </script>
-<style type="text/css">
-    table.outline{
-    margin-top:50px;
-    border-bottom: 1pt solid #888888;
-    border-left: 1pt solid #888888;
-    border-top: 1pt solid #888888;
-    border-right: 1pt solid #888888;
-    }
-    table.grid{
-    border-bottom: 1pt solid #888888;
-    border-left: 1pt solid #888888;
-    border-top: 1pt solid #888888;
-    border-right: 1pt solid #888888;
-    }
-    td.gridTitles{
-    border-bottom: 2pt solid #888888;
-    font-weight: bold;
-    text-align: center;
-    }
-    td.gridTitlesWOBottom{
-    font-weight: bold;
-    text-align: center;
-    }
-    td.middleGrid{
-    border-left: 1pt solid #888888;
-    border-right: 1pt solid #888888;
-    text-align: center;
-    }
-
-    .odd{
-      background-color:#EEEEFF;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
-  <tr class="MainTableTopRow">
-    <td width="10%" class="MainTableTopRowLeftColumn">Billing</td>
-    <td width="88%" class="MainTableTopRowRightColumn"><table class="TopStatusBar">
-        <tr>
-          <td>Adjust Private Billing Codes</td>
-          <td>&nbsp;</td>
-          <td style="text-align:right"><a href="javascript:popupStart(300,400,'Help.jsp')"> <bean:message key="global.help"/> </a> | <a href="javascript:popupStart(300,400,'About.jsp')"> <bean:message key="global.about"/> </a> | <a href="javascript:popupStart(300,400,'License.jsp')"> <bean:message key="global.license"/> </a> </td>
-        </tr>
-      </table></td>
-  </tr>
-  <tr>
-    <td class="MainTableLeftColumn" valign="top">&nbsp; <a href="billingAddPrivateCode.jsp?addNew=true">Add Code</a> </td>
-    <td class="MainTableRightColumn"><form action="billingPrivateCodeAdjust.jsp" method="get">
-        <%if (request.getAttribute("returnMessage") != null) {      %>
-        <table>
-          <tr>
-            <td style="font-color: red;"><%=request.getAttribute("returnMessage")%> </td>
-          </tr>
-        </table>
-        <%}      %>
-        <table>
-          <tr>
-            <td></td>
-          </tr>
-        </table>
-      </form>
-      <%
+	<tr class="MainTableTopRow">
+		<td width="10%" class="MainTableTopRowLeftColumn">Billing</td>
+		<td width="88%" class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Adjust Private Billing Codes</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"> <bean:message
+					key="global.help" /> </a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"> <bean:message
+					key="global.about" /> </a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"> <bean:message
+					key="global.license" /> </a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; <a
+			href="billingAddPrivateCode.jsp?addNew=true">Add Code</a></td>
+		<td class="MainTableRightColumn">
+		<form action="billingPrivateCodeAdjust.jsp" method="get">
+		<%if (request.getAttribute("returnMessage") != null) {      %>
+		<table>
+			<tr>
+				<td style="font-color: red;"><%=request.getAttribute("returnMessage")%>
+				</td>
+			</tr>
+		</table>
+		<%}      %>
+		<table>
+			<tr>
+				<td></td>
+			</tr>
+		</table>
+		</form>
+		<%
 
       String sortOrder = request.getParameter("sortOrder")!=null?request.getParameter("sortOrder"):"";
       System.out.println("sortOrder=" + sortOrder);
@@ -118,24 +99,23 @@
             newOrder = "desc";
              arrow = "&darr;";
           }
-      %>
-
-      <% request.setAttribute( "test", list); %>
-
-
-<display:table name="test" defaultsort="1" defaultorder="descending" decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
-  <display:column property="serviceCode" title="Service Code" sortable="true" headerClass="sortable" />
-  <display:column property="description" title="Description" sortable="true" headerClass="sortable"  />
-  <display:column property="value" title="Price" sortable="true" headerClass="sortable"  />
-   <display:column property="billingserviceNo" title="Options" />
-</display:table>
-      <%}%>
-    </td>
-  </tr>
-  <tr>
-    <td class="MainTableBottomRowLeftColumn"></td>
-    <td class="MainTableBottomRowRightColumn"></td>
-  </tr>
+      %> <% request.setAttribute( "test", list); %> <display:table
+			name="test" defaultsort="1" defaultorder="descending"
+			decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
+			<display:column property="serviceCode" title="Service Code"
+				sortable="true" headerClass="sortable" />
+			<display:column property="description" title="Description"
+				sortable="true" headerClass="sortable" />
+			<display:column property="value" title="Price" sortable="true"
+				headerClass="sortable" />
+			<display:column property="billingserviceNo" title="Options" />
+		</display:table> <%}%>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
 </table>
 </body>
 </html:html>

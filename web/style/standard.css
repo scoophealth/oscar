@@ -3,12 +3,15 @@
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 }
+
 .altrow {
 	background-color: #E0E0E0;
 }
+
 .hlrow {
 	background-color: #FFFF66;
 }
+
 .errortext {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -18,9 +21,7 @@
 	vertical-align: middle;
 }
 
-a:link,
-a:visited,
-a:active {
+a:link,a:visited,a:active {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	color: #000066;
@@ -31,27 +32,31 @@ a:hover {
 	color: #FF0000;
 	text-decoration: underline;
 }
+
 .list {
 	margin: 2px;
 	padding: 2px;
 	list-style-type: disc;
 	list-style-position: inside;
 }
+
 .olist {
-    margin: 2px;
-    padding: 2px;
-    list-style-type: decimal;
-    list-style-position: inside;
+	margin: 2px;
+	padding: 2px;
+	list-style-type: decimal;
+	list-style-position: inside;
 }
+
 .field {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	color: #000000;
 	text-align: right;
 	font-weight: bold;
 }
+
 .leftfield {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	color: #000000;
 	font-weight: bold;

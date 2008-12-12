@@ -1,3 +1,4 @@
+
 <%
   //reportbilledvisit1.jsp?sdate=2002-04-15&edate=2003-03-31
   
@@ -5,7 +6,9 @@
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <!--  
 /*
  * 
@@ -33,7 +36,7 @@
 -->
 <html>
 <head>
-<title>PATIENT NO SHOW LIST </title>
+<title>PATIENT NO SHOW LIST</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <!--link rel="stylesheet" href="../web.css" -->
@@ -49,7 +52,8 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 <%
 //busy ... busy ... busy ..................................................<br>
 //display splash-msg first
@@ -167,45 +171,50 @@ db.closeConn();
 
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica">PATIENT VISIT LIST </font></th>
-    <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor=<%=deepcolor%>>
+		<th><font face="Helvetica">PATIENT VISIT LIST </font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="Print" onClick="window.print()"><input type="button"
+			name="Button" value=" Exit " onClick="window.close()"></th>
+	</tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr><td>Period: (<%=sdate%> ~ <%=edate%>) </td>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td>Period: (<%=sdate%> ~ <%=edate%>)</td>
+	</tr>
 </table>
 
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
-<tr bgcolor=<%=deepcolor%> align="center">
-<TH width="10%">.</TH>
-<TH width="6%">PHYs</TH>
-<TH width="6%">RES</TH>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor=<%=deepcolor%> align="center">
+		<TH width="10%">.</TH>
+		<TH width="6%">PHYs</TH>
+		<TH width="6%">RES</TH>
 
-<% for (int i = 0; i < vNurseNo.size(); i++) { %>
-	<TH width="6%"><%=vNurse.get(i)%></TH>
-<% } %>
-</tr>
+		<% for (int i = 0; i < vNurseNo.size(); i++) { %>
+		<TH width="6%"><%=vNurse.get(i)%></TH>
+		<% } %>
+	</tr>
 
-<tr bgcolor="<%=weakcolor%>">
-      <td align="center">Patient</td>
-      <td align="center"><%=props.getProperty("patPhys")%></td>
-      <td align="center"><%=props.getProperty("patRes")%></td>
-<% for (int i = 0; i < vNurseNo.size(); i++) { %>
-      <td align="center"><%=props.getProperty("patNurse"+i)%></td>
-<% } %>
+	<tr bgcolor="<%=weakcolor%>">
+		<td align="center">Patient</td>
+		<td align="center"><%=props.getProperty("patPhys")%></td>
+		<td align="center"><%=props.getProperty("patRes")%></td>
+		<% for (int i = 0; i < vNurseNo.size(); i++) { %>
+		<td align="center"><%=props.getProperty("patNurse"+i)%></td>
+		<% } %>
 
-</tr>
-<tr >
-      <td align="center">Visit</td>
-      <td align="center"><%=props.getProperty("visPhys")%></td>
-      <td align="center"><%=props.getProperty("visRes")%></td>
-<% for (int i = 0; i < vNurseNo.size(); i++) { %>
-      <td align="center"><%=props.getProperty("visNurse"+i)%></td>
-<% } %>
-</tr>
+	</tr>
+	<tr>
+		<td align="center">Visit</td>
+		<td align="center"><%=props.getProperty("visPhys")%></td>
+		<td align="center"><%=props.getProperty("visRes")%></td>
+		<% for (int i = 0; i < vNurseNo.size(); i++) { %>
+		<td align="center"><%=props.getProperty("visNurse"+i)%></td>
+		<% } %>
+	</tr>
 
 </table>
 </body>

@@ -24,52 +24,22 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*" %>
-<%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.search.demographicSearch.title"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.search.demographicSearch.title" /></title>
 </head>
-<html:base/>
+<html:base />
 
-<style type="text/css">
-
-h3.noFound {
-    color : red;
-}
-
-th.title {
-    background-color: #b8b8ff;
-    font-size: 12pt;
-
-}
-
-tr.odd {
-    background-color: #ddddff;
-    font-size: 10pt;
-}
-
-tr.even {
-    background-color: #ccccff;
-    font-size: 10pt;
-}
-
-td.tite4 {
-
-background-color: #ddddff;
-color : black;
-font-size: 12pt;
-
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
 
@@ -82,261 +52,195 @@ function BackToOscar()
        window.close();
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.search.demographicSearch.msgEncounter"/>">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" NOWRAP>
-                <bean:message key="oscarEncounter.search.demographicSearch.msgPatSearch"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
+<table class="MainTable" id="scrollNumber1"
+	name="<bean:message key="oscarEncounter.search.demographicSearch.msgEncounter"/>">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" NOWRAP><bean:message
+			key="oscarEncounter.search.demographicSearch.msgPatSearch" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td></td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
 
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
 
 
+		<td></td>
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+			<!--Start new rows here-->
+			<tr>
+				<td><html:form action="/oscarEncounter/SearchDemographic">
+					<table>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.msgFirstName" />:</td>
+							<td><html:text property="firstName" /></td>
 
-            <!--Start new rows here-->
-                <tr>
-                    <td>
-                                <html:form action="/oscarEncounter/SearchDemographic">
-                <table>
-                   <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgFirstName"/>:
-                        </td>
-                        <td >
-                            <html:text property="firstName"/>
-                        </td>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.msgLastName" />:</td>
+							<td><html:text property="lastName" /></td>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.msgSex" />:</td>
+							<td>
+							<table height="100%">
+								<tr>
+									<td><bean:message
+										key="oscarEncounter.search.demographicSearch.formMale" /></td>
+									<td><html:radio property="sex"
+										value="<bean:message key="oscarEncounter.search.demographicSearch.formMale"/>" />
+									</td>
+									<td><bean:message
+										key="oscarEncounter.search.demographicSearch.formFemale" /></td>
+									<td><html:radio property="sex"
+										value="<bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>" />
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formBirthYear" />:
+							</td>
+							<td><html:text property="yearOfBirth" /></td>
 
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgLastName"/>:
-                        </td>
-                        <td >
-                           <html:text property="lastName"/>
-                        </td>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgSex"/>:
-                        </td>
-                        <td >
-                            <table height="100%">
-                            <tr>
-                                <td >
-                                <bean:message key="oscarEncounter.search.demographicSearch.formMale"/>
-                                </td>
-                                <td >
-                                <html:radio property="sex" value="<bean:message key="oscarEncounter.search.demographicSearch.formMale"/>"/>
-                                </td>
-                                <td >
-                                <bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>
-                                </td>
-                                <td >
-                                <html:radio property="sex" value="<bean:message key="oscarEncounter.search.demographicSearch.formFemale"/>"/>
-                                </td>
-                            </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthYear"/>:
-                        </td>
-                        <td>
-                            <html:text property="yearOfBirth"/>
-                        </td>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formBirthMonth" />:
+							</td>
+							<td><html:text property="monthOfBirth" /></td class="tite4">
 
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthMonth"/>:
-                        </td>
-                        <td>
-                            <html:text property="monthOfBirth"/>
-                        </td class="tite4">
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formBirthDay" />:</td>
+							<td><html:text property="dayOfBirth" /></td>
+						</tr>
 
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formBirthDay"/>:
-                        </td>
-                        <td >
-                            <html:text property="dayOfBirth"/>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formAddr"/>:
-                        </td>
-                        <td >
-                           <html:text property="address"/>
-                        </td>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formCity"/>:
-                        </td>
-                        <td colspan="3">
-                           <html:text property="city"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formPhone"/>:
-                        </td>
-                        <td colspan="5">
-                           <html:text property="phone"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formHIN"/>:
-                        </td>
-                        <td colspan="5">
-                           <html:text property="hin"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tite4">
-                            <bean:message key="oscarEncounter.search.demographicSearch.formCNumber"/>:
-                        </td>
-                        <td colspan="5">
-                           <html:text property="chartNumber"/>
-                        </td>
-                    </tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formAddr" />:</td>
+							<td><html:text property="address" /></td>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formCity" />:</td>
+							<td colspan="3"><html:text property="city" /></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formPhone" />:</td>
+							<td colspan="5"><html:text property="phone" /></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formHIN" />:</td>
+							<td colspan="5"><html:text property="hin" /></td>
+						</tr>
+						<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.search.demographicSearch.formCNumber" />:</td>
+							<td colspan="5"><html:text property="chartNumber" /></td>
+						</tr>
 
 
 
 
-                    <tr>
-                        <td>
-                        <input type="submit" name="Submit" value="Submit"/>
-                        <input type="reset" value="Reset"/>
-                        </td>
-                    </tr>
-                </table>
-            </html:form>
-                <%
+						<tr>
+							<td><input type="submit" name="Submit" value="Submit" /> <input
+								type="reset" value="Reset" /></td>
+						</tr>
+					</table>
+				</html:form> <%
                 java.util.Vector searchVec = (java.util.Vector) request.getAttribute("searchVector");
                 if (searchVec != null){
 
                     if (searchVec.size() != 0){
 
                     %>
-                    <table >
-                        <tr>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgDemoN"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgLastName"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgFirstName"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgAddr"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgCity"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgProvice"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgSex"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgHin"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgDOB"/>
-                            </th>
-                            <th class="title">
-                            <bean:message key="oscarEncounter.search.demographicSearch.msgPhone"/>
-                            </th>
-                        </tr>
-                    <%
+				<table>
+					<tr>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgDemoN" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgLastName" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgFirstName" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgAddr" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgCity" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgProvice" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgSex" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgHin" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgDOB" /></th>
+						<th class="title"><bean:message
+							key="oscarEncounter.search.demographicSearch.msgPhone" /></th>
+					</tr>
+					<%
 
                         for ( int i = 0; i < searchVec.size(); i++){
                             oscar.oscarEncounter.search.data.EctDemographicData demo = (oscar.oscarEncounter.search.data.EctDemographicData) searchVec.elementAt(i);
                             String forClass;
                             if ( (i % 2) == 0){ forClass="even"; }else{ forClass="odd"; }
                         %>
-                            <tr class="<%=forClass%>">
-                                <td>
-                                <a href="../../IncomingEncounter.do?demographicSearch=true&demographicNo=<%=demo.demographicNo%>" >
-                                <%=demo.demographicNo%>
-                                </a>
-                                </td>
-                                <td>
-                                <%=demo.lastName%>
-                                </td>
-                                <td>
-                                <%=demo.firstName%>
-                                </td>
-                                <td>
-                                <%=demo.address%>
-                                </td>
-                                <td>
-                                <%=demo.city%>
-                                </td>
-                                <td>
-                                <%=demo.province%>
-                                </td>
-                                <td>
-                                <%=demo.sex%>
-                                </td>
-                                <td>
-                                <%=demo.hin%>
-                                </td>
-                                <td>
-                                <%=demo.yearOfBirth%>/<%=demo.monthOfBirth%>/<%=demo.dayOfBirth%>
-                                </td>
-                                <td>
-                                <%=demo.phone%>
-                                </td>
-                            </tr>
+					<tr class="<%=forClass%>">
+						<td><a
+							href="../../IncomingEncounter.do?demographicSearch=true&demographicNo=<%=demo.demographicNo%>">
+						<%=demo.demographicNo%> </a></td>
+						<td><%=demo.lastName%></td>
+						<td><%=demo.firstName%></td>
+						<td><%=demo.address%></td>
+						<td><%=demo.city%></td>
+						<td><%=demo.province%></td>
+						<td><%=demo.sex%></td>
+						<td><%=demo.hin%></td>
+						<td><%=demo.yearOfBirth%>/<%=demo.monthOfBirth%>/<%=demo.dayOfBirth%>
+						</td>
+						<td><%=demo.phone%></td>
+					</tr>
 
-                        <%}/*for*/%>
-                        </table>
-                    <%}else{%>
-                    <h3 class="noFound"><bean:message key="oscarEncounter.search.demographicSearch.msgNoResult"/></h3>
-                    <%}
+					<%}/*for*/%>
+				</table>
+				<%}else{%>
+				<h3 class="noFound"><bean:message
+					key="oscarEncounter.search.demographicSearch.msgNoResult" /></h3>
+				<%}
                 }%>
+				</td>
+			</tr>
+			<!----End new rows here-->
 
-                    </td>
-                </tr>
-            <!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 

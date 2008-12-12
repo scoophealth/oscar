@@ -27,13 +27,16 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
-<%@ page errorPage="/common/error.jsp" %>
+<%@ page errorPage="/common/error.jsp"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="templateBean" class="oscar.ScheduleTemplateBean" scope="page" />
-<jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="templateBean" class="oscar.ScheduleTemplateBean"
+	scope="page" />
+<jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable"
+	scope="page" />
 
 <%
     int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
@@ -77,9 +80,9 @@
    ((Statement)rst[1]).close();
           
 %>
-   
-    <table border="1" bgcolor="#486ebd" width="100%">
-        <%
+
+<table border="1" bgcolor="#486ebd" width="100%">
+	<%
             int hourCursor, minuteCursor;
             boolean bColorHour;
             StringBuffer hourmin, hourCode = new StringBuffer((String)dateTimeCodeBean.get(provider));
@@ -95,12 +98,16 @@
                 System.out.println("CODE " + (String)dateTimeCodeBean.get("color"+hourCode.substring(ratio,ratio+1)));
                 bColorHour=minuteCursor==0?true:false;
          %>
-        <tr>
-            <td style="color:white; font-size: xx-small" align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b>
-                <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></b></td>
-            </td>
-            <td style="font-size: xx-small" width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>            
-        </tr>
-        <%  }%>
-    </body>
-</html>
+	<tr>
+		<td style="color: white; font-size: xx-small" align="RIGHT"
+			bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b>
+		<%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></b></td>
+		</td>
+		<td style="font-size: xx-small" width='1%'
+			<%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%>
+			title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font
+			color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
+	</tr>
+	<%  }%>
+	</body>
+	</html>

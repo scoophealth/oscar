@@ -1,4 +1,4 @@
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 <%@ include file="/ticklerPlus/header.jsp"%>
 
 <%@ page import="java.util.Calendar"%>
@@ -158,75 +158,72 @@
 
 <html:form action="/Tickler">
 	<input type="hidden" name="method" value="save" />
-	<input type="hidden" name="order_tcr" value="asc"/>
+	<input type="hidden" name="order_tcr" value="asc" />
 
 	<tr>
 		<td class="searchTitle" colspan="4">Filter</td>
 	</tr>
 	<tr>
 		<td class="blueText">Service Date Range:</td>
-		<td class="blueText"><span style="text-decoration:underline"
+		<td class="blueText"><span style="text-decoration: underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</span>
 		<html:text property="filter.startDate" maxlength="10" /></td>
-		
-		<td class="blueText"><span style="text-decoration:underline"
+
+		<td class="blueText"><span style="text-decoration: underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span>
-		<html:text property="filter.endDate" maxlength="10"/>
-		</td>
-		
+		<html:text property="filter.endDate" maxlength="10" /></td>
+
 		<td><input type="button" value="Create Report"
 			onclick="return checkTicklerDate();" /></td>
 	</tr>
 	<tr>
-		<td class="blueText">Status: <html:select property="filter.status"
-			onchange="return checkTicklerDate();">
+		<td class="blueText">Status: <html:select
+			property="filter.status" onchange="return checkTicklerDate();">
 			<html:option value="Z">All</html:option>
 			<html:option value="A">Active</html:option>
 			<html:option value="C">Completed</html:option>
 			<html:option value="D">Deleted</html:option>
 		</html:select></td>
-		<td class="blueText">Provider: <html:select property="filter.provider"
-			onchange="return checkTicklerDate();">
+		<td class="blueText">Provider: <html:select
+			property="filter.provider" onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
 			<html:options collection="providers" property="providerNo"
 				labelProperty="formattedName" />
 		</html:select></td>
 		<td class="blueText">Task Assigned To: <html:select
-			property="filter.assignee"
-			onchange="return checkTicklerDate();">
+			property="filter.assignee" onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
 			<html:options collection="providers" property="providerNo"
 				labelProperty="formattedName" />
 		</html:select></td>
-		
+
 		<td class="blueText">Program: <html:select
-			property="filter.programId"
-			onchange="return checkTicklerDate();">
+			property="filter.programId" onchange="return checkTicklerDate();">
 			<option value="All Programs">All Programs</option>
 			<html:options collection="programs" property="id"
 				labelProperty="name" />
 		</html:select></td>
-		
+
 	</tr>
 	<tr>
-		<td colspan="2" class="blueText">Client: 
-		
-		<oscar:oscarPropertiesCheck property="clientdropbox" value="on">
-		    <html:select property="filter.demographic_no"
-			onchange="return checkTicklerDate();">
-			<option value="All Clients">All Clients</option>
-			<html:options collection="demographics" property="demographicNo" labelProperty="formattedName" />
-		    </html:select>
-		</oscar:oscarPropertiesCheck>
-		
-		<oscar:oscarPropertiesCheck property="clientdropbox" value="off" defaultVal="true">
-		    <html:hidden property="filter.demographic_no"/>
-		    <html:text property="filter.demographic_webName" onkeyup="filter(this.value, 'ticklersTbl', 2)" size="15"/>
-		    <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
-		    <script language="JavaScript">showClearButton();</script>
-		    <input type="button" value="Search" onclick="search_demographic();" />
-		</oscar:oscarPropertiesCheck>
-            </td>
+		<td colspan="2" class="blueText">Client: <oscar:oscarPropertiesCheck
+			property="clientdropbox" value="on">
+			<html:select property="filter.demographic_no"
+				onchange="return checkTicklerDate();">
+				<option value="All Clients">All Clients</option>
+				<html:options collection="demographics" property="demographicNo"
+					labelProperty="formattedName" />
+			</html:select>
+		</oscar:oscarPropertiesCheck> <oscar:oscarPropertiesCheck property="clientdropbox" value="off"
+			defaultVal="true">
+			<html:hidden property="filter.demographic_no" />
+			<html:text property="filter.demographic_webName"
+				onkeyup="filter(this.value, 'ticklersTbl', 2)" size="15" />
+			<span id="clear_button"><input type="button" value="Clear"
+				onclick="clearClientFilter();" /></span>
+			<script language="JavaScript">showClearButton();</script>
+			<input type="button" value="Search" onclick="search_demographic();" />
+		</oscar:oscarPropertiesCheck></td>
 	</tr>
 
 	<tr>
@@ -237,17 +234,19 @@
 			<html:options collection="customFilters" property="name" />
 		</html:select></td>
 
-<!-- 
+		<!-- 
 		<td><input type="button" value="Print Preview" onclick="location.href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' " /></td>
  -->
 		<!-- the following only works in Firefox, not in IE
 		<td><input type="button" value="Print Preview" onClick="window.open('<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp','Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes')" /> </td>
 		 -->
-<!-- 
+		<!-- 
 		<td><a href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' onClick="window.open(this.href,'Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes');return false;">Print Preview</a> </td>
- -->		 
-		<td><a id="pre_print" href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' target="_pre_print">Print Preview</a> </td>
-		
+ -->
+		<td><a id="pre_print"
+			href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp'
+			target="_pre_print">Print Preview</a></td>
+
 	</tr>
 
 
@@ -255,29 +254,30 @@
 	<%@ include file="/ticklerPlus/messages.jsp"%>
 	<br />
 	<table width="100%" border="0" cellpadding="0" cellspacing="1"
-		bgcolor="#C0C0C0" id="ticklersTbl" >
+		bgcolor="#C0C0C0" id="ticklersTbl">
 		<tr class="title">
 			<th></th>
 			<th></th>
 			<th>Demographic Name</th>
 			<th class=noprint>Provider Name</th>
-			
-			
-			 
+
+
+
 			<%
 
 			 String click_order =(String)session.getAttribute( "filter_order" );
 	
 			if(click_order=="DESC") {%>
-				<input type="hidden" name="filter.sort_order" value="ASC" />
-				<% 
+			<input type="hidden" name="filter.sort_order" value="ASC" />
+			<% 
 				session.setAttribute( "filter_order", "ASC" );
 			} else {%>
-				<input type="hidden" name="filter.sort_order" value="DESC" />
-				<% session.setAttribute( "filter_order", "DESC");
+			<input type="hidden" name="filter.sort_order" value="DESC" />
+			<% session.setAttribute( "filter_order", "DESC");
 			}		
 			%>
-			<th class=noprint><a href="javascript:sortByDate();" class=noprint>Date</a></th>
+			<th class=noprint><a href="javascript:sortByDate();"
+				class=noprint>Date</a></th>
 
 			<th class=noprint>Priority</th>
 			<th class=noprint>Task Assigned To</th>
@@ -356,11 +356,13 @@ String demographic_name = "";
 			}
 
 			%>
-					<td ><input type="checkbox" name="checkbox"
+					<td><input type="checkbox" name="checkbox"
 						value="<c:out value="${tickler.tickler_no}"/>" /></td>
-					<td><a href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
-						align="right" src="<c:out value="${ctx}"/>/ticklerPlus/images/<%=view_image %>" border="0" />
-					</a></td>
+					<td><a
+						href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
+						align="right"
+						src="<c:out value="${ctx}"/>/ticklerPlus/images/<%=view_image %>"
+						border="0" /> </a></td>
 
 					<%
 String style = "";
@@ -372,9 +374,10 @@ String style = "";
 			%>
 					<td style="<%=style%>"><%=demographic_name%></td>
 					<td style="<%=style%>" class=noprint><%=provider_name%></td>
-					<td style="<%=style%>" class=noprint><fmt:formatDate pattern="MM/dd/yy : hh:mm a"
-						value="${tickler.service_date}" /></td>
-					<td style="<%=style%>" class=noprint><c:out value="${tickler.priority}" /></td>
+					<td style="<%=style%>" class=noprint><fmt:formatDate
+						pattern="MM/dd/yy : hh:mm a" value="${tickler.service_date}" /></td>
+					<td style="<%=style%>" class=noprint><c:out
+						value="${tickler.priority}" /></td>
 					<td style="<%=style%>" class=noprint><%=assignee_name%></td>
 					<td style="<%=style%>" class=noprint><%=status%></td>
 					<td style="<%=style%>" align="left"><c:out escapeXml="false"
@@ -400,8 +403,8 @@ String style = "";
 			<td class=noprint><input type="button" value="Complete"
 				onclick="batch_operation('complete');" /></td>
 			<td class=noprint><input type="button" value="Delete"
-				onclick="batch_operation('delete');" /></td>	
-				
+				onclick="batch_operation('delete');" /></td>
+
 		</tr>
 	</table>
 </html:form>
@@ -411,7 +414,8 @@ String style = "";
 <table width="100%">
 	<tr>
 		<!-- <td><a href="../provider/providercontrol.jsp">Back to Schedule Page</a></td> -->
-		<td><a href="javascript:void(0)" onclick="wrapUp();">Close Window</a></td>
+		<td><a href="javascript:void(0)" onclick="wrapUp();">Close
+		Window</a></td>
 	</tr>
 </table>
 

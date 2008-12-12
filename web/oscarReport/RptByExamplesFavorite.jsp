@@ -26,69 +26,66 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 <script language="JavaScript" type="text/JavaScript">
 
 </script>
 <head>
-<title>
-<bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/> - <bean:message key="oscarReport.RptByExample.MsgEditMyFavorite"/>
-</title>
+<title><bean:message
+	key="oscarReport.RptByExample.MsgQueryByExamples" /> - <bean:message
+	key="oscarReport.RptByExample.MsgEditMyFavorite" /></title>
 </head>
 
-<body vlink="#0000FF" class="BodyStyle" >
-<table  class="MainTable" id="scrollNumber1" name="encounterTable">
-<html:form action="/oscarReport/RptByExamplesFavorite.do">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td><bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/> - <bean:message key="oscarReport.RptByExample.MsgEditMyFavorite"/></td>                                               
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">                 
-            </td>
-            <td class="MainTableRightColumn">
-                <table>
-                   <tr> 
-                        <td>
-                            <html:text property="favoriteName" size="40"/>
-                        </td>
-                   </tr>
-                   <tr> 
-                        <td>
-                            <html:textarea property="query" cols="80" rows="3"/>
-                        </td>
-                   </tr>
-                   <tr>
-                        <td>
-                            <input type="button" value="Add" onclick="submit();"/>                        
-                            <input type="button" value="<bean:message key='oscarReport.RptByExample.MsgCancel'/>" onclick="javascript:history.back(1);"/>
-                        </td>
-                   </tr>
-                   <tr></tr>
-                   
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn"></td>
-            <td class="MainTableBottomRowRightColumn"></td>
-        </tr>
-        </table>
-        
+<body vlink="#0000FF" class="BodyStyle">
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<html:form action="/oscarReport/RptByExamplesFavorite.do">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><bean:message
+				key="oscarReport.CDMReport.msgReport" /></td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td><bean:message
+						key="oscarReport.RptByExample.MsgQueryByExamples" /> - <bean:message
+						key="oscarReport.RptByExample.MsgEditMyFavorite" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn" valign="top"></td>
+			<td class="MainTableRightColumn">
+			<table>
+				<tr>
+					<td><html:text property="favoriteName" size="40" /></td>
+				</tr>
+				<tr>
+					<td><html:textarea property="query" cols="80" rows="3" /></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="Add" onclick="submit();" /> <input
+						type="button"
+						value="<bean:message key='oscarReport.RptByExample.MsgCancel'/>"
+						onclick="javascript:history.back(1);" /></td>
+				</tr>
+				<tr></tr>
+
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+</table>
+
 </html:form>
 </body>
 </html:html>

@@ -1,27 +1,29 @@
+
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!-- add by caisi -->
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
-<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar"%>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
 	long loadPage = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment"
+	rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <!-- caisi infirmary view extension add ffffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-<%
+	<%
 if (request.getParameter("year")!=null && request.getParameter("month")!=null && request.getParameter("day")!=null)
 	{
 		java.util.Date infirm_date=new java.util.GregorianCalendar(Integer.valueOf(request.getParameter("year")).intValue(), Integer.valueOf(request.getParameter("month")).intValue()-1, Integer.valueOf(request.getParameter("day")).intValue()).getTime();
@@ -46,23 +48,28 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 	session.setAttribute("infirmaryView_OscarQue",reqstr); 
 	String absurl="/infirm.do?action=showProgram";
 %>
-<c:import url="/infirm.do?action=showProgram" />
+	<c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
-<%@ page import="org.apache.commons.lang.*" %>
+<%@ page
+	import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*"%>
+<%@ page import="org.apache.commons.lang.*"%>
 
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
-<jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
+<jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable"
+	scope="page" />
 
 <!-- Struts for i18n -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%!
 /**
 Checks if the schedule day is patients birthday
@@ -190,17 +197,21 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
  * Ontario, Canada
  */
 -->
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="oscar.util.*"%>
 <%@page import="oscar.oscarDB.*"%>
 <html:html locale="true">
 <head>
-<title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
+<title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message
+	key="provider.appointmentProviderAdminDay.title" /></title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
+	type="text/css">
 <meta http-equiv="refresh" content="180;">
 
-<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
+<script language="javascript" type="text/javascript"
+	src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
 <script language="JavaScript">

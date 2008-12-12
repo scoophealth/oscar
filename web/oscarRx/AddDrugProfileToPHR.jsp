@@ -1,28 +1,31 @@
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>  
-<%@ page import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*, oscar.oscarEncounter.data.EctProviderData" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ page
+	import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*, oscar.oscarEncounter.data.EctProviderData"%>
 <%@ page import="org.chip.ping.client.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.talk.*"%>
 <%@ page import="org.chip.ping.xml.cddm.*"%>
 <%@ page import="org.chip.ping.xml.record.*"%>
 <%@ page import="org.chip.ping.xml.record.impl.*"%>
-<%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
+<%@ page
+	import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.util.Send2Indivo"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 <%@ page import="oscar.oscarProvider.data.*, oscar.OscarProperties"%>
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 
 
@@ -111,7 +114,7 @@ String level2 = CddmLevels.MEDICATIONS;
 <html:html locale="true">
 <head>
 <title>Send Prescription to PHR</title>
-<html:base/>
+<html:base />
 
 
 
@@ -119,37 +122,40 @@ String level2 = CddmLevels.MEDICATIONS;
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-  <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-  <tr>
-      <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                  <tr>
-            	    <td width="0%" valign="top">
-            	    <div class="DivCCBreadCrumbs">
-                        <% if (connected){%>
-                        &nbsp;&nbsp;Session Id: <%=actorTicket%><br/>
-                        <%}else{%>
-                        <%=connectErrorMsg%>
-                        <%}%>
-                    </div>
-                    </td>
-            	  </tr>
-            <!----Start new rows here-->
-                  <tr>
-                    <td>
- 		      <div class="DivContentTitle">Send Prescriptions to <%=patientPingId%> Personal Health Record</div>
-                    </td>
-		  </tr>
-                  <tr>
-                    <td>
-                      <div class="DivContentSectionHead">Adding</div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <%if(connected){
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<%@ include file="SideLinksNoEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs">
+				<% if (connected){%> &nbsp;&nbsp;Session Id: <%=actorTicket%><br />
+				<%}else{%> <%=connectErrorMsg%> <%}%>
+				</div>
+				</td>
+			</tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle">Send Prescriptions to <%=patientPingId%>
+				Personal Health Record</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead">Adding</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<%if(connected){
                             oscar.oscarRx.data.RxPatientData rxPatientData = new oscar.oscarRx.data.RxPatientData();
                             oscar.oscarRx.data.RxPatientData.Patient patient ;
 
@@ -176,9 +182,8 @@ String level2 = CddmLevels.MEDICATIONS;
                                                 indivoUpdated = true;                                                
                                         }
                                         else {
-                                        %>
-                                                An Error Occurred While Updating Medication <%=indivoServer.getErrorMsg()%>
-                                        <%
+                                        %> An Error Occurred While
+				Updating Medication <%=indivoServer.getErrorMsg()%> <%
                                                 break;
                                         }
                                     }
@@ -188,23 +193,20 @@ String level2 = CddmLevels.MEDICATIONS;
                                             indivoUpdated = true;                                                                                   
                                         }
                                         else {
-                                        %>
-                                                An Error Occurred While Adding Medication <%=indivoServer.getErrorMsg()%>
-                                        <%
+                                        %> An Error Occurred While
+				Adding Medication <%=indivoServer.getErrorMsg()%> <%
                                                 break;
                                         }
                                     }  
                                     
                                     if( indivoUpdated ) {
                                         if( drug.registerIndivo() ) {
-                                     %>
-                                                <%= drug.getRxDisplay() %><br>
-                                     <%    
+                                     %> <%= drug.getRxDisplay() %><br>
+				<%    
                                         }
                                         else {
-                                     %>
-                                                Error updating local database, please contact system administrator
-                                     <%
+                                     %> Error updating local database,
+				please contact system administrator <%
                                         }
                                     }
                                   
@@ -230,8 +232,7 @@ String level2 = CddmLevels.MEDICATIONS;
                                     
                                     drugList.add(Prescription);
                                     */
-                      %>                                                                
-                                  <%--  <%= drug.getRxDisplay() %><br>
+                      %> <%--  <%= drug.getRxDisplay() %><br>
                                     <!--
                                     Prescription.setComments(<%=drug.getSpecial()%>);
                                     Prescription.setDiagnosis(<%=""%>);
@@ -241,8 +242,7 @@ String level2 = CddmLevels.MEDICATIONS;
                                     Prescription.setFrequency(<%=drug.getFullFrequency()%>);
                                     Prescription.setRoute(<%=""%>);
                                     Prescription.setUnit(<%=""%>);                           
-                                    --> --%>
-                      <%      /*  }//if                                
+                                    --> --%> <%      /*  }//if                                
                             }  //for */
                             //try{   
                                 
@@ -252,14 +252,12 @@ String level2 = CddmLevels.MEDICATIONS;
                                 JAXBContext context = JAXBContext.newInstance("org.chip.ping.xml.talk:org.chip.ping.xml.record");
                                 Marshaller marshaller = context.createMarshaller();
                                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);        */
-                       %>
-                                <!--<textarea cols="100" rows="40">
+                       %> <!--<textarea cols="100" rows="40">
                                 <%
                                 //if(cddmType != null){
                                 //marshaller.marshal(cddmType, out);
                                 //}%>
-                                </textarea>-->
-                                <%
+                                </textarea>--> <%
                                 //
                                 //ping.sendCddm(actorTicket, patientPingId,cddmType);                                        
                             /*}catch(Exception sendCon){
@@ -268,36 +266,33 @@ String level2 = CddmLevels.MEDICATIONS;
                             }*/
                         }else{
                             out.write("none"); 
-                        }        %>
-                        <%=connectErrorMsg%>
-                    </td>
-                  </tr>
-                  
-                  <tr>
-                    <td>
-                        
-                      
-                      <input type=button class="ControlPushButton" onclick="javascript:window.close();" value="Close Window"/>
-                    </td>
-                  </tr>
-            <!----End new rows here-->
-		  <tr height="100%">
-                    <td>
-                    </td>
-                  </tr>
-                </table>
-        </td>
-     </tr>
-     <tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+                        }        %> <%=connectErrorMsg%></td>
+			</tr>
+
+			<tr>
+				<td><input type=button class="ControlPushButton"
+					onclick="javascript:window.close();" value="Close Window" /></td>
+			</tr>
+			<!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 
 </body>

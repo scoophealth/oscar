@@ -20,19 +20,23 @@
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties" scope="page" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
+	scope="page" />
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <title>Billing Reconcilliation</title>
 </head>
- 
+
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
 <% 
@@ -95,17 +99,16 @@ if (raNo.compareTo("") == 0 || raNo == null){
 } else {
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<form action="onGenRASummary.jsp">
-<tr class="myDarkGreen">
-	<th align='LEFT'>
-	<font color="#FFFFFF">
-	Billing Reconcilliation - Summary Report</font></th>
-	<th align='RIGHT'>
-	<select name="proNo">
-		<option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<form action="onGenRASummary.jsp">
+	<tr class="myDarkGreen">
+		<th align='LEFT'><font color="#FFFFFF"> Billing
+		Reconcilliation - Summary Report</font></th>
+		<th align='RIGHT'><select name="proNo">
+			<option value="all" <%=proNo.equals("all")?"selected":""%>>All
+			Providers</option>
 
-<%   
+			<%   
 //
 List aL = obj.getProviderListFromRAReport(raNo);
 for(int i=0; i<aL.size(); i++) {
@@ -114,40 +117,42 @@ for(int i=0; i<aL.size(); i++) {
 	plast = prop.getProperty("last_name", "");
 	pfirst = prop.getProperty("first_name", "");
 %>
-		<option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
-<%
+			<option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
+			<%
 }
 %>
-	</select><input type='submit' name='submit' value='Generate'>
-	<input type="hidden" name="rano" value="<%=raNo%>">
-	<input type='button' name='print' value='Print' onClick='window.print()'>
-	<input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
-</form>
+		</select><input type='submit' name='submit' value='Generate'> <input
+			type="hidden" name="rano" value="<%=raNo%>"> <input
+			type='button' name='print' value='Print' onClick='window.print()'>
+		<input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
+	</form>
 </table>
 
-     
+
 <% 
 	if (proNo == null || proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){ 
 %>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" class="myIvory">
-<tr class="myYellow"> 
-	<td width="7%" height="16">Billing No</td>
-	<td width="14%" height="16">Provider </td>
-	<td width="15%" height="16">Patient </td>
-	<td width="7%" height="16">HIN</td>
-	<td width="10%" height="16">Service Date </td>
-	<td width="7%" height="16">Service Code </td>
-	<!-- <td width="8%" height="16">Count</td> -->
-	<td width="7%" height="16" align=right>Invoiced</td>
-	<td width="7%" height="16" align=right>Paid</td>
-	<td width="7%" height="16" align=right>Clinic Pay </td>
-	<td width="7%" height="16" align=right>Hospital Pay </td>
-	<td width="7%" height="16" align=right>OB </td>
-	<td width="5%" height="16" align=right>Error</td>
-</tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	class="myIvory">
+	<tr class="myYellow">
+		<td width="7%" height="16">Billing No</td>
+		<td width="14%" height="16">Provider</td>
+		<td width="15%" height="16">Patient</td>
+		<td width="7%" height="16">HIN</td>
+		<td width="10%" height="16">Service Date</td>
+		<td width="7%" height="16">Service Code</td>
+		<!-- <td width="8%" height="16">Count</td> -->
+		<td width="7%" height="16" align=right>Invoiced</td>
+		<td width="7%" height="16" align=right>Paid</td>
+		<td width="7%" height="16" align=right>Clinic Pay</td>
+		<td width="7%" height="16" align=right>Hospital Pay</td>
+		<td width="7%" height="16" align=right>OB</td>
+		<td width="5%" height="16" align=right>Error</td>
+	</tr>
 
-<%
+	<%
 /*
 	String[] param = new String[2];
 	param[0] = raNo;
@@ -248,24 +253,24 @@ for(int i=0; i<aL.size(); i++) {
 */
 %>
 
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16"  align=right><%=explain%></td>
-</tr>
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
 
 
-<%/*
+	<%/*
 		} else { // clinic && local clinic
 			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
 				dFee = Double.parseDouble(amountpay);
@@ -273,97 +278,98 @@ for(int i=0; i<aL.size(); i++) {
 				BigTotal = BigTotal.add(bdFee);
 */
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
 
-<%/*
+	<%/*
 			} else { // other fee
 				dOFee = Double.parseDouble(amountpay);
 				bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigOTotal = BigOTotal.add(bdOFee);
 */
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
-<%
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
+	<%
 //			}
 //		}
 //	}	 
 } else { // raNo for all providers
 %>
 
-<table width="100%" border="0" cellspacing="1" cellpadding="0"  class="myIvory">
-<tr class="myYellow"> 
-	<th width="6%">Billing No</th>
-	<!--  th width="14%">Provider </th -->
-	<th width="20%">Patient </th>
-        <th >Fam Doc</th>
-	<th width="10%">HIN</th>
-	<th width="9%">Service Date </th>
-	<th width="8%">Service Code </th>
-	<!-- <th width="8%">Count</th> -->
-	<th width="7%" align=right>Invoiced</th>
-	<th width="7%" align=right>Paid</th>
-	<th width="7%" align=right>Clinic Pay </th>
-	<th width="7%" align=right>Hospital Pay </th>
-	<th width="7%" align=right>OB </th>
-	<th align=right>Error</th>
-</tr>
+	<table width="100%" border="0" cellspacing="1" cellpadding="0"
+		class="myIvory">
+		<tr class="myYellow">
+			<th width="6%">Billing No</th>
+			<!--  th width="14%">Provider </th -->
+			<th width="20%">Patient</th>
+			<th>Fam Doc</th>
+			<th width="10%">HIN</th>
+			<th width="9%">Service Date</th>
+			<th width="8%">Service Code</th>
+			<!-- <th width="8%">Count</th> -->
+			<th width="7%" align=right>Invoiced</th>
+			<th width="7%" align=right>Paid</th>
+			<th width="7%" align=right>Clinic Pay</th>
+			<th width="7%" align=right>Hospital Pay</th>
+			<th width="7%" align=right>OB</th>
+			<th align=right>Error</th>
+		</tr>
 
-<%
+		<%
 	aL = obj.getRASummary(raNo, proNo, OBbilling_no, CObilling_no,map);
 	for(int i=0; i<aL.size(); i++) {
 		Properties prop = (Properties) aL.get(i);
 		String color = i%2==0? "class='myGreen'":"";
 		color = i == (aL.size()-1) ? "class='myYellow'" : color;
 %>
-<tr <%=color %>> 
-	<td align="center"><%=prop.getProperty("account", "&nbsp;")%></td>
-	<!--  >td><%=prop.getProperty("demo_docname", "&nbsp;")%></td -->
-	<td><%=prop.getProperty("demo_name", "&nbsp;")%></td>
-        <td align="center"><%=prop.getProperty("demo_doc", "&nbsp;")%></td>
-	<td align="center"><%=prop.getProperty("demo_hin", "&nbsp;")%></td>
-	<td align="center"><%=prop.getProperty("servicedate", "&nbsp;")%></td>
-	<td align="center"><%=prop.getProperty("servicecode", "&nbsp;")%></td>
-	<!--<td width="8%"><%=serviceno%></td>-->
-	<td align=right><%=prop.getProperty("amountsubmit", "&nbsp;")%></td>
-	<td align=right><%=prop.getProperty("amountpay", "&nbsp;")%></td>
-	<td align=right><%=prop.getProperty("clinicPay", "&nbsp;")%></td>
-	<td align=right><%=prop.getProperty("hospitalPay", "&nbsp;")%></td>
-	<td align=right><%=prop.getProperty("obPay", "&nbsp;")%></td>
-	<td align=right><%=prop.getProperty("explain", "&nbsp;")%></td>
-</tr>         
+		<tr <%=color %>>
+			<td align="center"><%=prop.getProperty("account", "&nbsp;")%></td>
+			<!--  >td><%=prop.getProperty("demo_docname", "&nbsp;")%></td -->
+			<td><%=prop.getProperty("demo_name", "&nbsp;")%></td>
+			<td align="center"><%=prop.getProperty("demo_doc", "&nbsp;")%></td>
+			<td align="center"><%=prop.getProperty("demo_hin", "&nbsp;")%></td>
+			<td align="center"><%=prop.getProperty("servicedate", "&nbsp;")%></td>
+			<td align="center"><%=prop.getProperty("servicecode", "&nbsp;")%></td>
+			<!--<td width="8%"><%=serviceno%></td>-->
+			<td align=right><%=prop.getProperty("amountsubmit", "&nbsp;")%></td>
+			<td align=right><%=prop.getProperty("amountpay", "&nbsp;")%></td>
+			<td align=right><%=prop.getProperty("clinicPay", "&nbsp;")%></td>
+			<td align=right><%=prop.getProperty("hospitalPay", "&nbsp;")%></td>
+			<td align=right><%=prop.getProperty("obPay", "&nbsp;")%></td>
+			<td align=right><%=prop.getProperty("explain", "&nbsp;")%></td>
+		</tr>
 
-<% } }
+		<% } }
 }
 %>
-<%-- 	
+		<%-- 	
 	String[] param = new String[2];
 	param[0] = raNo;
 	param[1] = proNo+"%";
@@ -550,7 +556,7 @@ BigLTotal = BigLTotal.add(BigLocalHTotal);
 </table>
 
 --%>
-<%
+		<%
 
 String transaction="", content="", balancefwd="", xtotal="", other_total="", ob_total=""; 
 ResultSet rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
@@ -583,6 +589,6 @@ if (recordAffected != 1) System.out.println("genONRASummary.jsp: update_rahd_con
 apptMainBean.closePstmtConn();
 
 %>
-
+	
 </body>
 </html>

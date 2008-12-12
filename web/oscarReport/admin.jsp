@@ -25,7 +25,7 @@
 -->
 
 <!--oscarMessenger Code block -->
-    <%@ taglib uri="/WEB-INF/jaytags.tld" prefix="jaymessage" %>
+<%@ taglib uri="/WEB-INF/jaytags.tld" prefix="jaymessage"%>
 <!--/oscarMessenger Code block -->
 
 
@@ -39,7 +39,7 @@
   //display the main provider page
   //includeing the provider name and a month calendar
 %>
-<%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp"%>
 
 <html>
 <head>
@@ -81,165 +81,183 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-  <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <tr><th align="CENTER" bgcolor="#CCCCFF">ADMINISTRATIVE PAGE</th></tr>
-  </table>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td></td>
-      <td align="right"><a href="../logout.jsp">Log Out </a></td>
-  </tr>
-  </table>
-  
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
-        <p>Provider</p>
-      </td>
-    </tr>
-    <tr bgcolor="#EEEEFF"> 
-      <td> 
-        <p><a href="provideraddarecord.htm">Add a Provider Record</a><br>
-          <a href="providersearchrecords.htm">Search/Edit/Delete Provider Records</a></p>
-        </td>
-    </tr>
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2">Group No</td>
-    </tr>
-    <tr bgcolor="#EEEEFF"> 
-      <td> 
-        <p><a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Add a Group No Record</a><br>
-          <a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Search/Edit/Delete Group No Records</a></p>
-      </td>
-    </tr>
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> Preference</td>
-    </tr>
-    <tr bgcolor="#EEEEFF"> 
-      <td> 
-        <p><a href="preferenceaddarecord.jsp">Add a Preference Record for a User</a><br>
-          <a href="preferencesearchrecords.htm">Search/Edit/Delete Preference 
-          Records</a></p>
-      </td>
-    </tr>
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2">Security</td>
-    </tr>
-    <tr bgcolor="#EEEEFF"> 
-      <td> 
-        <p><a href="securityaddarecord.jsp">Add a Login Record</a><br>
-          <a href="securitysearchrecords.htm">Search/Edit/Delete Security Records</a></p>
-      </td>
-    </tr>
-      
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
-        <p>Schedule</p>
-      </td>
-    </tr>
-    <tr> 
-      <td> 
-	      <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;" title="Holiday and Schedule Setting" > Schedule Setting</a> 
-         
-        </td>
-    </tr>
-      
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
-        <p>Billing</p>
-      </td>
-    </tr>
-    <tr> 
-      <td> 
-        <p>
-             <a href=# onClick ="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=')">Simulation OHIP Diskette</a><br>
-        	
-<a href=# onClick ="popupPage(800,600,'../billing/billingOHIPreport.jsp')">Generate OHIP Diskette</a><br>
-           <a href=# onClick ="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=')">Billing Correction</a><br>
-          <a href=# onClick ="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all')">INR Batch Billing</a><br>
-          	         <a href=# onClick ="popupPage(600,800,'../billing/billingRA.jsp')">Billing Reconcilliation</a><br>
-	           	         <a href=# onClick ="popupPage(600,1000,'../billing/billingEA.jsp')">EDT Billing Report Generator</a><br>
-         	         
-         
-        </td>
-    </tr>
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> Demographic </td>
-    </tr>
-    <tr>
-      <td> <a href="demographicaddarecord.htm">Add a Demographic Record</a><br>
-        <!--a href="demographicsearch.htm">Search/Edit/Delete Demographic Records 
-        </a--> </td>
-    </tr>
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> 
-        <p>Resource</p>
-      </td>
-    </tr>
-    <tr> 
-      <td> <a href="#" ONCLICK ="popupPage(200,300,'resourcebaseurl.jsp');return false;" title="Holiday and Schedule Setting" > 
-        Base URL Setting</a> </td>
-    </tr>
-  </table>
+<table cellspacing="0" cellpadding="2" width="100%" border="0">
+	<tr>
+		<th align="CENTER" bgcolor="#CCCCFF">ADMINISTRATIVE PAGE</th>
+	</tr>
+</table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr>
+		<td></td>
+		<td align="right"><a href="../logout.jsp">Log Out </a></td>
+	</tr>
+</table>
+
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">
+		<p>Provider</p>
+		</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td>
+		<p><a href="provideraddarecord.htm">Add a Provider Record</a><br>
+		<a href="providersearchrecords.htm">Search/Edit/Delete Provider
+		Records</a></p>
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">Group No</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td>
+		<p><a href=#
+			onClick="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Add
+		a Group No Record</a><br>
+		<a href=#
+			onClick="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Search/Edit/Delete
+		Group No Records</a></p>
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">Preference</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td>
+		<p><a href="preferenceaddarecord.jsp">Add a Preference Record
+		for a User</a><br>
+		<a href="preferencesearchrecords.htm">Search/Edit/Delete
+		Preference Records</a></p>
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">Security</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td>
+		<p><a href="securityaddarecord.jsp">Add a Login Record</a><br>
+		<a href="securitysearchrecords.htm">Search/Edit/Delete Security
+		Records</a></p>
+		</td>
+	</tr>
+
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">
+		<p>Schedule</p>
+		</td>
+	</tr>
+	<tr>
+		<td><a href="#"
+			ONCLICK="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;"
+			title="Holiday and Schedule Setting"> Schedule Setting</a></td>
+	</tr>
+
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">
+		<p>Billing</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href=#
+			onClick="popupPage(800,700,'../billing/billingOHIPsimulation.jsp?html=')">Simulation
+		OHIP Diskette</a><br>
+
+		<a href=#
+			onClick="popupPage(800,600,'../billing/billingOHIPreport.jsp')">Generate
+		OHIP Diskette</a><br>
+		<a href=#
+			onClick="popupPage(800,640,'../billing/billingCorrection.jsp?billing_no=')">Billing
+		Correction</a><br>
+		<a href=#
+			onClick="popupPage(800,640,'../billing/inr/reportINR.jsp?provider_no=all')">INR
+		Batch Billing</a><br>
+		<a href=# onClick="popupPage(600,800,'../billing/billingRA.jsp')">Billing
+		Reconcilliation</a><br>
+		<a href=# onClick="popupPage(600,1000,'../billing/billingEA.jsp')">EDT
+		Billing Report Generator</a><br>
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">Demographic</td>
+	</tr>
+	<tr>
+		<td><a href="demographicaddarecord.htm">Add a Demographic
+		Record</a><br>
+		<!--a href="demographicsearch.htm">Search/Edit/Delete Demographic Records 
+        </a--></td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">
+		<p>Resource</p>
+		</td>
+	</tr>
+	<tr>
+		<td><a href="#"
+			ONCLICK="popupPage(200,300,'resourcebaseurl.jsp');return false;"
+			title="Holiday and Schedule Setting"> Base URL Setting</a></td>
+	</tr>
+</table>
 <!--oscarMessenger Code block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr>
-      <td bgcolor="#CCCCFF" colspan="2"> oscarMessenger </td>
-    </tr>
-    <tr>
-        <td colspan="2" nowrap>
-             <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&userName=<%=userfirstname%>%20<%=userlastname%>')">
-             <jaymessage:newMessages providerNo="<%=curProvider_no%>"/></a>
-        </td>
-    </tr>
-  </table>
-      <!--oscarReport Code block -->
-        <table cellspacing="0" cellpadding="2" width="90%" border="0">
-          <tr>
-            <td bgcolor="#CCCCFF" colspan="2"> oscarReport </td>
-          </tr>
-          <tr>
-              <td colspan="2" nowrap>
-                   <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarReport/dbReportAgeSex.jsp')">
-                  Age-Sex Report</a><br>
-                    <a HREF="#" ONCLICK ="popupOscarRx(600,1000,'../oscarReport/oscarReportVisitControl.jsp')">
-                  Visit Report</a>
-              </td>
-          </tr>
-        </table>
-<!--/oscarReport Code block -->
-<!--/oscarMessenger Code block -->
-
-<!--e forms block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan="2"> E-form</td>
-    </tr>
-    <tr> 
-      <td> <a href="../e_form/UploadHtml.jsp">Upload a Form</a><br>
-        </td>
-    </tr>
-    <tr> 
-      <td> <a href="../e_form/UploadImages.jsp">Upload an Image</a><br>
-        </td>
-    </tr>
-  </table>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr>
+		<td bgcolor="#CCCCFF" colspan="2">oscarMessenger</td>
+	</tr>
+	<tr>
+		<td colspan="2" nowrap><a HREF="#"
+			ONCLICK="popupOscarRx(600,900,'../../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&userName=<%=userfirstname%>%20<%=userlastname%>')">
+		<jaymessage:newMessages providerNo="<%=curProvider_no%>" /></a></td>
+	</tr>
+</table>
+<!--oscarReport Code block -->
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr>
+		<td bgcolor="#CCCCFF" colspan="2">oscarReport</td>
+	</tr>
+	<tr>
+		<td colspan="2" nowrap><a HREF="#"
+			ONCLICK="popupOscarRx(600,900,'../oscarReport/dbReportAgeSex.jsp')">
+		Age-Sex Report</a><br>
+		<a HREF="#"
+			ONCLICK="popupOscarRx(600,1000,'../oscarReport/oscarReportVisitControl.jsp')">
+		Visit Report</a></td>
+	</tr>
+</table>
+<!--/oscarReport Code block --> <!--/oscarMessenger Code block --> <!--e forms block -->
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2">E-form</td>
+	</tr>
+	<tr>
+		<td><a href="../e_form/UploadHtml.jsp">Upload a Form</a><br>
+		</td>
+	</tr>
+	<tr>
+		<td><a href="../e_form/UploadImages.jsp">Upload an Image</a><br>
+		</td>
+	</tr>
+</table>
 <!--// end e forms block -->
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr>
-      <td bgcolor="#CCCCFF"><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" > Update Resident </a></td>
-    </tr>
-  </table>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr>
+		<td bgcolor="#CCCCFF"><a href="#"
+			ONCLICK="popupPage(550,800,'updatedemographicprovider.jsp');return false;">
+		Update Resident </a></td>
+	</tr>
+</table>
 
-  <hr color='orange'>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-  </tr>
-  </table>
+<hr color='orange'>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr>
+		<td></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 </center>
 
 </body>

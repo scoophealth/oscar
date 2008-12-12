@@ -21,11 +21,11 @@
 * Toronto, Ontario, Canada 
 */
  -->
- 
- <%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*"  %>
-<%@ page import="java.util.Calendar,java.util.GregorianCalendar" %>
-	<%
+
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="org.caisi.model.*"%>
+<%@ page import="java.util.Calendar,java.util.GregorianCalendar"%>
+<%
 	    GregorianCalendar now=new GregorianCalendar();
 	    int curYear=now.get(Calendar.YEAR);
 	    int curMonth=now.get(Calendar.MONTH);
@@ -33,13 +33,9 @@
 	%>
 <html>
 <head>
-	<style type="text/css">
-	/* <![CDATA[ */
-	@import "<html:rewrite page="/css/core.css" />";
-	/*  ]]> */
-	</style>
-	
-	<script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<script>
 	function openBrWindow(theURL,winName,features) { 
 	  window.open(theURL,winName,features);
 	}
@@ -52,54 +48,56 @@
 	}
 	</script>
 
-	<title>Caisi Roles</title>
-	
+<title>Caisi Roles</title>
+
 </head>
 <body>
-<div style="color:red">
-<%@ include file="messages.jsp" %>
+<div style="color: red"><%@ include file="messages.jsp"%>
 </div>
-<div style="overflow:auto; height:480px; width:480px;">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#CCCCFF">
-	  <tr class="subject"><th colspan="4">Caisi Roles</th></tr>
-	<tr>
-            <td class="searchTitle" colspan="3">Existing Caisi Role List</td>
-            <td class="searchTitle" colspan="1">User Defined</td>
+<div style="overflow: auto; height: 480px; width: 480px;">
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	bgcolor="#CCCCFF">
+	<tr class="subject">
+		<th colspan="4">Caisi Roles</th>
 	</tr>
-	
+	<tr>
+		<td class="searchTitle" colspan="3">Existing Caisi Role List</td>
+		<td class="searchTitle" colspan="1">User Defined</td>
+	</tr>
+
 	<c:forEach var="role" items="${requestScope.roleList}">
-	<tr>
-            <td class="fieldValue" colspan="3"><c:out value="${role.name}" /></td>
-            <td class="fieldValue" ><c:out value="${role.userDefined}" /></td>
-	</tr>
+		<tr>
+			<td class="fieldValue" colspan="3"><c:out value="${role.name}" /></td>
+			<td class="fieldValue"><c:out value="${role.userDefined}" /></td>
+		</tr>
 
 	</c:forEach>
 	<tr>
-            <td class="searchTitle" colspan="4">Create New Caisi Role</td>
+		<td class="searchTitle" colspan="4">Create New Caisi Role</td>
 	</tr>
 </table>
 
 <br>
 
-<table width="60%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-	<html:form action="/CaisiRole" onsubmit="return validateRoleForm(this);">
-	<input type="hidden" name="method" value="save">
-              <tr>
-                      <td class="fieldTitle">Name:</td>
-                      <td class="fieldValue">
-                      	<html:text property="role.name" size="50" maxlength="255" />
-                      </td>
-              </tr>
-              <tr>
-              	<td class="fieldValue" colspan="2" align="left">
-				        <html:submit styleClass="button">Save</html:submit>				        
-				        <input type="button" value="close" onclick="self.close();"/>
-				</td>
-	
-				
-              </tr>
-		</html:form>
-</table>  
-</div>    
+<table width="60%" border="0" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0">
+	<html:form action="/CaisiRole"
+		onsubmit="return validateRoleForm(this);">
+		<input type="hidden" name="method" value="save">
+		<tr>
+			<td class="fieldTitle">Name:</td>
+			<td class="fieldValue"><html:text property="role.name" size="50"
+				maxlength="255" /></td>
+		</tr>
+		<tr>
+			<td class="fieldValue" colspan="2" align="left"><html:submit
+				styleClass="button">Save</html:submit> <input type="button"
+				value="close" onclick="self.close();" /></td>
+
+
+		</tr>
+	</html:form>
+</table>
+</div>
 </body>
 </html>

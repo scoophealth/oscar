@@ -1,8 +1,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,oscar.oscarDB.*" %>
-<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
-<%@ include file="/taglibs.jsp" %>
+<%@page import="java.sql.*,oscar.oscarDB.*"%>
+<%@page
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+<%@ include file="/taglibs.jsp"%>
 <%
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -84,10 +85,10 @@ String pSize        = request.getParameter("pSize");
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Add To Intake</title>
-	<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Add To Intake</title>
+<script type="text/javascript">
 	    function type_selected(nTemplate, eType) {
 		if (nTemplate=='4' || nTemplate=='5' || nTemplate=='6') {
 		    for (var i=0; i<eType.length; i++) {
@@ -117,49 +118,45 @@ String pSize        = request.getParameter("pSize");
 		popup('200','300',eURL,'mkdrpbx');
 	    }
 	</script>
-        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
-    </head>
-    <body>
-        <form name="addToIntakeFrm" method="post" action="AddToIntake.jsp" onsubmit="return type_selected(<%=nodeTemplate%>, elementType);">
-            
-            <input type="hidden" name="newpos"                value="<%=pSize%>"/>
-            
-            <input type="hidden" name="parent_intake_node_id" value="<%=id%>" />
-            
-            
-            <%if (nodeTemplate == null) {%>
-            NO ELEMENT!
-            <%}else if(nodeTemplate.equals("1") ){%>
-            Add Section  
-            <input type="hidden" name="elementType" value="4"/>
-            <%}else if(nodeTemplate.equals("3") ){%>
-            NADA
-            <%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%>
-            +<input type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br/>
-            +<input type="radio" name="elementType" value="6" onclick="mandSet(1);"> answer compound</input> <br/>
-            +<input type="radio" name="elementType" value="7" onclick="mandSet(0);"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="15" onclick="mandSet(0); makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
-            +<input type="radio" name="elementType" value="8" onclick="mandSet(0);"> answer scalar text</input> <br/>
-            +<input type="radio" name="elementType" value="13" onclick="mandSet(0);"> answer scalar note</input><br/>
-            <%}else if(nodeTemplate.equals("6") ){%>
-            +<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br/>
-            +<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br/>
-            +<input type="radio" name="elementType" value="8"> answer scalar text</input> <br/>
-            +<input type="radio" name="elementType" value="13"> answer scalar note</input><br/>
-            <%}else{%>
-            
-            <%}%>
-            
-      
-            <br> Label Text (Leave blank for no text):
-            <input type="text" name="intake_node_label" />
-	    <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
-	    <input type="checkbox" name="mandatory" onclick="doMandatory();">Mandatory</input>
-	    <input type="hidden" name="mandatorySet"/>
-            <%}%>
-            <input type="submit" value="Add" />
-        </form>  
-    </body>
+<script language="javascript" type="text/javascript"
+	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
+</head>
+<body>
+<form name="addToIntakeFrm" method="post" action="AddToIntake.jsp"
+	onsubmit="return type_selected(<%=nodeTemplate%>, elementType);">
+
+<input type="hidden" name="newpos" value="<%=pSize%>" /> <input
+	type="hidden" name="parent_intake_node_id" value="<%=id%>" /> <%if (nodeTemplate == null) {%>
+NO ELEMENT! <%}else if(nodeTemplate.equals("1") ){%> Add Section <input
+	type="hidden" name="elementType" value="4" /> <%}else if(nodeTemplate.equals("3") ){%>
+NADA <%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%> +<input
+	type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br />
++<input type="radio" name="elementType" value="6" onclick="mandSet(1);">
+answer compound</input> <br />
++<input type="radio" name="elementType" value="7" onclick="mandSet(0);">
+answer scalar choice</input> <br />
++<input type="radio" name="elementType" value="15"
+	onclick="mandSet(0); makeDropbox();"> answer scalar choice
+(dropbox)</input> <br />
++<input type="radio" name="elementType" value="8" onclick="mandSet(0);">
+answer scalar text</input> <br />
++<input type="radio" name="elementType" value="13" onclick="mandSet(0);">
+answer scalar note</input><br />
+<%}else if(nodeTemplate.equals("6") ){%> +<input type="radio"
+	name="elementType" value="7"> answer scalar choice</input> <br />
++<input type="radio" name="elementType" value="15"
+	onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br />
++<input type="radio" name="elementType" value="8"> answer scalar
+text</input> <br />
++<input type="radio" name="elementType" value="13"> answer
+scalar note</input><br />
+<%}else{%> <%}%> <br>
+Label Text (Leave blank for no text): <input type="text"
+	name="intake_node_label" /> <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
+<input type="checkbox" name="mandatory" onclick="doMandatory();">Mandatory</input>
+<input type="hidden" name="mandatorySet" /> <%}%> <input type="submit"
+	value="Add" /></form>
+</body>
 </html>
 
 <%!

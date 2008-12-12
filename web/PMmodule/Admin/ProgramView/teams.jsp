@@ -31,14 +31,18 @@
 </table>
 </div>
 <!--  show current staff -->
-<display:table class="simple" cellspacing="2" cellpadding="3" id="team" name="teams" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="team"
+	name="teams" export="false" pagesize="0"
+	requestURI="/PMmodule/ProgramManagerView.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="No teams are currently defined for this program." />
+	<display:setProperty name="basic.msg.empty_list"
+		value="No teams are currently defined for this program." />
 	<display:column property="name" sortable="true" title="Name" />
 	<display:column sortable="true" title="Staff">
 		<ul>
 			<c:forEach var="provider" items="${team.providers}">
-				<li><c:out value="${provider.provider.formattedName}" /> (<c:out value="${provider.role.name}" />)</li>
+				<li><c:out value="${provider.provider.formattedName}" /> (<c:out
+					value="${provider.role.name}" />)</li>
 			</c:forEach>
 		</ul>
 	</display:column>

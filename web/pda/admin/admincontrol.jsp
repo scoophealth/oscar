@@ -30,9 +30,10 @@
   //instatiate/configure the main bean, forward the request to the output file
 %>
 
-<%@ page errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbconnection.jsp" %>  
+<%@ page errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbconnection.jsp"%>
 
 <%
   String orderby="", limit="", limit1="", limit2="";

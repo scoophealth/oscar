@@ -1,9 +1,12 @@
 
-<%@page import="org.oscarehr.common.model.Provider"%><%@page import="java.util.Arrays"%>
+<%@page import="org.oscarehr.common.model.Provider"%><%@page
+	import="java.util.Arrays"%>
 <%@page import="org.oscarehr.common.model.FacilityDemographicPrimaryKey"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="java.util.Enumeration"%>
-<%@page import="org.oscarehr.PMmodule.web.ManageIntegratorLinkedDemographics"%><%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page
+	import="org.oscarehr.PMmodule.web.ManageIntegratorLinkedDemographics"%><%@page
+	import="org.oscarehr.util.SessionConstants"%>
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));

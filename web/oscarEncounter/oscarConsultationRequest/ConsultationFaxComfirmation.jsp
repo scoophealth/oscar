@@ -24,11 +24,12 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.*, org.w3c.dom.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="java.util.*, org.w3c.dom.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
 if(session.getValue("user") == null)
@@ -42,65 +43,44 @@ if(session.getValue("user") == null)
 %>
 <html>
 <head>
-<title>
-OscarFax - Consultations
-</title>
-<html:base/>
+<title>OscarFax - Consultations</title>
+<html:base />
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Fax
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                         consultation Requests
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-              &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-            
-            <%if (jobId == null){%>
-               Your fax has not been accepted.  <br>
-               Fax Error Message : <%=oscarFaxError%>
-
-
-            <%}else{%>
-               Your fax has been accepted. <br>
-               request Id = <%=requestId%> <br>
-               job Id = <%= jobId %>
-
-            <%}%>
- 
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-              &nbsp; 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-              &nbsp;
-            </td>
-        </tr>
-    </table>
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Fax</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>consultation Requests</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<%if (jobId == null){%> Your fax has not been accepted. <br>
+		Fax Error Message : <%=oscarFaxError%> <%}else{%> Your fax has been
+		accepted. <br>
+		request Id = <%=requestId%> <br>
+		job Id = <%= jobId %> <%}%>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html>

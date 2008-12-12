@@ -24,7 +24,7 @@
  */
 -->
 
- <%    
+<%    
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
@@ -36,34 +36,21 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 <html>
 <head>
 <title>Billing Report</title>
-<link rel="stylesheet" href="../web.css" >
-<style type="text/css">
-<!--
-.bodytext
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<link rel="stylesheet" href="../web.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!--
 
 function selectprovider(s) {
@@ -79,29 +66,38 @@ function selectprovider(s) {
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Generate Billing Report by Appointment</font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Generate
+		Billing Report by Appointment</font></th>
+	</tr>
 </table>
-<table width="100%" border="0" cellspacing="1" cellpadding="1" bgcolor="#0066CC" bordercolor="#0066CC">
-  <tr>
-    <td bgcolor="#003366" class="bodytext"> 
-      <div align="center"><a href="billingreport.jsp?displaymode=billreport&providerview=<%=providerview%>">Generate Billing Report</a></div>
-    </td>
-    <td bgcolor="#CCCCCC" class="bodytext"> 
-      <div align="center"><a href="billingAppointment.jsp?displaymode=billreport&providerview=<%=providerview%>" >Search Unbilled Appointment</a></div></td>
-    </tr>
-</table> 
+<table width="100%" border="0" cellspacing="1" cellpadding="1"
+	bgcolor="#0066CC" bordercolor="#0066CC">
+	<tr>
+		<td bgcolor="#003366" class="bodytext">
+		<div align="center"><a
+			href="billingreport.jsp?displaymode=billreport&providerview=<%=providerview%>">Generate
+		Billing Report</a></div>
+		</td>
+		<td bgcolor="#CCCCCC" class="bodytext">
+		<div align="center"><a
+			href="billingAppointment.jsp?displaymode=billreport&providerview=<%=providerview%>">Search
+		Unbilled Appointment</a></div>
+		</td>
+	</tr>
+</table>
 
 
 <table width="100%" border="0" bgcolor="#003366">
-  <form name="form1" method="post" action="genBillingReport.jsp"><tr> 
-      <td width="30%" align="right"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Select 
-             provider </font></b></td>
-      <td width="50%"><font face="Arial, Helvetica, sans-serif" size="2"> 
-        <select name="provider_no">
-        <% String proFirst="";
+	<form name="form1" method="post" action="genBillingReport.jsp">
+	<tr>
+		<td width="30%" align="right"><b><font
+			face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Select
+		provider </font></b></td>
+		<td width="50%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <select name="provider_no">
+			<% String proFirst="";
            String proLast="";
            String proOHIP="";
            String specialty_code; 
@@ -118,24 +114,25 @@ String billinggroup_no;
  specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 
 %>
-            <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-<%
+			<option value="<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
+			<%=proFirst%></option>
+			<%
       }      
   
   %>
-                
-        </select>
-        </font></td>
-   
-      <td width="20%">  <input type="hidden" name="verCode" value="V03">
-        <input type="submit" name="Submit" value="Create Report">
-      </td>
-    
-    </tr></form>
-  </table>
-  <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-  <p>&nbsp; </p>
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+
+		</select> </font></td>
+
+		<td width="20%"><input type="hidden" name="verCode" value="V03">
+		<input type="submit" name="Submit" value="Create Report"></td>
+
+	</tr>
+	</form>
+</table>
+<p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
+<p>&nbsp;</p>
+<%@ include file="../demographic/zfooterbackclose.jsp"%>
 
 </body>
 </html>

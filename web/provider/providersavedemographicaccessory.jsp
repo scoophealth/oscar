@@ -26,10 +26,12 @@
 
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
-%>    
-<%@ page  import="java.sql.*, java.util.*, java.net.*, oscar.*"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+%>
+<%@ page import="java.sql.*, java.util.*, java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_demographicaccessorycount", "select count(demographic_no) from demographicaccessory where demographic_no=?"},
@@ -43,14 +45,14 @@
 <html>
 <head>
 </head>
-<body >
+<body>
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD/UPDATE AN ENCOUNTERDEMOACCS RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD/UPDATE AN ENCOUNTERDEMOACCS RECORD</font></th>
+	</tr>
+</table>
 <%
   String content="";//default is not null temp=null, 
   content=SxmlMisc.createXmlDataString(request, "xml_");
@@ -77,7 +79,9 @@
       
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Updaten of an demographic acce Record.</h1></p>
+<p>
+<h1>Successful Updaten of an demographic acce Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
      	//self.history.go(-1);return false;//this.location.reload();	//self.opener.refresh();
 function dunescape(s) {
@@ -91,20 +95,20 @@ function dunescape(s) {
      	self.opener.document.encounter.xml_Medication.value = dunescape("<%=URLEncoder.encode(request.getParameter("xml_Medication"))%>");
      	self.opener.document.encounter.xml_Alert.value = dunescape("<%=URLEncoder.encode(request.getParameter("xml_Alert"))%>");
      	self.opener.document.encounter.xml_Family_Social_History.value = dunescape("<%=URLEncoder.encode(request.getParameter("xml_Family_Social_History"))%>");
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1>Sorry, Update has failed.</h1></p>
+<p>
+<h1>Sorry, Update has failed.</h1>
+</p>
 <%  
   }
   accsBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="self.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="self.close()"></form>
 </center>
 </body>
 </html>

@@ -23,29 +23,23 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.Measurements.msgCustomization"/>
-</title>
-<style type="text/css">
-body{
-    FONT-SIZE: 12px;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
-}
-</style>
-<html:base/>
+<title><bean:message
+	key="oscarEncounter.Measurements.msgCustomization" /></title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<html:base />
 <script type="text/javascript">
 function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
@@ -57,89 +51,145 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
+<html:errors />
 <table>
-    <tr>
-    <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgGroup"/></td>
-    </tr>
-    <tr>
-        <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'SetupStyleSheetList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementGroup"/></a>
-            </td></tr></table>
-        </td>
-        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'SetupGroupList.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.editMeasurementGroup"/></a>
-            </td></tr></table>
-        </td>
-    </tr>
-    <tr>
-    <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgType"/></td>
-    </tr>
-    <tr>
-         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(700,1000,'SetupDisplayMeasurementTypes.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementType"/></a>
-            </td></tr></table>
-        </td>
-         <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasurementType.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementType"/></a>
-            </td></tr></table>
-        </td>
-    </tr>
-    <tr>
-    <td class=Title colspan="2">Mappings</td>
-    </tr>
-    <tr>
-         <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'AddMeasurementMap.do')" class="messengerButtons">Add Measurement Mapping</a>
-            </td></tr></table>
-        </td>
-        <td >
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(600,700,'RemoveMeasurementMap.do')" class="messengerButtons">Remove/Remap Measurement Mapping</a>
-            </td></tr></table>
-        </td>
-    </tr>
-    <tr>
-    <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgMeasuringInstruction"/></td>
-    </tr>
-    <tr>
-        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'SetupAddMeasuringInstruction.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasuringInstruction"/></a>
-            </td></tr></table>
-        </td>
-    </tr>
-    <tr>
-    <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgStyleSheets"/></td>
-    </tr>
-    <tr>
-        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'SetupDisplayMeasurementStyleSheet.do')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.viewMeasurementStyleSheet"/></a>
-            </td></tr></table>
-        </td>
-        <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
-            <a href=# onClick="popupOscarConS(300,1000,'AddMeasurementStyleSheet.jsp')" class="messengerButtons"><bean:message key="oscarEncounter.Index.measurements.addMeasurementStyleSheet"/></a>
-            </td></tr></table>
-        </td>
-    </tr>
-    <tr><td></td></tr>
-    <tr>
-       <td>
-            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-            <a href="javascript:window.close()" class="messengerButtons"><bean:message key="global.btnClose"/></a>
-            </td></tr></table>
-        </td>
-    </tr>
+	<tr>
+		<td class=Title colspan="2"><bean:message
+			key="oscarEncounter.Measurements.msgGroup" /></td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'SetupStyleSheetList.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.addMeasurementGroup" /></a></td>
+			</tr>
+		</table>
+		</td>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'SetupGroupList.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.editMeasurementGroup" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class=Title colspan="2"><bean:message
+			key="oscarEncounter.Measurements.msgType" /></td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(700,1000,'SetupDisplayMeasurementTypes.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.viewMeasurementType" /></a></td>
+			</tr>
+		</table>
+		</td>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'SetupAddMeasurementType.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.addMeasurementType" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class=Title colspan="2">Mappings</td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'AddMeasurementMap.do')"
+					class="messengerButtons">Add Measurement Mapping</a></td>
+			</tr>
+		</table>
+		</td>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(600,700,'RemoveMeasurementMap.do')"
+					class="messengerButtons">Remove/Remap Measurement Mapping</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class=Title colspan="2"><bean:message
+			key="oscarEncounter.Measurements.msgMeasuringInstruction" /></td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'SetupAddMeasuringInstruction.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.addMeasuringInstruction" /></a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class=Title colspan="2"><bean:message
+			key="oscarEncounter.Measurements.msgStyleSheets" /></td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'SetupDisplayMeasurementStyleSheet.do')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.viewMeasurementStyleSheet" /></a>
+				</td>
+			</tr>
+		</table>
+		</td>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA" width="200"><a href=#
+					onClick="popupOscarConS(300,1000,'AddMeasurementStyleSheet.jsp')"
+					class="messengerButtons"><bean:message
+					key="oscarEncounter.Index.measurements.addMeasurementStyleSheet" /></a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	<tr>
+		<td>
+		<table class=messButtonsA cellspacing=0 cellpadding=3>
+			<tr>
+				<td class="messengerButtonsA"><a
+					href="javascript:window.close()" class="messengerButtons"><bean:message
+					key="global.btnClose" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 </table>
 </body>
 </html:html>
-                             
-                                   
-                                
+
+
+

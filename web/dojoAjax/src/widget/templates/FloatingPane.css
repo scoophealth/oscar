@@ -1,21 +1,15 @@
-
 /********** Outer Window ***************/
-
-.dojoFloatingPane {
-	/* essential css */
+.dojoFloatingPane { /* essential css */
 	position: absolute;
-	overflow: visible;		/* so drop shadow is displayed */
+	overflow: visible; /* so drop shadow is displayed */
 	z-index: 10;
-
 	/* styling css */
 	border: 1px solid;
 	border-color: ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight;
 	background-color: ThreeDFace;
 }
 
-
 /********** Title Bar ****************/
-
 .dojoFloatingPaneTitleBar {
 	vertical-align: top;
 	margin: 2px 2px 2px 2px;
@@ -44,14 +38,13 @@
 	margin-left: 5px;
 }
 
-.dojoFloatingPaneActions{
+.dojoFloatingPaneActions {
 	float: right;
 	position: absolute;
 	right: 2px;
 	top: 2px;
 	vertical-align: middle;
 }
-
 
 .dojoFloatingPaneActionItem {
 	vertical-align: middle;
@@ -60,11 +53,8 @@
 	width: 22px;
 }
 
-
-.dojoFloatingPaneTitleBarIcon {
-	/* essential css */
+.dojoFloatingPaneTitleBarIcon { /* essential css */
 	float: left;
-
 	/* styling css */
 	margin-left: 2px;
 	margin-right: 4px;
@@ -72,24 +62,26 @@
 }
 
 /* minimize/maximize icons are specified by CSS only */
-.dojoFloatingPaneMinimizeIcon,
-.dojoFloatingPaneMaximizeIcon,
-.dojoFloatingPaneRestoreIcon,
-.dojoFloatingPaneCloseIcon {
+.dojoFloatingPaneMinimizeIcon,.dojoFloatingPaneMaximizeIcon,.dojoFloatingPaneRestoreIcon,.dojoFloatingPaneCloseIcon
+	{
 	vertical-align: middle;
 	height: 22px;
 	width: 22px;
 	float: right;
 }
+
 .dojoFloatingPaneMinimizeIcon {
 	background-image: url(images/floatingPaneMinimize.gif);
 }
+
 .dojoFloatingPaneMaximizeIcon {
 	background-image: url(images/floatingPaneMaximize.gif);
 }
+
 .dojoFloatingPaneRestoreIcon {
 	background-image: url(images/floatingPaneRestore.gif);
 }
+
 .dojoFloatingPaneCloseIcon {
 	background-image: url(images/floatingPaneClose.gif);
 }
@@ -102,7 +94,6 @@
 }
 
 /************* Client Area ***************/
-
 .dojoFloatingPaneClient {
 	position: relative;
 	z-index: 10;
@@ -115,4 +106,3 @@
 	font-size: 12px;
 	overflow: auto;
 }
-

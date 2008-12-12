@@ -22,70 +22,72 @@
 */
  -->
 
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 
 <table width="100%" cellspacing="3" cellpadding="3">
-	 <tr>
-                <td align="left" colspan="2">
-<img src=images/caisi_logo.gif border="0" width="624" height="83"></td>
-     </tr>
+	<tr>
+		<td align="left" colspan="2"><img src=images/caisi_logo.gif
+			border="0" width="624" height="83"></td>
+	</tr>
 
-     <tr>
-                <td align="center" colspan="2">Vaccine Provider Report
-                <br/><br/>
-                </td>
-     </tr>
+	<tr>
+		<td align="center" colspan="2">Vaccine Provider Report <br />
+		<br />
+		</td>
+	</tr>
 
 	<tr>
 		<td>Client Name:</td>
-		<td><c:out value="${client_name}"/></td>
+		<td><c:out value="${client_name}" /></td>
 	</tr>
 	<tr>
 		<td>Date of Birth:</td>
-		<td><c:out value="${client_dob}"/></td>
+		<td><c:out value="${client_dob}" /></td>
 	</tr>
 	<tr>
 		<td>Health Card:</td>
-		<td><c:out value="${client_healthCard}"/></td>
+		<td><c:out value="${client_healthCard}" /></td>
 	</tr>
 	<Tr vheight="15">
-		<td></td><td></td>
+		<td></td>
+		<td></td>
 	</Tr>
 	<!-- allergies -->
 	<tr>
-		<td>Fever: <c:out value="${intakeMap['Fever']}"/></td>
-		<td>Reaction to Vaccine: <c:out value="${intakeMap['Reaction']}"/></td>
+		<td>Fever: <c:out value="${intakeMap['Fever']}" /></td>
+		<td>Reaction to Vaccine: <c:out value="${intakeMap['Reaction']}" /></td>
 	</tr>
 	<tr>
 		<td>Contraindicated Health Conditions:</td>
-		<td>
-			<c:out value="${intakeMap['Contraindicated Health Conditions']}"/>
-	</tr>	
-	<tr>
-		<td>Vaccination History:</td>
-		<td>
-			<c:out value="${intakeMap['Vaccination History']}"/>
-	</tr>		
-	<tr>
-		<td colspan="2"><a href="javascript:void(0);" onclick="window.open('oscarPrevention/index.jsp?demographic_no=<c:out value="${demographicNo}"/>','prevention','width=600,height=600');return false;">Immunization Record</a></td>
+		<td><c:out
+			value="${intakeMap['Contraindicated Health Conditions']}" />
 	</tr>
 	<tr>
-		<td colspan="2">
-			<input type="button" value="Print" onclick="window.print()"/>
-			&nbsp;
-			<input type="button" value="Back to Client Search" onclick="location.href='provider/er_clerk.jsp'"/>
-		</td>
+		<td>Vaccination History:</td>
+		<td><c:out value="${intakeMap['Vaccination History']}" />
+	</tr>
+	<tr>
+		<td colspan="2"><a href="javascript:void(0);"
+			onclick="window.open('oscarPrevention/index.jsp?demographic_no=<c:out value="${demographicNo}"/>','prevention','width=600,height=600');return false;">Immunization
+		Record</a></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="button" value="Print"
+			onclick="window.print()" /> &nbsp; <input type="button"
+			value="Back to Client Search"
+			onclick="location.href='provider/er_clerk.jsp'" /></td>
 	</tr>
 </table>
 
-<br/><br/>
-<h5>We cannot provide any assurance that the information enclosed is accurate,
-complete, or up-to-date for any particular purpose.  Please verify this
-information before relying upon it.  We do not assume responsibility for the
-consequences of any reliance on this information.</h5>
-<h5>The CAISI Project: Agencies and clients integrating care to end chronic
-homelessness. www.caisi.ca  please join the CAISI mailing lists at:
-https://lists.sourceforge.net/lists/listinfo/oscarmcmaster-caisi
+<br />
+<br />
+<h5>We cannot provide any assurance that the information enclosed
+is accurate, complete, or up-to-date for any particular purpose. Please
+verify this information before relying upon it. We do not assume
+responsibility for the consequences of any reliance on this information.</h5>
+<h5>The CAISI Project: Agencies and clients integrating care to end
+chronic homelessness. www.caisi.ca please join the CAISI mailing lists
+at: https://lists.sourceforge.net/lists/listinfo/oscarmcmaster-caisi
 Client Access to Integrated Services and Information (CAISI)</h5>
 
 

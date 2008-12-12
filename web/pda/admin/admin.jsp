@@ -34,7 +34,7 @@
   //display the main provider page
   //includeing the provider name and a month calendar
 %>
-<%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*,oscar.*" errorPage="errorpage.jsp"%>
 
 <html>
 <head>
@@ -60,94 +60,106 @@
     </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-  <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <tr><td align="CENTER" bgcolor="#486ebd"><div class="thheader"> ADMINISTRATIVE PAGE</div>
-    </td></tr>
-  </table>
-  
-  <p>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr> 
-      <td bgcolor="#CCCCCC" colspan="2"> 
-        <p>Provider</p>
-      </td>
-    </tr>
-    <tr> 
-      <td> 
-        <p><a href="provideraddarecord.htm">Add a Provider Record</a><br>
-          <a href="providersearchrecords.htm">Search/Edit/Delete Provider Records</a></p>
-        </td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr> 
-      <td bgcolor="#CCCCCC" colspan="2">Group No</td>
-    </tr>
-    <tr> 
-      <td> 
-        <p><a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Add a Group No Record</a><br>
-          <a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Search/Edit/Delete Group No Records</a></p>
-      </td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr> 
-      <td bgcolor="#CCCCCC" colspan="2"> Preference</td>
-    </tr>
-    <tr> 
-      <td> 
-        <p><a href="preferenceaddarecord.jsp">Add a Preference Record for a User</a><br>
-          <a href="preferencesearchrecords.htm">Search/Edit/Delete Preference 
-          Records</a></p>
-      </td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr> 
-      <td bgcolor="#CCCCCC" colspan="2">Security</td>
-    </tr>
-    <tr> 
-      <td>
-        <p><a href="securityaddarecord.jsp">Add a Login Record</a><br>
-          <a href="securitysearchrecords.htm">Search/Edit/Delete Security Records</a></p>
-        <p>&nbsp;</p>
-      </td>
-      <td>&nbsp;</td>
-    </tr>
-      <tr> 
-      <td bgcolor="#CCCCCC" colspan="2"> 
-        <p>Billing</p>
-      </td>
-    </tr>
-    <tr> 
-      <td> 
-        <p><a href=# onClick ="popupPage(800,600,'../billing/billingOHIPreport.jsp')">Generate OHIP Diskette</a><br>
-         
-        </td>
-      <td>&nbsp;</td>
-    </tr>
-  </table>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <tr> 
-      <td bgcolor="#CCCCCC" colspan="2"> 
-        Demographic
-      </td>
-    </tr>
-    <tr> 
-      <td> <a href="demographicaddarecord.htm">Add a Demographic Record</a><br>
-        <a href="demographicsearch.htm">Search/Edit/Delete Demographic Records 
-        </a> </td>
-      <td>&nbsp;</td>
-    </tr>
-  </table>
+<table cellspacing="0" cellpadding="2" width="100%" border="0">
+	<tr>
+		<td align="CENTER" bgcolor="#486ebd">
+		<div class="thheader">ADMINISTRATIVE PAGE</div>
+		</td>
+	</tr>
+</table>
 
-  <hr color='orange'>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td><a href="../index.html"> 
-        </a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-  </tr>
-  </table>
+<p>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">
+		<p>Provider</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href="provideraddarecord.htm">Add a Provider Record</a><br>
+		<a href="providersearchrecords.htm">Search/Edit/Delete Provider
+		Records</a></p>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">Group No</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href=#
+			onClick="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Add
+		a Group No Record</a><br>
+		<a href=#
+			onClick="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')">Search/Edit/Delete
+		Group No Records</a></p>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">Preference</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href="preferenceaddarecord.jsp">Add a Preference Record
+		for a User</a><br>
+		<a href="preferencesearchrecords.htm">Search/Edit/Delete
+		Preference Records</a></p>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">Security</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href="securityaddarecord.jsp">Add a Login Record</a><br>
+		<a href="securitysearchrecords.htm">Search/Edit/Delete Security
+		Records</a></p>
+		<p>&nbsp;</p>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">
+		<p>Billing</p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p><a href=#
+			onClick="popupPage(800,600,'../billing/billingOHIPreport.jsp')">Generate
+		OHIP Diskette</a><br>
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<tr>
+		<td bgcolor="#CCCCCC" colspan="2">Demographic</td>
+	</tr>
+	<tr>
+		<td><a href="demographicaddarecord.htm">Add a Demographic
+		Record</a><br>
+		<a href="demographicsearch.htm">Search/Edit/Delete Demographic
+		Records </a></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<hr color='orange'>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr>
+		<td><a href="../index.html"> </a></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 </center>
 
 </body>

@@ -1,5 +1,4 @@
-*
-{
+* {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -10,28 +9,25 @@
 	line-height: 17px;
 }
 
-body
-{
+body {
 	background: #bdc797;
 }
 
-#wrapper
-{
+#wrapper {
 	margin-left: auto;
 	margin-right: auto;
-	width:620px;
+	width: 620px;
 	background: #fff;
-	border-bottom: 1px solid #fff; /* strange hack to get white the whole way to bottom*/ 
+	border-bottom: 1px solid #fff;
+	/* strange hack to get white the whole way to bottom*/
 }
 
-#header
-{
+#header {
 	padding: 15px 40px;
 	background: #fff;
 }
 
-#header #ubc
-{
+#header #ubc {
 	height: 40px;
 	line-height: 40px;
 	font-size: 17px;
@@ -40,8 +36,7 @@ body
 	color: #127785;
 }
 
-#header #evidocs
-{
+#header #evidocs {
 	margin-top: 10px;
 	height: 40px;
 	line-height: 40px;
@@ -51,8 +46,7 @@ body
 	color: #127785;
 }
 
-#nav
-{
+#nav {
 	clear: both;
 	font-size: 17px;
 	line-height: 24px;
@@ -62,129 +56,108 @@ body
 	margin-bottom: 30px;
 }
 
-#nav span.ttl
-{
+#nav span.ttl {
 	font-size: 20px;
 }
 
-#nav a
-{
+#nav a {
 	font-size: 20px;
 	color: #127785;
 }
 
-#content
-{
+#content {
 	margin: 20px 40px;
 }
 
-#content h1, h2, h3
-{
+#content h1,h2,h3 {
 	font-weight: normal;
 	font-size: 20px;
 	margin: 17px 0px;
 	color: #127785;
 }
 
-#content h2
-{
+#content h2 {
 	font-size: 15px;
 	padding-top: 17px;
 	border-top: 1px dotted #127785;
 }
 
-#content h2.nobar
-{
+#content h2.nobar {
 	border: 0;
 	padding-top: 0;
 }
 
-#content h3
-{
+#content h3 {
 	font-size: 13px;
 }
 
-#content p, #content ul
-{	
+#content p,#content ul {
 	margin-bottom: 20px;
 }
 
-#content ul li
-{
+#content ul li {
 	margin: 0 0 0 20px;
 }
 
-#content ol li, #content ol li b, #content ol li a
-{
+#content ol li,#content ol li b,#content ol li a {
 	font-size: 11px;
 }
 
-#content a
-{
+#content a {
 	color: #127785;
 }
 
-#content a:hover
-{
+#content a:hover {
 	color: #5c4d46;
 }
 
-#content sup a
-{
+#content sup a {
 	font-size: 11px;
 	padding: 0 4px;
 	font-weight: bold;
 }
 
-#content table
-{
+#content table {
 	width: 520px;
 }
 
-#content table td
-{
+#content table td {
 	padding: 5px 2px;
 }
 
-#content table td
-{
+#content table td {
 	vertical-align: top;
 }
 
-#content table td.label
-{
+#content table td.label {
 	text-align: right;
 }
 
-#content input.bdr
-{
+#content input.bdr {
 	border: 1px solid #5c4d46;
 }
 
-#content input.btn
-{
+#content input.btn {
 	background-color: #f7f4d7;
 	padding: 2px 5px;
 	border: 1px solid #5c4d46;
 }
 
-#content table#FraminghamChart, #content table#UKPDSChart, #content table#key
-{
+#content table#FraminghamChart,#content table#UKPDSChart,#content table#key
+	{
 	border-collapse: collapse;
 	margin: 20px 0px;
 }
 
-#content table#key
-{
+#content table#key {
 	margin-top: 20px;
 }
-#content table#FraminghamChart
-{
+
+#content table#FraminghamChart {
 	margin-bottom: 20px;
 }
 
-#content table#FraminghamChart td, #content table#UKPDSChart td
-{
+#content table#FraminghamChart td,#content table#UKPDSChart td {
 	border: 1px solid #5c4d46;
 	text-align: center;
 	vertical-align: middle;

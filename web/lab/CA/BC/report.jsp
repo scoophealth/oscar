@@ -1,3 +1,4 @@
+
 <%
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
@@ -48,14 +49,16 @@ function Sign(check){
 <body>
 <form name="signForm" action="report.jsp" method="post">
 <table width="100%" class="DarkBG">
-  <tr> 
-    <td height="40" width="25"></td>
-    <td width="50%" align="left"> 
-      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - View Lab Report</font></font></b></font> 
-    </td>
-    <td align="right" class="Text" nowrap><%=(signed? ((db.getString(rs,"last_name")!=null)? "<b>Signed Off By: </b>" +  db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name") : "<b>Signed Off By Provider No.:</b> " + db.getString(rs,"provider_no")) + " on " + db.getString(rs,"signed_on") : "" )%>
-    	<input type="checkbox" name="cmd_sign" onclick="Sign(this);" value="<%=pid%>" <%=(signed? "checked disabled" : "")%>/><input type="hidden" name="pid" value="<%=pid%>" />Sign</td>
-  </tr>
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="50%" align="left"><font color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">PathNET - View Lab Report</font></font></b></font>
+		</td>
+		<td align="right" class="Text" nowrap><%=(signed? ((db.getString(rs,"last_name")!=null)? "<b>Signed Off By: </b>" +  db.getString(rs,"last_name") + ", " + db.getString(rs,"first_name") : "<b>Signed Off By Provider No.:</b> " + db.getString(rs,"provider_no")) + " on " + db.getString(rs,"signed_on") : "" )%>
+		<input type="checkbox" name="cmd_sign" onclick="Sign(this);"
+			value="<%=pid%>" <%=(signed? "checked disabled" : "")%> /><input
+			type="hidden" name="pid" value="<%=pid%>" />Sign</td>
+	</tr>
 </table>
 <%
 	}
@@ -69,9 +72,10 @@ function Sign(check){
 		age = oscar.MyDateFormat.getAge(calendar.get(java.util.GregorianCalendar.YEAR), calendar.get(java.util.GregorianCalendar.MONTH), calendar.get(java.util.GregorianCalendar.DATE));
 %>
 <table width="100%">
-  <tr>
-  	<td colspan="4" align="right"><input type="button" name="print" value="Print" onclick="window.print(); return false;" /></td>
-  </tr>
+	<tr>
+		<td colspan="4" align="right"><input type="button" name="print"
+			value="Print" onclick="window.print(); return false;" /></td>
+	</tr>
 	<tr>
 		<td class="Text" width="100px">Patient:</td>
 		<td class="Text"><%=db.getString(rs,"patient_name")%></td>
@@ -100,13 +104,15 @@ function Sign(check){
 		<td class="Text"></td>
 		<td class="Text"></td>
 	</tr>
-<%
+	<%
 	}
 	rs.close();
 	rs = db.GetSQL(select_header_information.replaceAll("@pid", pid));
 	if(rs.next()){
 %>
-	<tr><td colspan="4">&nbsp;</td></tr>
+	<tr>
+		<td colspan="4">&nbsp;</td>
+	</tr>
 	<tr>
 		<td class="Text">Lab:</td>
 		<td class="Text" colspan="3"><%=db.getString(rs,"filler_order_number").substring(0, db.getString(rs,"filler_order_number").indexOf("-", 3))%></td>
@@ -123,13 +129,13 @@ function Sign(check){
 		<td class="Text">Observed On:</td>
 		<td class="Text"><%=db.getString(rs,"observation_date_time")%></td>
 	</tr>
-<%
+	<%
 	}
 	rs.close();
 %>
 </table>
 <table cellspacing="0" cellpadding="0" width="100%">
-<%
+	<%
 	rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
 	boolean other = true;
 	String section = "";
@@ -144,7 +150,7 @@ function Sign(check){
 	<tr>
 		<td class="Section" colspan="7"><%=((db.getString(rs,"diagnostic_service_sect_id")!=null)? db.getString(rs,"diagnostic_service_sect_id") : "Other")%></td>
 	</tr>
-<%
+	<%
 			}
 %>
 	<tr>
@@ -159,7 +165,7 @@ function Sign(check){
 		<td class="Text" valign="top">Note:</td>
 		<td class="Text" colspan="6"><%=db.getString(rs,"obrnote").replaceAll("\\\\\\.br\\\\", " ")%>&nbsp;</td>
 	</tr>
-<%
+	<%
 		}
 		if(db.getString(rs,"set_id") != null){
 			if(rs.getInt("set_id") == 1){
@@ -167,14 +173,14 @@ function Sign(check){
 %>
 	<tr>
 		<td>&nbsp;</td>
-		<td style="width:15%;" class="Header">Test</td>
-		<td style="width:5%;" class="Header">Flags</td>
-		<td style="width:55%;" class="Header">Results</td>
-		<td style="width:8%;" class="Header">Range</td>
-		<td style="width:8%;" class="Header">Units</td>
+		<td style="width: 15%;" class="Header">Test</td>
+		<td style="width: 5%;" class="Header">Flags</td>
+		<td style="width: 55%;" class="Header">Results</td>
+		<td style="width: 8%;" class="Header">Range</td>
+		<td style="width: 8%;" class="Header">Units</td>
 		<td class="Header">Note</td>
 	</tr>
-<%
+	<%
 			}
 %>
 	<tr>
@@ -184,9 +190,11 @@ function Sign(check){
 		<td class="Text" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((db.getString(rs,"abnormal_flags").toUpperCase().equals("N"))? db.getString(rs,"observation_results") : "<b>" + db.getString(rs,"observation_results") + "</b>").replaceAll("\\\\\\.br\\\\", " ")%></td>
 		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=db.getString(rs,"reference_range")%></td>
 		<td class="Text" nowrap class="<%=(other? "LightBG" : "WhiteBG")%>"><%=db.getString(rs,"units")%></td>
-		<td class="Text" nowrap title="<%=db.getString(rs,"obxnote").replaceAll("\\\\\\.br\\\\", " ")%>" class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((db.getString(rs,"obxnote").length() < 20)? db.getString(rs,"obxnote") : db.getString(rs,"obxnote").substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
+		<td class="Text" nowrap
+			title="<%=db.getString(rs,"obxnote").replaceAll("\\\\\\.br\\\\", " ")%>"
+			class="<%=(other? "LightBG" : "WhiteBG")%>"><%=((db.getString(rs,"obxnote").length() < 20)? db.getString(rs,"obxnote") : db.getString(rs,"obxnote").substring(0, 20)).replaceAll("\\\\\\.br\\\\", " ")%></td>
 	</tr>
-<%
+	<%
 		}
 		other = !other;
 	}
@@ -195,13 +203,16 @@ function Sign(check){
 	if(rs.next()){
 %>
 	<tr>
-		<td colspan="7"><br><b>Notes:</b></td>
+		<td colspan="7"><br>
+		<b>Notes:</b></td>
 	</tr>
 	<tr>
-		<td colspan="7"><textarea name="notes" rows="7" style="width:100%;"><%=oscar.Misc.check(db.getString(rs,"notes"), "")%></textarea></td>
+		<td colspan="7"><textarea name="notes" rows="7"
+			style="width: 100%;"><%=oscar.Misc.check(db.getString(rs,"notes"), "")%></textarea></td>
 	</tr>
 	<tr class="LightBG">
-		<td colspan="7" align="right"><input type="submit" name="cmd_save" value="Save" /></td>
+		<td colspan="7" align="right"><input type="submit"
+			name="cmd_save" value="Save" /></td>
 	</tr>
 </table>
 <%

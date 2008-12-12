@@ -24,11 +24,12 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@page import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@page
+	import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*"%>
 
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -58,51 +59,14 @@ theRequests.estConsultationVecByDemographic(demo);
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.title"/>
+<title><bean:message
+	key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.title" />
 </title>
-<html:base/>
+<html:base />
 
 <!--META HTTP-EQUIV="Refresh" CONTENT="20;"-->
 
-<style type="text/css">
-td.stat1 {
-
-background-color: #eeeeFF;
-color : black;
-
-
-}
-
-th,td.stat2 {
-
-background-color: #ccccFF;
-color : black;
-
-
-}
-
-td.stat3 {
-
-background-color: #B8B8FF;
-color : black;
-
-
-}
-
-td.stat4 {
-
-background-color: #bbbbff;
-color : black;
-
-}
-
-th.VCRheads {
-background-color: #ddddff;
-color : black;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
 
@@ -135,63 +99,62 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Consultation
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header"NOWRAP >
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReqFor"/> <%=demographic.getLastName() %>, <%=demographic.getFirstName()%> <%=demographic.getSex()%> <%=demographic.getAge()%>
-                        </td>
-                        <td>
-                        </td>                        
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
-                <table>
-                    <tr>
-                        <td NOWRAP>
-                        <a href="javascript:popupOscarRx(700,960,'ConsultationFormRequest.jsp?de=<%=demo%>&teamVar=<%=team%>')">
-                        <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnNewCon"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td class="MainTableRightColumn">            
-                <table width="100%">                    
-                    <tr>
-                        <td>                            
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgClickLink"/>                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Consultation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td class="Header" NOWRAP><bean:message
+					key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgConsReqFor" />
+				<%=demographic.getLastName() %>, <%=demographic.getFirstName()%> <%=demographic.getSex()%>
+				<%=demographic.getAge()%></td>
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr style="vertical-align: top">
+		<td class="MainTableLeftColumn">
+		<table>
+			<tr>
+				<td NOWRAP><a
+					href="javascript:popupOscarRx(700,960,'ConsultationFormRequest.jsp?de=<%=demo%>&teamVar=<%=team%>')">
+				<bean:message
+					key="oscarEncounter.oscarConsultationRequest.ConsultChoice.btnNewCon" /></a>
+				</td>
+			</tr>
+		</table>
+		</td>
+		<td class="MainTableRightColumn">
+		<table width="100%">
+			<tr>
+				<td><bean:message
+					key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgClickLink" />
+				</td>
+			</tr>
+			<tr>
+				<td>
 
-                            <table border="0" width="80%" cellspacing="1">
-                                <tr>
-                                    <th align="left" class="VCRheads" width="75">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgStatus"/>
-                                    </th>
-                                    <th align="left" class="VCRheads">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPat"/>
-                                    </th>
-                                    <th align="left" class="VCRheads">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgProvider"/>
-                                    </th>
-                                    <th align="left" class="VCRheads">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgService"/>
-                                    </th>
-                                    <th align="left" class="VCRheads">
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgRefDate"/>
-                                    </th>
-                                </tr>
-                                <%  
+				<table border="0" width="80%" cellspacing="1">
+					<tr>
+						<th align="left" class="VCRheads" width="75"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgStatus" />
+						</th>
+						<th align="left" class="VCRheads"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPat" />
+						</th>
+						<th align="left" class="VCRheads"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgProvider" />
+						</th>
+						<th align="left" class="VCRheads"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgService" />
+						</th>
+						<th align="left" class="VCRheads"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgRefDate" />
+						</th>
+					</tr>
+					<%  
                                     for (int i = 0; i < theRequests.ids.size(); i++){
                                         System.out.println("requestID: " + theRequests.ids);
                                     String id      = (String) theRequests.ids.elementAt(i);
@@ -201,52 +164,39 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                                     String service = (String) theRequests.service.elementAt(i);
                                     String date    = (String) theRequests.date.elementAt(i);
                                 %>
-                                <tr>
-                                    <td class="stat<%=status%>" width="75">
-                                    <% if (status.equals("1")){ %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgNothingDone"/>
-                                    <% }else if(status.equals("2")) { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgSpecialistCall"/>
-                                    <% }else if(status.equals("3")) { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPatCall"/>
-                                    <% }else if(status.equals("4")) { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgAppMade"/>
-                                   <% } %>
-                                    </td>
-                                    <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">                                    
-                                    <%=patient%>
-                                    </a>
-                                    </td>
-                                    <td class="stat<%=status%>">
-                                    <%=provide%>
-                                    </td>
-                                    <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">
-                                    <%=service%>
-                                    </a>
-
-                                    </td>
-                                    <td class="stat<%=status%>">
-                                    <%=date%>
-                                    </td>
-                                </tr>
-                            <%}%>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+					<tr>
+						<td class="stat<%=status%>" width="75">
+						<% if (status.equals("1")){ %> <bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgNothingDone" />
+						<% }else if(status.equals("2")) { %> <bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgSpecialistCall" />
+						<% }else if(status.equals("3")) { %> <bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgPatCall" />
+						<% }else if(status.equals("4")) { %> <bean:message
+							key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.msgAppMade" />
+						<% } %>
+						</td>
+						<td class="stat<%=status%>"><a
+							href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">
+						<%=patient%> </a></td>
+						<td class="stat<%=status%>"><%=provide%></td>
+						<td class="stat<%=status%>"><a
+							href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">
+						<%=service%> </a></td>
+						<td class="stat<%=status%>"><%=date%></td>
+					</tr>
+					<%}%>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 

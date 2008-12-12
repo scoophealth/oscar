@@ -23,94 +23,97 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets" /></title>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <html:errors/>
-    <html:form action="/oscarEncounter/oscarMeasurements/DeleteMeasurementStyleSheet">
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.Measurements.msgMeasurements"/>
-            </td>
-            <td class="MainTableTopRowRightColumn" width="400">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td ><bean:message key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets"/></td>                                                
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">             
-            </td>
-            <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=700>
-                <tr>
-                    <td>
-                        <table>
-                            <tr>
-                            <logic:present name="messages">
-                                <logic:iterate id="msg" name="messages">
-                                <bean:write name="msg"/><br>
-                                </logic:iterate>
-                            </logic:present>
-                            </tr>
-                            <tr>
-                                <td>               
-                                    <tr>
-                                        <td align="left" class="Header" width="300">
-                                            <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingStyleSheetName"/>
-                                        </td>                                        
-                                        <td align="left" class="Header" width="10">
-                                            <bean:message key="oscarEncounter.oscarMeasurements.MeasurementAction.headingDelete"/>
-                                        </td>
-                                     </tr>
-                                    <logic:iterate id="styleSheet" name="styleSheets" property="styleSheetNameVector" indexId = "ctr" >
-                                    <tr class="data">
-                                        <td width="300"><bean:write name="styleSheet" property="styleSheetName" /></td>                                        
-                                        <td width="10"><input type="checkbox" name="deleteCheckbox" value="<bean:write name="styleSheet" property="cssId" />"</td>                            
-                                    </tr>                        
-                                    </logic:iterate>                                    
-                                </td>
-                            </tr>
-                        </table>
-                        <table>
-                            <tr>
-                                <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                                <td><input type="button" name="Button" value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>" onclick="submit();"/></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+<html:errors />
+<html:form
+	action="/oscarEncounter/oscarMeasurements/DeleteMeasurementStyleSheet">
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><bean:message
+				key="oscarEncounter.Measurements.msgMeasurements" /></td>
+			<td class="MainTableTopRowRightColumn" width="400">
+			<table class="TopStatusBar">
+				<tr>
+					<td><bean:message
+						key="oscarEncounter.Measurements.msgDisplayMeasurementStyleSheets" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn"></td>
+			<td class="MainTableRightColumn">
+			<table border=0 cellspacing=4 width=700>
+				<tr>
+					<td>
+					<table>
+						<tr>
+							<logic:present name="messages">
+								<logic:iterate id="msg" name="messages">
+									<bean:write name="msg" />
+									<br>
+								</logic:iterate>
+							</logic:present>
+						</tr>
+						<tr>
+							<td>
+						<tr>
+							<td align="left" class="Header" width="300"><bean:message
+								key="oscarEncounter.oscarMeasurements.Measurements.headingStyleSheetName" />
+							</td>
+							<td align="left" class="Header" width="10"><bean:message
+								key="oscarEncounter.oscarMeasurements.MeasurementAction.headingDelete" />
+							</td>
+						</tr>
+						<logic:iterate id="styleSheet" name="styleSheets"
+							property="styleSheetNameVector" indexId="ctr">
+							<tr class="data">
+								<td width="300"><bean:write name="styleSheet"
+									property="styleSheetName" /></td>
+								<td width="10"><input type="checkbox" name="deleteCheckbox"
+									value="<bean:write name="styleSheet" property="cssId" />"</td>
+							</tr>
+						</logic:iterate>
+						</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td><input type="button" name="Button"
+								value="<bean:message key="global.btnClose"/>"
+								onClick="window.close()"></td>
+							<td><input type="button" name="Button"
+								value="<bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingDelete"/>"
+								onclick="submit();" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
 </html:form>
 </body>
-</html:html>                                                                  
+</html:html>

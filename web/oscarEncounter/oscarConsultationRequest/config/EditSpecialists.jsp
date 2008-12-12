@@ -24,39 +24,22 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
-<jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
+<jsp:useBean id="displayServiceUtil" scope="request"
+	class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 <%
 displayServiceUtil.estSpecialistVector();
 %>
 <head>
-<title>
-<bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title"/>
+<title><bean:message
+	key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title" />
 </title>
-<html:base/>
-<style type="text/css">
-
-.ChooseRecipientsBox1{
-	font-size: 80%;
-	height: 340px;
-	/*width: 800px;*/
-	overflow: auto;
-        margin-left: 4px;
-	border: 1px solid #dcdcdc;
-}
-.currGroup{
-        color: #6666ff;
-        FONT-FAMILY: tahoma;
-        font-size: 14pt;
-}
-
-
-
-</style>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <script language="javascript">
 function BackToOscar()
@@ -65,71 +48,68 @@ function BackToOscar()
 }
 </script>
 <link rel="stylesheet" type="text/css" href="../../encounterStyles.css">
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
-<html:errors/>
+<html:errors />
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Consultation
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header" >
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title"/>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
-                <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Consultation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td class="Header"><bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title" />
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr style="vertical-align: top">
+		<td class="MainTableLeftColumn">
+		<%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
-            </td>
-            <td class="MainTableRightColumn">            
-                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+		</td>
+		<td class="MainTableRightColumn">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-            <!----Start new rows here-->                              
-               <tr>
-                  <td>
-                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgCheckOff"/><br>
-                  <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgClickOn"/><br>
+			<!----Start new rows here-->
+			<tr>
+				<td><bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgCheckOff" /><br>
+				<bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.msgClickOn" /><br>
 
 
-                  </td>
-               </tr>
-               <tr>
-                  <td>
-                     <html:form action="/oscarEncounter/EditSpecialists">
-                     <input type="submit" name="delete" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.btnDeleteSpecialist"/>">
-                     <div class="ChooseRecipientsBox1">
-                        <table>
-                           <tr>
-                              <th>
-                                 &nbsp;
-                              </th>
-                              <th>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.specialist"/>
-                              </th>
-                              <th>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.address"/>
-                              </th>
-                              <th>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.phone"/>
-                              </th>
-                              <th>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.fax"/>
-                              </th>
+				</td>
+			</tr>
+			<tr>
+				<td><html:form action="/oscarEncounter/EditSpecialists">
+					<input type="submit" name="delete"
+						value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.btnDeleteSpecialist"/>">
+					<div class="ChooseRecipientsBox1">
+					<table>
+						<tr>
+							<th>&nbsp;</th>
+							<th><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.specialist" />
+							</th>
+							<th><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.address" />
+							</th>
+							<th><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.phone" />
+							</th>
+							<th><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.fax" />
+							</th>
 
-                           </tr>
-                           <tr>
-                              <td>
-                              <!--<div class="ChooseRecipientsBox1">-->
-                              <%
+						</tr>
+						<tr>
+							<td><!--<div class="ChooseRecipientsBox1">--> <%
 
                                  for(int i=0;i < displayServiceUtil.specIdVec.size(); i++){
                                  String  specId     = (String) displayServiceUtil.specIdVec.elementAt(i);
@@ -140,54 +120,41 @@ function BackToOscar()
                                  String  phone      = (String) displayServiceUtil.phoneVec.elementAt(i);
                                  String  fax        = (String) displayServiceUtil.faxVec.elementAt(i);
                               %>
-
-                                 <tr>
-                                    <td>
-                                    <input type="checkbox" name="specialists" value="<%=specId%>">
-                                    </td>
-                                    <td>
-                                    <%
+							
+						<tr>
+							<td><input type="checkbox" name="specialists"
+								value="<%=specId%>"></td>
+							<td>
+							<%
                                       out.print("<a href=\"../../EditSpecialists.do?specId="+specId+"\"/>");
                                       out.print(lName+" "+fName+" "+proLetters);
                                       out.print("</a>");
                                     %>
-                                    </td>
-                                    <td>
-                                    <%=address %>
-                                    </td>
-                                    <td>
-                                    <%=phone%>
-                                    </td>
-                                    <td>
-                                    <%=fax%>
-                                    </td>
-                                 </tr>
-                              <% }%>
-                              </td>
-                           </tr>
-                        </table>
-                     </div>
-                     </html:form>
-                  </td>
-               </tr>
-            <!----End new rows here-->
+							</td>
+							<td><%=address %></td>
+							<td><%=phone%></td>
+							<td><%=fax%></td>
+						</tr>
+						<% }%>
+						</td>
+						</tr>
+					</table>
+					</div>
+				</html:form></td>
+			</tr>
+			<!----End new rows here-->
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 

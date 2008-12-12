@@ -29,13 +29,16 @@
   if(request.getParameter("oox")!=null) oox = Integer.parseInt(request.getParameter("oox"));
   if(request.getParameter("ooy")!=null) ooy = Integer.parseInt(request.getParameter("ooy"));
 %>
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilMisc, oscar.form.graphic.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilMisc, oscar.form.graphic.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> ANTENATAL RECORD </title>
-<link rel="stylesheet" href="antenatalrecordprint.css" >
+<title>ANTENATAL RECORD</title>
+<link rel="stylesheet" href="antenatalrecordprint.css">
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -53,11 +56,12 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 //-->
 </SCRIPT>
 </head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1"  bgcolor="navy">
+<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1"
+	bgcolor="navy">
 <img src="../images/formar2_99_08.gif">
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=50+oox%>px; top:<%=76+ooy%>px; width:400px; height:20px;"> 
-<%=Misc.JSEscape(request.getParameter("xml_name"))%>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=50+oox%>px; top:<%=76+ooy%>px; width:400px; height:20px;">
+<%=Misc.JSEscape(request.getParameter("xml_name"))%></div>
 
 <script language="JavaScript">
 ff(750,10,1,10,'<span class="title"><a href=# onClick="window.print()">Print</a></span>' );
@@ -451,106 +455,208 @@ ff(190,956,350,20,"<span class=\"smalltdname\">Canary - Mother's chart - forward
 ff(665,956,200,20,'<span class="smalltdname">7530-4654</span>' );
 </script>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=10+oox%>px; top:<%=ooy+172%>px; width:330px; height:60px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=UtilMisc.htmlJsEscape(request.getParameter("xml_rfi"))%>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=10+oox%>px; top:<%=ooy+172%>px; width:330px; height:60px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><%=UtilMisc.htmlJsEscape(request.getParameter("xml_rfi"))%></td>
+	</tr>
+</table>
 </div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=347+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=request.getParameter("xml_Alert_demographicaccessory")%>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=347+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><%=request.getParameter("xml_Alert_demographicaccessory")%></td>
+	</tr>
+</table>
 </div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=530+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=request.getParameter("xml_Medication_demographicaccessory")%>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=530+oox%>px; top:<%=ooy+172%>px; width:180px; height:50px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><%=request.getParameter("xml_Medication_demographicaccessory")%>
+		</td>
+	</tr>
+</table>
 </div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=410+oox%>px; top:<%=ooy+765%>px; width:210px; height:80px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><%=request.getParameter("xml_com")%>
-</td></tr></table>
-</div>
-
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+345%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv1co")%></span>
-</td></tr></table>
-</div>
-
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+363%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv2co")%></span>
-</td></tr></table>
-</div>
-
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+381%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv3co")%></span>
-</td></tr></table>
-</div>
-
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+399%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv4co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=410+oox%>px; top:<%=ooy+765%>px; width:210px; height:80px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><%=request.getParameter("xml_com")%></td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+417%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv5co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+345%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv1co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+435%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv6co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+363%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv2co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+453%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv7co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+381%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv3co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+473%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv8co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+399%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv4co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+491%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv9co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+417%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv5co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+509%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv10co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+435%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv6co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+528%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv11co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+453%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv7co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+547%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv12co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+473%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv8co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+566%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv13co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+491%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv9co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+585%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv14co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+509%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv10co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+603%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv15co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+528%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv11co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+621%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv16co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+547%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv12co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+639%>px; width:310px; height:20px;"> 
-<table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><span class="tdname1"><%=request.getParameter("xml_sv17co")%></span>
-</td></tr></table>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+566%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv13co")%></span>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+585%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv14co")%></span>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+603%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv15co")%></span>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+621%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv16co")%></span>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=374+oox%>px; top:<%=ooy+639%>px; width:310px; height:20px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><span class="tdname1"><%=request.getParameter("xml_sv17co")%></span>
+		</td>
+	</tr>
+</table>
 </div>
 
 <%
@@ -577,9 +683,11 @@ if (fedb != null && fedb.length() == 10 ) {
 		}
 	}
 %>
-<div ID="graphic" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=3+oox%>px; top:<%=653+ooy%>px; width:501px; height:280px;">
-<embed type="image/svg+xml" src="../form/formar2svg.jsp?bgimage=<%=URLEncoder.encode("../images/formar2_99_08gra.gif")%>&bgimagewidth=222&bgimageheight=276<%=urlparam%>" width="221" height="276"  wmode="transparent" />
-</div>
+<div ID="graphic"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=3+oox%>px; top:<%=653+ooy%>px; width:501px; height:280px;">
+<embed type="image/svg+xml"
+	src="../form/formar2svg.jsp?bgimage=<%=URLEncoder.encode("../images/formar2_99_08gra.gif")%>&bgimagewidth=222&bgimageheight=276<%=urlparam%>"
+	width="221" height="276" wmode="transparent" /></div>
 <%
 }
 %>

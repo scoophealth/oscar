@@ -21,7 +21,8 @@
  * Ontario, Canada 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
 <%
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
 if ( bean == null ){
@@ -36,15 +37,15 @@ if ( bean == null ){
             System.out.println("\nName: "+ht.get("name")
             +"\nPrice: "+ht.get("cost")
             +"\nRetailer: "+ht.get("reference"));%>
-            
-            <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-            <%=ht.get("name")%>&nbsp;&nbsp;&nbsp;&nbsp;: $ <%=ht.get("cost")%><br/>
-            Retailer:<%=ht.get("reference")%>
-            </div>
 
-      <%}
+<div
+	style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+<%=ht.get("name")%>&nbsp;&nbsp;&nbsp;&nbsp;: $ <%=ht.get("cost")%><br />
+Retailer:<%=ht.get("reference")%></div>
+
+<%}
     }else if(prices == null){ %>
-        <div>MyDrug to MyDrug Price Service not available</div>                          
+<div>MyDrug to MyDrug Price Service not available</div>
 <%  }   %>
 <%!
     

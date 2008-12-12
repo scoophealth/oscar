@@ -24,16 +24,18 @@
  */
 -->
 
- <% 
+<% 
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
   user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="../errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <% String search = "",search2 = "";
  search = request.getParameter("search"); 
  if (search.compareTo("") == 0){
@@ -109,20 +111,27 @@ if(request.getParameter("nameF") != null) {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000">Service Code Search </font><font face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3 selections)</font></th>
-  </tr>
+<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"
+			color="#000000">Service Code Search </font><font
+			face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3
+		selections)</font></th>
+	</tr>
 </table>
- <form name="servicecode" id="servicecode" method="post" action="billingCodeUpdate.jsp">
+<form name="servicecode" id="servicecode" method="post"
+	action="billingCodeUpdate.jsp">
 <table width="600" border="1">
-  <tr bgcolor="#CCCCFF"> 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Code</font></b></td>
-    <td width="88%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
-  </tr>
-   
-  <%  ResultSet rslocal = null;  
+	<tr bgcolor="#CCCCFF">
+		<td width="12%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Code</font></b></td>
+		<td width="88%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Description</font></b></td>
+	</tr>
+
+	<%  ResultSet rslocal = null;  
       ResultSet rslocal2 = null;
      
      
@@ -149,36 +158,49 @@ String Dcode="", DcodeDesc="";
  color="#EEEEFF";
  }
  %>
-  
-  <tr bgcolor="<%=color%>"> 
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input type="checkbox" name="code_<%=Dcode%>" checked><%}else{%><input type="checkbox" name="code_<%=Dcode%>"><%}%><%=Dcode%></font></td>
-    <td width="88%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>"><input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="50"><input type="submit" name="update" value="update <%=Dcode%>"></font></td>
-  </tr>
-  <% 
+
+	<tr bgcolor="<%=color%>">
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2">
+		<% if (Dcode.compareTo(xcodeName)==0 || Dcode.compareTo(xcodeName1)==0 || Dcode.compareTo(xcodeName2)==0){ %><input
+			type="checkbox" name="code_<%=Dcode%>" checked>
+		<%}else{%><input type="checkbox" name="code_<%=Dcode%>">
+		<%}%><%=Dcode%></font></td>
+		<td width="88%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden" name="codedesc_<%=Dcode%>"
+			value="<%=DcodeDesc%>"><input type="text" name="<%=Dcode%>"
+			value="<%=DcodeDesc%>" size="50"><input type="submit"
+			name="update" value="update <%=Dcode%>"></font></td>
+	</tr>
+	<% 
   }
   %>
-  
-  <%  if (intCount == 0 ) { %>
-  <tr bgcolor="<%=color%>"> 
-    <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2">No match found. <%// =i%></font></td>
-    
-  </tr>
-  <%  }%>
-  
-  <% if (intCount == 1) { %>
-  <script LANGUAGE="JavaScript">
+
+	<%  if (intCount == 0 ) { %>
+	<tr bgcolor="<%=color%>">
+		<td colspan="2"><font face="Arial, Helvetica, sans-serif"
+			size="2">No match found. <%// =i%>
+		</font></td>
+
+	</tr>
+	<%  }%>
+
+	<% if (intCount == 1) { %>
+	<script LANGUAGE="JavaScript">
 <!--
  CodeAttach('<%=Dcode%>'); 
 -->
 
 </script>
-<% } %>
-</table><input type="submit" name="update" value="Confirm"><input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
-<% 
+	<% } %>
+</table>
+<input type="submit" name="update" value="Confirm"><input
+	type="button" name="cancel" value="Cancel"
+	onclick="javascript:window.close()"> <% 
 if(request.getParameter("nameF") != null) {
 		out.println("<input type='hidden' name='nameF' value=\"" + request.getParameter("nameF") + "\"/>");
 }
-%> 
+%>
 </form>
 </body>
 </html>

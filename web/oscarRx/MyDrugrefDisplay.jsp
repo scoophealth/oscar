@@ -48,7 +48,8 @@ trusted truejava.lang.Boolean ? i think
  
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils"%>
 <%
     Vector<Hashtable> warnings = (Vector)request.getAttribute("warnings");    
     Hashtable hiddenResources = (Hashtable) request.getSession().getAttribute("hideResources");
@@ -81,50 +82,50 @@ trusted truejava.lang.Boolean ? i think
             }
             
             %>
-            
-            <div id="<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>"  <%=outputHtmlClass(trustedResource,hideResource)%> style="<%=hidden%>background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <span style="float:right;"><a href="javascript:void(0);" onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')" >Hide</a></span> <b><%=ht.get("name")%></b> From:<%=s(ht.get("author"))%>  <br/>
-                
-                
-                
-            <%=ht.get("body")%><br/> <% String ref = (String)ht.get("reference");%>
-            
-            <%if (commentsVec != null && commentsVec.size() > 0){ %>
-                <a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a>
-                <%}%>
-                
-                (<%=ht.get("evidence")%>) &nbsp;Reference: <a href="<%=ht.get("reference")%>"target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
-                 
-                
-                
-                <%if (commentsVec != null && commentsVec.size() > 0){ %>
-                <!--a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a-->
-                <fieldset style="border: 1px solid white;display:none;padding: 2px;" id="comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>">
-                  <legend>Comments</legend>
-                     
-                     <%for(Hashtable comment : commentsVec){ %>
-                     <div>
-                        <%= getCommentDisplay( comment ) %>
-                     </div>
-                     <%}%>
-                     
-                </fieldset>
-                <%}%>
-             
-            </div>
-           
-      <%
+
+<div id="<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>"
+	<%=outputHtmlClass(trustedResource,hideResource)%>
+	style="<%=hidden%>background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
+<span style="float: right;"><a href="javascript:void(0);"
+	onclick="HideW('<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>','<%=ht.get("id")%>','<%=getTime(ht.get("updated_at"))%>')">Hide</a></span>
+<b><%=ht.get("name")%></b> From:<%=s(ht.get("author"))%> <br />
+
+
+
+<%=ht.get("body")%><br />
+<% String ref = (String)ht.get("reference");%> <%if (commentsVec != null && commentsVec.size() > 0){ %>
+<a style="float: right;" href="javascript:void(0);"
+	onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a>
+<%}%> (<%=ht.get("evidence")%>) &nbsp;Reference: <a
+	href="<%=ht.get("reference")%>" target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
+
+
+
+<%if (commentsVec != null && commentsVec.size() > 0){ %> <!--a style="float:right;" href="javascript:void(0);" onclick="$('comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>').toggle();">comments</a-->
+<fieldset style="border: 1px solid white; display: none; padding: 2px;"
+	id="comm.<%=ht.get("id")%>.<%=getTime(ht.get("updated_at"))%>">
+<legend>Comments</legend> <%for(Hashtable comment : commentsVec){ %>
+<div><%= getCommentDisplay( comment ) %></div>
+<%}%>
+</fieldset>
+<%}%>
+</div>
+
+<%
         }
         if (untrustedRes > 0 ){ %>
-        <div><a href="javascript:void(0);" onclick="showUntrustedRes();" ><span id="showUntrustedResWord">show</span> <%=untrustedRes%> untrusted resources</a></div>
-        <%}
+<div><a href="javascript:void(0);" onclick="showUntrustedRes();"><span
+	id="showUntrustedResWord">show</span> <%=untrustedRes%> untrusted
+resources</a></div>
+<%}
         
         if (hiddenRes > 0){ %>
-        <div><a href="javascript:void(0);" onclick="showHiddenRes();" ><span id="showHiddenResWord">show</span> <%=hiddenRes%> hidden resources</a></div>
-        <%}
+<div><a href="javascript:void(0);" onclick="showHiddenRes();"><span
+	id="showHiddenResWord">show</span> <%=hiddenRes%> hidden resources</a></div>
+<%}
         
     }else if(warnings == null){ %>
-        <div>MyDrug to MyDrug Warning Service not available</div>                          
+<div>MyDrug to MyDrug Warning Service not available</div>
 <%  }   %>
 
 

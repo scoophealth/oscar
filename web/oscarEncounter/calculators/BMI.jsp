@@ -24,19 +24,17 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
-    
-    
-    
-    <head>
-        <title>
-            BMI
-        </title>
-        <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-        <script type="text/javascript">
+
+
+
+<head>
+<title>BMI</title>
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+<script type="text/javascript">
 
 	//Body Surface Area = 0.20247 x Height(m)0.725 x Weight(kg)0.425
             function getBodySurfaceArea(height,weight){
@@ -143,7 +141,7 @@
 			
 		
         </script>
-        <script Language="JavaScript">
+<script Language="JavaScript">
 //
 // QueryString
 //
@@ -229,168 +227,84 @@ function setValues(){
         window.focus();
 }
                             </script>
-        
-        <style type="text/css">
-            
-            table.outline{
-            margin-top:50px;
-            border-bottom: 1pt solid #888888;
-            border-left: 1pt solid #888888;
-            border-top: 1pt solid #888888;
-            border-right: 1pt solid #888888;
-            }
-            table.grid{
-            border-bottom: 1pt solid #888888;
-            border-left: 1pt solid #888888;
-            border-top: 1pt solid #888888;
-            border-right: 1pt solid #888888;
-            }
-            td.gridTitles{
-            border-bottom: 2pt solid #888888;
-            font-weight: bold;
-            text-align: center;
-            }
-            td.gridTitlesWOBottom{
-            font-weight: bold;
-            text-align: center;
-            }
-            td.middleGrid{
-            border-left: 1pt solid #888888;	   
-            border-right: 1pt solid #888888;
-            text-align: center;
-            }	
-            
-            
-            label{
-            float: left;
-            width: 140px;
-            font-weight: bold;
-            }
-            
-            
-            
-            br{
-            clear: left;
-            }
-            input.text{
-               width:4em;
-            }
-            
-            fieldset.inputs input{
-               width:4em;
-            }
-            
-            div.defs{
-            
-                margin-top: 30px;
-                margin-left: 10px;
-            }
-            
-            div.defs span{
-               color: red;
-               width: 840px;
-               font-weight: bold;
-            }
-            
-            
-        </style>
-    </head>
-    
-    <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
-        <!--  -->
-        <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-            <tr class="MainTableTopRow">
-                <td class="MainTableTopRowLeftColumn">
-                    BMI
-                </td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar">
-                        <tr>
-                            <td >
-                                BMI
-                            </td>
-                            <td  >&nbsp;
-                                
-                            </td>
-                            <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="MainTableLeftColumn">&nbsp;
-                    
-                </td>
-                <td class="MainTableRightColumn">
-                    <fieldset>
-                        <legend>BMI</legend>
-                        <label>Sex:</label> <input type="radio" name="sex" id="sexM" value="M">Male</input> 
-                        <input type="radio"  name="sex" id="sexF" value="F">Female</input>
-                        <br/>
-                        
-                        <label>Weight</label>
-                        <input type="text" class="text" name="weight" id="weight">
-                        <select name="weight_type" id="weight_type">
-                            <option value="lbs">lbs</option> 
-                            <option value="kgs">kgs</option>
-                        </select>
-                        <br/>
-                        
-                        <label>Height</label>
-                        <input type="text" class="text" name="height" id="height">
-                        <select name="height_type" id="height_type">
-                            <option value="inches">inches</option> 
-                            <option value="cm">cm</option>
-                            <option value="m">m</option>
-                        </select>
-                        <br/>
-                        <input type="submit" value="Calculate" onclick="calc();"/>
-                    </fieldset>
-                    <fieldset class="inputs">
-                        <legend>BMI</legend>    
-                        <label>Body Surface Area</label>
-                        <input type="text" name="bodySurfaceArea" id="bodySurfaceArea"> m<sup>2</sup> </input>
-                        <br/>
-                        <label>Lean Body Weight</label>
-                        <input type="text" name="leanBodyWeight_kg" id="leanBodyWeight_kg"> kg</input>
-                        <input type="text" name="leanBodyWeight_lbs" id="leanBodyWeight_lbs"> lbs</input>
-                        <br/>
-                        <label>Ideal Body Weight</label>
-                        <input type="text" name="idealBodyWeight_kg" id="idealBodyWeight_kg"> kg</input>
-                        <input type="text" name="idealBodyWeight_lbs" id="idealBodyWeight_lbs"> lbs</input>
-                        <br/>
-                        
-                        <label>Body Mass Index</label>
-                        <input type="text" name="bodyMassIndex" id="bodyMassIndex"> kg/m<sup>2</sup> </input>
-                        <br/>    
-                    </fieldset>
-                     <div class="defs" >
-                         <span>Body Surface Area</span> = 0.20247 x Height(m)<sup>0.725</sup> x Weight(kg)<sup>0.425</sup>
-                         <br/>
-                         <span>Lean Body Weight (men)</span> = (1.10 x Weight(kg)) - 128 ( Weight<sup>2</sup>/(100 x Height(m)<sup>2</sup>)
-                         <br/>
-                         <span>Lean Body Weight (women)</span> = (1.07 x Weight(kg)) - 148 ( Weight<sup>2</sup>/(100 x Height(m)<sup>2</sup>)
-                         <br/>
-                         <span>Ideal Body Weight (men)</span> = 50 + 2.3 ( Height(in) - 60 )
-                         <br/>
-                         <span>Ideal Body Weight (women)</span> = 45.5 + 2.3 ( Height(in) - 60 )
-                         <br/>
-                         <span>Body Mass Index</span> = Weight(kg) / Height(m)<sup>2</sup> 
-                         <br/>
-                    </div>
-                    
-                </td>
-            </tr>
-            <tr>
-                <td class="MainTableBottomRowLeftColumn">
-                    
-                </td>
-                <td class="MainTableBottomRowRightColumn">
-                    
-                </td>
-            </tr>
-        </table>
-    </body>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
+<!--  -->
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">BMI</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>BMI</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<fieldset><legend>BMI</legend> <label>Sex:</label> <input
+			type="radio" name="sex" id="sexM" value="M">Male</input> <input
+			type="radio" name="sex" id="sexF" value="F">Female</input> <br />
+
+		<label>Weight</label> <input type="text" class="text" name="weight"
+			id="weight"> <select name="weight_type" id="weight_type">
+			<option value="lbs">lbs</option>
+			<option value="kgs">kgs</option>
+		</select> <br />
+
+		<label>Height</label> <input type="text" class="text" name="height"
+			id="height"> <select name="height_type" id="height_type">
+			<option value="inches">inches</option>
+			<option value="cm">cm</option>
+			<option value="m">m</option>
+		</select> <br />
+		<input type="submit" value="Calculate" onclick="calc();" /></fieldset>
+		<fieldset class="inputs"><legend>BMI</legend> <label>Body
+		Surface Area</label> <input type="text" name="bodySurfaceArea"
+			id="bodySurfaceArea"> m<sup>2</sup> </input> <br />
+		<label>Lean Body Weight</label> <input type="text"
+			name="leanBodyWeight_kg" id="leanBodyWeight_kg"> kg</input> <input
+			type="text" name="leanBodyWeight_lbs" id="leanBodyWeight_lbs">
+		lbs</input> <br />
+		<label>Ideal Body Weight</label> <input type="text"
+			name="idealBodyWeight_kg" id="idealBodyWeight_kg"> kg</input> <input
+			type="text" name="idealBodyWeight_lbs" id="idealBodyWeight_lbs">
+		lbs</input> <br />
+
+		<label>Body Mass Index</label> <input type="text" name="bodyMassIndex"
+			id="bodyMassIndex"> kg/m<sup>2</sup> </input> <br />
+		</fieldset>
+		<div class="defs"><span>Body Surface Area</span> = 0.20247 x
+		Height(m)<sup>0.725</sup> x Weight(kg)<sup>0.425</sup> <br />
+		<span>Lean Body Weight (men)</span> = (1.10 x Weight(kg)) - 128 (
+		Weight<sup>2</sup>/(100 x Height(m)<sup>2</sup>) <br />
+		<span>Lean Body Weight (women)</span> = (1.07 x Weight(kg)) - 148 (
+		Weight<sup>2</sup>/(100 x Height(m)<sup>2</sup>) <br />
+		<span>Ideal Body Weight (men)</span> = 50 + 2.3 ( Height(in) - 60 ) <br />
+		<span>Ideal Body Weight (women)</span> = 45.5 + 2.3 ( Height(in) - 60
+		) <br />
+		<span>Body Mass Index</span> = Weight(kg) / Height(m)<sup>2</sup> <br />
+		</div>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+</body>
 </html:html>

@@ -1,4 +1,5 @@
- <!--  
+
+<!--  
 /*
  * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
@@ -22,7 +23,9 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -123,14 +126,17 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 <meta http-equiv="Content-Type" content="text/html;">
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
 <!-- main calendar program -->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
-<script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/lang/calendar-en.js"></script>
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
 function openBrWindow(theURL,winName,features) {
@@ -155,15 +161,16 @@ function checkData() {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr class="myDarkGreen">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-	<th><font color="#FFFFFF"> 
-	OHIP Report Simulation</font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0" onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr class="myDarkGreen">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th><font color="#FFFFFF"> OHIP Report Simulation</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 <%
@@ -173,55 +180,51 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 %>
 
 <table width="100%" border="0" class="myYellow">
-<form name="serviceform" method="post" action="billingONOhipSimulation.jsp" onSubmit="return checkData();">
-<tr> 
-	<td width="220"><b><font face="Arial" size="2">
-	Select Provider </font></b>
-	</td>
-	<td width="254">
-	<select name="provider">
-		<option value="all">Select Providers</option>
-		<%
+	<form name="serviceform" method="post"
+		action="billingONOhipSimulation.jsp" onSubmit="return checkData();">
+	<tr>
+		<td width="220"><b><font face="Arial" size="2"> Select
+		Provider </font></b></td>
+		<td width="254"><select name="provider">
+			<option value="all">Select Providers</option>
+			<%
 		BillingReviewPrep prep = new BillingReviewPrep();
 		List providerStr = prep.getProviderBillingStr();
 		for (int i = 0; i < providerStr.size(); i++) {
 			String temp[] = ((String) providerStr.get(i)).split("\\|");
 			%>
-		<option value="<%=temp[0]%>" <%=providerview.equals(temp[0])?"selected":(providerStr.size()==1?"selected":"")%>><%=temp[1]%>, <%=temp[2]%></option>
-		<%}
+			<option value="<%=temp[0]%>"
+				<%=providerview.equals(temp[0])?"selected":(providerStr.size()==1?"selected":"")%>><%=temp[1]%>,
+			<%=temp[2]%></option>
+			<%}
 		%>
-		</select>
-	</td>
-	<td width="254"><b><font face="Arial" size="2">
-	Bill Center: </font></b>
-	<input type="hidden" name="billcenter" value="<%=billCenter%>">
-	<font face="Arial" size="2"><b><%=healthOffice%></b> </font>
-	</td>
-	<td width="277"> <font color="#003366"> 
-	<input type="hidden" name="monthCode" value="<%=monthCode%>">
-	<input type="hidden" name="verCode" value="V03">
-	<input type="hidden" name="curUser" value="<%=user_no%>">
- 	<input type="hidden" name="curDate" value="<%=nowDate%>">
-	</font></td>
-</tr>
-<tr> 
-	<td><font face="Arial, Helvetica, sans-serif" size="2"><b> 
-	Service Date: </b></font> </td>
-	<td><font size="1" face="Arial, Helvetica, sans-serif">
-	From:</font> 
-	<input type="text" id="xml_vdate" name="xml_vdate" size="10" maxlength="10" value="<%=xml_vdate%>" readonly>
-          <img src="../../../images/cal.gif" id="xml_vdate_cal">
-	</td>
-	<td><font size="1" face="Arial, Helvetica, sans-serif">
-	To:</font> 
-	<input type="text" id="xml_appointment_date" name="xml_appointment_date" size="10" maxlength="10" value="<%=xml_appointment_date%>" readonly>
-          <img src="../../../images/cal.gif" id="xml_appointment_date_cal">
-	</td>
-	<td>
-	<input type="submit" name="submit" value="Create Report">
-	</td>
-</tr>
-</form>
+		</select></td>
+		<td width="254"><b><font face="Arial" size="2"> Bill
+		Center: </font></b> <input type="hidden" name="billcenter"
+			value="<%=billCenter%>"> <font face="Arial" size="2"><b><%=healthOffice%></b>
+		</font></td>
+		<td width="277"><font color="#003366"> <input
+			type="hidden" name="monthCode" value="<%=monthCode%>"> <input
+			type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"> </font></td>
+	</tr>
+	<tr>
+		<td><font face="Arial, Helvetica, sans-serif" size="2"><b>
+		Service Date: </b></font></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif">
+		From:</font> <input type="text" id="xml_vdate" name="xml_vdate" size="10"
+			maxlength="10" value="<%=xml_vdate%>" readonly> <img
+			src="../../../images/cal.gif" id="xml_vdate_cal"></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif">
+		To:</font> <input type="text" id="xml_appointment_date"
+			name="xml_appointment_date" size="10" maxlength="10"
+			value="<%=xml_appointment_date%>" readonly> <img
+			src="../../../images/cal.gif" id="xml_appointment_date_cal"></td>
+		<td><input type="submit" name="submit" value="Create Report">
+		</td>
+	</tr>
+	</form>
 </table>
 
 <%=request.getAttribute("html") == null?"":request.getAttribute("html")%>

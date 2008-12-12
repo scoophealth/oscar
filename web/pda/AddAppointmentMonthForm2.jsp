@@ -24,15 +24,15 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
 <jsp:useBean id="beanReturnPage" scope="session" class="bean.ReturnPage" />
 <jsp:useBean id="beanAboutDate" scope="session" class="bean.AboutDate" />
- 
+
 <%
   if(session.getValue("user") == null)    response.sendRedirect("logout.jsp");
  
@@ -52,7 +52,8 @@
 
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>AddAppointmentForm2</title>
+<head>
+<title>AddAppointmentForm2</title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">
 
@@ -60,41 +61,82 @@
 
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="AddAppointmentMonth.jsp">
 <table border="0" cellpadding="0" cellspacing="0" width="38%">
-        <tr><td></td>
-            <td>
-                <input type="submit" name="submitButton" value="Update">&nbsp;&nbsp;&nbsp;&nbsp;   
-                <a href="GoAppointmentMonth.jsp">Month</a>&nbsp;&nbsp;&nbsp;
-                <a href="AppointmentToday.jsp?todayString=<%=appointment_date%>">Return</a>
-            </td></tr>  
-  	 
-        <tr><td>Date :</td><td><input type="text" name="appointment_date" value="<%=appointment_date%>"></td></tr> 
- 
-        <tr><td>Start Time :</td><td><input type="text"  name="start_time" value="<%=start_time%>"></td></tr> 
-        <tr><td>End Time :</td><td><input type="text"   name="end_time" value="<%=end_time%>"></td></tr> 
- 
-        <tr><td>Name :</td><td><input type="text" name="name" value="<%=name%>"></td></tr>
-        <tr><td><input type="submit" name="submitButton" value="Search"></td><td>
+	<tr>
+		<td></td>
+		<td><input type="submit" name="submitButton" value="Update">&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="GoAppointmentMonth.jsp">Month</a>&nbsp;&nbsp;&nbsp; <a
+			href="AppointmentToday.jsp?todayString=<%=appointment_date%>">Return</a>
+		</td>
+	</tr>
 
-<%
+	<tr>
+		<td>Date :</td>
+		<td><input type="text" name="appointment_date"
+			value="<%=appointment_date%>"></td>
+	</tr>
+
+	<tr>
+		<td>Start Time :</td>
+		<td><input type="text" name="start_time" value="<%=start_time%>"></td>
+	</tr>
+	<tr>
+		<td>End Time :</td>
+		<td><input type="text" name="end_time" value="<%=end_time%>"></td>
+	</tr>
+
+	<tr>
+		<td>Name :</td>
+		<td><input type="text" name="name" value="<%=name%>"></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="submitButton" value="Search"></td>
+		<td>
+		<%
    if (request.getParameter("demographic_no")!=null){     
         out.print("<input type=\"text\" name=\"demographic_no\" value=\""+demographic_no+"\">");
    }else{
         out.print("<input type=\"text\" name=\"demographic_no\">");
    }     
-%>        
-        </td></tr> 
-        <tr><td colspan="2">Reason:<textarea rows="2" cols="25" name="reason"></textarea></td></tr>
-        <tr><td>Location:</td><td><input type="text" name="location" value=""></td></tr> 
-        <tr><td colspan="2">Notes: <textarea rows="2" cols="25" name="notes"></textarea></td></tr>
-        <tr><td>Last Creator :</td><td><input type="text" name="creator" value="Chan,David H"></td></tr> 
-        <tr><td>Status :</td><td><input type="text" name="status" value=""></td></tr> 
-        <tr><td>Type :</td><td><input type="text" name="type" value=""></td></tr> 
-        <tr><td>Chart No. :</td><td><input type="text" name="chartno" value=""></td></tr>
-        <tr><td>Resources :</td><td><input type="text" name="resources" value=""></td></tr> 
-        <tr><td>Last Time :</td><td><input type="text" name="createdatetime" value=""></td></tr> 
- 
+%>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">Reason:<textarea rows="2" cols="25" name="reason"></textarea></td>
+	</tr>
+	<tr>
+		<td>Location:</td>
+		<td><input type="text" name="location" value=""></td>
+	</tr>
+	<tr>
+		<td colspan="2">Notes: <textarea rows="2" cols="25" name="notes"></textarea></td>
+	</tr>
+	<tr>
+		<td>Last Creator :</td>
+		<td><input type="text" name="creator" value="Chan,David H"></td>
+	</tr>
+	<tr>
+		<td>Status :</td>
+		<td><input type="text" name="status" value=""></td>
+	</tr>
+	<tr>
+		<td>Type :</td>
+		<td><input type="text" name="type" value=""></td>
+	</tr>
+	<tr>
+		<td>Chart No. :</td>
+		<td><input type="text" name="chartno" value=""></td>
+	</tr>
+	<tr>
+		<td>Resources :</td>
+		<td><input type="text" name="resources" value=""></td>
+	</tr>
+	<tr>
+		<td>Last Time :</td>
+		<td><input type="text" name="createdatetime" value=""></td>
+	</tr>
 
-    
+
+
 </TABLE>
 
 </FORM>

@@ -1,8 +1,8 @@
 
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--  
@@ -34,95 +34,99 @@
 <html:html locale="true">
 <head>
 <title>Print Preview</title>
-<html:base/>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
-<link rel="stylesheet" type="text/css" href="styles.css"></head>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-   <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-  <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-        	<table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                  <tr>
-            	    <td width="0%" valign="top">
-            	    <div class="DivCCBreadCrumbs">
-              	    <a href="SearchPatient.jsp">
-                    <bean:message key="SearchPatient.title"/></a> >
-                    <b><bean:message key="ChoosePatient.title"/></b></div>
-                    </td>
-            	  </tr>
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<td></td>
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs"><a href="SearchPatient.jsp">
+				<bean:message key="SearchPatient.title" /></a> > <b><bean:message
+					key="ChoosePatient.title" /></b></div>
+				</td>
+			</tr>
 
-            <!----Start new rows here-->
-                  <tr>
-                    <td>
- 		      <div class="DivContentTitle"><bean:message key="ChoosePatient.title"/></div>
-                    </td>
-		  </tr>
-                  <tr>
-                    <td>
-                      <div class="DivContentSectionHead"><bean:message key="ChoosePatient.searchAgain"/></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                    <html:form action="/oscarRx/searchPatient" focus="surname">
-                    <table>
-                        <tr>
-                          <td>
-                            <bean:message key="ChoosePatient.textBox"/>
-                          </td>
-                          <td>
-                            <html:text property="surname" size="16" maxlength="16"/>
-                          </td>
-                          <td>
-                            <html:submit property="submit" value="Search" styleClass="ControlPushButton" />
-
-                          </td>
-                        </tr>
-                    </table>
-                    </html:form>
-                    </td>
-                  </tr>
-                  <tr>
- 		    <td>
- 		      <div class="DivContentSectionHead"><bean:message key="ChoosePatient.choose"/></div>
-		    </td>
-		  </tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle"><bean:message
+					key="ChoosePatient.title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="ChoosePatient.searchAgain" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td><html:form action="/oscarRx/searchPatient" focus="surname">
+					<table>
+						<tr>
+							<td><bean:message key="ChoosePatient.textBox" /></td>
+							<td><html:text property="surname" size="16" maxlength="16" />
+							</td>
+							<td><html:submit property="submit" value="Search"
+								styleClass="ControlPushButton" /></td>
+						</tr>
+					</table>
+				</html:form></td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="ChoosePatient.choose" /></div>
+				</td>
+			</tr>
 
 
-            <!----End new rows here-->
+			<!----End new rows here-->
 
-		  <tr height="100%">
-                    <td>
-                    </td>
-                  </tr>
-                </table>
-        </td>
-  </tr>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 
 	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 
 </body>

@@ -57,184 +57,146 @@
     </script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A PROVIDER</font></th>
-      </tr>
-    </table>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
-      <tr> 
-        <td width="50%" align="right">Provider No.<font color="red">:</font> </td>
-        <td>
-          <input type="text" name="provider_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">Last Name<font color="red">:</font> </div>
-        </td>
-        <td>
-          <input type="text" name="last_name">
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">First Name<font color="red">:</font> </div>
-        </td>
-        <td>
-          <input type="text" name="first_name">
-        </td>
-      </tr>
-      <tr>
-        <td align="right">Type (<font size="-2">receptionist/doctor/admin</font>)<font color="red">:</font> 
-        </td>
-        <td>
-          <!--input type="text" name="provider_type" -->
-          <select name="provider_type">
-            <option value="receptionist">receptionist</option>
-            <option value="doctor">doctor</option>
-            <option value="admin">admin</option>
-          </select>
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Specialty: </td>
-        <td>
-          <input type="text" name="specialty"  onBlur="upCaseCtrl(this)">
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Team: </td>
-        <td>
-          <input type="text" name="team" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Sex: </td>
-        <td> 
-          <input type="text" name="sex" maxlength="1"  onBlur="upCaseCtrl(this)">
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">DOB(<font size="-1"><i>yyyy-mm-dd</i></font>): </td>
-        <td> 
-          <input type="text" name="dob" value="0000-01-01" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Address: </td>
-        <td>
-          <input type="text" name="address" size="40">
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Phone: </td>
-        <td>
-          <input type="text" name="phone" >
-        </td>
-      </tr>
-  <tr> 
-    <td align="right">Pager: </td>
-    <td>
-          <input type="text" name="xml_p_pager" value="">
-        </td>
-  </tr>
-  <tr> 
-    <td align="right">Cell: </td>
-    <td>
-          <input type="text" name="xml_p_cell" value="">
-        </td>
-  </tr>
-  <tr> 
-    <td align="right">Other Phone: </td> 
-    <td>
-          <input type="text" name="xml_p_phone2" value="">
-        </td> 
-  </tr>
-  <tr> 
-    <td align="right">Fax: </td>
-    <td>
-          <input type="text" name="xml_p_fax" value="">
-        </td>
-  </tr>
-      <tr> 
-        <td align="right">OHIP NO: </td>
-        <td>
-          <input type="text" name="ohip_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">RMA NO: </td>
-        <td>
-          <input type="text" name="rma_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Billing No.: </td>
-        <td>
-          <input type="text" name="billing_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">HSO NO: </td>
-        <td>
-          <input type="text" name="hso_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Status: </td>
-        <td>
-          <input type="text" name="status" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Specialty Code: </td>
-        <td>
-          <input type="text" name="xml_p_specialty_code" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">Billing Group No.: </td>
-        <td>
-          <input type="text" name="xml_p_billinggroup_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">SLP USERNAME: </td>
-        <td>
-          <input type="text" name="xml_p_slpusername" >
-        </td>
-      </tr>
-      <tr> 
-        <td align="right">SLP PASSWORD: </td>
-        <td>
-          <input type="text" name="xml_p_slppassword" >
-        </td>
-      </tr>
-      <tr> 
-        <td colspan="2">
-          <div align="center"> 
-            <input type="hidden" name="dboperation" value="provider_add_record">
-            <input type="submit" name="displaymode" value="Provider_Add_Record">
-          </div>
-        </td>
-      </tr>
-    </form>
-  </table>
-  
-  <p></p>
-  <hr width="100%" color="orange">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A PROVIDER</font></th>
+	</tr>
+</table>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<form method="post" action="admincontrol.jsp" name="searchprovider"
+		onsubmit="return onsub()">
+	<tr>
+		<td width="50%" align="right">Provider No.<font color="red">:</font>
+		</td>
+		<td><input type="text" name="provider_no"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">Last Name<font color="red">:</font></div>
+		</td>
+		<td><input type="text" name="last_name"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">First Name<font color="red">:</font></div>
+		</td>
+		<td><input type="text" name="first_name"></td>
+	</tr>
+	<tr>
+		<td align="right">Type (<font size="-2">receptionist/doctor/admin</font>)<font
+			color="red">:</font></td>
+		<td><!--input type="text" name="provider_type" --> <select
+			name="provider_type">
+			<option value="receptionist">receptionist</option>
+			<option value="doctor">doctor</option>
+			<option value="admin">admin</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td align="right">Specialty:</td>
+		<td><input type="text" name="specialty" onBlur="upCaseCtrl(this)">
+		</td>
+	</tr>
+	<tr>
+		<td align="right">Team:</td>
+		<td><input type="text" name="team"></td>
+	</tr>
+	<tr>
+		<td align="right">Sex:</td>
+		<td><input type="text" name="sex" maxlength="1"
+			onBlur="upCaseCtrl(this)"></td>
+	</tr>
+	<tr>
+		<td align="right">DOB(<font size="-1"><i>yyyy-mm-dd</i></font>):
+		</td>
+		<td><input type="text" name="dob" value="0000-01-01"></td>
+	</tr>
+	<tr>
+		<td align="right">Address:</td>
+		<td><input type="text" name="address" size="40"></td>
+	</tr>
+	<tr>
+		<td align="right">Phone:</td>
+		<td><input type="text" name="phone"></td>
+	</tr>
+	<tr>
+		<td align="right">Pager:</td>
+		<td><input type="text" name="xml_p_pager" value=""></td>
+	</tr>
+	<tr>
+		<td align="right">Cell:</td>
+		<td><input type="text" name="xml_p_cell" value=""></td>
+	</tr>
+	<tr>
+		<td align="right">Other Phone:</td>
+		<td><input type="text" name="xml_p_phone2" value=""></td>
+	</tr>
+	<tr>
+		<td align="right">Fax:</td>
+		<td><input type="text" name="xml_p_fax" value=""></td>
+	</tr>
+	<tr>
+		<td align="right">OHIP NO:</td>
+		<td><input type="text" name="ohip_no"></td>
+	</tr>
+	<tr>
+		<td align="right">RMA NO:</td>
+		<td><input type="text" name="rma_no"></td>
+	</tr>
+	<tr>
+		<td align="right">Billing No.:</td>
+		<td><input type="text" name="billing_no"></td>
+	</tr>
+	<tr>
+		<td align="right">HSO NO:</td>
+		<td><input type="text" name="hso_no"></td>
+	</tr>
+	<tr>
+		<td align="right">Status:</td>
+		<td><input type="text" name="status"></td>
+	</tr>
+	<tr>
+		<td align="right">Specialty Code:</td>
+		<td><input type="text" name="xml_p_specialty_code"></td>
+	</tr>
+	<tr>
+		<td align="right">Billing Group No.:</td>
+		<td><input type="text" name="xml_p_billinggroup_no"></td>
+	</tr>
+	<tr>
+		<td align="right">SLP USERNAME:</td>
+		<td><input type="text" name="xml_p_slpusername"></td>
+	</tr>
+	<tr>
+		<td align="right">SLP PASSWORD:</td>
+		<td><input type="text" name="xml_p_slppassword"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="center"><input type="hidden" name="dboperation"
+			value="provider_add_record"> <input type="submit"
+			name="displaymode" value="Provider_Add_Record"></div>
+		</td>
+	</tr>
+	</form>
+</table>
+
+<p></p>
+<hr width="100%" color="orange">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"> Back to
+		Admin Page.</a></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

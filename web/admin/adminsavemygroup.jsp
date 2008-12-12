@@ -24,15 +24,17 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="../errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
 <head>
@@ -44,13 +46,14 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.adminsavemygroup.title"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.adminsavemygroup.title" /></font></th>
+	</tr>
+</table>
 <%
   int rowsAffected=0;
   StringBuffer strbuf=new StringBuffer();
@@ -70,23 +73,26 @@
 
   if (rowsAffected ==1) {
 %>
-  <p><h1><bean:message key="admin.adminsavemygroup.msgAdditionSuccess"/></h1></p>
+<p>
+<h1><bean:message key="admin.adminsavemygroup.msgAdditionSuccess" /></h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
      	//self.opener.refresh();
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1><bean:message key="admin.adminsavemygroup.msgAdditionFailure"/></h1></p>
+<p>
+<h1><bean:message key="admin.adminsavemygroup.msgAdditionFailure" /></h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close()">
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button"
+	value="<bean:message key="global.btnClose"/>" onClick="window.close()">
 </form>
 </center>
 </body>

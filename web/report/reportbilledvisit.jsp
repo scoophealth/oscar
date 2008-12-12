@@ -1,3 +1,4 @@
+
 <%
   //reportbilledvisit.jsp?sdate=2003-04-01&edate=2003-12-31
   
@@ -5,7 +6,9 @@
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <!--  
 /*
  * 
@@ -33,7 +36,7 @@
 -->
 <html>
 <head>
-<title>PATIENT NO SHOW LIST </title>
+<title>PATIENT NO SHOW LIST</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <!--link rel="stylesheet" href="../web.css" -->
@@ -49,7 +52,8 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 <%
 //busy ... busy ... busy ..................................................<br>
 //display splash-msg first
@@ -437,71 +441,76 @@ db.closeConn();
 
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica">PATIENT VISIT LIST </font></th>
-    <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor=<%=deepcolor%>>
+		<th><font face="Helvetica">PATIENT VISIT LIST </font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="Print" onClick="window.print()"><input type="button"
+			name="Button" value=" Exit " onClick="window.close()"></th>
+	</tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr><td>Period: (<%=sdate%> ~ <%=edate%>) </td>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td>Period: (<%=sdate%> ~ <%=edate%>)</td>
+	</tr>
 </table>
 
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
-<tr bgcolor=<%=deepcolor%> align="center">
-<TH width="10%">.</TH>
-<TH width="6%">Total</TH>
-<TH width="6%">RosterNR</TH>
-<TH width="6%">RosterRO</TH>
-<TH width="6%">Sex F</TH>
-<TH width="6%">Sex M</TH>
-<TH width="6%">Sex U</TH>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor=<%=deepcolor%> align="center">
+		<TH width="10%">.</TH>
+		<TH width="6%">Total</TH>
+		<TH width="6%">RosterNR</TH>
+		<TH width="6%">RosterRO</TH>
+		<TH width="6%">Sex F</TH>
+		<TH width="6%">Sex M</TH>
+		<TH width="6%">Sex U</TH>
 
-<TH width="6%">0-1</TH>
-<TH width="6%">2-11</TH>
-<TH width="6%">12-20</TH>
-<TH width="6%">21-34</TH>
-<TH width="6%">35-50</TH>
-<TH width="6%">51-64</TH>
-<TH width="6%">65-70</TH>
-<TH width="6%">71+</TH>
-</tr>
+		<TH width="6%">0-1</TH>
+		<TH width="6%">2-11</TH>
+		<TH width="6%">12-20</TH>
+		<TH width="6%">21-34</TH>
+		<TH width="6%">35-50</TH>
+		<TH width="6%">51-64</TH>
+		<TH width="6%">65-70</TH>
+		<TH width="6%">71+</TH>
+	</tr>
 
-<tr bgcolor="<%=weakcolor%>">
-      <td align="center">Patient</td>
-      <td align="center"><%=props.getProperty("patTotal")%></td>
-      <td align="center"><%=props.getProperty("patRosterNR")%></td>
-      <td align="center"><%=props.getProperty("patRosterRO")%></td>
-      <td align="center"><%=props.getProperty("patSexF")%></td>
-      <td align="center"><%=props.getProperty("patSexM")%></td>
-      <td align="center">0</td>
-      <td align="center"><%=props.getProperty("pat0_1")%></td>
-      <td align="center"><%=props.getProperty("pat2_11")%></td>
-      <td align="center"><%=props.getProperty("pat12_20")%></td>
-      <td align="center"><%=props.getProperty("pat21_34")%></td>
-      <td align="center"><%=props.getProperty("pat35_50")%></td>
-      <td align="center"><%=props.getProperty("pat51_64")%></td>
-      <td align="center"><%=props.getProperty("pat65_70")%></td>
-      <td align="center"><%=props.getProperty("pat71_")%></td>
-</tr>
-<tr >
-      <td align="center">Visit</td>
-      <td align="center"><%=props.getProperty("visTotal")%></td>
-      <td align="center"><%=props.getProperty("visRosterNR")%></td>
-      <td align="center"><%=props.getProperty("visRosterRO")%></td>
-      <td align="center"><%=props.getProperty("visSexF")%></td>
-      <td align="center"><%=props.getProperty("visSexM")%></td>
-      <td align="center">0</td>
-      <td align="center"><%=props.getProperty("vis0_1")%></td>
-      <td align="center"><%=props.getProperty("vis2_11")%></td>
-      <td align="center"><%=props.getProperty("vis12_20")%></td>
-      <td align="center"><%=props.getProperty("vis21_34")%></td>
-      <td align="center"><%=props.getProperty("vis35_50")%></td>
-      <td align="center"><%=props.getProperty("vis51_64")%></td>
-      <td align="center"><%=props.getProperty("vis65_70")%></td>
-      <td align="center"><%=props.getProperty("vis71_")%></td>
-</tr>
+	<tr bgcolor="<%=weakcolor%>">
+		<td align="center">Patient</td>
+		<td align="center"><%=props.getProperty("patTotal")%></td>
+		<td align="center"><%=props.getProperty("patRosterNR")%></td>
+		<td align="center"><%=props.getProperty("patRosterRO")%></td>
+		<td align="center"><%=props.getProperty("patSexF")%></td>
+		<td align="center"><%=props.getProperty("patSexM")%></td>
+		<td align="center">0</td>
+		<td align="center"><%=props.getProperty("pat0_1")%></td>
+		<td align="center"><%=props.getProperty("pat2_11")%></td>
+		<td align="center"><%=props.getProperty("pat12_20")%></td>
+		<td align="center"><%=props.getProperty("pat21_34")%></td>
+		<td align="center"><%=props.getProperty("pat35_50")%></td>
+		<td align="center"><%=props.getProperty("pat51_64")%></td>
+		<td align="center"><%=props.getProperty("pat65_70")%></td>
+		<td align="center"><%=props.getProperty("pat71_")%></td>
+	</tr>
+	<tr>
+		<td align="center">Visit</td>
+		<td align="center"><%=props.getProperty("visTotal")%></td>
+		<td align="center"><%=props.getProperty("visRosterNR")%></td>
+		<td align="center"><%=props.getProperty("visRosterRO")%></td>
+		<td align="center"><%=props.getProperty("visSexF")%></td>
+		<td align="center"><%=props.getProperty("visSexM")%></td>
+		<td align="center">0</td>
+		<td align="center"><%=props.getProperty("vis0_1")%></td>
+		<td align="center"><%=props.getProperty("vis2_11")%></td>
+		<td align="center"><%=props.getProperty("vis12_20")%></td>
+		<td align="center"><%=props.getProperty("vis21_34")%></td>
+		<td align="center"><%=props.getProperty("vis35_50")%></td>
+		<td align="center"><%=props.getProperty("vis51_64")%></td>
+		<td align="center"><%=props.getProperty("vis65_70")%></td>
+		<td align="center"><%=props.getProperty("vis71_")%></td>
+	</tr>
 
 </table>
 </body>

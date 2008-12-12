@@ -1,10 +1,11 @@
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment"
+	rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 <%--
 /*
@@ -31,9 +32,10 @@
  * Ontario, Canada
  */
 --%>
-<%@ page errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   //operation available to the client -- dboperation
   String [][] dbOperation=new String[][] {

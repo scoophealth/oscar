@@ -24,12 +24,13 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.*, org.w3c.dom.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.*" %>
+<%@ page language="java"%>
+<%@ page
+	import="java.util.*, org.w3c.dom.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.*"%>
 <%@ page import="oscar.oscarClinic.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
 if(session.getValue("user") == null)
@@ -63,9 +64,7 @@ if(session.getValue("user") == null)
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html>
 <head>
-<title>
-OscarFax - Consultations
-</title>
+<title>OscarFax - Consultations</title>
 <script type="text/javascript">
 // Declaring required variables
 var digits = "0123456789";
@@ -137,126 +136,90 @@ function ValidateForm(){
 </script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Fax
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                         consultation Requests
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-              &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-               <html:form action="/oscarEncounter/oscarConsultationRequests/consultationFax" onsubmit="return ValidateForm()">
-               <%	  
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Fax</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>consultation Requests</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn"><html:form
+			action="/oscarEncounter/oscarConsultationRequests/consultationFax"
+			onsubmit="return ValidateForm()">
+			<%	  
                     EctConsultationFaxForm thisForm;
                     thisForm = (EctConsultationFaxForm ) request.getAttribute("EctConsultationFaxForm");
                     thisForm.setRecipient(reqFrm.getSpecailistsName(reqFrm.specialist));
                     thisForm.setFrom(reqFrm.getProviderName(curUser_no));
                     thisForm.setRecipientsFaxNumber(reqFrm.specFax);
                %>
-                   <table>
-			<tr>
-				<td>
-                                   To:
- 				</td>
-				<td>
-                                   <html:text property="recipient"/>
-				</td>
-                        </tr>
-                        <tr>
-                                <td>
-                                  From:
-                                </td>
-                                <td>
-                                   <html:text property="from"/>
-                                </td>
-                        </tr>
-                        <tr>
-                                <td>
-                                  Fax Number:
-                                </td>
-                                <td>
-                                   <html:text property="recipientsFaxNumber"/>
-                                </td>
-                        </tr>
- 
-                        <tr>
-                                <td>
-                                  Senders Phone:
-                                </td>
-                                <td> 
-                                   <html:select property="sendersPhone">
-                                   <%  for (int i =0; i < vecPhones.size();i++){
+			<table>
+				<tr>
+					<td>To:</td>
+					<td><html:text property="recipient" /></td>
+				</tr>
+				<tr>
+					<td>From:</td>
+					<td><html:text property="from" /></td>
+				</tr>
+				<tr>
+					<td>Fax Number:</td>
+					<td><html:text property="recipientsFaxNumber" /></td>
+				</tr>
+
+				<tr>
+					<td>Senders Phone:</td>
+					<td><html:select property="sendersPhone">
+						<%  for (int i =0; i < vecPhones.size();i++){
                                          String te = (String) vecPhones.elementAt(i);
                                    %>
-                                     <html:option value="<%=te%>"><%=te%></html:option>
-                                   <%  }%>
-                                   </html:select>
-
-                                </td>
-                        </tr>
-                        <tr>
-                                <td>
-                                  Senders Fax:
-                                </td>
-                                <td>
-                                   <html:select property="sendersFax">
-                                   <%  for (int i =0; i < vecFaxes.size();i++){
+						<html:option value="<%=te%>"><%=te%></html:option>
+						<%  }%>
+					</html:select></td>
+				</tr>
+				<tr>
+					<td>Senders Fax:</td>
+					<td><html:select property="sendersFax">
+						<%  for (int i =0; i < vecFaxes.size();i++){
                                          String te = (String) vecFaxes.elementAt(i);
                                    %>
-                                     <html:option value="<%=te%>"><%=te%></html:option>
-                                   <%  }%>
-                                   </html:select>
-
-                                </td>
-                        </tr>
-                        <tr>
-                                <td colspan=2>
-                                   Comments
-                                </td>
-                        </tr>
-                        <tr>
-                                <td colspan=2> 
-                                 <html:textarea cols="30" rows="7" property="comments"/>
-                                </td>
-                        </tr>
-                        <tr> 
-                                <td colspan=2>
-                                  <input type="submit" value="Send to Fax Server"/>
-                                </td>
-                        </tr>
-                   </table>
-                 <input type="hidden" name="requestId" value="<%= (String) request.getAttribute("reqId")%>"\>
-               </html:form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-              &nbsp; 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-              &nbsp;
-            </td>
-        </tr>
-    </table>
+						<html:option value="<%=te%>"><%=te%></html:option>
+						<%  }%>
+					</html:select></td>
+				</tr>
+				<tr>
+					<td colspan=2>Comments</td>
+				</tr>
+				<tr>
+					<td colspan=2><html:textarea cols="30" rows="7"
+						property="comments" /></td>
+				</tr>
+				<tr>
+					<td colspan=2><input type="submit" value="Send to Fax Server" />
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="requestId"
+				value="<%= (String) request.getAttribute("reqId")%>"\>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html>

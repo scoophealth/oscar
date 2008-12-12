@@ -20,11 +20,12 @@
 -->
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String formClass = "BCClientChartChecklist";
@@ -64,22 +65,24 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Chart Checklist</title>
-    <link rel="stylesheet" type="text/css" href="bcArStyle.css" >
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<title>Chart Checklist</title>
+<link rel="stylesheet" type="text/css" href="bcArStyle.css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-  <link rel="stylesheet" type="text/css" media="print" href="print.css">
-    <html:base/>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="print" href="print.css">
+<html:base />
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -361,7 +364,8 @@ function calToday(field) {
 }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"
+	onLoad="setfocus()">
 <!--
 @oscar.formDB Table="formBCClientChartChecklist" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -371,47 +375,52 @@ function calToday(field) {
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
-<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
+	<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
+	<input type="hidden" name="submit" value="exit" />
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="window.print();"/>
-        </td>
-    </tr>
-</table>
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="button"
+				value="Print" onclick="window.print();" /></td>
+		</tr>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="0">
-<tr><td width="50%" valign="top">
+	<table width="80%" border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="50%" valign="top">
 
-  <table class="headline"  width="100%" border="0"  cellspacing="0" cellpadding="0">
-    <tr>
-    <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	  <%=props.getProperty("c_clinicName","") %> <br>Client Chart Checklist</th>
-	  <input type="hidden" name="c_clinicName" value="<%=props.getProperty("c_clinicName","") %>" />
-    </tr>
-  </table>
+			<table class="headline" width="100%" border="0" cellspacing="0"
+				cellpadding="0">
+				<tr>
+					<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
+					<%=props.getProperty("c_clinicName","") %> <br>
+					Client Chart Checklist</th>
+					<input type="hidden" name="c_clinicName"
+						value="<%=props.getProperty("c_clinicName","") %>" />
+				</tr>
+			</table>
 
-  </td><td>
-  
-  <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-    <!--r>
+			</td>
+			<td>
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<!--r>
       <td width="55%" >DATE
 		<img src="../images/cal.gif" id="pg1_formDate_cal">
           <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
@@ -420,14 +429,17 @@ function calToday(field) {
       </td>
       <td >      </td>
     </tr-->
-    <tr>
-	  <td>GIVEN NAME<br>
-      <input type="text" name="c_givenName" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_givenName", "") %>" @oscar.formDB />
-	  </td>
-      <td width="50%">SURNAME<br>
-      <input type="text" name="c_surname" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" @oscar.formDB />
-	  </td>
-    </tr><!--tr>
+				<tr>
+					<td>GIVEN NAME<br>
+					<input type="text" name="c_givenName" style="width: 100%" size="30"
+						maxlength="30" value="<%= props.getProperty("c_givenName", "") %>"
+						@oscar.formDB /></td>
+					<td width="50%">SURNAME<br>
+					<input type="text" name="c_surname" style="width: 100%" size="30"
+						maxlength="30" value="<%= props.getProperty("c_surname", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<!--tr>
       <td>ADDRESS<br>
       <input type="text" name="c_address" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_address", "") %>" @oscar.formDB />
       <input type="text" name="c_city" style="width:100%" size="50" maxlength="60" value="<%= props.getProperty("c_city", "") %>" @oscar.formDB />
@@ -440,23 +452,23 @@ function calToday(field) {
       <input type="text" name="c_phn" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("c_phn", "") %>" @oscar.formDB />
 	  </td>
     </tr-->
-  </table>
-  
-  </td>
-</tr>
-</table>
+			</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr>
-  <th width="20%">Status</th>
-  <th width="10%">Date</th>
-  <th>Description</th>
-  <th>Comments</th>
-</tr>
-<tr>
-  <th colspan='4'>Consult/Hx/PE visits</th>
-</tr>
-<% 
+			</td>
+		</tr>
+	</table>
+
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th width="20%">Status</th>
+			<th width="10%">Date</th>
+			<th>Description</th>
+			<th>Comments</th>
+		</tr>
+		<tr>
+			<th colspan='4'>Consult/Hx/PE visits</th>
+		</tr>
+		<% 
 String descCon[] = {
 		"Contact #s/when to call", 
 		"Letter to GP completed", 
@@ -477,29 +489,30 @@ String descCon[] = {
 String[] strStatus = {"Discussed", "Completed", "Not Applicable", "Late Into Care", "At Physician's Office", "Declined"};
 String[] strStatus2 = {"Low", "Medium", "High", "Unknown"};
 %>
-<% for(int i=0; i<descCon.length; i++) { %>
-<tr>
-  <td>
-    <select name="statusCon<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("statusCon"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap>
-    <input type="text" id="dateCon<%=i %>" name="dateCon<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("dateCon"+i, "") %>"
-    onDblClick="calToday(this)" @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="dateCon<%=i %>_cal">
-  </td>
-  <td nowrap><%=descCon[i] %></td>
-  <td>
-    <input type="text" id="cCon<%=i %>" name="cCon<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("cCon"+i, "") %>"/>
-  </td>
-</tr>
-<% } %>
-<tr><td colspan='4'>Initial Labs</td></tr>
-<% 
+		<% for(int i=0; i<descCon.length; i++) { %>
+		<tr>
+			<td><select name="statusCon<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("statusCon"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap><input type="text" id="dateCon<%=i %>"
+				name="dateCon<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("dateCon"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="dateCon<%=i %>_cal"></td>
+			<td nowrap><%=descCon[i] %></td>
+			<td><input type="text" id="cCon<%=i %>" name="cCon<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("cCon"+i, "") %>" /></td>
+		</tr>
+		<% } %>
+		<tr>
+			<td colspan='4'>Initial Labs</td>
+		</tr>
+		<% 
 String descConA[] = {
 		"Type/screen",
 		"Hematology Panel",
@@ -514,42 +527,42 @@ String descConA[] = {
 		"<input type='text' name='descCon2' size='70' maxlength='70' value='" + props.getProperty("descCon2", "")+ "'",
 		}; 
 %>
-<% for(int i=0; i<descConA.length; i++) { %>
-<tr>
-  <td>
-    <select name="statusConA<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("statusConA"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap>
-    <input type="text" id="dateConA<%=i %>" name="dateConA<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("dateConA"+i, "") %>"
-    onDblClick="calToday(this)" @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="dateConA<%=i %>_cal">
-  </td>
-  <% if(!descConA[i].startsWith("<input")) { %>
-  <td nowrap><%=descConA[i] %></td>
-  <td>
-    <input type="text" id="cConA<%=i %>" name="cConA<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("cConA"+i, "") %>"/>
-  </td>
-  <% } else { %>
-  <td colspan='2'><%=descConA[i] %></td>
-  <% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<descConA.length; i++) { %>
+		<tr>
+			<td><select name="statusConA<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("statusConA"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap><input type="text" id="dateConA<%=i %>"
+				name="dateConA<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("dateConA"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="dateConA<%=i %>_cal"></td>
+			<% if(!descConA[i].startsWith("<input")) { %>
+			<td nowrap><%=descConA[i] %></td>
+			<td><input type="text" id="cConA<%=i %>" name="cConA<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("cConA"+i, "") %>" /></td>
+			<% } else { %>
+			<td colspan='2'><%=descConA[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr>
-  <th colspan='4'>1st Trimester</th>
-</tr><!--  tr>
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th colspan='4'>1st Trimester</th>
+		</tr>
+		<!--  tr>
   <th width="20%">Status</th>
   <th width="10%">Date</th>
   <th>Description</th>
 </tr-->
-<% 
+		<% 
 String desc1st[] = {
 		"Genetic counseling", 
 		"MSS ordered (16 wk)", 
@@ -568,40 +581,40 @@ String desc1st[] = {
 		"<input type='text' name='desc1st1' size='70' maxlength='70' value='" + props.getProperty("desc1st1", "")+ "'",
 		}; 
 %>
-<% for(int i=0; i<desc1st.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status1st<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status1st"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date1st<%=i %>" name="date1st<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date1st"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date1st<%=i %>_cal">
-  </td>
-  <% if(!desc1st[i].startsWith("<input")) { %>
-  <td nowrap><%=desc1st[i] %></td>
-  <td>
-    <input type="text" id="c1st<%=i %>" name="c1st<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c1st"+i, "") %>"/>
-  </td>
-  <% } else { %>
-  <td colspan='2'><%=desc1st[i] %></td>
-  <% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc1st.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status1st<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status1st"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date1st<%=i %>"
+				name="date1st<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date1st"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date1st<%=i %>_cal"></td>
+			<% if(!desc1st[i].startsWith("<input")) { %>
+			<td nowrap><%=desc1st[i] %></td>
+			<td><input type="text" id="c1st<%=i %>" name="c1st<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c1st"+i, "") %>" /></td>
+			<% } else { %>
+			<td colspan='2'><%=desc1st[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr>
-  <th colspan='4'>2nd trimester</th>
-</tr><tr >
-  <td colspan='4'>24 weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th colspan='4'>2nd trimester</th>
+		</tr>
+		<tr>
+			<td colspan='4'>24 weeks</td>
+		</tr>
+		<% 
 String desc2nd[] = {
 		"Review dates (22wks)", 
 		"Quickening", 
@@ -618,40 +631,40 @@ String desc2nd[] = {
 		"<input type='text' name='desc2nd1' size='70' maxlength='70' value='" + props.getProperty("desc2nd1", "")+ "'",
 		}; 
 %>
-<% for(int i=0; i<desc2nd.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status2nd<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status2nd"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date2nd<%=i %>" name="date2nd<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date2nd"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date2nd<%=i %>_cal">
-  </td>
-  <% if(!desc2nd[i].startsWith("<input")) { %>
-  <td nowrap><%=desc2nd[i] %></td>
-  <td>
-    <input type="text" id="c2nd<%=i %>" name="c2nd<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c2nd"+i, "") %>"/>
-  </td>
-  <% } else {%>
-  <td colspan='2'><%=desc2nd[i] %></td>
-  <% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc2nd.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status2nd<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status2nd"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date2nd<%=i %>"
+				name="date2nd<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date2nd"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date2nd<%=i %>_cal"></td>
+			<% if(!desc2nd[i].startsWith("<input")) { %>
+			<td nowrap><%=desc2nd[i] %></td>
+			<td><input type="text" id="c2nd<%=i %>" name="c2nd<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c2nd"+i, "") %>" /></td>
+			<% } else {%>
+			<td colspan='2'><%=desc2nd[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr>
-  <th colspan='4'>3rd trimester</th>
-</tr><tr >
-  <td colspan='4'>28 weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th colspan='4'>3rd trimester</th>
+		</tr>
+		<tr>
+			<td colspan='4'>28 weeks</td>
+		</tr>
+		<% 
 String desc3rd1[] = {
 		"home birth consent signed", 
 		"S/Sx preterm labour", 
@@ -669,38 +682,37 @@ String desc3rd1[] = {
 		"<input type='text' name='desc3rd11' size='70' maxlength='70' value='" + props.getProperty("desc3rd11", "")+ "'",
 		}; 
 %>
-<% for(int i=0; i<desc3rd1.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status3rd1<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status3rd1"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd1<%=i %>" name="date3rd1<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date3rd1"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd1<%=i %>_cal">
-  </td>
-  <% if(!desc3rd1[i].startsWith("<input")) { %>
-  <td nowrap><%=desc3rd1[i] %></td>
-  <td>
-    <input type="text" id="c3rd1<%=i %>" name="c3rd1<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c3rd1"+i, "") %>"/>
-  </td>
-  <% }else{ %>
-  <td colspan='2'><%=desc3rd1[i] %></td>
-  <% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc3rd1.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status3rd1<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status3rd1"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd1<%=i %>"
+				name="date3rd1<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd1"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd1<%=i %>_cal"></td>
+			<% if(!desc3rd1[i].startsWith("<input")) { %>
+			<td nowrap><%=desc3rd1[i] %></td>
+			<td><input type="text" id="c3rd1<%=i %>" name="c3rd1<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c3rd1"+i, "") %>" /></td>
+			<% }else{ %>
+			<td colspan='2'><%=desc3rd1[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr >
-  <td colspan='4'>32 - 35 weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<td colspan='4'>32 - 35 weeks</td>
+		</tr>
+		<% 
 String desc3rd2[] = {
 		"Mother's cordial", 
 		"GBS", 
@@ -715,123 +727,129 @@ String desc3rd2[] = {
 		}; 
 
 %>
-<% for(int i=0; i<desc3rd2.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status3rd2<%=i %>">
-      <option value="" ></option>
-      <% if(desc3rd2[i].startsWith("Risk of PPD")) {
+		<% for(int i=0; i<desc3rd2.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status3rd2<%=i %>">
+				<option value=""></option>
+				<% if(desc3rd2[i].startsWith("Risk of PPD")) {
       	for(int j=0; j<strStatus2.length; j++) { %>
-      		<option value="<%=strStatus2[j] %>" <%=props.getProperty("status3rd2"+i, "").equalsIgnoreCase(strStatus2[j])?"selected":""%> ><%=strStatus2[j] %></option>
-      <%} } else {
+				<option value="<%=strStatus2[j] %>"
+					<%=props.getProperty("status3rd2"+i, "").equalsIgnoreCase(strStatus2[j])?"selected":""%>><%=strStatus2[j] %></option>
+				<%} } else {
       	for(int j=0; j<strStatus.length; j++) { %>
-      		<option value="<%=strStatus[j] %>" <%=props.getProperty("status3rd2"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } }%>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd2<%=i %>" name="date3rd2<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date3rd2"+i, "")%>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd2<%=i %>_cal">
-  </td>
-  <% if(!desc3rd2[i].startsWith("<input")) { %>
-  <td nowrap><%=desc3rd2[i] %></td>
-  <td>
-    <input type="text" id="c3rd2<%=i %>" name="c3rd2<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c3rd2"+i, "") %>"/>
-  </td>
-  <% }else { %>
-  <td colspan='2'><%=desc3rd2[i] %></td>
-  <% } %>
-</tr>
-<% } %>
-<tr>
-  <td colspan='4'>Newborn procedures</td>
-</tr>
-<tr>
-  <td width="20%">
-    <select name="status3rd2a0">
-      <option value=""  <%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("")?"selected":""%>></option>
-      <option value="Discussed" <%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("Discussed")?"selected":""%> >Discussed</option>
-      <option value="IM"  <%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("IM")?"selected":""%> >IM</option>
-      <option value="PO"  <%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("PO")?"selected":""%> >PO</option>
-      <option value="Declined"  <%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("Declined")?"selected":""%> >Declined</option>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd2a0" name="date3rd2a0" size="10" maxlength="10" value="<%= props.getProperty("date3rd2a0", "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd2a0_cal">
-  </td>
-  <td>&nbsp;&nbsp;Vit K</td>
-  <td>
-    <input type="text" id="c3rd2a0" name="c3rd2a0" size="40" maxlength="40" value="<%= props.getProperty("c3rd2a0", "") %>"/>
-  </td>
-</tr>
-<tr>
-  <td width="20%">
-    <select name="status3rd2a1">
-      <option value=""  <%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("")?"selected":""%>></option>
-      <option value="Discussed"  <%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Discussed")?"selected":""%> >Discussed</option>
-      <option value="Yes"  <%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Yes")?"selected":""%> >Yes</option>
-      <option value="Delayed"  <%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Delayed")?"selected":""%> >Delayed</option>
-      <option value="Declined"  <%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Declined")?"selected":""%> >Declined</option>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd2a1" name="date3rd2a1" size="10" maxlength="10" value="<%= props.getProperty("date3rd2a1", "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd2a1_cal">
-  </td>
-  <td>&nbsp;&nbsp;Eye prophylaxis</td>
-  <td>
-    <input type="text" id="c3rd2a1" name="c3rd2a1" size="40" maxlength="40" value="<%= props.getProperty("c3rd2a1", "") %>"/>
-  </td>
-</tr>
-<tr>
-  <td width="20%">
-    <select name="status3rd2a2">
-      <option value=""  <%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("")?"selected":""%>></option>
-      <option value="Discussed"  <%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Discussed")?"selected":""%> >Discussed</option>
-      <option value="Yes"  <%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Yes")?"selected":""%> >Yes</option>
-      <option value="Declined"  <%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Declined")?"selected":""%> >Declined</option>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd2a2" name="date3rd2a2" size="10" maxlength="10" value="<%= props.getProperty("date3rd2a2", "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd2a2_cal">
-  </td>
-  <td>&nbsp;&nbsp;NB Screen</td>
-  <td>
-    <input type="text" id="c3rd2a2" name="c3rd2a2" size="40" maxlength="40" value="<%= props.getProperty("c3rd2a2", "") %>"/>
-  </td>
-</tr>
-<tr>
-  <td width="20%">
-    <select name="status3rd2a3">
-      <option value=""  <%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("")?"selected":""%>></option>
-      <option value="Discussed"  <%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Discussed")?"selected":""%> >Discussed</option>
-      <option value="Yes"  <%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Yes")?"selected":""%> >Yes</option>
-      <option value="Declined"  <%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Declined")?"selected":""%> >Declined</option>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd2a3" name="date3rd2a3" size="10" maxlength="10" value="<%= props.getProperty("date3rd2a3", "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd2a3_cal">
-  </td>
-  <td>&nbsp;&nbsp;Circumcision</td>
-  <td>
-    <input type="text" id="c3rd2a3" name="c3rd2a3" size="40" maxlength="40" value="<%= props.getProperty("c3rd2a3", "") %>"/>
-  </td>
-</tr>
-</table>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status3rd2"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } }%>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd2<%=i %>"
+				name="date3rd2<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd2"+i, "")%>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd2<%=i %>_cal"></td>
+			<% if(!desc3rd2[i].startsWith("<input")) { %>
+			<td nowrap><%=desc3rd2[i] %></td>
+			<td><input type="text" id="c3rd2<%=i %>" name="c3rd2<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c3rd2"+i, "") %>" /></td>
+			<% }else { %>
+			<td colspan='2'><%=desc3rd2[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+		<tr>
+			<td colspan='4'>Newborn procedures</td>
+		</tr>
+		<tr>
+			<td width="20%"><select name="status3rd2a0">
+				<option value=""
+					<%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("")?"selected":""%>></option>
+				<option value="Discussed"
+					<%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("Discussed")?"selected":""%>>Discussed</option>
+				<option value="IM"
+					<%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("IM")?"selected":""%>>IM</option>
+				<option value="PO"
+					<%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("PO")?"selected":""%>>PO</option>
+				<option value="Declined"
+					<%=props.getProperty("status3rd2a0", "").equalsIgnoreCase("Declined")?"selected":""%>>Declined</option>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd2a0"
+				name="date3rd2a0" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd2a0", "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd2a0_cal"></td>
+			<td>&nbsp;&nbsp;Vit K</td>
+			<td><input type="text" id="c3rd2a0" name="c3rd2a0" size="40"
+				maxlength="40" value="<%= props.getProperty("c3rd2a0", "") %>" /></td>
+		</tr>
+		<tr>
+			<td width="20%"><select name="status3rd2a1">
+				<option value=""
+					<%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("")?"selected":""%>></option>
+				<option value="Discussed"
+					<%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Discussed")?"selected":""%>>Discussed</option>
+				<option value="Yes"
+					<%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Yes")?"selected":""%>>Yes</option>
+				<option value="Delayed"
+					<%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Delayed")?"selected":""%>>Delayed</option>
+				<option value="Declined"
+					<%=props.getProperty("status3rd2a1", "").equalsIgnoreCase("Declined")?"selected":""%>>Declined</option>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd2a1"
+				name="date3rd2a1" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd2a1", "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd2a1_cal"></td>
+			<td>&nbsp;&nbsp;Eye prophylaxis</td>
+			<td><input type="text" id="c3rd2a1" name="c3rd2a1" size="40"
+				maxlength="40" value="<%= props.getProperty("c3rd2a1", "") %>" /></td>
+		</tr>
+		<tr>
+			<td width="20%"><select name="status3rd2a2">
+				<option value=""
+					<%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("")?"selected":""%>></option>
+				<option value="Discussed"
+					<%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Discussed")?"selected":""%>>Discussed</option>
+				<option value="Yes"
+					<%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Yes")?"selected":""%>>Yes</option>
+				<option value="Declined"
+					<%=props.getProperty("status3rd2a2", "").equalsIgnoreCase("Declined")?"selected":""%>>Declined</option>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd2a2"
+				name="date3rd2a2" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd2a2", "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd2a2_cal"></td>
+			<td>&nbsp;&nbsp;NB Screen</td>
+			<td><input type="text" id="c3rd2a2" name="c3rd2a2" size="40"
+				maxlength="40" value="<%= props.getProperty("c3rd2a2", "") %>" /></td>
+		</tr>
+		<tr>
+			<td width="20%"><select name="status3rd2a3">
+				<option value=""
+					<%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("")?"selected":""%>></option>
+				<option value="Discussed"
+					<%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Discussed")?"selected":""%>>Discussed</option>
+				<option value="Yes"
+					<%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Yes")?"selected":""%>>Yes</option>
+				<option value="Declined"
+					<%=props.getProperty("status3rd2a3", "").equalsIgnoreCase("Declined")?"selected":""%>>Declined</option>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd2a3"
+				name="date3rd2a3" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd2a3", "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd2a3_cal"></td>
+			<td>&nbsp;&nbsp;Circumcision</td>
+			<td><input type="text" id="c3rd2a3" name="c3rd2a3" size="40"
+				maxlength="40" value="<%= props.getProperty("c3rd2a3", "") %>" /></td>
+		</tr>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr >
-  <td colspan='4'>36 weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<td colspan='4'>36 weeks</td>
+		</tr>
+		<% 
 String desc3rd3[] = {
 		"Active mgt 3rd stage",
 		"Home birth - home visit", 
@@ -846,44 +864,47 @@ String desc3rd3[] = {
 		}; 
 
 %>
-<% for(int i=0; i<desc3rd3.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status3rd3<%=i %>">
-	<% if(i==0) { %>
-      <option value=""  <%=props.getProperty("status3rd30", "").equalsIgnoreCase("")?"selected":""%>></option>
-      <option value="Discussed"  <%=props.getProperty("status3rd30", "").equalsIgnoreCase("Discussed")?"selected":""%> >Discussed</option>
-      <option value="Yes"  <%=props.getProperty("status3rd30", "").equalsIgnoreCase("Yes")?"selected":""%> >Yes</option>
-      <option value="Declined"  <%=props.getProperty("status3rd30", "").equalsIgnoreCase("Declined")?"selected":""%> >Declined</option>
-    <% } else { %>
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status3rd3"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd3<%=i %>" name="date3rd3<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date3rd3"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd3<%=i %>_cal">
-  </td>
-  <% if(!desc3rd3[i].startsWith("<input")) { %>
-  <td nowrap><%=desc3rd3[i] %></td>
-  <td>
-    <input type="text" id="c3rd3<%=i %>" name="c3rd3<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c3rd3"+i, "") %>"/>
-  </td>
-<% }else{ %>
-  <td colspan='2'><%=desc3rd3[i] %></td>
-<% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc3rd3.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status3rd3<%=i %>">
+				<% if(i==0) { %>
+				<option value=""
+					<%=props.getProperty("status3rd30", "").equalsIgnoreCase("")?"selected":""%>></option>
+				<option value="Discussed"
+					<%=props.getProperty("status3rd30", "").equalsIgnoreCase("Discussed")?"selected":""%>>Discussed</option>
+				<option value="Yes"
+					<%=props.getProperty("status3rd30", "").equalsIgnoreCase("Yes")?"selected":""%>>Yes</option>
+				<option value="Declined"
+					<%=props.getProperty("status3rd30", "").equalsIgnoreCase("Declined")?"selected":""%>>Declined</option>
+				<% } else { %>
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status3rd3"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd3<%=i %>"
+				name="date3rd3<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd3"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd3<%=i %>_cal"></td>
+			<% if(!desc3rd3[i].startsWith("<input")) { %>
+			<td nowrap><%=desc3rd3[i] %></td>
+			<td><input type="text" id="c3rd3<%=i %>" name="c3rd3<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c3rd3"+i, "") %>" /></td>
+			<% }else{ %>
+			<td colspan='2'><%=desc3rd3[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr >
-  <td colspan='4'>38 - 40 weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<td colspan='4'>38 - 40 weeks</td>
+		</tr>
+		<% 
 String desc3rd4[] = {
 		"Postdates discussion", 
 		"<input type='text' name='desc3rd40' size='70' maxlength='70' value='" + props.getProperty("desc3rd40", "")+ "'",
@@ -891,38 +912,37 @@ String desc3rd4[] = {
 		}; 
 
 %>
-<% for(int i=0; i<desc3rd4.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status3rd4<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status3rd4"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd4<%=i %>" name="date3rd4<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date3rd4"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd4<%=i %>_cal">
-  </td>
-  <% if(!desc3rd4[i].startsWith("<input")) { %>
-  <td nowrap><%=desc3rd4[i] %></td>
-  <td>
-    <input type="text" id="c3rd4<%=i %>" name="c3rd4<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c3rd4"+i, "") %>"/>
-  </td>
-<% } else {%>
-  <td colspan='2'><%=desc3rd4[i] %></td>
-<% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc3rd4.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status3rd4<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status3rd4"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd4<%=i %>"
+				name="date3rd4<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd4"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd4<%=i %>_cal"></td>
+			<% if(!desc3rd4[i].startsWith("<input")) { %>
+			<td nowrap><%=desc3rd4[i] %></td>
+			<td><input type="text" id="c3rd4<%=i %>" name="c3rd4<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c3rd4"+i, "") %>" /></td>
+			<% } else {%>
+			<td colspan='2'><%=desc3rd4[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr >
-  <td colspan='4'>41+ weeks</td>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<td colspan='4'>41+ weeks</td>
+		</tr>
+		<% 
 String desc3rd5[] = {
 		"Sweeps", 
 		"FM counts", 
@@ -933,38 +953,37 @@ String desc3rd5[] = {
 		"<input type='text' name='desc3rd51' size='70' maxlength='70' value='" + props.getProperty("desc3rd51", "")+ "'",
 		}; 
 %>
-<% for(int i=0; i<desc3rd5.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="status3rd5<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("status3rd5"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="date3rd5<%=i %>" name="date3rd5<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("date3rd5"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="date3rd5<%=i %>_cal">
-  </td>
-  <% if(!desc3rd5[i].startsWith("<input")) { %>
-  <td nowrap><%=desc3rd5[i] %></td>
-  <td>
-    <input type="text" id="c3rd5<%=i %>" name="c3rd5<%=i %>" size="40" maxlength="40" value="<%= props.getProperty("c3rd5"+i, "") %>"/>
-  </td>
-<% } else {%>
-  <td colspan='2'><%=desc3rd5[i] %></td>
-<% } %>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<desc3rd5.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="status3rd5<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("status3rd5"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="date3rd5<%=i %>"
+				name="date3rd5<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("date3rd5"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="date3rd5<%=i %>_cal"></td>
+			<% if(!desc3rd5[i].startsWith("<input")) { %>
+			<td nowrap><%=desc3rd5[i] %></td>
+			<td><input type="text" id="c3rd5<%=i %>" name="c3rd5<%=i %>"
+				size="40" maxlength="40"
+				value="<%= props.getProperty("c3rd5"+i, "") %>" /></td>
+			<% } else {%>
+			<td colspan='2'><%=desc3rd5[i] %></td>
+			<% } %>
+		</tr>
+		<% } %>
+	</table>
 
-<table width="80%" border="1"  cellspacing="0" cellpadding="2">
-<tr >
-  <th colspan='4'>Other</th>
-</tr>
-<% 
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th colspan='4'>Other</th>
+		</tr>
+		<% 
 String descOther[] = {
 		"", 
 		"", 
@@ -975,46 +994,44 @@ String descOther[] = {
 		""}; 
 
 %>
-<% for(int i=0; i<descOther.length; i++) { %>
-<tr>
-  <td width="20%">
-    <select name="statusOther<%=i %>">
-      <option value="" ></option>
-      <% for(int j=0; j<strStatus.length; j++) { %>
-      <option value="<%=strStatus[j] %>" <%=props.getProperty("statusOther"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%> ><%=strStatus[j] %></option>
-      <% } %>
-    </select>
-  </td>
-  <td nowrap width="10%">
-    <input type="text" id="dateOther<%=i %>" name="dateOther<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("dateOther"+i, "") %>"
-    onDblClick="calToday(this)"  @oscar.formDB dbType="date" />
-          <img src="../images/cal.gif" id="dateOther<%=i %>_cal">
-  </td>
-  <td><input type="text" name="descOther<%=i %>" size="50" maxlength="70" value="<%= props.getProperty("descOther"+i, "") %>" />
-  </td>
-</tr>
-<% } %>
-</table>
+		<% for(int i=0; i<descOther.length; i++) { %>
+		<tr>
+			<td width="20%"><select name="statusOther<%=i %>">
+				<option value=""></option>
+				<% for(int j=0; j<strStatus.length; j++) { %>
+				<option value="<%=strStatus[j] %>"
+					<%=props.getProperty("statusOther"+i, "").equalsIgnoreCase(strStatus[j])?"selected":""%>><%=strStatus[j] %></option>
+				<% } %>
+			</select></td>
+			<td nowrap width="10%"><input type="text" id="dateOther<%=i %>"
+				name="dateOther<%=i %>" size="10" maxlength="10"
+				value="<%= props.getProperty("dateOther"+i, "") %>"
+				onDblClick="calToday(this)" @oscar.formDB dbType="date" /> <img
+				src="../images/cal.gif" id="dateOther<%=i %>_cal"></td>
+			<td><input type="text" name="descOther<%=i %>" size="50"
+				maxlength="70" value="<%= props.getProperty("descOther"+i, "") %>" />
+			</td>
+		</tr>
+		<% } %>
+	</table>
 
-      <!--input type="checkbox" name="singleton" 
+	<!--input type="checkbox" name="singleton" 
       <%--= props.getProperty("singleton", "") --%>  @oscar.formDB dbType="tinyint(1)"/> Singleton-->
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="window.print();"/>
-        </td>
-    </tr>
-</table>
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="button"
+				value="Print" onclick="window.print();" /></td>
+		</tr>
+	</table>
 
 </html:form>
 

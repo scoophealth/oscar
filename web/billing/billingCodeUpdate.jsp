@@ -24,7 +24,7 @@
  */
 -->
 
-  <%
+<%
   if(session.getValue("user") == null) 
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
@@ -33,9 +33,12 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 
-%>     
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
+%>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="../errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html>
 <head>
 <title>Billing Summary</title>
@@ -53,8 +56,8 @@ function CodeAttach(File0, File1, File2) {
 </script>
 
 </head>
-    <body>       
- <%
+<body>
+<%
  if (request.getParameter("update").equals("Confirm")) {
  
  
@@ -85,12 +88,13 @@ function CodeAttach(File0, File1, File2) {
     
     if (Count ==0) {
     %>
-    <p>No input selected</p>
-    <input type="button" name="back" value="back" onClick="javascript:history.go(-1);return false;">
-    <%
+<p>No input selected</p>
+<input type="button" name="back" value="back"
+	onClick="javascript:history.go(-1);return false;">
+<%
     }else{
     %>
-    <script LANGUAGE="JavaScript">
+<script LANGUAGE="JavaScript">
     <!--
      CodeAttach('<%=param[0]%>','<%=param[1]%>', '<%=param[2]%>' ); 
     -->
@@ -117,7 +121,9 @@ function CodeAttach(File0, File1, File2) {
 <%  
    apptMainBean.closePstmtConn();
 %>
-  <p><h1>Successful Addition of a billing Record.</h1></p>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
     history.go(-1);return false;
     self.opener.refresh();
@@ -126,4 +132,3 @@ function CodeAttach(File0, File1, File2) {
 
 </body>
 </html>
-    

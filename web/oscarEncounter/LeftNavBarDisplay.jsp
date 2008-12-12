@@ -1,10 +1,12 @@
 <%@page contentType="text/html"%>
 <%-- <%@page pageEncoding="UTF-8"%> --%>
-<%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<%@page
+	import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
-        <%
+<%
         long startTime = System.currentTimeMillis();
         NavBarDisplayDAO dao = (NavBarDisplayDAO)request.getAttribute("DAO");
         String js = dao.getJavaScript();    
@@ -15,14 +17,18 @@
         //Is there java script to insert in page?  Then do it
         if( js != null ) {            
         %>
-        <%=js%>
-        <% }
+<%=js%>
+<% }
         //Do we have a '+' command to display on the right of the module header?
         String rh = dao.getRightHeadingID();
         if( !rh.equals("") ) {          
-        %>        
-        <div id='menuTitle<%=rh%>' style="width:10%; float:right; text-align:center;"><h3 style="padding:0px; <%=getBackgroundColor(dao)%>" ><a href="#" <%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3></div>
-        <%        
+        %>
+<div id='menuTitle<%=rh%>'
+	style="width: 10%; float: right; text-align: center;">
+<h3 style="padding:0px; <%=getBackgroundColor(dao)%>"><a href="#"
+	<%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3>
+</div>
+<%        
         int num;
         //if there is a pop up menu then grab all of the items and format according to number
         if( (num = dao.numPopUpMenuItems()) > 0 ) {
@@ -34,41 +40,45 @@
         menuWidth *= 2;
         }
         %>
-        <div id=menu<%=rh%> class='menu' style='width: <%=menuWidth%>;px' onclick='event.cancelBubble = true;'>
-            <h3 style='text-align:center'><%=dao.getMenuHeader()%></h3>
-            <%            
+<div id=menu <%=rh%> class='menu' style='width: <%=menuWidth%>;px'
+	onclick='event.cancelBubble = true;'>
+<h3 style='text-align: center'><%=dao.getMenuHeader()%></h3>
+<%            
             for(int idx = 0; idx < num; ++idx) {
             if( columns )
             style = idx % 2 == 0 ? "menuItemleft" : "menuItemright";
             else
             style = "menuItemleft";
-            %>
-            <a href="#" class="<%=style%>" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="<%=dao.getPopUpUrl(idx)%>; return false;"><%=dao.getPopUpText(idx)%></a>
-            <%
+            %> <a href="#" class="<%=style%>"
+	onmouseover='this.style.color="black"'
+	onmouseout='this.style.color="white"'
+	onclick="<%=dao.getPopUpUrl(idx)%>; return false;"><%=dao.getPopUpText(idx)%></a>
+<%
             if( columns && idx % 2 == 1) {
-            %>
-            <br>
-            <%
+            %> <br>
+<%
             }
             else if( !columns ){
-            %>
-            <br>
-            <%                    
+            %> <br>
+<%                    
             }
             } //end for
             %>
-        </div>
-        <%            
+</div>
+<%            
         } //end if menu items
         } //end if there is a right hand header               
         
         
         //left hand module header comes last as it's displayed as a block
         %>
-        <div style="clear:left; float:left; width:90%;"><h3 style="width:100%; <%=getBackgroundColor(dao)%>"><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3></div>
-               
-        <ul id="<%=request.getAttribute("navbarName")%>list">
-            <%
+<div style="clear: left; float: left; width: 90%;">
+<h3 style="width:100%; <%=getBackgroundColor(dao)%>"><a href="#"
+	onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3>
+</div>
+
+<ul id="<%=request.getAttribute("navbarName")%>list">
+	<%
             //now we display the actual items of the module
             String manageItems = "";
             String div = (String)request.getAttribute("navbarName");
@@ -131,15 +141,16 @@
                 out.println("<li>&nbsp;</li>");
             }
             %>
-        </ul>
-        <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=numDisplayed%>" />
-    <%   
+</ul>
+<input type="hidden" id="<%=request.getAttribute("navbarName")%>num"
+	value="<%=numDisplayed%>" />
+<%   
         out.println("<script type=\"text/javascript\">" + jscode.toString() + "</script>");
         //System.out.println(jscode.toString());
         System.out.println("LeftNavBar " + request.getAttribute("navbarName") + "load time: " + (System.currentTimeMillis()-startTime) + "ms");
     %>
-    
-    <%!
+
+<%!
     public String getBackgroundColor(NavBarDisplayDAO dao){
         if ( dao.hasHeadingColour()){
            return  "background-color: #"+dao.getHeadingColour()+";"; 

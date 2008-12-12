@@ -22,10 +22,10 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
 
-<%@ page import="org.oscarehr.casemgmt.model.*" %>
-<%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
+<%@ page import="org.oscarehr.casemgmt.model.*"%>
+<%@ page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.Map"%>
 
@@ -35,7 +35,8 @@
 %>
 Issue Filter Create Report View:
 
-<table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+<table width="100%" border="0" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0">
 	<tr class="title">
 		<td></td>
 		<td>Issue</td>
@@ -56,7 +57,7 @@ Issue Filter Create Report View:
 				bgcolor="#EEEEFF";
 			}			
 		%>
-		
+
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<%
 				String checked="";
@@ -78,30 +79,32 @@ Issue Filter Create Report View:
 				if("allergy".equals(issue.getIssue().getPriority()))
 					priority="yellow";
 			%>
-			<td><input type="checkbox" name="check_issue" value="<c:out value="${issue.issue_id}"/>" <%=checked %> onclick="document.caseManagementViewForm.submit();"/></td>
-			<td bgcolor=<%=priority%>><c:out value="${issue.issue.description }"/></td>
-			<td><c:if test="${issue.acute=='true'}">acute</c:if>
-			<c:if test="${issue.acute=='false'}">chronic</c:if>
-			</td>
-			<td><c:if test="${issue.certain=='true'}">certain</c:if>
-			<c:if test="${issue.certain=='false'}">uncertain</c:if>
-			</td>
-			<td><c:if test="${issue.major=='true'}">major</c:if>
-			<c:if test="${issue.major=='false'}">not major</c:if>
-			</td>
-			<td><c:if test="${issue.resolved=='true'}">resolved</c:if>
-			<c:if test="${issue.resolved=='false'}">unresolved</c:if>
-			</td>
-			<td><c:out value="${issue.type }"/></td>
+			<td><input type="checkbox" name="check_issue"
+				value="<c:out value="${issue.issue_id}"/>" <%=checked %>
+				onclick="document.caseManagementViewForm.submit();" /></td>
+			<td bgcolor=<%=priority%>><c:out
+				value="${issue.issue.description }" /></td>
+			<td><c:if test="${issue.acute=='true'}">acute</c:if> <c:if
+				test="${issue.acute=='false'}">chronic</c:if></td>
+			<td><c:if test="${issue.certain=='true'}">certain</c:if> <c:if
+				test="${issue.certain=='false'}">uncertain</c:if></td>
+			<td><c:if test="${issue.major=='true'}">major</c:if> <c:if
+				test="${issue.major=='false'}">not major</c:if></td>
+			<td><c:if test="${issue.resolved=='true'}">resolved</c:if> <c:if
+				test="${issue.resolved=='false'}">unresolved</c:if></td>
+			<td><c:out value="${issue.type }" /></td>
 			<td>
-				<%
+			<%
 					CaseManagementIssue i = (CaseManagementIssue) pageContext.getAttribute("issue");
 					if(i.isMajor()) {
 						String code = i.getIssue().getCode();
 						if(dxMap.get(code) != null) {
 							%>Dx<%
 						} else {
-							%><span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.issue.code}"/>';document.caseManagementViewForm.submit(); return false;" >+Dx</span><%
+							%><span
+				style="text-decoration: underline; cursor: pointer; color: blue"
+				onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.issue.code}"/>';document.caseManagementViewForm.submit(); return false;">+Dx</span>
+			<%
 						}
 					}
 				%>
@@ -109,10 +112,16 @@ Issue Filter Create Report View:
 		</tr>
 	</c:forEach>
 </table>
-<logic:equal name="caseManagementViewForm" property="hideActiveIssue" value="true">
-	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;" >show resolved issues</span>
+<logic:equal name="caseManagementViewForm" property="hideActiveIssue"
+	value="true">
+	<span style="text-decoration: underline; cursor: pointer; color: blue"
+		onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;">show
+	resolved issues</span>
 </logic:equal>
-<logic:notEqual name="caseManagementViewForm" property="hideActiveIssue" value="true">
-	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;" >hide resolved issues</span>
+<logic:notEqual name="caseManagementViewForm" property="hideActiveIssue"
+	value="true">
+	<span style="text-decoration: underline; cursor: pointer; color: blue"
+		onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;">hide
+	resolved issues</span>
 </logic:notEqual>
 

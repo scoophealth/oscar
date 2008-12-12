@@ -22,9 +22,10 @@
     response.sendRedirect("../logout.jsp");
   }
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*, oscar.oscarReport.data.*" %>
-  <%@ page import="oscar.login.*" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*, oscar.oscarReport.data.*"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 boolean bDeletedList = false;
 String msg = "Report List";
@@ -68,17 +69,15 @@ int n = bDeletedList? 0 : 1;
 String link = bDeletedList? "<a href='reportFormRecord.jsp'>Report list</a>" : "<a href='reportFormRecord.jsp?undelete=true'>Deleted report list</a>";
 Vector vec = reportItem.getNameList(n);
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        <%=bDeletedList? "Deleted" : ""%> Report List
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <script language="JavaScript">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title><%=bDeletedList? "Deleted" : ""%> Report List</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<script language="JavaScript">
 
 		<!--
 		function setfocus() {
@@ -108,67 +107,67 @@ Vector vec = reportItem.getNameList(n);
 		//-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr>
-          <td align="left">
-            &nbsp;
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td align="left">&nbsp;</td>
+	</tr>
+</table>
 
-      <center>
-      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
-        <tr BGCOLOR="#CCFFFF">
-          <th><%=msg%></th>
-        </tr>
-      </table>
-      </center>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr BGCOLOR="#CCCCFF">
-          <td align="right"><%=link%></td>
-        </tr>
-      </table>
-      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-<% for(int i=0; i<vec.size(); i++) {
+<center>
+<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+	<tr BGCOLOR="#CCFFFF">
+		<th><%=msg%></th>
+	</tr>
+</table>
+</center>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr BGCOLOR="#CCCCFF">
+		<td align="right"><%=link%></td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+	<% for(int i=0; i<vec.size(); i++) {
 		String color = i%2==0? "#EEEEFF" : "";
 		prop = (Properties) vec.get(i);
 		String itemId = prop.getProperty("id");
 %>
-        <form method="post" name="baseurl<%=i+1%>" action="reportFormRecord.jsp">
-          <tr bgcolor="<%=color%>">
-            <td align="right">
-              <b><%=i+1%></b>
-            </td>
-            <td onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=color%>';"
-            onClick="goPage(<%=itemId%>)" >
-              <%=prop.getProperty(itemId)%>
-            </td>
-            <td width="5%" align="right">
-              <input type="hidden" name="id" value="<%=itemId%>">
-        <% if(!bDeletedList) { %>
-              <input type="submit" name="submit" value="Delete" onclick="javascript:return onDelete();">
-        <% } else { %>
-              <input type="submit" name="submit" value="Restore" onclick="javascript:return onRestore();">
-        <% } %>
-            </td>
-          </tr>
-        </form>
-<% } %>
-      </table>
+	<form method="post" name="baseurl<%=i+1%>"
+		action="reportFormRecord.jsp">
+	<tr bgcolor="<%=color%>">
+		<td align="right"><b><%=i+1%></b></td>
+		<td
+			onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
+			onMouseout="this.style.backgroundColor='<%=color%>';"
+			onClick="goPage(<%=itemId%>)"><%=prop.getProperty(itemId)%></td>
+		<td width="5%" align="right"><input type="hidden" name="id"
+			value="<%=itemId%>"> <% if(!bDeletedList) { %> <input
+			type="submit" name="submit" value="Delete"
+			onclick="javascript:return onDelete();"> <% } else { %> <input
+			type="submit" name="submit" value="Restore"
+			onclick="javascript:return onRestore();"> <% } %>
+		</td>
+	</tr>
+	</form>
+	<% } %>
+</table>
 
-      <hr>
-      <table width="60%" border="0" cellspacing="2" cellpadding="2">
-        <tr><td>Add a new report</td></tr>
-        <tr><td align="center">
-        <form method="post" name="baseurl" action="reportFormRecord.jsp">
-              <input type="text" name="name" value="" size="60" />
-              <input type="submit" name="submit" value="Add" onclick="javascript:return onAdd();"/>
-        </form>
-        </td>
-        </tr>
-      </table>
+<hr>
+<table width="60%" border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td>Add a new report</td>
+	</tr>
+	<tr>
+		<td align="center">
+		<form method="post" name="baseurl" action="reportFormRecord.jsp">
+		<input type="text" name="name" value="" size="60" /> <input
+			type="submit" name="submit" value="Add"
+			onclick="javascript:return onAdd();" /></form>
+		</td>
+	</tr>
+</table>
 
-    </body>
-  </html:html>
+</body>
+</html:html>

@@ -1,4 +1,5 @@
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
+	errorPage="errorpage.jsp"%>
 <%
     //this is a quick independent page to let you add studying patient.
     
@@ -9,8 +10,9 @@
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
     String [][] dbQueries=new String[][] { 
         {"delete_demostudy", "delete from demographicstudy where demographic_no = ?" }, 
@@ -65,8 +67,8 @@
 -->
 <html>
 <head>
-<title>PATIENT STUDY SEARCH RESULTS </title>
-<link rel="stylesheet" href="../web.css" >
+<title>PATIENT STUDY SEARCH RESULTS</title>
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -76,26 +78,31 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th>PATIENT STUDY RECORDS</th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepColor%>">
+		<th>PATIENT STUDY RECORDS</th>
+	</tr>
 </table>
 
 <table width="100%" border="0">
-<tr><td align="left"><%=request.getParameter("name")!=null?request.getParameter("name"):""%></td></tr>
+	<tr>
+		<td align="left"><%=request.getParameter("name")!=null?request.getParameter("name"):""%></td>
+	</tr>
 </table>
 
 <CENTER>
-<table width="100%" border="0" bgcolor="#ffffff" > 
-<form method="post" name="study" action="demographicstudyselect.jsp" >
-  <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-  <tr bgcolor="<%=deepColor%>">
-  <TH width="5%"></TH>
-  <TH width="10%">Study Name</TH>
-  <TH width="15%">Description</TH>
-  </tr>
-<%
+<table width="100%" border="0" bgcolor="#ffffff">
+	<form method="post" name="study" action="demographicstudyselect.jsp">
+	<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+	<tr bgcolor="<%=deepColor%>">
+		<TH width="5%"></TH>
+		<TH width="10%">Study Name</TH>
+		<TH width="15%">Description</TH>
+	</tr>
+	<%
     ResultSet rsdemo = null ;
     ResultSet rs = null ;
     int nItems=0;
@@ -108,21 +115,28 @@ function setfocus() {
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
         rs = studyBean.queryResults(new String[]{demographic_no,rsdemo.getString("s.study_no")}, "search_demostudy");
-%>  
-  <tr bgcolor="<%=bgcolor%>">
-    <td align='center'><input type="checkbox" name="study_no" value="<%=rsdemo.getString("s.study_no")%>" <%=demographic_no.equals(rs.next()?studyBean.getString(rs,"demographic_no"):"0") ? "checked" : "" %>></td>
-    <td><%=studyBean.getString(rsdemo,"study_name")%></td>
-    <td align="center"><%=studyBean.getString(rsdemo,"description")%></td>
-  </tr>
-<%
+%>
+	<tr bgcolor="<%=bgcolor%>">
+		<td align='center'><input type="checkbox" name="study_no"
+			value="<%=rsdemo.getString("s.study_no")%>"
+			<%=demographic_no.equals(rs.next()?studyBean.getString(rs,"demographic_no"):"0") ? "checked" : "" %>></td>
+		<td><%=studyBean.getString(rsdemo,"study_name")%></td>
+		<td align="center"><%=studyBean.getString(rsdemo,"description")%></td>
+	</tr>
+	<%
   }
   studyBean.closePstmtConn();
-%> 
-<tr><td>&nbsp;</td><td></td><td></td></tr>
-<tr align="center" bgcolor="<%=weakColor%>"><td colspan='3'>
-  <input type="submit" name="submit" value="Update">
-  <input type="button" name="button" value="Exit" onClick="window.close()">
-  </td></tr>
+%>
+	<tr>
+		<td>&nbsp;</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr align="center" bgcolor="<%=weakColor%>">
+		<td colspan='3'><input type="submit" name="submit" value="Update">
+		<input type="button" name="button" value="Exit"
+			onClick="window.close()"></td>
+	</tr>
 </table>
 
 </form>

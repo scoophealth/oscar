@@ -1,8 +1,10 @@
-<jsp:useBean id="formHandler" class="org.caisi.tickler.prepared.seaton.consultation.NotifyConsultationBean" scope="request">
-	<jsp:setProperty name="formHandler" property="*"/>
+<jsp:useBean id="formHandler"
+	class="org.caisi.tickler.prepared.seaton.consultation.NotifyConsultationBean"
+	scope="request">
+	<jsp:setProperty name="formHandler" property="*" />
 </jsp:useBean>
 
-<%@ include file="/ticklerPlus/header.jsp" %>
+<%@ include file="/ticklerPlus/header.jsp"%>
 
 
 <script>
@@ -44,70 +46,74 @@ function generate_tickler() {
 }
 </script>
 
-	<tr>
-		<td class="searchTitle" colspan="4">Prepared Tickler - Notify Consultation Appointment</td>
-	</tr>
+<tr>
+	<td class="searchTitle" colspan="4">Prepared Tickler - Notify
+	Consultation Appointment</td>
+</tr>
 </table>
-<%@ include file="messages.jsp" %>
-<br/>
+<%@ include file="messages.jsp"%>
+<br />
 
-<table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-	<form name="myform" action="../Tickler.do">
-		<input type="hidden" name="method" value="<c:out value="${formHandler.method}"/>"/>
-		<input type="hidden" name="id" value="<c:out value="${formHandler.id}"/>"/>
-		<input type="hidden" name="action" value="<c:out value="${formHandler.action}"/>"/>
-		<tr>
-			<td class="fieldTitle">Demographic:</td>
-	        <td class="fieldValue">
-	        	<input type="hidden" name="demographic_no" value="<c:out value="${formHandler.demographic_no}"/>"/>
-	        	<input type="text" name="demographic_name" value="<c:out value="${formHandler.demographic_name}"/>"/>
-	        	<input type="button" value="Search" onclick="search_demographic();"/>
-			</td>
-		</tr>
-		<tr>
-			<td class="fieldTitle">Consultation Requests</td>
-			<td class="fieldValue">
-				<logic:present name="consultations">
-					<!-- Show Consultations here -->
-					<%
+<table width="100%" border="0" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0">
+	<form name="myform" action="../Tickler.do"><input type="hidden"
+		name="method" value="<c:out value="${formHandler.method}"/>" /> <input
+		type="hidden" name="id" value="<c:out value="${formHandler.id}"/>" />
+	<input type="hidden" name="action"
+		value="<c:out value="${formHandler.action}"/>" />
+	<tr>
+		<td class="fieldTitle">Demographic:</td>
+		<td class="fieldValue"><input type="hidden" name="demographic_no"
+			value="<c:out value="${formHandler.demographic_no}"/>" /> <input
+			type="text" name="demographic_name"
+			value="<c:out value="${formHandler.demographic_name}"/>" /> <input
+			type="button" value="Search" onclick="search_demographic();" /></td>
+	</tr>
+	<tr>
+		<td class="fieldTitle">Consultation Requests</td>
+		<td class="fieldValue"><logic:present name="consultations">
+			<!-- Show Consultations here -->
+			<%
 						int consultationSize = ((java.util.List)request.getAttribute("consultations")).size();
 						if(consultationSize > 0) {
 					%>
-					<table border="1" cellspacing="2" cellpadding="1">
-						<tr>
-							
-							<td align="left" class="fieldTitle">Referral Date</td>
-							<td align="left" class="fieldTitle">Name</td>
-							<td align="left" class="fieldTitle">Reason</td>
-						</tr>
-						<c:forEach var="current" items="${consultations}">
-							<tr>
-								<td><input type="radio" name="current_consultation" value="<c:out value="${current.requestId}"/>"/>
-								<fmt:formatDate dateStyle="short" value="${current.referalDate}"/></td>
-								<td><c:out value="${current.professionalSpecialist.firstName}"/>&nbsp;<c:out value="${current.professionalSpecialist.lastName}"/></td>
-								<td><c:out value="${current.reason}"/></td>
-							</tr>
-						</c:forEach>
-						<tr>
-							<td colspan="2">
-								<input type="button" value="Generate Tickler" onclick="javascript:generate_tickler()"/>
-							</td>
-						</tr>
-					</table>
-					<%} else { %>
+			<table border="1" cellspacing="2" cellpadding="1">
+				<tr>
+
+					<td align="left" class="fieldTitle">Referral Date</td>
+					<td align="left" class="fieldTitle">Name</td>
+					<td align="left" class="fieldTitle">Reason</td>
+				</tr>
+				<c:forEach var="current" items="${consultations}">
+					<tr>
+						<td><input type="radio" name="current_consultation"
+							value="<c:out value="${current.requestId}"/>" /> <fmt:formatDate
+							dateStyle="short" value="${current.referalDate}" /></td>
+						<td><c:out
+							value="${current.professionalSpecialist.firstName}" />&nbsp;<c:out
+							value="${current.professionalSpecialist.lastName}" /></td>
+						<td><c:out value="${current.reason}" /></td>
+					</tr>
+				</c:forEach>
+				<tr>
+					<td colspan="2"><input type="button" value="Generate Tickler"
+						onclick="javascript:generate_tickler()" /></td>
+				</tr>
+			</table>
+			<%} else { %>
 						No consultation requests were found for this Patient
 					<%} %>
-				</logic:present>
-				<logic:notPresent name="consultations">
-					<input type="button" value="Populate" onclick="populate_consultation_requests()"/>
-				</logic:notPresent>
-			</td>
-		</tr>
-		<tr>
-			<td class="fieldValue" colspan="3" align="left">
-				<input type="button" class="button" value="Cancel" onclick="location.href='/<%=application.getServletContextName()%>/Tickler.do?method=prepared_tickler_list';"/>
-			</td>
-		</tr>
+		</logic:present> <logic:notPresent name="consultations">
+			<input type="button" value="Populate"
+				onclick="populate_consultation_requests()" />
+		</logic:notPresent></td>
+	</tr>
+	<tr>
+		<td class="fieldValue" colspan="3" align="left"><input
+			type="button" class="button" value="Cancel"
+			onclick="location.href='/<%=application.getServletContextName()%>/Tickler.do?method=prepared_tickler_list';" />
+		</td>
+	</tr>
 	</form>
 </table>
 

@@ -1,3 +1,4 @@
+
 <%  
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
@@ -45,8 +46,8 @@
  * EMR System
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html>
 <head>
 <title>OSCAR oscarPathNET - Patient Linking</title>
@@ -69,57 +70,69 @@ function PopupLab(pid){
 </head>
 <body>
 <form action="index.jsp" method="post">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D3D3D3">
-	  <tr> 
-	    <td height="40" width="25"></td>
-	    <td width="50%" align="left">
-	      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - Patient Linking</font></font></b></font> 
-	    </td>
-	    <td class="Text" align="right"><a href="searchreports.jsp">Search Lab Reports</a>&nbsp;</td>
-	  </tr>
-	</table>
-	<table width="100%" cellspacing="2" cellpadding="2">
-		<tr bgcolor="E6E6E6">
-			<td class="Text" align="center" colspan="6" style="border-right: #464646 1px solid;">Lab Information</td>
-			<td class="Text" align="center" colspan="3" style="border-left: #464646 1px solid;">Demographic Information</td>
-		</tr>
-		<tr>
-			<td class="Header">Valid</td>
-			<td class="Header">Patient</td>
-			<td class="Header">BirthDate</td>
-			<td class="Header" >Gender</td>
-			<td class="Header">Ordered By</td>
-			<td class="Header" style="border-right: #464646 1px solid;">Copies To</td>
-			<td class="Header" style="border-left: #464646 1px solid;">Demo. No.</td>
-			<td class="Header">Name</td>
-			<td class="Header">BirthDate</td>
-		</tr>
-<%
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+	bgcolor="#D3D3D3">
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="50%" align="left"><font color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">PathNET - Patient Linking</font></font></b></font>
+		</td>
+		<td class="Text" align="right"><a href="searchreports.jsp">Search
+		Lab Reports</a>&nbsp;</td>
+	</tr>
+</table>
+<table width="100%" cellspacing="2" cellpadding="2">
+	<tr bgcolor="E6E6E6">
+		<td class="Text" align="center" colspan="6"
+			style="border-right: #464646 1px solid;">Lab Information</td>
+		<td class="Text" align="center" colspan="3"
+			style="border-left: #464646 1px solid;">Demographic Information</td>
+	</tr>
+	<tr>
+		<td class="Header">Valid</td>
+		<td class="Header">Patient</td>
+		<td class="Header">BirthDate</td>
+		<td class="Header">Gender</td>
+		<td class="Header">Ordered By</td>
+		<td class="Header" style="border-right: #464646 1px solid;">Copies
+		To</td>
+		<td class="Header" style="border-left: #464646 1px solid;">Demo.
+		No.</td>
+		<td class="Header">Name</td>
+		<td class="Header">BirthDate</td>
+	</tr>
+	<%
 		db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 		java.sql.ResultSet result = db.GetSQL(select_lab_matching);
 		boolean other = true;
 		while(result.next()){
 %>
-		<tr class="<%=(other? "WhiteBG" : "LightBG")%>">
-			<td class="Text"><input type="checkbox" name="chk" value="<%=result.getString("pid_id")%>" /></td>
-			<td class="Text"><a href="#" onclick="return PopupLab('<%=result.getString("pid_id")%>');" ><%=oscar.Misc.check(result.getString("patient_name"), "")%></a></td>
-			<td class="Text"><%=oscar.Misc.check(result.getString("birth").split(" ")[0], "")%></td>
-			<td class="Text" align="center"><%=oscar.Misc.check(result.getString("sex"), "")%></td>
-			<td class="Text"><%=oscar.Misc.check(result.getString("ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
-			<td class="Text" style="border-right: #464646 1px solid;"><%=oscar.Misc.check(result.getString("result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
-			<td class="Text" style="border-left: #464646 1px solid;"><a href="#" onclick="return PopupDemo('<%=result.getString("pid_id")%>');" ><%=oscar.Misc.check(result.getString("demographic_no"), "select")%> </a></td>
-			<td class="Text"><%=((result.getString("last_name")==null && result.getString("first_name")==null)? "" : result.getString("last_name") + ", " + result.getString("first_name"))%></td>
-			<td class="Text"><%=((result.getString("year")==null && result.getString("month")==null && result.getString("day")==null)? "" : result.getString("year") + "-" + result.getString("month") + "-" + result.getString("day"))%></td>
-		</tr>
-<%
+	<tr class="<%=(other? "WhiteBG" : "LightBG")%>">
+		<td class="Text"><input type="checkbox" name="chk"
+			value="<%=result.getString("pid_id")%>" /></td>
+		<td class="Text"><a href="#"
+			onclick="return PopupLab('<%=result.getString("pid_id")%>');"><%=oscar.Misc.check(result.getString("patient_name"), "")%></a></td>
+		<td class="Text"><%=oscar.Misc.check(result.getString("birth").split(" ")[0], "")%></td>
+		<td class="Text" align="center"><%=oscar.Misc.check(result.getString("sex"), "")%></td>
+		<td class="Text"><%=oscar.Misc.check(result.getString("ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
+		<td class="Text" style="border-right: #464646 1px solid;"><%=oscar.Misc.check(result.getString("result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
+		<td class="Text" style="border-left: #464646 1px solid;"><a
+			href="#"
+			onclick="return PopupDemo('<%=result.getString("pid_id")%>');"><%=oscar.Misc.check(result.getString("demographic_no"), "select")%>
+		</a></td>
+		<td class="Text"><%=((result.getString("last_name")==null && result.getString("first_name")==null)? "" : result.getString("last_name") + ", " + result.getString("first_name"))%></td>
+		<td class="Text"><%=((result.getString("year")==null && result.getString("month")==null && result.getString("day")==null)? "" : result.getString("year") + "-" + result.getString("month") + "-" + result.getString("day"))%></td>
+	</tr>
+	<%
 			other=!other;
 		}
 		db.CloseConn();
 %>
-		<tr>
-			<td colspan="9" align="left"><input type="submit" name="submit" value="Link" /></td>
-		</tr>
-	</table>
+	<tr>
+		<td colspan="9" align="left"><input type="submit" name="submit"
+			value="Link" /></td>
+	</tr>
+</table>
 </form>
 </body>
 </html:html>

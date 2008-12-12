@@ -21,39 +21,38 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
 .Head {
-    background-color:#BBBBBB;
-    padding-top:3px;
-    padding-bottom:3px;
-    width:940px;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 940px;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 BODY {
-    font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-    background-color: #c4e9f6;
+	font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+	background-color: #c4e9f6;
 }
 
 TABLE {
-    font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+	font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
 }
 
 .title {
-    background-color: #486ebd;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-align: centre;
+	background-color: #486ebd;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: centre;
 }
 
 .shrinkMe TABLE {
-    font-size: 9pt;
+	font-size: 9pt;
 }

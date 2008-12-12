@@ -24,24 +24,28 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*,java.security.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*,java.security.*"
+	errorPage="errorpage.jsp"%>
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
-<head><title>add a login user</title>
+<head>
+<title>add a login user</title>
 <link rel="stylesheet" href="../web.css">
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A LOGIN USER RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A LOGIN USER RECORD</font></th>
+	</tr>
+</table>
 <%
     StringBuffer sbTemp = new StringBuffer();
     MessageDigest md = MessageDigest.getInstance("SHA");
@@ -57,17 +61,14 @@
   if (rowsAffected ==1) {
   //System.out.println("********************");}
 %>
-  <h1>Successful Addition of a Login User Record.
-  </h1>
+<h1>Successful Addition of a Login User Record.</h1>
 <%  
   } else {
 %>
-  <h1>Sorry, addition has failed.
-<%  
+<h1>Sorry, addition has failed. <%  
   }
   apptMainBean.closePstmtConn();
-%>
-<%@ include file="footer2.htm" %>
+%> <%@ include file="footer2.htm"%>
 </center>
 </body>
 </html>

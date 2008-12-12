@@ -35,9 +35,11 @@
   }
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="demosummaryBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>  
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="demosummaryBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
     {"search_detail", "select * from demographic where demographic_no=?"},
@@ -92,9 +94,9 @@
 <html>
 <head>
 <title>PATIENT SUMMARY</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
@@ -103,10 +105,14 @@
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="silver"><th align=CENTER NOWRAP><font face="Helvetica" color="navy">PATIENT SUMMARY</font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="silver">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="navy">PATIENT
+		SUMMARY</font></th>
+	</tr>
 </table>
 <%
    ResultSet rsdemo = null;
@@ -153,51 +159,63 @@
 </encounter>
 </xml>
 
-<table width="100%" border="0" >
-  <tr>
-    <td align="left"><font color="blue"><%=demoname%> <i><%=""+age%></i> <%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
-    <td align="right"><input type="submit" name="submit" value=" Print " onClick="window.print()">
-      <input type="button" name="Button" value="Cancel" onClick="window.close()">
-    </td>
-  </tr>
+<table width="100%" border="0">
+	<tr>
+		<td align="left"><font color="blue"><%=demoname%> <i><%=""+age%></i>
+		<%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
+		<td align="right"><input type="submit" name="submit"
+			value=" Print " onClick="window.print()"> <input
+			type="button" name="Button" value="Cancel" onClick="window.close()">
+		</td>
+	</tr>
 </table>
-<table width="100%" border="1" bgcolor="white" cellpadding="0" cellspacing="1" datasrc='#xml_list'>
-  <tr bgcolor="#eeeeee"> 
-    <td width="50%" align="center"><b>Problem List</b></td>
-    <td width="50%" align="center"> <b>Medication</b></td>
-  </tr><tr>
-    <td><font size="-1"><div datafld='xml_Problem_List'></div></font></td>
-    <td><font size="-1"><div datafld='xml_Medication'></div></font></td>
-  </tr>
-  <tr bgcolor="#eeeeee"> 
-    <td  align="center"><b>Allergy/Alert</b></td>
-    <td align="center"><b>Family Social History</b></td>
-  </tr><tr>
-    <td><font size="-1"><div datafld='xml_Alert'></div></font></td>
-    <td><font size="-1"><div datafld='xml_Family_Social_History'></div></font></td>
-  </tr>
+<table width="100%" border="1" bgcolor="white" cellpadding="0"
+	cellspacing="1" datasrc='#xml_list'>
+	<tr bgcolor="#eeeeee">
+		<td width="50%" align="center"><b>Problem List</b></td>
+		<td width="50%" align="center"><b>Medication</b></td>
+	</tr>
+	<tr>
+		<td><font size="-1">
+		<div datafld='xml_Problem_List'></div>
+		</font></td>
+		<td><font size="-1">
+		<div datafld='xml_Medication'></div>
+		</font></td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td align="center"><b>Allergy/Alert</b></td>
+		<td align="center"><b>Family Social History</b></td>
+	</tr>
+	<tr>
+		<td><font size="-1">
+		<div datafld='xml_Alert'></div>
+		</font></td>
+		<td><font size="-1">
+		<div datafld='xml_Family_Social_History'></div>
+		</font></td>
+	</tr>
 </table>
 
 <p>
 <form name="encounterrep" method="post" action="demographicsummary.jsp">
 <table width="100%" border="0" bgcolor="ivory">
-  <tr > 
-    <td ><font size="-1"> <b>Encounter History</b></font></td>
-  </tr><tr>  
-    <td bgcolor="#FFFFFF"> 
-<%
+	<tr>
+		<td><font size="-1"> <b>Encounter History</b></font></td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFFFFF">
+		<%
    rsdemo = null;
    rsdemo = demosummaryBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
    int i=0;
    while (rsdemo.next()) { 
      i++;
-%>
-      &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%>
+%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%>
 
-        <input type="checkbox" name="<%="encounter_no"+i%>" value="<%=rsdemo.getString("encounter_no")%>" >
-      
-      <font color="blue"> 
-      <%
+		<input type="checkbox" name="<%="encounter_no"+i%>"
+			value="<%=rsdemo.getString("encounter_no")%>"> <font
+			color="blue"> <%
      String historysubject = rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
      //System.out.println(" history = " + historysubject);
@@ -209,27 +227,30 @@
 
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim()+".jsp";
-%>
-      <a href=# onClick ="popupPage(600,800,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%> 
-      </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(600,800,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      } else if(strForm.compareTo("")!=0) {
-%>     
-     <a href=# onClick ="popupPage(400,600,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%>
-     </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(400,600,'../provider/providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"No Subject":rsdemo.getString("subject").equals("")?"No Subject":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      }
    }     
    demosummaryBean.closePstmtConn();
-%>      
-    </td>
-  </tr>
-  <tr bgcolor="#eeeeee"><td align="center">
-    <input type="hidden" name="encounternum" value="<%=i%>">
-    <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-    <input type="submit" name="submit" value="Create Encounter Report">
-    <input type="submit" name="submit" value="Delete"><input type="button" name="button" value="Cancel" onClick="window.close()">
-  </td></tr>
+%>
+		</td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td align="center"><input type="hidden" name="encounternum"
+			value="<%=i%>"> <input type="hidden" name="demographic_no"
+			value="<%=request.getParameter("demographic_no")%>"> <input
+			type="submit" name="submit" value="Create Encounter Report">
+		<input type="submit" name="submit" value="Delete"><input
+			type="button" name="button" value="Cancel" onClick="window.close()">
+		</td>
+	</tr>
 </table>
 </form>
 <center></center>

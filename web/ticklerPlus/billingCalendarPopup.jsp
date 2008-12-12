@@ -24,10 +24,12 @@
  */
 -->
 
- <%
+<%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <%
   //to prepare calendar display  
   String type = request.getParameter("type");
@@ -42,12 +44,12 @@
   month = now.get(Calendar.MONTH)+1;
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <head>
-<title><bean:message key="billing.billingCalendarPopup.title"/></title>
+<title><bean:message key="billing.billingCalendarPopup.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -73,27 +75,43 @@ function typeSrvDate(year1,month1,day1) {
   DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-  			<tr>
-        	  <td BGCOLOR="#FFD7C4" width="50%" align="center" >
-			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> <bean:message key="billing.billingCalendarPopup.btnLast"/>&nbsp;&nbsp; 
-              </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;<bean:message key="billing.billingCalendarPopup.btnNext"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
-  			</TR>
-		</table>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td BGCOLOR="#FFD7C4" width="50%" align="center"><a
+			href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>">
+		&nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9"
+			BORDER="0" ALT="View Last Month" vspace="2"> <bean:message
+			key="billing.billingCalendarPopup.btnLast" />&nbsp;&nbsp; </a> <b><span
+			CLASS=title><%=year%>-<%=month%></span></b> <a
+			href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>">
+		&nbsp;&nbsp;<bean:message key="billing.billingCalendarPopup.btnNext" />
+		<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+	</TR>
+</table>
 <p>
-          <table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-            <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="billing.billingCalendarPopup.msgSun"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgMon"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgTue"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgWed"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgThu"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="billing.billingCalendarPopup.msgFri"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="billing.billingCalendarPopup.msgSat"/></font></td>
-            </tr>
-            
-            <%
+<table width="100%" border="1" cellspacing="0" cellpadding="2"
+	bgcolor="silver">
+	<tr bgcolor="#FOFOFO" align="center">
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="red"><bean:message
+			key="billing.billingCalendarPopup.msgSun" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="billing.billingCalendarPopup.msgMon" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="billing.billingCalendarPopup.msgTue" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="billing.billingCalendarPopup.msgWed" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="billing.billingCalendarPopup.msgThu" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="billing.billingCalendarPopup.msgFri" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="green"><bean:message
+			key="billing.billingCalendarPopup.msgSat" /></font></td>
+	</tr>
+
+	<%
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("<tr>");
                 for (int j=0; j<7; j++) {
@@ -103,16 +121,16 @@ function typeSrvDate(year1,month1,day1) {
                     
                       if (type.compareTo("admission") == 0) {
             %>
-                      <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-                      <%= dateGrid[i][j] %> </a>
-                      </td>
-            <%    }  
+	<td align="center" bgcolor='#FBECF3'><a href="#"
+		onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%    }  
                  else {
                  %>
-                 <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-		                       <%= dateGrid[i][j] %> </a>
-                      </td>
-                 <%
+	<td align="center" bgcolor='#FBECF3'><a href="#"
+		onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%
                  }
                  
                  }
@@ -121,20 +139,20 @@ function typeSrvDate(year1,month1,day1) {
                 out.println("</tr>");
               }
             %>
-            
-          </table>
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td>&nbsp;</td>
-            </tr>
-            <tr> 
-              <td bgcolor="#FFD7C4"> 
-                <div align="center"> 
-                  <input type="button" name="Cancel" value=" <bean:message key="billing.billingCalendarPopup.btnExit"/> " onClick="window.close()">
-                </div>
-              </td>
-            </tr>
-          </table>
+
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFD7C4">
+		<div align="center"><input type="button" name="Cancel"
+			value=" <bean:message key="billing.billingCalendarPopup.btnExit"/> "
+			onClick="window.close()"></div>
+		</td>
+	</tr>
+</table>
 
 </body>
 </html:html>

@@ -23,10 +23,11 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
   
@@ -56,39 +57,26 @@
   ArrayList providers = ProviderData.getProviderList();  
 %>
 
-                         
+
 <html:html locale="true">
 
 <head>
-<title>
-oscarMeasurement
-</title><!--I18n-->
-<html:base/>
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" /> 
-     
-<script type="text/javascript" src="../../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../../share/calendar/calendar-setup.js" ></script>   
+<title>oscarMeasurement</title>
+<!--I18n-->
+<html:base />
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<script type="text/javascript" src="../../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript"
+	src="../../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
 
-<style type="text/css">
-  div.ImmSet { background-color: #ffffff; }
-  div.ImmSet h2 {  }
-  div.ImmSet ul {  }
-  div.ImmSet li {  }
-  div.ImmSet li a { text-decoration:none; color:blue;}
-  div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-  
-  
-  ////////
-  div.prevention {  background-color: #999999; }
-  div.prevention fieldset {width:35em; font-weight:bold; }
-  div.prevention legend {font-weight:bold; }
-  
-  ////////
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -127,84 +115,7 @@ function disableifchecked(ele,nextDate){
 }
 </SCRIPT>
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	
-label{
-float: left;
-width: 120px;
-font-weight: bold;
-}
-
-label.checkbox{
-float: left;
-width: 116px;
-font-weight: bold;
-}
-
-label.fields{
-float: left;
-width: 80px;
-font-weight: bold;
-}
-
-span.labelLook{
-font-weight:bold;
-
-}
-
-input, textarea,select{
-
-//margin-bottom: 5px;
-}
-
-textarea{
-width: 450px;
-height: 100px;
-}
-
-
-.boxes{
-width: 1em;
-}
-
-#submitbutton{
-margin-left: 120px;
-margin-top: 5px;
-width: 90px;
-}
-
-br{
-clear: left;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
   function hideExtraName(ele){ 
@@ -218,40 +129,34 @@ clear: left;
        //alert('showing');
     }                       
   }
-</script>               
+</script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="Field.focus('value(inputValue-0)');">
+<body class="BodyStyle" vlink="#0000FF"
+	onload="Field.focus('value(inputValue-0)');">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="100" >
-               measurement
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            <oscar:nameage demographicNo="<%=demographic_no%>"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-               &nbsp;
-
-            </td>
-            <td valign="top" class="MainTableRightColumn">   
-               <html:errors/>
-               <% String val = "";
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="100">measurement</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><oscar:nameage demographicNo="<%=demographic_no%>" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td valign="top" class="MainTableRightColumn"><html:errors /> <% String val = "";
                   String saveAction = "/oscarEncounter/Measurements2"; 
                   String comment = "";
                   Hashtable h = null;
@@ -262,18 +167,19 @@ clear: left;
                      val = (String) h.get("value");
                      comment = (String) h.get("comments");
                   } 
-               %>
-               
-               <html:form action="<%=saveAction%>" styleId="measurementForm" >
-               
-               <input type="hidden" name="value(numType)" value="<%=measurements.length%>"/>                                                
-               <input type="hidden" name="value(groupName)" value=""/>                              
-               <input type="hidden" name="value(css)" value=""/>  
-               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/> 
-               <input type="hidden" name="inputFrom" value="AddMeasurementData"/>
-               <input type="hidden" name="template" value="<%=temp%>"/>
-               
-               <%
+               %> <html:form action="<%=saveAction%>"
+			styleId="measurementForm">
+
+			<input type="hidden" name="value(numType)"
+				value="<%=measurements.length%>" />
+			<input type="hidden" name="value(groupName)" value="" />
+			<input type="hidden" name="value(css)" value="" />
+			<input type="hidden" name="demographic_no"
+				value="<%=demographic_no%>" />
+			<input type="hidden" name="inputFrom" value="AddMeasurementData" />
+			<input type="hidden" name="template" value="<%=temp%>" />
+
+			<%
                 int ctr = 0;
                 EctMeasurementsForm ectMeasurementsForm = (EctMeasurementsForm) request.getAttribute("EctMeasurementsForm");  
                 
@@ -297,76 +203,80 @@ clear: left;
                     //prevDate = (String) h.get("date-"+ctr);
                 }
                 %>
-               
 
-               <input type="hidden" name="measurement" value="<%=measurement%>"/>
-               
-               <input type="hidden" name="<%= "value(inputType-" + ctr + ")" %>" value="<%=mtypeBean.getType()%>"/>
-               <input type="hidden" name="<%= "value(inputTypeDisplayName-" + ctr + ")" %>" value="<%=mtypeBean.getTypeDisplayName()%>"/>                            
-               <input type="hidden" name="<%= "value(validation-" + ctr + ")" %>" value="<%=mtypeBean.getValidation()%>"/>
-               
-               <% if ( id != null ) { %>
-               <input type="hidden" name="id" value="<%=id%>"/>
-               <input type="hidden" name="deleteCheckbox" id="deleteCheck" value="<%=id%>"/>
-               <% } %>
-                     
-               <div class="prevention">                                      
-                   <fieldset>
-                      <legend>Measurement : <%=mtypeBean.getTypeDisplayName()%></legend>
-                         <div style="float:left;display:none;">
-                           <input type="radio" name="<%= "value(inputMInstrc-" + ctr + ")" %>" value="<%=mtypeBean.getMeasuringInstrc()%>" checked/>
-                         </div>
-                         <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Obs Date:</label>    
-                            <input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate<%=ctr%>" value="<%=prevDate%>" size="9" > <a id="date<%=ctr%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                                                               
-                            <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label> 
-                            <% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
-                            <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
-                                <%if (measurements.length > 1){ %>
-                                <option value="" >Not Answered</option>
-                                <%}%>
-                                <option value="Yes"  <%=sel("Yes", val)%>>Yes</option>
-                                <option value="No"   <%=sel("No", val)%>>No</option>
-                            </select>
-                            <%}else{%>
-                            <input type="text" id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" size="5" value="<%=val%>" /> <br/>
-                            <%}%>
-                         </div>
-                          <br/>
-                         <fieldset >
-                          <legend >Comments</legend>                   
-                           <textarea name="<%= "value(comments-" + ctr + ")" %>" ><%=comment%></textarea>                   
-                         </fieldset> 
-                   </fieldset>                                                                            
-                   
-                                     
-               </div>
-               <%ctr++;
+
+			<input type="hidden" name="measurement" value="<%=measurement%>" />
+
+			<input type="hidden" name="<%= "value(inputType-" + ctr + ")" %>"
+				value="<%=mtypeBean.getType()%>" />
+			<input type="hidden"
+				name="<%= "value(inputTypeDisplayName-" + ctr + ")" %>"
+				value="<%=mtypeBean.getTypeDisplayName()%>" />
+			<input type="hidden" name="<%= "value(validation-" + ctr + ")" %>"
+				value="<%=mtypeBean.getValidation()%>" />
+
+			<% if ( id != null ) { %>
+			<input type="hidden" name="id" value="<%=id%>" />
+			<input type="hidden" name="deleteCheckbox" id="deleteCheck"
+				value="<%=id%>" />
+			<% } %>
+
+			<div class="prevention">
+			<fieldset><legend>Measurement : <%=mtypeBean.getTypeDisplayName()%></legend>
+			<div style="float: left; display: none;"><input type="radio"
+				name="<%= "value(inputMInstrc-" + ctr + ")" %>"
+				value="<%=mtypeBean.getMeasuringInstrc()%>" checked /></div>
+			<div style="float: left; margin-left: 30px;"><label
+				for="prevDate" class="fields">Obs Date:</label> <input type="text"
+				name="<%= "value(date-" + ctr + ")" %>" id="prevDate<%=ctr%>"
+				value="<%=prevDate%>" size="9"> <a id="date<%=ctr%>"><img
+				title="Calendar" src="../../images/cal.gif" alt="Calendar"
+				border="0" /></a> <br>
+
+			<label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label>
+			<% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
+			<select id="<%= "value(inputValue-" + ctr + ")" %>"
+				name="<%= "value(inputValue-" + ctr + ")" %>">
+				<%if (measurements.length > 1){ %>
+				<option value="">Not Answered</option>
+				<%}%>
+				<option value="Yes" <%=sel("Yes", val)%>>Yes</option>
+				<option value="No" <%=sel("No", val)%>>No</option>
+			</select> <%}else{%> <input type="text"
+				id="<%= "value(inputValue-" + ctr + ")" %>"
+				name="<%= "value(inputValue-" + ctr + ")" %>" size="5"
+				value="<%=val%>" /> <br />
+			<%}%>
+			</div>
+			<br />
+			<fieldset><legend>Comments</legend> <textarea
+				name="<%= "value(comments-" + ctr + ")" %>"><%=comment%></textarea>
+			</fieldset>
+			</fieldset>
+
+
+			</div>
+			<%ctr++;
                 }%>
-               <script type="text/javascript">
+			<script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));                                    
                </script>
-               
-               <br/>
-               
-               <% if ( id != null ) { %>
-               <input type="submit" name="delete" value="Delete" id="deleteButton" disabled="false"/>               
-               <% }else{ %>
-               <input type="submit" value="Save">
-               <%}%>
-               </html:form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+
+			<br />
+
+			<% if ( id != null ) { %>
+			<input type="submit" name="delete" value="Delete" id="deleteButton"
+				disabled="false" />
+			<% }else{ %>
+			<input type="submit" value="Save">
+			<%}%>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
 <script type="text/javascript">
     <% if ( id != null ) { %>
         Form.disable('measurementForm'); 
@@ -378,7 +288,7 @@ clear: left;
 Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "date<%=i%>", singleClick : true, step : 1 } );
   <%}%>
 //Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
-</script>    
+</script>
 </body>
 </html:html>
 <%!

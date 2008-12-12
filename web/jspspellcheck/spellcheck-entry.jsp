@@ -1,3 +1,4 @@
+
 <%/*
 
     spellcheck-entry.jsp - This is a temporary page that the user doesn't
@@ -27,7 +28,7 @@
 
 <html>
 <head>
-    <link rel="stylesheet" href="spellcheck.css" type="text/css"/>
+<link rel="stylesheet" href="spellcheck.css" type="text/css" />
 </head>
 <body>
 
@@ -40,19 +41,15 @@
         if( param.startsWith("element_") )
         {
             String value = request.getParameter( param );
-            %>
-            <input type="hidden" name="<%=param%>_name" value="<%=value%>"/>
-            <input type="hidden" name="<%=param%>_value"/>
-            <script>
+            %> <input type="hidden" name="<%=param%>_name"
+	value="<%=value%>" /> <input type="hidden" name="<%=param%>_value" /> <script>
             <!--
                 document.entry.<%=param%>_value.value = opener.document.<%=value%>.value;
             //-->
-            </script>
-            <%
+            </script> <%
         }
     }
 %>
-
 </form>
 
 <script>

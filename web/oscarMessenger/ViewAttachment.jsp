@@ -24,86 +24,30 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.util.*" %>
-<%@ page import="java.util.*, org.w3c.dom.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.util.*"%>
+<%@ page import="java.util.*, org.w3c.dom.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html>
 <head>
-<style type="text/css">
-    BODY
-    {
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        font-size: 10pt;
-        text-decoration: none;
-    }
-
-    SPAN.treeNode
-    {
-        font-size: 10pt;
-        font-weight: bold;
-        cursor: hand;
-    }
-
-    IMG.treeNode
-    {
-        vertical-align: middle;
-    }
-
-    IMG.collapse
-    {
-        cursor: hand;
-        margin-left: 15px;
-    }
-
-
-    TABLE.treeTable
-    {
-        margin-left: 15px;
-    }
-
-    TH.treeTable
-    {
-        font-weight: bold;
-    }
-
-    PRE
-    {
-        font-size: 9pt;
-        font-weight: normal;
-    }
-
-    .content
-    {
-        margin-left: 15px;
-        border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        padding: 3px;
-        background-color: #F5F5F5;
-    }
-
-    .borderTop
-    {
-        border-top-width: 1px;
-        border-top-color: #A9A9A9;
-        border-top-style: solid;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
     var browserName=navigator.appName; 
@@ -348,79 +292,62 @@
         }
     }
 %>
-<title>
-Document Transfer
-</title>
+<title>Document Transfer</title>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                oscarComm
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                        Document Transfer
-                        </td>
-                        <td  >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">oscarComm</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Document Transfer</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<hr style="color: #A9A9A9;">
+		<div style="height: 6px;"></div>
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-                <hr style="color:#A9A9A9;">
-                <div style="height:6px;"></div>
+		<form method="POST" action="AdjustAttachments.jsp"><input
+			type=hidden name="xmlDoc"
+			value="<%= MsgCommxml.encode64(MsgCommxml.toXML(root)) %>" /> <input
+			type=hidden name="id" value="<%= request.getAttribute("attId")%>" />
 
-                <form method="POST" action="AdjustAttachments.jsp">
-                    <input type=hidden name="xmlDoc" value="<%= MsgCommxml.encode64(MsgCommxml.toXML(root)) %>"/>
-                    <input type=hidden name="id"    value="<%= request.getAttribute("attId")%>"/>
-
-                <% DrawDoc(root, out); %>
-                    <br>
-                <div style="font-size: 8pt; margin-top: 15px;">
-                    <input type=submit value="Save Attachments" />
-
-                    <a href="javascript:expandAll();">Expand All</a>
-                    &nbsp;|&nbsp;
-                    <a href="javascript:collapseAll();">Collapse All</a>
-<%
+		<% DrawDoc(root, out); %> <br>
+		<div style="font-size: 8pt; margin-top: 15px;"><input
+			type=submit value="Save Attachments" /> <a
+			href="javascript:expandAll();">Expand All</a> &nbsp;|&nbsp; <a
+			href="javascript:collapseAll();">Collapse All</a> <%
     java.util.Properties prop = UtilXML.getPropText(xmlDoc, "table", "sqlFrom",  "name"); //
 	if (prop.getProperty("formAR") != null && prop.getProperty("formAR").equals("AR Form") ) {
-%>
-                    &nbsp;|&nbsp;
-                    <a href="../oscarEncounter/formCommARPg1.jsp?messageid=<%=request.getAttribute("attId")%>">AR1</a>
-                    &nbsp;|&nbsp;
-                    <a href="../oscarEncounter/formCommARPg2.jsp?messageid=<%=request.getAttribute("attId")%>">AR2 Pg1</a>
-                    &nbsp;|&nbsp;
-                    <a href="../oscarEncounter/formCommARPg3.jsp?messageid=<%=request.getAttribute("attId")%>">AR2 Pg2</a>
-<%
+%> &nbsp;|&nbsp; <a
+			href="../oscarEncounter/formCommARPg1.jsp?messageid=<%=request.getAttribute("attId")%>">AR1</a>
+		&nbsp;|&nbsp; <a
+			href="../oscarEncounter/formCommARPg2.jsp?messageid=<%=request.getAttribute("attId")%>">AR2
+		Pg1</a> &nbsp;|&nbsp; <a
+			href="../oscarEncounter/formCommARPg3.jsp?messageid=<%=request.getAttribute("attId")%>">AR2
+		Pg2</a> <%
     }    %>
-                </div>
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+		</div>
+		</form>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html>
 

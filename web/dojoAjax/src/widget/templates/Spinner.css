@@ -1,5 +1,5 @@
 /* inline the table holding the <input> and buttons (method varies by browser) */
-.ie .dojoSpinner, .safari .dojoSpinner {
+.ie .dojoSpinner,.safari .dojoSpinner {
 	display: inline;
 }
 
@@ -13,15 +13,16 @@
 
 /* generic stuff for the table */
 .dojoSpinner td {
-	padding:0px;
-	margin:0px;
+	padding: 0px;
+	margin: 0px;
 	vertical-align: middle;
 }
+
 table.dojoSpinner {
-	border:0px;
-	border-spacing:0px;
-	line-height:0px;
-	padding:0px;
+	border: 0px;
+	border-spacing: 0px;
+	line-height: 0px;
+	padding: 0px;
 	margin: 0px;
 	vertical-align: middle;
 }
@@ -29,6 +30,6 @@ table.dojoSpinner {
 /* the buttons */
 .dojoSpinner img {
 	display: block;
-	border-width:0px 1px 1px 0px;
-	border-style:outset;
+	border-width: 0px 1px 1px 0px;
+	border-style: outset;
 }

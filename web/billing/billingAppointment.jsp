@@ -36,10 +36,13 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
     String providerview = request.getParameter("providerview")==null?"":request.getParameter("providerview") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -48,17 +51,18 @@ GregorianCalendar now=new GregorianCalendar();
   
   
   
-  %><% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
+  %>
+<% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
 <html>
 <head>
 <title>Billing Report</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!--
 
 function selectprovider(s) {
@@ -84,11 +88,26 @@ function refresh() {
 
 //-->
 </script>
-<style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 10px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>
+<style type='text/css'>
+<!--
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none;
+}
+-->
+</style>
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0" onLoad="setfocus()">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0" onLoad="setfocus()">
 <% String provider="", proFirst1="", proLast1="";
 	provider = request.getParameter("provider");
 	int flag = 0, rowCount=0;
@@ -108,48 +127,54 @@ function refresh() {
    }
    %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"> 
-    <th align=CENTER NOWRAP width="11%">
-      <div align="left"><font face="Helvetica" color="#FFFFFF"> 
-        <input type="button" value="Done" onClick="window.close()" name="button2">
-        </font></div>
-    </th>
-    <th align=CENTER NOWRAP width="81%">
-      <div align="center"><font face="Helvetica" color="#FFFFFF">Search UNBILLED 
-        Appointment </font></div>
-    </th>
-    <th align=CENTER NOWRAP width="8%">
-      <div align="right"><font face="Helvetica" color="#FFFFFF"> 
-        <input type="button" value="Print Report" onClick="window.print()" name="button">
-        </font></div>
-    </th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP width="11%">
+		<div align="left"><font face="Helvetica" color="#FFFFFF">
+		<input type="button" value="Done" onClick="window.close()"
+			name="button2"> </font></div>
+		</th>
+		<th align=CENTER NOWRAP width="81%">
+		<div align="center"><font face="Helvetica" color="#FFFFFF">Search
+		UNBILLED Appointment </font></div>
+		</th>
+		<th align=CENTER NOWRAP width="8%">
+		<div align="right"><font face="Helvetica" color="#FFFFFF">
+		<input type="button" value="Print Report" onClick="window.print()"
+			name="button"> </font></div>
+		</th>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="1" cellpadding="1" bgcolor="#0066CC" bordercolor="#0066CC">
-  <tr>
-    <td bgcolor="#CCCCCC" class="bodytext">  
-      <div align="center"><a href="billingreport.jsp?displaymode=billreport&providerview=<%=providerview%>">Generate Billing Report</a></div>
-    </td>
-    <td bgcolor="#003366" class="bodytext"> 
-      <div align="center"><a href="billingAppointment.jsp?displaymode=billreport&providerview=<%=providerview%>" >Search Unbilled Appointment</a></div>
-    </td>
-    </tr>
-</table> 
+<table width="100%" border="0" cellspacing="1" cellpadding="1"
+	bgcolor="#0066CC" bordercolor="#0066CC">
+	<tr>
+		<td bgcolor="#CCCCCC" class="bodytext">
+		<div align="center"><a
+			href="billingreport.jsp?displaymode=billreport&providerview=<%=providerview%>">Generate
+		Billing Report</a></div>
+		</td>
+		<td bgcolor="#003366" class="bodytext">
+		<div align="center"><a
+			href="billingAppointment.jsp?displaymode=billreport&providerview=<%=providerview%>">Search
+		Unbilled Appointment</a></div>
+		</td>
+	</tr>
+</table>
 
 
 
 <table width="100%" border="0" bgcolor="#003366">
-  <form name="serviceform" method="get">
-    <tr> 
-      <td width="19%" align="right">
-        <div align="left"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Select 
-          provider </font></b></div>
-      </td>
-      <td width="41%"><font face="Arial, Helvetica, sans-serif" size="2"> 
-        <select name="provider">
-          <% String proFirst="";
+	<form name="serviceform" method="get">
+	<tr>
+		<td width="19%" align="right">
+		<div align="left"><b><font
+			face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Select
+		provider </font></b></div>
+		</td>
+		<td width="41%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <select name="provider">
+			<% String proFirst="";
            String proLast="";
            String proOHIP="";
            int Count = 0;
@@ -163,39 +188,41 @@ function refresh() {
   
 
  %>
-          <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, 
-          <%=proFirst%></option>
-          <% }
+			<option value="<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
+			<%=proFirst%></option>
+			<% }
 
  
 
   %>
-        </select>
-        </font></td>
-      <td width="40%"> 
-        <input type="submit" name="Submit" value="Create Report">
-      </td>
-    </tr>
-    <tr> 
-      <td width="19%"> 
-        <div align="left"><font color="#003366"><font face="Arial, Helvetica, sans-serif" size="2"><b> 
-          <font color="#FFFFFF">Service Date-Range</font></b></font></font> </div>
-      </td>
-      <td width="41%">
-<input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</a></font> 
-      </td>
-      <td width="40%"> 
-        <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-        <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End:</a></font> 
-      </td>
-    </tr>
-  </form>
+		</select> </font></td>
+		<td width="40%"><input type="submit" name="Submit"
+			value="Create Report"></td>
+	</tr>
+	<tr>
+		<td width="19%">
+		<div align="left"><font color="#003366"><font
+			face="Arial, Helvetica, sans-serif" size="2"><b> <font
+			color="#FFFFFF">Service Date-Range</font></b></font></font></div>
+		</td>
+		<td width="41%"><input type="text" name="xml_vdate"
+			value="<%=xml_vdate%>"> <font size="1"
+			face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="openBrWindow('billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</a></font>
+		</td>
+		<td width="40%"><input type="text" name="xml_appointment_date"
+			value="<%=xml_appointment_date%>"> <font size="1"
+			face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="openBrWindow('billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">End:</a></font>
+		</td>
+	</tr>
+	</form>
 </table>
 <% if (flag == 1) { %>
 
 <table width="100%" border="2" bgcolor="#ffffff" valign="top">
-  <%
+	<%
  String dateBegin = request.getParameter("xml_vdate");
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
@@ -214,15 +241,19 @@ function refresh() {
     out.println("failed!!!"); 
   } else {
   %>
-  <tr bgcolor="#339999" class="bodytext"> 
-    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">APPOINTMENT 
-      DATE</font></b></TH>
-    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">TIME</font></b></TH>
-    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
-    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">PROVIDER</font></b></TH>
-    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
-  </tr>
-  <%
+	<tr bgcolor="#339999" class="bodytext">
+		<TH align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">APPOINTMENT DATE</font></b></TH>
+		<TH align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">TIME</font></b></TH>
+		<TH align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
+		<TH align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">PROVIDER</font></b></TH>
+		<TH align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">COMMENTS</font></b></TH>
+	</tr>
+	<%
     while (rs.next()) {
      
       bodd=bodd?false:true; //for the color of rows
@@ -236,51 +267,60 @@ function refresh() {
       reason = rs.getString("reason");
       
 %>
-  <tr bgcolor="<%=bodd?"ivory":"white"%>" class="bodytext"> 
-    <TD align="center" width="20%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
-    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptTime%></font></b></TD>
-    <TD align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
-    <TD align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=proLast1%>, 
-      <%=proFirst1%></font></b></TD>
-    <TD align="center" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?billForm=MFP&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=provider%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")' title="<%=reason%>">Bill 
-      |$|</a></font></b></TD>
-  </tr>
-  <%  rowCount = rowCount + 1;
+	<tr bgcolor="<%=bodd?"ivory":"white"%>" class="bodytext">
+		<TD align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+		<TD align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=apptTime%></font></b></TD>
+		<TD align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+		<TD align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=proLast1%>, <%=proFirst1%></font></b></TD>
+		<TD align="center" width="10%"><b> <font size="2"
+			face="Arial, Helvetica, sans-serif"><a href=#
+			onClick='popupPage(700,720, "../billing/billingOB.jsp?billForm=MFP&hotclick=&appointment_no=<%=apptNo%>&demographic_name=<%=URLEncoder.encode(demoName)%>&demographic_no=<%=demoNo%>&user_no=<%=userno%>&apptProvider_no=<%=provider%>&appointment_date=<%=apptDate%>&start_time=<%=apptTime%>&bNewForm=1")'
+			title="<%=reason%>">Bill |$|</a></font></b></TD>
+	</tr>
+	<%  rowCount = rowCount + 1;
     }
     if (rowCount == 0) {
     %>
-  <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <TD colspan="5" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
-      unbill items</font></b></TD>
-  </tr>
-  <% }
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<TD colspan="5" align="center"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">No unbill items</font></b></TD>
+	</tr>
+	<% }
 }%>
 </table>
 <% }
 %>
 
-  
-    <%
+
+<%
  apptMainBean.closePstmtConn();
   %>
-  <br>
+<br>
 <%
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
 %>
-<a href="../billing/billingAppointment.jsp?provider=<%=provider%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
+<a
+	href="../billing/billingAppointment.jsp?provider=<%=provider%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a>
+|
 <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="../billing/billingAppointment.jsp?provider=<%=provider%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
+<a
+	href="../billing/billingAppointment.jsp?provider=<%=provider%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a>
 <%
 }
 %>
-<p>
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+<p><%@ include file="../demographic/zfooterbackclose.jsp"%>
 </center>
 </body>
 </html>

@@ -1,8 +1,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,oscar.oscarDB.*" %>
-<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
-<%@ include file="/taglibs.jsp" %>
+<%@page import="java.sql.*,oscar.oscarDB.*"%>
+<%@page
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+<%@ include file="/taglibs.jsp"%>
 <%
   WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
   GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -47,41 +48,38 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Edit Node</title>
-	<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Edit Node</title>
+<script type="text/javascript">
 	    function editDropbox() {
 		var eURL = "EditDropbox.jsp";
 		popup('300','400',eURL,'eddrpbx');
 	    }
 	</script>
-        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
-        <style type="text/css">
-        @import "<html:rewrite page="/css/genericIntake.css"/>";
-        </style>
-    </head>
-    <body>
+<script language="javascript" type="text/javascript"
+	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+<body>
 
-    <h2>Edit Label</h2>
-    <form action="EditLabel.jsp" method="post">
-        <input type="text" name="lbledit" value="<%=val%>"/>
-        <input type="hidden" name="id" value="<%=id%>"/>
-	<input type="hidden" name="nid" value="<%=nid%>"/>
-        
-        <input type="submit" value="update"/>
-     <%	if (hasMandatory) { %>
-	<br><input type="checkbox" name="mandatory" value="true" <%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input>
-     <%	} %>
-     <%	if (hasCutPast) { %>
-	<br><input type="checkbox" name="cutpast" value="true" <%=(theNode.getEq_to_id()==null || theNode.getEq_to_id()<0) ? "checked" : ""%>>Not related to past forms</input>
-     <%	} %>
-     <%	if (isDropbox) { %>
-	<br><input type="button" value="Edit Dropbox Items..." onclick="editDropbox();" />
-     <%	} %>
-    </form>
-    
-    </body>
+<h2>Edit Label</h2>
+<form action="EditLabel.jsp" method="post"><input type="text"
+	name="lbledit" value="<%=val%>" /> <input type="hidden" name="id"
+	value="<%=id%>" /> <input type="hidden" name="nid" value="<%=nid%>" />
+
+<input type="submit" value="update" /> <%	if (hasMandatory) { %> <br>
+<input type="checkbox" name="mandatory" value="true"
+	<%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input> <%	} %> <%	if (hasCutPast) { %>
+<br>
+<input type="checkbox" name="cutpast" value="true"
+	<%=(theNode.getEq_to_id()==null || theNode.getEq_to_id()<0) ? "checked" : ""%>>Not
+related to past forms</input> <%	} %> <%	if (isDropbox) { %> <br>
+<input type="button" value="Edit Dropbox Items..."
+	onclick="editDropbox();" /> <%	} %>
+</form>
+
+</body>
 </html>
 
 <%!

@@ -21,17 +21,15 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
-.items
-{
+.items {
 	border-right: #d4d4d4 1px solid;
 	font-size: 12px;
 	padding-bottom: 7px;
 	border-left: #d4d4d4 1px solid;
 	border-bottom: #d4d4d4 1px solid;
 }
-TD
-{
+
+TD {
 	margin-bottom: 1px;
 	padding-bottom: 1px;
 	border-left: #d4d4d4 1px solid;

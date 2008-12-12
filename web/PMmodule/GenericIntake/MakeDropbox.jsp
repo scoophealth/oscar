@@ -1,8 +1,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,oscar.oscarDB.*" %>
-<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
-<%@ include file="/taglibs.jsp" %>
+<%@page import="java.sql.*,oscar.oscarDB.*"%>
+<%@page
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
+<%@ include file="/taglibs.jsp"%>
 <%
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -59,10 +60,10 @@ session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Make Dropbox Scalar Choice</title>
-	<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Make Dropbox Scalar Choice</title>
+<script type="text/javascript">
 	    function copy_s(idx) {
 		val="";
 		if (idx>0) {
@@ -76,27 +77,29 @@ session.setAttribute("intakeNodeTemplate_c", intakeNodeTemplate);
 		document.makeDropboxFrm.submit();
 	    }
 	</script>
-        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
-    </head>
-    <body>
-        <form name="makeDropboxFrm" method="post" action="MakeDropbox.jsp">
-	    <select name="s_choice" onchange="copy_s(selectedIndex);">
-		<option value="-1">- Type below to add new item -</option>
-<%
+<script language="javascript" type="text/javascript"
+	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
+</head>
+<body>
+<form name="makeDropboxFrm" method="post" action="MakeDropbox.jsp">
+<select name="s_choice" onchange="copy_s(selectedIndex);">
+	<option value="-1">- Type below to add new item -</option>
+	<%
 for (int i=0; i<items.size(); i++) {
 %>
-		<option value="<%=i%>"><%=items.get(i)%></option>
-<% } %>
-	    </select>
-	    <p>&nbsp;</p>
-	    <input name="s_entry" type="text" size="20" />
-            <input type="button" value="+" title="Add new item" onclick="do_submit('add');" />
-	    <input type="button" value="-" title="Remove selected item" onclick="do_submit('remove');" />
-	    <p>&nbsp;</p>
-            <input type="button" value="Done" title="Save dropbox" onclick="do_submit('save');" />
-	    <input type="hidden" name="submit_type" />
-        </form>  
-    </body>
+	<option value="<%=i%>"><%=items.get(i)%></option>
+	<% } %>
+</select>
+<p>&nbsp;</p>
+<input name="s_entry" type="text" size="20" /> <input type="button"
+	value="+" title="Add new item" onclick="do_submit('add');" /> <input
+	type="button" value="-" title="Remove selected item"
+	onclick="do_submit('remove');" />
+<p>&nbsp;</p>
+<input type="button" value="Done" title="Save dropbox"
+	onclick="do_submit('save');" /> <input type="hidden"
+	name="submit_type" /></form>
+</body>
 </html>
 
 <%!

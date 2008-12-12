@@ -24,7 +24,7 @@
  */
 -->
 
- <%    
+<%    
   if(session.getValue("user") == null)
      response.sendRedirect("../logout.jsp");
   String user_no;
@@ -35,12 +35,15 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
-%> 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbReport.jsp" %>
+<%@ include file="dbReport.jsp"%>
 <% 
 GregorianCalendar now=new GregorianCalendar();
    int curYear = now.get(Calendar.YEAR);
@@ -59,32 +62,17 @@ GregorianCalendar now=new GregorianCalendar();
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
          
-%> 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarReport.oscarReportAgeSex.title"/></title>
-<link rel="stylesheet" href="oscarReport.css" >
-<style type="text/css">
-<!--
-.bodytext 
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  font-style: bold;
-  line-height: normal; 
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      
+<title><bean:message key="oscarReport.oscarReportAgeSex.title" /></title>
+<link rel="stylesheet" href="oscarReport.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+
 <script language="JavaScript">
 <!--
 
@@ -113,42 +101,56 @@ function refresh() {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="10">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%">
-      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
-    </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="oscarReport.oscarReportAgeSex.msgOscarReport"/></font></b></font></p>
-    </td>
-  </tr>
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"><input type='button' name='print'
+			value='<bean:message key="global.btnPrint"/>'
+			onClick='window.print()'></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4"><bean:message
+			key="oscarReport.oscarReportAgeSex.msgOscarReport" /></font></b></font></p>
+		</td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
-  <form name="serviceform" method="get" action="oscarReportAgeSex.jsp">
-    <tr> 
-      <td colspan="3"> 
-        <div align="center"> <font face="Arial, Helvetica, sans-serif" size="2"><b><bean:message key="oscarReport.oscarReportAgeSex.msgAgeSexRep"/><font color="#333333"></font></b></font></div>
-      </td>
-    </tr>
-    <tr> 
-      <td width="40%"> 
-        <div align="right"><font color="#003366"><font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
-          <input type="radio" name="reportAction" value="RO" <%=reportAction.equals("RO")?"checked":""%>>
-          <bean:message key="oscarReport.oscarReportAgeSex.formRostered"/> 
-          <input type="radio" name="reportAction" value="NR"  <%=reportAction.equals("NR")?"checked":""%>>
-          <bean:message key="oscarReport.oscarReportAgeSex.formNotRostered"/> 
-          <input type="radio" name="reportAction" value="TO" <%=reportAction.equals("TO")?"checked":""%>>
-          <bean:message key="oscarReport.oscarReportAgeSex.formTotal"/></font> <font face="Arial, Helvetica, sans-serif" size="1"><b> 
-          </b></font></font> </div>
-      </td>
-      <td width="40%"> 
-        <div align="right"></div>
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message key="oscarReport.oscarReportAgeSex.formSelectProvider"/> </b></font> 
-          <select name="providerview">
-             <option value="" <%=providerview.equals("all")?"selected":""%>>-------<bean:message key="oscarReport.oscarReportAgeSex.formSelectProvider"/> ----------</option>
-          <%   String proFirst="";
+	<form name="serviceform" method="get" action="oscarReportAgeSex.jsp">
+	<tr>
+		<td colspan="3">
+		<div align="center"><font face="Arial, Helvetica, sans-serif"
+			size="2"><b><bean:message
+			key="oscarReport.oscarReportAgeSex.msgAgeSexRep" /><font
+			color="#333333"></font></b></font></div>
+		</td>
+	</tr>
+	<tr>
+		<td width="40%">
+		<div align="right"><font color="#003366"><font size="1"
+			color="#333333" face="Verdana, Arial, Helvetica, sans-serif">
+		<input type="radio" name="reportAction" value="RO"
+			<%=reportAction.equals("RO")?"checked":""%>> <bean:message
+			key="oscarReport.oscarReportAgeSex.formRostered" /> <input
+			type="radio" name="reportAction" value="NR"
+			<%=reportAction.equals("NR")?"checked":""%>> <bean:message
+			key="oscarReport.oscarReportAgeSex.formNotRostered" /> <input
+			type="radio" name="reportAction" value="TO"
+			<%=reportAction.equals("TO")?"checked":""%>> <bean:message
+			key="oscarReport.oscarReportAgeSex.formTotal" /></font> <font
+			face="Arial, Helvetica, sans-serif" size="1"><b> </b></font></font></div>
+		</td>
+		<td width="40%">
+		<div align="right"></div>
+		<div align="center"><font
+			face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message
+			key="oscarReport.oscarReportAgeSex.formSelectProvider" /> </b></font> <select
+			name="providerview">
+			<option value="" <%=providerview.equals("all")?"selected":""%>>-------<bean:message
+				key="oscarReport.oscarReportAgeSex.formSelectProvider" /> ----------</option>
+			<%   String proFirst="";
                String proLast="";
                String proOHIP="";
                String specialty_code; 
@@ -163,38 +165,48 @@ function refresh() {
                   billinggroup_no= SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
                   specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
           %>
-             <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
-          <%   }   %>
-          </select>
-        </div>
-      </td>
-      <td width="20%"><font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif"> 
-        <input type="submit" name="Submit" value="<bean:message key="oscarReport.oscarReportAgeSex.btnCreate"/>">
-        </font></td>
-    </tr>
-    <tr> 
-          <td width="50%"> 
-            <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b> 
-              
-              <font color="#333333"><bean:message key="oscarReport.oscarReportAgeSex.msgServiceDate"/></font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportAgeSex.btnBegin"/>:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-              
-       </div>
-          </td>
-          <td colspan='2' > 
-            <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportAgeSex.btnEnd"/>:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-             
-    
-                  </div>
-          </td>
-       </tr>
-  </form>
+			<option value="<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
+			<%   }   %>
+		</select></div>
+		</td>
+		<td width="20%"><font color="#333333" size="2"
+			face="Verdana, Arial, Helvetica, sans-serif"> <input
+			type="submit" name="Submit"
+			value="<bean:message key="oscarReport.oscarReportAgeSex.btnCreate"/>">
+		</font></td>
+	</tr>
+	<tr>
+		<td width="50%">
+		<div align="left"><font color="#003366"><font
+			face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>
+
+		<font color="#333333"><bean:message
+			key="oscarReport.oscarReportAgeSex.msgServiceDate" /></font></b></font></font> &nbsp; &nbsp; <font
+			size="1" face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
+			key="oscarReport.oscarReportAgeSex.btnBegin" />:</a></font> <input type="text"
+			name="xml_vdate" value="<%=xml_vdate%>"></div>
+		</td>
+		<td colspan='2'>
+		<div align="left"><font size="1"
+			face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
+			key="oscarReport.oscarReportAgeSex.btnEnd" />:</a></font> <input type="text"
+			name="xml_appointment_date" value="<%=xml_appointment_date%>">
+
+
+		</div>
+		</td>
+	</tr>
+	</form>
 </table>
 
 
 
 <% if (reportAction.compareTo("") == 0 || reportAction == null){%>
 
-  <p>&nbsp; </p>
+<p>&nbsp;</p>
 <% } else {  
 
       String Total="0", mNum="", fNum="";
@@ -245,113 +257,123 @@ function refresh() {
       BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
       BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);    
    %>
-<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message key="oscarReport.oscarReportAgeSex.msgDate"/>: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message key="oscarReport.oscarReportAgeSex.msgUnit"/>: <%=clinic%>                                              <bean:message key="oscarReport.oscarReportAgeSex.msgPhysician"/>: <%=providerview%></font></pre>
+<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message
+	key="oscarReport.oscarReportAgeSex.msgDate" />: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message
+	key="oscarReport.oscarReportAgeSex.msgUnit" />: <%=clinic%>                                              <bean:message
+	key="oscarReport.oscarReportAgeSex.msgPhysician" />: <%=providerview%></font></pre>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-   <tr  bgcolor="#CCCCFF"> 
-     <td> 
-       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgAge"/></div>
-     </td>
-   <td colspan='12'> 
-       <div align="center">---------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgFemale"/> ---------------------------------</div>
-     </td>
-     <td> 
-       <div align="center"> </div>
-     </td>
-     <td colspan='12'> 
-       <div align="center">----------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgMale"/> ----------------------------------</div>
-     </td>
-     <td colspan='2'> 
-       <div align="center">---<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/> ---</div>
-    
-     </td>
-  </tr>
- <tr  bgcolor="#CCCCFF"> 
-    <td width="10%"> 
-      <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgGroup"/></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">+</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">9</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">8</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">7</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">6</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">5</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">4</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">3</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">2</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">1</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">0</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">1</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">2</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">3</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">4</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">5</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">6</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">7</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">8</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">9</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">+</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-  </tr>
-  <% String[][] AgeMatrix = new String[20][2];
+	<tr bgcolor="#CCCCFF">
+		<td>
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgAge" /></div>
+		</td>
+		<td colspan='12'>
+		<div align="center">---------------------------<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgFemale" />
+		---------------------------------</div>
+		</td>
+		<td>
+		<div align="center"></div>
+		</td>
+		<td colspan='12'>
+		<div align="center">----------------------------<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgMale" />
+		----------------------------------</div>
+		</td>
+		<td colspan='2'>
+		<div align="center">---<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgTotal" /> ---</div>
+
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="10%">
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgGroup" /></div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+		<td width="2%">
+		<div align="center">+</div>
+		</td>
+		<td width="2%">
+		<div align="center">9</div>
+		</td>
+		<td width="2%">
+		<div align="center">8</div>
+		</td>
+		<td width="2%">
+		<div align="center">7</div>
+		</td>
+		<td width="2%">
+		<div align="center">6</div>
+		</td>
+		<td width="2%">
+		<div align="center">5</div>
+		</td>
+		<td width="2%">
+		<div align="center">4</div>
+		</td>
+		<td width="2%">
+		<div align="center">3</div>
+		</td>
+		<td width="2%">
+		<div align="center">2</div>
+		</td>
+		<td width="2%">
+		<div align="center">1</div>
+		</td>
+		<td width="2%">
+		<div align="center">0</div>
+		</td>
+		<td width="2%">
+		<div align="center">1</div>
+		</td>
+		<td width="2%">
+		<div align="center">2</div>
+		</td>
+		<td width="2%">
+		<div align="center">3</div>
+		</td>
+		<td width="2%">
+		<div align="center">4</div>
+		</td>
+		<td width="2%">
+		<div align="center">5</div>
+		</td>
+		<td width="2%">
+		<div align="center">6</div>
+		</td>
+		<td width="2%">
+		<div align="center">7</div>
+		</td>
+		<td width="2%">
+		<div align="center">8</div>
+		</td>
+		<td width="2%">
+		<div align="center">9</div>
+		</td>
+		<td width="2%">
+		<div align="center">+</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+	</tr>
+	<% String[][] AgeMatrix = new String[20][2];
      AgeMatrix[0][0] = "0";
      AgeMatrix[0][1] = "4";
      AgeMatrix[1][0] = "5";
@@ -434,37 +456,37 @@ function refresh() {
         LineTotal = fdNum.add(mdNum).setScale(0, BigDecimal.ROUND_HALF_UP);
         LinePerc = fPerc.add(mPerc);
   %>
-  
-  <tr> 
-    <td> 
-      <div align="center"><%=AgeMatrix[i][0]%>-<%=AgeMatrix[i][1]%></div>
-    </td>
-    <td> 
-      <div align="right"><%=fNum%></div>
-    </td>
-    <td> 
-      <div align="right"><%=fPerc%></div>
-    </td>
-    <%=WriteFemaleBar(Integer.parseInt(fPercId.toString()))%>
-    <td bgcolor="#000000"> 
-      <div align="center"><font color="#CCCCCC">|</font></div>
-    </td>
-    <%=WriteMaleBar(Integer.parseInt(mPercId.toString()))%>
-    
-    <td> 
-      <div align="right"><%=mPerc%></div>
-    </td>
-    <td> 
-      <div align="right"><%=mNum%></div>
-    </td>
-    <td> 
-      <div align="right"><%=LineTotal%></div>
-    </td>
-    <td> 
-      <div align="right"><%=LinePerc%></div>
-    </td>
-  </tr>
-  <% 
+
+	<tr>
+		<td>
+		<div align="center"><%=AgeMatrix[i][0]%>-<%=AgeMatrix[i][1]%></div>
+		</td>
+		<td>
+		<div align="right"><%=fNum%></div>
+		</td>
+		<td>
+		<div align="right"><%=fPerc%></div>
+		</td>
+		<%=WriteFemaleBar(Integer.parseInt(fPercId.toString()))%>
+		<td bgcolor="#000000">
+		<div align="center"><font color="#CCCCCC">|</font></div>
+		</td>
+		<%=WriteMaleBar(Integer.parseInt(mPercId.toString()))%>
+
+		<td>
+		<div align="right"><%=mPerc%></div>
+		</td>
+		<td>
+		<div align="right"><%=mNum%></div>
+		</td>
+		<td>
+		<div align="right"><%=LineTotal%></div>
+		</td>
+		<td>
+		<div align="right"><%=LinePerc%></div>
+		</td>
+	</tr>
+	<% 
   
         mPercTotal = mPercTotal.add(mPerc);
         fPercTotal = fPercTotal.add(fPerc);
@@ -472,97 +494,98 @@ function refresh() {
         fTotal = fTotal.add(fdNum);
         BigTotalPerc = BigTotalPerc.add(LinePerc);
   } %>
-  <tr  bgcolor="#CCCCFF"> 
-     <td   width="10%"> 
-       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=fTotal.toString().substring(0, fTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=fPercTotal%></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td   width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=mPercTotal%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=mTotal.toString().substring(0, mTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=BigTotal.toString().substring(0, BigTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=BigTotalPerc%></div>
-     </td>
-  </tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="10%">
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgTotal" /></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=fTotal.toString().substring(0, fTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=fPercTotal%></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mPercTotal%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mTotal.toString().substring(0, mTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=BigTotal.toString().substring(0, BigTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=BigTotalPerc%></div>
+		</td>
+	</tr>
 </table>
 
 <% } // reportAction != null %>
 
-<%@ include file="../demographic/zfooterbackclose.jsp" %>
+<%@ include file="../demographic/zfooterbackclose.jsp"%>
 </body>
 </html:html>
 

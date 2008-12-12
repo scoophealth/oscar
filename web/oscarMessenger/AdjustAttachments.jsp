@@ -24,21 +24,21 @@
  */
 --%>
 
-<%@ page language="java"
-    contentType='text/xml'
-    import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"
-%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java" contentType='text/xml'
+	import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 
 <%

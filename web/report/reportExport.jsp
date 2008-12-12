@@ -26,7 +26,9 @@
  *
  * Created on May 4, 2005, 11:15 AM
  */
- %><%@page contentType="application/octet-stream"%><%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*"%><%
+ %><%@page contentType="application/octet-stream"%><%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*"%>
+<%
      
    
      ArrayList arrList = (ArrayList) session.getAttribute("ClinicalReports"); 

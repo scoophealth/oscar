@@ -22,4 +22,4 @@
 */
  -->
 
-<jsp:forward  page="/SurveyManager.do"  />
+<jsp:forward page="/SurveyManager.do" />

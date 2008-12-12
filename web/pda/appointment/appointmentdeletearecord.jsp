@@ -24,8 +24,10 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -41,14 +43,15 @@
     //-->
 </script>
 </head>
-<body  onload="start()"  background="../images/gray_bg.jpg" bgproperties="fixed">
+<body onload="start()" background="../images/gray_bg.jpg"
+	bgproperties="fixed">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE AN APPOINTMENT RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		DELETE AN APPOINTMENT RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
 /*  String[] param =new String[3];
@@ -64,25 +67,26 @@
   if (rowsAffected ==1) {
 
 %>
-  <p><h1>Successful Deletion of an appointment Record.
-  </h1></p>
+<p>
+<h1>Successful Deletion of an appointment Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
       self.close();
-</script>
-<%  
+</script> <%  
   } else {
 %>
-  <p><h1>Sorry, deletion has failed.</h1></p>
+<p>
+<h1>Sorry, deletion has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="closeit()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="closeit()"></form>
 </center>
 </body>
 </html>

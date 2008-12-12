@@ -31,12 +31,17 @@
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" errorPage="../../appointment/errorpage.jsp" %>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*"
+	errorPage="../../appointment/errorpage.jsp"%>
+<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
-<jsp:useBean id="checklist" class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
-<%@ include file="../../admin/dbconnection.jsp" %>
+<jsp:useBean id="risks"
+	class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
+<jsp:useBean id="checklist"
+	class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 {"search_formarrisk", "select * from formAR where ID = ?" }, 
@@ -45,23 +50,18 @@ String [][] dbQueries=new String[][] {
 };
 plannerBean.doConfigure(dbParams,dbQueries);
 %>
- 
+
 <html>
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-    <title>Antenatal Planner</title>
-	<STYLE type="text/css"> 
-	<!--
-	td {	font-size: 12px;	}
-	div {		font-size: 12px;	}
-	-->
-	</STYLE>
-	<script type="text/javascript" language="Javascript">
+<title>Antenatal Planner</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script type="text/javascript" language="Javascript">
 
 </script>
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-<%-- @ include file="zgetarriskdata.jsp" --%> 
+<%-- @ include file="zgetarriskdata.jsp" --%>
 <%
   //get the risk data from formAR1
   String finalEDB = null, wt=null, ht=null;
@@ -93,12 +93,12 @@ plannerBean.doConfigure(dbParams,dbQueries);
     String risk_content = rsdemo.getString("risk_content");
     String checklist_content = rsdemo.getString("checklist_content");
 %>
-  <xml id="xml_list">
-    <planner>
-      <%=risk_content%>
-      <%=checklist_content%>
-    </planner>
-  </xml> 
+<xml id="xml_list">
+<planner>
+<%=risk_content%>
+<%=checklist_content%>
+</planner>
+</xml>
 <%
 
 
@@ -123,14 +123,13 @@ plannerBean.doConfigure(dbParams,dbQueries);
   }
   plannerBean.closePstmtConn();
 %>
-<table bgcolor='silver' width='100%'  cellspacing=0 cellpadding=0 >
-  <tr>
-    <td><font color='blue'><%=patientName%> | EDB: <%=finalEDB%></font></td>
-    <td align="right">
-    <input type="button" name="submit" value="Print" onclick="window.print();" />
-    <input type="button" value="  Exit  "  onclick="javascript:window.close();" />
-    </td>
-  </tr>
+<table bgcolor='silver' width='100%' cellspacing=0 cellpadding=0>
+	<tr>
+		<td><font color='blue'><%=patientName%> | EDB: <%=finalEDB%></font></td>
+		<td align="right"><input type="button" name="submit"
+			value="Print" onclick="window.print();" /> <input type="button"
+			value="  Exit  " onclick="javascript:window.close();" /></td>
+	</tr>
 </table>
 
 <%
@@ -173,7 +172,7 @@ else {
   out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
 
 }
-%>    
+%>
 
 </body>
 </html>

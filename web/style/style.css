@@ -1,19 +1,18 @@
 @CHARSET "ISO-8859-1";
-input.button
-{
-	font-weight:bold;
+
+input.button {
+	font-weight: bold;
 	color: #910A11;
 }
 
-
 BODY {
- font-family: Verdana, helvetica, sans-serif;
- font-size: 1 pt;
+	font-family: Verdana, helvetica, sans-serif;
+	font-size: 1 pt;
 }
 
 H1 {
- color: black;
- font-size: 25 pt;
+	color: black;
+	font-size: 25 pt;
 }
 
 H3 {
@@ -24,16 +23,18 @@ H3 {
 }
 
 H5 {
- color: black;
- font-size: medium;
+	color: black;
+	font-size: medium;
 }
 
 .completed {
 	color: black;
 }
+
 .overdue {
 	color: red;
 }
+
 .inactive {
 	color: blue;
 }
@@ -43,13 +44,16 @@ H5 {
 	font-weight: bold;
 	font-size: small;
 }
+
 .date {
 	font-size: 10px;
 }
+
 .overdue_example {
 	color: black;
 	background-color: #FF979C;
 }
+
 P {
 	font-size: 12px;
 }
@@ -58,6 +62,7 @@ a.sidebar:link {
 	color: navy;
 	font-weight: bold;
 }
+
 a.header:link {
 	color: white;
 	font-weight: bold;
@@ -68,80 +73,91 @@ a.header:link {
 	font-weight: bold;
 	font-size: small;
 }
+
 .inactive {
 	color: red;
 }
 
 A:link {
- text-decoration: none;
- color: blue;
- }
+	text-decoration: none;
+	color: blue;
+}
+
 A:active {
- text-decoration: none;
- color: blue;
- }
+	text-decoration: none;
+	color: blue;
+}
+
 A:visited {
- text-decoration: none;
- color: blue;
- }
+	text-decoration: none;
+	color: blue;
+}
 
 TABLE {
-	border-collapse: inherit; 
+	border-collapse: inherit;
 	border: 0px;
 	border-spacing: 0px;
 	padding: 0px;
 }
+
 TABLE.padding {
-	padding-left:  5px;
+	padding-left: 5px;
 	padding-right: 5px;
-	padding-top:   0px;
-	padding-bottom:0px;
-	border:        1px;
-	border-spacing:1px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border: 1px;
+	border-spacing: 1px;
 }
 
 TR.even {
 	vertical-align: top;
 	background-color: #D5D5D5;
 }
+
 TR.odd {
 	vertical-align: top;
 	background-color: #E5E5E5;
 }
+
 TR.overdue {
 	vertical-align: top;
 	background-color: #FF979C;
 }
 
-TH { 
-	text-align: left; 
-	font-weight: bold; 
+TH {
+	text-align: left;
+	font-weight: bold;
 	vertical-align: top;
 	color: navy;
-/**	red background with white lettering
+	/**	red background with white lettering
 	background-color: #910A11; 
 	color: white;
 */
 	font-size: 15px;
 }
-TH.title { 
-	text-align: right; 
-	background-color: transparent; 
-	color:black;
+
+TH.title {
+	text-align: right;
+	background-color: transparent;
+	color: black;
 }
+
 TH.form {
 	text-align: right;
 }
+
 TH.view {
 	background-color: transparent;
 	color: black;
 	font-weight: bold;
 }
+
 TH.sortable {
 	white-space: nowrap;
 	background-color: transparent;
 	color: black;
 }
+
 TH.sorted {
 	white-space: nowrap;
 	background-color: #e6e7ff;
@@ -152,19 +168,22 @@ TD {
 	text-align: left;
 	font-size: 14px;
 }
-TD.select { 
+
+TD.select {
 	font-weight: bold;
 	color: red;
 }
 
 .pagebanner {
-	color:white;
+	color: white;
 }
+
 .pagelinks {
-	color:white;
+	color: white;
 	font-size: 80%;
 	padding-left: 150px;
 }
+
 .exportlinks {
 	text-align: right;
 }
@@ -175,22 +194,24 @@ TABLE.outercalendar {
 	border-color-light: #C0C0C0;
 	border-color: #111111;
 }
+
 TABLE.innercalendar {
 	border-color-light: #C0C0C0;
-	border-color-dark:#000000;
+	border-color-dark: #000000;
 	border-collapse: collapse;
-	border-color: #000000; 
+	border-color: #000000;
 	background-color: #DFDCD8;
 }
+
 TD.calendar {
 	border-color: #666666;
 	background-color: #666666;
 	color: #FFFFFF;
-	font-weight: bold;	
-	text-align: center; 
+	font-weight: bold;
+	text-align: center;
 	white-space: normal;
 }
+
 TD.right {
 	text-align: right;
 }
-

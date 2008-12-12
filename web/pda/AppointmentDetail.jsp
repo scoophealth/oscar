@@ -24,9 +24,9 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
@@ -53,15 +53,15 @@
     String reason = new String(request.getParameter("reason").trim());
     String location = new String(request.getParameter("location").trim());
     
-%>     
+%>
 <table border="1">
-<%
+	<%
  	    out.print("<tr><td>Date:"+appointment_date+"</td><td><a href=\"EditAppointmentForm.jsp?appointment_no="+appointment_no+"\">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:history.back()\">Return</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"logout.jsp\"<b>LogOut</b></a></td><td></td></tr>") ;
  
             String str = beanReturnPage.getAppointmentHtml(appointment_date,start_time,end_time,name,reason,location ) ;
             out.print( str);
  	    
 %>
-</table> 
+</table>
 </body>
 </HTML>

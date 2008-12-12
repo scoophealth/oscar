@@ -26,9 +26,9 @@
 
 <!-- Jan 20, 2003,-->
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%
     response.setHeader("Cache-Control","no-cache");
     oscar.oscarEncounter.pageUtil.EctSessionBean sessionbean = null;
@@ -51,34 +51,27 @@
     }
 </script>
 <head>
-<title>
-<bean:message key="oscarEncounter.timeOut.title"/>
-</title>
+<title><bean:message key="oscarEncounter.timeOut.title" /></title>
 </head>
 <body onload="javascript:loadUp()">
 
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.timeOut.msgEncounter"/>">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td style="color:white">
-                            <bean:message key="oscarEncounter.timeOut.msgSaveExit"/>
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td >
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+<table class="MainTable" id="scrollNumber1"
+	name="<bean:message key="oscarEncounter.timeOut.msgEncounter"/>">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td style="color: white"><bean:message
+					key="oscarEncounter.timeOut.msgSaveExit" /></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
 </body>
 </html:html>
 

@@ -1,3 +1,4 @@
+
 <%
   if (session.getAttribute("user") == null)
   {
@@ -5,10 +6,14 @@
   }
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 	{"search_daysheetall", "select a.appointment_date, a.provider_no, a.start_time, a.end_time, a.reason, p.last_name, p.first_name, d.last_name,d.first_name,d.chart_no, d.phone, d.date_of_birth, d.month_of_birth, d.year_of_birth, d.hin from appointment a,demographic d,provider p, mygroup m where a.appointment_date=? and  m.mygroup_no=? and a.status != 'C' and a.demographic_no=d.demographic_no and a.provider_no=p.provider_no AND p.provider_no=m.provider_no order by p.provider_no, a.appointment_date, "+orderby }, 
@@ -26,11 +31,11 @@
 <html>
 <head>
 <title>OSCAR - Day Sheet</title>
-<link rel="stylesheet" href="../media/css/oscar.css" >
-<link rel="stylesheet" href="../media/css/reporting.css" >
+<link rel="stylesheet" href="../media/css/oscar.css">
+<link rel="stylesheet" href="../media/css/reporting.css">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -40,16 +45,19 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 <table width="100%" bgcolor="#D3D3D3" border="0">
-  <tr> 
-    <td height="40" width="25"></td>
-    <td width="90%" align="left"> 
-      <p><font color="#4D4D4D"><b><font size="4">oscar<font size="3">Day Sheet (<%=createtime%>)</font></font></b></font> 
-      </p>
-    </td>
-    <td><input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></td>
-  </tr>
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="90%" align="left">
+		<p><font color="#4D4D4D"><b><font size="4">oscar<font
+			size="3">Day Sheet (<%=createtime%>)</font></font></b></font></p>
+		</td>
+		<td><input type="button" name="Button" value="Print"
+			onClick="window.print()"><input type="button" name="Button"
+			value=" Exit " onClick="window.close()"></td>
+	</tr>
 </table>
 <%
 	boolean bFistL = true;
@@ -84,18 +92,18 @@ function setfocus() {
 					time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ?
 						Integer.toString(min) : "0" + Integer.toString(min));
 %>
-					<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
-						<td class="items"><%=time%></td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-						<td class="items">&nbsp;</td>
-					</tr>
+<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
+	<td class="items"><%=time%></td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+	<td class="items">&nbsp;</td>
+</tr>
 <%
 					bodd = !(bodd);
 					if (45 == min)
@@ -117,7 +125,8 @@ function setfocus() {
 				veryFirst = false;
 			}
 %>
-	</table><p>
+</table>
+<p>
 <%
 			hour = 8;
 			min = 0;
@@ -126,24 +135,29 @@ function setfocus() {
 		{
 			bFistL = bodd = false;
 %>
-<table width="100%" border="0" cellspacing="0" cellpadding="1" class="smallerTable"><tr> 
-<td><font size=4><b><%=providerBean.getProperty(rsdemo.getString("a.provider_no")) + "</b>  (" + date + ")"%><font></td>
-<td align="right"></td>
-</tr></table>
-<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0" cellpadding="0" class="smallerTable">
-<tr>
-	<td class="items"><b>Time</b></td>
-	<td class="items"><b>Chart #</b></td>
-	<td class="items"><b>Name</b></td>
-	<td class="items" align="center" width="79"><b>DoB</b></td>
-	<td class="items" align="center" width="55"><b>PHN</b></td>
-	<td class="items" align="center" width="55"><b>Fee1</b></td>
-	<td class="items" align="center" width="55"><b>Diag1</b></td>
-	<td class="items" align="center" width="55"><b>Diag2</b></td>
-	<td class="items" align="center" width="55"><b>Diag3</b></td>
-	<td class="items"><b>Description</b></td>
-</tr>
-<%
+
+<table width="100%" border="0" cellspacing="0" cellpadding="1"
+	class="smallerTable">
+	<tr>
+		<td><font size=4><b><%=providerBean.getProperty(rsdemo.getString("a.provider_no")) + "</b>  (" + date + ")"%><font></td>
+		<td align="right"></td>
+	</tr>
+</table>
+<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0"
+	cellpadding="0" class="smallerTable">
+	<tr>
+		<td class="items"><b>Time</b></td>
+		<td class="items"><b>Chart #</b></td>
+		<td class="items"><b>Name</b></td>
+		<td class="items" align="center" width="79"><b>DoB</b></td>
+		<td class="items" align="center" width="55"><b>PHN</b></td>
+		<td class="items" align="center" width="55"><b>Fee1</b></td>
+		<td class="items" align="center" width="55"><b>Diag1</b></td>
+		<td class="items" align="center" width="55"><b>Diag2</b></td>
+		<td class="items" align="center" width="55"><b>Diag3</b></td>
+		<td class="items"><b>Description</b></td>
+	</tr>
+	<%
     	}
 		appTime = rsdemo.getString("a.start_time");
 		String endTime = rsdemo.getString("a.end_time");
@@ -155,19 +169,19 @@ function setfocus() {
 				if (!(time.equalsIgnoreCase(lastwritten)))
 				{
 %>
-					<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
-							<td class="items"><%=time%></td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-							<td class="items">&nbsp;</td>
-					</tr>
-<%
+	<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
+		<td class="items"><%=time%></td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+	</tr>
+	<%
 				bodd = !(bodd);
 				}
 				if (45 == min)
@@ -187,18 +201,18 @@ function setfocus() {
 		if (t <= st)
 		{
 %>
-			<tr bgcolor="<%=((bodd)?"#F6F6F6":"#FFFFFF")%>">
-			<td class="items"><%=time%></td>
-			<td class="items"><%=rsdemo.getString("d.chart_no")%></td>
-			<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%></td>
-			<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%></td>
-			<td class="items"><%=rsdemo.getString("d.hin")%></td>
-			<td class="items">&nbsp;</td>
-			<td class="items">&nbsp;</td>
-			<td class="items">&nbsp;</td>
-			<td class="items">&nbsp;</td>
-			<td class="items"><%=rsdemo.getString("a.reason")%>&nbsp;</td>
-<%
+	<tr bgcolor="<%=((bodd)?"#F6F6F6":"#FFFFFF")%>">
+		<td class="items"><%=time%></td>
+		<td class="items"><%=rsdemo.getString("d.chart_no")%></td>
+		<td class="items"><%=Misc.toUpperLowerCase(rsdemo.getString("d.last_name")) + ", " + Misc.toUpperLowerCase(rsdemo.getString("d.first_name")) + " Ph:" + rsdemo.getString("d.phone")%></td>
+		<td class="items"><%=rsdemo.getString("d.date_of_birth") + "-" + rsdemo.getString("d.month_of_birth") + "-" + rsdemo.getString("d.year_of_birth")%></td>
+		<td class="items"><%=rsdemo.getString("d.hin")%></td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items">&nbsp;</td>
+		<td class="items"><%=rsdemo.getString("a.reason")%>&nbsp;</td>
+		<%
 			bodd = !(bodd);
 			String[] ets = endTime.split(":");
 			int m = Integer.parseInt(ets[1]) + 1;
@@ -227,26 +241,27 @@ function setfocus() {
 		{
 			veryFirst = false;
 %>
-	<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0" cellpadding="0">
-	<tr>
-		<td><b>Time</b></td>
-		<td><b>Chart #</b></td>
-		<td><b>Name</b></td>
-		<td align="center" width="79"><b>DoB</b></td>
-		<td align="center" width="55"><b>PHN</b></td>
-		<td align="center" width="55"><b>Fee1</b></td>
-		<td align="center" width="55"><b>Diag1</b></td>
-		<td align="center" width="55"><b>Diag2</b></td>
-		<td align="center" width="55"><b>Diag3</b></td>
-		<td><b>Description</b></td>
-	</tr>
-<%
+		<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0"
+			cellpadding="0">
+			<tr>
+				<td><b>Time</b></td>
+				<td><b>Chart #</b></td>
+				<td><b>Name</b></td>
+				<td align="center" width="79"><b>DoB</b></td>
+				<td align="center" width="55"><b>PHN</b></td>
+				<td align="center" width="55"><b>Fee1</b></td>
+				<td align="center" width="55"><b>Diag1</b></td>
+				<td align="center" width="55"><b>Diag2</b></td>
+				<td align="center" width="55"><b>Diag3</b></td>
+				<td><b>Description</b></td>
+			</tr>
+			<%
 		}
 		time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
 		if (!(time.equalsIgnoreCase(lastwritten)))
 		{
 %>
-		<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
+			<tr bgcolor="<%=bodd?"#F6F6F6":"#FFFFFF"%>">
 				<td class="items"><%=time%></td>
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
@@ -257,8 +272,8 @@ function setfocus() {
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
 				<td class="items">&nbsp;</td>
-		</tr>
-<%
+			</tr>
+			<%
   		bodd = !(bodd);
 		}
 		if (45 == min)
@@ -272,7 +287,7 @@ function setfocus() {
 		}
 		time = ((10 <= hour) ? Integer.toString(hour) : "0" + Integer.toString(hour)) + ":" + ((10 <= min) ? Integer.toString(min) : "0" + Integer.toString(min));
 	}
-%> 
-</table>
+%>
+		</table>
 </body>
 </html>

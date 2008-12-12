@@ -1,116 +1,120 @@
 div.leftplane {
-    width: 90%;
-    margin-left: 3px;
-    margin-right: 3px;
-    margin-top: 3px;
+	width: 90%;
+	margin-left: 3px;
+	margin-right: 3px;
+	margin-top: 3px;
 }
 
 div.leftplane h3 {
-    background-color: #ccccff;
-    font-variant: small-caps;
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0px;
-    padding-left: 10px;
+	background-color: #ccccff;
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 11px;
+	margin: 0px;
+	padding-left: 10px;
 }
-
 
 div.leftplane ul {
-    list-style: none;
-    list-style-type: none;
-    list-style-position: outside;
-    font-size: 12px;
-    padding: 0px;
-    margin: 0px;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
 }
-    
+
 div.leftplane li {
-    padding-left: 5px;
-    white-space: nowrap;
+	padding-left: 5px;
+	white-space: nowrap;
 }
 
 div.doclist {
-    padding: 0px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
+	padding: 0px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 5px;
 }
 
 div.documentLists {
-    padding-bottom: 2px;
+	padding-bottom: 2px;
 }
+
 table.docTable {
-    border: 0px;
-    padding: 0px;
+	border: 0px;
+	padding: 0px;
 }
 
 table.docTable td {
-    border-bottom: solid 1px #afafaf;
-    font-size: 12px;
-    margin-top: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+	border-bottom: solid 1px #afafaf;
+	font-size: 12px;
+	margin-top: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 
 div.plusminus {
-    font-size: 10px; 
-    font-weight: bold;
-    padding-left: 5px;
-    padding-top: 0px;
-    height: 20px;
+	font-size: 10px;
+	font-weight: bold;
+	padding-left: 5px;
+	padding-top: 0px;
+	height: 20px;
 }
 
 div.docheading {
-    padding-left: 20px;
-    font-weight: bold;
-    font-size: 13px;
-    margin-top: 0px;
-    padding-top: 0px;
+	padding-left: 20px;
+	font-weight: bold;
+	font-size: 13px;
+	margin-top: 0px;
+	padding-top: 0px;
 }
 
 div.headerline {
-    background-color: #ccccd7;
+	background-color: #ccccd7;
 }
 
 div.topplane {
-    margin-right: 5px;
-    margin-left: 5px;
+	margin-right: 5px;
+	margin-left: 5px;
 }
 
 /* Global */
-a { 
-    text-decoration: none; color: #7552ca;
+a {
+	text-decoration: none;
+	color: #7552ca;
 }
+
 a:hover {
-    text-decoration: none; color: #bd528e;
+	text-decoration: none;
+	color: #bd528e;
 }
 
 input {
-    border: 1px solid #7682b1;
+	border: 1px solid #7682b1;
 }
 
 select {
-    border: 1px solid #7682b1;
-    font-size: 11px;
-    margin-bottom:-2px;
+	border: 1px solid #7682b1;
+	font-size: 11px;
+	margin-bottom: -2px;
 }
 
-input.tightCheckbox{
-    margin: 0px;
-    padding: 0px;
+input.tightCheckbox {
+	margin: 0px;
+	padding: 0px;
 }
 
 span.tabs {
-    font-family: Sans-Serif;
-    font-size: 11px;
-    margin-left: 20px;
+	font-family: Sans-Serif;
+	font-size: 11px;
+	margin-left: 20px;
 }
 
 span.fieldlabel {
-    font-size: 11px;
-    font-family: Georgia;
-    margin-left: 10px;
+	font-size: 11px;
+	font-family: Georgia;
+	margin-left: 10px;
 }
+
 form.forms {
-    margin: 0px;
+	margin: 0px;
 }

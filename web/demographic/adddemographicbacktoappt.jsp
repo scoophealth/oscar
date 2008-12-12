@@ -24,8 +24,10 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%
   //if action is good, then give me the result
 	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
@@ -82,8 +84,9 @@
  		rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
   	if(rs.next()) cpp_id=apptMainBean.getString(rs,"cpp_id");
 %>
-  <p><h2>Successful Addition of a cpp Record.
-  </h2></p>
+<p>
+<h2>Successful Addition of a cpp Record.</h2>
+</p>
 <%  
   if(true) {
     out.clear();
@@ -93,7 +96,9 @@
   }
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();

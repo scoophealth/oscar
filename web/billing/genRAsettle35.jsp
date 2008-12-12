@@ -24,10 +24,13 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <% 
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -105,8 +108,8 @@ String errorAccount ="", eFlag="", noErrorAccount="";
       	        
       	          int recordAffected = apptMainBean.queryExecuteUpdate(noErrorAccount,"update_billhd");
       	           %>
- 
-      	           <%
+
+<%
       	            }
       	              String[] paramx = new String[2]; 
       	              paramx[0] = "F";
@@ -114,14 +117,13 @@ String errorAccount ="", eFlag="", noErrorAccount="";
                       
       	        int recordAffected1 = apptMainBean.queryExecuteUpdate(paramx,"update_rahd_status");
       	           %>
-      	         
-      	      <script LANGUAGE="JavaScript">
+
+<script LANGUAGE="JavaScript">
 	            self.close();
 	            self.opener.refresh();
 </script>
-      	           <%
+<%
       	           }
       	           
       	               
       	           %>
-      	     

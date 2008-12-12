@@ -41,14 +41,32 @@
 </HEAD>
 <BODY>
 <table>
-<form  action="SearchIt.jsp" method="get">
-<tr><td><a href="AppointmentToday.jsp?todayString=<%=todayString%>">Return</a></td><td><a href="logout.jsp">LogOut</a></td></tr>
-<tr><td>Input keywords :</td><td></td></tr>
-<tr><td colspan="2"><input type="text" name="keyword"></td><td></td></tr>
-<tr><td><input type="submit" name="button" value="name"></td><td><input type="submit" name="button" value="phone"></td></tr>
-<tr><td><input type="submit" name="button" value="DOB"></td><td><input type="submit" name="button" value="Address"></td></tr>
-<tr><td><input type="submit" name="button" value="HIN"></td><td><input type="submit" name="button" value="ChartNo"></td></tr>
-</form >
+	<form action="SearchIt.jsp" method="get">
+	<tr>
+		<td><a href="AppointmentToday.jsp?todayString=<%=todayString%>">Return</a></td>
+		<td><a href="logout.jsp">LogOut</a></td>
+	</tr>
+	<tr>
+		<td>Input keywords :</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="text" name="keyword"></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="button" value="name"></td>
+		<td><input type="submit" name="button" value="phone"></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="button" value="DOB"></td>
+		<td><input type="submit" name="button" value="Address"></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="button" value="HIN"></td>
+		<td><input type="submit" name="button" value="ChartNo"></td>
+	</tr>
+	</form>
 </table>
 </body>
 </HTML>

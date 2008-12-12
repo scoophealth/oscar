@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-    Document   : VTForm.xml
-    Created on : October 31, 2004, 1:46 PM
-    Author     : root
-    Description:
-        Purpose of the document follows.
--->
+	<!--
+		Document : VTForm.xml Created on : October 31, 2004, 1:46 PM Author :
+		root Description: Purpose of the document follows.
+	-->
 
 <formProp>
-    <measurement> 
-	<type>BP</type> 
-	<typeDesc>Blood Pressure</typeDesc>
-	<typeDisplayName>BP</typeDisplayName>
-	<measuringInstrc>Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.</measuringInstrc>
+	<measurement>
+		<type>BP</type>
+		<typeDesc>Blood Pressure</typeDesc>
+		<typeDisplayName>BP</typeDisplayName>
+		<measuringInstrc>Sitting Position (nnn/nnn) Target:&lt;130/80 Interval:3mo.</measuringInstrc>
 	<validationRule>
 	    <name>Blood Pressure</name>
 	    <regularExp>[0-9]{2,3}/{1}[0-9]{2,3}</regularExp>

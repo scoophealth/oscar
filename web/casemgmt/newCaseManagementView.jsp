@@ -22,24 +22,29 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@page import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*" %>
-<%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
-<%@page import="org.oscarehr.PMmodule.model.*" %>
-<%@page import="org.oscarehr.common.model.*" %>
-<%@page import="oscar.util.DateUtils" %>
+<%@page
+	import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.HashSet, java.util.Iterator, java.text.SimpleDateFormat, java.util.Calendar, java.util.Date, java.text.ParseException"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page
+	import="org.oscarehr.common.model.UserProperty, org.oscarehr.casemgmt.model.*"%>
+<%@page import="org.oscarehr.casemgmt.web.formbeans.*"%>
+<%@page import="org.oscarehr.PMmodule.model.*"%>
+<%@page import="org.oscarehr.common.model.*"%>
+<%@page import="oscar.util.DateUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.model.Role"%>
 
 
-<%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page import="org.oscarehr.util.EncounterUtil"%><jsp:useBean
+	id="oscarVariables" class="java.util.Properties" scope="session" />
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 
 <%
     String demographicNo = request.getParameter("demographicNo");
@@ -217,21 +222,21 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 <jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 --%>
 
-        <html:form action="/CaseManagementView" method="post">        
-            <html:hidden property="demographicNo" value="<%=demographicNo%>"/>
-            <html:hidden property="providerNo" value="<%=provNo%>" />
-            <html:hidden property="tab" value="Current Issues"/>
-            <html:hidden property="hideActiveIssue"/>
-            <html:hidden property="ectWin.rowOneSize" styleId="rowOneSize"/>
-            <html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize"/>
-            <input type="hidden" name="chain" value="list" /> 
-            <input type="hidden" name="method" value="view"/>
-            <input type="hidden" id="check_issue" name="check_issue">
-            <input type="hidden" id="serverDate" value="<%=strToday%>">
-            <input type="hidden" id="resetFilter" name="resetFilter" value="false">
-            <!--Row One Headers -->
-            
-                <%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
+<html:form action="/CaseManagementView" method="post">
+	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
+	<html:hidden property="providerNo" value="<%=provNo%>" />
+	<html:hidden property="tab" value="Current Issues" />
+	<html:hidden property="hideActiveIssue" />
+	<html:hidden property="ectWin.rowOneSize" styleId="rowOneSize" />
+	<html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize" />
+	<input type="hidden" name="chain" value="list" />
+	<input type="hidden" name="method" value="view" />
+	<input type="hidden" id="check_issue" name="check_issue">
+	<input type="hidden" id="serverDate" value="<%=strToday%>">
+	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
+	<!--Row One Headers -->
+
+	<%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
                 <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >
                     <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
                     out.print(oscarVariables.getProperty("otherMedications", ""));
@@ -265,18 +270,19 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 </div>                                  
 
             <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->--%>
-            <div style="width:100%; height:75px; margin:0px; background-color:#FFFFFF;">
-                <div id="divR1I1" class="topBox" style="float:left; width:49%; margin-left:3px;">
-                    <%--&nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>--%>
-                </div>    
-                
-                <!-- This is the Medical History cell ...mh...--> 
-                <div id="divR1I2" class="topBox" style="float:right; width:49%; margin-right:3px;">
-                    <%--<html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>--%>
-                </div>  
-            </div>        
-            <!--2nd row headers -->
-            <%--
+	<div
+		style="width: 100%; height: 75px; margin: 0px; background-color: #FFFFFF;">
+	<div id="divR1I1" class="topBox"
+		style="float: left; width: 49%; margin-left: 3px;"><%--&nbsp;<html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>--%>
+	</div>
+
+	<!-- This is the Medical History cell ...mh...-->
+	<div id="divR1I2" class="topBox"
+		style="float: right; width: 49%; margin-right: 3px;"><%--<html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>--%>
+	</div>
+	</div>
+	<!--2nd row headers -->
+	<%--
             <div style="float:left; width:50%; background-color:#CCCCFF;" class="RowTop" >
                 &nbsp;
                 <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
@@ -304,69 +310,77 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                 <bean:message key="oscarEncounter.Index.r"/></a>
             </div>
             --%>
-            <div style="width:100%; height:75px; margin-top:0px; background-color:#FFFFFF;">
-                <!--Ongoing Concerns cell -->
-                <div id="divR2I1" class="topBox" style="clear:left; float:left; width:49%; margin-left:3px;">                
-                    
-                </div>     
-                
-                <!--Reminders cell -->
-                <div id="divR2I2" class="topBox" style="clear:right; float:right; width:49%; margin-right:3px;">
-                    
-                </div> 
-            </div>
-        
-        <div id="notCPP" style="height:70%; margin-left:2px; background-color:#FFFFFF;">
-        <%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
-        <div id="topContent" style="float:left; width:100%; margin-right:-2px; padding-bottom:10px; background-color:#CCCCFF; font-size:10px;">
-            <nested:notEmpty name="caseManagementViewForm" property="filter_providers">
-                <div style="float:left; margin-left:30px;margin-top:0px;"><u>Providers:</u><br>
-                    <nested:iterate type="String" id="filter_provider" property="filter_providers">                    
-                        <c:choose>
-                        <c:when test="${filter_provider == 'a'}">
+	<div
+		style="width: 100%; height: 75px; margin-top: 0px; background-color: #FFFFFF;">
+	<!--Ongoing Concerns cell -->
+	<div id="divR2I1" class="topBox"
+		style="clear: left; float: left; width: 49%; margin-left: 3px;">
+
+	</div>
+
+	<!--Reminders cell -->
+	<div id="divR2I2" class="topBox"
+		style="clear: right; float: right; width: 49%; margin-right: 3px;">
+
+	</div>
+	</div>
+
+	<div id="notCPP"
+		style="height: 70%; margin-left: 2px; background-color: #FFFFFF;">
+	<%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
+	<div id="topContent"
+		style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
+	<nested:notEmpty name="caseManagementViewForm"
+		property="filter_providers">
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Providers:</u><br>
+		<nested:iterate type="String" id="filter_provider"
+			property="filter_providers">
+			<c:choose>
+				<c:when test="${filter_provider == 'a'}">
                             All
                         </c:when>
-                        <c:otherwise>
-                            <nested:iterate id="provider" name="providers">
-                                <c:if test="${filter_provider==provider.providerNo}">                        
-                                    <nested:write name="provider" property="formattedName"/><br>
-                                </c:if>
-                            </nested:iterate>
-                       </c:otherwise>
-                       </c:choose>
-                    </nested:iterate>
-                </div>
-            </nested:notEmpty>
-            <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
-                <div style="float:left; margin-left:30px; margin-top:0px;"><u>Roles:</u><br>
-                    <nested:iterate type="String" id="filter_role" property="filter_roles"> 
-                        <c:choose>
-                        <c:when test="${filter_role == 'a'}">
+				<c:otherwise>
+					<nested:iterate id="provider" name="providers">
+						<c:if test="${filter_provider==provider.providerNo}">
+							<nested:write name="provider" property="formattedName" />
+							<br>
+						</c:if>
+					</nested:iterate>
+				</c:otherwise>
+			</c:choose>
+		</nested:iterate></div>
+	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Roles:</u><br>
+		<nested:iterate type="String" id="filter_role" property="filter_roles">
+			<c:choose>
+				<c:when test="${filter_role == 'a'}">
                             All
                         </c:when>
-                        <c:otherwise>
-                            <nested:iterate id="role" name="roles">
-                                <c:if test="${filter_role==role.id}">                        
-                                    <nested:write name="role" property="name"/><br>
-                                </c:if>
-                            </nested:iterate>
-                        </c:otherwise>
-                        </c:choose>
-                    </nested:iterate>
-                </div>
-            </nested:notEmpty>
-            <nested:notEmpty name="caseManagementViewForm" property="note_sort">
-                <div style="float:left; margin-left:30px; margin-top:0px;"><u>Sort:</u><br>
-                    <nested:write property="note_sort"/><br>
-                </div>
-            </nested:notEmpty>
-            
-            <div id="filter" style="display:none;">
-                <div style="clear:both; height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
-                    Provider:
-                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
-                        <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
-                        <%
+				<c:otherwise>
+					<nested:iterate id="role" name="roles">
+						<c:if test="${filter_role==role.id}">
+							<nested:write name="role" property="name" />
+							<br>
+						</c:if>
+					</nested:iterate>
+				</c:otherwise>
+			</c:choose>
+		</nested:iterate></div>
+	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Sort:</u><br>
+		<nested:write property="note_sort" /><br>
+		</div>
+	</nested:notEmpty>
+
+	<div id="filter" style="display: none;">
+	<div
+		style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative; left: 10%;">
+	Provider:
+	<ul
+		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		<li><html:multibox property="filter_providers" value="a"
+			onclick="filterCheckBox(this)"></html:multibox>All</li>
+		<%
                         Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");                                                
                         
                         String providerNo;
@@ -376,121 +390,153 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         prov = iter.next();
                         providerNo = prov.getProviderNo();
                         %>
-                        <li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
-                        <%
+		<li><html:multibox property="filter_providers"
+			value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
+		<%
                         }
                         %>
-                    </ul>
-                </div>
-                
-                <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:20%;">
-                    Role:
-                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
-                        <li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
-                        <%
+	</ul>
+	</div>
+
+	<div
+		style="height: 150px; width: auto; overflow: auto; float: left; position: relative; left: 20%;">
+	Role:
+	<ul
+		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		<li><html:multibox property="filter_roles" value="a"
+			onclick="filterCheckBox(this)"></html:multibox>All</li>
+		<%
                         List roles = (List)request.getAttribute("roles");
                         for( int num = 0; num < roles.size(); ++num ) {
                         Role role = (Role)roles.get(num);
                         %>
-                        <li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
-                        <%
+		<li><html:multibox property="filter_roles"
+			value="<%=String.valueOf(role.getId())%>"
+			onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
+		<%
                         }
                         %>
-                    </ul>
-                </div>
-                
-                <div style="float:left; position:relative; left:25%;">
-                    Sort:
-                    <ul style="margin-left:0px; padding-left:0px; margin-top:1px; list-style: none inside none;">
-                        <li><html:radio property="note_sort" value="observation_date_asc">Observation Date Asc</html:radio></li>
-                        <li><html:radio property="note_sort" value="observation_date_desc">Observation Date Desc</html:radio></li>
-                        <li><html:radio property="note_sort" value="providerName">Provider</html:radio></li>
-                        <li><html:radio property="note_sort" value="programName">Program</html:radio></li>
-                        <li><html:radio property="note_sort" value="roleName">Role</html:radio></li>                        
-                    </ul>
-                </div>
-                
-                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter(false);">
-                    Show View
-                </div>                
-                <div style="text-align:right; cursor:pointer; text-decoration:underline; margin-right:10px;" onclick="return filter(true);">
-                    Reset Filter
-                </div>                                
-            </div>            
-            <div style="float:left; clear:both; margin-top:5px; margin-bottom:5px; width:100%; text-align:center;">                                
-                <img src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">                
-                <input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
-                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none">&nbsp</div>  
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <select id="channel">
-                    <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
-                    <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
-                    <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed"/></option>
-                    <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus"/></option>
-                    <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message key="global.BNF"/></option>
-                </select>
-                
-                <input type="text" id="keyword" name="keyword"  value=""  onkeypress="return grabEnter('searchButton',event)"/>
-                <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">       
-                
-            </div>
-            <div style="clear:both; text-align:right">
-                <img style="cursor:pointer;" title="View Filter" alte="View Filter" onclick="showFilter();" src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;Filter
-                &nbsp;&nbsp;
-                <img style="cursor:pointer;" title="Print" id='imgPrintCPP' alt="Toggle Print CPP" onclick="return printInfo(this,'printCPP');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;CPP
-                &nbsp;&nbsp;
-                <img style="cursor:pointer;" title="Print" id='imgPrintRx' alt="Toggle Print Rx" onclick="return printInfo(this, 'printRx');"  src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>&nbsp;Rx
-                &nbsp;&nbsp;
-            </div>
-        </div>
-    </html:form>          
+	</ul>
+	</div>
+
+	<div style="float: left; position: relative; left: 25%;">Sort:
+	<ul
+		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
+		<li><html:radio property="note_sort" value="observation_date_asc">Observation Date Asc</html:radio></li>
+		<li><html:radio property="note_sort"
+			value="observation_date_desc">Observation Date Desc</html:radio></li>
+		<li><html:radio property="note_sort" value="providerName">Provider</html:radio></li>
+		<li><html:radio property="note_sort" value="programName">Program</html:radio></li>
+		<li><html:radio property="note_sort" value="roleName">Role</html:radio></li>
+	</ul>
+	</div>
+
+	<div
+		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
+		onclick="return filter(false);">Show View</div>
+	<div
+		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
+		onclick="return filter(true);">Reset Filter</div>
+	</div>
+	<div
+		style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
+	<img
+		src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">
+	<input id="enTemplate" tabindex="6" size="16" type="text" value=""
+		onkeypress="return grabEnterGetTemplate(event)" />
+	<div class="enTemplate_name_auto_complete" id="enTemplate_list"
+		style="z-index: 1; display: none">&nbsp</div>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select id="channel">
+		<option
+			value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message
+			key="oscarEncounter.Index.oscarSearch" /></option>
+		<option value="http://www.google.com/search?q="><bean:message
+			key="global.google" /></option>
+		<option
+			value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message
+			key="global.pubmed" /></option>
+		<option
+			value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message
+			key="global.medlineplus" /></option>
+		<option
+			value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message
+			key="global.BNF" /></option>
+	</select> <input type="text" id="keyword" name="keyword" value=""
+		onkeypress="return grabEnter('searchButton',event)" /> <input
+		type="button" id="searchButton" name="button" value="Search"
+		onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
+
+	</div>
+	<div style="clear: both; text-align: right"><img
+		style="cursor: pointer;" title="View Filter" alte="View Filter"
+		onclick="showFilter();"
+		src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;Filter
+	&nbsp;&nbsp; <img style="cursor: pointer;" title="Print"
+		id='imgPrintCPP' alt="Toggle Print CPP"
+		onclick="return printInfo(this,'printCPP');"
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;CPP
+	&nbsp;&nbsp; <img style="cursor: pointer;" title="Print"
+		id='imgPrintRx' alt="Toggle Print Rx"
+		onclick="return printInfo(this, 'printRx');"
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;Rx
+	&nbsp;&nbsp;</div>
+	</div>
+</html:form>
 <%
     current = System.currentTimeMillis();
     System.out.println("NEW CASEMANAGEMENT VIEW page filters loaded " + String.valueOf(current-start));
     start = current;
 %>
-    <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0;">
-        <html:hidden property="demographicNo" value="<%=demographicNo%>"/>        
-        <html:hidden property="includeIssue" value="off"/>
-        <input type="hidden" name="deleteId" value="0">
-        <input type="hidden" name="lineId" value="0">
-        <input type="hidden" name="from" value="casemgmt">
-        <input type="hidden" name="method" value="save">
-        <input type="hidden" name="change_diagnosis" value="<c:out value="${change_diagnosis}"/>"/>
-        <input type="hidden" name="change_diagnosis_id" value="<c:out value="${change_diagnosis_id}"/>"/>                                     
-        <input type="hidden" name="newIssueId" id="newIssueId">
-        <input type="hidden" name="newIssueName" id="newIssueName">
-        <input type="hidden" name="ajax" value="false">
-        <input type="hidden" name="chain" value="">
-        <input type="hidden" name="caseNote.program_no" value="<%=pId%>">
-        <input type="hidden" name="noteId" value="0">
-        <input type="hidden" name="note_edit" value="new">
-        <input type="hidden" name="sign" value="off">
-        <input type="hidden" name="verify" value="off">
-        <input type="hidden" name="forceNote" value="false">
-        <input type="hidden" name="newNoteIdx" value="">
-        <input type="hidden" name="notes2print" id="notes2print" value="">
-        <input type="hidden" name="printCPP" id="printCPP" value="false">
-        <input type="hidden" name="printRx" id="printRx" value="false">
-        <input type="hidden" name="encType" id="encType" value="">
-        <div id="mainContent" style="background-color:#FFFFFF; width:100%; margin-right:-2px; display:inline; float:left;"> 
-            <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
-                <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
-                    <tr>
-                        <td style="height:430px; vertical-align: bottom;"> 
-                            <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="position:relative; left:0px; display:none;"></div>
-                        </td>
-                    </tr>
-                </table> 
-            </span>
-            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color:#FFFFFF; height:410px; overflow:auto; margin-left:2px;">
-                
-                <%
+<nested:form action="/CaseManagementEntry"
+	style="display:inline; margin-top:0; margin-bottom:0;">
+	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
+	<html:hidden property="includeIssue" value="off" />
+	<input type="hidden" name="deleteId" value="0">
+	<input type="hidden" name="lineId" value="0">
+	<input type="hidden" name="from" value="casemgmt">
+	<input type="hidden" name="method" value="save">
+	<input type="hidden" name="change_diagnosis"
+		value="<c:out value="${change_diagnosis}"/>" />
+	<input type="hidden" name="change_diagnosis_id"
+		value="<c:out value="${change_diagnosis_id}"/>" />
+	<input type="hidden" name="newIssueId" id="newIssueId">
+	<input type="hidden" name="newIssueName" id="newIssueName">
+	<input type="hidden" name="ajax" value="false">
+	<input type="hidden" name="chain" value="">
+	<input type="hidden" name="caseNote.program_no" value="<%=pId%>">
+	<input type="hidden" name="noteId" value="0">
+	<input type="hidden" name="note_edit" value="new">
+	<input type="hidden" name="sign" value="off">
+	<input type="hidden" name="verify" value="off">
+	<input type="hidden" name="forceNote" value="false">
+	<input type="hidden" name="newNoteIdx" value="">
+	<input type="hidden" name="notes2print" id="notes2print" value="">
+	<input type="hidden" name="printCPP" id="printCPP" value="false">
+	<input type="hidden" name="printRx" id="printRx" value="false">
+	<input type="hidden" name="encType" id="encType" value="">
+	<div id="mainContent"
+		style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
+	<span id="issueList"
+		style="background-color: #FFFFFF; height: 440px; width: 350px; position: absolute; z-index: 1; display: none; overflow: auto;">
+	<table id="issueTable" class="enTemplate_name_auto_complete"
+		style="position: relative; left: 0px; display: none;">
+		<tr>
+			<td style="height: 430px; vertical-align: bottom;">
+			<div class="enTemplate_name_auto_complete" id="issueAutocompleteList"
+				name="issueAutocompleteList"
+				style="position: relative; left: 0px; display: none;"></div>
+			</td>
+		</tr>
+	</table>
+	</span>
+	<div id="encMainDiv"
+		style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;">
+
+	<%
                
                 System.out.println("Notes Size " + noteList.size());
-                %>
-                <c:if test="${not empty Notes}">                        
-                    <%
+                %> <c:if test="${not empty Notes}">
+		<%
                     //java.util.List noteList=(java.util.List)request.getAttribute("Notes");
                     int idx = 0;
                     
@@ -618,74 +664,95 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     
                     //System.out.println("Starting " + note.getId());
 		    time1 = System.currentTimeMillis();
-                    %>                               
-                    <div id="nc<%=idx%>" class="note"> 
-                        <input type="hidden" id="signed<%=note.getId()%>" value="<%=note.isSigned()%>">
-                        <input type="hidden" id="full<%=note.getId()%>" value="<%=fulltxt || note.getId() == savedId%>">
-                        <input type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
-                        <input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
-                        <input type="hidden" name="caseNote.demographic_no" value="<%=note.getDemographic_no()%>">
-                        <div id="n<%=note.getId()%>">
-                            <%
+                    %>
+		<div id="nc<%=idx%>" class="note"><input type="hidden"
+			id="signed<%=note.getId()%>" value="<%=note.isSigned()%>"> <input
+			type="hidden" id="full<%=note.getId()%>"
+			value="<%=fulltxt || note.getId() == savedId%>"> <input
+			type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
+		<input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
+		<input type="hidden" name="caseNote.demographic_no"
+			value="<%=note.getDemographic_no()%>">
+		<div id="n<%=note.getId()%>">
+		<%
                             //display last saved note for editing
                             if( note.getId() == savedId ) {    
                             found = true;
-                            %>    
-                            <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
-                            <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
-                            <div class="sig" style="display:inline;<%=bgColour%>" id="sig<%=note.getId()%>">
-                                <%@ include file="noteIssueList.jsp" %>
-                            </div>
-                            
-                            <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                <p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                            </c:if>                                 
-                            
-                            <%    
+                            %> <img title="Print"
+			id='print<%=note.getId()%>' alt="Toggle Print Note"
+			onclick="togglePrint(<%=note.getId()%>, event)"
+			style='float: right; margin-right: 5px;'
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
+		<textarea tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea"
+			style="line-height: 1.1em;" name="caseNote_note"
+			id="caseNote_note<%=savedId%>"><nested:write
+			property="caseNote.note" /></textarea>
+		<div class="sig" style="display:inline;<%=bgColour%>"
+			id="sig<%=note.getId()%>"><%@ include file="noteIssueList.jsp"%>
+		</div>
+
+		<c:if test="${sessionScope.passwordEnabled=='true'}">
+			<p style='background-color: #CCCCFF; display: none; margin: 0px;'
+				id='notePasswd'>Password:&nbsp;<html:password
+				property="caseNote.password" /></p>
+		</c:if> <%    
                             }
                             //else display contents of note for viewing
                             else {
                             
 				if( note.isLocked() ) {
-                            %>
-                            <span id="txt<%=note.getId()%>"><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></span>
-                            <%
+                            %> <span id="txt<%=note.getId()%>"><bean:message
+			key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></span>
+		<%
                             }
                             else {                                      
                             
                             String rev = note.getRevision();
                             if( fulltxt ) {
-                            %>
-                            <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/> 
-                            <% }else {
-                            %>                                
-                            <img title="Maximize Display" id='quitImg<%=note.getId()%>' alt="Maximize Display" onclick="fullView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'/>
-                            <% } 
-                            %>
-                            <img title="Print" id='print<%=note.getId()%>' alt="Toggle Print Note" onclick="togglePrint(<%=note.getId()%>, event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png'/>
-			    
-                            <span id="txt<%=note.getId()%>"><%=noteStr%></span>
-                            <%--
+                            %> <img title="Minimize Display"
+			id='quitImg<%=note.getId()%>' alt="Minimize Display"
+			onclick="minView(event)"
+			style='float: right; margin-right: 5px; margin-bottom: 3px;'
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
+		<% }else {
+                            %> <img title="Maximize Display"
+			id='quitImg<%=note.getId()%>' alt="Maximize Display"
+			onclick="fullView(event)" style='float: right; margin-right: 5px;'
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' />
+		<% } 
+                            %> <img title="Print"
+			id='print<%=note.getId()%>' alt="Toggle Print Note"
+			onclick="togglePrint(<%=note.getId()%>, event)"
+			style='float: right; margin-right: 5px;'
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
+
+		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();
 			    System.out.println("Format note " + String.valueOf(time2 - time1));
 			    time1 = time2;
-                            --%>                                       
-                            <% if( largeNote(noteStr) ) {
-                            %>
-                            
-                            <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/> 
-                            <%
+                            --%> <% if( largeNote(noteStr) ) {
+                            %> <img title="Minimize Display"
+			id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display"
+			onclick="minView(event)"
+			style='float: right; margin-right: 5px; margin-bottom: 3px;'
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
+		<%
                             }
 
 			    //time2 = System.currentTimeMillis();
 			    //System.out.println("largeNote() " + String.valueOf(time2 - time1));
 			    //time1 = time2;
-                            %>                                      
-                            <div id="sig<%=note.getId()%>" class="sig" style="clear:both;<%=bgColour%>"><div id="sumary<%=note.getId()%>">
-                                    <div id="observation<%=note.getId()%>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
-                                    <div><span style="float:left;">Editors:</span>
-                                        <ul style="list-style: none inside none; margin:0px;">    
-                                            <%  
+                            %>
+		<div id="sig<%=note.getId()%>" class="sig"
+			style="clear:both;<%=bgColour%>">
+		<div id="sumary<%=note.getId()%>">
+		<div id="observation<%=note.getId()%>"
+			style="float: right; margin-right: 3px;"><i>Date:&nbsp;<span
+			id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a
+			href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
+		<div><span style="float: left;">Editors:</span>
+		<ul style="list-style: none inside none; margin: 0px;">
+			<%  
                                             List editors = note.getEditors();
                                             Iterator<Provider> it = editors.iterator(); 
                                             int count = 0;
@@ -704,54 +771,55 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                             if( count % MAXLINE == 0 )
                                             out.print("</li>");
                                             %>
-                                            
-                                        </ul>                                        
-                                    </div>
-                                    <div style="clear:right;margin-right:3px;float:right;">
-                                        Enc Type:&nbsp;<span id="encType<%=note.getId()%>"><%=note.getEncounter_type().equals("")?"":"&quot;"+note.getEncounter_type()+"&quot;"%></span>
-                                    </div>
-                                    <%
+
+		</ul>
+		</div>
+		<div style="clear: right; margin-right: 3px; float: right;">Enc
+		Type:&nbsp;<span id="encType<%=note.getId()%>"><%=note.getEncounter_type().equals("")?"":"&quot;"+note.getEncounter_type()+"&quot;"%></span>
+		</div>
+		<%
 			    //time2 = System.currentTimeMillis();
 			    //System.out.println("List Editors " + String.valueOf(time2 - time1));
 			    //time1 = time2;
                                     Set issSet = note.getIssues();
                                     if( issSet.isEmpty() ) {
                                     %>
-                                    <div>&nbsp;</div>
-                                    <%
+		<div>&nbsp;</div>
+		<%
                                     }
                                     if( issSet.size() > 0 ) {
                                     %>
-                                    <div style="display:block;">  
-                                    <span style="float:left;">Assigned Issues</span>
-                                    <ul style="float:left; list-style: circle inside none; margin:0px;">                            
-                                        <% 
+		<div style="display: block;"><span style="float: left;">Assigned
+		Issues</span>
+		<ul style="float: left; list-style: circle inside none; margin: 0px;">
+			<% 
                                         Iterator i = issSet.iterator();
                                         while( i.hasNext() ) {
                                         CaseManagementIssue iss = (CaseManagementIssue)i.next();
                                         %>
-                                        <li><%=iss.getIssue().getDescription().trim()%></li>
-                                        <%
+			<li><%=iss.getIssue().getDescription().trim()%></li>
+			<%
                                         }
-                                    %></ul>  
-                                       <br style="clear:both;">
-                                    </div> 
-                                    <%
+                                    %>
+		</ul>
+		<br style="clear: both;">
+		</div>
+		<%
                                     }
 			    //time2 = System.currentTimeMillis();
 			    //System.out.println("List Issues " + String.valueOf(time2 - time1));
 			    //time1 = time2;
                                     %>
-                                </div>
-                            </div>
-                            <%
+		</div>
+		</div>
+		<%
                             }
                             }
                             //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
                             %>
-                        </div>
-                    </div>
-                    <%
+		</div>
+		</div>
+		<%
                     //if we are not editing note, remember note ids for setting event listeners
                     //Internet Explorer does not play nice with inserting javascript between divs
                     //so we store the ids here and list the event listeners at the end of this script
@@ -774,66 +842,89 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     //System.out.println("NEW CASEMANAGEMENT VIEW display note " + note.getId() + " :  " + String.valueOf(current-start));
     //start = current;
                     } //end for */
-                    %> 
-<%
+                    %>
+		<%
     current = System.currentTimeMillis();
     System.out.println("NEW CASEMANAGEMENT VIEW display notes " + String.valueOf(current-start));
     start = current;
 %>
-                </c:if>        
-                
-                <%
+	</c:if> <%
                 if( !found ) {
                 savedId = 0;
-                %>    
-                <div id="nc<%=savedId%>" class="note">
-                    <input type="hidden" id="signed<%=savedId%>" value="false">
-                    <input type="hidden" id="full<%=savedId%>" value="true">
-                    <input type="hidden" id="bgColour<%=savedId%>" value="color:#000000;background-color:#CCCCFF;">
-                    <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
-                        <textarea  tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
-                        <div class="sig" id="sig0">
-                            <%@ include file="noteIssueList.jsp" %>
-                        </div>
-                        
-                        <c:if test="${sessionScope.passwordEnabled=='true'}">
-                            <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                        </c:if>
-                        
-                        
-                    </div>
-                </div>  
-<%--
+                %>
+	<div id="nc<%=savedId%>" class="note"><input type="hidden"
+		id="signed<%=savedId%>" value="false"> <input type="hidden"
+		id="full<%=savedId%>" value="true"> <input type="hidden"
+		id="bgColour<%=savedId%>"
+		value="color:#000000;background-color:#CCCCFF;">
+	<div id="n<%=savedId%>" style="line-height: 1.1em;"><textarea
+		tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea"
+		style="line-height: 1.1em;" name="caseNote_note"
+		id="caseNote_note<%=savedId%>"><nested:write
+		property="caseNote_note" /></textarea>
+	<div class="sig" id="sig0"><%@ include file="noteIssueList.jsp"%>
+	</div>
+
+	<c:if test="${sessionScope.passwordEnabled=='true'}">
+		<p style='display: none;' id='notePasswd'>Password:&nbsp;<html:password
+			property="caseNote.password" /></p>
+	</c:if></div>
+	</div>
+	<%--
     current = System.currentTimeMillis();
     System.out.println("NEW CASEMANAGEMENT VIEW new note set up " + String.valueOf(current-start));
     start = current;
---%>
-                <%
+--%> <%
                 }
                 %>
-                
-            </div>
-            <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
-                <span style="float:right; margin-right:5px;">                                
-                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" id="saveImg" onclick="Event.stop(event);return savePage('save', 'list');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
-                    <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
-                    <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-                    <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
-                    <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-                    <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>&nbsp;
-                    <input tabindex="16" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>" onclick="return printSetup(event);" title='<bean:message key="oscarEncounter.Index.btnPrint"/>'>                              
-                </span>
-                <input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
-                <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
-                <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
-                <span id="busy" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
-                
-                
-            </div>
-        </div>              
-    </nested:form>          
-    </div>
-          
+	</div>
+	<div id='save'
+		style="width: 99%; background-color: #CCCCFF; padding-top: 5px; margin-left: 2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">
+	<span style="float: right; margin-right: 5px;"> <input
+		tabindex="10" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>"
+		id="saveImg"
+		onclick="Event.stop(event);return savePage('save', 'list');"
+		title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
+	<input tabindex="11" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>"
+		id="newNoteImg" onclick="newNote(event); return false;"
+		title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
+	<input tabindex="12" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>"
+		onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit', '');"
+		title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
+	<input tabindex="13" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>"
+		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');"
+		title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+	<input tabindex="14" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>"
+		onclick="return toggleNotePasswd();"
+		title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+	<input tabindex="15" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>"
+		onclick='closeEnc(event);return false;'
+		title='<bean:message key="global.btnExit"/>'>&nbsp; <input
+		tabindex="16" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/document-print.png"/>"
+		onclick="return printSetup(event);"
+		title='<bean:message key="oscarEncounter.Index.btnPrint"/>'> </span>
+	<input type='image' id='toggleIssue'
+		onclick="return showIssues(event);"
+		src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>"
+		title='Display Issues'>&nbsp; <input tabindex="8" type="text"
+		id="issueAutocomplete" name="issueSearch" style="z-index: 2;"
+		onkeypress="return submitIssue(event);" size="25">&nbsp; <input
+		tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
+	<span id="busy" style="display: none"><img
+		style="position: absolute;"
+		src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"
+		alt="Working..." /></span></div>
+	</div>
+</nested:form>
+</div>
+
 <script type="text/javascript">                         
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
     
@@ -930,7 +1021,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     reason = "<%=insertReason(request, bean)%>";    //function defined bottom of file
    </script>
-   
+
 <%
     current = System.currentTimeMillis();
     System.out.println("NEW CASEMANAGEMENT VIEW total " + String.valueOf(current-beginning));

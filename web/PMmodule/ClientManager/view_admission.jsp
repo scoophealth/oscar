@@ -1,6 +1,6 @@
-<%@ page import="org.apache.struts.validator.DynaValidatorForm" %>
-<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
-<%@ page import="org.oscarehr.PMmodule.model.DischargeReason" %>
+<%@ page import="org.apache.struts.validator.DynaValidatorForm"%>
+<%@ page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@ page import="org.oscarehr.PMmodule.model.DischargeReason"%>
 <!--
 /*
 *
@@ -24,71 +24,77 @@
 * Toronto, Ontario, Canada
 */
 -->
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 <html:html locale="true">
-    <head>
-        <title>Admission Details</title>
+<head>
+<title>Admission Details</title>
 
-        <style type="text/css">
-            @import "<html:rewrite page="/css/tigris.css" />";
-            @import "<html:rewrite page="/css/displaytag.css" />";
-            @import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
-        </style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<body>
+<html:form action="/PMmodule/ClientManager.do">
 
-    <body>
-    <html:form action="/PMmodule/ClientManager.do">
+	<html:hidden property="admission.id" />
 
-        <html:hidden property="admission.id"/>
-
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-            <tr class="b">
-                <td width="20%">Client name:</td>
-                <td><bean:write name="clientManagerForm" property="client.formattedName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Provider name:</td>
-                <td><bean:write name="clientManagerForm" property="provider.formattedName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Program name:</td>
-                <td><bean:write name="clientManagerForm" property="admission.programName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Team name:</td>
-                <td><bean:write name="clientManagerForm" property="admission.teamName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Program type:</td>
-                <td><bean:write name="clientManagerForm" property="admission.programType"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Client status:</td>
-                <td><bean:write name="clientManagerForm" property="admission.clientStatus"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Admission status:</td>
-                <td><bean:write name="clientManagerForm" property="admission.admissionStatus"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Admission notes:</td>
-                <td><bean:write name="clientManagerForm" property="admission.admissionNotes"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Admission date:</td>
-                <td><bean:write name="clientManagerForm" property="admission.admissionDate"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Temporary admission?</td>
-                <td><bean:write name="clientManagerForm" property="admission.temporaryAdmission"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Discharge date:</td>
-                <td><bean:write name="clientManagerForm" property="admission.dischargeDate"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Discharge reason:</td>
-                <td>
-                    <%
+	<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr class="b">
+			<td width="20%">Client name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="client.formattedName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Provider name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="provider.formattedName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Program name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.programName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Team name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.teamName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Program type:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.programType" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Client status:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.clientStatus" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Admission status:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.admissionStatus" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Admission notes:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.admissionNotes" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Admission date:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.admissionDate" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Temporary admission?</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.temporaryAdmission" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Discharge date:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.dischargeDate" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Discharge reason:</td>
+			<td>
+			<%
                         DynaValidatorForm form = (DynaValidatorForm)session.getAttribute("clientManagerForm");
 
                         Admission admission = (Admission) form.get("admission");
@@ -96,18 +102,19 @@
                         if(dischargeReason==null || dischargeReason=="" || "".equals(dischargeReason) || "NULL".equals(dischargeReason)) 
                         	dischargeReason="0";
                         DischargeReason reason = DischargeReason.values()[Integer.valueOf(dischargeReason)];
-                    %>
-                    <bean:message bundle="pmm" key='<%="discharge.reason." + reason.toString()%>'/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Discharge notes:</td>
-                <td><bean:write name="clientManagerForm" property="admission.dischargeNotes"/></td>
-            </tr>
+                    %> <bean:message bundle="pmm"
+				key='<%="discharge.reason." + reason.toString()%>' /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Discharge notes:</td>
+			<td><bean:write name="clientManagerForm"
+				property="admission.dischargeNotes" /></td>
+		</tr>
 
-        </table>
+	</table>
 
 
 
-    </html:form>
-    </body>
+</html:form>
+</body>
 </html:html>

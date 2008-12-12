@@ -24,10 +24,11 @@
  */
 --%>
 
-<%@ page language="java" contentType="text/html" import="oscar.OscarProperties, oscar.util.BuildInfo" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java" contentType="text/html"
+	import="oscar.OscarProperties, oscar.util.BuildInfo"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
     String errormsg = request.getParameter("errormsg");
@@ -35,15 +36,13 @@
 
 <html:html locale="true">
 <head>
-  <html:base/>
-  <title>
-    Login Failure
-  </title>
+<html:base />
+<title>Login Failure</title>
 </head>
 <body>
-  <!--h2>OSCAR has encountered the following fatal error:</h2>
+<!--h2>OSCAR has encountered the following fatal error:</h2>
   <hr-->
-  <p><%=errormsg%>
-  <p>Please correct and try again.
+<p><%=errormsg%>
+<p>Please correct and try again.
 </body>
 </html:html>

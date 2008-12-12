@@ -24,11 +24,12 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties, oscar.util.StringUtils" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties, oscar.util.StringUtils"%>
 
 <%
 
@@ -44,15 +45,14 @@ if (type == null) type = "";
 
 %>
 
-<link rel="stylesheet" type="text/css" href="../../oscarMDS/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../oscarMDS/encounterStyles.css">
 
 <html>
-    <head>
-        <title>
-            Measurement Mapping Configuration
-        </title>
-        
-        <script type="text/javascript" language=javascript>
+<head>
+<title>Measurement Mapping Configuration</title>
+
+<script type="text/javascript" language=javascript>
             
             function popupStart(vheight,vwidth,varpage,windowname) {
                 var page = varpage;
@@ -91,99 +91,93 @@ if (type == null) type = "";
                 }   
             }%>
 
-        </script>    
-        <style type="text/css">
-            .Cell{
-                padding-left:15px;
-            }
-            .Header{
-                padding:5px;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <form method="post" name="CONFIG" action="RemapMeasurementMap.do">
-            <input type="hidden" name="id" value="<%= id %>" >
-            <input type="hidden" name="identifier" value="<%= identifier %>" >
-            <input type="hidden" name="name" value="<%= name %>" >
-            <input type="hidden" name="type" value="<%= type %>" >
-            <table width="100%" height="100%" border="0">
-                <tr class="MainTableTopRow">
-                    <td class="MainTableTopRow" colspan="9" align="left">                       
-                        <table width="100%">
-                            <tr> 
-                                <td align="left">
-                                    <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                </td>
-                                <td align="right">
-                                    <a href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'../About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'../License.jsp')" ><bean:message key="global.license"/></a>
-                                </td>
-                            </tr>
-                        </table>                        
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="middle">
-                        <center>
-                            <table width="80%">
-                                <tr>
-                                    <td colspan="2" valign="bottom" class="Header">
-                                        Remap Identifier Code
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="Cell" width="20%">Identifier:</td>
-                                    <td class="Cell" width="80%"><%= identifier %></td>
-                                </tr>  
-                                <tr>
-                                    <td class="Cell" width="20%">Name:</td>
-                                    <td class="Cell" width="80%"><%= name %></td>
-                                </tr>
-                                <tr>
-                                    <td class="Cell" width="20%">Lab Type:</td>
-                                    <td class="Cell" width="80%"><%= type %></td>
-                                </tr>
-                                <tr>
-                                    <td class="Cell" width="20%">
-                                        Search codes by name:
-                                    </td>
-                                    <td class="Cell" width="80%">
-                                        <%String searchstring = request.getParameter("searchstring");
+        </script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+
+<body>
+<form method="post" name="CONFIG" action="RemapMeasurementMap.do">
+<input type="hidden" name="id" value="<%= id %>"> <input
+	type="hidden" name="identifier" value="<%= identifier %>"> <input
+	type="hidden" name="name" value="<%= name %>"> <input
+	type="hidden" name="type" value="<%= type %>">
+<table width="100%" height="100%" border="0">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRow" colspan="9" align="left">
+		<table width="100%">
+			<tr>
+				<td align="left"><input type="button"
+					value=" <bean:message key="global.btnClose"/> "
+					onClick="window.close()"></td>
+				<td align="right"><a
+					href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'../About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'../License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td valign="middle">
+		<center>
+		<table width="80%">
+			<tr>
+				<td colspan="2" valign="bottom" class="Header">Remap Identifier
+				Code</td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Identifier:</td>
+				<td class="Cell" width="80%"><%= identifier %></td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Name:</td>
+				<td class="Cell" width="80%"><%= name %></td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Lab Type:</td>
+				<td class="Cell" width="80%"><%= type %></td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Search codes by name:</td>
+				<td class="Cell" width="80%">
+				<%String searchstring = request.getParameter("searchstring");
                                                 if (searchstring == null)
                                                     searchstring = "";%>
-                                        <input type="text" size="30" name="searchstring" value="<%= searchstring %>" /> <input type="submit" value="Search" onclick="return reloadPage()"/>
-                                    </td>                                    
-                                <tr>
-                                    <td class="Cell" width="20%">
-                                        Select code to map to: 
-                                    </td>
-                                    <td class="Cell" width="80%">
-                                        <select name="loinc_code" >        
-                                                <option value="0">None Selected</option>
-                                                <%ArrayList loincCodes = mmc.getLoincCodes(searchstring);
+				<input type="text" size="30" name="searchstring"
+					value="<%= searchstring %>" /> <input type="submit" value="Search"
+					onclick="return reloadPage()" /></td>
+			<tr>
+				<td class="Cell" width="20%">Select code to map to:</td>
+				<td class="Cell" width="80%"><select name="loinc_code">
+					<option value="0">None Selected</option>
+					<%ArrayList loincCodes = mmc.getLoincCodes(searchstring);
                                                 for (int i=0; i < loincCodes.size(); i++) { 
-                                                Hashtable ht = (Hashtable) loincCodes.get(i);%>                  
-                                                <option value="<%= (String) ht.get("code") %>"><%= (String) ht.get("code")+" - "+((String) ht.get("name")).trim()%></option>
-                                                <% }%>
-                                        </select>
-                                    </td>
-                                </tr> 
-                                <tr>
-                                    <td colspan="2" class="Cell" align="center">
-                                        <input type="submit" value=" Remap Measurement " > <input type="button" value=" Add New Loinc Code " onclick="javascript:popupStart('300','600','newMeasurementMap.jsp','Add New Loinc Code')">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="Cell" align="center">
-                                        NOTE: <a href="javascript:newWindow('http://www.regenstrief.org/medinformatics/loinc/relma','RELMA')">It is suggested that you use the RELMA application to help determine correct loinc codes.</a>
-                                    </td>    
-                                </tr>
-                            </table>
-                        </center>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </body>
+                                                Hashtable ht = (Hashtable) loincCodes.get(i);%>
+					<option value="<%= (String) ht.get("code") %>"><%= (String) ht.get("code")+" - "+((String) ht.get("name")).trim()%></option>
+					<% }%>
+				</select></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="Cell" align="center"><input
+					type="submit" value=" Remap Measurement "> <input
+					type="button" value=" Add New Loinc Code "
+					onclick="javascript:popupStart('300','600','newMeasurementMap.jsp','Add New Loinc Code')">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="Cell" align="center">NOTE: <a
+					href="javascript:newWindow('http://www.regenstrief.org/medinformatics/loinc/relma','RELMA')">It
+				is suggested that you use the RELMA application to help determine
+				correct loinc codes.</a></td>
+			</tr>
+		</table>
+		</center>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
 </html>

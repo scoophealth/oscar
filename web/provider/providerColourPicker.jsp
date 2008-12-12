@@ -26,9 +26,9 @@
 
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import ="oscar.oscarProvider.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page import="oscar.oscarProvider.data.*"%>
 
 
 <%
@@ -44,14 +44,15 @@ if(session.getValue("user") == null)
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html:html>
-    <head>
-        <html:base/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title><bean:message key="provider.setColour.title"/></title>
-    
-        <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
-        <script type="text/javascript" src="../share/javascript/picker.js"></script>
-        <script type="text/javascript">
+<head>
+<html:base />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><bean:message key="provider.setColour.title" /></title>
+
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
+<script type="text/javascript" src="../share/javascript/picker.js"></script>
+<script type="text/javascript">
             function update() {
                 var elem = document.getElementById('cdisp');
                 elem.style.backgroundColor=document.forms[0].elements['colour'].value;
@@ -59,62 +60,52 @@ if(session.getValue("user") == null)
             }
         </script>
 
-    </head>
-        
-    <body class="BodyStyle" vlink="#0000FF" <%=bFirstLoad?"onload='update()'":""%> >
+</head>
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.setColour.msgPrefs"/>
-            </td>
-            <td style="color:white" class="MainTableTopRowRightColumn">
-                <bean:message key="provider.setColour.msgProviderColour"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-           
-            <%
+<body class="BodyStyle" vlink="#0000FF"
+	<%=bFirstLoad?"onload='update()'":""%>>
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.setColour.msgPrefs" /></td>
+		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message
+			key="provider.setColour.msgProviderColour" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<%
               ProviderColourUpdater colourUpdater = new ProviderColourUpdater(curUser_no);
               String colour = colourUpdater.getColour();
                
                if( request.getAttribute("status") == null )
                {
       
-            %>
-            <html:form action = "/setProviderColour.do" >
-               <html:hidden property="colour" value="<%=colour%>"/>
-               <bean:message key="provider.setColour.msgEdit"/> <a href="javascript:TCP.popup(document.forms[0].elements['colour'])"><img width="15" height="13" border="0" src="../images/sel.gif"></a><p>
-                   <bean:message key="provider.setColour.msgSatus"/>
-               <div id='cdisp' style='width:33%'>&nbsp;</div></p>
-               <p>
-                                
-               
-               <input type="submit" onclick="return validate();" value="<bean:message key="provider.setColour.btnSubmit"/>" />                           
-            </html:form> 
-            <%
+            %> <html:form action="/setProviderColour.do">
+			<html:hidden property="colour" value="<%=colour%>" />
+			<bean:message key="provider.setColour.msgEdit" />
+			<a href="javascript:TCP.popup(document.forms[0].elements['colour'])"><img
+				width="15" height="13" border="0" src="../images/sel.gif"></a>
+			<p><bean:message key="provider.setColour.msgSatus" />
+			<div id='cdisp' style='width: 33%'>&nbsp;</div>
+			</p>
+			<p><input type="submit" onclick="return validate();"
+				value="<bean:message key="provider.setColour.btnSubmit"/>" />
+		</html:form> <%
                }
                else if( ((String)request.getAttribute("status")).equals("complete") ) {
-            %>            
-                <bean:message key="provider.setColour.msgSuccess"/> <br>
-                
-            <%
+            %> <bean:message key="provider.setColour.msgSuccess" /> <br>
+
+		<%
                }
             %>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-             
-            </td>
-        </tr>
-    </table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

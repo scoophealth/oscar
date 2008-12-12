@@ -23,14 +23,14 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
@@ -47,11 +47,11 @@
 <html:html locale="true">
 
 <head>
-<title>
-<logic:present name="groupName"><bean:write name="groupName"/></logic:present> <bean:message key="oscarEncounter.Index.measurements"/>
-</title>
+<title><logic:present name="groupName">
+	<bean:write name="groupName" />
+</logic:present> <bean:message key="oscarEncounter.Index.measurements" /></title>
 
-<html:base/>
+<html:base />
 
 </head>
 
@@ -91,132 +91,164 @@ function check() {
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
 <!--  -->
-    
-    <html:form action="/oscarEncounter/Measurements" >
-    <logic:present name="css">
-        <link rel="stylesheet" type="text/css" href="<bean:write name="css" />">
-    </logic:present>
-    <logic:notPresent name="css">
-        <link rel="stylesheet" type="text/css" href="styles/measurementStyle.css">
-    </logic:notPresent>
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <logic:present name="groupName"><bean:write name="groupName"/></logic:present>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td width=70% class="Header"  NOWRAP >     
-                            <oscar:nameage demographicNo="<%=demo%>"/>
-                            </td>                        
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn"> 
-            <table>
-                <tr>
-                    <td><a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'../calculators.jsp?demo=<%=demo%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a></td>
-                </tr>
-            </table>
-            </td>            
-            <td class="MainTableRightColumn">
-               <table border=0 cellspacing=0 >
-                <tr>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <table>
-                                    <html:errors/>
-                                        <tr>
-                                            <td>               
-                                                <tr class="Header">
-                                                    <td align="left"  width="100">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingType"/>
-                                                    </td>                                                    
-                                                    <td align="left"  width="160">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc"/>
-                                                    </td>
-                                                    <td align="left"  width="50">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingValue"/>
-                                                    </td>                                                    
-                                                    <td align="left"  width="130">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate"/>
-                                                    </td>
-                                                    <td align="left"  width="300">
-                                                        <bean:message key="oscarEncounter.oscarMeasurements.Measurements.headingComments"/>
-                                                    </td>
-                                                    <td align="left"  width="10">                                                        
-                                                    </td>
-                                                 </tr>
-                                                <% int i = 0;%>
-                                                <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
-                                                <tr class="data">                          
-                                                    <td width="5"><a title="<bean:write name="measurementType" property="typeDesc" />"><bean:write name="measurementType" property="typeDisplayName" /></a></td>
-                                                    <td>                                                        
-                                                        <logic:iterate id="mInstrc" name="<%=\"mInstrcs\"+ ctr%>" property="measuringInstructionVector">                                                            
-                                                            <input type="radio" name='<%= "value(inputMInstrc-" + ctr + ")" %>' value="<bean:write name="mInstrc" property="measuringInstrc"/>" checked/><bean:write name="mInstrc" property="measuringInstrc"/><br>
-                                                        </logic:iterate>                                                                                       
-                                                    </td>
-                                                    <td><html:text property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>                                                         
-                                                    <td><html:text property='<%= "value(date-" + ctr + ")" %>' size="20"/></td>
-                                                    <td><html:text property='<%= "value(comments-" + ctr + ")" %>' size="45"/></td>
-                                                    <td width="10"></td>                            
-                                                    <input type="hidden" name='<%= "value(inputType-" + ctr + ")" %>' value="<bean:write name="measurementType" property="type" />"/>
-                                                    <input type="hidden" name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>' value="<bean:write name="measurementType" property="typeDisplayName" />"/>                            
-                                                    <input type="hidden" name='<%= "value(validation-" + ctr + ")" %>' value="<bean:write name="measurementType" property="validation" />"/>
-                                                    <% i++; %>
-                                                </tr>
-                                                <logic:present name='measurementType' property='lastMInstrc'>
-                                                <tr class="note">
-                                                    <td><bean:message key="oscarEncoutner.oscarMeasurements.msgTheLastValue"/>: </td>                                                    
-                                                    <td><bean:write name='measurementType' property='lastMInstrc'/></td>
-                                                    <td><bean:write name='measurementType' property='lastData'/></td>
-                                                    <td><bean:write name='measurementType' property='lastDateEntered'/></td>
-                                                    <td><bean:write name='measurementType' property='lastComments'/></td>                                                                                                        
-                                                    <td><img src="img/history.gif" title='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="measurementType" property="type" />'); return false;" /></td>
-                                                </tr>
-                                                </logic:present>
-                                                </logic:iterate>                        
-                                                <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
-                                                <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
-                                                <input type="hidden" name="value(parentChanged)" value="false" />
-                                                <input type="hidden" name="value(demographicNo)" value="<%=demo%>" />
-                                                <logic:present name="css"> 
-                                                    <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
-                                                </logic:present>
-                                                <logic:notPresent name="css">
-                                                    <input type="hidden" name="value(css)" value=""/>
-                                                </logic:notPresent>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table>
-                                    <tr>
-                                        <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
-                                        <td><input type="submit" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="return check();"/></td>
-                                    </tr>
-                                    </table>
-                                </td>   
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+<html:form action="/oscarEncounter/Measurements">
+	<logic:present name="css">
+		<link rel="stylesheet" type="text/css"
+			href="<bean:write name="css" />">
+	</logic:present>
+	<logic:notPresent name="css">
+		<link rel="stylesheet" type="text/css"
+			href="styles/measurementStyle.css">
+	</logic:notPresent>
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><logic:present
+				name="groupName">
+				<bean:write name="groupName" />
+			</logic:present></td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td width=70% class="Header" NOWRAP><oscar:nameage
+						demographicNo="<%=demo%>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn">
+			<table>
+				<tr>
+					<td><a
+						href="javascript: function myFunction() {return false; }"
+						onClick="popupPage(150,200,'../calculators.jsp?demo=<%=demo%>'); return false;"><bean:message
+						key="oscarEncounter.Index.calculators" /></a></td>
+				</tr>
+			</table>
+			</td>
+			<td class="MainTableRightColumn">
+			<table border=0 cellspacing=0>
+				<tr>
+					<td>
+					<table>
+						<tr>
+							<td>
+							<table>
+								<html:errors />
+								<tr>
+									<td>
+								<tr class="Header">
+									<td align="left" width="100"><bean:message
+										key="oscarEncounter.oscarMeasurements.Measurements.headingType" />
+									</td>
+									<td align="left" width="160"><bean:message
+										key="oscarEncounter.oscarMeasurements.Measurements.headingMeasuringInstrc" />
+									</td>
+									<td align="left" width="50"><bean:message
+										key="oscarEncounter.oscarMeasurements.Measurements.headingValue" />
+									</td>
+									<td align="left" width="130"><bean:message
+										key="oscarEncounter.oscarMeasurements.Measurements.headingObservationDate" />
+									</td>
+									<td align="left" width="300"><bean:message
+										key="oscarEncounter.oscarMeasurements.Measurements.headingComments" />
+									</td>
+									<td align="left" width="10"></td>
+								</tr>
+								<% int i = 0;%>
+								<logic:iterate id="measurementType" name="measurementTypes"
+									property="measurementTypeVector" indexId="ctr">
+									<tr class="data">
+										<td width="5"><a
+											title="<bean:write name="measurementType" property="typeDesc" />"><bean:write
+											name="measurementType" property="typeDisplayName" /></a></td>
+										<td><logic:iterate id="mInstrc"
+											name="<%=\"mInstrcs\"+ ctr%>"
+											property="measuringInstructionVector">
+											<input type="radio"
+												name='<%= "value(inputMInstrc-" + ctr + ")" %>'
+												value="<bean:write name="mInstrc" property="measuringInstrc"/>"
+												checked />
+											<bean:write name="mInstrc" property="measuringInstrc" />
+											<br>
+										</logic:iterate></td>
+										<td><html:text
+											property='<%= "value(inputValue-" + ctr + ")" %>' size="5" /></td>
+										<td><html:text
+											property='<%= "value(date-" + ctr + ")" %>' size="20" /></td>
+										<td><html:text
+											property='<%= "value(comments-" + ctr + ")" %>' size="45" /></td>
+										<td width="10"></td>
+										<input type="hidden"
+											name='<%= "value(inputType-" + ctr + ")" %>'
+											value="<bean:write name="measurementType" property="type" />" />
+										<input type="hidden"
+											name='<%= "value(inputTypeDisplayName-" + ctr + ")" %>'
+											value="<bean:write name="measurementType" property="typeDisplayName" />" />
+										<input type="hidden"
+											name='<%= "value(validation-" + ctr + ")" %>'
+											value="<bean:write name="measurementType" property="validation" />" />
+										<% i++; %>
+									</tr>
+									<logic:present name='measurementType' property='lastMInstrc'>
+										<tr class="note">
+											<td><bean:message
+												key="oscarEncoutner.oscarMeasurements.msgTheLastValue" />:</td>
+											<td><bean:write name='measurementType'
+												property='lastMInstrc' /></td>
+											<td><bean:write name='measurementType'
+												property='lastData' /></td>
+											<td><bean:write name='measurementType'
+												property='lastDateEntered' /></td>
+											<td><bean:write name='measurementType'
+												property='lastComments' /></td>
+											<td><img src="img/history.gif"
+												title='<bean:message key="oscarEncounter.Index.oldMeasurements"/>'
+												onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="measurementType" property="type" />'); return false;" /></td>
+										</tr>
+									</logic:present>
+								</logic:iterate>
+								<input type="hidden" name="value(numType)"
+									value="<%=String.valueOf(i)%>" />
+								<input type="hidden" name="value(groupName)"
+									value="<bean:write name="groupName"/>" />
+								<input type="hidden" name="value(parentChanged)" value="false" />
+								<input type="hidden" name="value(demographicNo)"
+									value="<%=demo%>" />
+								<logic:present name="css">
+									<input type="hidden" name="value(css)"
+										value="<bean:write name="css"/>" />
+								</logic:present>
+								<logic:notPresent name="css">
+									<input type="hidden" name="value(css)" value="" />
+								</logic:notPresent>
+								</td>
+								</tr>
+							</table>
+							<table>
+								<tr>
+									<td><input type="button" name="Button"
+										value="<bean:message key="global.btnCancel"/>"
+										onClick="window.close()"></td>
+									<td><input type="submit" name="Button"
+										value="<bean:message key="global.btnSubmit"/>"
+										onclick="return check();" /></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

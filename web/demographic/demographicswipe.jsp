@@ -51,12 +51,17 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
 -->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" onLoad="setfocus()" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" onLoad="setfocus()" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		DETAIL RECORD</font></th>
+	</tr>
 </table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-<% String card = request.getParameter("card_no");
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<% String card = request.getParameter("card_no");
    String hin = card.substring(8,card.indexOf("^"));  
    String lastname = card.substring(card.indexOf("^")+1, card.indexOf("/")).toUpperCase();
    String subcard = card.substring(card.indexOf("/")+1);
@@ -74,57 +79,52 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
    } else{
    sex="M";
    }
-   %>  
-   
-    <tr> 
-         <td align="right"> <b>Last Name: </b></td>
-         <td align="left"> 
-           <input type="text" name="last_name" value="<%=lastname%>" >
-         </td>
-         <td align="right"><b>First Name: </b> </td>
-         <td align="left"> 
-           <input type="text" name="first_name" value="<%=firstname%>" >
-         </td>
-       </tr>
-       <tr valign="top"> 
-         <td  align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b> 
-         </td>
-         <td  align="left" >    <table border="0" cellpadding="0" cellspacing="0">
-          <tr> 
-            <td> 
-              <input type="text" name="year_of_birth" value="<%=dobyear%>" size="4" maxlength="4">
-            </td>
-            <td>-</td>
-            <td> 
-              <input type="text" name="month_of_birth" value="<%=dobmonth%>" size="2" maxlength="2">
-            </td>
-            <td>-</td>
-            <td> 
-              <input type="text" name="date_of_birth" value="<%=dobdate%>" size="2" maxlength="2">
-            </td>
-          </tr>
-        </table>
-         </td>
-         <td  align="right"><b> Sex:</b></td>
-         <td align="left">  <input type="text" name="sex" value="<%=sex%>">
-         </td>
-       </tr>
-       <tr valign="top"> 
-         <td align="right"><b>HIN: </b></td>
-         <td align="left" > 
-           <input type="text" name="hin" value="<%=hin%>">
-         </td>
-         <td align="right"><b>Ver.</b> </td>
-         <td align="left"> 
-           <input type="text" name="ver" value="<%=vercode%>">
-         </td>
-    </tr>
- </table>
+   %>
+
+	<tr>
+		<td align="right"><b>Last Name: </b></td>
+		<td align="left"><input type="text" name="last_name"
+			value="<%=lastname%>"></td>
+		<td align="right"><b>First Name: </b></td>
+		<td align="left"><input type="text" name="first_name"
+			value="<%=firstname%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b>
+		</td>
+		<td align="left">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td><input type="text" name="year_of_birth"
+					value="<%=dobyear%>" size="4" maxlength="4"></td>
+				<td>-</td>
+				<td><input type="text" name="month_of_birth"
+					value="<%=dobmonth%>" size="2" maxlength="2"></td>
+				<td>-</td>
+				<td><input type="text" name="date_of_birth"
+					value="<%=dobdate%>" size="2" maxlength="2"></td>
+			</tr>
+		</table>
+		</td>
+		<td align="right"><b> Sex:</b></td>
+		<td align="left"><input type="text" name="sex" value="<%=sex%>">
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>HIN: </b></td>
+		<td align="left"><input type="text" name="hin" value="<%=hin%>">
+		</td>
+		<td align="right"><b>Ver.</b></td>
+		<td align="left"><input type="text" name="ver"
+			value="<%=vercode%>"></td>
+	</tr>
+</table>
 
 <br>
 <br>
-<form>
-   <input type="button" name="Button1" value="Confirm" onclick="javascript:Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>')"><input type="button" name="Button" value="Cancel" onclick=self.close();>
+<form><input type="button" name="Button1" value="Confirm"
+	onclick="javascript:Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>')"><input
+	type="button" name="Button" value="Cancel" onclick=self.close();>
 </form>
 </body>
 </html>

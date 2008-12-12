@@ -32,18 +32,20 @@
             String userfirstname = (String) session.getAttribute("userfirstname");
             String userlastname = (String) session.getAttribute("userlastname");
 %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="page" />
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="oscar.oscarProvider.data.*" %>
+<%@page import="oscar.oscarProvider.data.*"%>
 <%
             ArrayList providers = ProviderData.getProviderList();
             String provider = "";
@@ -118,30 +120,34 @@
             }
 %>
 <html:html locale="true">
-    <head>
-    <title><bean:message key="dms.documentReport.title"/></title>
-    <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    
-    <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
-    <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-    <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-    <script type="text/javascript" src="../share/javascript/effects.js"></script>
-    <script type="text/javascript" src="../share/javascript/controls.js"></script>
-        
-    <link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
-    <link rel="stylesheet" type="text/css" href="dms.css"/>
-    <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
-    
-    
-    <script type="text/javascript" src="../share/javascript/swfupload.js"></script>
-        
-        <script type="text/javascript" src="../share/javascript/swfupload.queue.js"></script>
-        <script type="text/javascript" src="../share/javascript/fileprogress.js"></script>
-        <script type="text/javascript" src="../share/javascript/handlers.js"></script>
-        
-        
-        <script type="text/javascript">
+<head>
+<title><bean:message key="dms.documentReport.title" /></title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../share/javascript/effects.js"></script>
+<script type="text/javascript" src="../share/javascript/controls.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="dms.css" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyPrint.css" media="print" />
+
+
+<script type="text/javascript" src="../share/javascript/swfupload.js"></script>
+
+<script type="text/javascript"
+	src="../share/javascript/swfupload.queue.js"></script>
+<script type="text/javascript" src="../share/javascript/fileprogress.js"></script>
+<script type="text/javascript" src="../share/javascript/handlers.js"></script>
+
+
+<script type="text/javascript">
             var swfu;
 
             window.onload = function() {
@@ -198,43 +204,16 @@
                 swfu.addPostParam("provider",ele.options[ele.selectedIndex].value);
             }
         </script>
-    
-    
-    
-    
-    <style type="text/css">
-        div.autocomplete {
-  position:absolute;
-  width:250px;
-  background-color:white;
-  border:1px solid #888;
-  margin:0px;
-  padding:0px;
-}
-div.autocomplete ul {
-  list-style-type:none;
-  margin:0px;
-  padding:0px;
-}
-div.autocomplete ul li.selected { background-color: #ffb;}
-div.autocomplete ul li {
-  list-style-type:none;
-  display:block;
-  margin:0;
-  padding:2px;
-  height:32px;
-  cursor:pointer;
-}
-        label.fields{
-            width:200px;
-        }
 
-    </style>
-    
-    
-    <script type="text/javascript" src="../share/javascript/nifty.js"></script>
-    <script type="text/javascript" src="../phr/phr.js"></script>
-    <script type="text/javascript">
+
+
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+
+<script type="text/javascript" src="../share/javascript/nifty.js"></script>
+<script type="text/javascript" src="../phr/phr.js"></script>
+<script type="text/javascript">
        
 
 
@@ -427,32 +406,31 @@ div.autocomplete ul li {
     }
     
     </script>
-    
-    
-    </head>
-    <body class="bodystyle">
-        
-        <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
-            <tr class="MainTableRowTop">
-                <td class="MainTableTopRowLeftColumn" width="60px">
-                    eDocs
-                </td>
-                <td class="MainTableTopRowRightColumn">
-                    <table class="TopStatusBar">
-                        <tr>
-                            <td>Documents</td>
-                            <td>&nbsp;</td>
-                            <td style="text-align: right;">
-                                <a href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | 
-                                <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
-                                <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <%--
+
+
+</head>
+<body class="bodystyle">
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable"
+	style="margin: 0px;">
+	<tr class="MainTableRowTop">
+		<td class="MainTableTopRowLeftColumn" width="60px">eDocs</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Documents</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right;"><a
+					href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | <a
+					href="javascript: popupStart(300, 400, 'About.jsp')">About</a> | <a
+					href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<%--
          <td class="MainTableLeftColumn" valign="top">
              <div class="leftplane">
                   <h3>&nbsp; Tags</h3>
@@ -466,46 +444,46 @@ div.autocomplete ul li {
              </div>
          </td>
                 --%>
-                <td class="MainTableRightColumn" colspan="2" valign="top">
-                    
-                                            
-                                     <form id="form1" action="../dms/addEditDocument.do" method="post" enctype="multipart/form-data">
-                
-                <label for="provider" class="fields">Send to Provider:</label> 
-                <select onchange="javascript:addProviderToPost(this);" id="providerDrop" name="provider"> 
-                    <option value="-1" <%= ("-1".equals(provider) ? " selected" : "")%> >None</option>
-                    <%for (int i = 0; i < providers.size(); i++) {
+		<td class="MainTableRightColumn" colspan="2" valign="top">
+
+
+		<form id="form1" action="../dms/addEditDocument.do" method="post"
+			enctype="multipart/form-data"><label for="provider"
+			class="fields">Send to Provider:</label> <select
+			onchange="javascript:addProviderToPost(this);" id="providerDrop"
+			name="provider">
+			<option value="-1" <%= ("-1".equals(provider) ? " selected" : "")%>>None</option>
+			<%for (int i = 0; i < providers.size(); i++) {
                 Hashtable h = (Hashtable) providers.get(i);%>
-                    <option value="<%= h.get("providerNo")%>" <%= (h.get("providerNo").equals(provider) ? " selected" : "")%>><%= h.get("lastName")%> <%= h.get("firstName")%></option>
-                    <%}%>                    
-                    
-                </select>  
-                
-                
-                <fieldset class="flash" id="fsUploadProgress">
-                    <legend>Upload Queue</legend>
-                </fieldset>
-                <div id="divStatus">0 Files Uploaded</div>
-                <div>
-                    <%--input type="file" name="filedata"/--%>
-                    
-                    <input type="button" value="Upload file (Max 100 MB)" onclick="swfu.selectFiles()" style="font-size: 8pt;" />
-                    <input id="btnCancel" type="button" value="Cancel All Uploads" onclick="swfu.cancelQueue();" disabled="disabled" style="font-size: 8pt;" />
-                    
-                </div>
-                
-            </form>   
-                                        
-                                        
-                                    
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" class="MainTableBottomRowRightColumn">
-                </td>
-            </tr>
-        </table>
-        
-        
-    </body>
+			<option value="<%= h.get("providerNo")%>"
+				<%= (h.get("providerNo").equals(provider) ? " selected" : "")%>><%= h.get("lastName")%>
+			<%= h.get("firstName")%></option>
+			<%}%>
+
+		</select>
+
+
+		<fieldset class="flash" id="fsUploadProgress"><legend>Upload
+		Queue</legend></fieldset>
+		<div id="divStatus">0 Files Uploaded</div>
+		<div><%--input type="file" name="filedata"/--%> <input
+			type="button" value="Upload file (Max 100 MB)"
+			onclick="swfu.selectFiles()" style="font-size: 8pt;" /> <input
+			id="btnCancel" type="button" value="Cancel All Uploads"
+			onclick="swfu.cancelQueue();" disabled="disabled"
+			style="font-size: 8pt;" /></div>
+
+		</form>
+
+
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+
+
+</body>
 </html:html>

@@ -20,9 +20,7 @@
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
- */
-
- /* styles.css -- Style sheet for the UI prototype.
+ */ /* styles.css -- Style sheet for the UI prototype.
 
 	Colours used:
 		#A9A9A9 = darkgray
@@ -31,233 +29,222 @@
 		#000000 = black
 		#FF8C00 = darkorange
 */
-
-BODY
-{
-    FONT-SIZE: Normal;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+BODY {
+	FONT-SIZE: Normal;
+	FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
 }
 
-TABLE
-{
+TABLE {
 	FONT-SIZE: x-small;
 }
 
-TH
-{
-    FONT-SIZE: small;
-    font-weight: bold;
+TH {
+	FONT-SIZE: small;
+	font-weight: bold;
 }
 
-A IMG
-{
-    border: 0px;
+A IMG {
+	border: 0px;
 }
 
 H3 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 .box {
-    border-top:1px;
-    border-left:1px;
-    border-right:1px;
-    border-bottom:1px;
+	border-top: 1px;
+	border-left: 1px;
+	border-right: 1px;
+	border-bottom: 1px;
 }
 
-.ControlTextarea
-{
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+.ControlTextarea {
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 100%;
 }
 
-.FakeLink
-{
-    text-align:right;
-   font-size:80%;
+.FakeLink {
+	text-align: right;
+	font-size: 80%;
 }
+
 .Head {
-    background-color:#BBBBBB;
-    padding-top:5px;
-    padding-bottom:5px;
-    width:100%;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 100%;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
-
-.RowTop
-{
-    font-size:8pt;
-    font-variant:small-caps;
-    font:bold;
+.RowTop {
+	font-size: 8pt;
+	font-variant: small-caps;
+	font: bold;
 }
 
-.ControlPushButton
-{
-		font-size: 80%;
-		font-family: Verdana, Tahoma, Arial, sans-serif;
+.ControlPushButton {
+	font-size: 80%;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
 }
 
-.Header
-{
-        font-weight:bold;
-        font-size: 80%;
-        background-color:#6699cc;
+.Header {
+	font-weight: bold;
+	font-size: 80%;
+	background-color: #6699cc;
 }
+
 /*These are my additions************************/
 H4 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 H3 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 TH {
-    font-size: small;
-    font-weight: bold;
+	font-size: small;
+	font-weight: bold;
 }
 
 .doctorInfo {
-    font-size: x-small;
-    text-decoration: bold;
-    background-color: #A39FC4;
+	font-size: x-small;
+	text-decoration: bold;
+	background-color: #A39FC4;
 }
 
-.encounterTable
-{
-    background-color: #EBEAF2;
+.encounterTable {
+	background-color: #EBEAF2;
 }
 
 .patientInfo {
-    font-size: small;
-    text-decoration: bold;
-    background-color: #CBC9E0;
-    //#CBC9E0;
+	font-size: small;
+	text-decoration: bold;
+	background-color: #CBC9E0;
+	//#
+	CBC9E0;
 }
 
-.ControlTextarea
-{
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+.ControlTextarea {
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 100%;
 }
 
 .ControlSelect {
-    font-family: Verdana, Tahoma, Arial, sans-serif;
-    font-size:80%;
-    width:100%;
-}
-.LeftTable
-{
-    width:100%;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 80%;
+	width: 100%;
 }
 
-.BodyStyle
-{
-    margin-left:0;
-    margin-right:0;
-    margin-top:0;
+.LeftTable {
+	width: 100%;
 }
 
-.MainTable
-{
-    border-collapse: collapse;
-    border-color:#111111;
-    border-width:0;
-    padding-bottom:0;
-    padding-top:0;
-    padding-left:0;
-    padding-right:0;
-    width:100%;
-    font-size:80%;
-}
-.MainTableTopRowLeftColumn
-{
-    background-color:#003399;   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    height:34px;
-    max-width:130px;
-    font-size: 110%;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-.MainTableBottomRowLeftColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-bottom: 2px solid #A9A9A9;
-    height:4px;
-    max-width:130px;
-
-}
-.MainTableLeftColumn
-{   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    max-width:130px;
+.BodyStyle {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
 }
 
-.MainTableTopRowRightColumn
-{
-    border-right: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    background-color:#003399;   
-    height:34px;
+.MainTable {
+	border-collapse: collapse;
+	border-color: #111111;
+	border-width: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	font-size: 80%;
 }
-.MainTableBottomRowRightColumn
-{
-    border-bottom: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
-    height:4px;
+
+.MainTableTopRowLeftColumn {
+	background-color: #003399;
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	height: 34px;
+	max-width: 130px;
+	font-size: 110%;
+	font-weight: bold;
+	color: #FFFFFF;
 }
-.MainTableRightColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    height:34px;
+
+.MainTableBottomRowLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-bottom: 2px solid #A9A9A9;
+	height: 4px;
+	max-width: 130px;
 }
-.TopStatusBar
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:800;
+
+.MainTableLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	max-width: 130px;
 }
-.TopStatusBarShort
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:500;
+
+.MainTableTopRowRightColumn {
+	border-right: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	background-color: #003399;
+	height: 34px;
 }
-.Title
-{
-    font-weight:bold;
-    font-size:110%;
-    color:white;
+
+.MainTableBottomRowRightColumn {
+	border-bottom: 2px solid #A9A9A9;
+	border-right: 2px solid #A9A9A9;
+	height: 4px;
 }
+
+.MainTableRightColumn {
+	border-right: 2px solid #A9A9A9;
+	height: 34px;
+}
+
+.TopStatusBar {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 800;
+}
+
+.TopStatusBarShort {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 500;
+}
+
+.Title {
+	font-weight: bold;
+	font-size: 110%;
+	color: white;
+}
+
 .fieldBox {
-    font-family: tahoma, helvetica;
-    background-color:"#ddddff";
+	font-family: tahoma, helvetica;
+	background-color: "#ddddff";
 }
+
 .note {
-    font-size:80%; 
-    color:#3366CC;
+	font-size: 80%;
+	color: #3366CC;
 }
+
 .data {
-    background-color:#F7F7F7;
-    font-size:80%;
+	background-color: #F7F7F7;
+	font-size: 80%;
 }

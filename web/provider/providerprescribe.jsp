@@ -32,25 +32,30 @@
   apptProvider_no = request.getParameter("curProvider_no");
   username =  request.getParameter("username").toUpperCase();
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> PRESCRIBE </title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<title>PRESCRIBE</title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
 //-->
 </SCRIPT>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PRESCRIBE</font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PRESCRIBE</font></th>
+	</tr>
 </table>
 <%
    ResultSet rsdemo = null;
@@ -84,88 +89,98 @@
 %>
 <xml id="xml_list">
 <encounteraccessory>
-     <%=content%>
+<%=content%>
 </encounteraccessory>
 </xml>
 <%
   } 
   apptMainBean.closePstmtConn();
 %>
-<table width="100%"  cellspacing="0" cellpadding="0" border="0">
-<form name="encounter" method="post" action="providercontrol.jsp">
-<tr><td>
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+	<form name="encounter" method="post" action="providercontrol.jsp">
+	<tr>
+		<td>
 
 
-<table width="100%" border="0">
-  <tr>
-    <td align="left"><font color="blue"><%=demoname%> <i><%=age%></i> <%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
-    <td align="right">
-  </tr>
-</table>
-<table width="100%" border="0" bgcolor="silver" datasrc='#xml_list'>
-  <tr> 
-    <td width="50%" align="center"> 
-      Problem List:<br>
-        <textarea name="xml_Problem_List" style="width:100%" cols="30" rows="2" <%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%> ></textarea>
+		<table width="100%" border="0">
+			<tr>
+				<td align="left"><font color="blue"><%=demoname%> <i><%=age%></i>
+				<%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
+				<td align="right">
+			</tr>
+		</table>
+		<table width="100%" border="0" bgcolor="silver" datasrc='#xml_list'>
+			<tr>
+				<td width="50%" align="center">Problem List:<br>
+				<textarea name="xml_Problem_List" style="width: 100%" cols="30"
+					rows="2" <%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%>></textarea>
 
-      </td>
-    <td width="50%" align="center"> Medication:<br>
-      <textarea name="xml_dup_Medication" style="width:100%" cols="30" rows="2" <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
-      <!--duplicate the value just the same as the following by xml data island-->
-    </td>
-  </tr>
-  <tr> 
-    <td > 
-      <div align="center">Alert:<br>
-        <textarea name="xml_Alert" style="width:100%" cols="30" rows="2" <%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea>
-      </div>
-    </td>
-    <td > 
-      <div align="center">Family Social History:<br>
-        <textarea name="xml_Family_Social_History" style="width:100%" cols="30" rows="2" <%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
-      </div>
-    </td>
-  </tr>
-</table>
+				</td>
+				<td width="50%" align="center">Medication:<br>
+				<textarea name="xml_dup_Medication" style="width: 100%" cols="30"
+					rows="2" <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
+				<!--duplicate the value just the same as the following by xml data island-->
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div align="center">Alert:<br>
+				<textarea name="xml_Alert" style="width: 100%" cols="30" rows="2"
+					<%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea></div>
+				</td>
+				<td>
+				<div align="center">Family Social History:<br>
+				<textarea name="xml_Family_Social_History" style="width: 100%"
+					cols="30" rows="2"
+					<%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
+				</div>
+				</td>
+			</tr>
+		</table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <td><font color="#FFFFFF"><%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%> |
-	 <%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>  <%=username%> 
-      </font>
-	  </td><td>This Prescribe</td>
-  </tr>
-</table>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr bgcolor="#486ebd">
+				<td><font color="#FFFFFF"><%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>
+				| <%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%> <%=username%>
+				</font></td>
+				<td>This Prescribe</td>
+			</tr>
+		</table>
 
-<table border="0" width="100%" datasrc='#xml_list' >
-  <tr> 
-    <td> 
-      <div align="center">Medication<br>
-        <textarea name='xml_Medication' style="width:100%" cols='60' rows='10' <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
-      </div>
-      <input type='hidden' name='xml_subjectprefix' value='.' >
-    </td>
-  </tr>
-</talbe>
-<table border="0" width="100%">
-  <tr> 
-    <td nowrap align="center" colspan="2"> 
-      <p> 
-        <input type="hidden" tabindex="5" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-        <input type="hidden" tabindex="6" name="prescribe_date" value='<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>'>
-        <input type="hidden" tabindex="7" name="prescribe_time" value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
-        <input type="hidden" tabindex="8" name="user_no" value='<%=user_no%>'>
-        <!--input type="hidden" tabindex="9" name="template" value='<%=request.getParameter("template")%>'-->
-        <input type="hidden" tabindex="10" name="dboperation" value="save_prescribe">
-        <input type="hidden" tabindex="11" name="displaymode" value="saveprescribe">
-        <input type="submit" tabindex="12" name="submit" value=" Save ">
-        <input type="button" tabindex="13" name="Button" value="Cancel" onClick="window.close();">
-      </p>
-  </td></tr>
-</table>
+		<table border="0" width="100%" datasrc='#xml_list'>
+			<tr>
+				<td>
+				<div align="center">Medication<br>
+				<textarea name='xml_Medication' style="width: 100%" cols='60'
+					rows='10' <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
+				</div>
+				<input type='hidden' name='xml_subjectprefix' value='.'></td>
+			</tr>
+			</talbe>
+			<table border="0" width="100%">
+				<tr>
+					<td nowrap align="center" colspan="2">
+					<p><input type="hidden" tabindex="5" name="demographic_no"
+						value="<%=request.getParameter("demographic_no")%>"> <input
+						type="hidden" tabindex="6" name="prescribe_date"
+						value='<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>'>
+					<input type="hidden" tabindex="7" name="prescribe_time"
+						value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
+					<input type="hidden" tabindex="8" name="user_no"
+						value='<%=user_no%>'> <!--input type="hidden" tabindex="9" name="template" value='<%=request.getParameter("template")%>'-->
+					<input type="hidden" tabindex="10" name="dboperation"
+						value="save_prescribe"> <input type="hidden" tabindex="11"
+						name="displaymode" value="saveprescribe"> <input
+						type="submit" tabindex="12" name="submit" value=" Save ">
+					<input type="button" tabindex="13" name="Button" value="Cancel"
+						onClick="window.close();"></p>
+					</td>
+				</tr>
+			</table>
 
-</td></tr>
-</form>
-</table>
+			</td>
+			</tr>
+			</form>
+		</table>
 </body>
 </html>

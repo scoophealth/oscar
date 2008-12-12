@@ -7,13 +7,13 @@
 		<id name="counter" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="templateNo" /> 
-        <property name="relation" /> 
-        <property name="fieldNo" /> 
-        <property name="op" column="operator" /> 
-        <property name="val" /> 
-        <property name="valDesc" /> 
-        <property name="required" /> 
+		<property name="templateNo" />
+		<property name="relation" />
+		<property name="fieldNo" />
+		<property name="op" column="operator" />
+		<property name="val" />
+		<property name="valDesc" />
+		<property name="required" />
 	</class>
 </hibernate-mapping>
     

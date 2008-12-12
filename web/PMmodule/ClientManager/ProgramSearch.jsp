@@ -26,13 +26,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <html:html locale="true">
-	<head>
-		<title>Program Search</title>
-		<link href="<html:rewrite page='/css/tigris.css'/>" rel="stylesheet" type="text/css" />
-		<link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet" type="text/css" />
-	</head>
-	
-	<script type="text/javascript">
+<head>
+<title>Program Search</title>
+<link href="<html:rewrite page='/css/tigris.css'/>" rel="stylesheet"
+	type="text/css" />
+<link href="<html:rewrite page='/css/displaytag.css'/>" rel="stylesheet"
+	type="text/css" />
+</head>
+
+<script type="text/javascript">
 		var gender='<%=request.getSession().getAttribute("clientGender")%>';
 		var age=<%=request.getSession().getAttribute("clientAge")%>;
 		
@@ -124,47 +126,60 @@ if (!Array.prototype.indexOf)
 			self.close();
 		}		
 	</script>
-	
-	<body marginwidth="0" marginheight="0">
-		<%@ include file="/common/messages.jsp"%>
-		<div class="tabs" id="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-				<tr>
-					<th title="Programs">Search Results</th>
-				</tr>
-			</table>
-		</div>
-		
-		<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" pagesize="200" requestURI="/PMmodule/ClientManager.do">
-			<display:setProperty name="paging.banner.placement" value="bottom" />
-			<display:column sortable="true" title="Name">
-				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.id}" />');"><c:out value="${program.name}" /></a>
-			</display:column>
-			<display:column property="type" sortable="true" title="Type"></display:column>
-			<display:column sortable="false" title="Participation">
-				<c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" />&nbsp;(<c:out value="${program.queueSize}" /> waiting)
-			</display:column>
-			<display:column property="description" sortable="false" title="Description"></display:column>
-		</display:table>
 
-		<c:if test="${remotePrograms!=null}">
-			<br /><br />
-			<div class="tabs" id="tabs">
-				<table cellpadding="3" cellspacing="0" border="0">
-					<tr>
-						<th title="Programs">Remote Search Results</th>
-					</tr>
-				</table>
-			</div>
-			
-			<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
-				<display:column sortable="true" title="Name">
-					<a href="#javascript:void(0);" onclick="selectRemoteProgram('<c:out value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" />','<c:out value="${program.facilityIdIntegerCompositePk.caisiItemId}" />');"><c:out value="${program.name}" /></a>
-				</display:column>
-				<display:column property="type" sortable="true" title="Type"></display:column>
-				<display:column property="description" sortable="false" title="Description"></display:column>
-			</display:table>
-		</c:if>
+<body marginwidth="0" marginheight="0">
+<%@ include file="/common/messages.jsp"%>
+<div class="tabs" id="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Search Results</th>
+	</tr>
+</table>
+</div>
 
-	</body>
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="program" name="programs" pagesize="200"
+	requestURI="/PMmodule/ClientManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<display:column sortable="true" title="Name">
+		<a href="#javascript:void(0);"
+			onclick="selectProgram('<c:out value="${program.id}" />');"><c:out
+			value="${program.name}" /></a>
+	</display:column>
+	<display:column property="type" sortable="true" title="Type"></display:column>
+	<display:column sortable="false" title="Participation">
+		<c:out value="${program.numOfMembers}" />/<c:out
+			value="${program.maxAllowed}" />&nbsp;(<c:out
+			value="${program.queueSize}" /> waiting)
+			</display:column>
+	<display:column property="description" sortable="false"
+		title="Description"></display:column>
+</display:table>
+
+<c:if test="${remotePrograms!=null}">
+	<br />
+	<br />
+	<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Remote Search Results</th>
+		</tr>
+	</table>
+	</div>
+
+	<display:table class="simple" cellspacing="2" cellpadding="3"
+		id="program" name="remotePrograms" pagesize="200"
+		requestURI="/PMmodule/ClientManager.do">
+		<display:column sortable="true" title="Name">
+			<a href="#javascript:void(0);"
+				onclick="selectRemoteProgram('<c:out value="${program.facilityIdIntegerCompositePk.integratorFacilityId}" />','<c:out value="${program.facilityIdIntegerCompositePk.caisiItemId}" />');"><c:out
+				value="${program.name}" /></a>
+		</display:column>
+		<display:column property="type" sortable="true" title="Type"></display:column>
+		<display:column property="description" sortable="false"
+			title="Description"></display:column>
+	</display:table>
+</c:if>
+
+</body>
 </html:html>

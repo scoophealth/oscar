@@ -23,12 +23,13 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page language="java" %>
-<%@ page import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%   
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 
@@ -43,7 +44,8 @@
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarResearch.oscarDxResearch.dxResearch.title"/></title>
+<title><bean:message
+	key="oscarResearch.oscarDxResearch.dxResearch.title" /></title>
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -112,101 +114,123 @@ function openNewPage(vheight,vwidth,varpage) {
 
 //-->
 </SCRIPT>
-<style type="text/css">
-</style>  
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="setfocus()">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
+	topmargin="0" marginwidth="0" marginheight="0" onLoad="setfocus()">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-    <td>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr bgcolor="#000000"> 
-                <td class="subject" colspan="2">
-                &nbsp;&nbsp;&nbsp;<bean:message key="global.disease"/>                
-                </td>
-                <td align="right" valign="bottom" style="color:white;"><oscar:nameage demographicNo="<%=(String) session.getAttribute(\"demographicNo\")%>"/></td>
-        </tr>
-        </table>
-    </td>
-</tr>
-<tr>
-    <td>
-        <html:form action="/oscarResearch/oscarDxResearch/dxResearch.do">
-        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="500">
-        <html:errors/>
-            <tr> 
-                <td width="26%" valign="top"> 
+	<tr>
+		<td>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#000000">
+				<td class="subject" colspan="2">&nbsp;&nbsp;&nbsp;<bean:message
+					key="global.disease" /></td>
+				<td align="right" valign="bottom" style="color: white;"><oscar:nameage
+					demographicNo="<%=(String) session.getAttribute(\"demographicNo\")%>" /></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td><html:form
+			action="/oscarResearch/oscarDxResearch/dxResearch.do">
+			<table width="100%" border="0" cellpadding="0" cellspacing="1"
+				bgcolor="#EEEEFF" height="500">
+				<html:errors />
+				<tr>
+					<td width="26%" valign="top">
 
-                <table width="100%" border="0" cellspacing="0" cellpadding="2" height="500" bgcolor="#FFFFFF">
-                    <tr> 
-                        <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: 
+					<table width="100%" border="0" cellspacing="0" cellpadding="2"
+						height="500" bgcolor="#FFFFFF">
+						<tr>
+							<td class="heading"><bean:message
+								key="oscarResearch.oscarDxResearch.codingSystem" />: <html:select
+								property="selectedCodingSystem">
+								<logic:iterate id="codingSys" name="codingSystem"
+									property="codingSystems">
+									<option value="<bean:write name="codingSys"/>"><bean:write
+										name="codingSys" /></option>
+								</logic:iterate>
 
-                            <html:select property="selectedCodingSystem">
-                                <logic:iterate id="codingSys" name="codingSystem" property="codingSystems">
-                                    <option value="<bean:write name="codingSys"/>"><bean:write name="codingSys" /></option>
-                                </logic:iterate>
-                                
-                            </html:select>                                                       
-                        </td>
-                    </tr>                                        
-                    <tr> 
-                        <td>
-                            <html:text property="xml_research1" size="30"/>
-                            <input type="hidden" name="demographicNo" value="<bean:write name="demographicNo"/>">
-                            <input type="hidden" name="providerNo" value="<bean:write name="providerNo"/>">
-                        </td>
-                    </tr>
-                    <tr><td><html:text property="xml_research2" size="30"/></td></tr>
-                    <tr><td><html:text property="xml_research3" size="30"/></td></tr>
-                    <tr><td><html:text property="xml_research4" size="30"/></td></tr>
-                    <tr><td><html:text property="xml_research5" size="30"/></td></tr>
-                    <tr> 
-                        <td> 
-                            <input type="hidden" name="forward" value="none"/>
-                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>" onClick="javascript: ResearchScriptAttach();")>
-                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>" onClick="javascript: submitform('','');">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="heading">
-                            <bean:message key="oscarResearch.oscarDxResearch.quickList"/>
-                        </td>                
-                    </tr>
-                    <tr>
-                        <td>
-                        <%-- RJ --%>
-                            <html:select property="quickList" style="width:200px" onchange="javascript:changeList();">
-                                <logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector">
-                                    <option value="<bean:write name="quickLists" property="quickListName" />" <bean:write name="quickLists" property="lastUsed" />><bean:write name="quickLists" property="quickListName" /></option>
-                                </logic:iterate>
-                            </html:select>
-                            <input type="button" value="GO" onclick="javascript:changeList();">
-                        </td>
-                    </tr>
-                    <logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector">
-                    <tr>
-                        <td class="quickList">
-                            <a href="#" title='<bean:write name="item" property="dxSearchCode"/>' onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>','<bean:write name="item" property="type"/>');"><bean:write name="item" property="description"/></a>
-                        </td>
-                    </tr>
-                    </logic:iterate>            
-                    <tr>
-                    </tr>
-                </table>
+							</html:select></td>
+						</tr>
+						<tr>
+							<td><html:text property="xml_research1" size="30" /> <input
+								type="hidden" name="demographicNo"
+								value="<bean:write name="demographicNo"/>"> <input
+								type="hidden" name="providerNo"
+								value="<bean:write name="providerNo"/>"></td>
+						</tr>
+						<tr>
+							<td><html:text property="xml_research2" size="30" /></td>
+						</tr>
+						<tr>
+							<td><html:text property="xml_research3" size="30" /></td>
+						</tr>
+						<tr>
+							<td><html:text property="xml_research4" size="30" /></td>
+						</tr>
+						<tr>
+							<td><html:text property="xml_research5" size="30" /></td>
+						</tr>
+						<tr>
+							<td><input type="hidden" name="forward" value="none" /> <input
+								type="button" name="button" class=mbttn
+								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
+								onClick="javascript: ResearchScriptAttach();")> <input
+								type="button" name="button" class=mbttn
+								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
+								onClick="javascript: submitform('','');"></td>
+						</tr>
+						<tr>
+							<td class="heading"><bean:message
+								key="oscarResearch.oscarDxResearch.quickList" /></td>
+						</tr>
+						<tr>
+							<td><%-- RJ --%> <html:select property="quickList"
+								style="width:200px" onchange="javascript:changeList();">
+								<logic:iterate id="quickLists" name="allQuickLists"
+									property="dxQuickListBeanVector">
+									<option
+										value="<bean:write name="quickLists" property="quickListName" />"
+										<bean:write name="quickLists" property="lastUsed" />><bean:write
+										name="quickLists" property="quickListName" /></option>
+								</logic:iterate>
+							</html:select> <input type="button" value="GO"
+								onclick="javascript:changeList();"></td>
+						</tr>
+						<logic:iterate id="item" name="allQuickListItems"
+							property="dxQuickListItemsVector">
+							<tr>
+								<td class="quickList"><a href="#"
+									title='<bean:write name="item" property="dxSearchCode"/>'
+									onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>','<bean:write name="item" property="type"/>');"><bean:write
+									name="item" property="description" /></a></td>
+							</tr>
+						</logic:iterate>
+						<tr>
+						</tr>
+					</table>
 
-                </td>
-                <td width="75%" valign="top">
+					</td>
+					<td width="75%" valign="top">
 
-                <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-                <tr> 
-                    <td class="heading" width="48%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis"/></b></td>
-                    <td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit"/></b></td>
-                    <td class="heading" width="15%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit"/></b></td>
-                    <td class="heading" width="22%"><b><bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgAction"/></b></td>
-                </tr>        
-                <logic:iterate id="diagnotics" name="allDiagnostics" property="dxResearchBeanVector" indexId = "ctr" >
-                    <%  
+					<table width="100%" border="0" cellpadding="0" cellspacing="0"
+						bgcolor="#FFFFFF">
+						<tr>
+							<td class="heading" width="48%"><b><bean:message
+								key="oscarResearch.oscarDxResearch.dxResearch.msgDiagnosis" /></b></td>
+							<td class="heading" width="15%"><b><bean:message
+								key="oscarResearch.oscarDxResearch.dxResearch.msgFirstVisit" /></b></td>
+							<td class="heading" width="15%"><b><bean:message
+								key="oscarResearch.oscarDxResearch.dxResearch.msgLastVisit" /></b></td>
+							<td class="heading" width="22%"><b><bean:message
+								key="oscarResearch.oscarDxResearch.dxResearch.msgAction" /></b></td>
+						</tr>
+						<logic:iterate id="diagnotics" name="allDiagnostics"
+							property="dxResearchBeanVector" indexId="ctr">
+							<%  
                         if (Count == 0){
                             Count = 1;
                             color = "#FFFFFF";
@@ -215,35 +239,42 @@ function openNewPage(vheight,vwidth,varpage) {
                             Count = 0;
                             color="#EEEEFF";
                         }       
-                    %> 
-                    <logic:equal name="diagnotics" property="status" value="A">
-                    <tr bgcolor="<%=color%>">
-                        <td class="notResolved"><bean:write name="diagnotics" property="description" /></td>
-                        <td class="notResolved"><bean:write name="diagnotics" property="start_date" /></td>                            
-                        <td class="notResolved"><bean:write name="diagnotics" property="end_date" /></td>
-                        <td class="notResolved">
-                            <a href='dxResearchUpdate.do?status=C&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/></a> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>            
-                        </td>
-                    </tr>
-                    </logic:equal>
-                    <logic:equal name="diagnotics" property="status" value="C">
-                    <tr bgcolor="<%=color%>">
-                        <td><bean:write name="diagnotics" property="description" /></td>
-                        <td><bean:write name="diagnotics" property="start_date" /></td>                            
-                        <td><bean:write name="diagnotics" property="end_date" /></td>
-                        <td>                
-                           <bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnResolve"/> | <a href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message key="oscarResearch.oscarDxResearch.dxResearch.btnDelete"/></a>
-                        </td>
-                    </tr>
-                    </logic:equal>
-                </logic:iterate>
-                </table>
+                    %>
+							<logic:equal name="diagnotics" property="status" value="A">
+								<tr bgcolor="<%=color%>">
+									<td class="notResolved"><bean:write name="diagnotics"
+										property="description" /></td>
+									<td class="notResolved"><bean:write name="diagnotics"
+										property="start_date" /></td>
+									<td class="notResolved"><bean:write name="diagnotics"
+										property="end_date" /></td>
+									<td class="notResolved"><a
+										href='dxResearchUpdate.do?status=C&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message
+										key="oscarResearch.oscarDxResearch.dxResearch.btnResolve" /></a> |
+									<a
+										href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message
+										key="oscarResearch.oscarDxResearch.dxResearch.btnDelete" /></a></td>
+								</tr>
+							</logic:equal>
+							<logic:equal name="diagnotics" property="status" value="C">
+								<tr bgcolor="<%=color%>">
+									<td><bean:write name="diagnotics" property="description" /></td>
+									<td><bean:write name="diagnotics" property="start_date" /></td>
+									<td><bean:write name="diagnotics" property="end_date" /></td>
+									<td><bean:message
+										key="oscarResearch.oscarDxResearch.dxResearch.btnResolve" /> |
+									<a
+										href='dxResearchUpdate.do?status=D&did=<bean:write name="diagnotics" property="dxResearchNo" />&demographicNo=<bean:write name="demographicNo" />&providerNo=<bean:write name="providerNo" />'><bean:message
+										key="oscarResearch.oscarDxResearch.dxResearch.btnDelete" /></a></td>
+								</tr>
+							</logic:equal>
+						</logic:iterate>
+					</table>
 
-                </td>
-        </tr>
-        </table>
-    </td>
-</tr>
+					</td>
+				</tr>
+			</table></td>
+	</tr>
 </table>
 </html:form>
 

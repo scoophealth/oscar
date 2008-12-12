@@ -24,9 +24,10 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"  %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"%>
 <%
   //to prepare calendar display
   String type = "admissfdfion";//request.getParameter("type");
@@ -43,7 +44,8 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="OscarEncounter.oscarConsultationRequest.CalendarPopUp.title"/></title>
+<title><bean:message
+	key="OscarEncounter.oscarConsultationRequest.CalendarPopUp.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -67,27 +69,47 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
   DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-  			<tr>
-        	  <td BGCOLOR="#bbbbff" width="50%" align="center" >
-			  <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>" vspace="2"> <bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth"/>&nbsp;&nbsp;
-              </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>"> &nbsp;&nbsp;<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>" vspace="2">&nbsp;&nbsp;</a></td>
-  			</TR>
-		</table>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td BGCOLOR="#bbbbff" width="50%" align="center"><a
+			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>">
+		&nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9"
+			BORDER="0"
+			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVLastMonth"/>"
+			vspace="2"> <bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgLastMonth" />&nbsp;&nbsp;
+		</a> <b><span CLASS=title><%=year%>-<%=month%></span></b> <a
+			href="CalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>">
+		&nbsp;&nbsp;<bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgNextMonth" />
+		<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="<bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgVNextMonth"/>"
+			vspace="2">&nbsp;&nbsp;</a></td>
+	</TR>
+</table>
 <p>
-          <table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-            <tr bgcolor="#ccccff" align="center">
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSun"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgMon"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgTue"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgWed"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgThu"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgFri"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSat"/></font></td>
-            </tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="2"
+	bgcolor="silver">
+	<tr bgcolor="#ccccff" align="center">
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="red"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSun" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgMon" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgTue" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgWed" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgThu" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgFri" /></font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="green"><bean:message
+			key="oscarEncounter.oscarConsultationRequest.CalendarPopUp.msgSat" /></font></td>
+	</tr>
 
-            <%
+	<%
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("<tr>");
                 for (int j=0; j<7; j++) {
@@ -97,16 +119,16 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
 
                       if (type.compareTo("admission") == 0) {
             %>
-                      <td align="center" bgcolor='#eeeeff'><a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-                      <%= dateGrid[i][j] %> </a>
-                      </td>
-            <%    }
+	<td align="center" bgcolor='#eeeeff'><a href="#"
+		onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%    }
                  else {
                  %>
-                 <td align="center" bgcolor='#eeeeff'><a href="#" onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-		                       <%= dateGrid[i][j] %> </a>
-                      </td>
-                 <%
+	<td align="center" bgcolor='#eeeeff'><a href="#"
+		onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%
                  }
 
                  }
@@ -116,19 +138,19 @@ opener.EctConsultationFormRequestForm.appointmentDay.options.selectedIndex = (da
               }
             %>
 
-          </table>
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td>&nbsp;</td>
-            </tr>
-            <tr>
-              <td bgcolor="#bbbbff">
-                <div align="center">
-                  <input type="button" name="Cancel" value="<bean:message key="global.btnClose"/>" onClick="window.close()">
-                </div>
-              </td>
-            </tr>
-          </table>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#bbbbff">
+		<div align="center"><input type="button" name="Cancel"
+			value="<bean:message key="global.btnClose"/>"
+			onClick="window.close()"></div>
+		</td>
+	</tr>
+</table>
 
 </body>
 </html:html>

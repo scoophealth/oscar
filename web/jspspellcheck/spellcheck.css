@@ -7,61 +7,49 @@
     See spellcheck.license.txt.
 
 */
-
-body, div, p, th, td, li, dd, input, select, button, textarea
-{
-    font-family:  Verdana, Tahoma Lucida, Arial, Helvetica, sans-serif ;
-    font-size:    12px;
+body,div,p,th,td,li,dd,input,select,button,textarea {
+	font-family: Verdana, Tahoma Lucida, Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
-body
-{
-    background-color: threedface;
-    color: menutext;
-    margin: 1px;
-    border:none;
-    vertical-align: middle;
+body {
+	background-color: threedface;
+	color: menutext;
+	margin: 1px;
+	border: none;
+	vertical-align: middle;
 }
 
-select
-{
-    width: 100%;
-    height: 90px;
+select {
+	width: 100%;
+	height: 90px;
 }
 
-
-input
-{
-    width: 100%;
+input {
+	width: 100%;
 }
 
-button
-{
-    width: 100%;
+button {
+	width: 100%;
 }
 
-table
-{
-    width: 100%;
+table {
+	width: 100%;
 }
 
-td
-{
-    vertical-align: top;
-    padding: 3px;
+td {
+	vertical-align: top;
+	padding: 3px;
 }
 
-#LeftTD
-{
-    width: 60%;
+#LeftTD {
+	width: 60%;
 }
 
-.Disabled
-{
-    background-color: threedface;
+.Disabled {
+	background-color: threedface;
 }
 
-.Label
-{
-    font-weight: bold;
+.Label {
+	font-weight: bold;
 }

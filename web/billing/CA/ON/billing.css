@@ -1,5 +1,5 @@
-<!--  
-/*
+
+<!-- /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
@@ -24,21 +24,62 @@
  */
 -->
 <!--
- 
-BODY  {	font-size : 8pt; font-weight : normal;	line-height: 10px;	font-style : normal; color : black; text-decoration : none; font-family: "Times New Roman", Times, serif; background-attachment: fixed}
-TD, TH { 
-  font-family: "Arial", "Helvetica", sans-serif;
-  font-size : 8pt; font-weight : normal;	line-height: 10px;
-} 
-TR { 
-  font-family: "Arial", "Helvetica", sans-serif;
-  font-size : 8pt; font-weight : normal;	line-height: 10px; color: grey;
-} 
-.bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 10px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none} 
-a:active {  text-decoration : none;}
-a:link {  text-decoration : none;; color: #645FCD;font-weight : bold;}
-a:visited {  text-decoration : none;; color: #645FCD; font-weight: bold}
-a:hover {COLOR: red; font-weight : bolder;} 
+BODY {
+	font-size: 8pt;
+	font-weight: normal;
+	line-height: 10px;
+	font-style: normal;
+	color: black;
+	text-decoration: none;
+	font-family: "Times New Roman", Times, serif;
+	background-attachment: fixed
+}
 
+TD,TH {
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	line-height: 10px;
+}
 
+TR {
+	font-family: "Arial", "Helvetica", sans-serif;
+	font-size: 8pt;
+	font-weight: normal;
+	line-height: 10px;
+	color: grey;
+}
+
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none
+}
+
+a:active {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;;
+	color: #645FCD;
+	font-weight: bold;
+}
+
+a:visited {
+	text-decoration: none;;
+	color: #645FCD;
+	font-weight: bold
+}
+
+a:hover {
+	COLOR: red;
+	font-weight: bolder;
+}
 -->

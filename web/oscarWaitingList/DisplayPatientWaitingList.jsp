@@ -26,20 +26,19 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-Waiting List
-</title>
+<title>Waiting List</title>
 
 </head>
 <script>
@@ -57,80 +56,74 @@ function removePatient(demographicNo, waitingList){
     
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" >
-<!--  -->    
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Waiting List
-            </td>
-            <td class="MainTableTopRowRightColumn" width="400">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td ><logic:present name="demoInfo"><bean:write name="demoInfo"/> years</logic:present></td>                                                
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">   
-                <a href="../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="demographicNo"/>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" />&nbsp;</a>
-            </td>
-            <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=700>
-                <tr>
-                    <td>
-                        <table>                            
-                            <tr>
-                                <td>               
-                                    <tr>
-                                        <td align="left" class="Header" width="100">
-                                            Waiting List
-                                        </td>                                        
-                                        <td align="left" class="Header" width="50">
-                                            Position
-                                        </td>
-                                        <td align="left" class="Header" width="100">
-                                            Note
-                                        </td>
-                                        <td align="left" class="Header" width="100">
-                                            On the Waiting List Since
-                                        </td>
-                                        <td align="left" class="Header" width="100">
-                                        </td>
-                                     </tr>
-                                    <logic:iterate id="waitingListBean" name="patientWaitingList" property="patientWaitingListVector">
-                                    <tr class="data">
-                                        <td width="100"><bean:write name="waitingListBean" property="waitingList" /></td>
-                                        <td width="50"><bean:write name="waitingListBean" property="position" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="note" /></td>
-                                        <td width="100"><bean:write name="waitingListBean" property="onListSince" /></td>                                        
-                                        <td>
-                                            <a href=# onClick ="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="waitingListBean" property="waitingListID" />');">Remove</a>
-                                        </td>
-                                    </tr>                        
-                                    </logic:iterate>                                    
-                                </td>
-                            </tr>
-                        </table>
-                        <table>
-                            <tr>
-                                <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+<body class="BodyStyle" vlink="#0000FF">
+<!--  -->
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Waiting List</td>
+		<td class="MainTableTopRowRightColumn" width="400">
+		<table class="TopStatusBar">
+			<tr>
+				<td><logic:present name="demoInfo">
+					<bean:write name="demoInfo" /> years</logic:present></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn"><a
+			href="../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="demographicNo"/>&displaymode=edit&dboperation=search_detail"><bean:message
+			key="global.btnBack" />&nbsp;</a></td>
+		<td class="MainTableRightColumn">
+		<table border=0 cellspacing=4 width=700>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td>
+					<tr>
+						<td align="left" class="Header" width="100">Waiting List</td>
+						<td align="left" class="Header" width="50">Position</td>
+						<td align="left" class="Header" width="100">Note</td>
+						<td align="left" class="Header" width="100">On the Waiting
+						List Since</td>
+						<td align="left" class="Header" width="100"></td>
+					</tr>
+					<logic:iterate id="waitingListBean" name="patientWaitingList"
+						property="patientWaitingListVector">
+						<tr class="data">
+							<td width="100"><bean:write name="waitingListBean"
+								property="waitingList" /></td>
+							<td width="50"><bean:write name="waitingListBean"
+								property="position" /></td>
+							<td width="100"><bean:write name="waitingListBean"
+								property="note" /></td>
+							<td width="100"><bean:write name="waitingListBean"
+								property="onListSince" /></td>
+							<td><a href=#
+								onClick="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="waitingListBean" property="waitingListID" />');">Remove</a>
+							</td>
+						</tr>
+					</logic:iterate>
+					</td>
+					</tr>
+				</table>
+				<table>
+					<tr>
+						<td><input type="button" name="Button"
+							value="<bean:message key="global.btnClose"/>"
+							onClick="window.close()"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

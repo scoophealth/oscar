@@ -29,13 +29,15 @@
   
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <html>
 <head>
-<title> CHECK LIST</title>
-<link rel="stylesheet" href="antenatalrecord.css" >
+<title>CHECK LIST</title>
+<link rel="stylesheet" href="antenatalrecord.css">
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -48,8 +50,9 @@ function onExit() {
 //-->
 </SCRIPT>
 </head>
-<body onLoad="setfocus()" bgcolor="#c4e9f6" bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-<form name="checklistedit" action="checklistedit.jsp"  method="POST">
+<body onLoad="setfocus()" bgcolor="#c4e9f6" bgproperties="fixed"
+	topmargin="0" leftmargin="1" rightmargin="1">
+<form name="checklistedit" action="checklistedit.jsp" method="POST">
 <%
   char sep = oscarVariables.getProperty("file_separator").toCharArray()[0];
   String str = null;
@@ -63,20 +66,21 @@ function onExit() {
     inf.close();
   }			
 %>
-  <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd"> 
-      <th align=CENTER  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Antenatal 
-        Check List</font></th>
-      <th width="25%" nowrap> 
-        <div align="right">
-          <input type='submit' name='submit' value=' Save '>
-          <input type="button" name="Button" value="&nbsp;<%=request.getParameter("submit")!=null?" Exit ":"Cancel"%>&nbsp;" onClick="onExit();">&nbsp;
-        </div>
-      </th>
-    </tr>
-    <tr> 
-      <td align=CENTER colspan="2"  ><font face="Times New Roman, Times, serif"> 
-        <textarea name="checklist" cols="100" rows="32"  style="width:100%">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Antenatal Check List</font></th>
+		<th width="25%" nowrap>
+		<div align="right"><input type='submit' name='submit'
+			value=' Save '> <input type="button" name="Button"
+			value="&nbsp;<%=request.getParameter("submit")!=null?" Exit ":"Cancel"%>&nbsp;"
+			onClick="onExit();">&nbsp;</div>
+		</th>
+	</tr>
+	<tr>
+		<td align=CENTER colspan="2"><font
+			face="Times New Roman, Times, serif"> <textarea
+			name="checklist" cols="100" rows="32" style="width: 100%">
 <%
 //		try {
 			File file = new File(".."+sep+"webapps"+sep+oscarVariables.getProperty("project_home")+sep+"decision"+sep+"annualreview"+sep+"desannualreviewplannerriskchecklist.xml");
@@ -97,15 +101,16 @@ function onExit() {
 			raf.close();
 //		} catch(IOException e) {}
 %>
-</textarea>
-        </font></td>
-    </tr><TR>
-      <td><b>*</b> The Symbols ("&", "<", or ">") should be written as " & ", " < ", or " > " 
-        in the content. Or use ("&amp;amp;","&amp;lt;", or "&amp;gt;") instead.</td>
-    </tr>
-  </table>
-          <input type='submit' name='submit' value=' Save '>
-          <input type="button" name="Button" value=" Exit " onClick="onExit();">
+</textarea> </font></td>
+	</tr>
+	<TR>
+		<td><b>*</b> The Symbols ("&", "<", or ">") should be written as
+		" & ", " < ", or " > " in the content. Or use ("&amp;amp;","&amp;lt;",
+		or "&amp;gt;") instead.</td>
+	</tr>
+</table>
+<input type='submit' name='submit' value=' Save '> <input
+	type="button" name="Button" value=" Exit " onClick="onExit();">
 </form>
 </body>
 </html>

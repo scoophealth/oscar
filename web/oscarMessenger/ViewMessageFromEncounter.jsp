@@ -30,23 +30,27 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page language="java" import="java.util.Enumeration" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="encounterStyles.css" media="screen">
-<link rel="stylesheet" type="text/css" href="printable.css" media="print">
+<%@ page language="java" import="java.util.Enumeration"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css" href="encounterStyles.css"
+	media="screen">
+<link rel="stylesheet" type="text/css" href="printable.css"
+	media="print">
 <html:html locale="true">
 <head>
 
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
@@ -73,9 +77,7 @@ if(msgCount!=null){
 }
 %>
 
-<title>
-<bean:message key="oscarMessenger.ViewMessage.title"/>
-</title>
+<title><bean:message key="oscarMessenger.ViewMessage.title" /></title>
 
 <script type="text/javascript">
 function BackToOscar()
@@ -161,184 +163,179 @@ function paste2Encounter(demoNo) {
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarMessenger.ViewMessage.msgMessenger"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            <bean:message key="oscarMessenger.ViewMessage.msgViewMessage"/>
-                        </td>
-                        <td  >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarMessenger.ViewMessage.msgMessenger" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message
+					key="oscarMessenger.ViewMessage.msgViewMessage" /></td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn Printable">
+		<table>
+			<tr>
+				<td>
+				<table cellspacing=3>
+					<tr>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a
+									href="javascript:BackToOscar()" class="messengerButtons"><bean:message
+									key="oscarMessenger.ViewMessage.btnExit" /></a></td>
+							</tr>
+						</table>
+						</td>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a
+									href="javascript:window.print()" class="messengerButtons"><bean:message
+									key="oscarMessenger.ViewMessage.btnPrint" /></a></td>
+							</tr>
+						</table>
+						</td>
+						<td>
+						<%if(iPrevMsg>=0){%>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a class="messengerButtons"
+									href="<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&msgCount=<%=msgCount%>&orderBy=<%=orderBy%>&demographic_no=<%=request.getParameter("demographic_no")%>&messagePosition=<%=Integer.toString(iPrevMsg)%>">
+								<< Prev Msg </a></td>
+							</tr>
+						</table>
+						<%}%>
+						</td>
+						<td>
+						<%if(iNextMsg < iMsgCount){%>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a class="messengerButtons"
+									href="<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&msgCount=<%=msgCount%>&orderBy=<%=orderBy%>&demographic_no=<%=request.getParameter("demographic_no")%>&messagePosition=<%=Integer.toString(iNextMsg)%>">
+								Next Msg >> </a></td>
+							</tr>
+						</table>
+						<%}%>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td class="Printable">
+				<table cellspacing="1" valign="top">
+					<tr>
+						<td class="Printable" bgcolor="#DDDDFF"><bean:message
+							key="oscarMessenger.ViewMessage.msgFrom" />:</td>
+						<td id="sentBy" class="Printable" bgcolor="#CCCCFF"><%= request.getAttribute("viewMessageSentby") %>
+						</td>
+					</tr>
+					<tr>
+						<td class="Printable" bgcolor="#DDDDFF"><bean:message
+							key="oscarMessenger.ViewMessage.msgTo" />:</td>
+						<td id="sentTo" class="Printable" bgcolor="#BFBFFF"><%= request.getAttribute("viewMessageSentto") %>
+						</td>
+					</tr>
+					<tr>
+						<td class="Printable" bgcolor="#DDDDFF"><bean:message
+							key="oscarMessenger.ViewMessage.msgSubject" />:</td>
+						<td id="msgSubject" class="Printable" bgcolor="#BBBBFF"><%= request.getAttribute("viewMessageSubject") %>
+						</td>
+					</tr>
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-                &nbsp;
-            </td>
-            <td class="MainTableRightColumn Printable">
-                <table>
-                    <tr>
-                        <td>
-                            <table  cellspacing=3>
-                                <tr>
-                                    <td>
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnExit"/></a>
-                                        </td></tr></table>
-                                    </td>
-                                    <td>
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a href="javascript:window.print()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnPrint"/></a>
-                                        </td></tr></table>
-                                    </td>        
-                                    <td><%if(iPrevMsg>=0){%>
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a class="messengerButtons" href="<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&msgCount=<%=msgCount%>&orderBy=<%=orderBy%>&demographic_no=<%=request.getParameter("demographic_no")%>&messagePosition=<%=Integer.toString(iPrevMsg)%>">
-                                            << Prev Msg
-                                            </a>
-                                        </td></tr></table>
-                                        <%}%>
-                                    </td>
-                                    <td><%if(iNextMsg < iMsgCount){%>
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                            <a class="messengerButtons" href="<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&msgCount=<%=msgCount%>&orderBy=<%=orderBy%>&demographic_no=<%=request.getParameter("demographic_no")%>&messagePosition=<%=Integer.toString(iNextMsg)%>">
-                                            Next Msg >>
-                                            </a>
-                                        </td></tr></table>
-                                        <%}%>
-                                    </td>                                                                                                            
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="Printable">
-                            <table  cellspacing="1" valign="top">
-                                <tr>
-                                    <td class="Printable" bgcolor="#DDDDFF">
-                                    <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
-                                    </td>
-                                    <td id="sentBy" class="Printable" bgcolor="#CCCCFF">
-                                    <%= request.getAttribute("viewMessageSentby") %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="Printable" bgcolor="#DDDDFF">
-                                    <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
-                                    </td>
-                                    <td id="sentTo" class="Printable" bgcolor="#BFBFFF">
-                                    <%= request.getAttribute("viewMessageSentto") %>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="Printable" bgcolor="#DDDDFF">
-                                        <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
-                                    </td>
-                                    <td id="msgSubject" class="Printable" bgcolor="#BBBBFF">
-                                        <%= request.getAttribute("viewMessageSubject") %>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                  <td class="Printable" bgcolor="#DDDDFF">
-                                      <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
-                                  </td>
-                                  <td id="sentDate" class="Printable" bgcolor="#B8B8FF">
-                                      <%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
-                                      <%= request.getAttribute("viewMessageTime") %>
-                                  </td>
-                                </tr>
-                                <%  String attach = (String) request.getAttribute("viewMessageAttach");
+					<tr>
+						<td class="Printable" bgcolor="#DDDDFF"><bean:message
+							key="oscarMessenger.ViewMessage.msgDate" />:</td>
+						<td id="sentDate" class="Printable" bgcolor="#B8B8FF"><%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
+						<%= request.getAttribute("viewMessageTime") %></td>
+					</tr>
+					<%  String attach = (String) request.getAttribute("viewMessageAttach");
                                     String id = (String) request.getAttribute("viewMessageId");
                                     if ( attach != null && attach.equals("1") ){
                                     %>
-                                    <tr>
-                                        <td bgcolor="#DDDDFF">
-                                            <bean:message key="oscarMessenger.ViewMessage.msgAttachments"/>:
-                                        </td>
-                                        <td bgcolor="#B8B8FF">
-                                            <a href="javascript:popupViewAttach(700,960,'ViewAttach.do?attachId=<%=id%>')">
-                                            <bean:message key="oscarMessenger.ViewMessage.btnAttach"/>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <%
+					<tr>
+						<td bgcolor="#DDDDFF"><bean:message
+							key="oscarMessenger.ViewMessage.msgAttachments" />:</td>
+						<td bgcolor="#B8B8FF"><a
+							href="javascript:popupViewAttach(700,960,'ViewAttach.do?attachId=<%=id%>')">
+						<bean:message key="oscarMessenger.ViewMessage.btnAttach" /> </a></td>
+					</tr>
+					<%
                                     }
                                 %>
-                                        
-                                <tr>
-                                    <html:form action="/oscarMessenger/HandleMessages" >
-                                    <td bgcolor="#EEEEFF" ></td>
-                                    <td bgcolor="#EEEEFF" >
-                                        <textarea id="msgBody" name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
-                                        
-                                    </td>
-                                    </html:form>
-                                </tr>
-                                <tr>
-                                    <td bgcolor="#EEEEFF" ></td>
-                                    <td bgcolor="#EEEEFF" >&nbsp;</td>
-                                </tr>                                                                
-                                <tr>
-                                    <td bgcolor="#EEEEFF">
-                                    </td>
-                                    <td bgcolor="#EEEEFF" >
-                                        <font style="font-weight:bold">Demographic(s) linked to this message</font>
-                                    </td>
-                                </tr>
-                                <% if(demoMap !=null){ %>
-                                             
-                                        <% for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
+
+					<tr>
+						<html:form action="/oscarMessenger/HandleMessages">
+							<td bgcolor="#EEEEFF"></td>
+							<td bgcolor="#EEEEFF"><textarea id="msgBody" name="Message"
+								wrap="hard" readonly="true" rows="18" cols="60"><%= request.getAttribute("viewMessageMessage") %></textarea><br>
+
+							</td>
+						</html:form>
+					</tr>
+					<tr>
+						<td bgcolor="#EEEEFF"></td>
+						<td bgcolor="#EEEEFF">&nbsp;</td>
+					</tr>
+					<tr>
+						<td bgcolor="#EEEEFF"></td>
+						<td bgcolor="#EEEEFF"><font style="font-weight: bold">Demographic(s)
+						linked to this message</font></td>
+					</tr>
+					<% if(demoMap !=null){ %>
+
+					<% for (Enumeration e=demoMap.keys(); e.hasMoreElements(); ) { 
                                             String demoID = (String)e.nextElement(); %>
-                                        <tr>
-                                            <td bgcolor="#EEEEFF"></td>
-                                            <td bgcolor="#EEEEFF">        
-                                            <%=(String)demoMap.get(demoID)%>     
-                                            <% if ( demoID.equals(demographic_no ) ) { %> 
-                                            <input onclick="javascript:popup(<%=demographic_no%>, <%=messageId%>, <%=provider_no%>);" class="ControlPushButton" type="button" name="writeToEncounter" value="Write To Encounter">
-                                            <input onclick="return paste2Encounter(<%=demographic_no%>);" class="ControlPushButton" type="button" name="pasteToEncounter" value="Paste To Encounter">
-                                            <% } %>
-                                            </td>
-                                        </tr>
-                                        <%}
+					<tr>
+						<td bgcolor="#EEEEFF"></td>
+						<td bgcolor="#EEEEFF"><%=(String)demoMap.get(demoID)%> <% if ( demoID.equals(demographic_no ) ) { %>
+						<input
+							onclick="javascript:popup(<%=demographic_no%>, <%=messageId%>, <%=provider_no%>);"
+							class="ControlPushButton" type="button" name="writeToEncounter"
+							value="Write To Encounter"> <input
+							onclick="return paste2Encounter(<%=demographic_no%>);"
+							class="ControlPushButton" type="button" name="pasteToEncounter"
+							value="Paste To Encounter"> <% } %>
+						</td>
+					</tr>
+					<%}
                                     }
                                 else{%>
-                                <tr>
-                                    <td bgcolor="#EEEEFF"></td>
-                                    <td bgcolor="#EEEEFF">
-                                    No demographic is linked to this message
-                                    </td>
-                                </tr>
-                                <%}%>                                
-                            </table>
-                        </td>                        
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table> 
+					<tr>
+						<td bgcolor="#EEEEFF"></td>
+						<td bgcolor="#EEEEFF">No demographic is linked to this
+						message</td>
+					</tr>
+					<%}%>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 <!-- I don't like this next part, but it is a working hack for printing long messages.  A prefered solution would
  move away from textboxes entirely, so that there is more programmatic formating control. -->
 <%  String bodyTextAsHTML = (String) request.getAttribute("viewMessageMessage");

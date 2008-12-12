@@ -27,7 +27,7 @@
  *  
  */
 -->
- <%
+<%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -36,30 +36,32 @@
 <%
 	String styleClass = "data2";
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.util.*, oscar.oscarWaitingList.bean.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page
+	import="java.util.*,oscar.util.*, oscar.oscarWaitingList.bean.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-Waiting List
-</title>
+<title>Waiting List</title>
 
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 
 </head>
 
@@ -154,36 +156,35 @@ function removePatient(demographicNo, waitingList){
     
 }
 </script>
-<body class="BodyStyle" vlink="#0000FF" onload='window.resizeTo(900,400)' >
-<!--  -->    
-    <html:form action="/oscarWaitingList/SetupDisplayWaitingList.do?update=Y">    
-    
-    <input type="hidden" name="demographicNumSelected" value=""  />
-    <input type="hidden" name="wlNoteSelected" value=""  />
-    <input type="hidden" name="onListSinceSelected" value=""  />
-   
-   
-    <input type="hidden" name="waitingListId" value=""  /> 
-    <input type="hidden" name="update" value=""  /> 
-   
-   
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowRightColumn" colspan="2" width="85%">
-                <table class="TopStatusBar" >                 
-                    <tr>    
-                        <td>
-	     Current List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present>
-                        	
-                        </td>
-                        <td align="right"> 
-                        </td>
-                                
-                        <td align="left">Please Select a Waiting List:</td>    
-                        <td>                        
-                            <html:select property="selectedWL">
-                                <option value=""> </option>
-                                <%
+<body class="BodyStyle" vlink="#0000FF"
+	onload='window.resizeTo(900,400)'>
+<!--  -->
+<html:form
+	action="/oscarWaitingList/SetupDisplayWaitingList.do?update=Y">
+
+	<input type="hidden" name="demographicNumSelected" value="" />
+	<input type="hidden" name="wlNoteSelected" value="" />
+	<input type="hidden" name="onListSinceSelected" value="" />
+
+
+	<input type="hidden" name="waitingListId" value="" />
+	<input type="hidden" name="update" value="" />
+
+
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowRightColumn" colspan="2" width="85%">
+			<table class="TopStatusBar">
+				<tr>
+					<td>Current List: <logic:present name="waitingListName">
+						<bean:write name="waitingListName" />
+					</logic:present></td>
+					<td align="right"></td>
+
+					<td align="left">Please Select a Waiting List:</td>
+					<td><html:select property="selectedWL">
+						<option value=""></option>
+						<%
                                 	String providerNo = (String)session.getAttribute("user");
                                 	String groupNo = "";
                                     if(session.getAttribute("groupno") != null){
@@ -197,131 +198,118 @@ function removePatient(demographicNo, waitingList){
                                         String name = wLBean.getWaitingListName();                                       
                                         String selected = id.compareTo((String) request.getAttribute("WLId")==null?"0":(String) request.getAttribute("WLId"))==0?"SELECTED":"";                                        
                                 %>
-                                 <option value="<%=id%>" <%=selected%>><%=name%></option>
-                                <%}%>
-                            </html:select>                        
-                            <INPUT type="button" onClick="goToPage()" value="Generate Report">                            
-<%
+						<option value="<%=id%>" <%=selected%>><%=name%></option>
+						<%}%>
+					</html:select> <INPUT type="button" onClick="goToPage()" value="Generate Report">
+					<%
         String userRole = "";
         if(session.getAttribute("userrole") != null){
                 userRole = (String)session.getAttribute("userrole");
         }
         if(userRole.indexOf("admin") >= 0){
-%>
-	     <a href="#" onclick="popupEditWlNamePage();" style="color:#000000; text-decoration: none;" >Create List</a>
-<%
+%> <a href="#" onclick="popupEditWlNamePage();"
+						style="color: #000000; text-decoration: none;">Create List</a> <%
         }else{
-%>
-		test
-<%
+%> test <%
 }
 %>
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">             
-            </td>
-            <td class="tableColumnEven">
-               <table border=0 cellspacing=4 width="100%">
-                <tr>
-                    <td>
-                        <table>                            
-                            <tr>
-                                <td>               
-                                    <tr>
-                                        <td align="left" class="Header" width="20">                                            
-                                        </td>                                        
-                                        <td align="left" class="Header" width="100">
-                                            Patient Name
-                                        </td>
-                                        <td align="center" class="Header" width="370">
-                                            Note
-                                        </td>
-                                        <td align="left" class="Header" width="50">
-                                            <nobr>Date of </nobr>Request<br/><nobr>(yyyy-mm-dd)</nobr>
-                                        </td> 
-                                        <td align="center" class="Header" width="300">
-                                            Provider
-                                        </td> 
-                                        <td align="left" class="Header" width="50">                                        
-                                        </td>
-                                     </tr>
-                                    <logic:iterate id="waitingListBean" name="waitingList" property="waitingListArrayList" indexId = "ctr">
-           							<html:hidden name="waitingListBean" property="demographicNo" indexed="true"  />                        
-          							<%
+					
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn"></td>
+			<td class="tableColumnEven">
+			<table border=0 cellspacing=4 width="100%">
+				<tr>
+					<td>
+					<table>
+						<tr>
+							<td>
+						<tr>
+							<td align="left" class="Header" width="20"></td>
+							<td align="left" class="Header" width="100">Patient Name</td>
+							<td align="center" class="Header" width="370">Note</td>
+							<td align="left" class="Header" width="50"><nobr>Date
+							of </nobr>Request<br />
+							<nobr>(yyyy-mm-dd)</nobr></td>
+							<td align="center" class="Header" width="300">Provider</td>
+							<td align="left" class="Header" width="50"></td>
+						</tr>
+						<logic:iterate id="waitingListBean" name="waitingList"
+							property="waitingListArrayList" indexId="ctr">
+							<html:hidden name="waitingListBean" property="demographicNo"
+								indexed="true" />
+							<%
 											if( ((ctr.intValue()+1) % 2) == 0  ){
 												styleClass = "data5";
 											}else{
 												styleClass = "data2";
 											}
 									%>
-									<tr>
-										<td>
-											<a name="anchor_<%=ctr%>">
-										</td>
-									</tr>
-                                    <tr>
-                                        <td class="<%=styleClass%>">
-                                        	<bean:write name="waitingListBean" property="position" />
-                                        </td>
-                                        <td class="<%=styleClass%>">
-                                        	<a href=# onclick="popupDemographicPage('../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="waitingListBean" property="demographicNo" />&displaymode=edit&dboperation=search_detail');return false;">
-                                        		<bean:write name="waitingListBean" property="patientName" />
-                                        	</a>
-                                        	<input type="button" value="Update" name="update_<%=ctr%>"  style="font-size:7pt;" 
-                                        			onClick="updateWaitingList('<bean:write name="waitingListBean" property="waitingListID" />',<%=ctr%>);" />
-                                        </td>
-                                        <td class="<%=styleClass%>">
-                                        	<html:textarea cols="45" name="waitingListBean" property="note" indexed="true" styleClass="data3" onblur="setParameters(this);" />
-                                        </td>
-                                        <td class="<%=styleClass%>">
-                                            <html:text  name="waitingListBean" property="onListSince" indexed="true" styleClass="data3" onblur="setParameters(this);" onchange="setParameters(this);" />
-                                            <img src="../images/cal.gif" id="referral_date_cal_<%=ctr%>">
-                                        </td>
-<script type="text/javascript">
+							<tr>
+								<td><a name="anchor_<%=ctr%>"></td>
+							</tr>
+							<tr>
+								<td class="<%=styleClass%>"><bean:write
+									name="waitingListBean" property="position" /></td>
+								<td class="<%=styleClass%>"><a href=#
+									onclick="popupDemographicPage('../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="waitingListBean" property="demographicNo" />&displaymode=edit&dboperation=search_detail');return false;">
+								<bean:write name="waitingListBean" property="patientName" /> </a> <input
+									type="button" value="Update" name="update_<%=ctr%>"
+									style="font-size: 7pt;"
+									onClick="updateWaitingList('<bean:write name="waitingListBean" property="waitingListID" />',<%=ctr%>);" />
+								</td>
+								<td class="<%=styleClass%>"><html:textarea cols="45"
+									name="waitingListBean" property="note" indexed="true"
+									styleClass="data3" onblur="setParameters(this);" /></td>
+								<td class="<%=styleClass%>"><html:text
+									name="waitingListBean" property="onListSince" indexed="true"
+									styleClass="data3" onblur="setParameters(this);"
+									onchange="setParameters(this);" /> <img
+									src="../images/cal.gif" id="referral_date_cal_<%=ctr%>">
+								</td>
+								<script type="text/javascript">
 Calendar.setup({ inputField : "waitingListBean[<%=ctr%>].onListSince", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal_<%=ctr%>", singleClick : true, step : 1 });
-</script>                                  
-                                        <td class="<%=styleClass%>">
-                                            <html:select property="selectedProvider" styleClass="data3">                                                
-                                                <html:options collection="allProviders" property="providerID" labelProperty="providerName"/>
-                                            </html:select> 
-                                            <a href=# onClick ="popupPage(<%=ctr%>,'<bean:write name="waitingListBean" property="patientName" />',
+</script>
+								<td class="<%=styleClass%>"><html:select
+									property="selectedProvider" styleClass="data3">
+									<html:options collection="allProviders" property="providerID"
+										labelProperty="providerName" />
+								</html:select> <a href=#
+									onClick="popupPage(<%=ctr%>,'<bean:write name="waitingListBean" property="patientName" />',
                                                                           '<bean:write name="waitingListBean" property="demographicNo"/>',
                                                                           '<bean:write name="today"/>',400,780,
                                                                           '../schedule/scheduleflipview.jsp?originalpage=../oscarWaitingList/DisplayWaitingList.jsp');return false;">
-                                                                          make_appt
-                                            </a>
-                                        </td>
-                                        <td class="<%=styleClass%>">
-                                            <a href=# onClick ="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="WLId"/>');">remove</a>
-                                        </td>
-                                    </tr>   
-                                    </logic:iterate>                                    
-                                </td>
-                            </tr>
-                        </table>
-                        <table>
-                            <tr>
-                            
-                                <td><input type="button" name="closeWindow" value="<bean:message key="global.btnClose"/>"  style="font-size:8pt;" onClick="window.close()"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            </td>
-            <td class="MainTableBottomRowRightColumn">
+								make_appt </a></td>
+								<td class="<%=styleClass%>"><a href=#
+									onClick="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="WLId"/>');">remove</a>
+								</td>
+							</tr>
+						</logic:iterate>
+						</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
 
-            </td>
-        </tr>
-    </table>
-    </html:form>
-   
+							<td><input type="button" name="closeWindow"
+								value="<bean:message key="global.btnClose"/>"
+								style="font-size: 8pt;" onClick="window.close()"></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
+</html:form>
+
 </body>
 </html:html>

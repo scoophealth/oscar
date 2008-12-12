@@ -20,9 +20,7 @@
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
- */
-
- /* styles.css -- Style sheet for the UI prototype.
+ */ /* styles.css -- Style sheet for the UI prototype.
 
 	Colours used:
 		#A9A9A9 = darkgray
@@ -31,391 +29,377 @@
 		#000000 = black
 		#FF8C00 = darkorange
 */
-
-BODY
-{
-    FONT-SIZE: Normal;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+BODY {
+	FONT-SIZE: Normal;
+	FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
 }
 
-TABLE
-{
+TABLE {
 	FONT-SIZE: x-small;
 }
 
-TH
-{
-    FONT-SIZE: small;
-    font-weight: bold;
+TH {
+	FONT-SIZE: small;
+	font-weight: bold;
 }
 
-A IMG
-{
-    border: 0px;
+A IMG {
+	border: 0px;
 }
 
 H3 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 .box {
-    border-top:1px;
-    border-left:1px;
-    border-right:1px;
-    border-bottom:1px;
+	border-top: 1px;
+	border-left: 1px;
+	border-right: 1px;
+	border-bottom: 1px;
 }
 
-.ControlTextarea
-{
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+.ControlTextarea {
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 100%;
 }
 
-.FakeLink
-{
-    text-align:right;
-   font-size:80%;
+.FakeLink {
+	text-align: right;
+	font-size: 80%;
 }
+
 .Head {
-    background-color:#BBBBBB;
-    padding-top:5px;
-    padding-bottom:5px;
-    width:100%;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 100%;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
-
-.RowTop
-{
-    font-size:9px;
-    font-variant:small-caps;
-    font:bold;
+.RowTop {
+	font-size: 9px;
+	font-variant: small-caps;
+	font: bold;
 }
 
-.ControlPushButton
-{
-		font-size: 80%;
-		font-family: Verdana, Tahoma, Arial, sans-serif;
+.ControlPushButton {
+	font-size: 80%;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
 }
 
-.Header
-{
-        font-weight:bold;
-        font-size: 80%;
-        background-color:#6699cc;
+.Header {
+	font-weight: bold;
+	font-size: 80%;
+	background-color: #6699cc;
 }
+
 /*These are my additions************************/
 H4 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 H3 {
-    font-size: x-small;
-    font-weight: bold;
-    margin-bottom: -10px;
+	font-size: x-small;
+	font-weight: bold;
+	margin-bottom: -10px;
 }
 
 TH {
-    font-size: small;
-    font-weight: bold;
+	font-size: small;
+	font-weight: bold;
 }
 
 .doctorInfo {
-    font-size: x-small;
-    text-decoration: bold;
-    background-color: #A39FC4;
+	font-size: x-small;
+	text-decoration: bold;
+	background-color: #A39FC4;
 }
 
-.encounterTable
-{
-    background-color: #EBEAF2;
+.encounterTable {
+	background-color: #EBEAF2;
 }
 
 .patientInfo {
-    font-size: small;
-    text-decoration: bold;
-    background-color: #CBC9E0;
-    /*#CBC9E0;*/
+	font-size: small;
+	text-decoration: bold;
+	background-color: #CBC9E0;
+	/*#CBC9E0;*/
 }
 
-.ControlTextarea
-{
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+.ControlTextarea {
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 100%;
 }
 
 .ControlSelect {
-    font-family: Verdana, Tahoma, Arial, sans-serif;
-    font-size:80%;
-    width:100%;
-}
-.LeftTable
-{
-    width:100%;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	font-size: 80%;
+	width: 100%;
 }
 
-.BodyStyle
-{
-    margin-left:0;
-    margin-right:0;
-    margin-top:0;
+.LeftTable {
+	width: 100%;
 }
 
-.MainTable
-{
-    border-collapse: collapse;
-    border-color:#111111;
-    border-width:0;
-    padding-bottom:0;
-    padding-top:0;
-    padding-left:0;
-    padding-right:0;
-    width:100%;
-    font-size:80%;
-}
-.MainTableTopRowLeftColumn
-{
-    background-color:#003399;   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    height:34px;
-    max-width:130px;
-    font-size: 110%;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-.MainTableBottomRowLeftColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-bottom: 2px solid #A9A9A9;
-    height:4px;
-    max-width:130px;
-
-}
-.MainTableLeftColumn
-{   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    max-width:130px;
+.BodyStyle {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
 }
 
-.MainTableTopRowRightColumn
-{
-    border-right: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    background-color:#003399;   
-    height:34px;
+.MainTable {
+	border-collapse: collapse;
+	border-color: #111111;
+	border-width: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	font-size: 80%;
 }
-.MainTableBottomRowRightColumn
-{
-    border-bottom: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
-    height:4px;
+
+.MainTableTopRowLeftColumn {
+	background-color: #003399;
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	height: 34px;
+	max-width: 130px;
+	font-size: 110%;
+	font-weight: bold;
+	color: #FFFFFF;
 }
-.MainTableRightColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    height:34px;
+
+.MainTableBottomRowLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-bottom: 2px solid #A9A9A9;
+	height: 4px;
+	max-width: 130px;
 }
-.TopStatusBar
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:800;
+
+.MainTableLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	max-width: 130px;
 }
-.TopStatusBarShort
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:500;
+
+.MainTableTopRowRightColumn {
+	border-right: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	background-color: #003399;
+	height: 34px;
 }
-.Title
-{
-    font-weight:bold;  
-    font-size:110%;  
-    color:white;
-    background-color:#6699cc;
+
+.MainTableBottomRowRightColumn {
+	border-bottom: 2px solid #A9A9A9;
+	border-right: 2px solid #A9A9A9;
+	height: 4px;
 }
+
+.MainTableRightColumn {
+	border-right: 2px solid #A9A9A9;
+	height: 34px;
+}
+
+.TopStatusBar {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 800;
+}
+
+.TopStatusBarShort {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 500;
+}
+
+.Title {
+	font-weight: bold;
+	font-size: 110%;
+	color: white;
+	background-color: #6699cc;
+}
+
 .fieldBox {
-    font-family: tahoma, helvetica;
-    background-color:"#ddddff";
+	font-family: tahoma, helvetica;
+	background-color: "#ddddff";
 }
+
 .note {
-    font-size:80%; 
-    color:#3366CC;
+	font-size: 80%;
+	color: #3366CC;
 }
+
 .data {
-    background-color:#F7F7F7;
-    font-size:80%;
+	background-color: #F7F7F7;
+	font-size: 80%;
 }
 
 .data2 {
-    background-color:#F7F7F7;
-    color:#3366CC;
-    font-size: 9px;
+	background-color: #F7F7F7;
+	color: #3366CC;
+	font-size: 9px;
 }
+
 .data3 {
-    color:#15120B;
-    font-size: 11px;
+	color: #15120B;
+	font-size: 11px;
 }
+
 .data4 {
-    background-color:#F7F7F7;
-    color:#3366CC;
-    font-size: 12px;
+	background-color: #F7F7F7;
+	color: #3366CC;
+	font-size: 12px;
 }
 
 .data5 {
-	background-color:#FDFEC7;	
-    color:#3366CC;
-    font-size: 9px;
+	background-color: #FDFEC7;
+	color: #3366CC;
+	font-size: 9px;
 }
 
 div.topBox {
-    margin-top:2px;
-    padding:0px;
-    background-color: #FFFFFF;
-/*    margin-left:3px;
+	margin-top: 2px;
+	padding: 0px;
+	background-color: #FFFFFF;
+	/*    margin-left:3px;
     margin-right:3px;*/
-    border-left: 1px solid #6699cc;   
-    border-right: 1px solid #6699cc;
-    border-bottom: 1px solid #6699cc;
+	border-left: 1px solid #6699cc;
+	border-right: 1px solid #6699cc;
+	border-bottom: 1px solid #6699cc;
 }
 
-div.leftBox{
-   clear:both;
-   width:100%;   
-   margin-top:2px;   
-   /*margin-left:3px;
+div.leftBox {
+	clear: both;
+	width: 100%;
+	margin-top: 2px;
+	/*margin-left:3px;
    margin-right:1px;   
    /*float: left;
    border-left: 1px solid #6699cc;   
    border-right: 1px solid #6699cc;
    border-bottom: 1px solid #6699cc; */
-   background-color: #FFFFFF;
+	background-color: #FFFFFF;
 }
 
 span.footnote {
-    background-color: #ccccee;
-    border: 1px solid #000;
-    width: 4px;
+	background-color: #ccccee;
+	border: 1px solid #000;
+	width: 4px;
 }
 
 div.topBox h3 a {
-    color: white;
-    text-decoration: none;
+	color: white;
+	text-decoration: none;
 }
 
-div.topBox h3 {  
-   background-color: #6699cc; 
-   /*font-size: 1.0em;*/
-   font-size: 9px;
-   /*font-variant:small-caps;*/
-   color: white;
-   font-weight:bold;
-   margin-top:0px;
-   padding-top:0px;
-   margin-bottom:0px;
-   padding-bottom:0px;
-   padding-left:5px;
-   /*padding-right:5px;*/
+div.topBox h3 {
+	background-color: #6699cc;
+	/*font-size: 1.0em;*/
+	font-size: 9px;
+	/*font-variant:small-caps;*/
+	color: white;
+	font-weight: bold;
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	/*padding-right:5px;*/
 }
 
-div.topBox ul{ 
-       /*border-top: 1px solid #F11;*/
-       /*border-bottom: 1px solid #F11;*/
-       /*font-size: 1.0em;*/
-       font-size: 9px;
-       list-style:circle inside;
-       padding-left:1px;
-       margin-left:1px;    
-       margin-top:0px;
-       padding-top:1px;
-       margin-bottom:0px;
-       padding-bottom:0px;	
+div.topBox ul { /*border-top: 1px solid #F11;*/
+	/*border-bottom: 1px solid #F11;*/ /*font-size: 1.0em;*/
+	font-size: 9px;
+	list-style: circle inside;
+	padding-left: 1px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 }
 
-div.topBox li {
-/*padding-right: 15px;*/
-white-space: nowrap;
+div.topBox li { /*padding-right: 15px;*/
+	white-space: nowrap;
 }
 
 div.leftBox h3 a {
-    color: white;
-    text-decoration: none;
+	color: white;
+	text-decoration: none;
 }
 
-div.leftBox h3 {  
-   background-color: #6699cc; 
-   /*font-size: 1.0em;*/
-   font-size: 9px;
-   /*font-variant:small-caps;*/
-   color: white;
-   font-weight:bold;
-   margin-top:0px;
-   padding-top:0px;
-   margin-bottom:0px;
-   padding-bottom:0px;
-   padding-left:5px;
-   /*padding-right:5px;*/
+div.leftBox h3 {
+	background-color: #6699cc;
+	/*font-size: 1.0em;*/
+	font-size: 9px;
+	/*font-variant:small-caps;*/
+	color: white;
+	font-weight: bold;
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	/*padding-right:5px;*/
 }
 
-div.leftBox ul{ 
-       /*border-top: 1px solid #F11;*/
-       /*border-bottom: 1px solid #F11;*/
-       /*font-size: 1.0em;*/
-       font-size: 9px;
-       list-style:none;
-       list-style-type:none; 
-       list-style-position:outside;       
-       padding-left:1px;
-       margin-left:1px;    
-       margin-top:0px;
-       padding-top:1px;
-       margin-bottom:0px;
-       padding-bottom:0px;	
+div.leftBox ul { /*border-top: 1px solid #F11;*/
+	/*border-bottom: 1px solid #F11;*/ /*font-size: 1.0em;*/
+	font-size: 9px;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	padding-left: 1px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 }
 
-div.leftBox li {
-/*padding-right: 15px;*/
-white-space: nowrap;
+div.leftBox li { /*padding-right: 15px;*/
+	white-space: nowrap;
 }
 
 /* popup menu styles for forms */
-.menu { 
-    position: absolute; 
-    visibility: hidden; 
-    background-color: #6699cc; 
-    layer-background-color: #6699cc; 
-    color: white; 
-    border-left: 1px solid black; 
-    border-top: 1px solid black; 
-    border-bottom: 3px solid black; 
-    border-right: 3px solid black; 
-    padding: 3px; 
-    z-index: 101;    
-    font-size: 9px;
-}            
-.menuItemright { 
-    float: right; 
-    color:white; 
-    text-decoration: none; 
+.menu {
+	position: absolute;
+	visibility: hidden;
+	background-color: #6699cc;
+	layer-background-color: #6699cc;
+	color: white;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-bottom: 3px solid black;
+	border-right: 3px solid black;
+	padding: 3px;
+	z-index: 101;
+	font-size: 9px;
 }
-.menuItemleft { 
-    float: left; 
-    color:white; 
-    text-decoration: none; 
+
+.menuItemright {
+	float: right;
+	color: white;
+	text-decoration: none;
+}
+
+.menuItemleft {
+	float: left;
+	color: white;
+	text-decoration: none;
 }

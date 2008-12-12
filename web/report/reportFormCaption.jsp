@@ -20,9 +20,10 @@
 <%
   if (session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*, oscar.oscarReport.data.*" %>
-  <%@ page import="oscar.login.*" %>
-  <%@ page import="org.apache.commons.lang.*" %>
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*, oscar.oscarReport.data.*"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="org.apache.commons.lang.*"%>
 <%
 String reportId = request.getParameter("id")!=null ? request.getParameter("id") : "0";
 String tableName = request.getParameter("tableName")!=null ? request.getParameter("tableName") : "";
@@ -57,17 +58,15 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 Vector vecTableField = new Vector();
 vecTableField = tableObj.getTableNameCaption(tableName);
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        Report List
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <script language="JavaScript">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title>Report List</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<script language="JavaScript">
 
 		<!--
 		function setfocus() {
@@ -92,28 +91,29 @@ vecTableField = tableObj.getTableNameCaption(tableName);
 		//-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <center>
-      </center>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr BGCOLOR="#CCCCFF">
-          <td><%=reportName%> Caption</td>
-          <td width="10%" align="right" nowrap>
-<% if("demographic".equals(tableName) ) {%>
-          <a href="reportFormDemoConfig.jsp?id=<%=reportId%>&tableName=<%=tableName%>&formTableName=<%=formTableName%>&configTableName=<%=configTableName%>">Back to the Configuration</a>
-<% } else {%>
-          <a href="reportFormConfig.jsp?id=<%=reportId%>&tableName=<%=tableName%>">Back to the Configuration</a>
-<% }%>
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<center></center>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr BGCOLOR="#CCCCFF">
+		<td><%=reportName%> Caption</td>
+		<td width="10%" align="right" nowrap>
+		<% if("demographic".equals(tableName) ) {%> <a
+			href="reportFormDemoConfig.jsp?id=<%=reportId%>&tableName=<%=tableName%>&formTableName=<%=formTableName%>&configTableName=<%=configTableName%>">Back
+		to the Configuration</a> <% } else {%> <a
+			href="reportFormConfig.jsp?id=<%=reportId%>&tableName=<%=tableName%>">Back
+		to the Configuration</a> <% }%>
+		</td>
+	</tr>
+</table>
 
-      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-		<tr><td width="70%">
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td width="70%">
 
 		<table width="100%" border="0" cellspacing="1" cellpadding="2">
-<%
+			<%
 for(int i=0; i<vecTableField.size(); i++) {
 	String color = i%2==0? "#EEEEFF" : "";
 	String captionName = (String)vecTableField.get(i);
@@ -127,25 +127,29 @@ for(int i=0; i<vecTableField.size(); i++) {
 	}
 	if(fieldCaption.length()>1) {color="gold";action = "Update";}
 %>
-		<form method="post" name="baseurl<%=i%>" action="reportFormCaption.jsp">
-		  <tr bgcolor="<%=color%>">
-		<td width="50%"><input type="text" name="caption" value="<%=fieldCaption%>" size="36"/></td>
-		<td width="30%" nowrap><%=fieldName%></td>
-		<td align="center"><input type="submit" name="submit" value="<%=action%>" /></td>
-		<input type="hidden" name="name" value="<%=fieldName%>">
-		<input type="hidden" name="id" value="<%=reportId%>">
-		<input type="hidden" name="tableName" value="<%=tableName%>">
-		<input type="hidden" name="formTableName" value="<%=formTableName%>">
-		<input type="hidden" name="configTableName" value="<%=configTableName%>">
-		  </tr>
-		</form>
-<% } %>
+			<form method="post" name="baseurl<%=i%>"
+				action="reportFormCaption.jsp">
+			<tr bgcolor="<%=color%>">
+				<td width="50%"><input type="text" name="caption"
+					value="<%=fieldCaption%>" size="36" /></td>
+				<td width="30%" nowrap><%=fieldName%></td>
+				<td align="center"><input type="submit" name="submit"
+					value="<%=action%>" /></td>
+				<input type="hidden" name="name" value="<%=fieldName%>">
+				<input type="hidden" name="id" value="<%=reportId%>">
+				<input type="hidden" name="tableName" value="<%=tableName%>">
+				<input type="hidden" name="formTableName" value="<%=formTableName%>">
+				<input type="hidden" name="configTableName"
+					value="<%=configTableName%>">
+			</tr>
+			</form>
+			<% } %>
 		</table>
-		</td><td>
+		</td>
+		<td></td>
+	</tr>
+</table>
 
-		</td></tr>
-	</table>
 
-
-    </body>
-  </html:html>
+</body>
+</html:html>

@@ -24,11 +24,11 @@
  */
 --%>
 
-<%@ page language="java" %>
+<%@ page language="java"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 
 <%
@@ -54,13 +54,15 @@ final int INITIAL_DISPLAY=20;
 %>
 
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
@@ -75,11 +77,13 @@ if ( demographic_no != null ) {
 
 
 %>
-<jsp:useBean id="DisplayMessagesBeanId" scope="session" class="oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean" />
+<jsp:useBean id="DisplayMessagesBeanId" scope="session"
+	class="oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean" />
 <% DisplayMessagesBeanId.setProviderNo(bean.getProviderNo());
 bean.nullAttachment();%>
 <jsp:setProperty name="DisplayMessagesBeanId" property="*" />
-<jsp:useBean id="ViewMessageForm" scope="session" class="oscar.oscarMessenger.pageUtil.MsgViewMessageForm"/>
+<jsp:useBean id="ViewMessageForm" scope="session"
+	class="oscar.oscarMessenger.pageUtil.MsgViewMessageForm" />
 
 
 
@@ -89,42 +93,9 @@ bean.nullAttachment();%>
 <head>
 <html:base />
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<title>
-<bean:message key="oscarMessenger.DisplayMessages.title"/>
+<title><bean:message key="oscarMessenger.DisplayMessages.title" />
 </title>
-<style type="text/css">
-td.messengerButtonsA{
-    /*background-color: #6666ff;*/
-    /*background-color: #6699cc;*/
-    background-color: #003399;
-}
-td.messengerButtonsD{
-    /*background-color: #84c0f4;*/
-    background-color: #555599;
-}
-a.messengerButtons{
-    color: #ffffff;
-    font-size: 9pt;
-    text-decoration: none;
-}
-
-
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
 function BackToOscar()
@@ -145,165 +116,143 @@ function unlink(){
 
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarMessenger.DisplayMessages.msgMessenger"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            <div class="DivContentTitle">Messages related to <%=demographic_name%> </div>                         
-                        </td>
-                        <td  >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarMessenger.DisplayMessages.msgMessenger" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>
+				<div class="DivContentTitle">Messages related to <%=demographic_name%>
+				</div>
+				</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table width="100%">
+			<tr>
+				<td>
+				<table cellspacing=3>
+					<tr>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a
+									href="javascript:BackToOscar()" class="messengerButtons"><bean:message
+									key="oscarMessenger.DisplayMessages.btnExit" /></a></td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-                <table width="100%">
-                    <tr>
-                        <td>
-                            <table  cellspacing=3 >
-                                <tr>
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                        <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.DisplayMessages.btnExit"/></a>
-                                        </td></tr></table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
 
 
+			<tr>
+				<td>
+				<%String strutsAction = "/oscarMessenger/DisplayDemographicMessages.do?demographic_no="+demographic_no; %>
 
-                    <tr>
-                        <td>    
-                         <%String strutsAction = "/oscarMessenger/DisplayDemographicMessages.do?demographic_no="+demographic_no; %>
+				<html:form action="<%=strutsAction%>">
 
-                         <html:form action="<%=strutsAction%>" >                        
-
-                            <table border="0" width="80%" cellspacing="1">
-                                <tr>
-                                    <th bgcolor="#DDDDFF" width="75">
-                                    &nbsp;
-                                    </th>                                    
-                                    <th align="left" bgcolor="#DDDDFF">
-                                      <% if (moreMessages.equals("true")){%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=from&moreMessages=true"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                            </html:link>
-                                       <%}else{%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=from&moreMessages=false"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                            </html:link>
-                                       <%}%>
-                                    </th>
-                                    <th align="left" bgcolor="#DDDDFF">
-                                        <% if (moreMessages.equals("true")){%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=subject&moreMessages=true"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
-                                            </html:link>
-                                        <%}else{%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=subject&moreMessages=false"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
-                                            </html:link>
-                                        <%}%>
-                                    </th>
-                                    <th align="left" bgcolor="#DDDDFF">
-                                        <% if (moreMessages.equals("true")){%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=date&moreMessages=true"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
-                                            </html:link>
-                                        <%}else{%>
-                                            <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=date&moreMessages=false"  >
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
-                                            </html:link>
-                                        <%}%>
-                                    </th>                                    
-                                </tr>
-                                <% //java.util.Vector theMessages = new java.util.Vector() ;
+					<table border="0" width="80%" cellspacing="1">
+						<tr>
+							<th bgcolor="#DDDDFF" width="75">&nbsp;</th>
+							<th align="left" bgcolor="#DDDDFF">
+							<% if (moreMessages.equals("true")){%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=from&moreMessages=true">
+								<bean:message key="oscarMessenger.DisplayMessages.msgFrom" />
+							</html:link> <%}else{%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=from&moreMessages=false">
+								<bean:message key="oscarMessenger.DisplayMessages.msgFrom" />
+							</html:link> <%}%>
+							</th>
+							<th align="left" bgcolor="#DDDDFF">
+							<% if (moreMessages.equals("true")){%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=subject&moreMessages=true">
+								<bean:message key="oscarMessenger.DisplayMessages.msgSubject" />
+							</html:link> <%}else{%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=subject&moreMessages=false">
+								<bean:message key="oscarMessenger.DisplayMessages.msgSubject" />
+							</html:link> <%}%>
+							</th>
+							<th align="left" bgcolor="#DDDDFF">
+							<% if (moreMessages.equals("true")){%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=date&moreMessages=true">
+								<bean:message key="oscarMessenger.DisplayMessages.msgDate" />
+							</html:link> <%}else{%> <html:link
+								page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=date&moreMessages=false">
+								<bean:message key="oscarMessenger.DisplayMessages.msgDate" />
+							</html:link> <%}%>
+							</th>
+						</tr>
+						<% //java.util.Vector theMessages = new java.util.Vector() ;
                                    java.util.Vector theMessages2 = new java.util.Vector() ;
                                    theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
                                    String msgCount = Integer.toString(theMessages2.size());
                                 %>
-                                <!--   for loop Control Initiliation variabe changed to nextMessage   -->
-                            <%for (int i = 0; i < theMessages2.size() ; i++) {  
+						<!--   for loop Control Initiliation variabe changed to nextMessage   -->
+						<%for (int i = 0; i < theMessages2.size() ; i++) {  
                                         oscar.oscarMessenger.data.MsgDisplayMessage dm;
                                         dm = (oscar.oscarMessenger.data.MsgDisplayMessage) theMessages2.get(i);
                                         String isLastMsg = "false";
                             %>
-                                <tr>
-                                    <td bgcolor="#EEEEFF" width="75">
-                                    
-                                        <html:checkbox property="messageNo" value="<%=dm.messageId %>" />
-                                        <% String atta = dm.attach;
+						<tr>
+							<td bgcolor="#EEEEFF" width="75"><html:checkbox
+								property="messageNo" value="<%=dm.messageId %>" /> <% String atta = dm.attach;
                                             if (atta.equals("1")){
-                                            %><img src="img/clip4.JPG"><%
+                                            %><img src="img/clip4.JPG">
+							<%
                                             }
-                                         %>
-                                    
-                                        &nbsp;                                    
-                                    </td>
-                                    
-                                    <td bgcolor="#EEEEFF">
-                                    <%= dm.sentby  %>
-                                    </td>
-                                    <td bgcolor="#EEEEFF">
-                                    <a href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?from=encounter&demographic_no=<%=demographic_no%>&msgCount=<%=msgCount%>&orderBy=<%=orderby%>&messageID=<%=dm.messageId%>&messagePosition=<%=dm.messagePosition%>">
-                                        <%=dm.thesubject%>
-                                    </a>
+                                         %> &nbsp;</td>
 
-                                    </td>
-                                    <td bgcolor="#EEEEFF">
-                                    <%= dm.thedate  %>
-                                    </td>
-                                </tr>
-                            <%}%>
-                            </table>  
-                            <table width="80%">
-                                <tr>
-                                    <td>                                        
-                                        <input type="button" value="Unlink Messages" onclick="javascript:unlink();">
-                                    </td>
-                                    <%
+							<td bgcolor="#EEEEFF"><%= dm.sentby  %></td>
+							<td bgcolor="#EEEEFF"><a
+								href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?from=encounter&demographic_no=<%=demographic_no%>&msgCount=<%=msgCount%>&orderBy=<%=orderby%>&messageID=<%=dm.messageId%>&messagePosition=<%=dm.messagePosition%>">
+							<%=dm.thesubject%> </a></td>
+							<td bgcolor="#EEEEFF"><%= dm.thedate  %></td>
+						</tr>
+						<%}%>
+					</table>
+					<table width="80%">
+						<tr>
+							<td><input type="button" value="Unlink Messages"
+								onclick="javascript:unlink();"></td>
+							<%
                                        if (moreMessages.equals("false") && theMessages2.size()>=INITIAL_DISPLAY){
                                     %>
-                                    <td width="60%"></td>
-                                    <td  align="left">
-                                        <html:link page="/oscarMessenger/DisplayMessages.jsp?moreMessages=true"  >
-                                        <bean:message key="oscarMessenger.DisplayMessages.msgAllMessage"/>
-                                        </html:link>
-                                    </td>
-                                    <%}%>
-                                </tr>
-                              </table>
-                                    
-                         </html:form>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+							<td width="60%"></td>
+							<td align="left"><html:link
+								page="/oscarMessenger/DisplayMessages.jsp?moreMessages=true">
+								<bean:message key="oscarMessenger.DisplayMessages.msgAllMessage" />
+							</html:link></td>
+							<%}%>
+						</tr>
+					</table>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+				</html:form></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

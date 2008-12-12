@@ -21,7 +21,8 @@
  * Ontario, Canada 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
 <%
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
 if ( bean == null ){
@@ -38,16 +39,16 @@ if ( bean == null ){
             +"\nDate: "+ht.get("news_date")
             +"\nATC: "+ht.get("atc")
             +"\nNews: "+ht.get("body"));%>
-            
-            <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <b><%=ht.get("name")%></b>&nbsp;&nbsp;News Source: <%=ht.get("news_source")%><br/>
-            <%=ht.get("body")%><br/>
-            Date: <%=ht.get("news_date")%>
-            </div>
 
-      <%}
+<div
+	style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
+<b><%=ht.get("name")%></b>&nbsp;&nbsp;News Source: <%=ht.get("news_source")%><br />
+<%=ht.get("body")%><br />
+Date: <%=ht.get("news_date")%></div>
+
+<%}
     }else if(bulletins == null){ %>
-        <div>MyDrug to MyDrug Bulletin Service not available</div>                          
+<div>MyDrug to MyDrug Bulletin Service not available</div>
 <%  }   %>
 <%!
     

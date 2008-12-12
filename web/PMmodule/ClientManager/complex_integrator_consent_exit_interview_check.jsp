@@ -21,10 +21,10 @@
 	else
 	{
 		%>
-			<script>
+<script>
 				window.opener.location=window.opener.location;
 				window.close();
 			</script>
-		<%
+<%
 	}
 %>

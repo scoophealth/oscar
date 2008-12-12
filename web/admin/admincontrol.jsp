@@ -23,13 +23,15 @@
  * Ontario, Canada
  */
 --%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
+	reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -38,9 +40,10 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   //instatiate/configure the main bean, forward the request to the output file
 %>
 
-<%@ page errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbconnection.jsp" %>
+<%@ page errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbconnection.jsp"%>
 
 <%
   String orderby="", limit="", limit1="", limit2="";

@@ -28,17 +28,20 @@
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%> 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*" errorPage="errorpage.jsp" %>
+%>
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <html>
-<head> 
-<title> BILLING HISTORY</title>
-<link rel="stylesheet" href="billingON.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<head>
+<title>BILLING HISTORY</title>
+<link rel="stylesheet" href="billingON.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 
 <script language="JavaScript">
 <!--
@@ -48,27 +51,30 @@
 </head>
 <body topmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr class="myDarkGreen">
-    <th><font color="#FFFFFF">BILLING HISTORY 
-      </font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr class="myDarkGreen">
+		<th><font color="#FFFFFF">BILLING HISTORY </font></th>
+	</tr>
 </table>
 
 <table width="95%" border="0">
-  <tr><td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%> (<%=request.getParameter("demographic_no")%>)</td></tr>
+	<tr>
+		<td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%>
+		(<%=request.getParameter("demographic_no")%>)</td>
+	</tr>
 </table>
-<CENTER><table width="100%" border="0" bgcolor="#ffffff"> 
-<tr class="myYellow">
-      <TH width="12%"><b>Invoice No.</b></TH>
-      <TH width="15%"><b>Appt. Date</b></TH>      
-      <TH width="10%"><b>Bill Type</b></TH>
-      <TH width="35%"><b>Service Code</b></TH>
-      <TH width="5%"><b>Dx</b></TH>
-      <TH width="8%"><b>Fee</b></TH>
-      <TH><b>COMMENTS</b></TH>
-</tr>
-<% // new billing records
+<CENTER>
+<table width="100%" border="0" bgcolor="#ffffff">
+	<tr class="myYellow">
+		<TH width="12%"><b>Invoice No.</b></TH>
+		<TH width="15%"><b>Appt. Date</b></TH>
+		<TH width="10%"><b>Bill Type</b></TH>
+		<TH width="35%"><b>Service Code</b></TH>
+		<TH width="5%"><b>Dx</b></TH>
+		<TH width="8%"><b>Fee</b></TH>
+		<TH><b>COMMENTS</b></TH>
+	</tr>
+	<% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 String limit = " limit " + strLimit1 + "," + strLimit2;
 List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
@@ -90,26 +96,28 @@ for(int i=0; i<aL.size(); i=i+2) {
 		strBillType = "";
 	}
 %>
-<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
-      <td width="5%" align="center" height="25">
-        <a href=# onClick="popupPage(600,800, 'billingONDisplay.jsp?billing_no=<%=obj.getId()%>')"><%=obj.getId()%></a>
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r">
-        <a href=# onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
-        </security:oscarSec>
-      </td>
-      <td align="center"><%=obj.getBilling_date()%> <%--=obj.getBilling_time()--%></td>
-      <td align="center"><%=strBillType%></td>
-      <td align="center"><%=itObj.getService_code()%></td>
-      <td align="center"><%=itObj.getDx()%></td>
-      <td align="center"><%=obj.getTotal()%></td>
-    
-      <% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
-      <td align="center" >&nbsp;</td>
-      <% } else { %>
-      <td align="center" ><a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
-      <% } %>
-</tr>
-<% 
+	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
+		<td width="5%" align="center" height="25"><a href=#
+			onClick="popupPage(600,800, 'billingONDisplay.jsp?billing_no=<%=obj.getId()%>')"><%=obj.getId()%></a>
+		<security:oscarSec roleName="<%=roleName$%>"
+			objectName="_admin,_admin.billing" rights="r">
+			<a href=#
+				onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
+		</security:oscarSec></td>
+		<td align="center"><%=obj.getBilling_date()%> <%--=obj.getBilling_time()--%></td>
+		<td align="center"><%=strBillType%></td>
+		<td align="center"><%=itObj.getService_code()%></td>
+		<td align="center"><%=itObj.getDx()%></td>
+		<td align="center"><%=obj.getTotal()%></td>
+
+		<% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
+		<td align="center">&nbsp;</td>
+		<% } else { %>
+		<td align="center"><a
+			href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+		<% } %>
+	</tr>
+	<% 
 }
 %>
 
@@ -120,27 +128,30 @@ for(int i=0; i<aL.size(); i=i+2) {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
 }
 
 //}
 %>
 <p>
-  <hr width="100%">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href=# onClick="javascript:history.go(-1);return false;"> <img src="images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back </a></td>
-      <td align="right"><a href="" onClick="self.close();">Close the Window<img src="images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+<hr width="100%">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href=# onClick="javascript:history.go(-1);return false;">
+		<img src="images/leftarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"> Back </a></td>
+		<td align="right"><a href="" onClick="self.close();">Close
+		the Window<img src="images/rightarrow.gif" border="0" width="25"
+			height="20" align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

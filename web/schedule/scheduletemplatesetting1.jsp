@@ -28,11 +28,15 @@
   
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean"
+	scope="session" />
 <%  if(!scheduleMainBean.getBDoConfigure()) { %>
-<%@ include file="scheduleMainBeanConn.jsp" %>  
+<%@ include file="scheduleMainBeanConn.jsp"%>
 <% } %>
 
 <% scheduleRscheduleBean.clear(); %>
@@ -136,40 +140,45 @@ function addDataString1() {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<form method="post" name="schedule" action="schedulecreatedate.jsp" onSubmit="addDataString();return(addDataString1())">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<form method="post" name="schedule" action="schedulecreatedate.jsp"
+	onSubmit="addDataString();return(addDataString1())">
 
 <table border="0" width="100%">
-<tr>
-      <td width="150" bgcolor="#009966"> 
-        <!--left column-->
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd"> 
-            <th align="CENTER" bgcolor="#009966">
-              <p>&nbsp;</p>
-              <p><font face="Helvetica" color="#FFFFFF">SCHEDULE TEMPLATE SETTING</font></p>
-            </th>
-    </tr>
-  </table>
-        <table width="98%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td>
-              <p>&nbsp;</p>
-              <p><font size="-1">1. Use the current R Schedule or select a different one from the select field.</font></p>
-              <p><font size="-1">2. Type in the start date and end date for this 
-                R Schedule.</font></p>
-              <p><font size="-1">3. Check the day of week which is AVAILABLE.</font></p>
-              <p><font size="-1">4. Click the 'Next' button.</font></p>
-              <p>&nbsp;</p>
-              <p>&nbsp;</p>
-            </td>
-          </tr>
-        </table>
+	<tr>
+		<td width="150" bgcolor="#009966"><!--left column-->
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr bgcolor="#486ebd">
+				<th align="CENTER" bgcolor="#009966">
+				<p>&nbsp;</p>
+				<p><font face="Helvetica" color="#FFFFFF">SCHEDULE
+				TEMPLATE SETTING</font></p>
+				</th>
+			</tr>
+		</table>
+		<table width="98%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+				<p>&nbsp;</p>
+				<p><font size="-1">1. Use the current R Schedule or
+				select a different one from the select field.</font></p>
+				<p><font size="-1">2. Type in the start date and end date
+				for this R Schedule.</font></p>
+				<p><font size="-1">3. Check the day of week which is
+				AVAILABLE.</font></p>
+				<p><font size="-1">4. Click the 'Next' button.</font></p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				</td>
+			</tr>
+		</table>
 
-      </td><td>
+		</td>
+		<td>
 
-<center>
-<%
+		<center>
+		<%
   int rowsAffected = 0;
   GregorianCalendar now = new GregorianCalendar();
   int year = now.get(Calendar.YEAR);
@@ -223,175 +232,178 @@ function addDataString1() {
   }
 
 %>
-          <p>&nbsp;</p>
-          <table width="95%" border="0" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr> 
-              <td bgcolor="#CCFFCC"><b><%=request.getParameter("provider_name")%></b> 
-                <input type="hidden" name="provider_name" value="<%=request.getParameter("provider_name")%>">
-              </td>
-              <td bgcolor="#CCFFCC"> 
-                <div align="right">
-                  <select name="select"  onChange="selectrschedule(this)">
-                    <option value="<%=today%>" <%=request.getParameter("sdate")!=null?(today.equals(request.getParameter("sdate"))?"selected":""):""%>>Current R Schedule</option>
-<%
+		<p>&nbsp;</p>
+		<table width="95%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td bgcolor="#CCFFCC"><b><%=request.getParameter("provider_name")%></b>
+				<input type="hidden" name="provider_name"
+					value="<%=request.getParameter("provider_name")%>"></td>
+				<td bgcolor="#CCFFCC">
+				<div align="right"><select name="select"
+					onChange="selectrschedule(this)">
+					<option value="<%=today%>"
+						<%=request.getParameter("sdate")!=null?(today.equals(request.getParameter("sdate"))?"selected":""):""%>>Current
+					R Schedule</option>
+					<%
   param1[2]=today; //query for the future date
   rsgroup = scheduleMainBean.queryResults(param1,"search_rschedule_future");
  	while (rsgroup.next()) { 
 %>
-                  <option value="<%=rsgroup.getString("sdate")%>" <%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):""%> >
-                  <%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
-<%
+					<option value="<%=rsgroup.getString("sdate")%>"
+						<%=request.getParameter("sdate")!=null?(rsgroup.getString("sdate").equals(request.getParameter("sdate"))?"selected":""):""%>>
+					<%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
+					<%
  	}
 %>
-                  </select>
-                </div>
-              </td>
-            </tr>
-            <tr> 
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr> 
-              <td colspan="2">Date: </td>
-              <!--is not available every day of month:-->
-            </tr>
-            <tr> 
-              <td bgcolor="#CCFFCC" colspan="2">&nbsp; from<font size="-2">(yyyy-mm-dd)</font>: 
-                <input type="text" name="syear" size="4" maxlength="4" value="<%=syear%>">
-                - 
-                <input type="text" name="smonth" size="2" maxlength="2" value="<%=smonth%>">
-                - 
-                <input type="text" name="sday" size="2" maxlength="2" value="<%=sday%>">
-                &nbsp; &nbsp; to<font size="-2">(yyyy-mm-dd)</font>: 
-                <input type="text" name="eyear" size="4" maxlength="4" value="<%=eyear%>">
-                - 
-                <input type="text" name="emonth" size="2" maxlength="2" value="<%=emonth%>">
-                - 
-                <input type="text" name="eday" size="2" maxlength="2" value="<%=eday%>">
-                <input type="hidden" name="day_of_month1" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month2" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month3" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month4" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month5" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month6" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month7" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month8" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month9" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month10" size="3" maxlength="2" onBlur = "addDataString1()">
-                <input type="hidden" name="day_of_month" value="">
-                <input type="hidden" name="day_of_year" value="">
-              </td>
-            </tr>
-            <tr> 
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr> 
-              <td colspan="2">is available EVERY<font size="-2"> (Day of Week)</font>:</td>
-            </tr>
-            <tr> 
-              <td nowrap align="right" colspan="2"> 
-                <table border=0 width=80%>
-                  <tr bgcolor="#CCFFCC"> 
-                    <td> 
-                      <p><font size="-1"> 
-                        <input type="checkbox" name="checksun" value="1" onClick = "addDataString()" <%=param2[0]%>>
-                        Sun. </font> 
-                    </td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="sunfrom" size="5" maxlength="5" value="<%=param3[0][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="sunto" size="5" maxlength="5" value="<%=param3[0][1]%>">
-                      </font> </td>
-                  </tr>
-                  <tr> 
-                    <td> <font size="-1"> 
-                      <input type="checkbox" name="checkmon" value="2" onClick = "addDataString()" <%=param2[1]%>>
-                      Mon.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="monfrom" size="5" maxlength="5" value="<%=param3[1][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="monto" size="5" maxlength="5" value="<%=param3[1][1]%>">
-                      </font></td>
-                  </tr>
-                  <tr bgcolor="#CCFFCC"> 
-                    <td><font size="-1"> 
-                      <input type="checkbox" name="checktue" value="3" onClick = "addDataString()" <%=param2[2]%>>
-                      Tue.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="tuefrom" size="5" maxlength="5" value="<%=param3[2][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="tueto" size="5" maxlength="5" value="<%=param3[2][1]%>">
-                      </font></td>
-                  </tr>
-                  <tr> 
-                    <td><font size="-1"> 
-                      <input type="checkbox" name="checkwed" value="4" onClick = "addDataString()" <%=param2[3]%>>
-                      Wed.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="wedfrom" size="5" maxlength="5" value="<%=param3[3][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="wedto" size="5" maxlength="5" value="<%=param3[3][1]%>">
-                      </font></td>
-                  </tr>
-                  <tr bgcolor="#CCFFCC"> 
-                    <td><font size="-1"> 
-                      <input type="checkbox" name="checkthu" value="5" onClick = "addDataString()" <%=param2[4]%>>
-                      Thu.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="thufrom" size="5" maxlength="5" value="<%=param3[4][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="thuto" size="5" maxlength="5" value="<%=param3[4][1]%>">
-                      </font></td>
-                  </tr>
-                  <tr> 
-                    <td><font size="-1"> 
-                      <input type="checkbox" name="checkfri" value="6" onClick = "addDataString()" <%=param2[5]%>>
-                      Fri.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="frifrom" size="5" maxlength="5" value="<%=param3[5][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="frito" size="5" maxlength="5" value="<%=param3[5][1]%>">
-                      </font></td>
-                  </tr>
-                  <tr bgcolor="#CCFFCC"> 
-                    <td><font size="-1"> 
-                      <input type="checkbox" name="checksat" value="7" onClick = "addDataString()" <%=param2[6]%>>
-                      Sat.</font></td>
-                    <td><font size="-1">from: 
-                      <input type="text" name="satfrom" size="5" maxlength="5" value="<%=param3[6][0]%>">
-                      &nbsp;&nbsp;to: 
-                      <input type="text" name="satto" size="5" maxlength="5" value="<%=param3[6][1]%>">
-                      </font></td>
-                  </tr>
-                </table>
-              </td>
-              <input type="hidden" name="day_of_week" value="">
-              <input type="hidden" name="avail_hour" value="">
-            </tr>
-            <tr> 
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr> 
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr> 
-              <td bgcolor="#CCFFCC" colspan="2"> 
-                <div align="right"> 
-                  <input type="hidden" name="provider_no" value="<%=request.getParameter("provider_no")%>">
-                  <input type="hidden" name="available" value="1">
-                  <input type="submit" name="Submit" value=" Next ">
-                  <input type="button" name="Cancel" value="Cancel" onClick="window.close()">
-                </div>
-              </td>
-            </tr>
-          </table>
-<p> 
-
-          <p>&nbsp;</p>
-        </center>
-  </td></tr>
+				</select></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2">Date:</td>
+				<!--is not available every day of month:-->
+			</tr>
+			<tr>
+				<td bgcolor="#CCFFCC" colspan="2">&nbsp; from<font size="-2">(yyyy-mm-dd)</font>:
+				<input type="text" name="syear" size="4" maxlength="4"
+					value="<%=syear%>"> - <input type="text" name="smonth"
+					size="2" maxlength="2" value="<%=smonth%>"> - <input
+					type="text" name="sday" size="2" maxlength="2" value="<%=sday%>">
+				&nbsp; &nbsp; to<font size="-2">(yyyy-mm-dd)</font>: <input
+					type="text" name="eyear" size="4" maxlength="4" value="<%=eyear%>">
+				- <input type="text" name="emonth" size="2" maxlength="2"
+					value="<%=emonth%>"> - <input type="text" name="eday"
+					size="2" maxlength="2" value="<%=eday%>"> <input
+					type="hidden" name="day_of_month1" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month2" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month3" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month4" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month5" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month6" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month7" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month8" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month9" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month10" size="3" maxlength="2"
+					onBlur="addDataString1()"> <input type="hidden"
+					name="day_of_month" value=""> <input type="hidden"
+					name="day_of_year" value=""></td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2">is available EVERY<font size="-2"> (Day
+				of Week)</font>:</td>
+			</tr>
+			<tr>
+				<td nowrap align="right" colspan="2">
+				<table border=0 width=80%>
+					<tr bgcolor="#CCFFCC">
+						<td>
+						<p><font size="-1"> <input type="checkbox"
+							name="checksun" value="1" onClick="addDataString()"
+							<%=param2[0]%>> Sun. </font>
+						</td>
+						<td><font size="-1">from: <input type="text"
+							name="sunfrom" size="5" maxlength="5" value="<%=param3[0][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="sunto" size="5"
+							maxlength="5" value="<%=param3[0][1]%>"> </font></td>
+					</tr>
+					<tr>
+						<td><font size="-1"> <input type="checkbox"
+							name="checkmon" value="2" onClick="addDataString()"
+							<%=param2[1]%>> Mon.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="monfrom" size="5" maxlength="5" value="<%=param3[1][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="monto" size="5"
+							maxlength="5" value="<%=param3[1][1]%>"> </font></td>
+					</tr>
+					<tr bgcolor="#CCFFCC">
+						<td><font size="-1"> <input type="checkbox"
+							name="checktue" value="3" onClick="addDataString()"
+							<%=param2[2]%>> Tue.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="tuefrom" size="5" maxlength="5" value="<%=param3[2][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="tueto" size="5"
+							maxlength="5" value="<%=param3[2][1]%>"> </font></td>
+					</tr>
+					<tr>
+						<td><font size="-1"> <input type="checkbox"
+							name="checkwed" value="4" onClick="addDataString()"
+							<%=param2[3]%>> Wed.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="wedfrom" size="5" maxlength="5" value="<%=param3[3][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="wedto" size="5"
+							maxlength="5" value="<%=param3[3][1]%>"> </font></td>
+					</tr>
+					<tr bgcolor="#CCFFCC">
+						<td><font size="-1"> <input type="checkbox"
+							name="checkthu" value="5" onClick="addDataString()"
+							<%=param2[4]%>> Thu.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="thufrom" size="5" maxlength="5" value="<%=param3[4][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="thuto" size="5"
+							maxlength="5" value="<%=param3[4][1]%>"> </font></td>
+					</tr>
+					<tr>
+						<td><font size="-1"> <input type="checkbox"
+							name="checkfri" value="6" onClick="addDataString()"
+							<%=param2[5]%>> Fri.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="frifrom" size="5" maxlength="5" value="<%=param3[5][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="frito" size="5"
+							maxlength="5" value="<%=param3[5][1]%>"> </font></td>
+					</tr>
+					<tr bgcolor="#CCFFCC">
+						<td><font size="-1"> <input type="checkbox"
+							name="checksat" value="7" onClick="addDataString()"
+							<%=param2[6]%>> Sat.</font></td>
+						<td><font size="-1">from: <input type="text"
+							name="satfrom" size="5" maxlength="5" value="<%=param3[6][0]%>">
+						&nbsp;&nbsp;to: <input type="text" name="satto" size="5"
+							maxlength="5" value="<%=param3[6][1]%>"> </font></td>
+					</tr>
+				</table>
+				</td>
+				<input type="hidden" name="day_of_week" value="">
+				<input type="hidden" name="avail_hour" value="">
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td bgcolor="#CCFFCC" colspan="2">
+				<div align="right"><input type="hidden" name="provider_no"
+					value="<%=request.getParameter("provider_no")%>"> <input
+					type="hidden" name="available" value="1"> <input
+					type="submit" name="Submit" value=" Next "> <input
+					type="button" name="Cancel" value="Cancel" onClick="window.close()">
+				</div>
+				</td>
+			</tr>
+		</table>
+		<p>
+		<p>&nbsp;</p>
+		</center>
+		</td>
+	</tr>
 </table>
 
 

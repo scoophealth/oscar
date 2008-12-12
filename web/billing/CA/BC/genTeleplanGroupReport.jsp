@@ -1,3 +1,4 @@
+
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../../../logout.jsp");
@@ -28,11 +29,13 @@
  */
 -->
 
-<%@ page import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"  %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.oscarBilling.ca.bc.MSP.*"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 
 <% GregorianCalendar now=new GregorianCalendar();
@@ -203,6 +206,6 @@
  %>
 
 
-<jsp:forward page='billingTeleplanGroupReport.jsp' >
-<jsp:param name="year" value='' />
+<jsp:forward page='billingTeleplanGroupReport.jsp'>
+	<jsp:param name="year" value='' />
 </jsp:forward>

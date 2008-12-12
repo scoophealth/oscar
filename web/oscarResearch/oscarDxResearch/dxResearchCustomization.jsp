@@ -23,26 +23,20 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.title"/>
-</title>
-<style type="text/css">
-body{
-    FONT-SIZE: 12px;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
-}
-</style>
-<html:base/>
+<title><bean:message
+	key="oscarResearch.oscarDxResearch.dxCustomization.title" /></title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<html:base />
 <script type="text/javascript">
 
 function setfocus(){
@@ -54,31 +48,39 @@ function setfocus(){
 
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="setfocus();">
-<html:errors/>
+<html:errors />
 <table width="100%" bgcolor="#EEEEFF">
-    <tr bgcolor="#000000"> 
-        <td class="subject" colspan="2">
-        &nbsp;&nbsp;&nbsp;<bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch"/>
-        </td>
-    </tr>
-    <tr>
-    <td class=heading colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxCustomization.title"/></td>
-    </tr>
-    <tr><td>&nbsp;</td></tr>
-    <tr>
-        <td valign="center">
-            <input type="button" class="mbttn" style="width:180px" onClick="popupPage(230,600,'dxResearchNewQuickList.jsp')" value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.addNewQuickList"/>"/>            
-        </td>
-        <td valign="center">
-            <input type="button" class="mbttn" style="width:180px" onClick="popupPage(230,600,'dxResearchLoadQuickList.do')" value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.editQuickList"/>"/>
-        </td>
-    </tr>
-    <tr><td></td></tr>
-    <tr>
-       <td>
-            <input type="button" class="mbttn" onClick="javascript:window.close()" value="<bean:message key="global.btnClose"/>"/>            
-        </td>
-    </tr>
+	<tr bgcolor="#000000">
+		<td class="subject" colspan="2">&nbsp;&nbsp;&nbsp;<bean:message
+			key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch" /></td>
+	</tr>
+	<tr>
+		<td class=heading colspan="2"><bean:message
+			key="oscarResearch.oscarDxResearch.dxCustomization.title" /></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td valign="center"><input type="button" class="mbttn"
+			style="width: 180px"
+			onClick="popupPage(230,600,'dxResearchNewQuickList.jsp')"
+			value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.addNewQuickList"/>" />
+		</td>
+		<td valign="center"><input type="button" class="mbttn"
+			style="width: 180px"
+			onClick="popupPage(230,600,'dxResearchLoadQuickList.do')"
+			value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.editQuickList"/>" />
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+	</tr>
+	<tr>
+		<td><input type="button" class="mbttn"
+			onClick="javascript:window.close()"
+			value="<bean:message key="global.btnClose"/>" /></td>
+	</tr>
 </table>
 </body>
 </html:html>

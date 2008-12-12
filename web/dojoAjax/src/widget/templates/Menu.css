@@ -1,29 +1,26 @@
 .dojoMenu {
-	border:1px solid #000000;
-	list-style-type:none;
-	margin:0;
-	padding:0;
+	border: 1px solid #000000;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 	padding-bottom: 1px;
-	background-color:#f4f4f4;
+	background-color: #f4f4f4;
 	font-size: 8pt;
 }
 
 .dojoMenuSeparator {
-	list-style-type:none;
-	margin:0;
-	padding:1px 0;
-	border-bottom:1px solid #000000;
-	line-height:1px;
-	height:1px;
+	list-style-type: none;
+	margin: 0;
+	padding: 1px 0;
+	border-bottom: 1px solid #000000;
+	line-height: 1px;
+	height: 1px;
 }
 
-li:hover.dojoMenuSeparator {
-	background-color:#e5e5e5;
-	cursor:default;
+li:hover .dojoMenuSeparator {
+	background-color: #e5e5e5;
+	cursor: default;
 }
-
-
-
 
 .dojoContextMenu {
 	position: absolute;

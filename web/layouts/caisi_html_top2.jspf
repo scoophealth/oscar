@@ -1,46 +1,54 @@
 <%@ include file="/taglibs.jsp"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>Program Management Module</title>
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/tigris.css" />' />
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
+<head>
+<title>Program Management Module</title>
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/tigris.css" />' />
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/displaytag.css" />' />
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
 
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
-				
-		<script type="text/javascript">
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
+
+<script type="text/javascript">
 			var djConfig = {
 				isDebug: false,
 				parseWidgets: false,
 				searchIds: ["addPopupTimePicker"]
 			};
 		</script>
-	    
-		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />">
+
+<script type="text/javascript"
+	src="<html:rewrite page="/dojoAjax/dojo.js" />">
 		</script>
-		
-		<script type="text/javascript" language="JavaScript">
+
+<script type="text/javascript" language="JavaScript">
             dojo.require("dojo.date.format");
 			dojo.require("dojo.widget.*");
 			dojo.require("dojo.validate.*");
 		</script>
-		
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>		
-	</head>
-	<body>
-		<div class="composite">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-				<td colspan="2" width="100%">
-					<%@include file="/PMmodule/Header.jsp"%>
-				</td></tr>
-				<tr valign="top">
-					<td id="leftcol" width="20%">
-						<%@include file="/PMmodule/navigation.jsp"%>
-					</td>
-					<td width="80%">
-						<div class="body">
+
+<script type="text/javascript"
+	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+</head>
+<body>
+<div class="composite">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td colspan="2" width="100%"><%@include
+			file="/PMmodule/Header.jsp"%></td>
+	</tr>
+	<tr valign="top">
+		<td id="leftcol" width="20%"><%@include
+			file="/PMmodule/navigation.jsp"%></td>
+		<td width="80%">
+		<div class="body">

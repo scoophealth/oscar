@@ -11,9 +11,11 @@
   if (request.getParameter("limit1") != null) strLimit1 = request.getParameter("limit1");
   if (request.getParameter("limit2") != null) strLimit2 = request.getParameter("limit2");
 %>
-<%@page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp"%>
+<%@page import="java.util.*, java.sql.*, java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
 <%@include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%@include file="dbBilling.jsp"%>
 <!--
   /*
@@ -54,60 +56,40 @@
 
 //-->
 
-</SCRIPT><!--base target="pt_srch_main"-->
+</SCRIPT>
+<!--base target="pt_srch_main"-->
 </head>
 <body bgproperties="fixed" class="regtext">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#000000">
-    <th align=CENTER NOWRAP>
-      <font face="Helvetica" color="#FFFFFF">BILLING HISTORY</font>
-    </th>
-  </tr>
+	<tr bgcolor="#000000">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">BILLING
+		HISTORY</font></th>
+	</tr>
 </table>
 <!--%@ include file="zcppfulltitlesearch.htm" %-->
 <table width="95%" border="0">
-  <tr>
-    <td align="left">
-      <i>Results for Demographic</i>
-      :
-<%=request.getParameter("last_name")%>      ,
-<%=request.getParameter("first_name")%>      (
-<%=request.getParameter("demographic_no")%>      )
-</td>
-  </tr>
+	<tr>
+		<td align="left"><i>Results for Demographic</i> : <%=request.getParameter("last_name")%>
+		, <%=request.getParameter("first_name")%> ( <%=request.getParameter("demographic_no")%>
+		)</td>
+	</tr>
 </table>
 <hr>
 <CENTER>
-  <table width="100%" border="2" class="regtext">
-    <tr class="SectionHead">
-      <th>
-        <b>INVOICE#</b>
-      </th>
-      <th>LINE#</th>
-      <th>SVC CODE</th>
-      <th>
-        <b>AMT</b>
-      </th>
-      <th>
-        <b>DX CODE</b>
-      </th>
-      <th>
-        <b>APP. DATE</b>
-      </th>
-      <th>
-        <b>TYPE</b>
-      </th>
-      <th>
-        <b>STATUS</b>
-      </th>
-      <th>
-        <b>PRACT.</b>
-      </th>
-      <th>
-        <b>COMMENTS</b>
-      </th>
-    </tr>
-  <%
+<table width="100%" border="2" class="regtext">
+	<tr class="SectionHead">
+		<th><b>INVOICE#</b></th>
+		<th>LINE#</th>
+		<th>SVC CODE</th>
+		<th><b>AMT</b></th>
+		<th><b>DX CODE</b></th>
+		<th><b>APP. DATE</b></th>
+		<th><b>TYPE</b></th>
+		<th><b>STATUS</b></th>
+		<th><b>PRACT.</b></th>
+		<th><b>COMMENTS</b></th>
+	</tr>
+	<%
     String proFirst = "";
     String proLast = "";
     String proNo = "";
@@ -202,59 +184,55 @@
         }
         rsbillingmaster_count.close();
   %>
-    <tr align="center" class="<%=bodd?"InnerSectionHead":""%>">
-    <%if (!currentBillingNo.equals(billno)) {    %>
-      <td rowspan="<%=billingmaster_count%>">
-        <a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=billno%>&receipt=yes')"><%=billno%>        </a>
-        <br/>
-        AMT:
-<%=fmt.format(billAmt)%>        <br/>
-      </td>
-    <%}    %>
-      <td><%=apptMainBean.getString(rs,"billingmaster_no")%>      </td>
-      <td><%=apptMainBean.getString(rs,"billing_code")%>      </td>
-      <td><%=fmt.format(rs.getDouble("bill_amount"))%>      </td>
-      <td><%=apptMainBean.getString(rs,"dx_code1")%>        &nbsp
-</td>
-      <td><%=apptMainBean.getString(rs,"billing_date")%>      </td>
-      <td><%=apptMainBean.getString(rs,"billingtype")%>      </td>
-      <td><%=billType%>      </td>
-      <td><%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%>      </td>
-    <%if (billCode.substring(0, 1).compareTo("B") == 0 || billCode.substring(0, 1).compareTo("S") == 0) {    %>
-      <td>&nbsp;</td>
-    <%} else {    %>
-      <td>
-        <a href="billingDeleteNoAppt.jsp?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a>
-      </td>
-    <%}    %>
-    </tr>
-  <%
+	<tr align="center" class="<%=bodd?"InnerSectionHead":""%>">
+		<%if (!currentBillingNo.equals(billno)) {    %>
+		<td rowspan="<%=billingmaster_count%>"><a href=#
+			onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=billno%>&receipt=yes')"><%=billno%>
+		</a> <br />
+		AMT: <%=fmt.format(billAmt)%> <br />
+		</td>
+		<%}    %>
+		<td><%=apptMainBean.getString(rs,"billingmaster_no")%></td>
+		<td><%=apptMainBean.getString(rs,"billing_code")%></td>
+		<td><%=fmt.format(rs.getDouble("bill_amount"))%></td>
+		<td><%=apptMainBean.getString(rs,"dx_code1")%> &nbsp</td>
+		<td><%=apptMainBean.getString(rs,"billing_date")%></td>
+		<td><%=apptMainBean.getString(rs,"billingtype")%></td>
+		<td><%=billType%></td>
+		<td><%=apptMainBean.getString(rs,"last_name")+","+apptMainBean.getString(rs,"first_name")%>
+		</td>
+		<%if (billCode.substring(0, 1).compareTo("B") == 0 || billCode.substring(0, 1).compareTo("S") == 0) {    %>
+		<td>&nbsp;</td>
+		<%} else {    %>
+		<td><a
+			href="billingDeleteNoAppt.jsp?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a>
+		</td>
+		<%}    %>
+	</tr>
+	<%
     currentBillingNo = billno;
     } //else
         } //while
         apptMainBean.closePstmtConn();
   %>
-  </table>
-  <br>
+</table>
+<br>
 <%
   int nLastPage = 0, nNextPage = 0;
   nNextPage = Integer.parseInt(strLimit2) + Integer.parseInt(strLimit1);
   nLastPage = Integer.parseInt(strLimit1) - Integer.parseInt(strLimit2);
   if (nLastPage >= 0) {
-%>
-  <a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a>
-  |
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
       if (nItems == Integer.parseInt(strLimit2)) {
-%>
-  <a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">Next Page</a>
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">Next
+Page</a> <%
   }
 %>
-  <p>
-  <%@include file="../../../demographic/zfooterbackclose.jsp"%>
-
+<p><%@include file="../../../demographic/zfooterbackclose.jsp"%>
 </center>
 </body>
 </html>

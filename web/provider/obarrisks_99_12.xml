@@ -1,64 +1,76 @@
 <?xml version="1.0"?>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */
+	-->
 <riskFactors>
-  <section>
-    <section_title>Other Risk Factors (check if present)</section_title>
-    <subsection>
-      <subsection_title>Past OB History</subsection_title>
-      <risk name="risk101" riskno="107" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/stillbirth">Stillbirth</risk>
-      <risk name="risk102" riskno="108" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/sga">SGA</risk>
-      <risk name="risk103" riskno="109" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Peterm labour or PROM</risk>
-      <risk name="risk104" riskno="110" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/gbs">Infant with invasive GBStrep</risk>
-      <risk name="risk105" riskno="111" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/abruption">Abruption</risk>
-      <risk name="risk106" riskno="112" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/htn">HTN disease of pregnancy</risk>
-      <risk name="risk107" riskno="113" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/csection">Previous C/S</risk>
-    </subsection>
-    <subsection>
-      <subsection_title>Other Medical Problems</subsection_title>
-      <risk name="risk128" riskno="128" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/seizure">Seizure Disorder</risk>
-    </subsection>
-  </section>
-  <section>
-    <section_title>Discussion Resources</section_title>
-    <risk name="risk163" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/hivtesting">HIV testing</risk>
-    <risk name="risk164" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/msstesting">MSS testing</risk>
-    <risk name="risk167" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/toxoplasmosis">Toxoplasmosis (cat litter)</risk>
-    <risk name="risk168" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/varicella">Varicella/Parvovirus risk</risk>
-    <risk name="risk169" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/exercise">Exercise</risk>
-    <subsection>
-      <subsection_title>Nutrition</subsection_title>
-      <heading href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/nutrition">General Nutrition</heading>
-      <risk name="risk181" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/folate">If less than 12 wks continue .4mg folic acid</risk>
-      <risk name="risk182" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/calcium">Calcium sources (1500mg/day)</risk>
-      <risk name="risk183" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/diet">Balanced diet</risk>
-      <risk name="risk184" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/nausea">Vomiting</risk>
-      <risk name="risk185" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/constipation">Constipation</risk>
-    </subsection>
-  </section>
+	<section>
+		<section_title>Other Risk Factors (check if present)</section_title>
+		<subsection>
+			<subsection_title>Past OB History</subsection_title>
+			<risk name="risk101" riskno="107"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/stillbirth">Stillbirth</risk>
+			<risk name="risk102" riskno="108"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/sga">SGA</risk>
+			<risk name="risk103" riskno="109"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Peterm labour or PROM</risk>
+			<risk name="risk104" riskno="110"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/gbs">Infant with invasive GBStrep</risk>
+			<risk name="risk105" riskno="111"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/abruption">Abruption</risk>
+			<risk name="risk106" riskno="112"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/htn">HTN disease of pregnancy</risk>
+			<risk name="risk107" riskno="113"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/csection">Previous C/S</risk>
+		</subsection>
+		<subsection>
+			<subsection_title>Other Medical Problems</subsection_title>
+			<risk name="risk128" riskno="128"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/seizure">Seizure Disorder</risk>
+		</subsection>
+	</section>
+	<section>
+		<section_title>Discussion Resources</section_title>
+		<risk name="risk163"
+			href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/hivtesting">HIV testing</risk>
+		<risk name="risk164"
+			href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/msstesting">MSS testing</risk>
+		<risk name="risk167"
+			href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/toxoplasmosis">Toxoplasmosis (cat litter)</risk>
+		<risk name="risk168"
+			href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/varicella">Varicella/Parvovirus risk</risk>
+		<risk name="risk169"
+			href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/exercise">Exercise</risk>
+		<subsection>
+			<subsection_title>Nutrition</subsection_title>
+			<heading
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/nutrition">General Nutrition</heading>
+			<risk name="risk181"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/folate">If less than 12 wks continue .4mg folic acid</risk>
+			<risk name="risk182"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/calcium">Calcium sources (1500mg/day)</risk>
+			<risk name="risk183"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/diet">Balanced diet</risk>
+			<risk name="risk184"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/nausea">Vomiting</risk>
+			<risk name="risk185"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/constipation">Constipation</risk>
+		</subsection>
+	</section>
 </riskFactors>
 
 

@@ -23,15 +23,15 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
     Integer latestFrmId = (Integer) session.getAttribute("latestFrmId");
     session.removeAttribute("latestFrmId");
 %>
 <html:html locale="true">
-    <head>
-        <script language=javascript>
+<head>
+<script language=javascript>
           self.close();
 <%  if (latestFrmId==null) { %>
           self.opener.location.reload();
@@ -39,8 +39,9 @@
 	  self.opener.location = "EditIntake.jsp?id=<%=latestFrmId%>";
 <%  } %>
         </script>
-    </head>
-    <body>
-       <a href="javascript:window.close();"><bean:message key="oscarEncounter.close.btnHere"/></a>
-    </body>
+</head>
+<body>
+<a href="javascript:window.close();"><bean:message
+	key="oscarEncounter.close.btnHere" /></a>
+</body>
 </html:html>

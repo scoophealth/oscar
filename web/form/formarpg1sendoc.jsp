@@ -1,3 +1,4 @@
+
 <%
 	
 
@@ -13,25 +14,30 @@
     java.util.Properties props = rec.getARPrintRecord(demoNo, formId);
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="oscar.oscarEncounter.data.*,oscar.oscarEncounter.pageUtil.EctSessionBean"%>
-<%@ page import="org.oscarcitizens.oscarClient.main.*" %>
-<%@ page import="org.oscarcitizens.util.*" %>
-<%@ page import="javax.xml.soap.*" %>
-<%@ page import="javax.xml.messaging.*" %>
-<%@ page import="javax.xml.transform.*" %>
-<%@ page import="javax.xml.transform.dom.*" %>
-<%@ page import="org.w3c.dom.*" %>
-<%@ page import="org.xml.sax.InputSource" %>
-<%@ page import="javax.xml.parsers.*" %>
-<%@ page import="javax.xml.transform.*" %>
-<%@ page import="javax.xml.transform.dom.*" %>
-<%@ page import="javax.xml.transform.stream.*" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page
+	import="oscar.oscarEncounter.data.*,oscar.oscarEncounter.pageUtil.EctSessionBean"%>
+<%@ page import="org.oscarcitizens.oscarClient.main.*"%>
+<%@ page import="org.oscarcitizens.util.*"%>
+<%@ page import="javax.xml.soap.*"%>
+<%@ page import="javax.xml.messaging.*"%>
+<%@ page import="javax.xml.transform.*"%>
+<%@ page import="javax.xml.transform.dom.*"%>
+<%@ page import="org.w3c.dom.*"%>
+<%@ page import="org.xml.sax.InputSource"%>
+<%@ page import="javax.xml.parsers.*"%>
+<%@ page import="javax.xml.transform.*"%>
+<%@ page import="javax.xml.transform.dom.*"%>
+<%@ page import="javax.xml.transform.stream.*"%>
 
 
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_master","select pin from demographic where demographic_no=?" }, 
@@ -65,7 +71,7 @@
 -->
 <html>
 <head>
-<title>ENCOUNTER SHEET </title>
+<title>ENCOUNTER SHEET</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <script language="JavaScript">
@@ -74,7 +80,7 @@
 //-->
 </SCRIPT>
 </head>
-<body onLoad="setfocus()" >
+<body onLoad="setfocus()">
 <%
 	String pin = null;
 	ResultSet rs = null ;

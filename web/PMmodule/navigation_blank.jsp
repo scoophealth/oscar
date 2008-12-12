@@ -21,11 +21,12 @@
 * Toronto, Ontario, Canada
 */
 -->
-<%@ include file="/taglibs.jsp" %>
-<%@ page import="java.util.*" %>
-<%@ page import="org.springframework.web.context.WebApplicationContext" %>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 
 <%
@@ -48,10 +49,5 @@
 </script>
 
 <div id="projecttools" class="toolgroup">
-<div class="label">
-    <strong>Navigator</strong>
-</div>
-<div class="body">
-&nbsp; &nbsp;
-</div>
-
+<div class="label"><strong>Navigator</strong></div>
+<div class="body">&nbsp; &nbsp;</div>

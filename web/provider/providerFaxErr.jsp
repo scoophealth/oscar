@@ -24,49 +24,39 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <head>
 
-<html:base/>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<html:base />
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 
-<title>
-<bean:message key="provider.editRxFax.title"/>
-</title>
+<title><bean:message key="provider.editRxFax.title" /></title>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.editRxFax.msgPrefs"/>
-            </td>
-            <td style="color:white" class="MainTableTopRowRightColumn">
-                <bean:message key="provider.editRxFax.msgProviderFaxNumber"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td style="color:red" class="MainTableRightColumn">
-                <bean:message key="provider.editRxFax.msgError"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-             
-            </td>
-        </tr>
-    </table>
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.editRxFax.msgPrefs" /></td>
+		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message
+			key="provider.editRxFax.msgProviderFaxNumber" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td style="color: red" class="MainTableRightColumn"><bean:message
+			key="provider.editRxFax.msgError" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

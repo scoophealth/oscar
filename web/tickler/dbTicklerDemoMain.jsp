@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbTicker.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbTicker.jsp"%>
 <%
  String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
  String parentAjaxId = request.getParameter("parentAjaxId")==null?"":request.getParameter("parentAjaxId");
@@ -37,11 +39,12 @@ String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");
 if (temp== null){
 %>
- <jsp:forward page='ticklerDemoMain.jsp' >     
-         <jsp:param name="demoview" value='<%=demoview%>' />
-         <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
-         <jsp:param name="updateParent" value="<%=updateParent%>" />
-</jsp:forward><%}else{
+<jsp:forward page='ticklerDemoMain.jsp'>
+	<jsp:param name="demoview" value='<%=demoview%>' />
+	<jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
+	<jsp:param name="updateParent" value="<%=updateParent%>" />
+</jsp:forward>
+<%}else{
 		//temp=e.nextElement().toString();
 		
 
@@ -61,8 +64,8 @@ int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
 apptMainBean.closePstmtConn();
 
 %>
- <jsp:forward page='ticklerDemoMain.jsp' >
-    <jsp:param name="demoview" value='<%=demoview%>' />
-    <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
-    <jsp:param name="updateParent" value="<%=updateParent%>" />
+<jsp:forward page='ticklerDemoMain.jsp'>
+	<jsp:param name="demoview" value='<%=demoview%>' />
+	<jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
+	<jsp:param name="updateParent" value="<%=updateParent%>" />
 </jsp:forward>

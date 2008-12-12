@@ -27,29 +27,34 @@
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat,oscar.oscarDB.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties" scope="page" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat,oscar.oscarDB.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties"
+	scope="page" />
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
-<link rel="stylesheet" href="billing.css" >
+<link rel="stylesheet" href="billing.css">
 <title>Billing Reconcilliation</title>
 </head>
- 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'> 
-	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
-	<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
-	Billing Reconcilliation - Payment Summary</font></th>
-	<th align='RIGHT'>
-	<input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print(); return false;'></th>
+		<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+		Billing Reconcilliation - Payment Summary</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 <% 
 String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
@@ -172,13 +177,14 @@ if (raNo.compareTo("") == 0 || raNo == null){
 } else {
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#333333">
-	<th align='CENTRE'><form action="genRASummary.jsp"><input type="hidden" name="rano" value="<%=raNo%>">
-	<select name="proNo">
-	<!--option value="all"  <%--=proNo.equals("all")?"selected":""--%>>All Providers</option-->
-	
-<%
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#333333">
+		<th align='CENTRE'>
+		<form action="genRASummary.jsp"><input type="hidden"
+			name="rano" value="<%=raNo%>"> <select name="proNo">
+			<!--option value="all"  <%--=proNo.equals("all")?"selected":""--%>>All Providers</option-->
+
+			<%
 	ResultSet rsdemo = null;
 	ResultSet rsdemo2 = null;
 	ResultSet rsdemo3 = null;
@@ -188,34 +194,36 @@ if (raNo.compareTo("") == 0 || raNo == null){
 		plast = rsdemo.getString("last_name");
 		pfirst = rsdemo.getString("first_name");
 %>
-	<option value="<%=pohipno%>" "selected"><%=plast%>,<%=pfirst%></option>
-<%	} %>
-	</select>
-	<input type="submit" name="submit" value="Generate"></form></th>
-</tr>
+			<option value="<%=pohipno%>""selected"><%=plast%>,<%=pfirst%></option>
+			<%	} %>
+		</select> <input type="submit" name="submit" value="Generate"></form>
+		</th>
+	</tr>
 </table>
-      
+
 <% 
 	if (proNo == null || proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){ 
 %>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
-<tr> 
-	<td width="7%" height="16">Billing No</td>
-	<td width="14%" height="16">Family Doc </td>
-	<td width="15%" height="16">Patient </td>
-	<td width="7%" height="16">HIN</td>
-	<td width="10%" height="16">Service Date </td>
-	<td width="7%" height="16">Service Code </td>
-	<!-- <td width="8%" height="16">Count</td> -->
-	<td width="7%" height="16" align=right>Invoiced</td>
-	<td width="7%" height="16" align=right>Paid</td>
-	<td width="7%" height="16" align=right>Clinic Pay </td>
-	<td width="7%" height="16" align=right>Hospital Pay </td>
-	<td width="7%" height="16" align=right>OB </td>
-	<td width="5%" height="16" align=right>Error</td>
-</tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+		<td width="7%" height="16">Billing No</td>
+		<td width="14%" height="16">Family Doc</td>
+		<td width="15%" height="16">Patient</td>
+		<td width="7%" height="16">HIN</td>
+		<td width="10%" height="16">Service Date</td>
+		<td width="7%" height="16">Service Code</td>
+		<!-- <td width="8%" height="16">Count</td> -->
+		<td width="7%" height="16" align=right>Invoiced</td>
+		<td width="7%" height="16" align=right>Paid</td>
+		<td width="7%" height="16" align=right>Clinic Pay</td>
+		<td width="7%" height="16" align=right>Hospital Pay</td>
+		<td width="7%" height="16" align=right>OB</td>
+		<td width="5%" height="16" align=right>Error</td>
+	</tr>
 
-<%
+	<%
 	String[] param = new String[2];
 	param[0] = raNo;
 	param[1] = "%";
@@ -324,92 +332,93 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			}
 %>
 
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16"  align=right><%=explain%></td>
-</tr>
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
 
 
-<%
+	<%
 		} else { // clinic && local clinic
 			if (location.compareTo("00") == 0 && wasBilledLocal(account,providerOhipNo,servicedate,servicecode)){//billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
 				dFee = Double.parseDouble(amountpay);
 				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigTotal = BigTotal.add(bdFee);
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
 
-<%
+	<%
 			} else { // other fee
 				dOFee = Double.parseDouble(amountpay);
 				bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigOTotal = BigOTotal.add(bdOFee);
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
-<%
+	<tr>
+		<td height="16"><%=account%></td>
+		<td height="16"><%=demo_docname%></td>
+		<td height="16"><%=demo_name%></td>
+		<td height="16"><%=demo_hin%></td>
+		<td height="16"><%=servicedate%></td>
+		<td height="16"><%=servicecode%></td>
+		<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+		<td height="16" align=right><%=amountsubmit%></td>
+		<td height="16" align=right><%=amountpay%></td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right>N/A</td>
+		<td height="16" align=right><%=amountOB%></td>
+		<td height="16" align=right><%=explain%></td>
+	</tr>
+	<%
 			}
 		}
 	}	 
 } else { // raNo for all providers
 %>
 
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
-<tr> 
-	<td width="7%" height="16">Billing No</td>
-	<td width="14%" height="16">Provider </td>
-	<td width="15%" height="16">Patient </td>
-	<td width="7%" height="16">HIN</td>
-	<td width="10%" height="16">Service Date </td>
-	<td width="7%" height="16">Service Code </td>
-	<!-- <td width="8%" height="16">Count</td> -->
-	<td width="7%" height="16" align=right>Invoiced</td>
-	<td width="7%" height="16" align=right>Paid</td>
-	<td width="7%" height="16" align=right>Clinic Pay </td>
-	<td width="7%" height="16" align=right>Hospital Pay </td>
-	<td width="7%" height="16" align=right>OB </td>
-	<td width="5%" height="16"  align=right>Error</td>
-</tr>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0"
+		bgcolor="#EFEFEF">
+		<tr>
+			<td width="7%" height="16">Billing No</td>
+			<td width="14%" height="16">Provider</td>
+			<td width="15%" height="16">Patient</td>
+			<td width="7%" height="16">HIN</td>
+			<td width="10%" height="16">Service Date</td>
+			<td width="7%" height="16">Service Code</td>
+			<!-- <td width="8%" height="16">Count</td> -->
+			<td width="7%" height="16" align=right>Invoiced</td>
+			<td width="7%" height="16" align=right>Paid</td>
+			<td width="7%" height="16" align=right>Clinic Pay</td>
+			<td width="7%" height="16" align=right>Hospital Pay</td>
+			<td width="7%" height="16" align=right>OB</td>
+			<td width="5%" height="16" align=right>Error</td>
+		</tr>
 
-<%
+		<%
 	String[] param = new String[2];
 	param[0] = raNo;
 	param[1] = proNo+"%";
@@ -506,68 +515,68 @@ if (raNo.compareTo("") == 0 || raNo == null){
 				BigLocalHTotal = BigLocalHTotal.add(bdHFee);
 			}
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!--<td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>         
+		<tr>
+			<td height="16"><%=account%></td>
+			<td height="16"><%=demo_docname%></td>
+			<td height="16"><%=demo_name%></td>
+			<td height="16"><%=demo_hin%></td>
+			<td height="16"><%=servicedate%></td>
+			<td height="16"><%=servicecode%></td>
+			<!--<td width="8%" height="16"><%=serviceno%></td>-->
+			<td height="16" align=right><%=amountsubmit%></td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right>N/A</td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right><%=amountOB%></td>
+			<td height="16" align=right><%=explain%></td>
+		</tr>
 
-<%
+		<%
 		} else {     
 			if (location.compareTo("00") == 0 && wasBilledLocal(account,providerOhipNo,servicedate,servicecode)){ //billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
 				dFee = Double.parseDouble(amountpay);
 				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigTotal = BigTotal.add(bdFee);
-%>   
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
+%>
+		<tr>
+			<td height="16"><%=account%></td>
+			<td height="16"><%=demo_docname%></td>
+			<td height="16"><%=demo_name%></td>
+			<td height="16"><%=demo_hin%></td>
+			<td height="16"><%=servicedate%></td>
+			<td height="16"><%=servicecode%></td>
+			<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+			<td height="16" align=right><%=amountsubmit%></td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right>N/A</td>
+			<td height="16" align=right><%=amountOB%></td>
+			<td height="16" align=right><%=explain%></td>
+		</tr>
 
-<%
+		<%
 			} else{ 
 				dOFee = Double.parseDouble(amountpay);
 				bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigOTotal = BigOTotal.add(bdOFee);
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demo_docname%></td>
-	<td height="16"><%=demo_name%></td>
-	<td height="16"><%=demo_hin%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<!-- <td width="8%" height="16"><%=serviceno%></td>-->
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right>N/A</td>
-	<td height="16" align=right><%=amountOB%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
+		<tr>
+			<td height="16"><%=account%></td>
+			<td height="16"><%=demo_docname%></td>
+			<td height="16"><%=demo_name%></td>
+			<td height="16"><%=demo_hin%></td>
+			<td height="16"><%=servicedate%></td>
+			<td height="16"><%=servicecode%></td>
+			<!-- <td width="8%" height="16"><%=serviceno%></td>-->
+			<td height="16" align=right><%=amountsubmit%></td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right>N/A</td>
+			<td height="16" align=right>N/A</td>
+			<td height="16" align=right><%=amountOB%></td>
+			<td height="16" align=right><%=explain%></td>
+		</tr>
 
-<%
+		<%
 			}
 		}
 
@@ -580,23 +589,23 @@ BigLTotal = BigLTotal.add(BigTotal);
 //BigLTotal = BigLTotal.add(BigHTotal);
 BigLTotal = BigLTotal.add(BigLocalHTotal);
 %>
-<tr bgcolor='#FFFF3E'> 
-	<td height="16"></td>
-	<td height="16"></td>
-	<td height="16"></td>
-	<td height="16"></td>
-	<td height="16"></td>
-	<td height="16">Total</td>
-	<td height="16" align=right><%=BigCTotal%></td>
-	<td height="16" align=right><%=BigPTotal%><!-- <%=BigOTotal%>--></td>
-	<td height="16" align=right><%=BigTotal%><!--<%=BigLTotal%>--></td>
-	<td height="16" align=right><%=BigHTotal%></td>
-	<td height="16" align=right><%=BigOBTotal%></td>
-	<td height="16"></td>
-</tr>
-</table>
+		<tr bgcolor='#FFFF3E'>
+			<td height="16"></td>
+			<td height="16"></td>
+			<td height="16"></td>
+			<td height="16"></td>
+			<td height="16"></td>
+			<td height="16">Total</td>
+			<td height="16" align=right><%=BigCTotal%></td>
+			<td height="16" align=right><%=BigPTotal%><!-- <%=BigOTotal%>--></td>
+			<td height="16" align=right><%=BigTotal%><!--<%=BigLTotal%>--></td>
+			<td height="16" align=right><%=BigHTotal%></td>
+			<td height="16" align=right><%=BigOBTotal%></td>
+			<td height="16"></td>
+		</tr>
+	</table>
 
-<%
+	<%
 String transaction="", content="", balancefwd="", xtotal="", other_total="", ob_total=""; 
 ResultSet rslocal = apptMainBean.queryResults(raNo, "search_rahd_content");
 while(rslocal.next()){

@@ -28,7 +28,7 @@
 		response.sendRedirect("../../logout.jsp");
 %>
 <%@ page language="java"%>
-<%@ page import="java.sql.*, oscar.oscarDB.*" %>
+<%@ page import="java.sql.*, oscar.oscarDB.*"%>
 
 <%
 //http://192.168.2.4/PDSsecurity/logindd.asp?DI=PEPPER&UN=yilee18&PW=515750564848564853485353544852485248484851575150

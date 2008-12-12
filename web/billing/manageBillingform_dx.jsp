@@ -26,11 +26,11 @@
 
 <form method="post" name="form1" action="dbManageBillingform_dx.jsp">
 <table width="75%" border="0" cellpadding="3" bgcolor="#9999CC">
-  <tr> 
-   
-       
-   
-  <% 
+	<tr>
+
+
+
+		<% 
   
  ResultSet rs=null ;
   ResultSet rs2=null ;
@@ -55,7 +55,7 @@ int rCount = 0;
    out.println("failed!!!"); 
   } else {
   %>
-  <% 
+		<% 
    while (rs.next()) {
      
       bodd=bodd?false:true; //for the color of rows
@@ -64,42 +64,54 @@ int rCount = 0;
       rCount = rCount + 1;
    }
  }          
-  %> 
-  <td >
-    <table width="100%" border="0">
-         
-           <% for(int k=0; k<15;k++){ %>
-           <tr>
-             <td><input type="text" name="diagcode<%=k%>" value="<%=service_code[k]%>" size="10" style="font-size:8pt;text-align:right;vertical-align:bottom"></td>
-           </tr>
-           <% } %>
-      </table></td>
-        <td >
-          <table width="100%" border="0">
-               
-                 <% for(int k0=15; k0<30;k0++){ %>
-                 <tr>
-                   <td><input type="text" name="diagcode<%=k0%>" value="<%=service_code[k0]%>" size="10" style="font-size:8pt;text-align:right;vertical-align:bottom"></td>
-                 </tr>
-                 <% } %>
-      </table></td>
-        <td >
-          <table width="100%" border="0">
-               
-                 <% for(int k1=30; k1<45;k1++){ %>
-                 <tr>
-                   <td><input type="text" name="diagcode<%=k1%>" value="<%=service_code[k1]%>" size="10" style="font-size:8pt;text-align:right;vertical-align:bottom"></td>
-                 </tr>
-                 <% } %>
-      </table></td>
-  <%  
+  %>
+		<td>
+		<table width="100%" border="0">
+
+			<% for(int k=0; k<15;k++){ %>
+			<tr>
+				<td><input type="text" name="diagcode<%=k%>"
+					value="<%=service_code[k]%>" size="10"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"></td>
+			</tr>
+			<% } %>
+		</table>
+		</td>
+		<td>
+		<table width="100%" border="0">
+
+			<% for(int k0=15; k0<30;k0++){ %>
+			<tr>
+				<td><input type="text" name="diagcode<%=k0%>"
+					value="<%=service_code[k0]%>" size="10"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"></td>
+			</tr>
+			<% } %>
+		</table>
+		</td>
+		<td>
+		<table width="100%" border="0">
+
+			<% for(int k1=30; k1<45;k1++){ %>
+			<tr>
+				<td><input type="text" name="diagcode<%=k1%>"
+					value="<%=service_code[k1]%>" size="10"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"></td>
+			</tr>
+			<% } %>
+		</table>
+		</td>
+		<%  
 
 %>
-  
-     
-   </tr>
-   <tr>
-   <td colspan="3"><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_service.btnUpdate"/>"><input type="hidden" name="typeid" value="<%=request.getParameter("billingform")%>"></td>
-   </tr>
- </table>
- </form>
+
+
+	</tr>
+	<tr>
+		<td colspan="3"><input type="submit" name="submit"
+			value="<bean:message key="billing.manageBillingform_service.btnUpdate"/>"><input
+			type="hidden" name="typeid"
+			value="<%=request.getParameter("billingform")%>"></td>
+	</tr>
+</table>
+</form>

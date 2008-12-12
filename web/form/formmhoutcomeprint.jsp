@@ -28,20 +28,22 @@
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
 %>
 
-<%@ page import="oscar.form.*, java.util.*" %>
-<%@ page import="java.io.FileInputStream" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.form.*, java.util.*"%>
+<%@ page import="java.io.FileInputStream"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <title>Print Mental Health Outcome</title>
-<html:base/>
+<html:base />
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
-<link rel="stylesheet" type="text/css" media="screen" href="mhStyles.css" >
+<link rel="stylesheet" type="text/css" media="screen"
+	href="mhStyles.css">
 
 <%
     Properties props = new Properties();
@@ -72,110 +74,103 @@
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="button" value="Exit" onclick="javascript:onCancel();"/>
-            <input type="button" value="Print" onclick="javascript:onPrint();"/>
-        </td>
-    </tr>
+	<tr>
+		<td align="left"><input type="button" value="Exit"
+			onclick="javascript:onCancel();" /> <input type="button"
+			value="Print" onclick="javascript:onPrint();" /></td>
+	</tr>
 </table>
 
 <table cellpadding="5" cellspacing="0">
-    <tr>
-        <th align="left">
-            <big>MENTAL HEALTH OUTCOME</big><br><br>
-        </th>
-    </tr>
-    <tr>
-        <td>
-            <table border="0" cellpadding="5" cellspacing="0" class="tableWithBorder">
-                <tr>
-                    <td>Name:</td>
-                    <td align="left"><%= props.getProperty("c_pName", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Sex:</td>
-                    <td align="left"><%= props.getProperty("c_sex", "") %>&nbsp;</td>
-                </tr>
-                </tr>
-                    <td>Address:</td>
-                    <td align="left"><%= props.getProperty("c_address", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Home Phone:</td>
-                    <td align="left"><%= props.getProperty("c_homePhone", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Birth Date <small>(yyyy/mm/dd)</small>: </td>
-                    <td align="left"><%= props.getProperty("c_birthDate", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Referral Date<small>(yyyy/mm/dd)</small>: </td>
-                    <td align="left"><%= props.getProperty("c_referralDate", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Referred By: </td>
-                    <td align="left"><%= props.getProperty("c_referredBy", "") %>&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <table>
-                <tr>
-                    <td class="mhSelect">
-                        Services Provided:<br>
-                      <% String[] sp = list.loadData("mhOutcome/ServicesProvided.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("o_sp1", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("o_sp2", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("o_sp3", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Problems Encountered:<br>
-                          <% String[] pe = list.loadData("mhOutcome/ProblemsEncountered.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("o_pe1", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("o_pe2", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("o_pe3", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe3", "---"))-1] %></b>
-                  </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Dispostion:<br>
-                        <% String[] d = list.loadData("mhOutcome/Disposition.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("o_d1", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("o_d2", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("o_d3", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Patient Not Seen:<br>
-                         <% String[] pns = list.loadData("mhOutcome/PatientNotSeen.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("o_pns1", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("o_pns2", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("o_pns3", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Comments:<br>
-                        <%= props.getProperty("o_outComments", "")%>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+	<tr>
+		<th align="left"><big>MENTAL HEALTH OUTCOME</big><br>
+		<br>
+		</th>
+	</tr>
+	<tr>
+		<td>
+		<table border="0" cellpadding="5" cellspacing="0"
+			class="tableWithBorder">
+			<tr>
+				<td>Name:</td>
+				<td align="left"><%= props.getProperty("c_pName", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Sex:</td>
+				<td align="left"><%= props.getProperty("c_sex", "") %>&nbsp;</td>
+			</tr>
+			</tr>
+			<td>Address:</td>
+			<td align="left"><%= props.getProperty("c_address", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Home Phone:</td>
+				<td align="left"><%= props.getProperty("c_homePhone", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Birth Date <small>(yyyy/mm/dd)</small>:</td>
+				<td align="left"><%= props.getProperty("c_birthDate", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Referral Date<small>(yyyy/mm/dd)</small>:</td>
+				<td align="left"><%= props.getProperty("c_referralDate", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Referred By:</td>
+				<td align="left"><%= props.getProperty("c_referredBy", "") %>&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table>
+			<tr>
+				<td class="mhSelect">Services Provided:<br>
+				<% String[] sp = list.loadData("mhOutcome/ServicesProvided.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("o_sp1", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("o_sp2", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("o_sp3", "---").equals("")?"":sp[Integer.parseInt(props.getProperty("o_sp3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Problems Encountered:<br>
+				<% String[] pe = list.loadData("mhOutcome/ProblemsEncountered.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("o_pe1", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("o_pe2", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("o_pe3", "---").equals("")?"":pe[Integer.parseInt(props.getProperty("o_pe3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Dispostion:<br>
+				<% String[] d = list.loadData("mhOutcome/Disposition.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("o_d1", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("o_d2", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("o_d3", "---").equals("")?"":d[Integer.parseInt(props.getProperty("o_d3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Patient Not Seen:<br>
+				<% String[] pns = list.loadData("mhOutcome/PatientNotSeen.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("o_pns1", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("o_pns2", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("o_pns3", "---").equals("")?"":pns[Integer.parseInt(props.getProperty("o_pns3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Comments:<br>
+				<%= props.getProperty("o_outComments", "")%></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 </table>
 <table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="button" value="Exit" onclick="javascript:onCancel();"/>
-            <input type="button" value="Print" onclick="javascript:onPrint();"/>
-        </td>
-    </tr>
+	<tr>
+		<td align="left"><input type="button" value="Exit"
+			onclick="javascript:onCancel();" /> <input type="button"
+			value="Print" onclick="javascript:onPrint();" /></td>
+	</tr>
 </table>
 
 </body>

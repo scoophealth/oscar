@@ -24,27 +24,17 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="oscar.oscarEncounter.immunization.data.EctImmImmunizationData" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.data.EctImmImmunizationData"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html>
 <head>
-<title>
-Record Immunization
-</title>
-<style type="text/css">
-.grey
-{
-    background-color: #CCCCCC;
-}
-.active
-{
-    background-color: #FFFFFF;
-}
-</style>
+<title>Record Immunization</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <%
 //System.out.println("we are here ....");
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
@@ -271,148 +261,130 @@ if(request.getParameter("name")!=null)
 </script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="loadPage();" bottommargin="0">
+<body class="BodyStyle" vlink="#0000FF" onload="loadPage();"
+	bottommargin="0">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                record immunization
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBarShort">
-                    <tr>
-                        <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
-                        </td>
-                        <td>
-                        </td>
-                        <td style="text-align:right" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'../Help.jsp')"  >Help</a> |
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            </td>
-            <td class="MainTableRightColumn">
-                <form name="/oscarEncounter/scheduleEdit">
-                    <table>
-                        <tr>
-                            <td style="font-weight:bold">
-                                &nbsp;<%=immName%>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight:bold">
-                                <input type="radio" name="chkStatus" onclick="javascript:changeStatus(0);" value="0" checked="checked"></input>
-                                    <span onclick="chkStatus[0].click()">Not Given</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight:bold">
-                                <input type="radio" name="chkStatus" onclick="javascript:changeStatus(1);" value="1"></input>
-                                    <span onclick="chkStatus[1].click()">Immunization Given</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-left:50px; border-width:2px; border-style:solid;">
-                                    <tr>
-                                        <td align="right" width="120px">Given Date: </td>
-                                        <td>
-                                            <input type="hidden" id="givenDate" />
-                                            <input type="text" id="givenYear" style="width:50px" maxlength=4 />
-                                            <b>-</b>
-                                            <select id="givenMonth">                                               
-                                                <option value="1">January</option>
-                                                <option value="2">February</option>
-                                                <option value="3">March</option>
-                                                <option value="4">April</option>
-                                                <option value="5">May</option>
-                                                <option value="6">June</option>
-                                                <option value="7">July</option>
-                                                <option value="8">August</option>
-                                                <option value="9">September</option>
-                                                <option value="10">October</option>
-                                                <option value="11">November</option>
-                                                <option value="12">December</option>
-                                            </select>
-                                            <b>-</b>
-                                            <input type=text id="givenDay" style="width:50px" maxlength=2 />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td align="right">Lot Number: </td>
-                                        <td>
-                                            <input type="text" id="lot" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td align="right">Provider: </td>
-                                        <td>
-                                            <select id="provider">
-                                                <%= providerCombo() %>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight:bold">
-                                <input type="radio" name="chkStatus" onclick="javascript:changeStatus(2);" value="2"></input>
-                                <span onclick="chkStatus[2].click()">Refused</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-left:50px; border-width:2px; border-style:solid;">
-                                    <tr>
-                                        <td align="right" width="120px">Refused Date: </td>
-                                        <td>
-                                            <input type="hidden" id="refusedDate" />
-                                            <input type="text" id="refusedYear" style="width:50px" maxlength=4 />
-                                            <b>-</b>
-                                            <select id="refusedMonth">                                                
-                                                <option value="1">January</option>
-                                                <option value="2">February</option>
-                                                <option value="3">March</option>
-                                                <option value="4">April</option>
-                                                <option value="5">May</option>
-                                                <option value="6">June</option>
-                                                <option value="7">July</option>
-                                                <option value="8">August</option>
-                                                <option value="9">September</option>
-                                                <option value="10">October</option>
-                                                <option value="11">November</option>
-                                                <option value="12">December</option>
-                                            </select>
-                                            <b>-</b>
-                                            <input type=text id="refusedDay" style="width:50px" maxlength=2 />
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <br/>
-                                <div style="font-weight: bold">Comments</div>
-                                <textarea id="comments" style='width:100%; height:80px'></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right">
-                                <br/>
-                                <input type="button" style="width:120px" onclick="javascript:saveClose();" value="Save and Close" />
-                                <input type="button" style="width:120px" onclick="javascript:window.close();" value="Cancel" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-                <%!
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">record immunization</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBarShort">
+			<tr>
+				<td class="Header"
+					style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
+					NOWRAP><%=bean.patientLastName %>, <%=bean.patientFirstName%>
+				<%=bean.patientSex%> <%=bean.patientAge%></td>
+				<td></td>
+				<td style="text-align: right" NOWRAP><a
+					href="javascript:popupStart(300,400,'../Help.jsp')">Help</a> |</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn"></td>
+		<td class="MainTableRightColumn">
+		<form name="/oscarEncounter/scheduleEdit">
+		<table>
+			<tr>
+				<td style="font-weight: bold">&nbsp;<%=immName%></td>
+			</tr>
+			<tr>
+				<td style="font-weight: bold"><input type="radio"
+					name="chkStatus" onclick="javascript:changeStatus(0);" value="0"
+					checked="checked"></input> <span onclick="chkStatus[0].click()">Not
+				Given</span></td>
+			</tr>
+			<tr>
+				<td style="font-weight: bold"><input type="radio"
+					name="chkStatus" onclick="javascript:changeStatus(1);" value="1"></input>
+				<span onclick="chkStatus[1].click()">Immunization Given</span></td>
+			</tr>
+			<tr>
+				<td>
+				<table
+					style="margin-left: 50px; border-width: 2px; border-style: solid;">
+					<tr>
+						<td align="right" width="120px">Given Date:</td>
+						<td><input type="hidden" id="givenDate" /> <input
+							type="text" id="givenYear" style="width: 50px" maxlength=4 /> <b>-</b>
+						<select id="givenMonth">
+							<option value="1">January</option>
+							<option value="2">February</option>
+							<option value="3">March</option>
+							<option value="4">April</option>
+							<option value="5">May</option>
+							<option value="6">June</option>
+							<option value="7">July</option>
+							<option value="8">August</option>
+							<option value="9">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select> <b>-</b> <input type=text id="givenDay" style="width: 50px"
+							maxlength=2 /></td>
+					</tr>
+					<tr>
+						<td align="right">Lot Number:</td>
+						<td><input type="text" id="lot" /></td>
+					</tr>
+					<tr>
+						<td align="right">Provider:</td>
+						<td><select id="provider">
+							<%= providerCombo() %>
+						</select></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="font-weight: bold"><input type="radio"
+					name="chkStatus" onclick="javascript:changeStatus(2);" value="2"></input>
+				<span onclick="chkStatus[2].click()">Refused</span></td>
+			</tr>
+			<tr>
+				<td>
+				<table
+					style="margin-left: 50px; border-width: 2px; border-style: solid;">
+					<tr>
+						<td align="right" width="120px">Refused Date:</td>
+						<td><input type="hidden" id="refusedDate" /> <input
+							type="text" id="refusedYear" style="width: 50px" maxlength=4 />
+						<b>-</b> <select id="refusedMonth">
+							<option value="1">January</option>
+							<option value="2">February</option>
+							<option value="3">March</option>
+							<option value="4">April</option>
+							<option value="5">May</option>
+							<option value="6">June</option>
+							<option value="7">July</option>
+							<option value="8">August</option>
+							<option value="9">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select> <b>-</b> <input type=text id="refusedDay" style="width: 50px"
+							maxlength=2 /></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td><br />
+				<div style="font-weight: bold">Comments</div>
+				<textarea id="comments" style='width: 100%; height: 80px'></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><br />
+				<input type="button" style="width: 120px"
+					onclick="javascript:saveClose();" value="Save and Close" /> <input
+					type="button" style="width: 120px"
+					onclick="javascript:window.close();" value="Cancel" /></td>
+			</tr>
+		</table>
+		</form>
+		<%!
                 String providerCombo()
                         throws java.sql.SQLException
                 {
@@ -430,9 +402,8 @@ if(request.getParameter("name")!=null)
                     }
                     return new String(sb);
                 }
-                %>
-            </td>
-        </tr>
-    </table>
+                %></td>
+	</tr>
+</table>
 </body>
 </html>

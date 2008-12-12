@@ -27,16 +27,20 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 %>
-<%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*,java.sql.*"
+	errorPage="../provider/errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
-<head><title> <bean:message key="provider.providerdisplaymygroup.title"/></title></head>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<head>
+<title><bean:message key="provider.providerdisplaymygroup.title" /></title>
+</head>
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
@@ -48,24 +52,30 @@
 // stop javascript -->
 </script>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp">
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="provider.providerdisplaymygroup.msgTitle"/></font></th>
-  </tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<FORM NAME="UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="provider.providerdisplaymygroup.msgTitle" /></font></th>
+	</tr>
 </table>
 
 <center>
 <table border="0" cellpadding="0" cellspacing="0" width="80%">
-  <tr><td width="100%">
-  
-          <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
-            <tr BGCOLOR="#CCFFFF" > 
-              <td ALIGN="center" colspan="2"> <font face="arial"> <bean:message key="provider.providerdisplaymygroup.msgGroupNo"/></font></td>
-              <td ALIGN="center"> <font face="arial"> <bean:message key="provider.providerdisplaymygroup.msgProvider"/></font> </td>
-          </tr>
-<%
+	<tr>
+		<td width="100%">
+
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
+			BGCOLOR="#C0C0C0">
+			<tr BGCOLOR="#CCFFFF">
+				<td ALIGN="center" colspan="2"><font face="arial"> <bean:message
+					key="provider.providerdisplaymygroup.msgGroupNo" /></font></td>
+				<td ALIGN="center"><font face="arial"> <bean:message
+					key="provider.providerdisplaymygroup.msgProvider" /></font></td>
+			</tr>
+			<%
    ResultSet rsgroup = null;
    boolean bNewNo=false;
    String oldNo="";
@@ -76,32 +86,42 @@
        //System.out.println(oldNo);
      }
 %>
-          <tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
-            <td width="10%" align="center"><input type="checkbox" name="<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>" value="<%=rsgroup.getString("mygroup_no")%>">
-            </td>
-            <td ALIGN="center"> <font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
-            <td ALIGN="center"> <font face="arial"> <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></font> </td>
-          </tr>
-<%
+			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
+				<td width="10%" align="center"><input type="checkbox"
+					name="<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>"
+					value="<%=rsgroup.getString("mygroup_no")%>"></td>
+				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
+				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></font>
+				</td>
+			</tr>
+			<%
    }
    apptMainBean.closePstmtConn();
 %>
-              <INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
+			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
 
-        </table>
-	
-	</td></tr>
+		</table>
+
+		</td>
+	</tr>
 </table>
 </center>
 
 <table width="100%" BGCOLOR="#486ebd">
-  <tr>
-    <TD align="center" >
-      <input type="hidden" name="submit_form" value="">
-      <INPUT TYPE="submit" VALUE="<bean:message key="provider.providerdisplaymygroup.btnDelete"/>" SIZE="7" onclick="document.forms['UPDATEPRE'].submit_form.value='Delete'; document.forms['UPDATEPRE'].submit();">
-      <INPUT TYPE="submit" VALUE="<bean:message key="provider.providerdisplaymygroup.btnNew"/>" SIZE="7" onclick="document.forms['UPDATEPRE'].submit_form.value='New Group/Add a Member'; document.forms['UPDATEPRE'].submit();">
-      <INPUT TYPE = "RESET" VALUE = "<bean:message key="provider.providerdisplaymygroup.btnClose"/>" onClick="window.close();"></TD>
-  </tr>
+	<tr>
+		<TD align="center"><input type="hidden" name="submit_form"
+			value=""> <INPUT TYPE="submit"
+			VALUE="<bean:message key="provider.providerdisplaymygroup.btnDelete"/>"
+			SIZE="7"
+			onclick="document.forms['UPDATEPRE'].submit_form.value='Delete'; document.forms['UPDATEPRE'].submit();">
+		<INPUT TYPE="submit"
+			VALUE="<bean:message key="provider.providerdisplaymygroup.btnNew"/>"
+			SIZE="7"
+			onclick="document.forms['UPDATEPRE'].submit_form.value='New Group/Add a Member'; document.forms['UPDATEPRE'].submit();">
+		<INPUT TYPE="RESET"
+			VALUE="<bean:message key="provider.providerdisplaymygroup.btnClose"/>"
+			onClick="window.close();"></TD>
+	</tr>
 </TABLE>
 
 </FORM>

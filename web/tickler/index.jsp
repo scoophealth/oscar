@@ -30,6 +30,6 @@
 </head>
 
 <body bgcolor="#FFFFFF">
-You got something wrong! ^=^ 
+You got something wrong! ^=^
 </body>
 </html>

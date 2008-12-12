@@ -60,11 +60,11 @@ function openSurvey(methodId) {
 </script>
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Registration Intake</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Registration Intake</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
@@ -79,13 +79,14 @@ function openSurvey(methodId) {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><c:out value="${intake.intakeStatus}"/></td>
-			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />','<c:out value="${intake.id}" />')" /></td>
+			<td><c:out value="${intake.intakeStatus}" /></td>
+			<td><input type="button" value="Print Preview"
+				onclick="printQuickIntake('<c:out value="${client.demographicNo}" />','<c:out value="${intake.id}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
-		<td colspan="3">
-			<input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />
+		<td colspan="3"><input type="button" value="Update"
+			onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />
 		</td>
 	</tr>
 </table>
@@ -93,11 +94,11 @@ function openSurvey(methodId) {
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Follow-up Intake</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Follow-up Intake</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
@@ -111,12 +112,13 @@ function openSurvey(methodId) {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><input type="button" value="Print Preview" onclick="printIndepthIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td><input type="button" value="Print Preview"
+				onclick="printIndepthIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
-		<td colspan="3">
-			<input type="button" value="Update" onclick="updateIndepthIntake('<c:out value="${client.demographicNo}" />')" />
+		<td colspan="3"><input type="button" value="Update"
+			onclick="updateIndepthIntake('<c:out value="${client.demographicNo}" />')" />
 		</td>
 	</tr>
 </table>
@@ -124,11 +126,11 @@ function openSurvey(methodId) {
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Program Intakes</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Program Intakes</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
@@ -142,18 +144,19 @@ function openSurvey(methodId) {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td>
-				<input type="button" value="Print Preview" onclick="printProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
-				<input type="button" value="Update" onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
+			<td><input type="button" value="Print Preview"
+				onclick="printProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
+			<input type="button" value="Update"
+				onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
 			</td>
 		</tr>
 	</c:forEach>
 	<tr>
-		<td colspan="3">
-			<html:select property="programWithIntakeId">
-				<html:options collection="programsWithIntake" property="id" labelProperty="name" />
-			</html:select>
-			<input type="button" value="Update" onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />')" />
+		<td colspan="3"><html:select property="programWithIntakeId">
+			<html:options collection="programsWithIntake" property="id"
+				labelProperty="name" />
+		</html:select> <input type="button" value="Update"
+			onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />')" />
 		</td>
 	</tr>
 </table>
@@ -161,15 +164,15 @@ function openSurvey(methodId) {
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">User Created</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">User Created</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
-		<tr>		
+		<tr>
 			<th>Form Name</th>
 			<th>Date</th>
 			<th>Staff</th>
@@ -177,13 +180,15 @@ function openSurvey(methodId) {
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${surveys}">
-		<tr>			
+		<tr>
 			<td><c:out value="${form.description}" /></td>
 			<td><c:out value="${form.dateCreated}" /></td>
 			<td><c:out value="${form.username}" /></td>
-			<td><input type="button" value="Update" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(0);" />
-			<input type="button" value="Print Preview" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(1);" /></td>
-		
+			<td><input type="button" value="Update"
+				onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(0);" />
+			<input type="button" value="Print Preview"
+				onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(1);" /></td>
+
 		</tr>
 	</c:forEach>
 </table>
@@ -193,19 +198,20 @@ function openSurvey(methodId) {
 New User Created Form:&nbsp;
 <html:select property="form.formId" onchange="openSurvey(0)">
 	<html:option value="0">&nbsp;</html:option>
-	<html:options collection="survey_list" property="formId" labelProperty="description" />
+	<html:options collection="survey_list" property="formId"
+		labelProperty="description" />
 </html:select>
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Consent History</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Consent History</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
-		<tr>		
+		<tr>
 			<th>Date</th>
 			<th>Form Name</th>
 			<th>Provider</th>
@@ -213,18 +219,17 @@ New User Created Form:&nbsp;
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${consents}">
-		<tr>			
+		<tr>
 			<td><c:out value="${form.createdDate}" /></td>
 			<td><c:out value="${form.formVersion}" /></td>
-			<td><c:out value="${form.provider}" /></td>		
-			<td>
-				<c:if test="${form.formVersion != 'QUICK'}">
-					<a target="_blank" href="ClientManager/view_consent_details.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
-				</c:if>
-				<c:if test="${form.formVersion == 'QUICK'}">
-					<a href="ClientManager/integrator_consent.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
-				</c:if>
-			</td>		
+			<td><c:out value="${form.provider}" /></td>
+			<td><c:if test="${form.formVersion != 'QUICK'}">
+				<a target="_blank"
+					href="ClientManager/view_consent_details.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
+			</c:if> <c:if test="${form.formVersion == 'QUICK'}">
+				<a
+					href="ClientManager/integrator_consent.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
+			</c:if></td>
 		</tr>
 	</c:forEach>
 </table>

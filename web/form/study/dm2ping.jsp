@@ -28,23 +28,27 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 %>
 
 
-<%@ page contentType="text/xml" %>
-<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"%>
+<%@ page contentType="text/xml"%>
+<%@ page
+	import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>  
-<%@ page import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*" %>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ page
+	import="java.util.*,oscar.ping.xml.*,oscar.ping.xml.impl.*,javax.xml.bind.*"%>
 <%@ page import="org.chip.ping.client.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.talk.*"%>
 <%@ page import="org.chip.ping.xml.cddm.*"%>
 <%@ page import="org.chip.ping.xml.record.*"%>
 <%@ page import="org.chip.ping.xml.record.impl.*"%>
-<%@ page import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
+<%@ page
+	import="org.chip.ping.xml.cddm.impl.*,org.w3c.dom.*,javax.xml.parsers.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 
-<%@ include file="../../admin/dbconnection.jsp" %>
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 	{"search_demographic", "select * from demographic where demographic_no=? "}, 

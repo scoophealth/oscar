@@ -28,14 +28,15 @@
     response.sendRedirect("../logout.jsp");
   }
 %>
-  <%@ page errorPage="../../../appointment/errorpage.jsp"import="java.util.*,
+<%@ page errorPage="../../../appointment/errorpage.jsp"
+	import="java.util.*,
                                                            java.sql.*,
                                                            oscar.*,
                                                            java.text.*,
                                                            java.lang.*,
-                                                           java.net.*" %>
-  <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+                                                           java.net.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
   int serviceCodeLen = 5;
   String msg = "Type in a service code and search first to see if it is available.";
@@ -180,27 +181,28 @@ System.out.println(sqlMinMax);
 	}
   }
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        Add/Edit Service Code
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <!-- calendar stylesheet -->
-      <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-      <!-- main calendar program -->
-      <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-      <!-- language for the calendar -->
-      <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title>Add/Edit Service Code</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
               </script>
-      <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-      <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
-      <script language="JavaScript">
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
+<script language="JavaScript">
 
       <!--
 		function setfocus() {
@@ -300,101 +302,83 @@ System.out.println(sqlMinMax);
 //-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr>
-          <td align="left">
-            &nbsp;
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td align="left">&nbsp;</td>
+	</tr>
+</table>
 
-      <center>
-      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
-        <tr BGCOLOR="#CCFFFF">
-          <th>
-            <%=msg%>
-          </th>
-        </tr>
-      </table>
-      </center>
-      <form method="post" name="baseurl" action="addEditServiceCode.jsp">
-      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Service Code</b>
-            </td>
-            <td>
-              <input type="text" name="service_code" value="<%=prop.getProperty("service_code", "")%>" size='4' maxlength='5' onblur="upCaseCtrl(this)" />
-              (5 letters, e.g. A001A)
-              <input type="submit" name="submit" value="Search" onclick="javascript:return onSearch();">
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Description</b>
-            </td>
-            <td>
-              <input type="text" name="description" value="<%=prop.getProperty("description", "")%>" size='50' maxlength='50'>
-              (50 letters)
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Fee</b>
-            </td>
-            <td>
-              <input type="text" name="value" value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>
-              (format: xx.xx, e.g. 18.20)
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Percentage</b>
-            </td>
-            <td>
-              <input type="text" name="percentage" value="<%=prop.getProperty("percentage", "")%>" size='8' maxlength='8'>
-              (format: 0.xx, e.g. 0.20)
-              min.
-              <input type="text" name="min" value="<%=prop.getProperty("min", "")%>" size='7' maxlength='8'>
-              max.<input type="text" name="max" value="<%=prop.getProperty("max", "")%>" size='7' maxlength='8'>
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Issued Date</b>
-            </td>
-            <td>
-              <input type="text" name="billingservice_date" id="billingservice_date" value="<%=prop.getProperty("billingservice_date", "")%>" size='10' maxlength='10' readonly>
-              (effective date)
-              <img src="../../../images/cal.gif" id="billingservice_date_cal">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#CCCCFF" colspan="2">
-              <input type="hidden" name="action" value='<%=action%>'>
-              <input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();">
-              <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
-            </td>
-          </tr>
-      </table>
-      </form>
-    </body>
-    <script type="text/javascript">
+<center>
+<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+	<tr BGCOLOR="#CCFFFF">
+		<th><%=msg%></th>
+	</tr>
+</table>
+</center>
+<form method="post" name="baseurl" action="addEditServiceCode.jsp">
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Service Code</b></td>
+		<td><input type="text" name="service_code"
+			value="<%=prop.getProperty("service_code", "")%>" size='4'
+			maxlength='5' onblur="upCaseCtrl(this)" /> (5 letters, e.g. A001A) <input
+			type="submit" name="submit" value="Search"
+			onclick="javascript:return onSearch();"></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Description</b></td>
+		<td><input type="text" name="description"
+			value="<%=prop.getProperty("description", "")%>" size='50'
+			maxlength='50'> (50 letters)</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Fee</b></td>
+		<td><input type="text" name="value"
+			value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>
+		(format: xx.xx, e.g. 18.20)</td>
+	</tr>
+	<tr>
+		<td align="right"><b>Percentage</b></td>
+		<td><input type="text" name="percentage"
+			value="<%=prop.getProperty("percentage", "")%>" size='8'
+			maxlength='8'> (format: 0.xx, e.g. 0.20) min. <input
+			type="text" name="min" value="<%=prop.getProperty("min", "")%>"
+			size='7' maxlength='8'> max.<input type="text" name="max"
+			value="<%=prop.getProperty("max", "")%>" size='7' maxlength='8'>
+		</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Issued Date</b></td>
+		<td><input type="text" name="billingservice_date"
+			id="billingservice_date"
+			value="<%=prop.getProperty("billingservice_date", "")%>" size='10'
+			maxlength='10' readonly> (effective date) <img
+			src="../../../images/cal.gif" id="billingservice_date_cal"></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center" bgcolor="#CCCCFF" colspan="2"><input
+			type="hidden" name="action" value='<%=action%>'> <input
+			type="submit" name="submit"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
+			onclick="javascript:return onSave();"> <input type="button"
+			name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()"></td>
+	</tr>
+</table>
+</form>
+</body>
+<script type="text/javascript">
 Calendar.setup( { inputField : "billingservice_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "billingservice_date_cal", singleClick : true, step : 1 } );
 </script>
-  </html:html>
+</html:html>

@@ -31,8 +31,10 @@
   apptProvider_no = request.getParameter("curProvider_no");
   username =  request.getParameter("username").toUpperCase();
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%
    ResultSet rsdemo = null;
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
@@ -48,14 +50,14 @@
      hin=rsdemo.getString("hin");
      roster=rsdemo.getString("roster_status");
    }
-%>   
+%>
 
 <html>
 <head>
-<title> ENCOUNTER </title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<title>ENCOUNTER</title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
@@ -138,10 +140,14 @@ function gotoAccs() {
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ENCOUNTER </font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ENCOUNTER
+		</font></th>
+	</tr>
 </table>
 <%
 	GregorianCalendar now=new GregorianCalendar();
@@ -160,70 +166,97 @@ function gotoAccs() {
 %>
 <xml id="xml_list">
 <encounteraccessory>
-     <%=content%>
+<%=content%>
 </encounteraccessory>
 </xml>
 <%
    } 
 %>
-<table width="100%" border="0"  cellspacing="0" cellpadding="0"><!--for form use-->
-<!--form name="demoacce" method="post" action="providercontrol.jsp" target="encounterhist" onSubmit="popupPage(1,1,'providercontrol.jsp')"-->
-<form name="encounter" method="post" action="providercontrol.jsp" >
-<tr><td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<!--for form use-->
+	<!--form name="demoacce" method="post" action="providercontrol.jsp" target="encounterhist" onSubmit="popupPage(1,1,'providercontrol.jsp')"-->
+	<form name="encounter" method="post" action="providercontrol.jsp">
+	<tr>
+		<td>
+
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="left"><font color="blue"><%=Misc.toUpperLowerCase(demoname)%>
+				<i><%=""+age%></i> <%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
+				<td align="center" bgcolor="#aabbcc">
+				<table bgcolor="#eeeeee" border="0" cellpadding="3" cellspacing="0"
+					width="98%">
+					<tr>
+						<td bgcolor="#ffffff" align="center">
+						<table width="100%" border="0" bgcolor="#aabbcc">
+							<tr>
+								<td align="center"><a href=#
+									onClick="popupPage(750,1000,'providerencountereditdemoacc.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>')">
+								Edit </a></td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+
+		<table border="0" cellpadding="2" cellspacing="0" bgcolor="#aabbcc"
+			width=100%>
+			<tr>
+				<td>
+				<table bgcolor="#eeeeee" border="0" cellpadding="2" cellspacing="0"
+					width="100%">
+					<tr>
+						<td bgcolor="#ffffff" align="center">
+
+						<table width="100%" border="0" cellpadding="2" cellspacing="0"
+							bgcolor="#aabbcc" <%=bNewDemoAcc?"":"datasrc='#xml_list'"%>>
+							<tr>
+								<td width="50%" align="center">Problem List:<br>
+								<textarea name="xml_Problem_List" style="width: 100%" cols="30"
+									rows="6" readonly
+									<%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%>></textarea></td>
+								<td width="50%" align="center">Medication:<br>
+								<textarea name="xml_Medication" style="width: 100%" cols="30"
+									rows="6" readonly
+									<%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea></td>
+							</tr>
+							<tr>
+								<td>
+								<div align="center">Allergy/Alert:<br>
+								<textarea name="xml_Alert" style="width: 100%" cols="30"
+									rows="3" readonly <%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea>
+								</div>
+								</td>
+								<td>
+								<div align="center">Family Social History:<br>
+								<textarea name="xml_Family_Social_History" style="width: 100%"
+									cols="30" rows="3" readonly
+									<%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
+								</div>
+								</td>
+							</tr>
+						</table>
+
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+
+		</td>
+	</tr>
+	<!--/form-->
+</table>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td align="left"><font color="blue"><%=Misc.toUpperLowerCase(demoname)%> <i><%=""+age%></i> <%=gender%> <i>RS: <%=roster==null?"NONE":roster%></i></font></td>
-    <td align="center" bgcolor="#aabbcc"><table bgcolor="#eeeeee" border="0" cellpadding="3" cellspacing="0" width="98%"> 
-      <tr><td bgcolor="#ffffff" align="center">
-        <table width="100%" border="0" bgcolor="#aabbcc"><tr><td align="center" >
-          <a href=# onClick="popupPage(750,1000,'providerencountereditdemoacc.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>')" >
-           Edit </a></td></tr></table></td></tr></table>
-    </td>
-  </tr>
-</table>
-
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#aabbcc" width=100%>
-<tr><td>
-<table bgcolor="#eeeeee" border="0" cellpadding="2" cellspacing="0" width="100%"> 
-<tr><td bgcolor="#ffffff" align="center">
-
-<table width="100%" border="0"  cellpadding="2" cellspacing="0" bgcolor="#aabbcc" <%=bNewDemoAcc?"":"datasrc='#xml_list'"%> >
-  <tr> 
-    <td width="50%" align="center"> 
-      Problem List:<br>
-        <textarea name="xml_Problem_List" style="width:100%" cols="30" rows="6"  readonly <%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%> ></textarea>
-
-      </td>
-    <td width="50%" align="center"> Medication:<br>
-      <textarea name="xml_Medication" style="width:100%" cols="30" rows="6" readonly <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
-    </td>
-  </tr>
-  <tr> 
-    <td > 
-      <div align="center">Allergy/Alert:<br>
-        <textarea name="xml_Alert" style="width:100%" cols="30" rows="3"  readonly <%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea>
-      </div>
-    </td>
-    <td > 
-      <div align="center">Family Social History:<br>
-        <textarea name="xml_Family_Social_History" style="width:100%" cols="30" rows="3"  readonly <%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
-      </div>
-    </td>
-  </tr>
-</table>
-
-</td></tr></table></td></tr></table>
-
-</td></tr>
-<!--/form-->
-</table>
-
-<table width="100%" border="0"  cellpadding="0" cellspacing="0" >
-  <tr > 
-    <td ><font size="-1"><!--History--></font></td>
-    <td width="100%">
-<%
+	<tr>
+		<td><font size="-1"><!--History--></font></td>
+		<td width="100%">
+		<%
    rsdemo = null;
    rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
    int i=0;
@@ -233,9 +266,8 @@ function gotoAccs() {
        out.println("<a href=# onClick=\"popupPage(400,600,'providercontrol.jsp?demographic_no=" +request.getParameter("demographic_no")+ "&dboperation=search_encounter&displaymode=encounterhistory');return false;\">... more</a>");
        break;
      }
-%>   
-     &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font color="blue"> 
-<%
+%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
+			color="blue"> <%
      String historysubject = rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
      //System.out.println(" history = " + historysubject);
@@ -247,86 +279,92 @@ function gotoAccs() {
 
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim().toLowerCase()+".jsp";
-%>     
-     <a href=# onClick ="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
-     </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      } else if(strForm.compareTo("")!=0) {
-%>     
-     <a href=# onClick ="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
-     </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      }
    }     
-%>      
-    </td>
-  </tr>
+%>
+		</td>
+	</tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <td><font color="#FFFFFF"><%=curYear+"-"+(curMonth)+"-"+curDay%> |
-	 <%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%> <br> <%=Misc.toUpperLowerCase(username)%> 
-      </font>
-	  </td>
-    <td align="right">
-    <a href=# onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=request.getParameter("demographic_no")%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
-    <font color="yellow">Add Document</font></a>
-   <%
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<td><font color="#FFFFFF"><%=curYear+"-"+(curMonth)+"-"+curDay%>
+		| <%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%> <br>
+		<%=Misc.toUpperLowerCase(username)%> </font></td>
+		<td align="right"><a href=#
+			onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=request.getParameter("demographic_no")%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";>
+		<font color="yellow">Add Document</font></a> <%
      if(request.getParameter("status").indexOf('B')==-1) {
-   %>
-    <!--a href=# onClick='popupPage(600,800, "billingobstetric.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" )'><font color="yellow">
-    Billing</font></a><br--> 
-    <!--a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1")'><font color="yellow">
-    Billing</font></a><br--> 
-   <%       
+   %> <!--a href=# onClick='popupPage(600,800, "billingobstetric.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" )'><font color="yellow">
+    Billing</font></a><br--> <!--a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1")'><font color="yellow">
+    Billing</font></a><br--> <%       
      }
-   %>
-    <!--a href=# onClick='popupPage(500,700, "providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=user_no%>&username=<%= username %>&apptProvider_no=<%=apptProvider_no%>&displaymode=prescribe&dboperation=search_demograph&template=" );return false;'><font color="yellow">
-    Prescribe</font></a-->
-    </td><td align="right">
-      <select name="formmenu" size="1" OnChange="selectform(this)">
-        <option selected value="">Form </option>
-	<%
+   %> <!--a href=# onClick='popupPage(500,700, "providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=user_no%>&username=<%= username %>&apptProvider_no=<%=apptProvider_no%>&displaymode=prescribe&dboperation=search_demograph&template=" );return false;'><font color="yellow">
+    Prescribe</font></a--></td>
+		<td align="right"><select name="formmenu" size="1"
+			OnChange="selectform(this)">
+			<option selected value="">Form</option>
+			<%
    rsdemo = null;
    rsdemo = apptMainBean.queryResults("%", "search_encounterform");
    while (rsdemo.next()) { 
 	%>
-        <option value="<%=rsdemo.getString("encounterform_value")+request.getParameter("demographic_no")%>"><%=rsdemo.getString("encounterform_name")%></option>
-  <%
+			<option
+				value="<%=rsdemo.getString("encounterform_value")+request.getParameter("demographic_no")%>"><%=rsdemo.getString("encounterform_name")%></option>
+			<%
      }
 	%>
-      </select>
-        <select name="templatemenu" OnChange="selecttemplate(this)">
-           <option selected value=""><%=request.getParameter("template").equals("")?"Template":request.getParameter("template")%> </option>
-	<%
+		</select> <select name="templatemenu" OnChange="selecttemplate(this)">
+			<option selected value=""><%=request.getParameter("template").equals("")?"Template":request.getParameter("template")%>
+			</option>
+			<%
    rsdemo = null;
    rsdemo = apptMainBean.queryResults("%", "search_template");
    while (rsdemo.next()) { 
 	%>
-        <option value="<%=rsdemo.getString("encountertemplate_url").length()>20?rsdemo.getString("encountertemplate_url").substring(0,20):rsdemo.getString("encountertemplate_url")%>"><%=rsdemo.getString("encountertemplate_name").toLowerCase()%></option>
-  <%
+			<option
+				value="<%=rsdemo.getString("encountertemplate_url").length()>20?rsdemo.getString("encountertemplate_url").substring(0,20):rsdemo.getString("encountertemplate_url")%>"><%=rsdemo.getString("encountertemplate_name").toLowerCase()%></option>
+			<%
      }
 	%>
-      </select>
-    </td></tr>
+		</select></td>
+	</tr>
 </table>
 
 <table width="100%" border="1" bgcolor="#87CEEB">
-<!--form name="encounter" method="post" action="providercontrol.jsp" -->
-  <tr> 
-    <td align="center"> 
-        
-<%
+	<!--form name="encounter" method="post" action="providercontrol.jsp" -->
+	<tr>
+		<td align="center">
+		<%
   if(request.getParameter("template")!=null && !(request.getParameter("template").equals("")) ) {
      rsdemo = apptMainBean.queryResults(request.getParameter("template"), "search_template");
      while (rsdemo.next()) { 
 %>
-<table><tr><td width='10%'>Reason:</td><td><input type='text' name='xml_subject' style='width:100%' value='<%=URLDecoder.decode(request.getParameter("reason"))%>' size='60' maxlength='60'></td></tr>
-<tr><td>Content:</td><td><textarea name='xml_content' style='width:100%' cols='60' rows='10'><%=rsdemo.getString("encountertemplate_value")%>
- </textarea></td></tr>
-<input type='hidden' name='xml_subjectprefix' value='SOAP'></talbe>
-<%     
+		<table>
+			<tr>
+				<td width='10%'>Reason:</td>
+				<td><input type='text' name='xml_subject' style='width: 100%'
+					value='<%=URLDecoder.decode(request.getParameter("reason"))%>'
+					size='60' maxlength='60'></td>
+			</tr>
+			<tr>
+				<td>Content:</td>
+				<td><textarea name='xml_content' style='width: 100%' cols='60'
+					rows='10'><%=rsdemo.getString("encountertemplate_value")%>
+ </textarea></td>
+			</tr>
+			<input type='hidden' name='xml_subjectprefix' value='SOAP'>
+			</talbe>
+			<%     
      }
   }else if(request.getParameter("editpreviousenc")!=null && request.getParameter("editpreviousenc").equals("1") ) {
      String [] param = new String [2];
@@ -334,9 +372,17 @@ function gotoAccs() {
      param[1] = user_no ;
      rsdemo = apptMainBean.queryResults(param, "search_previousenc");
 %>
-    <table width="100%">
-    <tr><td width="10%">Reason:</td><td><input type='text' name='xml_subject' style="width:100%" value='<%=URLDecoder.decode(request.getParameter("reason"))%>' size='60' maxlength='60'></td></tr>
-    <tr><td>Content:</td><td><textarea name='xml_content' style="width:100%" cols='50' rows='10'>
+			<table width="100%">
+				<tr>
+					<td width="10%">Reason:</td>
+					<td><input type='text' name='xml_subject' style="width: 100%"
+						value='<%=URLDecoder.decode(request.getParameter("reason"))%>'
+						size='60' maxlength='60'></td>
+				</tr>
+				<tr>
+					<td>Content:</td>
+					<td><textarea name='xml_content' style="width: 100%" cols='50'
+						rows='10'>
 <%  //String at=null, enc=null;
     if (rsdemo.next()) { 
       String at = SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_content") ;
@@ -348,17 +394,31 @@ function gotoAccs() {
     }
 %>
 <%--=rsdemo.getString("content")--%>
-    </td></tr></table>
-    <input type='hidden' name='xml_subjectprefix' value=".">   
-<%  
+    </td>
+				</tr>
+			</table>
+			<input type='hidden' name='xml_subjectprefix' value=".">
+			<%  
   }else {
 %>
-    <table width="100%">
-    <tr><td width="10%">Reason:</td><td><input type='text' name='xml_subject' style="width:100%" value='<%=URLDecoder.decode(request.getParameter("reason"))%>' size='60' maxlength='60'></td></tr>
-    <tr><td>Content:<br><a href="providercontrol.jsp?editpreviousenc=1&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&reason=<%=request.getParameter("reason")%>&username=<%=request.getParameter("username") %>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&status=<%=request.getParameter("status")%>&displaymode=encounter&dboperation=search_demograph&template=" title="Edit Last Encounter">(Edit)</a></td>
-    <td><textarea name='xml_content' style="width:100%" cols='50' rows='10'></textarea></td></tr></table>
-    <input type='hidden' name='xml_subjectprefix' value=".">   
-<%  
+			<table width="100%">
+				<tr>
+					<td width="10%">Reason:</td>
+					<td><input type='text' name='xml_subject' style="width: 100%"
+						value='<%=URLDecoder.decode(request.getParameter("reason"))%>'
+						size='60' maxlength='60'></td>
+				</tr>
+				<tr>
+					<td>Content:<br>
+					<a
+						href="providercontrol.jsp?editpreviousenc=1&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=request.getParameter("curProvider_no")%>&reason=<%=request.getParameter("reason")%>&username=<%=request.getParameter("username") %>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&status=<%=request.getParameter("status")%>&displaymode=encounter&dboperation=search_demograph&template="
+						title="Edit Last Encounter">(Edit)</a></td>
+					<td><textarea name='xml_content' style="width: 100%" cols='50'
+						rows='10'></textarea></td>
+				</tr>
+			</table>
+			<input type='hidden' name='xml_subjectprefix' value=".">
+			<%  
   }
 
   String slpusername="", slppassword="";
@@ -370,50 +430,64 @@ function gotoAccs() {
     }
   }
   apptMainBean.closePstmtConn();
-%>          
-      
-      </td>
-  </tr><tr>
-      <td nowrap align="center" colspan="2"> 
-        <p> 
-          <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-          <input type="hidden" name="encounter_date" value='<%=curYear+"-"+(curMonth)+"-"+curDay%>'>
-          <input type="hidden" name="encounter_time" value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
-          <input type="hidden" name="user_no" value='<%=user_no%>'>
-          <input type="hidden" name="xml_username" value='<%=username%>'>
-          <input type="hidden" name="template" value='<%=request.getParameter("template")%>'>
-          <input type="hidden" name="dboperation" value="add_encounter">
-          <input type="hidden" name="displaymode" value="saveencounter">
-          <input type="submit" name="submit" value="Save & Exit" onClick="checksubject();"><input type="submit" name="submit" value="Save & Print Preview" onClick="checksubject();">
-          <!--input type="button" name="submit" value="Signature" onClick="self.location.href='providerencountersignature.jsp?demographic_no=<%--=request.getParameter("demographic_no")--%>';"-->
-          <input type="button" name="Button" value="Cancel" onClick="window.close();">
-          <!--a href=# onClick ="popupPage(400,600,'xmledit.jsp?')"><font color='navy'>Attachment</font></a-->
-      </td></tr>
-      <tr><td colspan="2">    
-          <font size="-2">Attachments:</font> 
-          <input type='text' size='70' name='attachmentdisplay' value="<%=request.getParameter("attachmentdisplay")==null?"":request.getParameter("attachmentdisplay")%>" readonly onFocus="onAttachmentFocus()">
-          <br>
-          <input type='hidden' size='70' name='encounterattachment' value="<%=URLEncoder.encode(request.getParameter("encounterattachment")==null?"":request.getParameter("encounterattachment"))%>" >
-    </td>
-  </tr>
-</form>
-</table>
+%>
 
-<table width="100%" border="1" bgcolor="ivory">
-<form name="ksearch" onsubmit="popupSearchPage(600,800,this.channel.options[this.channel.selectedIndex].value+urlencode(this.key.value) ); return false;">
-<tr><td>
-Knowledge Search: <input type="text" name="key" value="">
- <select name="channel" size="1">
- <option value="http://emr.skolar.com/gateway?tfUsername=dchan@mcmaster.ca&pwPassword=david&url=/emr/Search.jsp&query=">Skolar</option>
- <option value="https://209.61.188.77:8443/oscar_slp/Greeting.jsp?firstkeyword=">Self-Learning</option>
- <!--option value="http://130.113.153.155:8080/slt/SimpleSearchOut.jsp?uid=<%--=slpusername%>&password=<%=slppassword--%>&firstkeyword="-->
- <option value="http://www.google.com/search?q=">Google</option>
- </select> 
- <input type="submit" value=" Go " name="submit">
-</td></tr></form>
-<tr><td><a href=# onClick='popupPage(600,800, "http://www.ncbi.nlm.nih.gov/entrez/query/static/clinical.html" );return false;' > Pubmed</a>
-</td></tr>
-</table>
+			</td>
+			</tr>
+			<tr>
+				<td nowrap align="center" colspan="2">
+				<p><input type="hidden" name="demographic_no"
+					value="<%=request.getParameter("demographic_no")%>"> <input
+					type="hidden" name="encounter_date"
+					value='<%=curYear+"-"+(curMonth)+"-"+curDay%>'> <input
+					type="hidden" name="encounter_time"
+					value='<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND)%>'>
+				<input type="hidden" name="user_no" value='<%=user_no%>'> <input
+					type="hidden" name="xml_username" value='<%=username%>'> <input
+					type="hidden" name="template"
+					value='<%=request.getParameter("template")%>'> <input
+					type="hidden" name="dboperation" value="add_encounter"> <input
+					type="hidden" name="displaymode" value="saveencounter"> <input
+					type="submit" name="submit" value="Save & Exit"
+					onClick="checksubject();"><input type="submit"
+					name="submit" value="Save & Print Preview"
+					onClick="checksubject();"> <!--input type="button" name="submit" value="Signature" onClick="self.location.href='providerencountersignature.jsp?demographic_no=<%--=request.getParameter("demographic_no")--%>';"-->
+				<input type="button" name="Button" value="Cancel"
+					onClick="window.close();"> <!--a href=# onClick ="popupPage(400,600,'xmledit.jsp?')"><font color='navy'>Attachment</font></a-->
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><font size="-2">Attachments:</font> <input
+					type='text' size='70' name='attachmentdisplay'
+					value="<%=request.getParameter("attachmentdisplay")==null?"":request.getParameter("attachmentdisplay")%>"
+					readonly onFocus="onAttachmentFocus()"> <br>
+				<input type='hidden' size='70' name='encounterattachment'
+					value="<%=URLEncoder.encode(request.getParameter("encounterattachment")==null?"":request.getParameter("encounterattachment"))%>">
+				</td>
+			</tr>
+			</form>
+		</table>
 
+		<table width="100%" border="1" bgcolor="ivory">
+			<form name="ksearch"
+				onsubmit="popupSearchPage(600,800,this.channel.options[this.channel.selectedIndex].value+urlencode(this.key.value) ); return false;">
+			<tr>
+				<td>Knowledge Search: <input type="text" name="key" value="">
+				<select name="channel" size="1">
+					<option
+						value="http://emr.skolar.com/gateway?tfUsername=dchan@mcmaster.ca&pwPassword=david&url=/emr/Search.jsp&query=">Skolar</option>
+					<option
+						value="https://209.61.188.77:8443/oscar_slp/Greeting.jsp?firstkeyword=">Self-Learning</option>
+					<!--option value="http://130.113.153.155:8080/slt/SimpleSearchOut.jsp?uid=<%--=slpusername%>&password=<%=slppassword--%>&firstkeyword="-->
+					<option value="http://www.google.com/search?q=">Google</option>
+				</select> <input type="submit" value=" Go " name="submit"></td>
+			</tr>
+			</form>
+			<tr>
+				<td><a href=#
+					onClick='popupPage(600,800, "http://www.ncbi.nlm.nih.gov/entrez/query/static/clinical.html" );return false;'>
+				Pubmed</a></td>
+			</tr>
+		</table>
 </body>
 </html>

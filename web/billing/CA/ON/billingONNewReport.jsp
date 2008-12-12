@@ -29,13 +29,16 @@ String strLimit2="50";
 if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
 if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
-%> 
+%>
 
-<%@ page import="java.util.*, java.sql.*, oscar.login.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.login.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <%
 GregorianCalendar now=new GregorianCalendar(); 
@@ -310,26 +313,12 @@ if("unpaid".equals(action)) {
 %>
 
 <html>
-<head> 
+<head>
 <title>ON Billing Report</title>
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
-<link rel="stylesheet" href="../../web.css" >
-<style type="text/css">
-<!--
-.bodytext {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
+<link rel="stylesheet" href="../../web.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -370,37 +359,37 @@ function calToday(field) {
 	field.value = calDate.getFullYear() + '/' + (varMonth) + '/' + varDate;
 }
 //-->
-</script> 
+</script>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#CCCCFF"> 
-    <td width="5%"> </td>
-    <td width="80%" align="left"> 
-      <p><b><font  face="Verdana, Arial" color="#FFFFFF" size="3"><a href="billingReportCenter.jsp">OSCARbilling</a></font></b></p>
-    </td>  
-    <td align="right"><a href=# onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">
-	<font size="1">Manage Provider List </font></a>
-	</td>
-  </tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="5%"></td>
+		<td width="80%" align="left">
+		<p><b><font face="Verdana, Arial" color="#FFFFFF" size="3"><a
+			href="billingReportCenter.jsp">OSCARbilling</a></font></b></p>
+		</td>
+		<td align="right"><a href=#
+			onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">
+		<font size="1">Manage Provider List </font></a></td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
-<form name="serviceform" method="post" action="billingONReport.jsp">
-<tr> 
-	<td width="30%" align="center"> 
-	<font size="2"> 
-	<input type="radio" name="reportAction" value="unbilled" <%="unbilled".equals(action)? "checked" : "" %>>Unbilled 
-	<input type="radio" name="reportAction" value="billed" <%="billed".equals(action)? "checked" : "" %>>Billed 
-	<!--  input type="radio" name="reportAction" value="paid" <%="paid".equals(action)? "checked" : "" %>>Paid 
+	<form name="serviceform" method="post" action="billingONReport.jsp">
+	<tr>
+		<td width="30%" align="center"><font size="2"> <input
+			type="radio" name="reportAction" value="unbilled"
+			<%="unbilled".equals(action)? "checked" : "" %>>Unbilled <input
+			type="radio" name="reportAction" value="billed"
+			<%="billed".equals(action)? "checked" : "" %>>Billed <!--  input type="radio" name="reportAction" value="paid" <%="paid".equals(action)? "checked" : "" %>>Paid 
 	<input type="radio" name="reportAction" value="unpaid" <%="unpaid".equals(action)? "checked" : "" %>>Unpaid -->
-	</font>
-	</td>
-	<td width="20%" align="right" nowrap>
-	<b>Provider </b></font> 
-	<select name="providerview">
-<% 
+		</font></td>
+		<td width="20%" align="right" nowrap><b>Provider </b></font> <select
+			name="providerview">
+			<% 
 String proFirst="";
 String proLast="";
 String proOHIP="";
@@ -414,51 +403,52 @@ while(rslocal.next()){
 	proLast = rslocal.getString("last_name");
 	proOHIP = rslocal.getString("provider_no"); 
 %>
-		<option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-<%
+			<option value="<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
+			<%=proFirst%></option>
+			<%
 }      
 %>
-	</select>
-	</td><td align="center" nowrap> 
-	<font size="1">
-	From:</font> 
-	<input type="text" name="xml_vdate" id="xml_vdate" size="10" value="<%=xml_vdate%>">
-	<font size="1">
-	<img src="../../../images/cal.gif" id="xml_vdate_cal">
-	To:</font> 
-	<input type="text" name="xml_appointment_date" id="xml_appointment_date" onDblClick="calToday(this)" size="10" value="<%=xml_appointment_date%>">
-	<img src="../../../images/cal.gif" id="xml_appointment_date_cal">
-	</td><td align="right">
-	<input type="submit" name="Submit" value="Create Report">
-	</font></td>
-</tr><tr> 
-</form>
+		</select></td>
+		<td align="center" nowrap><font size="1"> From:</font> <input
+			type="text" name="xml_vdate" id="xml_vdate" size="10"
+			value="<%=xml_vdate%>"> <font size="1"> <img
+			src="../../../images/cal.gif" id="xml_vdate_cal"> To:</font> <input
+			type="text" name="xml_appointment_date" id="xml_appointment_date"
+			onDblClick="calToday(this)" size="10"
+			value="<%=xml_appointment_date%>"> <img
+			src="../../../images/cal.gif" id="xml_appointment_date_cal"></td>
+		<td align="right"><input type="submit" name="Submit"
+			value="Create Report"> </font></td>
+	</tr>
+	<tr>
+		</form>
 </table>
 
 <table border="1" cellspacing="0" cellpadding="0" width="100%"
-			bordercolorlight="#99A005" bordercolordark="#FFFFFF"
-			bgcolor="#FFFFFF">
-<tr bgcolor=<%="#ccffcc" %>>
-<% for (int i=0; i<vecHeader.size(); i++) {%>
-	<th><%=vecHeader.get(i) %></th>
-<% } %>
-<% for (int i=0; i<vecValue.size(); i++) {%>
-<tr bgcolor="<%=i%2==0? "ivory" : "#EEEEFF" %>">
-	<% for (int j=0; j<vecHeader.size(); j++) {
+	bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#FFFFFF">
+	<tr bgcolor=<%="#ccffcc" %>>
+		<% for (int i=0; i<vecHeader.size(); i++) {%>
+		<th><%=vecHeader.get(i) %></th>
+		<% } %>
+		<% for (int i=0; i<vecValue.size(); i++) {%>
+	
+	<tr bgcolor="<%=i%2==0? "ivory" : "#EEEEFF" %>">
+		<% for (int j=0; j<vecHeader.size(); j++) {
 	    prop = (Properties)vecValue.get(i);
 	%>
-	<td align="center"><%=prop.getProperty((String)vecHeader.get(j), "&nbsp;") %>&nbsp;</td>
+		<td align="center"><%=prop.getProperty((String)vecHeader.get(j), "&nbsp;") %>&nbsp;</td>
+		<% } %>
+	</tr>
 	<% } %>
-</tr>
-<% } %>
 
-<% if(vecTotal.size() > 0) { %>
-<tr bgcolor="silver">
-	<% for (int i=0; i < vecTotal.size(); i++) {%>
+	<% if(vecTotal.size() > 0) { %>
+	<tr bgcolor="silver">
+		<% for (int i=0; i < vecTotal.size(); i++) {%>
 		<th><%=vecTotal.get(i) %>&nbsp;</th>
+		<% } %>
+	</tr>
 	<% } %>
-</tr>
-<% } %>
 
 </table>
 
@@ -466,11 +456,14 @@ while(rslocal.next()){
 
 <hr width="100%">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr>
-	<td><a href=# onClick="javascript:history.go(-1);return false;"> <img src="images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-	Back </a></td>
-	<td align="right"><a href="" onClick="self.close();">Close the Window<img src="images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-</tr>
+	<tr>
+		<td><a href=# onClick="javascript:history.go(-1);return false;">
+		<img src="images/leftarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"> Back </a></td>
+		<td align="right"><a href="" onClick="self.close();">Close
+		the Window<img src="images/rightarrow.gif" border="0" width="25"
+			height="20" align="absmiddle"></a></td>
+	</tr>
 </table>
 
 </body>

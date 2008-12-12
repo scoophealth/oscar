@@ -33,12 +33,14 @@
   //display the main provider page
   //includeing the provider name and a month calendar
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> PATIENT SEARCH RESULTS </title>
+<title>PATIENT SEARCH RESULTS</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -50,45 +52,51 @@ function setfocus() {
 }
 //-->
 </SCRIPT>
- <!--base target="pt_srch_main"-->
+<!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-	  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		DETAIL RECORD</font></th>
+	</tr>
 </table>
 
-  <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#C4D9E7">
+<table border="0" cellpadding="1" cellspacing="0" width="100%"
+	bgcolor="#C4D9E7">
 	<form method="post" name="titlesearch" action="../cpp/cppcontrol.jsp">
 	<%--@ include file="zcpptitlesearch.htm"--%>
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-        </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
-        Name </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
-          Phone</font></td> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">
-          <input type="radio"  name="search_mode" value="search_dob">
-          DOB</font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="cpp_id" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-        <input type="hidden" name="displaymode" value=" Search" >
-        <input type="SUBMIT" name="displaymode" value=" Search" size="17">
-		</tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
-        Address </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
-          HIN</font></td>
-        <td></td>
-		</tr>
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
+
+		<td width="10%" nowrap><font size="1" face="Verdana"
+			color="#0000FF"> <input type="radio" checked
+			name="search_mode" value="search_name"> Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_phone">
+		Phone</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_dob"> DOB</font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			TYPE="hidden" NAME="orderby" VALUE="cpp_id"> <INPUT
+			TYPE="hidden" NAME="dboperation" VALUE="search_titlename"> <INPUT
+			TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden"
+			NAME="limit2" VALUE="10"> <input type="hidden"
+			name="displaymode" value=" Search"> <input type="SUBMIT"
+			name="displaymode" value=" Search" size="17">
+	</tr>
+	<tr>
+
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_address">
+		Address </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_hin"> HIN</font></td>
+		<td></td>
+	</tr>
 	<%
   String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -97,15 +105,15 @@ function setfocus() {
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
          //System.out.println();
   }
-	%> 
-    </tr>
+	%>
+	</tr>
 	</form>
-  </table>
+</table>
 
 <table width="95%" border="0">
-<tr>
-<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
-</tr>
+	<tr>
+		<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
+	</tr>
 </table>
 
 
@@ -123,34 +131,38 @@ function addName(lastname, firstname) {
 </SCRIPT>
 
 <hr>
-<CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
-	<form method="post" name="addform" action="../appointment/editappointmentaftercpp.jsp" >
-<tr bgcolor="#339999">
-<TH align="center" width="20%"><b>CPP ID</b></TH>
-<TH align="center" width="20%"><b>FIRST NAME </b></TH>
-<TH align="center" width="20%"><b>LAST NAME </b></TH>
-<TH align="center" width="10%"><b>AGE</b></TH>
-<TH align="center" width="10%"><b>ROSTER STATUS</b></TH>
-<TH align="center" width="10%"><b>SEX</B></TH>
-<TH align="center" width="10%"><b>DOB(yy/mm/dd)</B></TH>
-</tr>
+<CENTER>
+<table width="100%" border="2" bgcolor="#ffffff">
+	<form method="post" name="addform"
+		action="../appointment/editappointmentaftercpp.jsp">
+	<tr bgcolor="#339999">
+		<TH align="center" width="20%"><b>CPP ID</b></TH>
+		<TH align="center" width="20%"><b>FIRST NAME </b></TH>
+		<TH align="center" width="20%"><b>LAST NAME </b></TH>
+		<TH align="center" width="10%"><b>AGE</b></TH>
+		<TH align="center" width="10%"><b>ROSTER STATUS</b></TH>
+		<TH align="center" width="10%"><b>SEX</B></TH>
+		<TH align="center" width="10%"><b>DOB(yy/mm/dd)</B></TH>
+	</tr>
 
-<%@ include file="zcppsearchresult.jsp" %>
+	<%@ include file="zcppsearchresult.jsp"%>
 
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td align="center" width="10%" height="25"><input type="submit" name="cpp_id" value="<%=rs.getString("cpp_id")%>"  onClick="addName('<%=rs.getString("last_name")%>','<%=rs.getString("first_name")%>')"></td>
-      <!--td width="20%" align="center" height="25"> <!--a href="cppcontrol.jsp?cpp_id=<%=rs.getString("cpp_id")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("cpp_id")%></a></td-->
-      <td align="center" width="20%" height="25"><%=rs.getString("first_name")%></td>
-      <td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
-      <td align="center" width="10%" height="25"><%=age%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("roster_status")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("sex")%></td>
-      <td align="center" width="10%" height="25"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-</tr>
-<%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td align="center" width="10%" height="25"><input type="submit"
+			name="cpp_id" value="<%=rs.getString("cpp_id")%>"
+			onClick="addName('<%=rs.getString("last_name")%>','<%=rs.getString("first_name")%>')"></td>
+		<!--td width="20%" align="center" height="25"> <!--a href="cppcontrol.jsp?cpp_id=<%=rs.getString("cpp_id")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("cpp_id")%></a></td-->
+		<td align="center" width="20%" height="25"><%=rs.getString("first_name")%></td>
+		<td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
+		<td align="center" width="10%" height="25"><%=age%></td>
+		<td align="center" width="10%" height="25"><%=rs.getString("roster_status")%></td>
+		<td align="center" width="10%" height="25"><%=rs.getString("sex")%></td>
+		<td align="center" width="10%" height="25"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+	</tr>
+	<%
     }
   }
-%> 
+%>
 	<%
   //String temp=null;
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -159,11 +171,12 @@ function addName(lastname, firstname) {
   	out.println("<input type='hidden' name='"+temp+"' value='"+request.getParameter(temp)+"'>");
          //System.out.println();
   }
-	%> 
+	%>
 	</form>
 
 </table>
-<p>
-<br>Please select by clicking on the patient's CPP id for details.</p></center>
+<p><br>
+Please select by clicking on the patient's CPP id for details.</p>
+</center>
 </body>
 </html>

@@ -22,10 +22,10 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
 
-<%@ page import="org.oscarehr.casemgmt.model.*" %>
-<%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
+<%@ page import="org.oscarehr.casemgmt.model.*"%>
+<%@ page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 
 <%
 	if(application.getAttribute("javax.servlet.context.tempdir") == null) {
@@ -58,25 +58,32 @@
 	}
 </script>
 </head>
-<body bgcolor="#C4D9E7" bgproperties="fixed" onLoad="self.focus();init_page();" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Client Image Manager</font></th></tr>
+<body bgcolor="#C4D9E7" bgproperties="fixed"
+	onLoad="self.focus();init_page();" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Client
+		Image Manager</font></th>
+	</tr>
 </table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
 
-	<html:form action="/ClientImage" enctype="multipart/form-data" method="post" onsubmit="return onPicUpload();">
-	<input type="hidden" name="method" value="saveImage"/>
-	<%
+	<html:form action="/ClientImage" enctype="multipart/form-data"
+		method="post" onsubmit="return onPicUpload();">
+		<input type="hidden" name="method" value="saveImage" />
+		<%
 	request.getSession().setAttribute("clientId",request.getParameter("demographicNo"));
 	%>
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Add Image
-        </i></b></font></td>
+		<tr valign="top">
+			<td rowspan="2" ALIGN="right" valign="middle"><font
+				face="Verdana" color="#0000FF"><b><i>Add Image </i></b></font></td>
 
 
-    <td valign="middle" rowspan="2" ALIGN="left">		
-		<html:file property="clientImage.imagefile" size="30" accept="*.gif,*.jpg"/><br>
-		<html:submit value="Upload" />
-	</td>
+			<td valign="middle" rowspan="2" ALIGN="left"><html:file
+				property="clientImage.imagefile" size="30" accept="*.gif,*.jpg" /><br>
+			<html:submit value="Upload" /></td>
 		</tr>
 	</html:form>
 </table>
@@ -88,10 +95,8 @@ Only gif and jpg image type are allowed for the client photo uploading.
 <br>
 
 
-<form>
-
-  <input type="button" name="Button" value="cancel" onclick="self.close();"/>
-</form>
+<form><input type="button" name="Button" value="cancel"
+	onclick="self.close();" /></form>
 
 
 

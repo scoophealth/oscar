@@ -21,10 +21,13 @@
     if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.io.*, java.sql.*, oscar.*, oscar.util.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page
+	import="java.io.*, java.sql.*, oscar.*, oscar.util.*, java.util.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
+<jsp:useBean id="documentBean" class="oscar.DocumentBean"
+	scope="request" />
 
 <%
 JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
@@ -53,14 +56,15 @@ if(!filename.equals("")) {
 	filepath = props.getProperty("DOCUMENT_DIR", "").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
 	dbObj.importRAFile(filepath + filename);	
 } 
-%>   
-   
+%>
+
 
 <html>
 <head>
 <title>Billing Reconcilliation</title>
-<link rel="stylesheet" type="text/css" href="../billing/CA/ON/billingON.css" />
-       
+<link rel="stylesheet" type="text/css"
+	href="../billing/CA/ON/billingON.css" />
+
 <script language="JavaScript">
 <!--
 var remote=null;
@@ -95,27 +99,28 @@ function checkReconcile(url){
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr class="myDarkGreen">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
-	<th><font color="#FFFFFF">Billing Reconcilliation</font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr class="myDarkGreen">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print(); return false;'></th>
+		<th><font color="#FFFFFF">Billing Reconcilliation</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
- 
+
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
-<tr class="myYellow">  
-	<th width="10%">Read Date</th>
-	<th width="10%">Payment Date </th>
-	<th width="25%">Payable </th>
-	<th width="10%">Records/Claims</th>
-	<th width="8%">Total </th>
-	<th width="22%">Action</th>
-	<th>Status</th>
-</tr>
-   
-<% //
+	<tr class="myYellow">
+		<th width="10%">Read Date</th>
+		<th width="10%">Payment Date</th>
+		<th width="25%">Payable</th>
+		<th width="10%">Records/Claims</th>
+		<th width="8%">Total</th>
+		<th width="22%">Action</th>
+		<th>Status</th>
+	</tr>
+
+	<% //
 List aL = dbObj.getAllRahd("D");
 for(int i = 0; i < aL.size(); i++) {
 	Properties pro = (Properties) aL.get(i);
@@ -127,21 +132,24 @@ for(int i = 0; i < aL.size(); i++) {
 	strtCount = pro.getProperty("records");
 	total = pro.getProperty("totalamount");
 	String status = pro.getProperty("status");
-%> 
-		     
-<tr <%=i%2==0?"class='myGreen'":"class='myIvory'"%>> 
-    <td><%=nowDate%>  </td>
-    <td align="center"><%=paymentdate%> </td>
-    <td><%=payable%></td>
-    <td align="center"><%=strcount%>/<%=strtCount%></td>
-    <td align="right"><%=total%></td>
-    <td align="center">
-	<a href="../billing/CA/ON/onGenRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | 
-	<a href="../billing/CA/ON/onGenRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| 
-	<a href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-    <td><%=status.compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : status.compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
-</tr>
-<%
+%>
+
+	<tr <%=i%2==0?"class='myGreen'":"class='myIvory'"%>>
+		<td><%=nowDate%></td>
+		<td align="center"><%=paymentdate%></td>
+		<td><%=payable%></td>
+		<td align="center"><%=strcount%>/<%=strtCount%></td>
+		<td align="right"><%=total%></td>
+		<td align="center"><a
+			href="../billing/CA/ON/onGenRAError.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Error</a> | <a
+			href="../billing/CA/ON/onGenRASummary.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Summary</a>| <a
+			href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report
+		</a></td>
+		<td><%=status.compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : status.compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+	</tr>
+	<%
 }
 %>
 </table>

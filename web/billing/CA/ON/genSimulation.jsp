@@ -27,11 +27,14 @@
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <%
 String errorMsg = "";
@@ -100,7 +103,7 @@ apptMainBean.closePstmtConn();
 request.setAttribute("html",htmlValue);
 %>
 
-<jsp:forward page='billingOHIPsimulation.jsp' >
+<jsp:forward page='billingOHIPsimulation.jsp'>
 	<jsp:param name="xml_appointment_date" value='<%=dateEnd%>' />
 	<jsp:param name="xml_v_date" value='<%=dateBegin%>' />
 	<jsp:param name="provider" value='<%=provider%>' />

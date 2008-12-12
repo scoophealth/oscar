@@ -24,8 +24,9 @@
  */
 -->
 
-<%@ page import="bean.*" %>
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
+<%@ page import="bean.*"%>
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
 <%
 beanSwitchControl.set_main_switch(1);
 response.sendRedirect("main.jsp");

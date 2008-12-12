@@ -29,12 +29,15 @@
  */
  --%>
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*" %>
-<%@ page import="oscar.oscarProvider.data.*,oscar.oscarWorkflow.*,oscar.oscarEncounter.oscarMeasurements.bean.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*"%>
+<%@ page
+	import="oscar.oscarProvider.data.*,oscar.oscarWorkflow.*,oscar.oscarEncounter.oscarMeasurements.bean.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 
 <%
@@ -99,202 +102,25 @@
  */
 -->
 <html:html locale="true">
-    <% response.setHeader("Cache-Control","no-cache");%>
+<% response.setHeader("Cache-Control","no-cache");%>
 
-    <head>
-        <title>Rh Immune Globulin Injection Reporting Form</title>
-        <html:base/>
-        
-        <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
-     
-        <script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-        <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-        <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script> 
-        <script type="text/javascript" src="../share/prototype.js" ></script>
+<head>
+<title>Rh Immune Globulin Injection Reporting Form</title>
+<html:base />
 
-        <style type="text/css">
-            a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-            }
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-            a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-            }
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../share/prototype.js"></script>
 
-            a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-            }
-
-            a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-            }
-
-            .Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-            }
-
-            .Head INPUT {
-            width: 100px;
-            }
-
-            .Head A {
-            font-size:12pt;
-            }
-
-            BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #FFF;            
-            }
-
-            TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-            }
-        
-            TD{
-            font-size:13pt;
-            }
-
-            TH{
-            font-size:14pt;
-            font-weight: normal;            
-            }
-
-            .checkbox{
-            height: 25px;
-            width: 25px;     
-            background-color: #FFFFFF;
-            }
-
-            .checkboxError{
-            height: 25px;
-            width: 25px;     
-            background-color: red;
-            }
-
-            .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: center;
-            }
-
-            .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: left;
-            }
-            .subTitle {
-            background-color: #F2F2F2;
-            font-weight: bold;
-            text-align: center;             
-            }
-            .question{
-            text-align: left;
-            }
-        
-            div.boxed1 {
-            border-style: solid;
-            margin: 10px;
-            padding: 10px;
-            }
-        
-            div.boxed2 {
-            border-style: solid;
-            margin: 10px;
-            padding: 10px;
-            }
-        
-            div.boxed2 label{
-            float:left;
-            width:160px;
-            }
-        
-            div.boxed2 br{
-            clear:left;
-            }
-          
-            div.boxed2 input{
-            float:left;
-            margin-right: 3px;
-           
-            }
-        
-        
-        
-            label.smallmargin{
-            float:left;
-            width:70;
-            }
-        
-        
-        
-            fieldset {
-            margin-right: 10px;
-            padding-right: 10px;
-            margin-left: 10px;
-            padding-left: 10px;
-        
-        
-            }
-        
-            fieldset label{
-            float:left;
-            width:110px;
-            }
-        
-            fieldset br{
-            clear:left;
-            }
-        
-       
-        
-            fieldset input{
-            float:left;
-            margin-right: 3px;
-           
-            }
-        
-            fieldset select{
-            float:left;
-            }
-        
-            fieldset ul {
-            list-style: none;
-            }
-        
-        
-        
-            fieldset ul input {
-            float:none;
-            }
-        
-        
-            fieldset.phys {
-             margin-top: 10px;
-
-            }
-        
-            fieldset.phys label{
-            float:left;
-            width:260px;
-            }
-
-        </style>
-    </head>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
 
 
-    <script type="text/javascript" language="Javascript">
+<script type="text/javascript" language="Javascript">
     
         var choiceFormat  = new Array(6,7,8,9,12,13);        
         var allNumericField = new Array(14,15);
@@ -302,8 +128,8 @@
         var action = "/<%=project_home%>/form/formname.do";        
 
     </script>
-    
-    <script type="text/javascript">
+
+<script type="text/javascript">
       function hideExtraName(ele){ 
        //alert(ele);
         if (ele.options[ele.selectedIndex].value != -1){
@@ -348,19 +174,20 @@
                document.getElementById(nextDate).disabled = false;              
             }
         }
-    </script>     
-    
-    <script type="text/javascript" src="formScripts.js">
+    </script>
+
+<script type="text/javascript" src="formScripts.js">
     
     </script>
 
 
-    <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,833)">
-      
-      
-                
-                
-                <script type="text/javascript">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,833)">
+
+
+
+
+<script type="text/javascript">
                     //new Form.Element.Observer($("myfield"), 1, myCallBackFunction);
                     
                     function process(formInject){
@@ -381,47 +208,54 @@
                        return False;
                     }
                 </script>
-                
-                
-                <html:form action="/oscarPrevention/AddPrevention" onsubmit="return process(this);" styleId="injectForm" >
-                    <input type="hidden" name="prevention" value="RH"/>
-                    <input type="hidden" name="demographic_no" value="<%=demographicNo%>"/>
-                    <input type="hidden" name="workflowId" value="<%=workflowId%>"/>
-                    <input type="hidden" name="formId" value="<%=formIdStr%>"/>
-                    <input type="hidden" name="reason" value=""/>
 
-       
-                    <fieldset>
-                      <legend>Rh Injection</legend>
-                         <div style="float:left;">
-                            <input name="given" type="radio" value="given"      checked >Completed</input><br/>
-                            <input name="given" type="radio" value="refused"    >Refused</input><br/>
-                            
-                         </div>
-                         <div style="float:left;margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/> 
-                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
-                                      <%for (int i=0; i < providers.size(); i++) {
+
+<html:form action="/oscarPrevention/AddPrevention"
+	onsubmit="return process(this);" styleId="injectForm">
+	<input type="hidden" name="prevention" value="RH" />
+	<input type="hidden" name="demographic_no" value="<%=demographicNo%>" />
+	<input type="hidden" name="workflowId" value="<%=workflowId%>" />
+	<input type="hidden" name="formId" value="<%=formIdStr%>" />
+	<input type="hidden" name="reason" value="" />
+
+
+	<fieldset><legend>Rh Injection</legend>
+	<div style="float: left;"><input name="given" type="radio"
+		value="given" checked>Completed</input><br />
+	<input name="given" type="radio" value="refused">Refused</input><br />
+
+	</div>
+	<div style="float: left; margin-left: 30px;"><label
+		for="prevDate" class="fields">Date:</label> <input type="text"
+		name="prevDate" id="prevDate" value="<%=prevDate%>" size="9">
+	<a id="date"><img title="Calendar" src="../images/cal.gif"
+		alt="Calendar" border="0" /></a> <br>
+	<label for="provider" class="fields">Provider:</label> <input
+		type="text" name="providerName" id="providerName"
+		value="<%=providerName%>" /> <select
+		onchange="javascript:hideExtraName(this);" id="providerDrop"
+		name="provider">
+		<%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
-                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
-                                      <%}%>                    
-                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
-                                  </select>                                      
-                         </div>
-                   </fieldset>                                                                            
-                   <fieldset >
-                      <legend >Result</legend>
-                         <label for="location">Hospital/Clinic:</label> <input type="text" name="location" /> <br/>
-                         <label for="route">Route:</label> <input type="text" name="route"   /><br/>                                               
-                         <label for="lot">Lot:</label> <input type="text" name="lot"  /><br/>
-                         <label for="lot">Product:</label> <input type="text" name="product"  /><br/>
-                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   /><br/>    
-                         <label>Dosage:</label> <input type="text" name="dosage" size="9"/><small>mcg</small>  
-                   </fieldset>
-                    
-                  
-                        <%--
+		<option value="<%= h.get("providerNo")%>"
+			<%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %>
+		<%= h.get("firstName") %></option>
+		<%}%>
+		<option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %>>Other</option>
+	</select></div>
+	</fieldset>
+	<fieldset><legend>Result</legend> <label for="location">Hospital/Clinic:</label>
+	<input type="text" name="location" /> <br />
+	<label for="route">Route:</label> <input type="text" name="route" /><br />
+	<label for="lot">Lot:</label> <input type="text" name="lot" /><br />
+	<label for="lot">Product:</label> <input type="text" name="product" /><br />
+	<label for="manufacture">Manufacture:</label> <input type="text"
+		name="manufacture" /><br />
+	<label>Dosage:</label> <input type="text" name="dosage" size="9" /><small>mcg</small>
+	</fieldset>
+
+
+	<%--
                         <div class="boxed2">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date" style="float:left;"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>                       
                             <label >Hospital/Clinic:</label><input type="text" name="location" size="9"/> 
@@ -441,39 +275,49 @@
                             <label>Dosage:</label> <input type="text" name="dosage" size="9"/><small>mcg</small>   
                         </div>
                     --%>
-                        
-                        <fieldset>
-                            <legend>REASON FOR INJECTION (please check):</legend>
-                            <ul >
-                                <li><input type="radio" name="reason_check"  value="Antepartum (28 weeks)" checked>Antepartum (28 weeks)</input> </li>
-                                <li><input type="radio" name="reason_check"  value="Amniocentesis">Amniocentesis </input></li>
-                                <li><input type="radio" name="reason_check"  value="Ectopic Pregnancy">Ectopic Pregnancy </input></li>
-                                <li><input type="radio" name="reason_check"  value="Antenatal Bleeding (threatened abortion)">Antenatal Bleeding (threatened abortion) </input></li>
-                                <li><input type="radio" name="reason_check" value="Spontaneous Abortion">Spontaneous Abortion </input></li>
-                                <li><input type="radio" name="reason_check" value="Therapeutic Abortion">Therapeutic Abortion </input></li>
-                                <li><input type="radio" name="reason_check" value="Platelet Transfusion">Platelet Transfusion </input></li>
-                                <li><input type="radio" name="reason_check" value="Postpartum">Postpartum</input></li>
-                                <li><input type="radio" name="reason_check" value="Other">Other</input> <input type="text" name="reasonOtherText" id="reasonOtherText"/></li>
-                            </ul> 
-                        </fieldset>
-                        <%-- input type="button" onclick="process(document.getElementById('injectForm'))"/ --%>
-                        &nbsp;<input type="submit" value="Save Injection"/>
-                    
-                </html:form>
-            </div>
-            
-             <script type="text/javascript">
+
+	<fieldset><legend>REASON FOR INJECTION (please
+	check):</legend>
+	<ul>
+		<li><input type="radio" name="reason_check"
+			value="Antepartum (28 weeks)" checked>Antepartum (28 weeks)</input></li>
+		<li><input type="radio" name="reason_check" value="Amniocentesis">Amniocentesis
+		</input></li>
+		<li><input type="radio" name="reason_check"
+			value="Ectopic Pregnancy">Ectopic Pregnancy </input></li>
+		<li><input type="radio" name="reason_check"
+			value="Antenatal Bleeding (threatened abortion)">Antenatal
+		Bleeding (threatened abortion) </input></li>
+		<li><input type="radio" name="reason_check"
+			value="Spontaneous Abortion">Spontaneous Abortion </input></li>
+		<li><input type="radio" name="reason_check"
+			value="Therapeutic Abortion">Therapeutic Abortion </input></li>
+		<li><input type="radio" name="reason_check"
+			value="Platelet Transfusion">Platelet Transfusion </input></li>
+		<li><input type="radio" name="reason_check" value="Postpartum">Postpartum</input></li>
+		<li><input type="radio" name="reason_check" value="Other">Other</input>
+		<input type="text" name="reasonOtherText" id="reasonOtherText" /></li>
+	</ul>
+	</fieldset>
+	<%-- input type="button" onclick="process(document.getElementById('injectForm'))"/ --%>
+                        &nbsp;<input type="submit"
+		value="Save Injection" />
+
+</html:form>
+</div>
+
+<script type="text/javascript">
             Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
             hideExtraName(document.getElementById('providerDrop'));                                    
                             
         </script>
-              
-          
-        
-       
-        
-        
-    </body>
+
+
+
+
+
+
+</body>
 </html:html>
 
 

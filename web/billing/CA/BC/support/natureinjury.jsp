@@ -1,3 +1,4 @@
+
 <%
   	if (session.getAttribute("user") == null){
 		response.sendRedirect("../../logout.jsp");
@@ -50,66 +51,48 @@ function posttoText(index){
 }
 </script>
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
-<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D3D3D3">
-  <tr> 
-    <td height="40" width="25"></td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana" color="#4D4D4D"><b><font size="4">oscar<font size="3">Nature of Injury</font></font></b></font> 
-      </p>
-    </td>
-  </tr>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+	bgcolor="#D3D3D3">
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana" color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">Nature of Injury</font></font></b></font></p>
+		</td>
+	</tr>
 </table>
 <br>
 <table width="100%" border="0" cellspacing="5" cellpadding="0">
 	<tr bgcolor="#D4D4D4">
-		<td>
-			Link
-		</td>
-		<td>
-			Level 1
-		</td>
-		<td>
-			Level 2
-		</td>
-		<td>
-			Level 3
-		</td>
-		<td>
-			Usage Note
-		</td>
+		<td>Link</td>
+		<td>Level 1</td>
+		<td>Level 2</td>
+		<td>Level 3</td>
+		<td>Usage Note</td>
 	</tr>
-<%
+	<%
 	boolean color = false;
 	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
    String wherestr = "where code like '"+searchStr+"' or level1 like '"+searchStr+"' or level2 like '"+searchStr+"' or level3 like '"+searchStr+"'";
 	java.sql.ResultSet rs = db.GetSQL("SELECT code, level1, level2, level3, usagenote FROM wcb_noi_code "+wherestr+" ORDER BY level1, level2, level3");
 	while (rs.next()){
 %>
-	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
-		<td class="SmallerText">
-			<a href=# onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
+	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
+		valign="top">
+		<td class="SmallerText"><a href=#
+			onClick="posttoText('<%=rs.getString("code")%>');"><%=rs.getString("code")%></a>
 		</td>
-		<td class="SmallerText">
-			<%=db.getString(rs,"level1")%>
-		</td>
-		<td class="SmallerText">
-			<%=db.getString(rs,"level2")%>
-		</td>
-		<td class="SmallerText">
-			<%=db.getString(rs,"level3")%>
-		</td>
-		<td class="SmallerText">
-			<%=db.getString(rs,"usagenote")%>
-		</td>
+		<td class="SmallerText"><%=db.getString(rs,"level1")%></td>
+		<td class="SmallerText"><%=db.getString(rs,"level2")%></td>
+		<td class="SmallerText"><%=db.getString(rs,"level3")%></td>
+		<td class="SmallerText"><%=db.getString(rs,"usagenote")%></td>
 	</tr>
-<%
+	<%
 		color = !(color);
 	}
 %>
-<tr bgcolor="#D4D4D4">
-		<td colspan="5">
-			&nbsp
-		</td>
+	<tr bgcolor="#D4D4D4">
+		<td colspan="5">&nbsp</td>
 	</tr>
 </table>
 </body>

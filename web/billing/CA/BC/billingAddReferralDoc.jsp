@@ -24,15 +24,17 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,org.apache.commons.beanutils.*" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,org.apache.commons.beanutils.*"%>
 
 <html:html locale="true">
 
 <head>
 <title>Manage Referral Docs</title>
-<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
 function isNumeric(strString){
@@ -92,122 +94,39 @@ function forwardZero(str, len) {
 
 </script>
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	label{
-float: left;
-width: 120px;
-font-weight: bold;
-}
-
-label.checkbox{
-float: left;
-width: 116px;
-font-weight: bold;
-}
-
-label.fields{
-float: left;
-width: 80px;
-font-weight: bold;
-}
-
-span.labelLook{
-font-weight:bold;
-
-}
-
-input, textarea,select{
-
-//margin-bottom: 5px;
-}
-
-textarea{
-width: 450px;
-height: 100px;
-}
-
-
-.boxes{
-width: 1em;
-}
-
-#submitbutton{
-margin-left: 120px;
-margin-top: 5px;
-width: 90px;
-}
-
-br{
-clear: left;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                billing
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						Manage Referral Billing
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">&nbsp;
-            &nbsp;
-            
-            </td>
-            <td class="MainTableRightColumn">    
-                             
-            <% if (request.getAttribute("Error") != null){ %>
-                 <span style="font: bold 15pt sans-serif;color:red;"><%=request.getAttribute("Error") %></span>
-              <% }%>
-            
-           <html:form action="/billing/CA/BC/AddReferralDoc" onsubmit="return checkBillingNumber();">
-           
-           <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">billing</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Manage Referral Billing</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; &nbsp;</td>
+		<td class="MainTableRightColumn">
+		<% if (request.getAttribute("Error") != null){ %> <span
+			style="font: bold 15pt sans-serif; color: red;"><%=request.getAttribute("Error") %></span>
+		<% }%> <html:form action="/billing/CA/BC/AddReferralDoc"
+			onsubmit="return checkBillingNumber();">
+
+			<%
             String id = request.getParameter("id");
             if ( id != null ){                
                 try{
@@ -216,42 +135,42 @@ clear: left;
                     BeanUtils.populate(frm,bd.getReferralbyId(id));                              
                 }catch(Exception e){
                     e.printStackTrace();
-                }%>    
-                <input type="hidden" name="id" value="<%=id%>"/>
-           <%
+                }%>
+			<input type="hidden" name="id" value="<%=id%>" />
+			<%
             }
            %>
-            
-           <fieldset >
-                 <legend ><%=(id == null)?"Add":"Update"%> Referral Doctor</legend>
 
-             <label for="referral_no">Billing #:</label> <html:text property="referral_no"/><br>
-             <label for="last_name">Last Name:</label><html:text property="last_name"/><b>First Name:</b><html:text property="first_name"/> <br/>
-             <label for="specialty">Specialty:</label> <html:text property="specialty"/></br>
-             <label for="address1">Address 1:</label> <html:text property="address1" size="30"/><br/>
-             <label for="address2">Address 2:</label> <html:text property="address2" size="30"/><br/>                      
-             <label for="city">City:</label> <html:text property="city"/><b>Province:</b><html:text property="province"/><br/>
-             <label for="postal">Postal:</label><html:text property="postal"/><br/>                                         
-             <label for="phone">Phone:</label> <html:text property="phone"/><b>Fax:<b/><html:text property="fax"/><br/>                                                                   
-               
-               
-               
-               
-               <input type="submit" value="Save"/>
-               <input type="button" value="Cancel" onclick="window.location = 'billingManageReferralDoc.jsp';"/>
-            </fieldset>
-            </html:form>
-              
-			   </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+			<fieldset><legend><%=(id == null)?"Add":"Update"%>
+			Referral Doctor</legend> <label for="referral_no">Billing #:</label> <html:text
+				property="referral_no" /><br>
+			<label for="last_name">Last Name:</label><html:text
+				property="last_name" /><b>First Name:</b><html:text
+				property="first_name" /> <br />
+			<label for="specialty">Specialty:</label> <html:text
+				property="specialty" /></br>
+			<label for="address1">Address 1:</label> <html:text
+				property="address1" size="30" /><br />
+			<label for="address2">Address 2:</label> <html:text
+				property="address2" size="30" /><br />
+			<label for="city">City:</label> <html:text property="city" /><b>Province:</b><html:text
+				property="province" /><br />
+			<label for="postal">Postal:</label><html:text property="postal" /><br />
+			<label for="phone">Phone:</label> <html:text property="phone" /><b>Fax:<b /><html:text
+				property="fax" /><br />
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
 
-            </td>
-        </tr>
-    </table>
+
+
+			<input type="submit" value="Save" /> <input type="button"
+				value="Cancel"
+				onclick="window.location = 'billingManageReferralDoc.jsp';" /></fieldset>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

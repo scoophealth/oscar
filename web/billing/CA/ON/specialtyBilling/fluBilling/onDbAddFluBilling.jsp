@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ page import="java.util.*, oscar.oscarBilling.ca.on.pageUtil.*"%>
 
@@ -160,7 +161,8 @@
 <%}%>
 <p></p>
 <hr width="90%"></hr>
-<form><input type="button" value="Close this window" onClick="window.close()"></form>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

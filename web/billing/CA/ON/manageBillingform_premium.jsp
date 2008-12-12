@@ -22,8 +22,8 @@
  * Hamilton 
  * Ontario, Canada 
  */
---%>   
-  <% 
+--%>
+<% 
   
  ResultSet rs=null ;
   ResultSet rs2=null ;
@@ -43,7 +43,7 @@
    out.println("failed!!!"); 
   } else {
   %>
-  <% 
+<% 
    while (rs.next()) {
      
          rCount = rCount + 1;
@@ -65,7 +65,7 @@
    out.println("failed!!!"); 
   } else {
   %>
-  <% 
+<% 
    while (rs.next()) {
  
         service_code1[rCount1] = rs.getString("service_code");
@@ -74,65 +74,88 @@
    }
  } 
  
-  %> 
+  %>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="allborder" valign="top">    <table width="100%" border="0" cellspacing="0" cellpadding="0"><form method="post" name="form1" action="dbManageBillingform_premium.jsp">
-        <tr> 
-          <td><bean:message key="billing.manageBillingform_premium.msgAdd"/></td>
-        </tr>
-   <% for (int x=0; x<10 ; x++) { %>
-        <tr> 
-          <td><input type="text" name="service<%=x+1%>"></td>
-   
-        </tr>
-   <%}%>
-      <tr> 
-             <td><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_premium.btnAdd"/>"></td>
-        </tr>
-       </form></table></td>
-    <td class="allborder">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0"><form method="post" name="form1" action="dbManageBillingform_premium_delete.jsp">
-        <tr> 
-          <td class="rightBorder"><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
-          <td class="rightBorder"><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
-          <td><bean:message key="billing.manageBillingform_premium.msgDescription"/></td>
-   
-        </tr>
-          <% tCount = 0;
+	<tr>
+		<td class="allborder" valign="top">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<form method="post" name="form1"
+				action="dbManageBillingform_premium.jsp">
+			<tr>
+				<td><bean:message
+					key="billing.manageBillingform_premium.msgAdd" /></td>
+			</tr>
+			<% for (int x=0; x<10 ; x++) { %>
+			<tr>
+				<td><input type="text" name="service<%=x+1%>"></td>
+
+			</tr>
+			<%}%>
+			<tr>
+				<td><input type="submit" name="submit"
+					value="<bean:message key="billing.manageBillingform_premium.btnAdd"/>"></td>
+			</tr>
+			</form>
+		</table>
+		</td>
+		<td class="allborder">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<form method="post" name="form1"
+				action="dbManageBillingform_premium_delete.jsp">
+			<tr>
+				<td class="rightBorder"><bean:message
+					key="billing.manageBillingform_premium.msgDescription" /></td>
+				<td class="rightBorder"><bean:message
+					key="billing.manageBillingform_premium.msgDescription" /></td>
+				<td><bean:message
+					key="billing.manageBillingform_premium.msgDescription" /></td>
+
+			</tr>
+			<% tCount = 0;
           while (tCount < rCount-3) {
           tCount1=tCount;
           tCount2=tCount+1;
           tCount3=tCount+2;
           tCount=tCount +3;
     %>
-           
-        <tr class="list"> 
 
-          <td class="topRightBorder"><input type="checkbox" name="service<%=service_code1[tCount1]%>" value="<%=service_code1[tCount1]%>"><%=service_code1[tCount1]%> <%=service_desc1[tCount1]%></td>
-          <td class="topRightBorder"><input type="checkbox" name="service<%=service_code1[tCount2]%>" value="<%=service_code1[tCount2]%>"><%=service_code1[tCount2]%> <%=service_desc1[tCount2]%></td>
-          <td class="topBorder"><input type="checkbox" name="service<%=service_code1[tCount3]%>" value="<%=service_code1[tCount3]%>"><%=service_code1[tCount3]%> <%=service_desc1[tCount3]%></td>
-        </tr>
-          <%
+			<tr class="list">
+
+				<td class="topRightBorder"><input type="checkbox"
+					name="service<%=service_code1[tCount1]%>"
+					value="<%=service_code1[tCount1]%>"><%=service_code1[tCount1]%>
+				<%=service_desc1[tCount1]%></td>
+				<td class="topRightBorder"><input type="checkbox"
+					name="service<%=service_code1[tCount2]%>"
+					value="<%=service_code1[tCount2]%>"><%=service_code1[tCount2]%>
+				<%=service_desc1[tCount2]%></td>
+				<td class="topBorder"><input type="checkbox"
+					name="service<%=service_code1[tCount3]%>"
+					value="<%=service_code1[tCount3]%>"><%=service_code1[tCount3]%>
+				<%=service_desc1[tCount3]%></td>
+			</tr>
+			<%
        
           }
      	  %>
-	  
-        <tr> 
-      
-          <td><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_premium.btnDelete"/>"></td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr></form>
-      </table>
-    </td>
-  </tr>
+
+			<tr>
+
+				<td><input type="submit" name="submit"
+					value="<bean:message key="billing.manageBillingform_premium.btnDelete"/>"></td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			</form>
+		</table>
+		</td>
+	</tr>
 </table>
 
-  <%  
+<%  
 
 %>
-  
-     
+
+
 
 

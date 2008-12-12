@@ -223,15 +223,18 @@
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <link rel="StyleSheet" type="text/css" href="../web.css" />
 <!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
 <!-- main calendar program -->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
-<script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
+<script type="text/javascript"
+	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
               </script>
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
 <script language="JavaScript">
 
       <!--
@@ -341,7 +344,8 @@
 
       </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <center>
 <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr class="myDarkGreen">
@@ -350,8 +354,9 @@
 </table>
 </center>
 
-<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="myYellow">
-<form method="post" name="baseur0" action="billingONfavourite.jsp">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"
+	class="myYellow">
+	<form method="post" name="baseur0" action="billingONfavourite.jsp">
 	<tr>
 		<td align="right" width="50%"><select name="name" id="name">
 			<option selected="selected" value="">- choose one -</option>
@@ -364,48 +369,63 @@
 			<%}
 				%>
 		</select></td>
-		<td><input type="hidden" name="submit" value="Search"> <input type="submit" name="action" value=" Edit ">
-			<input type="submit" name="action" value="Delete" onClick="javascript:return onDelete();">
-		</td>
+		<td><input type="hidden" name="submit" value="Search"> <input
+			type="submit" name="action" value=" Edit "> <input
+			type="submit" name="action" value="Delete"
+			onClick="javascript:return onDelete();"></td>
 	</tr>
-</form>
+	</form>
 </table>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
-<form method="post" name="baseurl" action="billingONfavourite.jsp" >
+	<form method="post" name="baseurl" action="billingONfavourite.jsp">
 	<tr class="myGreen">
 		<td align="right"><b>Name</b></td>
-		<td><input type="text" name="name" value="<%=prop.getProperty("name", "")%>" size='40' maxlength='50' /> (e.g. Flu
-		shot) <input type="submit" name="submit" value="Search" onclick="javascript:return onSearch();"></td>
+		<td><input type="text" name="name"
+			value="<%=prop.getProperty("name", "")%>" size='40' maxlength='50' />
+		(e.g. Flu shot) <input type="submit" name="submit" value="Search"
+			onclick="javascript:return onSearch();"></td>
 	</tr>
 
 	<%for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 
 					%>
-	<tr <%=i%2==0? "bgcolor=\"ivory\"" : "class=\"myGreen\""%>">
+	<tr<%=i%2==0? "bgcolor=\"ivory\"" : "class=\"myGreen\""%>">
 		<td align="right"><b>Service Code <%=i + 1%></b></td>
-		<td><input type="text" name="serviceCode<%=i%>" value="<%=prop.getProperty("serviceCode"+i, "")%>" size='5'
-			maxlength='50' onblur="upCaseCtrl(this)" /> (e.g. A001A) <b>Unit</b><input type="text" name="serviceUnit<%=i%>"
-			value="<%=prop.getProperty("serviceUnit"+i, "")%>" size='2' maxlength='2' /> (e.g. 1, 12) <b>@</b><input type="text"
-			name="serviceAt<%=i%>" value="<%=prop.getProperty("serviceAt"+i, "")%>" size='3' maxlength='4' /> (e.g. 0.85)</td>
+		<td><input type="text" name="serviceCode<%=i%>"
+			value="<%=prop.getProperty("serviceCode"+i, "")%>" size='5'
+			maxlength='50' onblur="upCaseCtrl(this)" /> (e.g. A001A) <b>Unit</b><input
+			type="text" name="serviceUnit<%=i%>"
+			value="<%=prop.getProperty("serviceUnit"+i, "")%>" size='2'
+			maxlength='2' /> (e.g. 1, 12) <b>@</b><input type="text"
+			name="serviceAt<%=i%>"
+			value="<%=prop.getProperty("serviceAt"+i, "")%>" size='3'
+			maxlength='4' /> (e.g. 0.85)</td>
 	</tr>
 	<%}
 
 				%>
 
-	<tr >
+	<tr>
 		<td align="right"><b>Dx</b></td>
-		<td><input type="text" name="dx" value="<%=prop.getProperty("dx", "")%>" size='3' maxlength='4' /> (e.g. 012) <b>Dx1</b>
-		<input type="text" name="dx1" value="<%=prop.getProperty("dx1", "")%>" size='3' maxlength='4' /> <b>Dx2</b> <input
-			type="text" name="dx2" value="<%=prop.getProperty("dx2", "")%>" size='3' maxlength='4' /></td>
+		<td><input type="text" name="dx"
+			value="<%=prop.getProperty("dx", "")%>" size='3' maxlength='4' />
+		(e.g. 012) <b>Dx1</b> <input type="text" name="dx1"
+			value="<%=prop.getProperty("dx1", "")%>" size='3' maxlength='4' /> <b>Dx2</b>
+		<input type="text" name="dx2" value="<%=prop.getProperty("dx2", "")%>"
+			size='3' maxlength='4' /></td>
 	</tr>
 	<tr>
-		<td align="center" class="myGreen" colspan="2"><input type="hidden" name="action" value='<%=action%>'> <input
-			type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
-			onclick="javascript:return onSave();"> <input type="button" name="Cancel"
-			value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()"></td>
+		<td align="center" class="myGreen" colspan="2"><input
+			type="hidden" name="action" value='<%=action%>'> <input
+			type="submit" name="submit"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
+			onclick="javascript:return onSave();"> <input type="button"
+			name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()"></td>
 	</tr>
-</form>
+	</form>
 </table>
 </body>
 <script type="text/javascript">

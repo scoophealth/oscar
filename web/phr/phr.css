@@ -4,96 +4,94 @@
     Author     : root
     Description:
         Purpose of the stylesheet follows.
-*/
-
-/* 
+*/ /* 
    TODO customize this sample style
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
-
-root { 
-    display: block;
+root {
+	display: block;
 }
 
 body {
-    margin-top: 0px;
-    margin-left: 0px;
-    margin-right: 2px;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 2px;
 }
 
 div.objectGreenHeader {
-    background: #7ab869 none repeat scroll 0%;
-    border: medium none;
-    color: #F1F1FD;
-    font-family: arial;
-    font-weight: bold;
-    text-align: center;
+	background: #7ab869 none repeat scroll 0%;
+	border: medium none;
+	color: #F1F1FD;
+	font-family: arial;
+	font-weight: bold;
+	text-align: center;
 }
 
 div.objectGreen {
-    background: #f5fff6 none repeat scroll 0%;
-    border: 1px solid #7ab869;
-    font-family: Arial;
-    font-size: 11px;
-    margin-left: 0px;
-    margin-top: 2px;
-    width: 100%;
-    padding-bottom: 5px;
+	background: #f5fff6 none repeat scroll 0%;
+	border: 1px solid #7ab869;
+	font-family: Arial;
+	font-size: 11px;
+	margin-left: 0px;
+	margin-top: 2px;
+	width: 100%;
+	padding-bottom: 5px;
 }
 
 font.announcementGreen {
-    color: #306f19;
-    text-align: center;
-    font-weight: bold;
+	color: #306f19;
+	text-align: center;
+	font-weight: bold;
 }
+
 div.objectRedHeader {
-    background: #a3341a none repeat scroll 0%;
-    border: medium none;
-    color: #F1F1FD;
-    font-family: arial;
-    font-weight: bold;
-    text-align: center;
+	background: #a3341a none repeat scroll 0%;
+	border: medium none;
+	color: #F1F1FD;
+	font-family: arial;
+	font-weight: bold;
+	text-align: center;
 }
 
 div.objectRed {
-    background: #F5F5FF none repeat scroll 0%;
-    border: 1px solid #a3341a;
-    font-family: Arial;
-    font-size: 11px;
-    margin-left: 0px;
-    margin-top: 2px;
-    width: 100%;
-    padding-bottom: 5px;
+	background: #F5F5FF none repeat scroll 0%;
+	border: 1px solid #a3341a;
+	font-family: Arial;
+	font-size: 11px;
+	margin-left: 0px;
+	margin-top: 2px;
+	width: 100%;
+	padding-bottom: 5px;
 }
 
 font.announcementRed {
-    color: #306f80;
-    text-align: center;
-    font-weight: bold;
+	color: #306f80;
+	text-align: center;
+	font-weight: bold;
 }
 
 div.objectBlueHeader {
-    background: #69b2b6 none repeat scroll 0%;
-    border: medium none;
-    color: #F1F1FD;
-    font-family: arial;
-    font-weight: bold;
-    text-align: center;
+	background: #69b2b6 none repeat scroll 0%;
+	border: medium none;
+	color: #F1F1FD;
+	font-family: arial;
+	font-weight: bold;
+	text-align: center;
 }
 
 div.objectBlue {
-    background: #F5F5FF none repeat scroll 0%;
-    border: 1px solid #6F92C8;
-    font-family: Arial;
-    font-size: 11px;
-    margin-left: 0px;
-    margin-top: 2px;
-    width: 100%;
-    padding-bottom: 5px;
+	background: #F5F5FF none repeat scroll 0%;
+	border: 1px solid #6F92C8;
+	font-family: Arial;
+	font-size: 11px;
+	margin-left: 0px;
+	margin-top: 2px;
+	width: 100%;
+	padding-bottom: 5px;
 }
 
 font.announcementBlue {
-    color: #306f19;
-    text-align: center;
-    font-weight: bold;
+	color: #306f19;
+	text-align: center;
+	font-weight: bold;
 }

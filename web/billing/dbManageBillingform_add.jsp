@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <%
 
 
@@ -47,13 +49,13 @@ if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("")
  String errormsg = "Error: Type Description, Groups Descrption  must be entered.";
 
 %>
-<jsp:forward page='../dms/errorpage.jsp' >
-<jsp:param name="msg" value='<%=errormsg%>' />
-<jsp:param name="type" value='<%=type%>' />
-<jsp:param name="typeid" value='<%=typeid%>' />
-<jsp:param name="group1" value='<%=group1%>' />
-<jsp:param name="group2" value='<%=group2%>' />
-<jsp:param name="group2" value='<%=group3%>' />
+<jsp:forward page='../dms/errorpage.jsp'>
+	<jsp:param name="msg" value='<%=errormsg%>' />
+	<jsp:param name="type" value='<%=type%>' />
+	<jsp:param name="typeid" value='<%=typeid%>' />
+	<jsp:param name="group1" value='<%=group1%>' />
+	<jsp:param name="group2" value='<%=group2%>' />
+	<jsp:param name="group2" value='<%=group3%>' />
 </jsp:forward>
 <%
 
@@ -119,4 +121,4 @@ else {
 }
 
 
-%> 
+%>

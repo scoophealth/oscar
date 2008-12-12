@@ -24,22 +24,26 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html:html locale="true">
-<head><title><bean:message key="admin.preferenceaddpreference.title"/></title>
+<head>
+<title><bean:message key="admin.preferenceaddpreference.title" /></title>
 <link rel="stylesheet" href="../web.css">
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceaddpreference.description"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.preferenceaddpreference.description" /></font></th>
+	</tr>
+</table>
 <%
 String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
@@ -70,8 +74,8 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[7]);
 }
 %>
-  <h1><bean:message key="admin.preferenceaddarecord.msgSuccessful"/>
-  </h1>
+<h1><bean:message key="admin.preferenceaddarecord.msgSuccessful" />
+</h1>
 <%  
   } else {
   //now try to add the new preference record
@@ -96,25 +100,31 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[7]);
 }
 %>
-  <h1><bean:message key="admin.preferenceaddpreference.msgAdditionSuccess"/></h1>
+<h1><bean:message
+	key="admin.preferenceaddpreference.msgAdditionSuccess" /></h1>
 <%  
     } else {
 %>
-  <p><h1><bean:message key="admin.preferenceaddpreference.msgAdditionFailure"/></h1></p>
+<p>
+<h1><bean:message
+	key="admin.preferenceaddpreference.msgAdditionFailure" /></h1>
+</p>
 <%  
     }
   }
   apptMainBean.closePstmtConn();
-%>
-
-  <!-- footer -->
-  <hr width="100%" color="navy">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"><bean:message key="global.btnBack"/></a></td>
-      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+%> <!-- footer -->
+<hr width="100%" color="navy">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"><bean:message
+			key="global.btnBack" /></a></td>
+		<td align="right"><a href="../logout.jsp"><bean:message
+			key="global.btnLogout" /><img src="../images/rightarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

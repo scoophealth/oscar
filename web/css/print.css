@@ -1,13 +1,16 @@
 body {
-  color : #000000;
-  background : #ffffff;
-  font-family : "Times New Roman", Times, serif,Verdana, Tahoma, Arial, sans-serif;;
-  font-size : 8pt;
+	color: #000000;
+	background: #ffffff;
+	font-family: "Times New Roman", Times, serif, Verdana, Tahoma, Arial,
+		sans-serif;;
+	font-size: 8pt;
 }
+
 a {
-  text-decoration : underline;
-  color : #0000ff;
+	text-decoration: underline;
+	color: #0000ff;
 }
+
 #noprint {
-  display : none;
+	display: none;
 }

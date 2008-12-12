@@ -26,9 +26,11 @@
 -->
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 <%@include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%@include file="dbDMS.jsp"%>
 <%
   String filename = "", filetype = "", doc_no = "";
@@ -43,23 +45,24 @@
     if (filetype.compareTo("active") == 0) {              
       if ( downloadMethod == null ) {
       filePath = "../../OscarDocument"+request.getContextPath()+"/document/"+filename;
-      %>  
-      <html:html locale="true">
-      <head>
-         <title><bean:message key="dms.documentGetFile.title"/></title>
-         <meta http-equiv="Content-Type" content="text/html;">
-      </head>
-      <frameset rows="21,*" frameborder="NO" border="0" frames.opera/cache4/pacing="0" cols="*"> 
-         <frame name="topFrame" scrolling="NO" noresize src="docViewerHead.jsp" >
-         <frame name="mainFrame" src="<%=filePath%>">
-      </frameset>
-      <noframes>
-        <body bgcolor="#FFFFFF" text="#000000">
-        </body>
-      </noframes> 
-      </html:html>
-      
-      <%}else{         
+      %>
+<html:html locale="true">
+<head>
+<title><bean:message key="dms.documentGetFile.title" /></title>
+<meta http-equiv="Content-Type" content="text/html;">
+</head>
+<frameset rows="21,*" frameborder="NO" border="0"
+	frames.opera/cache4/pacing="0" cols="*">
+	<frame name="topFrame" scrolling="NO" noresize src="docViewerHead.jsp">
+	<frame name="mainFrame" src="<%=filePath%>">
+</frameset>
+<noframes>
+<body bgcolor="#FFFFFF" text="#000000">
+</body>
+</noframes>
+</html:html>
+
+<%}else{         
          response.setContentType("application/octet-stream");      
          response.setHeader("Content-Disposition", "attachment;filename=\"" + filename+ "\"");
          //read the file name.
@@ -90,7 +93,8 @@
   } else {
 %>
 <jsp:forward page='../dms/errorpage.jsp'>
-  <jsp:param name="msg" value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>'/>
+	<jsp:param name="msg"
+		value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>' />
 </jsp:forward>
 
 <%}%>

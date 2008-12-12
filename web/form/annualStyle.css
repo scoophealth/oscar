@@ -21,136 +21,137 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
-/* annualStyle.css -- Style sheet used for the Annual Health Review */
-
+	/* annualStyle.css -- Style sheet used for the Annual Health Review */
 BODY {
-font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-font-size: 70%;
-background-color: #FFFFCC;
+	font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+	font-size: 70%;
+	background-color: #FFFFCC;
 }
 
 TEXTAREA {
-    overflow:auto;
+	overflow: auto;
 }
 
 .DashedBorder {
-    border-width:1px;
-    border-style:dashed;
-    border-color:#000000;
+	border-width: 1px;
+	border-style: dashed;
+	border-color: #000000;
 }
 
 .Input {
-    font-size:80%;
+	font-size: 80%;
 }
 
 .TableWithBorder {
-    border-width:1px;
-    border-style:solid;
-    border-color:black;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
 }
 
 .FixedTableWithBorder {
-    border-width:1px;
-    border-style:solid;
-    border-color:black;
-    width:955px;
-}
-.bottomBorder {
-   border-bottom: solid black 1px;
-   border-right: solid black 1 px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	width: 955px;
 }
 
+.bottomBorder {
+	border-bottom: solid black 1px;
+	border-right: solid black 1 px;
+}
 
 .SystemsReview {
-    width:350px;
+	width: 350px;
 }
 
 .LifestyleReview {
-    width:230px;
+	width: 230px;
 }
 
 .ScreeningReview {
-    width:300px;
-}
-.OnExam {
-   width:310px;
+	width: 300px;
 }
 
-.PhysicalSigns {
-//    width:730px;
-    height:300px;
-    width:100%;
+.OnExam {
+	width: 310px;
+}
+
+.PhysicalSigns { //
+	width: 730px;
+	height: 300px;
+	width: 100%;
 }
 
 .AssessmentPlan {
-    width:450px;
-    height:300px;
+	width: 450px;
+	height: 300px;
 }
+
 .ImpressionPlan {
-    width:800px;
-    height:300px;
+	width: 800px;
+	height: 300px;
 }
+
 .ToDos {
-    width:450px;
-
-}
-.listItem{
-  font-size: 13px;
-}
-.listItemReqOhip{
-  font-size: 13px;
-  font-weight: bold;
-}
-.Headings{
-   font-size: 15px;
-   font-weight: bold;
-   text-align: center;
-}
-.HeadingsReqOhip{
-  font-size: 15px;
-  font-weight: bold;
-}
-.HeadingNotOhip{
-  font-size:15px;
+	width: 450px;
 }
 
+.listItem {
+	font-size: 13px;
+}
+
+.listItemReqOhip {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.Headings {
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.HeadingsReqOhip {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.HeadingNotOhip {
+	font-size: 15px;
+}
 
 .Body {
-        width:900px;
-        font-size: 13px;
+	width: 900px;
+	font-size: 13px;
 }
-
-
-
 
 .ScreeningReview {
-    width:300px;
+	width: 300px;
 }
 
-.PhysicalSigns {
-//    width:730px;
-    height:300px;
-    width:100%;
+.PhysicalSigns { //
+	width: 730px;
+	height: 300px;
+	width: 100%;
 }
 
 .AssessmentPlan {
-    width:450px;
-    height:300px;
+	width: 450px;
+	height: 300px;
 }
 
 .Head {
-    background-color:#BBBBBB;
-    padding-top:5px;
-    padding-bottom:5px;
-    width:940px;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 940px;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }

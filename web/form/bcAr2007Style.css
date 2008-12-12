@@ -21,75 +21,77 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
 .Head {
-    background-color:#BBBBBB;
-    padding-top:3px;
-    padding-bottom:3px;
-    width:940px;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 940px;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 .headline {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 BODY {
-    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
-    background-color: #BBCCFF;
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	background-color: #BBCCFF;
 }
 
 TABLE {
-    font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
 	font-size: 10pt;
 }
-INPUT{
-    font-family:    Helvetica, Arial, Verdana, Tahoma, sans-serif;
-    font-size:      9pt;
-    font-weight:    bold; 
+
+INPUT {
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
 }
-TEXTAREA{
-    font-family:    Helvetica, Arial, Verdana, Tahoma, sans-serif;
-    font-size:      9pt;
-    font-weight:    bold;
+
+TEXTAREA {
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
 }
-SELECT{
-    font-family:    Helvetica, Arial, Verdana, Tahoma, sans-serif;
-    font-size:      9pt;
-    font-weight:    bold;
+
+SELECT {
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size: 9pt;
+	font-weight: bold;
 }
 
 .title {
-    background-color: #486ebd;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-align: center;
+	background-color: #486ebd;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-align: center;
 }
 
 .shrinkMe {
-    font-size: 9pt;
+	font-size: 9pt;
 }
 
 .small9 {
-    font-size: 9pt;
+	font-size: 9pt;
 }
 
 .small8 {
-    font-size: 8pt;
+	font-size: 8pt;
 }
 
 .small10 {
-    font-size: 10pt;
+	font-size: 10pt;
 }
 
 .spe {
-    background-color: #CCCCFF ;
+	background-color: #CCCCFF;
 }

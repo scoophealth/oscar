@@ -24,8 +24,9 @@
  */
 -->
 
-<%@ page import="bean.*" %>
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
+<%@ page import="bean.*"%>
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
 <%
     String year = request.getParameter("year").trim();  
     String month = request.getParameter("month").trim();

@@ -26,17 +26,17 @@
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-     
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <html:html locale="true">
-    <head>
-        <title> <bean:message key="demographic.search.title"/> </title>
-        <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-        <meta http-equiv="Cache-Control" content="no-cache">
-        <script type="text/javascript" >
+<head>
+<title><bean:message key="demographic.search.title" /></title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<script type="text/javascript">
 
         function setfocus() {
             document.titlesearch.keyword.focus();
@@ -81,129 +81,77 @@
         }
          
         </script>
-        <style type="text/css">
-    BODY{
-        font-size: medium;
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        margin:0px;
-    }
-    TABLE{
-        font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-    }
-    TD{
-        font-size:11pt;
-    }
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+<body onload="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#CCCCFF">
+		<th NOWRAP><font face="Helvetica"><bean:message
+			key="demographic.search.msgSearchPatient" /></font></th>
+	</tr>
+</table>
+<form method="get" name="titlesearch" action="demographiccontrol.jsp"
+	onSubmit="return checkTypeIn()">
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#EEEEFF">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i><bean:message
+			key="demographic.search.msgSearch" /></i></b></font></td>
 
-    TH{
-        font-size:11pt;            
-    }
-    .blueText{
-        font-size:9pt;        
-        vertical-align: top;
-    }
-    .mbttn {
-        background: #D7DBF2;
-        border-bottom: 1px solid #104A7B;
-        border-right: 1px solid #104A7B;
-        border-left: 1px solid #AFC4D5;
-        border-top:1px solid #AFC4D5;
-        color:#000066;height:19px;
-        text-decoration:none;
-        cursor: hand;
-    }
-    .subject {
-        background-color: #003399;
-        color: #FFFFFF;  
-        font-size: 14pt;
-        font-weight: bold;
-        text-align: center;        
-    }
-    .searchTitle {
-        background-color: #6699CC;
-        color: #000000;            
-        font-weight: bold;
-        text-align: left;
-        height:20px;
-    }
-    .title {
-        background-color: #6699CC;
-        color: #000000;            
-        font-weight: bold;
-        text-align: center;
-        height:20px;
-    }
-    
-</style>
-    </head>
-    <body onload="setfocus()" >
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-            <tr bgcolor="#CCCCFF"><th NOWRAP><font face="Helvetica"><bean:message key="demographic.search.msgSearchPatient"/></font></th></tr>
-        </table>
-        <form method="get" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
-        <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">         
-            <tr valign="top">
-                <td rowspan="2" ALIGN="right" valign="middle">
-                    <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.search.msgSearch"/></i></b></font>
-                </td>
-			
-                <td width="10%" nowrap>
-                    <font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio"  checked name="search_mode" value="search_name">
-                    <bean:message key="demographic.search.formName"/> </font>
-                </td>
-                <td nowrap>
-                    <font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio"  name="search_mode" value="search_phone">
-                    <bean:message key="demographic.search.formPhone"/></font>
-                </td> 
-                <td nowrap>
-                    <font size="1" face="Verdana" color="#0000FF">
-                    <input type="radio"  name="search_mode" value="search_dob">
-                    <bean:message key="demographic.search.formDOB"/></font>
-                </td> 
-                <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-                    <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" >
-                    <INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-                    <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-                    <INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-                    <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-                    <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active">
-                    <INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
-                    &nbsp;&nbsp;&nbsp;
-                    <INPUT TYPE="button" onclick="searchInactive();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>" VALUE="<bean:message key="demographic.search.Inactive"/>">
-                    <INPUT TYPE="button" onclick="searchAll();" TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>" VALUE="<bean:message key="demographic.search.All"/>">                    
-                </td>
-            </tr>
-            <tr>			
-                <td nowrap>
-                    <font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio" name="search_mode" value="search_address">
-                    <bean:message key="demographic.search.formAddr"/> </font>
-                </td>
-                <td nowrap>
-                    <font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio" name="search_mode" value="search_hin">
-                    <bean:message key="demographic.search.formHIN"/></font>
-                </td>
-                <td nowrap>
-                    <font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio" name="search_mode" value="search_chart_no">
-                    <bean:message key="demographic.search.formChart"/></font>
-                </td>
-            </tr>
-        </table>
-        </form>			
+		<td width="10%" nowrap><font size="1" face="Verdana"
+			color="#0000FF"> <input type="radio" checked
+			name="search_mode" value="search_name"> <bean:message
+			key="demographic.search.formName" /> </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_phone"> <bean:message
+			key="demographic.search.formPhone" /></font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_dob"> <bean:message
+			key="demographic.search.formDOB" /></font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
+		<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
+		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
+			NAME="displaymode" VALUE="Search"> <INPUT TYPE="hidden"
+			NAME="ptstatus" VALUE="active"> <INPUT TYPE="SUBMIT"
+			NAME="displaymode"
+			VALUE="<bean:message key="demographic.search.btnSearch"/>" SIZE="17"
+			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchActive"/>">
+		&nbsp;&nbsp;&nbsp; <INPUT TYPE="button" onclick="searchInactive();"
+			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchInactive"/>"
+			VALUE="<bean:message key="demographic.search.Inactive"/>"> <INPUT
+			TYPE="button" onclick="searchAll();"
+			TITLE="<bean:message key="demographic.zdemographicfulltitlesearch.tooltips.searchAll"/>"
+			VALUE="<bean:message key="demographic.search.All"/>"></td>
+	</tr>
+	<tr>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_address">
+		<bean:message key="demographic.search.formAddr" /> </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_hin"> <bean:message
+			key="demographic.search.formHIN" /></font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_chart_no">
+		<bean:message key="demographic.search.formChart" /></font></td>
+	</tr>
+</table>
+</form>
 
-        <CENTER>
-        <p> <br>
-        </p>
- 
-        <p><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message key="demographic.search.btnCreateNew"/></font></b></a> 
-           <oscar:oscarPropertiesCheck property="SHOW_FILE_IMPORT_SEARCH" value="yes">
-           &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font size="+1">Import New Demographic</font></a>
-           </oscar:oscarPropertiesCheck>
-        </p>
-        <p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1"><bean:message key="demographic.search.btnELearning"/></font></a--></p>
-        </center>
-    </body>
+<CENTER>
+<p><br>
+</p>
+
+<p><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
+	key="demographic.search.btnCreateNew" /></font></b></a> <oscar:oscarPropertiesCheck
+	property="SHOW_FILE_IMPORT_SEARCH" value="yes">
+           &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font
+		size="+1">Import New Demographic</font></a>
+</oscar:oscarPropertiesCheck></p>
+<p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1"><bean:message key="demographic.search.btnELearning"/></font></a--></p>
+</center>
+</body>
 </html:html>

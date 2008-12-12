@@ -24,20 +24,24 @@
  */
 -->
 
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
-<head><title>demographic: the following records</title></head>
+<head>
+<title>demographic: the following records</title>
+</head>
 <link rel="stylesheet" href="../web.css" />
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            UPDATE a DEMOGRAPHIC RECORD</font></th>
-      </tr>
-    </table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		UPDATE a DEMOGRAPHIC RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
     String[] param =new String[25];
@@ -72,20 +76,20 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <h2> Update a Demographic Record Successfully ! 
-  <p><a href="admincontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=Demographic_Edit&dboperation=demographic_search_detail"><%= request.getParameter("demographic_no") %></a>
-  </h2>
+<h2>Update a Demographic Record Successfully !
+<p><a
+	href="admincontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=Demographic_Edit&dboperation=demographic_search_detail"><%= request.getParameter("demographic_no") %></a>
+</h2>
 <%  
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.
+<h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
-  <p></p>
-<%@ include file="footer2.htm" %>
-  
-  </center>
+<p></p>
+<%@ include file="footer2.htm"%>
+</center>
 </body>
 </html>

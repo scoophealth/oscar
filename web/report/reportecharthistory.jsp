@@ -1,4 +1,4 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
   
 
@@ -10,9 +10,12 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,oscar.oscarProvider.data.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,oscar.oscarProvider.data.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
 //{"search_appt","select appointment_no, appointment_date,start_time, end_time, reason from appointment where demographic_no=? order by ? desc limit ? offset ?" },
@@ -48,10 +51,10 @@
 -->
 <html>
 <head>
-<title>ENCOUNTER SHEET </title>
+<title>ENCOUNTER SHEET</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -62,26 +65,38 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="oscarEncounter.echartHistory.title"/></font></th>
-    <th width="10%" nowrap>
-      <input type="button" name="Button" value="<bean:message key="oscarEncounter.echartHistory.buttonPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="oscarEncounter.echartHistory.buttonExit"/>" onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#CCCCFF">
+		<th align=CENTER NOWRAP><font face="Helvetica"><bean:message
+			key="oscarEncounter.echartHistory.title" /></font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="<bean:message key="oscarEncounter.echartHistory.buttonPrint"/>"
+			onClick="window.print()"><input type="button" name="Button"
+			value="<bean:message key="oscarEncounter.echartHistory.buttonExit"/>"
+			onClick="window.close()"></th>
+	</tr>
 </table>
 
-<table width="480" border="0" cellspacing="1" cellpadding="0" ><tr>
-<td>  </td>
-<td align="right"></td>
-</tr></table>
-<table width="100%" border="0" bgcolor="#ffffff" cellspacing="1" cellpadding="2" >
-<tr bgcolor="#CCCCFF" align="center">
-<TH ><b><bean:message key="oscarEncounter.echartHistory.apptDate"/></b></TH>
-<TH width="50%"><b><bean:message key="oscarEncounter.echartHistory.reason"/></b></TH>
-<!--TH width="10%"><b>Size</b></TH-->
-<th>Provider</th>
-</tr>
-<%
+<table width="480" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td></td>
+		<td align="right"></td>
+	</tr>
+</table>
+<table width="100%" border="0" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="2">
+	<tr bgcolor="#CCCCFF" align="center">
+		<TH><b><bean:message
+			key="oscarEncounter.echartHistory.apptDate" /></b></TH>
+		<TH width="50%"><b><bean:message
+			key="oscarEncounter.echartHistory.reason" /></b></TH>
+		<!--TH width="10%"><b>Size</b></TH-->
+		<th>Provider</th>
+	</tr>
+	<%
   ResultSet rsdemo = null ;
   ResultSet rsdemo1 = null ;
   //boolean bodd = false;
@@ -122,13 +137,14 @@ function setfocus() {
 		bgcolor = "gold";
 	}
 %>
-<tr bgcolor="<%=bgcolor%>">
-      <td align="center"><a href="../oscarEncounter/echarthistoryprint.jsp?echartid=<%=rsdemo.getString("eChartId")%>&demographic_no=<%=demographic_no%>"><%=datetime%></a></td>
-      <td><%=rsdemo.getString("subject")!=null?rsdemo.getString("subject"):""%></td>
-      <!--td align="center"><%--=ectsize + "KB" --%></td-->
-      <td><%=ProviderData.getProviderName(rsdemo.getString("providerNo"))%></td>
-</tr>
-<%
+	<tr bgcolor="<%=bgcolor%>">
+		<td align="center"><a
+			href="../oscarEncounter/echarthistoryprint.jsp?echartid=<%=rsdemo.getString("eChartId")%>&demographic_no=<%=demographic_no%>"><%=datetime%></a></td>
+		<td><%=rsdemo.getString("subject")!=null?rsdemo.getString("subject"):""%></td>
+		<!--td align="center"><%--=ectsize + "KB" --%></td-->
+		<td><%=ProviderData.getProviderName(rsdemo.getString("providerNo"))%></td>
+	</tr>
+	<%
   }
   daySheetBean.closePstmtConn();
 %>
@@ -141,14 +157,14 @@ function setfocus() {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="reportecharthistory.jsp?demographic_no=<%=demographic_no%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="reportecharthistory.jsp?demographic_no=<%=demographic_no%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="reportecharthistory.jsp?demographic_no=<%=demographic_no%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&splitectsize=<%=splitectsize%>"> Next Page</a>
-<%
+%> <a
+	href="reportecharthistory.jsp?demographic_no=<%=demographic_no%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&splitectsize=<%=splitectsize%>">
+Next Page</a> <%
   }
 %>
 </CENTER>

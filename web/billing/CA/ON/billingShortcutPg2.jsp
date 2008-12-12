@@ -1,3 +1,4 @@
+
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
@@ -12,16 +13,19 @@
   String premiumFlag     = "";
   String service_form    = "";
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-  <%@ page errorPage="errorpage.jsp"import="java.util.*,java.math.*,java.net.*,
-                                            java.sql.*, oscar.util.*, oscar.*" %>
-  <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-  <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-  <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page errorPage="errorpage.jsp"
+	import="java.util.*,java.math.*,java.net.*,
+                                            java.sql.*, oscar.util.*, oscar.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <%
   if(request.getParameter("submit")!=null && "Back to Edit".equals(request.getParameter("button")  ) ) {
 %>
@@ -386,8 +390,8 @@ System.out.println(" * ******************************" + sql);
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>OscarBilling</title>
-	<script language="JavaScript">
+<title>OscarBilling</title>
+<script language="JavaScript">
 	<!--
 	    function onSave() {
 	        //document.forms[0].submit.value="save";
@@ -402,139 +406,138 @@ System.out.println(" * ******************************" + sql);
 	</script>
 </head>
 
-<body topmargin="0" >
+<body topmargin="0">
 
-  <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-    <form method="post" name="titlesearch" action="billingShortcutPg2.jsp"  onsubmit="return onSave();">
-      <tr>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr><td>
-          	<b>Confirmation </b>
-        	</td>
-			<td align="right">
-            <input type="hidden" name="addition" value="Confirm" />
-            </td>
+<table border="0" cellpadding="0" cellspacing="2" width="100%"
+	bgcolor="#CCCCFF">
+	<form method="post" name="titlesearch" action="billingShortcutPg2.jsp"
+		onsubmit="return onSave();">
+	<tr>
+		<td>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td><b>Confirmation </b></td>
+				<td align="right"><input type="hidden" name="addition"
+					value="Confirm" /></td>
 			</tr>
-		  </table>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr bgcolor="#33CCCC">
-              <td nowrap bgcolor="#FFCC99" width="10%" align="center">
-                <%= demoname %> <%= demoSex.equals("1")?"Male":"Female" %> <%= " DOB: " + demoDOBYY + "/" + demoDOBMM + "/" + demoDOBDD + " HIN: " + demoHIN %>
-              </td>
-              <td bgcolor="#99CCCC" align="center"><%= wrongMsg %>
-              </td>
-            </tr>
-          </table>
-
-          <table border="1" cellspacing="0" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#FFFFFF">
-            <tr >
-              <td width="50%">
-
-              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="ivory">
-              <tr><td nowrap width="30%" align="center" valign="top">
-                <b>Service Date</b><br>
-                <%=request.getParameter("billDate").replaceAll("\\n", "<br>")%>
-              </td>
-              <td align="center" width="33%">
-                <b>Diagnostic Code</b><br>
-                <%=request.getParameter("dxCode")%>
-                <hr>
-	                <b>Cal.% mode</b><br>
-					<%=request.getParameter("rulePerc")%>
-              </td>
-              <td valign="top">
-                <b>Refer. Doctor</b><br><%=request.getParameter("referralDocName")%><br>
-                <b>Refer. Doctor #</b><br><%=request.getParameter("referralCode")%>
-              </td>
-              </tr>
-              </table>
-
-              </td><td valign="top">
-
-              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#EEEEFF">
-              <tr><td nowrap width="30%">
-				<b>Billing Physician</b></td>
-				<td width="20%">
-				<%=providerBean.getProperty(request.getParameter("xml_provider"), "")%></td>
-				<td nowrap width="30%"><b>Assig. Physician</b></td>
-				<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
-              	</td>
-              </tr>
-              <tr>
-
-				<td width="30%"><b>Visit Type</b></td>
-				<td width="20%">
-				<%=request.getParameter("xml_visittype").substring(request.getParameter("xml_visittype").indexOf("|")+1)%>
-				</td>
-
-				<td width="30%"><b>Billing Type</b></td>
-				<td width="20%">
-				<%=request.getParameter("xml_billtype").substring(request.getParameter("xml_billtype").indexOf("|")+1)%>
-				</td>
-              </tr>
-              <tr>
-				<td><b>Visit Location</b></td>
-				<td colspan="3">
-				<%=request.getParameter("xml_location").substring(request.getParameter("xml_location").indexOf("|")+1)%></td>
-              </tr>
-              <tr>
-				<td><b>Admission Date</b></td>
-				<td >
-				<%=request.getParameter("xml_vdate")%>
-				</td>
-				<td colspan="2">
-				</td>
-
-              </tr>
-              </table>
-
-
-              </td>
-            </tr>
-          </table>
-
-        </td>
-
-      </tr>
-      <tr><td align="center">
-			<table border = "1" width="50%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
-
-                <%= msg %>
-
-			  <tr>
-
-                <td colspan='2' align='center' bgcolor="silver">
-                <input type="submit" name="button" value="Back to Edit"  style="width: 120px;" />
-                <input type="submit" name="submit" value="Save"  style="width: 120px;"/>
-                <input type="submit" name="submit" value="Save and Back"  style="width: 120px;"/>
-				</td>
-              </tr>
-            </table>
+		</table>
 		</td>
-	  </tr>
+	</tr>
+	<tr>
+		<td>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr bgcolor="#33CCCC">
+				<td nowrap bgcolor="#FFCC99" width="10%" align="center"><%= demoname %>
+				<%= demoSex.equals("1")?"Male":"Female" %> <%= " DOB: " + demoDOBYY + "/" + demoDOBMM + "/" + demoDOBDD + " HIN: " + demoHIN %>
+				</td>
+				<td bgcolor="#99CCCC" align="center"><%= wrongMsg %></td>
+			</tr>
+		</table>
+
+		<table border="1" cellspacing="0" cellpadding="0" width="100%"
+			bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+			bgcolor="#FFFFFF">
+			<tr>
+				<td width="50%">
+
+				<table border="1" cellspacing="2" cellpadding="0" width="100%"
+					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+					bgcolor="ivory">
+					<tr>
+						<td nowrap width="30%" align="center" valign="top"><b>Service
+						Date</b><br>
+						<%=request.getParameter("billDate").replaceAll("\\n", "<br>")%></td>
+						<td align="center" width="33%"><b>Diagnostic Code</b><br>
+						<%=request.getParameter("dxCode")%>
+						<hr>
+						<b>Cal.% mode</b><br>
+						<%=request.getParameter("rulePerc")%></td>
+						<td valign="top"><b>Refer. Doctor</b><br><%=request.getParameter("referralDocName")%><br>
+						<b>Refer. Doctor #</b><br><%=request.getParameter("referralCode")%>
+						</td>
+					</tr>
+				</table>
+
+				</td>
+				<td valign="top">
+
+				<table border="1" cellspacing="2" cellpadding="0" width="100%"
+					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+					bgcolor="#EEEEFF">
+					<tr>
+						<td nowrap width="30%"><b>Billing Physician</b></td>
+						<td width="20%"><%=providerBean.getProperty(request.getParameter("xml_provider"), "")%></td>
+						<td nowrap width="30%"><b>Assig. Physician</b></td>
+						<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
+						</td>
+					</tr>
+					<tr>
+
+						<td width="30%"><b>Visit Type</b></td>
+						<td width="20%"><%=request.getParameter("xml_visittype").substring(request.getParameter("xml_visittype").indexOf("|")+1)%>
+						</td>
+
+						<td width="30%"><b>Billing Type</b></td>
+						<td width="20%"><%=request.getParameter("xml_billtype").substring(request.getParameter("xml_billtype").indexOf("|")+1)%>
+						</td>
+					</tr>
+					<tr>
+						<td><b>Visit Location</b></td>
+						<td colspan="3"><%=request.getParameter("xml_location").substring(request.getParameter("xml_location").indexOf("|")+1)%></td>
+					</tr>
+					<tr>
+						<td><b>Admission Date</b></td>
+						<td><%=request.getParameter("xml_vdate")%></td>
+						<td colspan="2"></td>
+
+					</tr>
+				</table>
 
 
-<%
+				</td>
+			</tr>
+		</table>
+
+		</td>
+
+	</tr>
+	<tr>
+		<td align="center">
+		<table border="1" width="50%" bordercolorlight="#99A005"
+			bordercolordark="#FFFFFF">
+
+			<%= msg %>
+
+			<tr>
+
+				<td colspan='2' align='center' bgcolor="silver"><input
+					type="submit" name="button" value="Back to Edit"
+					style="width: 120px;" /> <input type="submit" name="submit"
+					value="Save" style="width: 120px;" /> <input type="submit"
+					name="submit" value="Save and Back" style="width: 120px;" /></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+
+
+	<%
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 		String temp=e.nextElement().toString();
 %>
-	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>">
-<%
+	<input type="hidden" name="<%= temp %>"
+		value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>">
+	<%
 }
 %>
 	<input type="hidden" name="hc_type" value="<%=demoHCTYPE%>">
 	<input type="hidden" name="referralCode" value="<%=r_doctor_ohip%>">
 	<input type="hidden" name="sex" value="<%=demoSex%>">
 	<input type="hidden" name="proOHIPNO" value="<%=proOHIPNO%>">
-    </form>
+	</form>
 
-  </table>
+</table>
 
 
-  </body>
+</body>
 </html>

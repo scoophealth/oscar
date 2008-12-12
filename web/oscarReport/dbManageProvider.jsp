@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbReport.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbReport.jsp"%>
 <html>
 <head>
 <script LANGUAGE="JavaScript">
@@ -42,14 +44,15 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A Provider List</font></th>
-      </tr>
-    </table><%    
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A Provider List</font></th>
+	</tr>
+</table>
+<%    
  
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -86,24 +89,18 @@ mygroup = request.getParameter(temp).substring(request.getParameter(temp).indexO
 	  
 	  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_reportprovider_byaction");
 	
-%>
-
-<%
+%> <%
 }
-%>
-
-<script LANGUAGE="JavaScript">
+%> <script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
-</script>
-<%
+</script> <%
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

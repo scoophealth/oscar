@@ -25,11 +25,13 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 
 <%
   
@@ -48,27 +50,23 @@
 <html:html locale="true">
 
 <head>
-<html:base/>
-<title>oscarPrevention</title><!-- i18n -->
+<html:base />
+<title>oscarPrevention</title>
+<!-- i18n -->
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" > 
-     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1">
+
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
-<style type="text/css">
-  div.ImmSet { background-color: #ffffff; }
-  div.ImmSet h2 {  }
-  div.ImmSet ul {  }
-  div.ImmSet li {  }
-  div.ImmSet li a { text-decoration:none; color:blue;}
-  div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
 
@@ -139,97 +137,24 @@ function disableifchecked(ele,nextDate){
         //alert(nextProcedureTD.innerText);
 
     }
-</script>  
+</script>
 
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	
-label{
-float: left;
-width: 120px;
-font-weight: bold;
-}
-
-span.labelLook{
-font-weight:bold;
-
-}
-
-input, textarea,select{
-
-margin-bottom: 5px;
-}
-
-textarea{
-width: 250px;
-height: 150px;
-}
-
-.boxes{
-width: 1em;
-}
-
-#submitbutton{
-margin-left: 120px;
-margin-top: 5px;
-width: 90px;
-}
-
-br{
-clear: left;
-}
-
-table.ele {
-   
-   border-collapse:collapse;
-}
-
-table.ele td{
-    border:1px solid grey;
-    padding:2px;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <style type="text/css" media="print">
 .MainTable {
-    display:none;
-}
-.hiddenInPrint{
-    display:none;
-}
-.shownInPrint{
-    display:block;
+	display: none;
 }
 
+.hiddenInPrint {
+	display: none;
+}
+
+.shownInPrint {
+	display: block;
+}
 </style>
 
 
@@ -237,81 +162,67 @@ table.ele td{
 
 <body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" >
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="100" >
-               oscarPrevention
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            Prevention Reporting
-                        </td>
-                        <td  >&nbsp;
-		               <a href="../report/ManageLetters.jsp?goto=success_manage_from_prevention" target="_blank">manage letters</a>			
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-               &nbsp;
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-               <html:form action="/oscarPrevention/PreventionReport" method="get">
-               <div>
-                  Patient Set:
-                  <html:select property="patientSet">
-                      <html:option value="-1" >--Select Set--</html:option>
-                      <%for (int i =0 ; i < queryArray.size(); i++){
+<table class="MainTable" id="scrollNumber1">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="100">
+		oscarPrevention</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Prevention Reporting</td>
+				<td>&nbsp; <a
+					href="../report/ManageLetters.jsp?goto=success_manage_from_prevention"
+					target="_blank">manage letters</a></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td valign="top" class="MainTableRightColumn"><html:form
+			action="/oscarPrevention/PreventionReport" method="get">
+			<div>Patient Set: <html:select property="patientSet">
+				<html:option value="-1">--Select Set--</html:option>
+				<%for (int i =0 ; i < queryArray.size(); i++){
                         RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
                         String qId = sc.id;
                         String qName = sc.queryName;%>
-                        <html:option value="<%=qId%>"><%=qName%></html:option>
-                      <%}%>
-                  </html:select>                  
-               </div>
-               <div>
-                  Prevention Query:
-                  <html:select property="prevention">
-                      <html:option value="-1" >--Select Query--</html:option>
-                      <html:option value="PAP" >PAP</html:option>
-                      <html:option value="Mammogram" >Mammogram</html:option>
-                      <html:option value="Flu" >Flu</html:option>
-                      <html:option value="ChildImmunizations" >Child Immunizations</html:option>  
-                      <html:option value="FOBT" >FOBT</html:option>  
-                  </html:select>                  
-               </div>
-               <div>
-                  As of:
-                    <html:text property="asofDate" size="9" styleId="asofDate" /> <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                      
-                    
-                    
-               </div>
-               <input type="submit" />
-               </html:form>
-               
-               
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
-    
-    <div>
-                <%ArrayList overDueList = new ArrayList();
+				<html:option value="<%=qId%>"><%=qName%></html:option>
+				<%}%>
+			</html:select></div>
+			<div>Prevention Query: <html:select property="prevention">
+				<html:option value="-1">--Select Query--</html:option>
+				<html:option value="PAP">PAP</html:option>
+				<html:option value="Mammogram">Mammogram</html:option>
+				<html:option value="Flu">Flu</html:option>
+				<html:option value="ChildImmunizations">Child Immunizations</html:option>
+				<html:option value="FOBT">FOBT</html:option>
+			</html:select></div>
+			<div>As of: <html:text property="asofDate" size="9"
+				styleId="asofDate" /> <a id="date"><img title="Calendar"
+				src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+
+
+
+			</div>
+			<input type="submit" />
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<div>
+<%ArrayList overDueList = new ArrayList();
                   ArrayList firstLetter = new ArrayList();
                   ArrayList secondLetter = new ArrayList();
                   ArrayList refusedLetter = new ArrayList();
@@ -327,46 +238,45 @@ table.ele td{
                   if (asDate == null){ asDate = Calendar.getInstance().getTime(); }
                   
                   if (list != null ){ %>
-              <table class="ele" width="80%">
-                       <tr>
-                       <td>&nbsp;</td>
-                       <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td colspan="3">Up to Date: <%=done%> = <%=percentage %> % 
-                         <%if (percentageWithGrace != null){  %>
-                           <%-- <br/> With Grace <%=percentageWithGrace%> %
-                           --%>
-                         <%}%>
-                       </td>
-                       <%if (type != null ){ %>
-                       <td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%> </td>
-                       <%}else{%>
-                       <td colspan="8">&nbsp;<%=request.getAttribute("patientSet")%> </td>
-                       <%}%>
-                       </tr>
-                       <tr>
-                          <td>&nbsp;</td>
-                          <td>DemoNo</td>
-                          <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
-                          <td>Sex</td>
-                          <td>Lastname</td>
-                          <td>Firstname</td>
-                          <%if (type != null ){ %>
-                          <td>Guardian</td>
-                          <%}%>
-                          <td>Phone</td>                          
-                          <td>Address</td>
-                          <td>Status</td>                          
-                          <%if (type != null ){ %>
-                          <td>Shot #</td>
-                          <%}%>                          
-                          <td>Bonus Stat</td>
-                          <td>Since Last Procedure Date</td>
-                          <td>Last Procedure Date</td>
-                          <td>Last Contact Method</td>
-                          <td>Next Contact Method</td>
-                          <td>Roster Physician</td>
-                       </tr>
-                       <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
+<table class="ele" width="80%">
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="2">Total patients: <%=list.size()%><br />
+		Ineligible:<%=ineligible%></td>
+		<td colspan="3">Up to Date: <%=done%> = <%=percentage %> % <%if (percentageWithGrace != null){  %>
+		<%-- <br/> With Grace <%=percentageWithGrace%> %
+                           --%> <%}%>
+		</td>
+		<%if (type != null ){ %>
+		<td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%></td>
+		<%}else{%>
+		<td colspan="8">&nbsp;<%=request.getAttribute("patientSet")%></td>
+		<%}%>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>DemoNo</td>
+		<td>Age as of <br /><%=UtilDateUtilities.DateToString(asDate)%></td>
+		<td>Sex</td>
+		<td>Lastname</td>
+		<td>Firstname</td>
+		<%if (type != null ){ %>
+		<td>Guardian</td>
+		<%}%>
+		<td>Phone</td>
+		<td>Address</td>
+		<td>Status</td>
+		<%if (type != null ){ %>
+		<td>Shot #</td>
+		<%}%>
+		<td>Bonus Stat</td>
+		<td>Since Last Procedure Date</td>
+		<td>Last Procedure Date</td>
+		<td>Last Contact Method</td>
+		<td>Next Contact Method</td>
+		<td>Roster Physician</td>
+	</tr>
+	<%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
                          DemographicData demoData= new DemographicData();
                          
                          
@@ -396,119 +306,99 @@ table.ele td{
                                overDueList.add(dis.demographicNo);
                             }
                             %>
-                       <tr>
-                          <td><%=i+1%></td>
-                          <td>
-                              <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
-                          </td>
-                          
-                          <%if (type == null ){ %>
-                          <td><%=demo.getAgeAsOf(asDate)%></td>
-                          <td><%=h.get("sex")%></td>
-                          <td><%=h.get("lastName")%></td>
-                          <td><%=h.get("firstName")%></td>
-                          <td><%=demo.getPhone()%> </td>
-                          <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>                          
-                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
-                          
-                          
-                          <% }else {
-                              DemographicData.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>                                                                 
-                          <td><%=demo.getAgeAsOf(asDate)%></td>
-                          <td><%=h.get("sex")%></td>
-                          <td><%=h.get("lastName")%></td>
-                          <td><%=h.get("firstName")%></td>                          
-                          
-                          <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
-                          <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
-                          <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>                          
-                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>                          
-                          <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
-                          
-                          <%}%>                          
-                          <td bgcolor="<%=dis.color%>" id="lastFollowup<%=i+1%>">
-                             <% if (dis.lastFollowup != null ){ %>                                 
-                                 <%=dis.lastFollupProcedure%>
-                                 <%=UtilDateUtilities.DateToString(dis.lastFollowup)%> 
-                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M                           
-                             <% }else{ %>
-                                ----
-                             <% } %>                                 
-                          </td>
-                          <td bgcolor="<%=dis.color%>" id="nextSuggestedProcedure<%=i+1%>">
-                              <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
-                                 <a href="javascript: return false;" onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>
-                              <%}else if(dis.nextSuggestedProcedure != null){%>
-                                    <%=dis.nextSuggestedProcedure%>
-                              <%}else{%>
-                                    ----
-                              <%}%>
-                          </td>
-                          <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
-                          
-                       </tr>                                                         
-                      <%}%>
-                    </table>   
-                    
-                    
-                  
-                  <%}%>
-                  <%--
+	<tr>
+		<td><%=i+1%></td>
+		<td><a href="javascript: return false;"
+			onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>
+		</td>
+
+		<%if (type == null ){ %>
+		<td><%=demo.getAgeAsOf(asDate)%></td>
+		<td><%=h.get("sex")%></td>
+		<td><%=h.get("lastName")%></td>
+		<td><%=h.get("firstName")%></td>
+		<td><%=demo.getPhone()%></td>
+		<td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%>
+		</td>
+		<td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
+
+
+		<% }else {
+                              DemographicData.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>
+		<td><%=demo.getAgeAsOf(asDate)%></td>
+		<td><%=h.get("sex")%></td>
+		<td><%=h.get("lastName")%></td>
+		<td><%=h.get("firstName")%></td>
+
+		<td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%>
+		<%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
+		<td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
+		<td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%>
+		&nbsp;</td>
+		<td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
+		<td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
+
+		<%}%>
+		<td bgcolor="<%=dis.color%>" id="lastFollowup<%=i+1%>">
+		<% if (dis.lastFollowup != null ){ %> <%=dis.lastFollupProcedure%> <%=UtilDateUtilities.DateToString(dis.lastFollowup)%>
+		<%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M
+		<% }else{ %> ---- <% } %>
+		</td>
+		<td bgcolor="<%=dis.color%>" id="nextSuggestedProcedure<%=i+1%>">
+		<%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
+		<a href="javascript: return false;"
+			onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>
+		<%}else if(dis.nextSuggestedProcedure != null){%> <%=dis.nextSuggestedProcedure%>
+		<%}else{%> ---- <%}%>
+		</td>
+		<td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
+
+	</tr>
+	<%}%>
+</table>
+
+
+
+<%}%> <%--
                   <% if ( overDueList.size() > 0 ) { 
                         String queryStr = getUrlParamList(overDueList, "demo");            
                         %>                        
                         <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
-                  --%>
-                  
-                 <%-- if ( firstLetter.size() > 0 ) { 
+                  --%> <%-- if ( firstLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(firstLetter, "demo"); 
                         %>                        
                     <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">Generate First Envelopes</a>
                   <%}
-                    --%>
-                  
-                  
-                  <% if ( firstLetter.size() > 0 ) { 
+                    --%> <% if ( firstLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(firstLetter, "demo"); 
-                        %>                        
-                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate First Letter</a>
-                  <%}%>
-                  
-                  <% if ( secondLetter.size() > 0 ) { 
+                        %> <a target="_blank"
+	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate
+First Letter</a> <%}%> <% if ( secondLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(secondLetter, "demo"); 
-                        %>                        
-                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate Second Letter</a>
-                  <%}%>
-                  
-                  <% if ( refusedLetter.size() > 0 ) { 
+                        %> <a target="_blank"
+	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate
+Second Letter</a> <%}%> <% if ( refusedLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(refusedLetter, "demo"); 
-                        %>                        
-                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate Refused Letter</a>
-                  <%}%>
-                  
-                  
-                  <%--
+                        %> <a target="_blank"
+	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate
+Refused Letter</a> <%}%> <%--
                   <% if ( phoneCall.size() > 0 ) { 
                         String queryStr = getUrlParamList(phoneCall, "demo");                      
                         %>                        
                         <a target="_blank" href="../report/GenerateSpreadsheet.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Phone call 1 made for : "+request.getAttribute("prevType"),"UTF-8")%>followupType=<%=followUpType%>&followupValue=P1">Generate Phone Call list</a>
                   <%}%>
-                  --%>             
-                                    
-                                
-           
-               </div>
-    
+                  --%></div>
+
 <script type="text/javascript">
     Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-</script>    
+</script>
 
 </body>
 </html:html>

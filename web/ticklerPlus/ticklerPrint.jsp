@@ -1,50 +1,53 @@
-<%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*, org.oscarehr.common.model.*, org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
-<%@ page import="java.util.Date" %>
+<%@ include file="/taglibs.jsp"%>
+<%@ page
+	import="org.caisi.model.*, org.oscarehr.common.model.*, org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
+<%@ page import="java.util.Date"%>
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_tasks" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("noRights.html");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_tasks"
+	rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("noRights.html");%>
 </security:oscarSec>
 
 <%
 	ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(application);
 %>
 <c:if test="${requestScope.from ne 'CaseMgmt'}">
-<html>
-<head>
-	<title>TicklerPlus</title>	
-</head>
-<body>
+	<html>
+	<head>
+	<title>TicklerPlus</title>
+	</head>
+	<body>
 </c:if>
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-	<table width="100%" border="1" cellpadding="0" cellspacing="1"
-		bgcolor="#C0C0C0">
-		<tr>
-			
-			<th>Demographic Name</th>
-			<th>Provider Name</th>				
-			<th>Date</th>
-			<th>Priority</th>
-			<th>Task Assigned To</th>
-			<th>Status</th>
-			<th>Message</th>
-		</tr>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+<table width="100%" border="1" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0">
+	<tr>
 
-		<tr>
-			<%int index = 0;
+		<th>Demographic Name</th>
+		<th>Provider Name</th>
+		<th>Date</th>
+		<th>Priority</th>
+		<th>Task Assigned To</th>
+		<th>Status</th>
+		<th>Message</th>
+	</tr>
+
+	<tr>
+		<%int index = 0;
 			String bgcolor;
 			String view_image;
 
 			%>
-			<c:forEach var="tickler" items="${ticklers}">				
-				<tr align="center">
-					<%
+		<c:forEach var="tickler" items="${ticklers}">
+			<tr align="center">
+				<%
 			String demographic_name = "";
 			String provider_name = "";
 			String assignee_name = "";
@@ -88,20 +91,20 @@
 				}
 			}
 
-			%>					
+			%>
 
-					<td><%=demographic_name%></td>
-					<td><%=provider_name%></td>
-					<td><c:out value="${tickler.service_date}" /></td>
-					<td><c:out value="${tickler.priority}" /></td>
-					<td><%=assignee_name%></td>
-					<td><%=status%></td>
-					<td><c:out value="${tickler.message}" /></td>
-				</tr>
-			</c:forEach>
-		</tr>
-		
-	</table>
+				<td><%=demographic_name%></td>
+				<td><%=provider_name%></td>
+				<td><c:out value="${tickler.service_date}" /></td>
+				<td><c:out value="${tickler.priority}" /></td>
+				<td><%=assignee_name%></td>
+				<td><%=status%></td>
+				<td><c:out value="${tickler.message}" /></td>
+			</tr>
+		</c:forEach>
+	</tr>
+
+</table>
 
 </body>
 </html>

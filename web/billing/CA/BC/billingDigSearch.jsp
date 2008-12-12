@@ -32,7 +32,8 @@
 %>
 <%@page import="java.util.*, java.sql.*, oscar.*, java.net.*"%>
 <%@include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%@include file="dbBilling.jsp"%>
 <%
   String search = "", search2 = "";
@@ -57,15 +58,18 @@ function CodeAttach(File2) {
       self.opener.document.serviceform.xml_diagnostic_detail.value = File2;
 }
 -->
-</script></head>
-<body bgcolor="#FFFFFF" text="#000000" onLoad="window.setTimeout('Refresh()',3000)" topmargin="0" leftmargin="0" rightmargin="0">
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000"
+	onLoad="window.setTimeout('Refresh()',3000)" topmargin="0"
+	leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP bgcolor="#CCCCFF">
-      <font face="Helvetica" color="#000000">Diagnostic Code Search</font>
-      <font face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3 selections)</font>
-    </th>
-  </tr>
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"
+			color="#000000">Diagnostic Code Search</font> <font
+			face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3
+		selections)</font></th>
+	</tr>
 </table>
 
 <pre>
@@ -84,50 +88,35 @@ function CodeAttach(File2) {
   }
 %>
 </pre>
-<h3>
-  <font face="Arial, Helvetica, sans-serif">  </font>
-</h3>
+<h3><font face="Arial, Helvetica, sans-serif"> </font></h3>
 <form name="codesearch" method=POST action="billingDigSearch.jsp">
-<p>
-  <font face="Arial, Helvetica, sans-serif" size="2">
-    <b>Refine Search</b>
-    <br>
-    Code Range:
-    <select name="coderange">
-      <option value="0" selected>000-099</option>
-      <option value="1">100-199</option>
-      <option value="2">200-299</option>
-      <option value="3">300-399</option>
-      <option value="4">400-499</option>
-      <option value="5">500-599</option>
-      <option value="6">600-699</option>
-      <option value="7">700-799</option>
-      <option value="8">800-899</option>
-      <option value="9">900-999</option>
-    </select>
-    OR
-    <br>
-    Description:
-    <input type="text" name="codedesc" value="" size="30">
-  </font>
-  <input type=submit name=search value="Search">
-</p>
+<p><font face="Arial, Helvetica, sans-serif" size="2"> <b>Refine
+Search</b> <br>
+Code Range: <select name="coderange">
+	<option value="0" selected>000-099</option>
+	<option value="1">100-199</option>
+	<option value="2">200-299</option>
+	<option value="3">300-399</option>
+	<option value="4">400-499</option>
+	<option value="5">500-599</option>
+	<option value="6">600-699</option>
+	<option value="7">700-799</option>
+	<option value="8">800-899</option>
+	<option value="9">900-999</option>
+</select> OR <br>
+Description: <input type="text" name="codedesc" value="" size="30">
+</font> <input type=submit name=search value="Search"></p>
 </form>
-<form name="diagcode" id="diagcode" method="post" action="billingDigUpdate.jsp">
+<form name="diagcode" id="diagcode" method="post"
+	action="billingDigUpdate.jsp">
 <table width="600" border="1">
-  <tr bgcolor="#CCCCFF">
-    <td width="12%">
-      <b>
-        <font face="Arial, Helvetica, sans-serif" size="2">Code</font>
-      </b>
-    </td>
-    <td width="88%">
-      <b>
-        <font face="Arial, Helvetica, sans-serif" size="2">Description</font>
-      </b>
-    </td>
-  </tr>
-<%
+	<tr bgcolor="#CCCCFF">
+		<td width="12%"><b> <font face="Arial, Helvetica, sans-serif"
+			size="2">Code</font> </b></td>
+		<td width="88%"><b> <font face="Arial, Helvetica, sans-serif"
+			size="2">Description</font> </b></td>
+	</tr>
+	<%
  System.err.print("IN THE DIG SEARCH");
   ResultSet rslocal = null;
   ResultSet rslocal2 = null;
@@ -203,21 +192,17 @@ function CodeAttach(File2) {
         color = "#EEEEFF";
       }
 %>
-  <tr bgcolor="<%=color%>">
-    <td width="12%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <a href="javascript:CodeAttach('<%=Dcode%>|<%=DcodeDesc%>')"><%=Dcode%>          <a>
-
-      </font>
-    </td>
-    <td width="88%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="60">
-        <input type="submit" name="update" value="Update <%=Dcode%>">
-      </font>
-    </td>
-  </tr>
-<%
+	<tr bgcolor="<%=color%>">
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <a
+			href="javascript:CodeAttach('<%=Dcode%>|<%=DcodeDesc%>')"><%=Dcode%>
+		<a></font></td>
+		<td width="88%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <input type="text" name="<%=Dcode%>"
+			value="<%=DcodeDesc%>" size="60"> <input type="submit"
+			name="update" value="Update <%=Dcode%>"> </font></td>
+	</tr>
+	<%
   }
   } else {
     rslocal = null;
@@ -235,21 +220,17 @@ function CodeAttach(File2) {
         color = "#F9E6F0";
       }
 %>
-  <tr bgcolor="<%=color%>">
-    <td width="12%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <a href="javascript:CodeAttach('<%=Dcode%>|<%=DcodeDesc%>')"><%=Dcode%>          <a>
-
-      </font>
-    </td>
-    <td width="88%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="60">
-        <input type="submit" name="update" value="Update <%=Dcode%>">
-      </font>
-    </td>
-  </tr>
-<%
+	<tr bgcolor="<%=color%>">
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <a
+			href="javascript:CodeAttach('<%=Dcode%>|<%=DcodeDesc%>')"><%=Dcode%>
+		<a></font></td>
+		<td width="88%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <input type="text" name="<%=Dcode%>"
+			value="<%=DcodeDesc%>" size="60"> <input type="submit"
+			name="update" value="Update <%=Dcode%>"> </font></td>
+	</tr>
+	<%
   }
       rslocal2 = null;
   rslocal2 = apptMainBean.queryResults(codeName2 + "%", search2);
@@ -266,46 +247,38 @@ function CodeAttach(File2) {
       color = "#F9E6F0";
     }
 %>
-  <tr bgcolor="<%=color%>">
-    <td width="12%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <a href="javascript:CodeAttach('<%=Dcode2%>|<%=DcodeDesc2%>')"><%=Dcode2%>          <a>
-
-      </font>
-    </td>
-    <td width="88%">
-      <font face="Arial, Helvetica, sans-serif" size="2">
-        <input type="text" name="<%=Dcode2%>" value="<%=DcodeDesc2%>" size="60">
-        <input type="submit" name="update" value="Update <%=Dcode2%>">
-      </font>
-    </td>
-  </tr>
-<%
+	<tr bgcolor="<%=color%>">
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <a
+			href="javascript:CodeAttach('<%=Dcode2%>|<%=DcodeDesc2%>')"><%=Dcode2%>
+		<a></font></td>
+		<td width="88%"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <input type="text" name="<%=Dcode2%>"
+			value="<%=DcodeDesc2%>" size="60"> <input type="submit"
+			name="update" value="Update <%=Dcode2%>"> </font></td>
+	</tr>
+	<%
   }
       }
 %>
-<%if (intCount == 0) {%>
-  <tr bgcolor="<%=color%>">
-    <td colspan="2">
-      <font face="Arial, Helvetica, sans-serif" size="2">        No match found.
-      <%// =i      %>
-      </font>
-    </td>
-  </tr>
-<%}%>
-<%if (intCount == 1) {%>
-<script LANGUAGE="JavaScript">
+	<%if (intCount == 0) {%>
+	<tr bgcolor="<%=color%>">
+		<td colspan="2"><font face="Arial, Helvetica, sans-serif"
+			size="2"> No match found. <%// =i      %> </font></td>
+	</tr>
+	<%}%>
+	<%if (intCount == 1) {%>
+	<script LANGUAGE="JavaScript">
 <!--
  CodeAttach('<%=Dcode%>|<%=DcodeDesc%>');
 -->
 
-</script><%}%>
+</script>
+	<%}%>
 </table>
 <form>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <h3>&nbsp;</h3>
-
-
 </body>
 </html>

@@ -30,75 +30,69 @@
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 
-<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <head>
-<title>
-    Report by Template
-</title>
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css">
+<title>Report by Template</title>
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" href="reportByTemplate.css">
-<script type="text/javascript" language="JavaScript" src="../../share/javascript/prototype.js"></script>
-<script type="text/javascript" language="JavaScript" src="../../share/javascript/Oscar.js"></script>
+<script type="text/javascript" language="JavaScript"
+	src="../../share/javascript/prototype.js"></script>
+<script type="text/javascript" language="JavaScript"
+	src="../../share/javascript/Oscar.js"></script>
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
 
 <table class="MainTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" style="width: 100%;">
-                    <tr>
-                        <td>
-				Report By Template
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top" width="160px;"> 
-               <jsp:include page="listTemplates.jsp">
-                   <jsp:param name="templateviewid" value=""/>
-               </jsp:include>
-            </td>
-            <td class="MainTableRightColumn" valign="top">
-          <%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarReport.CDMReport.msgReport" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar" style="width: 100%;">
+			<tr>
+				<td>Report By Template</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top" width="160px;"><jsp:include
+			page="listTemplates.jsp">
+			<jsp:param name="templateviewid" value="" />
+		</jsp:include></td>
+		<td class="MainTableRightColumn" valign="top">
+		<%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
             String templateViewId = request.getParameter("templateviewid");
             if (templateViewId == null) templateViewId = "";
             %>
-          <div class="titleHP">Report By Template</div>
-          Select a template:
-          <div class="templatelistdivHP">
-              <ul class="templatelistHP">
-                <%for (int i=0; i<templates.size(); i++) {
+		<div class="titleHP">Report By Template</div>
+		Select a template:
+		<div class="templatelistdivHP">
+		<ul class="templatelistHP">
+			<%for (int i=0; i<templates.size(); i++) {
                     ReportObject curReport = (ReportObject) templates.get(i);%>
-                   <li><%=String.valueOf(i+1)%>. <a href="reportConfiguration.jsp?templateid=<%=curReport.getTemplateId()%>"><%=curReport.getTitle()%></a></li>
-                   <div class="templateDescriptionHP">
-                    <%=curReport.getDescription()%>
-                   </div>
-               <% } %>
-              </ul>
-               <%if (templates.isEmpty()) {%>
-                  <div class="warning">No templates in the database, please create a template file by clicking on "Edit Templates"</div>
-               <%}%>
-          </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
+			<li><%=String.valueOf(i+1)%>. <a
+				href="reportConfiguration.jsp?templateid=<%=curReport.getTemplateId()%>"><%=curReport.getTitle()%></a></li>
+			<div class="templateDescriptionHP"><%=curReport.getDescription()%>
+			</div>
+			<% } %>
+		</ul>
+		<%if (templates.isEmpty()) {%>
+		<div class="warning">No templates in the database, please create
+		a template file by clicking on "Edit Templates"</div>
+		<%}%>
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
-            <td class="MainTableBottomRowRightColumn">
-                &nbsp;
-            </td>
-        </tr>
-   </table>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </html:html>

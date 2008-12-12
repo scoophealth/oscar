@@ -1,13 +1,13 @@
 <html>
 
-    
-    <body>
-    
-        <script>
+
+<body>
+
+<script>
 top.opener.location.reload();
 top.window.close();
         </script>
 
-    </body>
+</body>
 </html>
 

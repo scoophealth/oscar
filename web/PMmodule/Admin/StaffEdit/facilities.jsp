@@ -50,17 +50,17 @@
 
 <input type="hidden" name="facility_id" />
 <div class="tabs" id="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Facilities">Facilities</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Facilities">Facilities</th>
+	</tr>
+</table>
 </div>
 
 <table class="simple" cellspacing="2" cellpadding="3">
 	<tr>
-		<th style="color:black">Assigned To</th>
-		<th style="color:black">Facility Name</th>
+		<th style="color: black">Assigned To</th>
+		<th style="color: black">Facility Name</th>
 	</tr>
 	<%
 		List<Integer> providerFacilityIds=(List)request.getAttribute("providerFacilities");
@@ -72,7 +72,9 @@
 			if (providerFacilityIds.contains(facility.getId())) checked="checked=\"checked\"";			
 		%>
 		<tr>
-			<td><input id="check_box_<c:out value='${facility.id}'/>" type="checkbox" <%=checked%> onchange="facility_change(<c:out value='${facility.id}'/>)"/></td>
+			<td><input id="check_box_<c:out value='${facility.id}'/>"
+				type="checkbox" <%=checked%>
+				onchange="facility_change(<c:out value='${facility.id}'/>)" /></td>
 			<td><c:out value="${facility.name}" /></td>
 	</c:forEach>
 </table>

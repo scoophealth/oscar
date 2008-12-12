@@ -23,106 +23,104 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
-<%@page import="java.util.Calendar" %>
+<%@page import="java.util.Calendar"%>
 <html>
-	<head>
-	
-		<style type="text/css">
-		/* <![CDATA[ */
-		@import "<html:rewrite page="/css/core.css" />";
-		/*  ]]> */
-		</style>
-		
-		<title>Facility Messages</title>
-	</head>
-	<script>
+<head>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<title>Facility Messages</title>
+</head>
+<script>
 function openBrWindow(theURL,winName,features) { 
   window.open(theURL,winName,features);
 }
 </script>
-	<body>
 <body>
-<table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#CCCCFF">
-	  <tr class="subject"><th colspan="4">CAISI</th></tr>
+<body>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	bgcolor="#CCCCFF">
+	<tr class="subject">
+		<th colspan="4">CAISI</th>
+	</tr>
 
 	<tr>
-            <td class="searchTitle" colspan="4">Facility Message Editor</td>
+		<td class="searchTitle" colspan="4">Facility Message Editor</td>
 	</tr>
 </table>
 
-<br/>
-		<html:form action="/FacilityMessage">
-			<input type="hidden" name="method" value="save"/>
-			<html:hidden property="facility_message.id"/>
-			<table width="60%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-				<tr>
-					<td class="fieldTitle">Expiry Day:&nbsp;</td>
-					<td class="fieldValue"><html:text property="facility_message.expiry_day"/>
-					<%
+<br />
+<html:form action="/FacilityMessage">
+	<input type="hidden" name="method" value="save" />
+	<html:hidden property="facility_message.id" />
+	<table width="60%" border="0" cellpadding="0" cellspacing="1"
+		bgcolor="#C0C0C0">
+		<tr>
+			<td class="fieldTitle">Expiry Day:&nbsp;</td>
+			<td class="fieldValue"><html:text
+				property="facility_message.expiry_day" /> <%
                       	Calendar rightNow = Calendar.getInstance();              
    	                  	int year = rightNow.get(Calendar.YEAR);
    	                  	int month = rightNow.get(Calendar.MONTH)+1;
    	                  	int day = rightNow.get(Calendar.DAY_OF_MONTH);
    	                  	String formattedDate = year + "-" + month + "-" + day;
-                     %>
-                     <a href="#" onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=facilityMessageForm&amp;openerElement=facility_message.expiry_day&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img border="0" src="images/calendar.jpg"/></a>
-                     </td>
-                     <td></td>
-				</tr>
-				<tr>
-					<td class="fieldTitle">Expiry Time:&nbsp;</td>
-					<td class="fieldValue">Hour: 
-						<html:select property="facility_message.expiry_hour">
-							<%for(int x=1;x<24;x++){ %>
-								<html:option value="<%=String.valueOf(x) %>"><%=x %></html:option>
-							<% } %>
-						</html:select>
-					&nbsp;&nbsp;
-					Minute: 
-						<html:select property="facility_message.expiry_minute">
-							<%for(int x=0;x<60;x++) {%>
-								<html:option value="<%=String.valueOf(x) %>"><%=x %></html:option>
-							<% } %>
-						</html:select>
-					</td>
-					<td></td>
-				</tr>
-				<tr>
-					<td class="fieldTitle">Message&nbsp;</td>
-					<td colspan="2" class="fieldValue"><html:text size="60" property="facility_message.message"/></td>
-				</tr>
-						
-				<tr>
-     				<td class="fieldTitle">Facilities&nbsp;</td>
-   					<td>
-					<%
+                     %> <a href="#"
+				onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=facilityMessageForm&amp;openerElement=facility_message.expiry_day&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img
+				border="0" src="images/calendar.jpg" /></a></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="fieldTitle">Expiry Time:&nbsp;</td>
+			<td class="fieldValue">Hour: <html:select
+				property="facility_message.expiry_hour">
+				<%for(int x=1;x<24;x++){ %>
+				<html:option value="<%=String.valueOf(x) %>"><%=x %></html:option>
+				<% } %>
+			</html:select> &nbsp;&nbsp; Minute: <html:select
+				property="facility_message.expiry_minute">
+				<%for(int x=0;x<60;x++) {%>
+				<html:option value="<%=String.valueOf(x) %>"><%=x %></html:option>
+				<% } %>
+			</html:select></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td class="fieldTitle">Message&nbsp;</td>
+			<td colspan="2" class="fieldValue"><html:text size="60"
+				property="facility_message.message" /></td>
+		</tr>
+
+		<tr>
+			<td class="fieldTitle">Facilities&nbsp;</td>
+			<td>
+			<%
 						String role = (String)request.getAttribute("issueRole");
 						pageContext.setAttribute("issue_role",role);
-					%>
-			        <select name="facility_message.facilityId">
-			             <option value="0">&nbsp;</option>
-			             <c:forEach var="facility" items="${facilities}" varStatus="status">
-			             <c:choose>
-			             <c:when test="${facility.id == facilityMessageForm.map.facility_message.facilityId}">
-			             <option value="<c:out value="${facility.id}"/>" selected><c:out value="${facility.name}"/></option>
-			             </c:when>
-			             <c:otherwise>
-			             <option value="<c:out value="${facility.id}"/>"><c:out value="${facility.name}"/></option>
-			             </c:otherwise>
-			             </c:choose>
-			             </c:forEach>
-			        </select> 
-			     	</td>
-				</tr>
-				
-				
-				<tr>
-					<td class="fieldValue" colspan="3">
-						<html:submit>Save</html:submit>
-						<input type="button" value="Cancel" onclick="location.href='FacilityMessage.do'"/>
-					</td>
-				</tr>
-			</table>
-		</html:form>
-	</body>
+					%> <select name="facility_message.facilityId">
+				<option value="0">&nbsp;</option>
+				<c:forEach var="facility" items="${facilities}" varStatus="status">
+					<c:choose>
+						<c:when
+							test="${facility.id == facilityMessageForm.map.facility_message.facilityId}">
+							<option value="<c:out value="${facility.id}"/>" selected><c:out
+								value="${facility.name}" /></option>
+						</c:when>
+						<c:otherwise>
+							<option value="<c:out value="${facility.id}"/>"><c:out
+								value="${facility.name}" /></option>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+			</select></td>
+		</tr>
+
+
+		<tr>
+			<td class="fieldValue" colspan="3"><html:submit>Save</html:submit>
+			<input type="button" value="Cancel"
+				onclick="location.href='FacilityMessage.do'" /></td>
+		</tr>
+	</table>
+</html:form>
+</body>
 </html>

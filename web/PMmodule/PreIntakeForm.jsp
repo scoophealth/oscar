@@ -25,7 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.Agency"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <script>
 	function new_client(demographicId) {
@@ -43,7 +43,8 @@
 	}
 </script>
 <h4>New Client</h4>
-<p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
+<p>Please enter the following information. The system will try to
+determine if the client has already been entered into the system.</p>
 <br />
 <script>
 	function validateSearchForm(form) {
@@ -63,7 +64,8 @@
 		return true;
 	}
 </script>
-<html:form action="/PMmodule/Intake" onsubmit="return validateSearchForm(this)">
+<html:form action="/PMmodule/Intake"
+	onsubmit="return validateSearchForm(this)">
 	<input type="hidden" name="action" value="do_intake" />
 	<html:hidden property="form.demographicId" />
 	<table width="50%">
@@ -107,10 +109,11 @@
 			</html:select>&nbsp;<html:text property="form.yearOfBirth" size="4" /></td>
 		</tr>
 		<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
-		<tr>
-			<td>Health Card</td>
-			<td><html:text property="form.healthCardNumber" size="10" /> &nbsp; <html:text property="form.healthCardVersion" size="2" /></td>
-		</tr>
+			<tr>
+				<td>Health Card</td>
+				<td><html:text property="form.healthCardNumber" size="10" />
+				&nbsp; <html:text property="form.healthCardVersion" size="2" /></td>
+			</tr>
 		</caisi:isModuleLoad>
 		<tr>
 			<td colspan="2"><br />
@@ -120,24 +123,33 @@
 	<br />
 	<br />
 	<c:if test="${requestScope.clients != null}">
-		<p>The following possible matches were found in the system. If your client is not one of these matches, choose the 'New Client' button, otherwise, you can update the existing client file.</p>
+		<p>The following possible matches were found in the system. If
+		your client is not one of these matches, choose the 'New Client'
+		button, otherwise, you can update the existing client file.</p>
 		<b>Search Type:&nbsp; Agency</b>
-		<p><input type="button" value="New Client" onclick="this.form.action.value='new_client';this.form.submit();" /> <display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/Intake.do">
+		<p><input type="button" value="New Client"
+			onclick="this.form.action.value='new_client';this.form.submit();" />
+		<display:table class="simple" cellspacing="2" cellpadding="3"
+			id="client" name="clients" export="false" pagesize="10"
+			requestURI="/PMmodule/Intake.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
-			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
+			<display:setProperty name="basic.msg.empty_list"
+				value="No clients found." />
 			<display:column sortable="false" title="">
-				<span title="Update client intake form">
-					<a href="#" onclick="update_client('<c:out value="${client.demographicNo}"/>');return false;">
-						<img border="0" src="images/refresh.gif" />
-					</a>
-				</span>
+				<span title="Update client intake form"> <a href="#"
+					onclick="update_client('<c:out value="${client.demographicNo}"/>');return false;">
+				<img border="0" src="images/refresh.gif" /> </a> </span>
 			</display:column>
 			<display:column property="formattedName" sortable="true" title="Name" />
 			<display:column sortable="true" title="Date of Birth">
-				<c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" />
+				<c:out value="${client.yearOfBirth}" />/<c:out
+					value="${client.monthOfBirth}" />/<c:out
+					value="${client.dateOfBirth}" />
 			</display:column>
 			<display:column title="EMPI Links">
-				<span style="text-decoration:underline" title="<c:out value="${client.formattedLinks}"/>"><c:out value="${client.numLinks}" /></span>
+				<span style="text-decoration: underline"
+					title="<c:out value="${client.formattedLinks}"/>"><c:out
+					value="${client.numLinks}" /></span>
 			</display:column>
 		</display:table> <br />
 	</c:if>

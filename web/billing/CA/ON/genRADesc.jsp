@@ -26,13 +26,16 @@
 
 <%  
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
-%> 
+%>
 
-<%@ page import="java.io.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.io.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <% 
 String raNo = "", note="", htmlContent="", transaction="", messages="";
@@ -166,7 +169,7 @@ reader.close();
 input.close();
 %>
 
-<html> 
+<html>
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title>OSCAR Project</title>
@@ -180,31 +183,44 @@ input.close();
 </script>
 </head>
 
-<body  onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd"> 
-        <th align="left"><form><input type="button" onclick="window.print()" value="Print"></form></th>
-	<th align="center"><font face="Helvetica" color="#FFFFFF">
-	Reconcillation Report </font></th>
-	<th align="right"><form><input type="button" onClick="popupPage(700,600,'billingClipboard.jsp')" value="Clipboard"></form></th>
-</tr>
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="left">
+		<form><input type="button" onclick="window.print()"
+			value="Print"></form>
+		</th>
+		<th align="center"><font face="Helvetica" color="#FFFFFF">
+		Reconcillation Report </font></th>
+		<th align="right">
+		<form><input type="button"
+			onClick="popupPage(700,600,'billingClipboard.jsp')" value="Clipboard"></form>
+		</th>
+	</tr>
 </table>
 
-Cheque amount: <%=total%> <br>
-<%="Local clinic "%>: <%=local_total%> <br>
-Other clinic : <%=other_total%><br>
+Cheque amount:
+<%=total%>
+<br>
+<%="Local clinic "%>:
+<%=local_total%>
+<br>
+Other clinic :
+<%=other_total%><br>
 
-OB Total : <%=ob_total%><br>
-Colposcopy Total : <%=co_total%><br>
+OB Total :
+<%=ob_total%><br>
+Colposcopy Total :
+<%=co_total%><br>
 
 <br>
 <br>
-<table bgcolor="#EEEEEE"  bordercolor="#666666" border="1" >
-<%=htmlContent%>
+<table bgcolor="#EEEEEE" bordercolor="#666666" border="1">
+	<%=htmlContent%>
 </table>
 <br>
-<table bgcolor="#EEEEFF"  bordercolor="#666666" border="1">
-<%=transaction%>
+<table bgcolor="#EEEEFF" bordercolor="#666666" border="1">
+	<%=transaction%>
 </table>
 <pre><%=message_txt%></pre>
 

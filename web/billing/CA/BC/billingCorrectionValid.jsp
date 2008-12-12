@@ -26,18 +26,22 @@
 -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-<head> 
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title></title>
 </head>
 <body>
-<%@ page  import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"  errorPage="errorpage.jsp"%>
+<%@ page
+	import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"
+	errorPage="errorpage.jsp"%>
 
 
-<jsp:useBean id="dbBillingDataBean" scope="page" class="oscar.dbBillingData">
-  <jsp:setProperty name="dbBillingDataBean" property="*" />
+<jsp:useBean id="dbBillingDataBean" scope="page"
+	class="oscar.dbBillingData">
+	<jsp:setProperty name="dbBillingDataBean" property="*" />
 </jsp:useBean>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 <center>
 <h2>Billing Correction Review (session)</h2>
 </center>
@@ -208,8 +212,8 @@ otherstr2 = sotherBuffer.toString();
   	  
 	
   	%>
- 
-  	<%	
+
+<%	
          } if (eFlag.compareTo("1") == 0){
 			  		
 			  	//	billingunit = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -324,7 +328,7 @@ otherstr2 = sotherBuffer.toString();
   }
    catch (java.lang.ArrayIndexOutOfBoundsException _e0) {
  }%>
- 
+
 
 </body>
 </html>

@@ -1,7 +1,11 @@
- <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <!--  
 /*
  * 
@@ -29,7 +33,7 @@
 -->
 <html>
 <head>
-<link rel="stylesheet" href="billing.css" >
+<link rel="stylesheet" href="billing.css">
 <title>Teleplan Reconcilliation</title>
 <script language="JavaScript">
 
@@ -47,16 +51,18 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 </script>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Teleplan 
-      Reconcilliation - Billed Report</font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Teleplan Reconcilliation - Billed Report</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -75,36 +81,37 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 
 
    String officeNo = request.getParameter("officeNo");
-%>      
-             <table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
-             <form>
-                <tr> 
-                     <td width="5%" height="16">Office No</td>
-                     <td width="5%" height="16">Practitioner</td>
-                     <td width="5%" height="16">Service Code</td>
-                     <td height="16">Payment Date</td>
-                     <td width="5%" height="16" alight="right">Billed Amount</td>
-                     <td width="5%" height="16" align="right">Paid Amount</td>
-                     <td width="2%" height="16">EP1</td>
-                     <td width="2%" height="16">EP2</td>
-                     <td width="2%" height="16">EP3</td>
-                     <td width="2%" height="16">AJC1</td>
-                     <td width="5%" height="16">AJA1</td>
-                     <td width="2%" height="16">AJC2</td>
-                     <td width="5%" height="16">AJA2</td>
-                     <td width="2%" height="16">AJC3</td>
-                     <td width="5%" height="16">AJA3</td>
-                     <td width="2%" height="16">AJC4</td>
-                     <td width="5%" height="16">AJA4</td>
-                     <td width="2%" height="16">AJC5</td>
-                     <td width="5%" height="16">AJA5</td>
-                     <td width="2%" height="16">AJC6</td>
-                     <td width="5%" height="16">AJA6</td>
-                     <td width="2%" height="16">AJC7</td>
-                     <td width="5%" height="16">AJA7</td>
-                     <td width="10%" height="16">Status</td>
-                </tr>
-          <% 
+%>
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+		<td width="5%" height="16">Office No</td>
+		<td width="5%" height="16">Practitioner</td>
+		<td width="5%" height="16">Service Code</td>
+		<td height="16">Payment Date</td>
+		<td width="5%" height="16" alight="right">Billed Amount</td>
+		<td width="5%" height="16" align="right">Paid Amount</td>
+		<td width="2%" height="16">EP1</td>
+		<td width="2%" height="16">EP2</td>
+		<td width="2%" height="16">EP3</td>
+		<td width="2%" height="16">AJC1</td>
+		<td width="5%" height="16">AJA1</td>
+		<td width="2%" height="16">AJC2</td>
+		<td width="5%" height="16">AJA2</td>
+		<td width="2%" height="16">AJC3</td>
+		<td width="5%" height="16">AJA3</td>
+		<td width="2%" height="16">AJC4</td>
+		<td width="5%" height="16">AJA4</td>
+		<td width="2%" height="16">AJC5</td>
+		<td width="5%" height="16">AJA5</td>
+		<td width="2%" height="16">AJC6</td>
+		<td width="5%" height="16">AJA6</td>
+		<td width="2%" height="16">AJC7</td>
+		<td width="5%" height="16">AJA7</td>
+		<td width="10%" height="16">Status</td>
+	</tr>
+	<% 
           Misc misc = new Misc();
           System.out.println(officeNo);
               String[] param = new String[1];          
@@ -119,58 +126,77 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
                  account = rsdemo.getString("t_officeno");
                    
           %>
-                <tr>     
-                   <td width="5%" height="16"><a href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')" ><%=rsdemo.getString("t_officeno")%></a>&nbsp; </td>
-                   <td width="5%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=rsdemo.getString("t_billfeeschedule")%>&nbsp; </td>
-                   <td height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
-                   <td width="5%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_billamt"))%>&nbsp; </td>
-                   <td width="5%" height="16" align=right><%=moneyFormat(rsdemo.getString("t_paidamt"))%></td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_exp1")%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_exp2")%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_exp3")%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc1")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja1"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc2")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja2"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc3")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja3"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc4")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja4"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc5")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja5"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc6")%>&nbsp; </td>
-                   <td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja6"))%>&nbsp; </td>
-                   <td width="2%" height="16"><%=rsdemo.getString("t_ajc7")%>&nbsp; </td>
-                   <!--<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja7"))%>&nbsp; </td>-->
-                    <td width="5%" height="16"><%=rsdemo.getString("t_s00type")%>&nbsp; </td>               
-                   <td width="5%" height="16" align=right><%=rsdemo.getString("t_linecode").compareTo("P")==0?"Paid as billed":rsdemo.getString("t_linecode").compareTo("R")==0?"Refusal":rsdemo.getString("t_linecode").compareTo("H")==0?"Recycle":""%></td>
-                </tr>
-           <% }
+	<tr>
+		<td width="5%" height="16"><a
+			href="javascript: popupPage(700,750,'adjustBill.jsp?billing_no=<%=rsdemo.getString("t_officeno")%>')"><%=rsdemo.getString("t_officeno")%></a>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=rsdemo.getString("t_practitionerno")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=rsdemo.getString("t_billfeeschedule")%>&nbsp;
+		</td>
+		<td height="16"><%=rsdemo.getString("t_payment")%>&nbsp;</td>
+		<td width="5%" height="16" align="right"><%=moneyFormat(rsdemo.getString("t_billamt"))%>&nbsp;
+		</td>
+		<td width="5%" height="16" align=right><%=moneyFormat(rsdemo.getString("t_paidamt"))%></td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_exp1")%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_exp2")%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_exp3")%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc1")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja1"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc2")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja2"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc3")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja3"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc4")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja4"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc5")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja5"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc6")%>&nbsp;
+		</td>
+		<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja6"))%>&nbsp;
+		</td>
+		<td width="2%" height="16"><%=rsdemo.getString("t_ajc7")%>&nbsp;
+		</td>
+		<!--<td width="5%" height="16"><%=moneyFormat(rsdemo.getString("t_aja7"))%>&nbsp; </td>-->
+		<td width="5%" height="16"><%=rsdemo.getString("t_s00type")%>&nbsp;
+		</td>
+		<td width="5%" height="16" align=right><%=rsdemo.getString("t_linecode").compareTo("P")==0?"Paid as billed":rsdemo.getString("t_linecode").compareTo("R")==0?"Refusal":rsdemo.getString("t_linecode").compareTo("H")==0?"Recycle":""%></td>
+	</tr>
+	<% }
        
           if(counter == 0){%>
-                <tr>
-                    <td colspan="23" align="center">
-                    No Records found.
-                    </td>
-                </tr>
-          <%}else{ 
+	<tr>
+		<td colspan="23" align="center">No Records found.</td>
+	</tr>
+	<%}else{ 
                 String s = ""; 
                 if (counter > 1) { s = "s";}%>
-               <tr>
-                    <td colspan="23" align="center">
-                    <%=counter%> Record<%=s%> found.
-                    </td>
-                </tr>
-          <%}   
+	<tr>
+		<td colspan="23" align="center"><%=counter%> Record<%=s%> found.
+		</td>
+	</tr>
+	<%}   
       %>
-     
-             
+
+
 </table>
-     
- 
- </body>
- </html>
+
+
+</body>
+</html>
 <%!
     String moneyFormat(String str){       
         String moneyStr = "0.00";

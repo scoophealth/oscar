@@ -22,14 +22,14 @@
 */
  -->
 
-<%@ include file="/survey/taglibs.jsp" %>
+<%@ include file="/survey/taglibs.jsp"%>
 <html:html>
-	<head>
-		<title>Question Editor</title>
-	</head>
-	
-	<body>
-	<script>
+<head>
+<title>Question Editor</title>
+</head>
+
+<body>
+<script>
 		function save() {
 			document.surveyForm.method.value="save_question";
 			document.surveyForm.submit();
@@ -44,121 +44,121 @@
 			document.surveyForm.submit();
 		}	
 	</script>
-	
-		<html:form action="/SurveyManager">
-			<input type="hidden" name="method" value="save_question"/>
-			<center><h2>Question Editor</h2></center>
-			<br/>
-			<table>
-				<tr>
-					<td colspan="2">Question:<br/><html:textarea property="questionModel.description" rows="5" cols="50"></html:textarea></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<html:checkbox property="questionModel.bold" value="true"/>Bold&nbsp;&nbsp;
-						<html:checkbox property="questionModel.underline" value="true"/>Underline&nbsp;&nbsp;
-						<html:checkbox property="questionModel.italics" value="true"/>Italics&nbsp;&nbsp;
-      					<html-el:select property="questionModel.color">
-      						<html-el:option value="">&nbsp;</html-el:option>
-      						<c:forEach var="color" items="${colors}">
-      							<html-el:option value="${color}"><c:out value="${color}"/></html-el:option>
-      						</c:forEach>      						
-      					</html-el:select>						
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2"><br/></td>
-				</tr>
-				<tr>
-					<td>Units (optional)</td>
-					<td>
-						<html:text property="questionModel.unit"/>
-					</td>
-				</tr>		
-				<tr>
-					<td>Orientation</td>
-					<td>
-						<html:select property="questionModel.orientation">
-							<html:option value="vertical">vertical</html:option>
-							<html:option value="horizontal">horizontal</html:option>
-						</html:select>
-					</td>
-				</tr>		
-				<tr>
-					<td>Data Link</td>
-					<td>
-						<html-el:select property="questionModel.dataLink">
-							<html-el:option value="">&nbsp;</html-el:option>
-								<c:forEach var="obj" items="${oscarVars}">
-									<html-el:option value="${obj.value}"><c:out value="${obj.label}"/></html-el:option>
-								</c:forEach>							
-						</html-el:select>
-					</td>
-				</tr>	
-				<tr>
-					<td>Pre-filled Data</td>
-					<td>
-						<html-el:select property="questionModel.caisiObject">
-							<html-el:option value="">&nbsp;</html-el:option>
-							<c:forEach var="obj" items="${caisiobjects}">
-								<html-el:option value="${obj}"><c:out value="${obj}"/></html-el:option>
-							</c:forEach>
-						</html-el:select>
-					</td>
-				</tr>															
-				<tr>
-					<td colspan="2"><br/></td>
-				</tr>
-				
-				<tr>
-					<td>Type:</td>
-					<td>
-						<c:set var="question" scope="page" value="${surveyForm.map.questionModel}"></c:set>
-	                     
-						<%
+
+<html:form action="/SurveyManager">
+	<input type="hidden" name="method" value="save_question" />
+	<center>
+	<h2>Question Editor</h2>
+	</center>
+	<br />
+	<table>
+		<tr>
+			<td colspan="2">Question:<br />
+			<html:textarea property="questionModel.description" rows="5"
+				cols="50"></html:textarea></td>
+		</tr>
+		<tr>
+			<td colspan="2"><html:checkbox property="questionModel.bold"
+				value="true" />Bold&nbsp;&nbsp; <html:checkbox
+				property="questionModel.underline" value="true" />Underline&nbsp;&nbsp;
+			<html:checkbox property="questionModel.italics" value="true" />Italics&nbsp;&nbsp;
+			<html-el:select property="questionModel.color">
+				<html-el:option value="">&nbsp;</html-el:option>
+				<c:forEach var="color" items="${colors}">
+					<html-el:option value="${color}">
+						<c:out value="${color}" />
+					</html-el:option>
+				</c:forEach>
+			</html-el:select></td>
+		</tr>
+		<tr>
+			<td colspan="2"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>Units (optional)</td>
+			<td><html:text property="questionModel.unit" /></td>
+		</tr>
+		<tr>
+			<td>Orientation</td>
+			<td><html:select property="questionModel.orientation">
+				<html:option value="vertical">vertical</html:option>
+				<html:option value="horizontal">horizontal</html:option>
+			</html:select></td>
+		</tr>
+		<tr>
+			<td>Data Link</td>
+			<td><html-el:select property="questionModel.dataLink">
+				<html-el:option value="">&nbsp;</html-el:option>
+				<c:forEach var="obj" items="${oscarVars}">
+					<html-el:option value="${obj.value}">
+						<c:out value="${obj.label}" />
+					</html-el:option>
+				</c:forEach>
+			</html-el:select></td>
+		</tr>
+		<tr>
+			<td>Pre-filled Data</td>
+			<td><html-el:select property="questionModel.caisiObject">
+				<html-el:option value="">&nbsp;</html-el:option>
+				<c:forEach var="obj" items="${caisiobjects}">
+					<html-el:option value="${obj}">
+						<c:out value="${obj}" />
+					</html-el:option>
+				</c:forEach>
+			</html-el:select></td>
+		</tr>
+		<tr>
+			<td colspan="2"><br />
+			</td>
+		</tr>
+
+		<tr>
+			<td>Type:</td>
+			<td><c:set var="question" scope="page"
+				value="${surveyForm.map.questionModel}"></c:set> <%
 						org.oscarehr.surveymodel.Question question = (org.oscarehr.surveymodel.Question)pageContext.getAttribute("question");						    
               			if(question.getType().isSetRank()) { out.print("Rank"); }
                			if(question.getType().isSetScale()) { out.print("Scale"); }
                			if(question.getType().isSetOpenEnded()) { out.print("Open Ended"); }
                			if(question.getType().isSetSelect()) { out.print("Select"); }
                			if(question.getType().isSetDate()) { out.print("Date"); }
-              			%>					
-					</td>
-				</tr>
-				
+              			%>
+			</td>
+		</tr>
+
+		<tr>
+			<td colspan="2"><br />
+			</td>
+		</tr>
+
+		<tr>
+			<!--  type specific -->
+			<td colspan="2">
+			<%if(question.getType().isSetOpenEnded()) {  %>
+			<table width="100%">
 				<tr>
-					<td colspan="2"><br/></td>
+					<td>Rows:</td>
+					<td><html:text property="questionModel.type.openEnded.rows"
+						size="4" /></td>
 				</tr>
-				
 				<tr>
-					<!--  type specific -->
-					<td colspan="2">
-						<%if(question.getType().isSetOpenEnded()) {  %>
-							<table width="100%">
-								<tr>
-									<td>Rows:</td>
-									<td><html:text property="questionModel.type.openEnded.rows" size="4"/></td>									
-								</tr>
-								<tr>
-									<td>Cols:</td>
-									<td><html:text property="questionModel.type.openEnded.cols" size="4"/></td>									
-								</tr>
-							</table>
-						<% } %>
-						<%if(question.getType().isSetDate()) {  %>
-							<table width="100%">
-								<tr>
-									<td>Format:</td>
-									<td>
-										<html:select property="web.dateFormat">
-											<html:options collection="dateFormats" property="value" labelProperty="label"/>
-										</html:select>
-									</td>									
-								</tr>								
-							</table>
-						<% } %>
-						<%if(question.getType().isSetSelect()) {  %>
-							<script>
+					<td>Cols:</td>
+					<td><html:text property="questionModel.type.openEnded.cols"
+						size="4" /></td>
+				</tr>
+			</table>
+			<% } %> <%if(question.getType().isSetDate()) {  %>
+			<table width="100%">
+				<tr>
+					<td>Format:</td>
+					<td><html:select property="web.dateFormat">
+						<html:options collection="dateFormats" property="value"
+							labelProperty="label" />
+					</html:select></td>
+				</tr>
+			</table>
+			<% } %> <%if(question.getType().isSetSelect()) {  %> <script>
 								function set_select_type() {
 									var selectType = document.surveyForm.elements['questionModel.type.select.renderType'];
 									for(var x=0;x<selectType.length;x++) {
@@ -178,67 +178,73 @@
 									}
 								}
 							</script>
-							<table width="100%">
-								<tr>
-									<td><html:radio property="questionModel.type.select.renderType" value="radio" onclick="set_select_type()"/></td>
-									<td>Radio Buttons</td>									
-								</tr>
-								<tr>
-									<td><html:radio property="questionModel.type.select.renderType" value="select" onclick="set_select_type()"/></td>
-									<td>Combo Box</td>									
-								</tr>
-								<tr>
-									<td><html:radio property="questionModel.type.select.renderType" value="checkbox" onclick="set_select_type()"/></td>
-									<td>Checkboxes (Multi-Select)</td>									
-								</tr>
-								<tr>
-									<td>Orientation</td>
-									<td>
-										<html:select property="questionModel.type.select.orientation">
-											<html:option value="vertical">vertical</html:option>
-											<html:option value="horizontal">horizontal</html:option>
-										</html:select>
-									</td>
-								</tr>
-								<tr>
-									<td>Allow "Other":</td>
-									<td>
-										<html:select property="questionModel.type.select.otherAnswer">
-											<html:option value="true"/>
-											<html:option value="false"/>
-										</html:select>
-									</td>
-								</tr>
-																
-								<tr>
-									<td>Number of Answers</td>
-									<td>
-										<html:select property="web.numAnswers" onchange="adjust_possible_answers()">
-											<%for(int x=1;x<50;x++) { %>
-												<html:option value="<%=String.valueOf(x)%>"/>											
-											<%} %>
-										</html:select>
-									</td>
-								</tr>
-								<tr>
-									<td>Answers</td>
-									<td>	
-										<c:forEach var="answer" items="${surveyForm.map.questionModel.type.select.possibleAnswers.answerArray}" varStatus="status">
-											<input type="text" name="answer_<c:out value="${status.index+1}"/>" value="<c:out value="${answer}"/>"/><br/>
-										</c:forEach>
-									</td>
-								</tr>								
-							</table>
-						<% } %>
-					</td>
+			<table width="100%">
+				<tr>
+					<td><html:radio
+						property="questionModel.type.select.renderType" value="radio"
+						onclick="set_select_type()" /></td>
+					<td>Radio Buttons</td>
+				</tr>
+				<tr>
+					<td><html:radio
+						property="questionModel.type.select.renderType" value="select"
+						onclick="set_select_type()" /></td>
+					<td>Combo Box</td>
+				</tr>
+				<tr>
+					<td><html:radio
+						property="questionModel.type.select.renderType" value="checkbox"
+						onclick="set_select_type()" /></td>
+					<td>Checkboxes (Multi-Select)</td>
+				</tr>
+				<tr>
+					<td>Orientation</td>
+					<td><html:select
+						property="questionModel.type.select.orientation">
+						<html:option value="vertical">vertical</html:option>
+						<html:option value="horizontal">horizontal</html:option>
+					</html:select></td>
+				</tr>
+				<tr>
+					<td>Allow "Other":</td>
+					<td><html:select
+						property="questionModel.type.select.otherAnswer">
+						<html:option value="true" />
+						<html:option value="false" />
+					</html:select></td>
+				</tr>
+
+				<tr>
+					<td>Number of Answers</td>
+					<td><html:select property="web.numAnswers"
+						onchange="adjust_possible_answers()">
+						<%for(int x=1;x<50;x++) { %>
+						<html:option value="<%=String.valueOf(x)%>" />
+						<%} %>
+					</html:select></td>
+				</tr>
+				<tr>
+					<td>Answers</td>
+					<td><c:forEach var="answer"
+						items="${surveyForm.map.questionModel.type.select.possibleAnswers.answerArray}"
+						varStatus="status">
+						<input type="text"
+							name="answer_<c:out value="${status.index+1}"/>"
+							value="<c:out value="${answer}"/>" />
+						<br />
+					</c:forEach></td>
 				</tr>
 			</table>
-			<!-- 
+			<% } %>
+			</td>
+		</tr>
+	</table>
+	<!-- 
 			<input type="button" value="Save" onClick="save();"/>
 			<input type="button" value="Cancel" onclick="window.close();"/>
 			 -->
-			 <html:submit styleClass="button">Save</html:submit>
-			 <html:cancel value="Cancel"/>
-		</html:form>
-	</body>
+	<html:submit styleClass="button">Save</html:submit>
+	<html:cancel value="Cancel" />
+</html:form>
+</body>
 </html:html>

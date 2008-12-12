@@ -29,12 +29,14 @@
   */
 -->
 <%@page language="java" contentType="text/html"%>
-<%@page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*"%>
+<%@page
+	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
-<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session"/>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%@include file="../../../admin/dbconnection.jsp"%>
 <%@include file="dbBilling.jsp"%>
 <%
@@ -66,47 +68,16 @@
 %>
 <html>
 <head>
-<html:base/>
+<html:base />
 <title>Billing Report</title>
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1"/>
-<script type="text/javascript" src="../../../share/calendar/calendar.js"></script><script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script><script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script><style type="text/css">
-  <!--
-    BODY                  {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    TD                    {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000                                                    }
-    TD.black              {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
-    TD.lilac              {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
-    TD.boldlilac          {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
-    TD.lilac A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
-    TD.lilac A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #EEEEFF  ;}
-    TD.lilac A:hover      {font-weight: normal;                                                                            color: #000000; background-color: #CDCFFF  ;}
-    TD             {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; }
-    TD.heading            {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
-    H2                    {font-weight: bold  ; font-size: 12pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    H3                    {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    H4                    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    H6                    {font-weight: bold  ; font-size: 7pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    A:link                {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #336666; }
-    A:visited             {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #336666; }
-    A:hover               {                                                                            color: red; }
-    TD.cost               {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: red; background-color: #FFFFFF;}
-    TD A:link       {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; }
-    TD A:visited    {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; }
-    TD A:hover      {                                                                            color: #FDCB03; }
-    TD.title              {font-weight: bold  ; font-size: 10pt; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    TD.white A:link       {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    TD.white A:visited    {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
-    TD.white A:hover      {font-weight: normal; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #CDCFFF  ;}
-    #navbar               {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FDCB03; background-color: #666699   ;}
-    SPAN.navbar A:link    {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #FFFFFF; background-color: #666699   ;}
-    SPAN.navbar A:visited {font-weight: bold  ; font-size: 8pt ; font-family: verdana,arial,helvetica; color: #EFEFEF; background-color: #666699   ;}
-    SPAN.navbar A:hover   {                                                                            color: #FDCB03; background-color: #666699   ;}
-    SPAN.bold             {font-weight: bold  ;                                                                        background-color: #666699   ;}
-  -->
-
-  td.bCellData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }
-  a.billType{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; text-decoration: none;}
-  th.bHeaderData{ font-weight:bold; font-family: Arial,Helvetica,sans-serif; }
-</style>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -182,53 +153,49 @@ function clearField(field){
   }
 }
 
-</script></head>
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10" onLoad="setUIState()">
-<table width="100%" border="1" align="center" cellpadding="0" cellspacing="0">
-  <tr>
-    <td>
-      <table width="100%" border="1" cellspacing="0" cellpadding="0">
-        <tr bgcolor="#FFFFFF">
-          <div align="right">
-            <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">
-              <font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List</font>
-            </a>
-          </div>
-        </tr>
-      </table>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr bgcolor="#000000">
-          <td height="40" width="10%">          </td>
-          <td width="90%" align="left">
-            <p>
-              <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF">
-                <b>
-                  <font face="Arial, Helvetica, sans-serif" size="4">Billing Reports</font>
-                </b>
-              </font>
-            </p>
-          </td>
-          <td nowrap valign="bottom">
-            <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF">
-              <b><%=DateUtils.sumDate("yyyy-M-d","0")%>              </b>
-            </font>
-          </td>
-        </tr>
-      </table>
-      <table width="100%" border="0" bgcolor="#EEEEFF">
-      <form action="createBillingReportAction.do">
-        <tr>
-          <td width="34%">
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <b>Select Payee</b>
-            </font>
-          </td>
-          <td width="66%" class="bCellData">
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <b>
-                <select name="selPayee" size="1" id="selPayee">
-                  <option value="ALL">All Payees</option>
-                <%
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="10" onLoad="setUIState()">
+<table width="100%" border="1" align="center" cellpadding="0"
+	cellspacing="0">
+	<tr>
+		<td>
+		<table width="100%" border="1" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#FFFFFF">
+				<div align="right"><a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')">
+				<font face="Arial, Helvetica, sans-serif" size="1">Manage
+				Provider List</font> </a></div>
+			</tr>
+		</table>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr bgcolor="#000000">
+				<td height="40" width="10%"></td>
+				<td width="90%" align="left">
+				<p><font face="Verdana, Arial, Helvetica, sans-serif"
+					color="#FFFFFF"> <b> <font
+					face="Arial, Helvetica, sans-serif" size="4">Billing Reports</font>
+				</b> </font></p>
+				</td>
+				<td nowrap valign="bottom"><font
+					face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF">
+				<b><%=DateUtils.sumDate("yyyy-M-d","0")%> </b> </font></td>
+			</tr>
+		</table>
+		<table width="100%" border="0" bgcolor="#EEEEFF">
+			<form action="createBillingReportAction.do">
+			<tr>
+				<td width="34%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <b>Select Payee</b> </font></td>
+				<td width="66%" class="bCellData"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <b> <select name="selPayee" size="1"
+					id="selPayee">
+					<option value="ALL">All Payees</option>
+					<%
                   {
                     String proFirst = "";
                     String proLast = "";
@@ -244,24 +211,17 @@ function clearField(field){
                       proLast = rslocal.getString("last_name");
                       proOHIP = rslocal.getString("ohip_no");
                 %>
-                  <option value="<%=proOHIP%>"><%=proLast%>                    ,
-<%=proFirst%>                  </option>
-                <%}}                %>
-                </select>
-              </b>
-            </font>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <b>Select Provider</b>
-            </font>
-          </td>
-          <td class="bCellData">
-            <select name="selProv" id="select">
-              <option value="ALL">All Providers</option>
-            <%
+					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
+					</option>
+					<%}}                %>
+				</select> </b> </font></td>
+			</tr>
+			<tr>
+				<td><font face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <b>Select Provider</b> </font></td>
+				<td class="bCellData"><select name="selProv" id="select">
+					<option value="ALL">All Providers</option>
+					<%
               {
                 String proFirst = "";
                 String proLast = "";
@@ -277,22 +237,18 @@ function clearField(field){
                   proLast = rslocal.getString("last_name");
                   proOHIP = rslocal.getString("provider_no");
             %>
-              <option value="<%=proOHIP%>"><%=proLast%>                ,
-<%=proFirst%>              </option>
-            <%}}            %>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">
-              <b>Select Account</b>
-            </font>
-          </td>
-          <td class="bCellData">
-            <select name="selAccount" id="select2">
-              <option value="ALL">All Accounts</option>
-            <%
+					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
+					</option>
+					<%}}            %>
+				</select></td>
+			</tr>
+			<tr>
+				<td><font color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif"> <b>Select
+				Account</b> </font></td>
+				<td class="bCellData"><select name="selAccount" id="select2">
+					<option value="ALL">All Accounts</option>
+					<%
               String proFirst = "";
               String proLast = "";
               String proOHIP = "";
@@ -307,140 +263,107 @@ function clearField(field){
                 proLast = rslocal.getString("last_name");
                 proOHIP = rslocal.getString("provider_no");
             %>
-              <option value="<%=proOHIP%>"><%=proLast%>                ,
-<%=proFirst%>              </option>
-            <%}            %>
-            </select>
-          </td>
+					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
+					</option>
+					<%}            %>
+				</select></td>
 
-        </tr>
-        <tr>
-          <td>
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <b>Report Type</b>
-            </font>
-          </td>
-          <td class="bCellData">
-            <select name="repType" onChange="setUIState()">
-              <option value="REP_INVOICE">Invoice</option>
-              <option value="REP_REJ">Rejection</option>
-              <option value="REP_ACCOUNT_REC">Accounts Receivable</option>
-              <option value="REP_WO">Write-Off</option>
-              <option value="REP_PAYREF">Payments and Refunds(Cash)</option>
-              <option value="REP_PAYREF_SUM">Payments and Refunds Summary</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <strong>Date Range</strong>
-            </font>
-          </td>
-          <td class="bCellData">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td>
-                  <font size="1" face="Arial, Helvetica, sans-serif">
-                    <a href="javascript: function myFunction() {return false; }" id="hlSDate">Start Date :</a>
-                  </font>
-                </td>
-                <td>
-                  <input type="text" name="xml_vdate" id="xml_vdate" value="<%=xml_vdate%>" readonly="true">
-                  <a href="javascript: clearField('xml_vdate')">clear</a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <font size="1" face="Arial, Helvetica, sans-serif">
-                    <a href="javascript: function myFunction() {return false; }" id="hlADate">End Date :</a>
-                  </font>
-                </td>
-                <td>
-                  <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=xml_appointment_date%>" readonly="true">
-                    <a href="javascript: clearField('xml_appointment_date')">clear</a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <strong>Document Format</strong>
-            </font>
-          </td>
-          <td class="bCellData">
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <strong>
-                <select name="docFormat" id="select3">
-                  <option value="pdf">PDF</option>
-                  <option value="csv">Spread Sheet</option>
-                </select>
-              </strong>
-            </font>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
-              <strong>Insurer</strong>
-            </font>
-          </td>
-          <td class="bCellData">
-            <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font>
-            <table width="100%">
-              <tr>
-                <td class="bCellData">
-                  <input name="showMSP" type="checkbox" value="true" checked/>
-                  MSP
-</td>
-                <td class="bCellData">
-                  <input name="showWCB" type="checkbox" value="true" checked/>
-                  WCB
-</td>
-                <td class="bCellData">
-                  <input name="showPRIV" type="checkbox" value="true" checked/>
-                  Private
-</td>
-                <td class="bCellData">
-                  <input name="showICBC" type="checkbox" value="true" checked/>
-                  ICBC
-</td>
-              </tr>
-            </table>
-            <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font>
-            <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <div align="center">
-              <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">
-                <span class="bCellData">
-                  <font color="#333333" size="2" face="Verdana, Arial, Helvetica, sans-serif">
-                    <input type="hidden" name="verCode" value="V03"/>
-                  </font>
-                </span>
-                <input type="submit" name="Submit" value="Create Report">
-              </font>
-            </div>
-          </td>
-        </tr>
-      </form>
-      </table>
-    <%
+			</tr>
+			<tr>
+				<td><font face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <b>Report Type</b> </font></td>
+				<td class="bCellData"><select name="repType"
+					onChange="setUIState()">
+					<option value="REP_INVOICE">Invoice</option>
+					<option value="REP_REJ">Rejection</option>
+					<option value="REP_ACCOUNT_REC">Accounts Receivable</option>
+					<option value="REP_WO">Write-Off</option>
+					<option value="REP_PAYREF">Payments and Refunds(Cash)</option>
+					<option value="REP_PAYREF_SUM">Payments and Refunds
+					Summary</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td><font face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <strong>Date Range</strong> </font></td>
+				<td class="bCellData">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td><font size="1" face="Arial, Helvetica, sans-serif">
+						<a href="javascript: function myFunction() {return false; }"
+							id="hlSDate">Start Date :</a> </font></td>
+						<td><input type="text" name="xml_vdate" id="xml_vdate"
+							value="<%=xml_vdate%>" readonly="true"> <a
+							href="javascript: clearField('xml_vdate')">clear</a></td>
+					</tr>
+					<tr>
+						<td><font size="1" face="Arial, Helvetica, sans-serif">
+						<a href="javascript: function myFunction() {return false; }"
+							id="hlADate">End Date :</a> </font></td>
+						<td><input type="text" name="xml_appointment_date"
+							id="xml_appointment_date" value="<%=xml_appointment_date%>"
+							readonly="true"> <a
+							href="javascript: clearField('xml_appointment_date')">clear</a></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td><font face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <strong>Document Format</strong> </font></td>
+				<td class="bCellData"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <strong> <select name="docFormat"
+					id="select3">
+					<option value="pdf">PDF</option>
+					<option value="csv">Spread Sheet</option>
+				</select> </strong> </font></td>
+			</tr>
+			<tr>
+				<td><font face="Verdana, Arial, Helvetica, sans-serif" size="2"
+					color="#333333"> <strong>Insurer</strong> </font></td>
+				<td class="bCellData"><font color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font>
+				<table width="100%">
+					<tr>
+						<td class="bCellData"><input name="showMSP" type="checkbox"
+							value="true" checked /> MSP</td>
+						<td class="bCellData"><input name="showWCB" type="checkbox"
+							value="true" checked /> WCB</td>
+						<td class="bCellData"><input name="showPRIV" type="checkbox"
+							value="true" checked /> Private</td>
+						<td class="bCellData"><input name="showICBC" type="checkbox"
+							value="true" checked /> ICBC</td>
+					</tr>
+				</table>
+				<font color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font> <font
+					color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif">&nbsp;</font></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				<div align="center"><font color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif"> <span
+					class="bCellData"> <font color="#333333" size="2"
+					face="Verdana, Arial, Helvetica, sans-serif"> <input
+					type="hidden" name="verCode" value="V03" /> </font> </span> <input type="submit"
+					name="Submit" value="Create Report"> </font></div>
+				</td>
+			</tr>
+			</form>
+		</table>
+		<%
       String billTypes = request.getParameter("billTypes");
       System.out.println("billTypes" + billTypes);
       if (billTypes == null) {
         billTypes = MSPReconcile.REJECTED;
       }
-    %>
-<script language='javascript'>
+    %> <script language='javascript'>
        Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
        Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});
-      </script>    </td>
-  </tr>
+      </script></td>
+	</tr>
 </table>
 </body>
 </html>

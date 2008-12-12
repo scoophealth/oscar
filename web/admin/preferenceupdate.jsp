@@ -24,23 +24,28 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
-<head><title><bean:message key="admin.preferenceupdate.title"/></title></head>
+<head>
+<title><bean:message key="admin.preferenceupdate.title" /></title>
+</head>
 <link rel="stylesheet" href="../web.css" />
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferenceupdate.description"/></font></th>
-      </tr>
-    </table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.preferenceupdate.description" /></font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
   String[] param=null;
@@ -65,19 +70,19 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,nparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h2><bean:message key="admin.preferenceupdate.msgUpdateSuccess"/><%=request.getParameter("provider_no")%>
-  </h2>
+<p>
+<h2><bean:message key="admin.preferenceupdate.msgUpdateSuccess" /><%=request.getParameter("provider_no")%>
+</h2>
 <%  
   } else {
 %>
-  <h1><bean:message key="admin.preferenceupdate.msgUpdateFailure"/><%= request.getParameter("provider_no") %>.
+<h1><bean:message key="admin.preferenceupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
-  <p></p>
-<%@ include file="footer2htm.jsp" %>
-
-  </center>
+<p></p>
+<%@ include file="footer2htm.jsp"%>
+</center>
 </body>
 </html:html>

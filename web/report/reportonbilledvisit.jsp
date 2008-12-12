@@ -28,14 +28,12 @@
   //    response.sendRedirect("../logout.jsp");
   //  }String curUser_no = (String)session.getAttribute("user");
 %>
-  <%@ page errorPage="../errorpage.jsp" %>
-  <html>
-    <head>
-      <title>
-        REPORT PHCP
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <script language="JavaScript">
+<%@ page errorPage="../errorpage.jsp"%>
+<html>
+<head>
+<title>REPORT PHCP</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<script language="JavaScript">
         <!--
 function setfocus() {
 	this.focus();
@@ -44,41 +42,30 @@ function setfocus() {
 //-->
         
       </script>
-    </head>
-    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-              PHCP
-            </font>
-          </th>
-          <td>
-            <input type="button" name="Button" value="Cancel" onClick="window.close()">
-          </td>
-        </th>
-      </tr>
-    </table>
-    <table width="20%" border="0" bgcolor="ivory" cellspacing="0" cellpadding="1">
-      <tr bgcolor="silver">
-        <th bgcolor="silver" width="10%" nowrap>
-          <b>Setting</b>
-        </th>
-      </tr>
-      <tr>
-        <td>
-          <a href="reportonbilledvisitprovider.jsp">
-            Provider list
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="reportonbilleddxgrp.jsp">
-            Dx group list
-          </a>
-        </td>
-      </tr>
-    </table>
-  </body>
+</head>
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> PHCP </font></th>
+		<td><input type="button" name="Button" value="Cancel"
+			onClick="window.close()"></td>
+		</th>
+	</tr>
+</table>
+<table width="20%" border="0" bgcolor="ivory" cellspacing="0"
+	cellpadding="1">
+	<tr bgcolor="silver">
+		<th bgcolor="silver" width="10%" nowrap><b>Setting</b></th>
+	</tr>
+	<tr>
+		<td><a href="reportonbilledvisitprovider.jsp"> Provider list
+		</a></td>
+	</tr>
+	<tr>
+		<td><a href="reportonbilleddxgrp.jsp"> Dx group list </a></td>
+	</tr>
+</table>
+</body>
 </html>

@@ -27,27 +27,31 @@
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title><bean:message key="billing.billingCorrectionSubmit.title"/></title>
+<title><bean:message key="billing.billingCorrectionSubmit.title" /></title>
 </head>
 <body>
-<%@ page import="oscar.*,java.text.*, java.util.*" %>
+<%@ page import="oscar.*,java.text.*, java.util.*"%>
 <jsp:useBean id="billing" scope="session" class="oscar.BillingBean" />
 <jsp:useBean id="billingItem" scope="page" class="oscar.BillingItemBean" />
-<jsp:useBean id="billingDataBean" class="oscar.BillingDataBean" scope="session"/>
-<jsp:useBean id="billingPatientDataBean" class="oscar.BillingPatientDataBean" scope="session"/>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<%@ include file="dbBilling.jsp" %>
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="billing.billingCorrectionSubmit.msgSuccessfull"/></font></th>
-  </tr>
+<jsp:useBean id="billingDataBean" class="oscar.BillingDataBean"
+	scope="session" />
+<jsp:useBean id="billingPatientDataBean"
+	class="oscar.BillingPatientDataBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<%@ include file="dbBilling.jsp"%>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="billing.billingCorrectionSubmit.msgSuccessfull" /></font></th>
+	</tr>
 </table>
 <%
  
@@ -102,7 +106,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
   
  %>
 
-    <%
+<%
     int recordAffected = 0;
     ListIterator it	=	billing.getBillingItems().listIterator();
  
@@ -129,16 +133,17 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
   }
    apptMainBean.closePstmtConn();
   %>
- 
-    <%
+
+<%
   }
    catch (java.lang.ArrayIndexOutOfBoundsException _e0) {
  }%>
 
-<form action="billingCorrection.jsp">
-<input type="hidden" name="billing_no" value="">
-<input type="submit" value="<bean:message key="billing.billingCorrectionSubmit.btnCorrectAnother"/>" name="submit">
-<input type="button" value="<bean:message key="billing.billingCorrectionSubmit.btnClose"/>" onClick="window.close()">
-</form>
+<form action="billingCorrection.jsp"><input type="hidden"
+	name="billing_no" value=""> <input type="submit"
+	value="<bean:message key="billing.billingCorrectionSubmit.btnCorrectAnother"/>"
+	name="submit"> <input type="button"
+	value="<bean:message key="billing.billingCorrectionSubmit.btnClose"/>"
+	onClick="window.close()"></form>
 </body>
 </html:html>

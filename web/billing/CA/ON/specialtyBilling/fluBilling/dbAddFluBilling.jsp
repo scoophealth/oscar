@@ -43,10 +43,11 @@ userfirstname = (String) session.getAttribute("userfirstname");
 userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ page  import="java.sql.*"%>
-<%@ include file="../../../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../../dbBilling.jsp" %>
+<%@ page import="java.sql.*"%>
+<%@ include file="../../../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../../dbBilling.jsp"%>
 
 
 <%
@@ -146,28 +147,30 @@ if (rowsAffected ==1) {
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A BILLING RECORD</font></th>
-      </tr>
-    </table>    
-    <%if (billSaved) { %>   
-        <p><h1>Successful Addition of a billing Record.</h1></p>
-        <script LANGUAGE="JavaScript">             
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A BILLING RECORD</font></th>
+	</tr>
+</table>
+<%if (billSaved) { %>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
+<script LANGUAGE="JavaScript">             
               self.close();
               self.opener.refresh();              
-        </script>
-    <%}  else {%>
-        <p><h1>Sorry, addition has failed.</h1></p>
-    <%}%>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+        </script> <%}  else {%>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
+<%}%>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

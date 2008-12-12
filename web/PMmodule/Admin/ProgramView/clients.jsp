@@ -23,7 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <script>
 function assignTeam(id,selectBox) {
@@ -124,7 +124,8 @@ function do_batch_discharge(community,bed) {
 <input type="hidden" name="admissionId" value="" />
 <input type="hidden" name="community" value="" />
 <input type="hidden" name="type" value="" />
-<input type="hidden" name="program_name" value="<c:out value="${program_name}"/>" />
+<input type="hidden" name="program_name"
+	value="<c:out value="${program_name}"/>" />
 <input type="hidden" name="clientStatusId" />
 
 <div class="tabs" id="tabs">
@@ -135,82 +136,102 @@ function do_batch_discharge(community,bed) {
 </table>
 </div>
 <!--  show current clients -->
-<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="admission" name="admissions" export="false" pagesize="0"
+	requestURI="/PMmodule/ProgramManagerView.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="No clients currently admitted to this program." />
+	<display:setProperty name="basic.msg.empty_list"
+		value="No clients currently admitted to this program." />
 	<display:column>
 		<input type="checkbox" name="checked_<c:out value="${admission.id}"/>">
 	</display:column>
-	<display:column property="client.formattedName" sortable="true" title="Name" />
-	<display:column property="admissionDate" sortable="true" title="Admission Date" />
-	
+	<display:column property="client.formattedName" sortable="true"
+		title="Name" />
+	<display:column property="admissionDate" sortable="true"
+		title="Admission Date" />
+
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+		<display:column property="temporaryAdmission" sortable="true"
+			title="Temporary Admission" />
 	</caisi:isModuleLoad>
-	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
+	<display:column property="admissionNotes" sortable="true"
+		title="Admission Notes" />
 
 	<display:column property="teamName" sortable="true" title="Team" />
-	
-	<display:column sortable="false" title="" >
-		<select name="x" onchange="assignTeam('<c:out value="${admission.id}"/>',this);">
+
+	<display:column sortable="false" title="">
+		<select name="x"
+			onchange="assignTeam('<c:out value="${admission.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="team" items="${teams}">
 				<c:choose>
 					<c:when test="${team.id == admission.teamId}">
-						<option value="<c:out value="${team.id}"/>" selected><c:out value="${team.name}" /></option>
+						<option value="<c:out value="${team.id}"/>" selected><c:out
+							value="${team.name}" /></option>
 					</c:when>
 					<c:otherwise>
-						<option value="<c:out value="${team.id}"/>"><c:out value="${team.name}" /></option>
+						<option value="<c:out value="${team.id}"/>"><c:out
+							value="${team.name}" /></option>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 		</select>
 	</display:column>
 
-	<display:column sortable="false" title="Status" >
-		<select name="y" onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
+	<display:column sortable="false" title="Status">
+		<select name="y"
+			onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="status" items="${client_statuses}">
 				<c:choose>
 					<c:when test="${status.id == admission.clientStatusId}">
-						<option value="<c:out value="${status.id}"/>" selected><c:out value="${status.name}" /></option>
+						<option value="<c:out value="${status.id}"/>" selected><c:out
+							value="${status.name}" /></option>
 					</c:when>
 					<c:otherwise>
-						<option value="<c:out value="${status.id}"/>"><c:out value="${status.name}" /></option>
+						<option value="<c:out value="${status.id}"/>"><c:out
+							value="${status.name}" /></option>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 		</select>
-	</display:column>	
+	</display:column>
 </display:table>
 <br />
 
-<c:if test="${requestScope.allowBatchDischarge == true and program.type eq 'Bed'}"> 
- 	<input type="button" value="Batch Discharge To CAISI Bed Program" onclick="do_batch_discharge(false,true)" />
+<c:if
+	test="${requestScope.allowBatchDischarge == true and program.type eq 'Bed'}">
+	<input type="button" value="Batch Discharge To CAISI Bed Program"
+		onclick="do_batch_discharge(false,true)" />
 	<select name="batch_discharge_program">
 		<option value="0"></option>
 		<c:forEach var="program" items="${bedPrograms}">
 			<c:if test="${program.id != requestScope.id}">
-				<option value="<c:out value="${program.id}"/>"><c:out value="${program.name}" /></option>
+				<option value="<c:out value="${program.id}"/>"><c:out
+					value="${program.name}" /></option>
 			</c:if>
 		</c:forEach>
 	</select>
 	<br />
-	<input type="button" value="Batch Discharge To Community Bed Program" onclick="do_batch_discharge(true,true)" />
+	<input type="button" value="Batch Discharge To Community Bed Program"
+		onclick="do_batch_discharge(true,true)" />
 	<select name="batch_discharge_community_program">
 		<option value="0"></option>
 		<c:forEach var="program" items="${communityPrograms}">
 			<c:if test="${program.id != requestScope.id}">
-				<option value="<c:out value="${program.id}"/>"><c:out value="${program.name}" /></option>
+				<option value="<c:out value="${program.id}"/>"><c:out
+					value="${program.name}" /></option>
 			</c:if>
 		</c:forEach>
-	</select>	
+	</select>
 </c:if>
 
-<c:if test="${requestScope.allowBatchDischarge == true and program.type eq 'Service'}"> 
- 	<input type="button" value="Batch Discharge" onclick="do_batch_discharge(false,false)" />
- 	
- 	<!-- 
+<c:if
+	test="${requestScope.allowBatchDischarge == true and program.type eq 'Service'}">
+	<input type="button" value="Batch Discharge"
+		onclick="do_batch_discharge(false,false)" />
+
+	<!-- 
  	<input type="button" value="Batch Discharge To CAISI Service Program" onclick="do_batch_discharge(false,false)" />
 	<select name="batch_discharge_program">
 		<option value="0"></option>

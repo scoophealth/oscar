@@ -27,7 +27,7 @@
 
 <html>
 <head>
-<title> PATIENT SEARCH RESULTS </title>
+<title>PATIENT SEARCH RESULTS</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -41,53 +41,60 @@ function setfocus() {
 <!--base target="pt_srch_main"-->
 <link rel="stylesheet" href="../web.css">
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">SEARCH/ADD PATIENT RECORDS</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">SEARCH/ADD
+		PATIENT RECORDS</font></th>
+	</tr>
 </table>
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
 	<form method="post" name="titlesearch" action="demographiccontrol.jsp">
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-        </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="search_name">
-        Name </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio"  name="search_mode" value="search_phone">
-          Phone</font></td> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">
-          <input type="radio"  name="search_mode" value="search_dob">
-          DOB</font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search" >
-				<INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="Search" SIZE="17"></td>
-		</tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="search_address">
-        Address </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_hin">
-          HIN</font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_chart_no">
-          Chart No</font></td>
-		</tr>
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
+
+		<td width="10%" nowrap><font size="1" face="Verdana"
+			color="#0000FF"> <input type="radio" checked
+			name="search_mode" value="search_name"> Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_phone">
+		Phone</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_dob"> DOB</font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
+			TYPE="hidden" NAME="dboperation" VALUE="search_titlename"> <INPUT
+			TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT TYPE="hidden"
+			NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
+			NAME="displaymode" VALUE="Search"> <INPUT TYPE="SUBMIT"
+			NAME="displaymode" VALUE="Search" SIZE="17"></td>
+	</tr>
+	<tr>
+
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_address">
+		Address </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_hin"> HIN</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_chart_no">
+		Chart No</font></td>
+	</tr>
 	</form>
 </table>
-			
+
 <CENTER>
-  <p> <br>
-  </p>
- 
-  <p><a href="demographicaddarecord.htm"><b><font size="+1">Create a new Demographic</font></b></a></p>
-  <p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1">E-Learning 
+<p><br>
+</p>
+
+<p><a href="demographicaddarecord.htm"><b><font size="+1">Create
+a new Demographic</font></b></a></p>
+<p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1">E-Learning 
     Search</font></a--></p>
 </center>
 </body>

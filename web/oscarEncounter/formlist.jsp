@@ -1,8 +1,9 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
+<%@ page
+	import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
 <%
 	
 	String provNo = request.getParameter("provider_no");
@@ -47,7 +48,7 @@
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarEncounter.formlist.title"/></title>
+<title><bean:message key="oscarEncounter.formlist.title" /></title>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <script type="text/javascript" language=javascript>
 
@@ -89,20 +90,27 @@ function popupPageK(page) {
       }
     }
 </script>
-
-<body  bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="oscarEncounter.formlist.msgFormList"/></font></th></tr>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica"><bean:message
+			key="oscarEncounter.formlist.msgFormList" /></font></th>
+	</tr>
 </table>
-<center>			
-<table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="60%" BGCOLOR="white">
-  <tr BGCOLOR="<%=tableTitle%>" > 
-  <th width=30% nowrap><bean:message key="oscarEncounter.formlist.formName"/></th>
-  <th width=11% nowrap><bean:message key="oscarEncounter.formlist.formCreated"/></th>
-  <th width=11% nowrap><bean:message key="oscarEncounter.formlist.formEditedTime"/></th>
-  </tr>
-  
-<%
+<center>
+<table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="60%"
+	BGCOLOR="white">
+	<tr BGCOLOR="<%=tableTitle%>">
+		<th width=30% nowrap><bean:message
+			key="oscarEncounter.formlist.formName" /></th>
+		<th width=11% nowrap><bean:message
+			key="oscarEncounter.formlist.formCreated" /></th>
+		<th width=11% nowrap><bean:message
+			key="oscarEncounter.formlist.formEditedTime" /></th>
+	</tr>
+
+	<%
 	for(int j=0; j<forms.length; j++) {
 		EctFormData.Form frm = forms[j];
 		String table = frm.getFormTable();
@@ -114,14 +122,17 @@ function popupPageK(page) {
 			nItems++;
 			EctFormData.PatientForm pfrm = pforms[i];
 %>
-  <tr bgcolor='<%= j%2 == 0 ? (i%2 == 0 ?weakcolor:deepcolor) : (i%2 == 0 ?"white":"#eeeeee")%>'>
-  <td><a href=# onClick="popupPageK('<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>'); return false;" ><%=frm.getFormName()%></a></td>
-  <td align='center'><%=pfrm.getCreated()%></td>
-  <td align='center'><%=pfrm.getEdited()%></td></tr>
-<%
+	<tr
+		bgcolor='<%= j%2 == 0 ? (i%2 == 0 ?weakcolor:deepcolor) : (i%2 == 0 ?"white":"#eeeeee")%>'>
+		<td><a href=#
+			onClick="popupPageK('<%=frm.getFormPage()+demoNo+"&formId="+pfrm.getFormId()+"&provNo="+provNo%>'); return false;"><%=frm.getFormName()%></a></td>
+		<td align='center'><%=pfrm.getCreated()%></td>
+		<td align='center'><%=pfrm.getEdited()%></td>
+	</tr>
+	<%
 		}
 %>
-<%
+	<%
 	int nLastPage=0,nNextPage=0;
 	nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
 	nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
@@ -130,20 +141,27 @@ function popupPageK(page) {
 		out.println("<tr><td colspan=3  align='center'>");
 		if(nLastPage >= 0) {
 %>
-<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="oscarEncounter.formlist.formLastpage"/></a> |
-<%
+	<a
+		href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+		key="oscarEncounter.formlist.formLastpage" /></a>
+	|
+	<%
 		}
 		if(nItems == intLimit2) {
 %>
-<a href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="oscarEncounter.formlist.formNextPage"/></a></td></tr>
-<%
+	<a
+		href="formlist.jsp?demographic_no=<%=demoNo%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+	<bean:message key="oscarEncounter.formlist.formNextPage" /></a>
+	</td>
+	</tr>
+	<%
 		}else { out.println("</td></tr>"); }
 %>
-<%
+	<%
 	}
 	}
 %>
-  
+
 </table>
 </center>
 </body>

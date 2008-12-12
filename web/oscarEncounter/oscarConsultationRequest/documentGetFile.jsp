@@ -26,9 +26,11 @@
 -->
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
 <%@include file="../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%@include file="../../dms/dbDMS.jsp"%>
 <%
   String filename = "", filetype = "", doc_no = "";
@@ -72,7 +74,8 @@
   } else {
 %>
 <jsp:forward page='../dms/errorpage.jsp'>
-  <jsp:param name="msg" value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>'/>
+	<jsp:param name="msg"
+		value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>' />
 </jsp:forward>
 
 <%}%>

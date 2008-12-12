@@ -1,7 +1,8 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,oscar.oscarDB.*" %>
-<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
+<%@page import="java.sql.*,oscar.oscarDB.*"%>
+<%@page
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 <%
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -82,10 +83,10 @@
 %>
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Edit Dropbox Items</title>
-	<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Edit Dropbox Items</title>
+<script type="text/javascript">
             function move(dirn, pos) {
 		if (pos!="") {
 		    frm_editdb.child_move.value=dirn;
@@ -106,39 +107,37 @@
 		document.frm_editdb.submit();
 	    }
 	</script>
-    </head>
-    <body>
-	<h2>Edit Dropbox Items</h2>
-	<form name="frm_editdb" method="post" action="EditDropbox.jsp">
-	    
-	    <table width="370">
-		<tr>
-		    <td>
-			<select name="box_item" size="9" onchange="copy_s(selectedIndex);">
-<% for (IntakeAnswerElement ie : items) { %>
-			    <option value="<%=ie.getId()%>" <%=(ie.getId()==slct) ? "selected" : ""%>><%=ie.getElement()%></option>
-<% } %>
-			</select>
-		    </td>
-		    <td>
-			<input type="button" value="Move Up" onclick="move('up', box_item.value)" />
-			<br>
-			<input type="button" value="Move Down" onclick="move('down', box_item.value)" />
-		    </td>
-		</tr>
-		<tr><td colspan="2">
-			<input name="s_entry" type="text" size="20" />
-			<input type="button" value="+" title="Add new item" onclick="do_submit('add');" />
-			<input type="button" value="-" title="Remove selected item" onclick="do_submit('remove');" />
-			<br>
-			<input type="button" value="Done" title="Save dropbox" onclick="do_submit('save');" />
-			
-			<input type="hidden" name="submit_type" />
-			<input type="hidden" name="child_move" />
-		</td></tr>
-	    </table>
-	</form>
-    </body>
+</head>
+<body>
+<h2>Edit Dropbox Items</h2>
+<form name="frm_editdb" method="post" action="EditDropbox.jsp">
+
+<table width="370">
+	<tr>
+		<td><select name="box_item" size="9"
+			onchange="copy_s(selectedIndex);">
+			<% for (IntakeAnswerElement ie : items) { %>
+			<option value="<%=ie.getId()%>"
+				<%=(ie.getId()==slct) ? "selected" : ""%>><%=ie.getElement()%></option>
+			<% } %>
+		</select></td>
+		<td><input type="button" value="Move Up"
+			onclick="move('up', box_item.value)" /> <br>
+		<input type="button" value="Move Down"
+			onclick="move('down', box_item.value)" /></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input name="s_entry" type="text" size="20" /> <input
+			type="button" value="+" title="Add new item"
+			onclick="do_submit('add');" /> <input type="button" value="-"
+			title="Remove selected item" onclick="do_submit('remove');" /> <br>
+		<input type="button" value="Done" title="Save dropbox"
+			onclick="do_submit('save');" /> <input type="hidden"
+			name="submit_type" /> <input type="hidden" name="child_move" /></td>
+	</tr>
+</table>
+</form>
+</body>
 </html>
 
 <%!

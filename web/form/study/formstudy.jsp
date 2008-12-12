@@ -1,4 +1,5 @@
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="../../errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"
+	errorPage="../../errorpage.jsp"%>
 <%
     //this is a quick independent page to let you select study.
     
@@ -7,8 +8,9 @@
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../../admin/dbconnection.jsp" %>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_study", "select s.* from study s order by ? " }, 
@@ -44,7 +46,7 @@
 <html>
 <head>
 <title>PATIENT STUDY</title>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -54,26 +56,31 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th>PATIENT STUDY RECORDS</th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepColor%>">
+		<th>PATIENT STUDY RECORDS</th>
+	</tr>
 </table>
 
 <table width="100%" border="0">
-<tr><td align="left"><%=request.getParameter("name")!=null?request.getParameter("name"):""%></td></tr>
+	<tr>
+		<td align="left"><%=request.getParameter("name")!=null?request.getParameter("name"):""%></td>
+	</tr>
 </table>
 
 <CENTER>
-<table width="70%" border="0" bgcolor="#ffffff" > 
-<form method="post" name="study" action="demographicstudyselect.jsp" >
-  <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-  <tr bgcolor="<%=deepColor%>">
-  <TH width="15%">Study No.</TH>
-  <TH width="35%">Study Name</TH>
-  <TH width="50%">Description</TH>
-  </tr>
-<%
+<table width="70%" border="0" bgcolor="#ffffff">
+	<form method="post" name="study" action="demographicstudyselect.jsp">
+	<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+	<tr bgcolor="<%=deepColor%>">
+		<TH width="15%">Study No.</TH>
+		<TH width="35%">Study Name</TH>
+		<TH width="50%">Description</TH>
+	</tr>
+	<%
     ResultSet rs = null ;
     int nItems=0;
     int ectsize=0;
@@ -85,20 +92,26 @@ function setfocus() {
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
 		System.out.println(nItems);
-%>  
-  <tr bgcolor="<%=bgcolor%>">
-    <td align="center"><%=studyBean.getString(rs,"s.study_no")%></td>
-    <td><a href="<%=studyBean.getString(rs,"s.study_link")%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=studyBean.getString(rs,"s.study_no")%>"><%=studyBean.getString(rs,"s.study_name")%></a></td>
-    <td><%=studyBean.getString(rs,"s.description")%></td>
-  </tr>
-<%
+%>
+	<tr bgcolor="<%=bgcolor%>">
+		<td align="center"><%=studyBean.getString(rs,"s.study_no")%></td>
+		<td><a
+			href="<%=studyBean.getString(rs,"s.study_link")%>?demographic_no=<%=request.getParameter("demographic_no")%>&study_no=<%=studyBean.getString(rs,"s.study_no")%>"><%=studyBean.getString(rs,"s.study_name")%></a></td>
+		<td><%=studyBean.getString(rs,"s.description")%></td>
+	</tr>
+	<%
 	}
 	studyBean.closePstmtConn();
-%> 
-<tr><td>&nbsp;</td><td></td><td></td></tr>
-<tr align="center" bgcolor="<%=weakColor%>"><td colspan='3'>
-  <input type="button" name="button" value=" Exit " onClick="window.close()">
-  </td></tr>
+%>
+	<tr>
+		<td>&nbsp;</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr align="center" bgcolor="<%=weakColor%>">
+		<td colspan='3'><input type="button" name="button" value=" Exit "
+			onClick="window.close()"></td>
+	</tr>
 </table>
 
 </form>

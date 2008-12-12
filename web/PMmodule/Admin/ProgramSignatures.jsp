@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.List"%>
 <%
 //	List pss = (List) request.getAttribute("programSignatures");
 //	System.out.println("size of ........"+pss.size());
@@ -8,25 +8,20 @@
 <html:html locale="true">
 <head>
 <title>Program History</title>
-<style type="text/css">			
-	TABLE{
-		background: white;
-	}
-	TH {
-		background: #eef;
-	}
-	TD{
-		background: #eee;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <body>
 
-<display:table cellspacing="2" cellpadding="9" id="ps" name="programSignatures" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
-	
-	<display:column property="providerName" style="white-space: nowrap;" sortable="true" title="Provider Name" ></display:column>
-	<display:column property="caisiRoleName" style="white-space: nowrap;" sortable="true" title="Role" ></display:column>
-	<display:column property="updateDate" style="white-space: nowrap;" sortable="true" title="Date" ></display:column>
+<display:table cellspacing="2" cellpadding="9" id="ps"
+	name="programSignatures" export="false" pagesize="0"
+	requestURI="/PMmodule/ProgramManager.do">
+
+	<display:column property="providerName" style="white-space: nowrap;"
+		sortable="true" title="Provider Name"></display:column>
+	<display:column property="caisiRoleName" style="white-space: nowrap;"
+		sortable="true" title="Role"></display:column>
+	<display:column property="updateDate" style="white-space: nowrap;"
+		sortable="true" title="Date"></display:column>
 </display:table>
 
 </body>
@@ -35,7 +30,7 @@
 <input type="button" value="Back" onClick="history.go(-1)"/>
 -->
 </br>
-<input type="button" value="Close" onClick="self.close()"/>
+<input type="button" value="Close" onClick="self.close()" />
 <!--
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">

@@ -3,19 +3,23 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.LookupTableDefValue" table="app_lookuptable" mutable="false">
+	<class name="com.quatro.model.LookupTableDefValue" table="app_lookuptable"
+		mutable="false">
 		<id name="tableId" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="tableName" column="table_name" /> 
-        <property name="description" /> 
-        <property name="active" column="activeyn" /> 
+		<property name="tableName" column="table_name" />
+		<property name="description" />
+		<property name="active" column="activeyn" />
 		<property name="readonly" column="readonly" />
 		<property name="tree" column="istree" />
-        <property name="treeCodeLength" column="treecode_length" />
-        <property name="moduleId"/>
-        <property name="moduleName"  formula="(select t.description from lst_field_category t where t.id=moduleId)"/>
-        <property name="hasActive"   formula="(select count(*) from app_lookuptable_fields t1 where t1.tableId=tableId and t1.genericidx=3)" />
-        <property name="hasDisplayOrder" formula="(select count(*) from app_lookuptable_fields t2 where t2.tableId=tableId and t2.genericidx=4)" />
+		<property name="treeCodeLength" column="treecode_length" />
+		<property name="moduleId" />
+		<property name="moduleName"
+			formula="(select t.description from lst_field_category t where t.id=moduleId)" />
+		<property name="hasActive"
+			formula="(select count(*) from app_lookuptable_fields t1 where t1.tableId=tableId and t1.genericidx=3)" />
+		<property name="hasDisplayOrder"
+			formula="(select count(*) from app_lookuptable_fields t2 where t2.tableId=tableId and t2.genericidx=4)" />
 	</class>
 </hibernate-mapping>

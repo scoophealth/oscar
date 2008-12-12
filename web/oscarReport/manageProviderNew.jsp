@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbReport.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbReport.jsp"%>
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
@@ -43,31 +45,16 @@ String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", st
 String demographic_dob="1800";
 String action = request.getParameter("action");
 String last_name="", first_name="", mygroup="";
-%> 
+%>
 <html>
 <head>
-<title>Manage Provider </title>
-<link rel="stylesheet" href="oscarReport.css" >
-<link rel="stylesheet" href="tree.css" >
-<style type="text/css">
-<!--
-.bodytext
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<title>Manage Provider</title>
+<link rel="stylesheet" href="oscarReport.css">
+<link rel="stylesheet" href="tree.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!--
 
 function selectprovider(s) {
@@ -90,8 +77,8 @@ function refresh() {
 //-->
 </script>
 
-	<script type="text/javascript" src="tree.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript" src="tree.js"></script>
+<script type="text/javascript">
 		<!--
 		var Tree = new Array;
 		// nodeId | parentNodeId | nodeName | nodeUrl
@@ -161,18 +148,17 @@ ycount = ycount + 1;
 
 <body>
 
-<div id="tree">
-<script type="text/javascript">
+<div id="tree"><script type="text/javascript">
 <!--
 	createTree(Tree); 
 //-->
-</script>
-</div>
+</script></div>
 
-<br /><br /> 
+<br />
+<br />
 
 <a href="mailto:drop@destroydrop.com">drop@destroydrop.com</a>
 
 </body>
 
-</html> 
+</html>

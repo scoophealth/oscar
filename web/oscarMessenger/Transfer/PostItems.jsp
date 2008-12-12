@@ -24,10 +24,8 @@
  */
 --%>
 
-<%@ page language="java"
-    contentType='text/xml'
-    import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"
-%>
+<%@ page language="java" contentType='text/xml'
+	import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*"%>
 <%
 
     String checks = "";

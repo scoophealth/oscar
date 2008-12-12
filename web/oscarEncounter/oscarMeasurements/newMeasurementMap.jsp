@@ -24,25 +24,25 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties, oscar.util.StringUtils" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties, oscar.util.StringUtils"%>
 
 <%
 
 %>
 
-<link rel="stylesheet" type="text/css" href="../../oscarMDS/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../oscarMDS/encounterStyles.css">
 
 <html>
-    <head>
-        <title>
-            Measurement Mapping Configuration
-        </title>
-        
-        <script type="text/javascript" language=javascript>
+<head>
+<title>Measurement Mapping Configuration</title>
+
+<script type="text/javascript" language=javascript>
             
             function newWindow(varpage, windowname){
                 var page = varpage;
@@ -139,67 +139,65 @@
                 }   
             }%>
 
-        </script>    
-        <style type="text/css">
-            .Cell{
-                padding-left:15px;
-            }
-            .Header{
-                padding:5px;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <form method="post" name="LOINC" action="NewMeasurementMap.do">
-            <input type="hidden" name="identifier" value="" >
-            <table width="100%" height="100%" border="0">
-                <tr class="MainTableTopRow">
-                    <td class="MainTableTopRow" colspan="9" align="left">                       
-                        <table width="100%">
-                            <tr> 
-                                <td align="left">
-                                    <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                </td>
-                                <td align="right">
-                                    <a href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'../About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'../License.jsp')" ><bean:message key="global.license"/></a>
-                                </td>
-                            </tr>
-                        </table>                        
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="middle">
-                        <center>
-                            <table width="80%">
-                                <tr>
-                                    <td colspan="2" valign="bottom" class="Header">
-                                        Add New Loinc Code
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="Cell" width="20%">Loinc Code:</td>
-                                    <td class="Cell" width="80%"><input type="text" name="loinc_code"></td>
-                                </tr>  
-                                <tr>
-                                    <td class="Cell" width="20%">Name:</td>
-                                    <td class="Cell" width="80%"><input type="text" name="name"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="Cell" align="center">
-                                        <input type="submit" value=" Add Loinc Code " onclick="return addLoinc()" > 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="Cell" align="center">
-                                        NOTE: <a href="javascript:newWindow('http://www.regenstrief.org/medinformatics/loinc/relma','RELMA')">It is suggested that you use the RELMA application to help determine correct loinc codes.</a>
-                                    </td>    
-                                </tr>
-                            </table>
-                        </center>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </body>
+        </script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+
+<body>
+<form method="post" name="LOINC" action="NewMeasurementMap.do"><input
+	type="hidden" name="identifier" value="">
+<table width="100%" height="100%" border="0">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRow" colspan="9" align="left">
+		<table width="100%">
+			<tr>
+				<td align="left"><input type="button"
+					value=" <bean:message key="global.btnClose"/> "
+					onClick="window.close()"></td>
+				<td align="right"><a
+					href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'../About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'../License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td valign="middle">
+		<center>
+		<table width="80%">
+			<tr>
+				<td colspan="2" valign="bottom" class="Header">Add New Loinc
+				Code</td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Loinc Code:</td>
+				<td class="Cell" width="80%"><input type="text"
+					name="loinc_code"></td>
+			</tr>
+			<tr>
+				<td class="Cell" width="20%">Name:</td>
+				<td class="Cell" width="80%"><input type="text" name="name"></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="Cell" align="center"><input
+					type="submit" value=" Add Loinc Code " onclick="return addLoinc()">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" class="Cell" align="center">NOTE: <a
+					href="javascript:newWindow('http://www.regenstrief.org/medinformatics/loinc/relma','RELMA')">It
+				is suggested that you use the RELMA application to help determine
+				correct loinc codes.</a></td>
+			</tr>
+		</table>
+		</center>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
 </html>

@@ -28,15 +28,19 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 %>
 
 <html>
-<head> 
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title></title>
 </head>
 <body>
-<%@ page  import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-<jsp:useBean id="dbBillingDataBean" scope="page" class="oscar.dbBillingData">
-  <jsp:setProperty name="dbBillingDataBean" property="*" />
+<%@ page
+	import="java.io.*, java.sql.*, java.util.*,java.net.*, oscar.*, java.math.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="dbBillingDataBean" scope="page"
+	class="oscar.dbBillingData">
+	<jsp:setProperty name="dbBillingDataBean" property="*" />
 </jsp:useBean>
 
 <center>

@@ -25,7 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
@@ -39,33 +39,43 @@
     }
 </script>
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Admission History</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Admission History</th>
+	</tr>
+</table>
 </div>
-<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissionHistory" requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="admission" name="admissionHistory"
+	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
+	<display:setProperty name="basic.msg.empty_list"
+		value="This client is not currently admitted to any programs." />
 
 	<%
 		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
 	%>
-    <display:column sortable="false">
-        <a href="javascript:void(0)" onclick="popupAdmissionInfo('<c:out value="${admission.id}" />')">
-            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
-        </a>
-    </display:column>
-    <display:column property="programName" sortable="true" title="Program Name" />
-	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
-	<display:column title="Facility<br />Admission" >
-	<%=!tmpAd.isAdmissionFromTransfer()%>
+	<display:column sortable="false">
+		<a href="javascript:void(0)"
+			onclick="popupAdmissionInfo('<c:out value="${admission.id}" />')">
+		<img alt="View details"
+			src="<c:out value="${ctx}" />/images/details.gif" border="0" /> </a>
 	</display:column>
-	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />
-	<display:column title="Facility<br />Discharge" >
-	<%=!tmpAd.isDischargeFromTransfer()%>
+	<display:column property="programName" sortable="true"
+		title="Program Name" />
+	<display:column property="programType" sortable="true"
+		title="Program Type" />
+	<display:column property="admissionDate"
+		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
+		title="Admission Date" />
+	<display:column title="Facility<br />Admission">
+		<%=!tmpAd.isAdmissionFromTransfer()%>
+	</display:column>
+	<display:column property="dischargeDate"
+		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
+		title="Discharge Date" />
+	<display:column title="Facility<br />Discharge">
+		<%=!tmpAd.isDischargeFromTransfer()%>
 	</display:column>
 	<display:column sortable="true" title="Days in Program">
 		<%
@@ -88,34 +98,45 @@
 		<%=numDays%>
 	</display:column>
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+		<display:column property="temporaryAdmission" sortable="true"
+			title="Temporary Admission" />
 	</caisi:isModuleLoad>
 </display:table>
 <br />
 <br />
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Referral History</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Referral History</th>
+	</tr>
+</table>
 </div>
-<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referralHistory" requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="referral" name="referralHistory"
+	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	
-    <display:column sortable="false">
-        <a href="javascript:void(0)" title="Referral details" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
-            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
-        </a>
-    </display:column>
-	<display:column property="programName" sortable="true" title="Program Name" />
-	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />
+
+	<display:column sortable="false">
+		<a href="javascript:void(0)" title="Referral details"
+			onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
+		<img alt="View details"
+			src="<c:out value="${ctx}" />/images/details.gif" border="0" /> </a>
+	</display:column>
+	<display:column property="programName" sortable="true"
+		title="Program Name" />
+	<display:column property="programType" sortable="true"
+		title="Program Type" />
+	<display:column property="referralDate"
+		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
+		title="Referral Date" />
 	<!--  display:column property="providerFormattedName" sortable="true" title="Referring Provider" / -->
-	<display:column property="completionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Completion Date" />
+	<display:column property="completionDate"
+		format="{0, date, yyyy-MM-dd kk:mm}" sortable="true"
+		title="Completion Date" />
 	<!-- display:column property="completionNotes" sortable="true" title="Completion Notes" / -->
 	<!-- display:column property="status" sortable="true" title="Status" / -->
 	<!-- display:column property="notes" sortable="true" title="Notes" / -->
-	<display:column property="completionNotes" sortable="false" title="Referring program/agency" />
+	<display:column property="completionNotes" sortable="false"
+		title="Referring program/agency" />
 	<display:column property="notes" sortable="false" title="External" />
 </display:table>

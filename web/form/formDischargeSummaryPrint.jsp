@@ -18,14 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  -->
- 
+
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*, org.oscarehr.util.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="org.springframework.context.*,org.springframework.web.context.support.*" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="oscar.util.*, oscar.form.*, oscar.form.data.*, org.oscarehr.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="org.springframework.context.*,org.springframework.web.context.support.*"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String formClass = "DischargeSummary";
@@ -51,87 +54,25 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY</title>
-    <html:base/>
-    <style type="text/css" media="print">
-        .header {
-        display:none;
-        }
+<title>MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY</title>
+<html:base />
+<style type="text/css" media="print">
+.header {
+	display: none;
+}
 
-        .header INPUT {
-        display:none;
-        }
+.header INPUT {
+	display: none;
+}
 
-        .header A {
-        display:none;
-        }
-    </style>
+.header A {
+	display: none;
+}
+</style>
 
-    <style type="text/css">
-    	.table {
-    	overflow: auto;
-    	}
-    	
-        .Header{
-        background-color:#BBBBBB;
-        padding-top:5px;
-        padding-bottom:5px;
-        width: 450pt;
-        font-size:12pt;
-        }
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<!-- <link rel="stylesheet" type="text/css" href="arStyle.css">  -->
 
-        .Header INPUT{
-        width: 100px;
-        }
-
-        .Header A{
-        font-size: 12pt;
-        }
-
-        table.patientInfo{
-        border: 1pt solid #888888;
-        }
-
-        table.leftPatient{
-        border-left: 1pt solid #AAAAAA;
-        }
-
-        table.printTable{
-        width: 450pt;
-        border: 1pt solid #888888;
-        font-size: 10pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-        td.subTitles{
-        font-size:12pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-        td.fillLine{
-        border-bottom: 1pt solid #444444;
-        font-size:10pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-        pre.text{
-        font-size:10pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-        td.title4{
-        font-size:12pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-        td.address{
-        font-size:10pt;
-        font-family: arial, verdana, tahoma, helvetica, sans serif;
-        }
-
-    </style>       
-    <!-- <link rel="stylesheet" type="text/css" href="arStyle.css">  -->
-    
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -328,194 +269,217 @@ var maxYear=9900;
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 
 <table width="100%" class="header">
-    <tr width="100%">
-        <td align="left">
-            <input type="button" value="Exit" onclick="window.close();"/> 
-            <input type="button" value="Print" onclick="window.print()" />            
-        </td>
-    </tr>
+	<tr width="100%">
+		<td align="left"><input type="button" value="Exit"
+			onclick="window.close();" /> <input type="button" value="Print"
+			onclick="window.print()" /></td>
+	</tr>
 </table>
 
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
- <tr>
-      <td align="center" ><b>Sherbourne Health Centre Infirmary</b></td>
- </tr>
- <tr>
- 	<td align="center" ><b>(ph) 416-324-4108</b></td>
- </tr>
- <tr>
- 	<td align="center" ><b>(fax) 416-324-4258</b></td>
- </tr>
- <tr><td>&nbsp;</td></tr>
-<tr>
-<td align="center" ><b>MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY</b></td>
-</tr>
-<tr><td>&nbsp;</td></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td align="center"><b>Sherbourne Health Centre Infirmary</b></td>
+	</tr>
+	<tr>
+		<td align="center"><b>(ph) 416-324-4108</b></td>
+	</tr>
+	<tr>
+		<td align="center"><b>(fax) 416-324-4258</b></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center"><b>MULTI-DISCIPLINARY TEAM DISCHARGE
+		SUMMARY</b></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
 </table>
 
 
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-    <tr width="100%">
-     <td align="left"><b>Client Name:</b>
-     <%= props.getProperty("clientName", "") %></td>
-     <td align="left"><b>DOB<small>(yyyy/mm/dd)</small>: </b>
-     <%= props.getProperty("birthDate", "") %></td>
-	 <td align="left"><b>OHIP#: </b>
-     <%= props.getProperty("ohip", "") %></td>
-    </tr>    
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr width="100%">
+		<td align="left"><b>Client Name:</b> <%= props.getProperty("clientName", "") %></td>
+		<td align="left"><b>DOB<small>(yyyy/mm/dd)</small>: </b> <%= props.getProperty("birthDate", "") %></td>
+		<td align="left"><b>OHIP#: </b> <%= props.getProperty("ohip", "") %></td>
+	</tr>
 
-    <tr width="100%">
-     <td align="left"><b>Admit Date:</b>
-     <%= props.getProperty("admitDate", "") %></td>
-     <td align="left"><b>Discharge Date<small>(yyyy/mm/dd):</small> </b>
-     <%= props.getProperty("dischargeDate", "") %></td>
-	 <td align="left"><b>Allergies: </b>
-	 <%= props.getProperty("allergies", "") %></td>   	
-</table>
-<br>
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-<tr><th align="left">Admitting Diagnosis/Primary Diagnosis:</th></tr>
-<tr><td><%= props.getProperty("admissionNotes", "") %></td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><th align="left">Problem List:</th></tr>
-<tr><td><%= props.getProperty("currentIssues", "") %></td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><th align="left">Brief Summary of stay (special procedures/treatment/complications):</th></tr>
-<tr><td><%= props.getProperty("briefSummary", "") %></td></tr>
-<tr><td>&nbsp;</td></tr>
-<tr><th align="left">Discharge Plan of Care/Recommendations/Outstanding Issues:</th></tr>
-<tr><td><%= props.getProperty("dischargePlan", "") %></td></tr>
-<tr><td>&nbsp;</td></tr>		
-</table>
-
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-<tr>
-	<th align="left">Follow-up Appointment(s): </th>	
-</tr>
-</table>
-<table width="100%" border="1"  cellspacing="0" cellpadding="0" > 
-<tr>
-	<th>Agency/Health Care Provider </th>
-	<th>Phone No </th>
-	<th>Date/Time </th>
-	<th>Location </th>
-</tr>
-<tr>
-	<td><%= props.getProperty("doctor1", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("phoneNumber1", "") %> &nbsp;</td>	
-    <td><%= props.getProperty("date1", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("location1", "") %>&nbsp;</td>
-</tr>
-<tr>
-	<td><%= props.getProperty("doctor2", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("phoneNumber2", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("date2", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("location2", "") %>&nbsp;</td>
-</tr>
-<tr>
-	<td><%= props.getProperty("doctor3", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("phoneNumber3", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("date3", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("location3", "") %>&nbsp;</td>
-</tr>
-<tr>
-	<td><%= props.getProperty("doctor4", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("phoneNumber4", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("date4", "") %>&nbsp;</td>	
-    <td><%= props.getProperty("location4", "") %>&nbsp;</td>
-</tr>
+	<tr width="100%">
+		<td align="left"><b>Admit Date:</b> <%= props.getProperty("admitDate", "") %></td>
+		<td align="left"><b>Discharge Date<small>(yyyy/mm/dd):</small>
+		</b> <%= props.getProperty("dischargeDate", "") %></td>
+		<td align="left"><b>Allergies: </b> <%= props.getProperty("allergies", "") %></td>
 </table>
 <br>
-<table width="100%" border="1"  cellspacing="0" cellpadding="0" >
-<tr>
-	<td>
-		<table width="100%" border="0"  cellspacing="0" cellpadding="0">
-			<tr><th>Current Medications:</th></tr>
-			<tr><td>Please see Attached Summary </td></tr>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<th align="left">Admitting Diagnosis/Primary Diagnosis:</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("admissionNotes", "") %></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<th align="left">Problem List:</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("currentIssues", "") %></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<th align="left">Brief Summary of stay (special
+		procedures/treatment/complications):</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("briefSummary", "") %></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<th align="left">Discharge Plan of
+		Care/Recommendations/Outstanding Issues:</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("dischargePlan", "") %></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<th align="left">Follow-up Appointment(s):</th>
+	</tr>
+</table>
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
+	<tr>
+		<th>Agency/Health Care Provider</th>
+		<th>Phone No</th>
+		<th>Date/Time</th>
+		<th>Location</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("doctor1", "") %>&nbsp;</td>
+		<td><%= props.getProperty("phoneNumber1", "") %> &nbsp;</td>
+		<td><%= props.getProperty("date1", "") %>&nbsp;</td>
+		<td><%= props.getProperty("location1", "") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("doctor2", "") %>&nbsp;</td>
+		<td><%= props.getProperty("phoneNumber2", "") %>&nbsp;</td>
+		<td><%= props.getProperty("date2", "") %>&nbsp;</td>
+		<td><%= props.getProperty("location2", "") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("doctor3", "") %>&nbsp;</td>
+		<td><%= props.getProperty("phoneNumber3", "") %>&nbsp;</td>
+		<td><%= props.getProperty("date3", "") %>&nbsp;</td>
+		<td><%= props.getProperty("location3", "") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("doctor4", "") %>&nbsp;</td>
+		<td><%= props.getProperty("phoneNumber4", "") %>&nbsp;</td>
+		<td><%= props.getProperty("date4", "") %>&nbsp;</td>
+		<td><%= props.getProperty("location4", "") %>&nbsp;</td>
+	</tr>
+</table>
+<br>
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<th>Current Medications:</th>
+			</tr>
+			<tr>
+				<td>Please see Attached Summary</td>
+			</tr>
 		</table>
-	<td>
-		<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-		<tr>
-			<th align="left">Prescription Provided:</th>
-			<td align="left">
-				<%if(props.getProperty("prescriptionProvided","").equals("1")){%>
-				<input type="radio" name="prescriptionProvided" value="1" checked />
-				<%}else { %>
-				<input type="radio" name="prescriptionProvided" value="1" />
-				<%} %>Yes
-			</td>
-			<td align="left">
-				<%if(props.getProperty("prescriptionProvided","").equals("0")){%>
-				<input type="radio" name="prescriptionProvided" value="0" checked />
-				<%}else { %>
-				<input type="radio" name="prescriptionProvided" value="0"/>
-				<%} %>No
-			</td>			
-			
-		</tr>
-		
-		
-		<tr>
-			<th align="left">Changes in Medications (include explanation):</th>
-			<td align="left">
-				<%if(props.getProperty("medicationProvided","").equals("1")){%>
-				<input type="radio" name="medicationProvided" value="1" checked />
-				<%}else { %>
-				<input type="radio" name="medicationProvided" value="1" />
-				<%} %>Yes
-			</td>
-			<td align="left">
-				<%if(props.getProperty("medicationProvided","").equals("0")){%>
-				<input type="radio" name="medicationProvided" value="0" checked />
-				<%}else { %>
-				<input type="radio" name="medicationProvided" value="0"/>
-				<%} %>No
-			</td>
-		</tr>
-		<tr>	
-			<td colspan="3"><%= props.getProperty("changeMedications", "") %><td>					
-		</tr>
+		<td>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<th align="left">Prescription Provided:</th>
+				<td align="left">
+				<%if(props.getProperty("prescriptionProvided","").equals("1")){%> <input
+					type="radio" name="prescriptionProvided" value="1" checked /> <%}else { %>
+				<input type="radio" name="prescriptionProvided" value="1" /> <%} %>Yes
+				</td>
+				<td align="left">
+				<%if(props.getProperty("prescriptionProvided","").equals("0")){%> <input
+					type="radio" name="prescriptionProvided" value="0" checked /> <%}else { %>
+				<input type="radio" name="prescriptionProvided" value="0" /> <%} %>No
+				</td>
+
+			</tr>
+
+
+			<tr>
+				<th align="left">Changes in Medications (include explanation):</th>
+				<td align="left">
+				<%if(props.getProperty("medicationProvided","").equals("1")){%> <input
+					type="radio" name="medicationProvided" value="1" checked /> <%}else { %>
+				<input type="radio" name="medicationProvided" value="1" /> <%} %>Yes
+				</td>
+				<td align="left">
+				<%if(props.getProperty("medicationProvided","").equals("0")){%> <input
+					type="radio" name="medicationProvided" value="0" checked /> <%}else { %>
+				<input type="radio" name="medicationProvided" value="0" /> <%} %>No</td>
+			</tr>
+			<tr>
+				<td colspan="3"><%= props.getProperty("changeMedications", "") %>
+				<td>
+			</tr>
 		</table>
-	</td>
-</tr>
-</table> 
+		</td>
+	</tr>
+</table>
 <br>
 <table>
-<tr><th align="left">Referrals:</th></tr>
+	<tr>
+		<th align="left">Referrals:</th>
+	</tr>
 </table>
-<table width="100%" border="1"  cellspacing="0" cellpadding="0" >
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
 
-<tr>
-	<th>Program</th>
-	<th>Referral Made</th>
-	<th>Outcome</th>
-</tr>
-<tr>	
-	<td><%= props.getProperty("referralProgram1", "") %>&nbsp;</td>
-	<td><%= props.getProperty("referralMade1","") %>&nbsp;</td>
-	<td><%= props.getProperty("referralOutcome1","") %>&nbsp;</td>
-</tr>
-<tr>	
-	<td><%= props.getProperty("referralProgram2", "") %>&nbsp;</td>
-	<td><%= props.getProperty("referralMade2","") %>&nbsp;</td>
-	<td><%= props.getProperty("referralOutcome2","") %>&nbsp;</td>
-</tr>
-<tr>	
-	<td><%= props.getProperty("referralProgram3", "") %>&nbsp;</td>
-	<td><%= props.getProperty("referralMade3","") %>&nbsp;</td>
-	<td><%= props.getProperty("referralOutcome3","") %>&nbsp;</td>
-</tr>
-<tr>	
-	<td><%= props.getProperty("referralProgram4", "") %>&nbsp;</td>
-	<td><%= props.getProperty("referralMade4","") %>&nbsp;</td>
-	<td><%= props.getProperty("referralOutcome4","") %>&nbsp;</td>
-</tr>
-<tr>	
-	<td><%= props.getProperty("referralProgram5", "") %>&nbsp;</td>
-	<td><%= props.getProperty("referralMade5","") %>&nbsp;</td>
-	<td><%= props.getProperty("referralOutcome5","") %>&nbsp;</td>
-</tr>
+	<tr>
+		<th>Program</th>
+		<th>Referral Made</th>
+		<th>Outcome</th>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("referralProgram1", "") %>&nbsp;</td>
+		<td><%= props.getProperty("referralMade1","") %>&nbsp;</td>
+		<td><%= props.getProperty("referralOutcome1","") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("referralProgram2", "") %>&nbsp;</td>
+		<td><%= props.getProperty("referralMade2","") %>&nbsp;</td>
+		<td><%= props.getProperty("referralOutcome2","") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("referralProgram3", "") %>&nbsp;</td>
+		<td><%= props.getProperty("referralMade3","") %>&nbsp;</td>
+		<td><%= props.getProperty("referralOutcome3","") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("referralProgram4", "") %>&nbsp;</td>
+		<td><%= props.getProperty("referralMade4","") %>&nbsp;</td>
+		<td><%= props.getProperty("referralOutcome4","") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><%= props.getProperty("referralProgram5", "") %>&nbsp;</td>
+		<td><%= props.getProperty("referralMade5","") %>&nbsp;</td>
+		<td><%= props.getProperty("referralOutcome5","") %>&nbsp;</td>
+	</tr>
 </table>
 
 <br>
@@ -525,25 +489,23 @@ var maxYear=9900;
 		<th align="left">Notes:</th>
 	</tr>
 	<tr>
-		<td>
-		<%= props.getProperty("notes", "") %>
-		</td>
+		<td><%= props.getProperty("notes", "") %></td>
 	</tr>
 </table>
 <br>
 <table>
-<tr>
-    <th align="left"> Infirmary Health Care Provider:</th>     
-     <td><%= props.getProperty("providerName", "") %>&nbsp;</td>
-  </tr>
-  <tr>
-	<th align="left">Provider's Signature:</th>
-	<td><%= props.getProperty("signature", "") %>&nbsp;</td>
-  </tr>
-  <tr>
-	<th align="left">Date(yyyy/mm/dd):</th>
-	<td><%= props.getProperty("signatureDate", "") %>&nbsp;</td>
-</tr>
+	<tr>
+		<th align="left">Infirmary Health Care Provider:</th>
+		<td><%= props.getProperty("providerName", "") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<th align="left">Provider's Signature:</th>
+		<td><%= props.getProperty("signature", "") %>&nbsp;</td>
+	</tr>
+	<tr>
+		<th align="left">Date(yyyy/mm/dd):</th>
+		<td><%= props.getProperty("signatureDate", "") %>&nbsp;</td>
+	</tr>
 </table>
 <br>
 

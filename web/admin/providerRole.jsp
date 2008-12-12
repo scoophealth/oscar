@@ -17,22 +17,24 @@
  * <OSCAR TEAM>
  */
 -->
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ page errorPage="../errorpage.jsp" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="oscar.util.*" %>
-<%@ page import="oscar.login.*" %>
-<%@ page import="oscar.log.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="oscar.util.*"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="oscar.log.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 if(session.getAttribute("user") == null )
 	response.sendRedirect("../logout.jsp");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 String curUser_no = (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
+	reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -233,13 +235,11 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
             }
         }
 %>
-  <html>
-    <head>
-      <title>
-        PROVIDER
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <script language="JavaScript">
+<html>
+<head>
+<title>PROVIDER</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<script language="JavaScript">
 
                 <!--
 function setfocus() {
@@ -253,28 +253,20 @@ function submit(form) {
 //-->
 
       </script>
-    </head>
-    <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <form name="myform" action="providerRole.jsp" method="POST">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-            <% if(msg.length()>1) {%>
-			<%=msg%>
-			<% } %>
-            </font>
-          </th>
-          <td nowrap>
-            <font size="-1" color="#FFFFFF">
-              Name:
-              <input type="text" name="keyword" size="15" value="<%=keyword%>" />
-              <input type="submit" name="search" value="Search">
-            </font>
-          </td>
-        </tr>
-      </table>
-      </form>
+</head>
+<body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<form name="myform" action="providerRole.jsp" method="POST">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> <% if(msg.length()>1) {%> <%=msg%> <% } %> </font></th>
+		<td nowrap><font size="-1" color="#FFFFFF"> Name: <input
+			type="text" name="keyword" size="15" value="<%=keyword%>" /> <input
+			type="submit" name="search" value="Search"> </font></td>
+	</tr>
+</table>
+</form>
 <%
 String     color       = "#ccCCFF";
 Properties prop        = null;
@@ -310,30 +302,19 @@ while (rs.next()) {
 	vec.add(prop);
 }
 %>
-        <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="mediumaquamarine">
-            <th colspan="5" align="left">
-              Provider-Role List
-            </th>
-          </tr>
-          <tr bgcolor="silver">
-            <th width="10%" nowrap>
-              ID
-            </th>
-            <th width="20%" nowrap>
-              <b>First Name</b>
-            </th>
-            <th width="20%" nowrap>
-              <b>Last Name</b>
-            </th>
-            <th width="20%" nowrap>
-              Role
-            </th>
-            <th nowrap>
-              Action
-            </th>
-          </tr>
-<%
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="mediumaquamarine">
+		<th colspan="5" align="left">Provider-Role List</th>
+	</tr>
+	<tr bgcolor="silver">
+		<th width="10%" nowrap>ID</th>
+		<th width="20%" nowrap><b>First Name</b></th>
+		<th width="20%" nowrap><b>Last Name</b></th>
+		<th width="20%" nowrap>Role</th>
+		<th nowrap>Action</th>
+	</tr>
+	<%
 		String tempNo = null;
 		String bgColor = color;
         for (int i = 0; i < vec.size(); i++) {
@@ -343,46 +324,39 @@ while (rs.next()) {
           		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF";
           	}
 %>
-      <form name="myform" action="providerRole.jsp" method="POST">
-            <tr bgcolor="<%=bgColor%>">
-              <td>
-                <%= providerNo %>
-              </td>
-              <td>
-                <%= ((Properties)vec.get(i)).getProperty("first_name", "") %>
-              </td>
-              <td>
-                <%= ((Properties)vec.get(i)).getProperty("last_name", "") %>
-              </td>
-              <td align="center">
-                  <select name="<%="name" + providerNo%>">
-						<option value="-" >-</option>
-<%
+	<form name="myform" action="providerRole.jsp" method="POST">
+	<tr bgcolor="<%=bgColor%>">
+		<td><%= providerNo %></td>
+		<td><%= ((Properties)vec.get(i)).getProperty("first_name", "") %>
+		</td>
+		<td><%= ((Properties)vec.get(i)).getProperty("last_name", "") %>
+		</td>
+		<td align="center"><select name="<%="name" + providerNo%>">
+			<option value="-">-</option>
+			<%
                     for (int j = 0; j < vecRoleName.size(); j++) {
 %>
-                      <option value="<%=vecRoleName.get(j)%>" <%= vecRoleName.get(j).equals(((Properties)vec.get(i)).getProperty("role_name", ""))?"selected":"" %>>
-                      <%= vecRoleName.get(j) %>
-                      </option>
-<%
+			<option value="<%=vecRoleName.get(j)%>"
+				<%= vecRoleName.get(j).equals(((Properties)vec.get(i)).getProperty("role_name", ""))?"selected":"" %>>
+			<%= vecRoleName.get(j) %></option>
+			<%
                     }
 %>
-                  </select>
-            </td>
-            <td align="center">
-              <input type="hidden" name="keyword" value="<%=keyword%>" />
-              <input type="hidden" name="providerId" value="<%= ((Properties)vec.get(i)).getProperty("provider_no", "")%>">
-              <input type="hidden" name="roleName" value="<%= ((Properties)vec.get(i)).getProperty("role_name", "")%>">
-              <input type="submit" name="submit" value="Add">
-              <input type="submit" name="buttonUpdate" value="Update">
-              -
-              <input type="submit" name="submit" value="Delete">
-            </td>
-            </tr>
-      </form>
-<%
+		</select></td>
+		<td align="center"><input type="hidden" name="keyword"
+			value="<%=keyword%>" /> <input type="hidden" name="providerId"
+			value="<%= ((Properties)vec.get(i)).getProperty("provider_no", "")%>">
+		<input type="hidden" name="roleName"
+			value="<%= ((Properties)vec.get(i)).getProperty("role_name", "")%>">
+		<input type="submit" name="submit" value="Add"> <input
+			type="submit" name="buttonUpdate" value="Update"> - <input
+			type="submit" name="submit" value="Delete"></td>
+	</tr>
+	</form>
+	<%
           }
 %>
-        </table>
-      <hr>
-      </body>
-    </html>
+</table>
+<hr>
+</body>
+</html>

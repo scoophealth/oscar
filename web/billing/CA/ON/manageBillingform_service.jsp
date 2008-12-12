@@ -24,13 +24,14 @@
  */
 -->
 
-<form method="post" name="form1" action="dbManageBillingform_service.jsp">
+<form method="post" name="form1"
+	action="dbManageBillingform_service.jsp">
 <table width="75%" border="0" cellpadding="3" bgcolor="#9999CC">
-  <tr> 
-   
-     
-   
-  <% 
+	<tr>
+
+
+
+		<% 
 for (int i=1;i<4;i++){
  ResultSet rs=null ;
   ResultSet rs2=null ;
@@ -56,7 +57,7 @@ int rCount = 0;
    out.println("failed!!!"); 
   } else {
   %>
-  <% 
+		<% 
     while (rs.next()) {
      
       bodd=bodd?false:true; //for the color of rows
@@ -67,26 +68,38 @@ int rCount = 0;
       rCount = rCount + 1;
    }
   }          
-  %> 
-  <td >
-    <table width="100%" border="0">
-           <tr>
-             <td><input type="text" name="group<%=i%>" value="<%=servicetype_name%>" size="20" style="font-size:8pt;text-align:right;vertical-align:bottom"></td>
-           </tr>
-           <% for(int k=0; k<20;k++){ %>
-           <tr>
-             <td><input type="text" name="group<%=i%>_service<%=k%>" value="<%=service_code[k]%>" size="10" style="font-size:8pt;text-align:right;vertical-align:bottom"><input type="text" name="group<%=i%>_service<%=k%>_order" value="<%=service_order[k]%>" size="5" style="font-size:8pt;text-align:right;vertical-align:bottom"></td>
-           </tr>
-           <% } %>
-      </table></td>
-  <%  }
+  %>
+		<td>
+		<table width="100%" border="0">
+			<tr>
+				<td><input type="text" name="group<%=i%>"
+					value="<%=servicetype_name%>" size="20"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"></td>
+			</tr>
+			<% for(int k=0; k<20;k++){ %>
+			<tr>
+				<td><input type="text" name="group<%=i%>_service<%=k%>"
+					value="<%=service_code[k]%>" size="10"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"><input
+					type="text" name="group<%=i%>_service<%=k%>_order"
+					value="<%=service_order[k]%>" size="5"
+					style="font-size: 8pt; text-align: right; vertical-align: bottom"></td>
+			</tr>
+			<% } %>
+		</table>
+		</td>
+		<%  }
 
 %>
-  
-     
-   </tr>
-   <tr>
-   <td colspan="3"><input type="submit" name="submit" value="<bean:message key="billing.manageBillingform_service.btnUpdate"/>"><input type="hidden" name="typeid" value="<%=request.getParameter("billingform")%>"><input type="hidden" name="type" value="<%=service_name%>"></td>
-   </tr>
- </table>
- </form>
+
+
+	</tr>
+	<tr>
+		<td colspan="3"><input type="submit" name="submit"
+			value="<bean:message key="billing.manageBillingform_service.btnUpdate"/>"><input
+			type="hidden" name="typeid"
+			value="<%=request.getParameter("billingform")%>"><input
+			type="hidden" name="type" value="<%=service_name%>"></td>
+	</tr>
+</table>
+</form>

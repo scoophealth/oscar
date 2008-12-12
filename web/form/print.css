@@ -21,81 +21,83 @@
  * Hamilton 
  * Ontario, Canada 
  */
+{
+font-size
+:
+ 
+8
+pt
+;
 
-{
-    font-size: 8pt;
+
+}
+BODY {
+	background-color: white;
+	color: black;
+	width: 300pt;
 }
 
-BODY
-{
-    background-color: white;
-    color: black;
-    width: 300pt;
+BODY A {
+	color: black;
 }
 
-BODY A
-{
-    color: black;
+.head {
+	display: none;
 }
 
-.head
-{
-    display:none;
+.head INPUT {
+	display: none;
 }
-.head INPUT
-{
-    display:none;
+
+.head A {
+	display: none;
 }
-.head A
-{
-    display:none;
+
+.header {
+	display: none;
 }
-.header
-{
-    display:none;
+
+.header INPUT {
+	display: none;
 }
-.header INPUT
-{
-    display:none;
+
+.header A {
+	display: none;
 }
-.header A
-{
-    display:none;
+
+.hidePrint {
+	display: none;
 }
-.hidePrint
-{
-    display: none;
+
+.hidePrint INPUT {
+	display: none;
 }
-.hidePrint INPUT
-{
-    display: none;
+
+.hidePrint A {
+	display: none;
 }
-.hidePrint A
-{
-    display: none;
+
+.LeftTable {
+	display: none;
 }
-.LeftTable
-{
-    display: none;
+
+.row {
+	background-color: #FFFFFF;
+	color: #000000;
 }
-.row
-{
-    background-color: #FFFFFF;
-    color: #000000;
+
+.column {
+	background-color: #FFFFFF;
+	color: #000000;
 }
-.column
-{
-    background-color: #FFFFFF;
-    color: #000000;
+
+.titleBar {
+	background-color: #FFFFFF;
+	color: #000000;
 }
-.titleBar
-{
-    background-color: #FFFFFF;
-    color: #000000;
-}
+
 .outerTable {
-    padding: 0;
-    border-spacing: 0;
-	width:650px;
+	padding: 0;
+	border-spacing: 0;
+	width: 650px;
 }
-

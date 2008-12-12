@@ -17,21 +17,22 @@
  * <OSCAR TEAM>
  */
 -->
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ page errorPage="../errorpage.jsp" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="oscar.login.*" %>
-<%@ page import="oscar.log.*" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="oscar.log.*"%>
 <%
 if(session.getAttribute("user") == null )
 	response.sendRedirect("../logout.jsp");
 String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 String curUser_no = (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -112,18 +113,16 @@ String curUser_no = (String)session.getAttribute("user");
 	}
   }
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-  <html:html locale="true">
-    <head>
-      <title>
-        Add/Edit Role
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT"/>
-      <meta http-equiv="Cache-Control" content="no-cache"/>
-      <script type="text/javascript" language="JavaScript">
+<html:html locale="true">
+<head>
+<title>Add/Edit Role</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<script type="text/javascript" language="JavaScript">
 
       <!--
 		function setfocus() {
@@ -192,70 +191,63 @@ String curUser_no = (String)session.getAttribute("user");
 //-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" style="margin: 0px">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr>
-          <td align="left">
-            &nbsp;
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" style="margin: 0px">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td align="left">&nbsp;</td>
+	</tr>
+</table>
 
-      <center>
-      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
-        <tr BGCOLOR="#CCFFFF">
-          <th>
-            <%=msg%>
-          </th>
-        </tr>
-      </table>
-      </center>
-      <form method="post" name="baseurl" action="providerAddRole.jsp">
-      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Role name</b>
-            </td>
-            <td>
-              <input type="text" name="role_name" value="<%=prop.getProperty("role_name", "")%>" size='20' maxlength='30'/>
-              <input type="submit" name="submit" value="Search" onclick="javascript:return onSearch();"/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#CCCCFF" colspan="2">
-              <input type="hidden" name="action" value='<%=action%>'/>
-              <% if(!"search".equals(action)) {%>
-              <input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();"/>
-              <% }%>
-              <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()"/>
-            </td>
-          </tr>
-      </table>
-      </form>
+<center>
+<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+	<tr BGCOLOR="#CCFFFF">
+		<th><%=msg%></th>
+	</tr>
+</table>
+</center>
+<form method="post" name="baseurl" action="providerAddRole.jsp">
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Role name</b></td>
+		<td><input type="text" name="role_name"
+			value="<%=prop.getProperty("role_name", "")%>" size='20'
+			maxlength='30' /> <input type="submit" name="submit" value="Search"
+			onclick="javascript:return onSearch();" /></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center" bgcolor="#CCCCFF" colspan="2"><input
+			type="hidden" name="action" value='<%=action%>' /> <% if(!"search".equals(action)) {%>
+		<input type="submit" name="submit"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
+			onclick="javascript:return onSave();" /> <% }%> <input type="button"
+			name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()" /></td>
+	</tr>
+</table>
+</form>
 
 <table>
-<tr><td>Role Name:</td></tr>
-<%
+	<tr>
+		<td>Role Name:</td>
+	</tr>
+	<%
 String	sql   = "select * from secRole order by role_name";
 ResultSet rs = dbObj.searchDBRecord(sql);
 while (rs.next()) {
 %>
-<tr><td><%=dbObj.getString(rs,"role_name")%></td></tr>
-<%}%>
+	<tr>
+		<td><%=dbObj.getString(rs,"role_name")%></td>
+	</tr>
+	<%}%>
 </table>
-    </body>
-  </html:html>
+</body>
+</html:html>

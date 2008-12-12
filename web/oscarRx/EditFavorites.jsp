@@ -1,7 +1,7 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--  
@@ -33,16 +33,17 @@
 <html:html locale="true">
 <head>
 <title>Edit Favorites</title>
-<html:base/>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
@@ -65,24 +66,24 @@ int i, j;
 %>
 
 <html:form action="/oscarRx/updateFavorite">
-    <html:hidden property="favoriteId" />
-    <html:hidden property="favoriteName" />
-    <html:hidden property="customName" />
-    <html:hidden property="takeMin" />
-    <html:hidden property="takeMax" />
-    <html:hidden property="frequencyCode" />
-    <html:hidden property="duration" />
-    <html:hidden property="durationUnit" />
-    <html:hidden property="quantity" />
-    <html:hidden property="repeat" />
-    <html:hidden property="nosubs" />
-    <html:hidden property="prn" />
-    <html:hidden property="special" />
-    <html:hidden property="customInstr" />
+	<html:hidden property="favoriteId" />
+	<html:hidden property="favoriteName" />
+	<html:hidden property="customName" />
+	<html:hidden property="takeMin" />
+	<html:hidden property="takeMax" />
+	<html:hidden property="frequencyCode" />
+	<html:hidden property="duration" />
+	<html:hidden property="durationUnit" />
+	<html:hidden property="quantity" />
+	<html:hidden property="repeat" />
+	<html:hidden property="nosubs" />
+	<html:hidden property="prn" />
+	<html:hidden property="special" />
+	<html:hidden property="customInstr" />
 </html:form>
 
 <html:form action="/oscarRx/deleteFavorite">
-    <html:hidden property="favoriteId" />
+	<html:hidden property="favoriteId" />
 </html:form>
 
 <script language=javascript>
@@ -156,49 +157,57 @@ int i, j;
 
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-  <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-  <tr>
-    <td></td>
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<td></td>
 
 
-    <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-      <table style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                  <tr>
-            	    <td width="0%" valign="top">
-            	    <div class="DivCCBreadCrumbs">
-              	    <a href="SearchDrug.jsp">   <bean:message key="SearchDrug.title"/></a> >
-                    <b><bean:message key="StaticScript.title"/></b>
-                    </div>
-                    </td>
-            	  </tr>
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table style="border-collapse: collapse" bordercolor="#111111"
+			width="100%" height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
+					key="SearchDrug.title" /></a> > <b><bean:message
+					key="StaticScript.title" /></b></div>
+				</td>
+			</tr>
 
 
-            <!----Start new rows here-->
-                    <tr>
-                      <td><div class="DivContentPadding">
-                        <div class="DivContentTitle">Edit Favorites</div>
-                      </div></td>
-                    </tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentPadding">
+				<div class="DivContentTitle">Edit Favorites</div>
+				</div>
+				</td>
+			</tr>
 
-                    <tr>
-                      <td><div class="DivContentPadding">
-                      <div class="DivContentSectionHead">Favorites </div>
-                      </div></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class=DivContentPadding>
-                            <input type=button value="Back to Search For Drug" class="ControlPushButton" onClick="javascript:window.location.href='SearchDrug.jsp';" />
-                            </div>
-                        </td>
-                    </tr>
+			<tr>
+				<td>
+				<div class="DivContentPadding">
+				<div class="DivContentSectionHead">Favorites</div>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class=DivContentPadding><input type=button
+					value="Back to Search For Drug" class="ControlPushButton"
+					onClick="javascript:window.location.href='SearchDrug.jsp';" /></div>
+				</td>
+			</tr>
 
-                    <tr>
-                        <td><div class="DivContentPadding">
-                            <form name="DispForm">
-                                <table  cellspacing=0 cellpadding=2>
-                                <%
+			<tr>
+				<td>
+				<div class="DivContentPadding">
+				<form name="DispForm">
+				<table cellspacing=0 cellpadding=2>
+					<%
                                     String style;
 
                                     for (i=0; i<favorites.length; i++)
@@ -208,159 +217,172 @@ int i, j;
                                         
                                         style="style='background-color:#F5F5F5'";
                                         %>
-                                <tr class=tblRow <%= style %> name="record<%= i%>Line1">
-                                    <td colspan=2>
-                                        <b>Favorite Name:</b><input type=hidden  name="fldFavoriteId<%= i%>" value="<%= f.getFavoriteId() %>" />
-                                        <input type=text size="50" name="fldFavoriteName<%= i%>" class=tblRow size=80 value="<%= f.getFavoriteName() %>" />&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td colspan=5>
-                                        <a href="javascript:updateRow(<%= i%>);">Save Changes</a>&nbsp;&nbsp;&nbsp;
-                                        <a href="javascript:deleteRow(<%= i%>);">Delete Favorite</a>
-                                    </td>
-                                </tr>
-                            <% if(!isCustom) { %>
-                                <tr class=tblRow <%= style %> name="record<%= i%>Line2">
-                                    <td>
-                                        <b>Brand Name:</b><%= f.getBN() %>
-                                    </td>
-                                    <td colspan=5>
-                                        <b>Generic Name:</b><%= f.getGN() %>
-                                    </td>
-                                    <td colspan=1>
-                                        &nbsp;
-                                        <input type="hidden" name="fldCustomName<%= i%>" value="" />
-                                    </td>
-                                </tr>
-                            <% } else { %>
-                                <tr class=tblRow <%= style %> name="record<%= i%>Line2">
-                                    <td colspan=7>
-                                        <b>Custom Drug Name:</b>
-                                        <input type=text size="50" name="fldCustomName<%= i%>" class=tblRow size=80 value="<%= f.getCustomName() %>" />
-                                    </td>
-                                </tr>
-                            <% } %>
-                                <tr class=tblRow <%= style %> name="record<%= i%>Line3">
-                                    <td nowrap><b>Take:</b>
-                                        <input type=text name="fldTakeMin<%= i%>" class=tblRow size=3 value="<%= f.getTakeMin() %>" />
-                                            <span>to</span>
-                                        <input type=text name="fldTakeMax<%= i%>" class=tblRow size=3 value="<%= f.getTakeMax() %>" />
-                                        <select name="fldFrequencyCode<%= i%>" class=tblRow>
-                                            <%
+					<tr class=tblRow <%= style %> name="record<%= i%>Line1">
+						<td colspan=2><b>Favorite Name:</b><input type=hidden
+							name="fldFavoriteId<%= i%>" value="<%= f.getFavoriteId() %>" />
+						<input type=text size="50" name="fldFavoriteName<%= i%>"
+							class=tblRow size=80 value="<%= f.getFavoriteName() %>" />&nbsp;&nbsp;&nbsp;
+						</td>
+						<td colspan=5><a href="javascript:updateRow(<%= i%>);">Save
+						Changes</a>&nbsp;&nbsp;&nbsp; <a href="javascript:deleteRow(<%= i%>);">Delete
+						Favorite</a></td>
+					</tr>
+					<% if(!isCustom) { %>
+					<tr class=tblRow <%= style %> name="record<%= i%>Line2">
+						<td><b>Brand Name:</b><%= f.getBN() %></td>
+						<td colspan=5><b>Generic Name:</b><%= f.getGN() %></td>
+						<td colspan=1>&nbsp; <input type="hidden"
+							name="fldCustomName<%= i%>" value="" /></td>
+					</tr>
+					<% } else { %>
+					<tr class=tblRow <%= style %> name="record<%= i%>Line2">
+						<td colspan=7><b>Custom Drug Name:</b> <input type=text
+							size="50" name="fldCustomName<%= i%>" class=tblRow size=80
+							value="<%= f.getCustomName() %>" /></td>
+					</tr>
+					<% } %>
+					<tr class=tblRow <%= style %> name="record<%= i%>Line3">
+						<td nowrap><b>Take:</b> <input type=text
+							name="fldTakeMin<%= i%>" class=tblRow size=3
+							value="<%= f.getTakeMin() %>" /> <span>to</span> <input
+							type=text name="fldTakeMax<%= i%>" class=tblRow size=3
+							value="<%= f.getTakeMax() %>" /> <select
+							name="fldFrequencyCode<%= i%>" class=tblRow>
+							<%
                                             for (j=0; j<freq.length; j++)
                                             {
-                                                %><option value="<%= freq[j].getFreqCode() %>"<%
+                                                %><option
+								value="<%= freq[j].getFreqCode() %>"
+								<%
                                                 if(freq[j].getFreqCode().equals(f.getFrequencyCode()))
                                                 {
-                                                    %> selected="selected" <%
+                                                    %>
+								selected="selected"
+								<%
                                                 }
-                                                %>><%=freq[j].getFreqCode()%></option><%
+                                                %>><%=freq[j].getFreqCode()%></option>
+							<%
                                             }
                                             %>
-                                        </select>
-
-                                        <b>For:</b>
-                                        <input type=text name="fldDuration<%= i%>" class=tblRow size=3 value="<%= f.getDuration() %>" />
-                                        <select name="fldDurationUnit<%= i%>" class=tblRow>
-                                            <option <%
+						</select> <b>For:</b> <input type=text name="fldDuration<%= i%>"
+							class=tblRow size=3 value="<%= f.getDuration() %>" /> <select
+							name="fldDurationUnit<%= i%>" class=tblRow>
+							<option
+								<%
                                                 if(f.getDurationUnit().equals("D"))
-                                                { %>selected="selected"<% }
-                                                %> value="D">Day(s)</option>
-                                            <option <%
+                                                { %>
+								selected="selected"
+								<% }
+                                                %>
+								value="D">Day(s)</option>
+							<option
+								<%
                                                 if(f.getDurationUnit().equals("W"))
-                                                { %>selected="selected"<% }
-                                                %> value="W">Week(s)</option>
-                                            <option <%
+                                                { %>
+								selected="selected"
+								<% }
+                                                %>
+								value="W">Week(s)</option>
+							<option
+								<%
                                                 if(f.getDurationUnit().equals("M"))
-                                                { %>selected="selected"<% }
-                                                %> value="M">Month(s)</option>
-                                        </select>
-                                    </td>
-                                    <td></td>
+                                                { %>
+								selected="selected"
+								<% }
+                                                %>
+								value="M">Month(s)</option>
+						</select></td>
+						<td></td>
 
-                                    <td nowrap><b>Quantity:</b>
-                                        <input type=text name="fldQuantity<%= i%>" class=tblRow size=5 value="<%= f.getQuantity() %>" />
-                                    </td>
-                                    <td></td>
-                                    <td><b>Repeats:</b><input type=text name="fldRepeat<%= i%>" class=tblRow size=3 value="<%= f.getRepeat() %>" /></td>
+						<td nowrap><b>Quantity:</b> <input type=text
+							name="fldQuantity<%= i%>" class=tblRow size=5
+							value="<%= f.getQuantity() %>" /></td>
+						<td></td>
+						<td><b>Repeats:</b><input type=text name="fldRepeat<%= i%>"
+							class=tblRow size=3 value="<%= f.getRepeat() %>" /></td>
 
-                                    <td><b>No Subs:</b><input type=checkbox name="fldNosubs<%= i%>"
-                                        <% if(f.getNosubs()==true) { %>checked<%} %>
-                                        class=tblRow size=1 value="on" /></td>
-                                    <td><b>PRN:</b><input type=checkbox name="fldPrn<%= i%>"
-                                        <% if(f.getPrn()==true) { %>checked<%} %>
-                                        class=tblRow size=1 value="on" /></td>
-                                </tr>
-                                <tr <%= style %>>
-                                    <td colspan=7>
-                                        <table>
-                                            <tr>
-                                                <td>
-                                                    <b>Special Instructions:</b><br/>
-                                                    Custom Instructions:&nbsp;<input type="checkbox" name="customInstr<%=i%>" <% if(f.getCustomInstr()) { %>checked<%}%>>
-                                                </td>
-                                                <td width="100%" >
-                                                    <textarea name="fldSpecial<%= i%>" style="width:100%" rows=5 ><%
+						<td><b>No Subs:</b><input type=checkbox
+							name="fldNosubs<%= i%>" <% if(f.getNosubs()==true) { %> checked
+							<%} %> class=tblRow size=1 value="on" /></td>
+						<td><b>PRN:</b><input type=checkbox name="fldPrn<%= i%>"
+							<% if(f.getPrn()==true) { %> checked <%} %> class=tblRow size=1
+							value="on" /></td>
+					</tr>
+					<tr <%= style %>>
+						<td colspan=7>
+						<table>
+							<tr>
+								<td><b>Special Instructions:</b><br />
+								Custom Instructions:&nbsp;<input type="checkbox"
+									name="customInstr<%=i%>" <% if(f.getCustomInstr()) { %> checked
+									<%}%>></td>
+								<td width="100%"><textarea name="fldSpecial<%= i%>"
+									style="width: 100%" rows=5>
+								<%
                                                         String s = f.getSpecial();
                                                         if(s!=null)
                                                         {
                                                             if(! s.equals("null"))
                                                             {
-                                                                %><%= s.trim()%><%
+                                                                %><%= s.trim()%>
+								<%
                                                             }
                                                         }
-                                                    %></textarea>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan=7 valign=center>
-                                        <hr width=100%>
-                                    </td>
-                                </tr>
-                                <tr>
-                                   <td colspan="7"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="7"></td>
-                                </tr>
-        
-                                  <% } //for i %>                                
+                                                    %>
+								</textarea></td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan=7 valign=center>
+						<hr width=100%>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="7"></td>
+					</tr>
+					<tr>
+						<td colspan="7"></td>
+					</tr>
 
-                                </table>
-                            </form>
+					<% } //for i %>
 
+				</table>
+				</form>
+				</td>
+				</div>
+			</tr>
 
+			<tr>
+				<td>
+				<div class=DivContentPadding><input type=button
+					value="Back to Search For Drug" class="ControlPushButton"
+					onClick="javascript:window.location.href='SearchDrug.jsp';" /></div>
+				</td>
+			</tr>
 
-                        </td></div>
-                    </tr>
+			<!----End new rows here-->
 
-                    <tr>
-                        <td>
-                            <div class=DivContentPadding>
-            <input type=button value="Back to Search For Drug" class="ControlPushButton" onClick="javascript:window.location.href='SearchDrug.jsp';" />
-                            </div>
-                        </td>
-                    </tr>
-
-            <!----End new rows here-->
-
- 	<tr height="100%"><td></td></tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    <td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  </tr>
-  <tr>
-    <td width="100%" height="0%" colspan="2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2">
-    </td>
-  </tr>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 </body>
 </html:html>

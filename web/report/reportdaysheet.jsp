@@ -1,15 +1,20 @@
+
 <%
     
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.login.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     String [][] dbQueries;
@@ -65,12 +70,14 @@
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="report.reportdaysheet.title"/></title>
+<title><bean:message key="report.reportdaysheet.title" /></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <style>
-td { font-size: 16px; }
+td {
+	font-size: 16px;
+}
 </style>
 <script language="JavaScript">
 <!--
@@ -105,12 +112,18 @@ td { font-size: 16px; }
         }
     }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th><bean:message key="report.reportdaysheet.msgMainLabel"/></th>
-    <th width="10%" nowrap><%=createtime%>
-      <input type="button" name="Button" value="<bean:message key="report.reportdaysheet.btnPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepColor%>">
+		<th><bean:message key="report.reportdaysheet.msgMainLabel" /></th>
+		<th width="10%" nowrap><%=createtime%> <input type="button"
+			name="Button"
+			value="<bean:message key="report.reportdaysheet.btnPrint"/>"
+			onClick="window.print()"><input type="button" name="Button"
+			value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th>
+	</tr>
 </table>
 
 <%
@@ -164,35 +177,49 @@ System.out.println("out of here ##############");
 	  bFistL = false;
     bodd = false ;
 %>
-<table width="480" border="0" cellspacing="1" cellpadding="0" ><tr>
-<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) + " - " +dateTemp + (request.getParameter("sTime")!=null? (" " + sTime + "-" + eTime) : "") %>  </td>
-<td align="right"></td>
-</tr></table>
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="1" >
-<tr bgcolor="#CCCCFF" align="center">
-<!--<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>-->
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=start_time<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message key="report.reportdaysheet.msgAppointmentTime"/></a></b></TH>
-<TH width="26%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=name<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message key="report.reportdaysheet.msgPatientLastName"/></a> </b></TH>
-<!--<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=p_first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>-->
-<TH width="10%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=chart_no<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message key="report.reportdaysheet.msgChartNo"/></a></b></TH>
-<% if(!bDob) {%>
-<TH width="6%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=roster_status<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message key="report.reportdaysheet.msgRosterStatus"/></a></b></TH>
-<% } else {%>
-<TH width="6%"><b>DOB</b></TH>
-<% }%>
-<TH width="48%"><b><bean:message key="report.reportdaysheet.msgComments"/></b></TH>
-</tr>
-<%
+<table width="480" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td><%=providerBean.getProperty(rsdemo.getString("provider_no")) + " - " +dateTemp + (request.getParameter("sTime")!=null? (" " + sTime + "-" + eTime) : "") %>
+		</td>
+		<td align="right"></td>
+	</tr>
+</table>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"
+	cellpadding="1">
+	<tr bgcolor="#CCCCFF" align="center">
+		<!--<TH width="14%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=appointment_date"><bean:message key="report.reportdaysheet.msgAppointmentDate"/></a></b></TH>-->
+		<TH width="10%"><b><a
+			href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=start_time<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message
+			key="report.reportdaysheet.msgAppointmentTime" /></a></b></TH>
+		<TH width="26%"><b><a
+			href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=name<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message
+			key="report.reportdaysheet.msgPatientLastName" /></a> </b></TH>
+		<!--<TH width="20%"><b><a href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=p_first_name"><bean:message key="report.reportdaysheet.msgPatientFirstName"/></a> </b></TH>-->
+		<TH width="10%"><b><a
+			href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=chart_no<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message
+			key="report.reportdaysheet.msgChartNo" /></a></b></TH>
+		<% if(!bDob) {%>
+		<TH width="6%"><b><a
+			href="reportdaysheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&edate=<%=edate%>&orderby=roster_status<%=request.getParameter("dsmode")==null?"":"&dsmode="+request.getParameter("dsmode")%>"><bean:message
+			key="report.reportdaysheet.msgRosterStatus" /></a></b></TH>
+		<% } else {%>
+		<TH width="6%"><b>DOB</b></TH>
+		<% }%>
+		<TH width="48%"><b><bean:message
+			key="report.reportdaysheet.msgComments" /></b></TH>
+	</tr>
+	<%
     }
 %>
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <!--<td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>-->
-      <td align="center" nowrap title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time").substring(0,5)%></td>
-      <td align="left"><%=rsdemo.getString("chart_no")==null?".":""%><%=Misc.toUpperLowerCase(rsdemo.getString("name"))%></td>
-      <td align="center">&nbsp;<%=rsdemo.getString("chart_no")==null?"":rsdemo.getString("chart_no")%>&nbsp;</td>
-<% if(!bDob) {%>
-      <td align="center">&nbsp;<%=rsdemo.getString("roster_status")==null?"":rsdemo.getString("roster_status")%>&nbsp;</td>
-<% } else {
+	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<!--<td align="center" nowrap><%=rsdemo.getString("appointment_date")%></td>-->
+		<td align="center" nowrap
+			title="<%="End Time: "+rsdemo.getString("end_time")%>"><%=rsdemo.getString("start_time").substring(0,5)%></td>
+		<td align="left"><%=rsdemo.getString("chart_no")==null?".":""%><%=Misc.toUpperLowerCase(rsdemo.getString("name"))%></td>
+		<td align="center">&nbsp;<%=rsdemo.getString("chart_no")==null?"":rsdemo.getString("chart_no")%>&nbsp;</td>
+		<% if(!bDob) {%>
+		<td align="center">&nbsp;<%=rsdemo.getString("roster_status")==null?"":rsdemo.getString("roster_status")%>&nbsp;</td>
+		<% } else {
 		String dob = rsdemo.getString("dob");
 		//String sql = "select year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no=" + rsdemo.getString("demographic_no");
 		//ResultSet rs = dbObj.searchDBRecord(sql);
@@ -200,22 +227,17 @@ System.out.println("out of here ##############");
 		//	dob = dbObj.getString(rs,"year_of_birth") + "/" + dbObj.getString(rs,"month_of_birth")+ "/" + dbObj.getString(rs,"date_of_birth");
 		//}
 %>
-      <td align="center">&nbsp;<%=dob==null?"":dob%></td>
-<% }%>
-      <td>
-          <% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) { %>
-              [<%=daySheetBean.getString(rsdemo,"doc_last_name")%>,
-              <%=daySheetBean.getString(rsdemo,"doc_first_name").charAt(0)%>] &nbsp;
-          <% } %>
-          <% if ( bDob && daySheetBean.getString(rsdemo,"family_doctor") != null) {
+		<td align="center">&nbsp;<%=dob==null?"":dob%></td>
+		<% }%>
+		<td>
+		<% if ( rsdemo.getString("doc_no") != null && ! daySheetBean.getString(rsdemo,"doc_no").equals("") && ! daySheetBean.getString(rsdemo,"doc_no").equals(daySheetBean.getString(rsdemo,"provider_no")) ) { %>
+		[<%=daySheetBean.getString(rsdemo,"doc_last_name")%>, <%=daySheetBean.getString(rsdemo,"doc_first_name").charAt(0)%>]
+		&nbsp; <% } %> <% if ( bDob && daySheetBean.getString(rsdemo,"family_doctor") != null) {
               String rd = SxmlMisc.getXmlContent(daySheetBean.getString(rsdemo,"family_doctor"),"rd");
               rd = rd !=null ? rd : "" ;
-          %>
-              [<%=rd%>]&nbsp;
-          <% } %>
-      <%=daySheetBean.getString(rsdemo,"reason")%>&nbsp;</td>
-</tr>
-<%
+          %> [<%=rd%>]&nbsp; <% } %> <%=daySheetBean.getString(rsdemo,"reason")%>&nbsp;</td>
+	</tr>
+	<%
   }
   daySheetBean.closePstmtConn();
 %>

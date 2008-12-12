@@ -16,14 +16,12 @@
 .dojoTaskBarItem img {
 	vertical-align: middle;
 	margin-right: 5px;
-	margin-left: 5px;	
+	margin-left: 5px;
 	height: 32px;
 	width: 32px;
 }
 
 .dojoTaskBarItem a {
-	 color: black;
+	color: black;
 	text-decoration: none;
 }
-
-

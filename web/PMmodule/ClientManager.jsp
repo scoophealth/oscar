@@ -2,22 +2,24 @@
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.PMmodule.service.ClientManager"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.model.DemographicExt"%>
-<%@page import="oscar.OscarProperties" %>
+<%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <html:form action="/PMmodule/ClientManager.do">
-	
+
 	<html:hidden property="view.tab" />
-	<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
+	<input type="hidden" name="id"
+		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
 	<html:hidden property="client.demographicNo" />
-	
+
 	<script>
 		function clickTab(name) {
 			document.clientManagerForm.method.value='edit';
@@ -25,13 +27,14 @@
 			document.clientManagerForm.submit();
 		}
 	</script>
-	
+
 	<table width="100%">
 		<tr>
-			<td style="text-align: right;" align="right"><c:out value="${client.formattedName }" /></td>
+			<td style="text-align: right;" align="right"><c:out
+				value="${client.formattedName }" /></td>
 		</tr>
 	</table>
-	
+
 	<div class="tabs" id="tabs">
 	<%
 		String selectedTab = request.getParameter("view.tab");
@@ -84,7 +87,8 @@
 				
 				if (ClientManagerFormBean.tabs[x].equals(selectedTab)) {
 			%>
-			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
+			<td style="background-color: #555;"><a href="javascript:void(0)"
+				onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
 			<%
 				} else {
 			        Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
@@ -96,14 +100,15 @@
 					if (requireActiveTab && !activeInFacility)
 					{
 						%>
-						<td style="color:silver"><%=ClientManagerFormBean.tabs[x]%></td>
-						<%
+			<td style="color: silver"><%=ClientManagerFormBean.tabs[x]%></td>
+			<%
 					}
 					else
 					{
 						%>
-						<td><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>');return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
-						<%
+			<td><a href="javascript:void(0)"
+				onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>');return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>
+			<%
 					}
 				}
 			}
@@ -111,11 +116,12 @@
 		</tr>
 	</table>
 	</div>
-<%
+	<%
 if(selectedTab.contains("Bed/Room")){
 	selectedTab = selectedTab.toLowerCase().replaceAll("bed/room", "bed");
 }
-%>	
+%>
 	<%@ include file="/common/messages.jsp"%>
-	<jsp:include page='<%="/PMmodule/ClientManager/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
+	<jsp:include
+		page='<%="/PMmodule/ClientManager/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 </html:form>

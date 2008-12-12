@@ -1,10 +1,14 @@
+
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_demographic", "select demographic_no, month_of_birth, date_of_birth from demographic order by demographic_no" }, 
@@ -41,12 +45,14 @@
 -->
 <html>
 <head>
-<title>SCRAMBLE SHEET </title>
+<title>SCRAMBLE SHEET</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 </head>
 <body>
-busy ... busy ... busy ..................................................<br>
+busy ... busy ... busy
+..................................................
+<br>
 <%
 	ResultSet rsdemo = null ;
 	int rowsAffected = 0; 
@@ -62,8 +68,9 @@ busy ... busy ... busy ..................................................<br>
 	}
 
 	daySheetBean.closePstmtConn();
-%> 
+%>
 
-<p><h1>done.</h1>
+<p>
+<h1>done.</h1>
 </body>
 </html>

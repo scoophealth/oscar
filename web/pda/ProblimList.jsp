@@ -24,16 +24,17 @@
  */
 -->
 
-<%@ page  import="java.io.InputStream" %>
-<%@ page  import="java.io.OutputStream" %>
-<%@ page  import="java.lang.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
+<%@ page import="java.io.InputStream"%>
+<%@ page import="java.io.OutputStream"%>
+<%@ page import="java.lang.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 <jsp:useBean id="beanUtility" scope="session" class="bean.Utility" />
 
 <% 
@@ -70,9 +71,9 @@
 
 </head>
 <body>
-<table  border="1">
-<form action="EditProblimList.jsp" method="get">
-<%
+<table border="1">
+	<form action="EditProblimList.jsp" method="get">
+	<%
 
          out.print("<tr><td><input type=\"submit\" name=\"submitButton\" value=\"Update\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"Demographic.jsp?demographic_no="+demographic_no+"&keyword="+keyword+"&button="+button+"\">Return</a></td></tr>");   
          out.print("<input TYPE=\"hidden\" name=\"demographic_no\" value=\""+demographic_no+"\">");   
@@ -125,8 +126,8 @@
 
  
 RS.close();   
-%> 
- 
+%>
+	
 </table>
 </body>
 </html>

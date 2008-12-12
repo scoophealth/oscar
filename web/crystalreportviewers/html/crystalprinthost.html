@@ -2,13 +2,15 @@
 <HEAD>
 <TITLE>Crystal Reports Viewer</TITLE>
 <SCRIPT language="Javascript" src="../js/print.js"></SCRIPT>
-<SCRIPT FOR="CrystalPrintControl" EVENT="Finished(status, statusText)" LANGUAGE="Javascript">
+<SCRIPT FOR="CrystalPrintControl" EVENT="Finished(status, statusText)"
+	LANGUAGE="Javascript">
 <!--
 window.close();
 -->
 </SCRIPT>
 </HEAD>
-<BODY onBeforeUnload="cancelPrinting(document.getElementById('CrystalPrintControl'))">
+<BODY
+	onBeforeUnload="cancelPrinting(document.getElementById('CrystalPrintControl'))">
 <SCRIPT LANGUAGE="Javascript">
 <!--
 var objectTag = "<OBJECT ID=\"CrystalPrintControl\" CLASSID=\"CLSID:19529B56-E206-4f0b-B44E-97B5F4861E6A\" CODEBASE=\"";

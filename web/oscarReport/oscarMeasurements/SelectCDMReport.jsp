@@ -23,20 +23,21 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.oscarMeasurements.pageUtil.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page
+	import="java.util.*,oscar.oscarReport.oscarMeasurements.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarReport.CDMReport.msgSelectCDMGroup"/>
-</title>
+<title><bean:message
+	key="oscarReport.CDMReport.msgSelectCDMGroup" /></title>
 
 <script type="text/javascript">
     function set(target) {
@@ -46,80 +47,81 @@
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <html:form action="oscarReport/oscarMeasurements/SelectCDMReport">
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td ><bean:message key="oscarReport.CDMReport.msgTitle"/></td>
-                        <td>
-                            <bean:message key="oscarReport.CDMReport.msgSelectCDMGroup"/>
-                            <html:select property="value(CDMgroup)">
-                                <html:options collection="CDMGroups" property="groupName" labelProperty="groupName"/>
-                            </html:select>                            
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">             
-            </td>
-            <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=900>
-                <tr>
-                    <td>
-                        <table> 
-                            <input type="hidden" name="forward" value="error"/>
-                            <tr>                                
-                                <td width="450" class="fieldBox" >
-                                    <bean:message key="oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline"/>
-                                </td>
-                                
-                                <td width="120" class="fieldBox">
-                                    <input type="button" name="button" value="<bean:message key="oscarReport.CDMReport.btnContinue"/>" onclick="set('patientWhoMetGuideline');submit();"/>
-                                </td>                         
-                            </tr>
-                            <tr>                                
-                                <td width="450" class="fieldBox" >
-                                    <bean:message key="oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange"/>
-                                </td>
-                                <td width="120" class="fieldBox" >
-                                    <input type="button" name="button" value="<bean:message key="oscarReport.CDMReport.btnContinue"/>" onclick="set('patientInAbnormalRange');submit();"/>
-                                </td>                         
-                            </tr>
-                            <tr>                                
-                                <td width="450" class="fieldBox" >
-                                    <bean:message key="oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed"/>
-                                </td>
-                                <td width="120" class="fieldBox" >
-                                    <input type="button" name="button" value="<bean:message key="oscarReport.CDMReport.btnContinue"/>" onclick="set('freqencyOfReleventTests');submit();"/>
-                                </td>                         
-                            </tr>                            
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+<html:form action="oscarReport/oscarMeasurements/SelectCDMReport">
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><bean:message
+				key="oscarReport.CDMReport.msgReport" /></td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td><bean:message key="oscarReport.CDMReport.msgTitle" /></td>
+					<td><bean:message
+						key="oscarReport.CDMReport.msgSelectCDMGroup" /> <html:select
+						property="value(CDMgroup)">
+						<html:options collection="CDMGroups" property="groupName"
+							labelProperty="groupName" />
+					</html:select></td>
+					<td style="text-align: right"><a
+						href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+						key="global.help" /></a> | <a
+						href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+						key="global.about" /></a> | <a
+						href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+						key="global.license" /></a></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn"></td>
+			<td class="MainTableRightColumn">
+			<table border=0 cellspacing=4 width=900>
+				<tr>
+					<td>
+					<table>
+						<input type="hidden" name="forward" value="error" />
+						<tr>
+							<td width="450" class="fieldBox"><bean:message
+								key="oscarReport.CDMReport.msgPercentageOfPatientWhoMetGuideline" />
+							</td>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+							<td width="120" class="fieldBox"><input type="button"
+								name="button"
+								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
+								onclick="set('patientWhoMetGuideline');submit();" /></td>
+						</tr>
+						<tr>
+							<td width="450" class="fieldBox"><bean:message
+								key="oscarReport.CDMReport.msgPercentageOfPatientInAbnormalRange" />
+							</td>
+							<td width="120" class="fieldBox"><input type="button"
+								name="button"
+								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
+								onclick="set('patientInAbnormalRange');submit();" /></td>
+						</tr>
+						<tr>
+							<td width="450" class="fieldBox"><bean:message
+								key="oscarReport.CDMReport.msgFrequencyOfRelevantTestsBeingPerformed" />
+							</td>
+							<td width="120" class="fieldBox"><input type="button"
+								name="button"
+								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
+								onclick="set('freqencyOfReleventTests');submit();" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

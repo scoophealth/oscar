@@ -20,9 +20,10 @@
 <%
   if (session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*, oscar.oscarReport.data.*" %>
-  <%@ page import="oscar.login.*" %>
-  <%@ page import="org.apache.commons.lang.*" %>
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*, oscar.oscarReport.data.*"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="org.apache.commons.lang.*"%>
 <%
 String reportId = request.getParameter("id")!=null ? request.getParameter("id") : "0";
 String SAVE_AS = "default";
@@ -86,17 +87,15 @@ if("".equals(tableName)) {
 }
 
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        Report List
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <script language="JavaScript">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title>Report List</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<script language="JavaScript">
 
 		<!--
 		function setfocus() {
@@ -121,40 +120,41 @@ if("".equals(tableName)) {
 		//-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <center>
-      </center>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr BGCOLOR="#CCCCFF">
-          <td><%=reportName%> Configuration</td>
-          <td width="10%" align="right" nowrap>
-          <a href="reportFilter.jsp?id=<%=reportId%>">Back to the Report</a>
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<center></center>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr BGCOLOR="#CCCCFF">
+		<td><%=reportName%> Configuration</td>
+		<td width="10%" align="right" nowrap><a
+			href="reportFilter.jsp?id=<%=reportId%>">Back to the Report</a></td>
+	</tr>
+</table>
 
-      <table width="100%" border="1" cellspacing="0" cellpadding="2">
-        <form method="post" name="baseurl0" action="reportFormConfig.jsp">
-<% if(vecFormTable.size()>0) { %>
-		<tr><td colspan="3" align="center"><font color="red">Please select a form name first </font>
-			<select name="selTable" >
-<%
+<table width="100%" border="1" cellspacing="0" cellpadding="2">
+	<form method="post" name="baseurl0" action="reportFormConfig.jsp">
+	<% if(vecFormTable.size()>0) { %>
+	
+	<tr>
+		<td colspan="3" align="center"><font color="red">Please
+		select a form name first </font> <select name="selTable">
+			<%
 	for(int i=0; i<vecFormTable.size(); i=i+2) {
 		String formName = (String)vecFormTable.get(i);
 		String formTable = (String)vecFormTable.get(i+1);
 %>
-				<option value="<%=formTable%>"><%=formName%></option>
-<% 	} %>
-			</select>
-			<input type="submit" name="submit" value=" Go "/>
-		</td></tr>
-<% } %>
-          <tr bgcolor="<%="#EEEEFF"%>">
-            <td align="center" width="45%">
-            Form | <a href="reportFormDemoConfig.jsp?id=<%=reportId%>&tableName=<%="demographic"%>&formTableName=<%=tableName%>&configTableName=<%=tableName%>">Patient Profile</a> <br/>
-			<select size=28 name="selField" ondblclick="javascript:onSelField();">
-<%
+			<option value="<%=formTable%>"><%=formName%></option>
+			<% 	} %>
+		</select> <input type="submit" name="submit" value=" Go " /></td>
+	</tr>
+	<% } %>
+	<tr bgcolor="<%="#EEEEFF"%>">
+		<td align="center" width="45%">Form | <a
+			href="reportFormDemoConfig.jsp?id=<%=reportId%>&tableName=<%="demographic"%>&formTableName=<%=tableName%>&configTableName=<%=tableName%>">Patient
+		Profile</a> <br />
+		<select size=28 name="selField" ondblclick="javascript:onSelField();">
+			<%
 String strMatchConfig = "";
 for(int i=0; i<vecConfigField.size(); i++) {
 	strMatchConfig += StringUtils.replace((String)vecConfigField.get(i), "|", "\\|") + "|";
@@ -165,44 +165,44 @@ for(int i=0; i<vecTableField.size(); i++) {
 	if(captionName.matches(strMatchConfig)) continue;
 	captionName = StringEscapeUtils.escapeHtml(captionName);
 %>
-				<option value="<%=captionName%>"><%=captionName%></option>
-<% } %>
-			</select>
-			<br>
-			<a href="reportFormCaption.jsp?id=<%=reportId%>&tableName=<%=tableName%>">Add Caption</a>
-            </td>
+			<option value="<%=captionName%>"><%=captionName%></option>
+			<% } %>
+		</select> <br>
+		<a
+			href="reportFormCaption.jsp?id=<%=reportId%>&tableName=<%=tableName%>">Add
+		Caption</a></td>
 
-            <td align="center" width="20%" nowrap valign="top">
-            <table width="100%" border="0" cellspacing="0" cellpadding="2">
-            <tr><td colspan="2">
-            Fields | Selected
-            <br><br>
-              ==<input type="submit" name="submit" value=" Add " />=&gt;&gt;
-              <br><br>
-              &lt;&lt;=<input type="submit" name="submit" value="Delete" />==
-            </tr>
-            </table>
-            </td>
+		<td align="center" width="20%" nowrap valign="top">
+		<table width="100%" border="0" cellspacing="0" cellpadding="2">
+			<tr>
+				<td colspan="2">Fields | Selected <br>
+				<br>
+				==<input type="submit" name="submit" value=" Add " />=&gt;&gt; <br>
+				<br>
+				&lt;&lt;=<input type="submit" name="submit" value="Delete" />==
+			</tr>
+		</table>
+		</td>
 
-            <td width="45%" align="center">
-			<select size=28 name="selConfig" ondblclick="javascript:onSelField();">
-<% for(int i=0; i<vecConfigField.size(); i++) {
+		<td width="45%" align="center"><select size=28 name="selConfig"
+			ondblclick="javascript:onSelField();">
+			<% for(int i=0; i<vecConfigField.size(); i++) {
 	String captionName = (String)vecConfigField.get(i);
 	captionName = StringEscapeUtils.escapeHtml(captionName);
 %>
-				<option value="<%=captionName%>"><%=captionName%></option>
-<% } %>
-			</select>
-			<br>
-			<a href="reportFormOrder.jsp?id=<%=reportId%>&save=<%=SAVE_AS%>&tableName=<%=tableName%>">Change Order</a>
-              <input type="hidden" name="id" value="<%=reportId%>">
-              <input type="hidden" name="tableName" value="<%=tableName%>">
-              <input type="hidden" name="configTableName" value="<%=tableName%>">
-            </td>
-          </tr>
-        </form>
-      </table>
+			<option value="<%=captionName%>"><%=captionName%></option>
+			<% } %>
+		</select> <br>
+		<a
+			href="reportFormOrder.jsp?id=<%=reportId%>&save=<%=SAVE_AS%>&tableName=<%=tableName%>">Change
+		Order</a> <input type="hidden" name="id" value="<%=reportId%>"> <input
+			type="hidden" name="tableName" value="<%=tableName%>"> <input
+			type="hidden" name="configTableName" value="<%=tableName%>">
+		</td>
+	</tr>
+	</form>
+</table>
 
 
-    </body>
-  </html:html>
+</body>
+</html:html>

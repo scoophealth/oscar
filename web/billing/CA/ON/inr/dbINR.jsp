@@ -24,7 +24,7 @@
  */
 --%>
 
- <%   
+<%   
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");

@@ -1,3 +1,4 @@
+
 <%  
 /*
  * 
@@ -25,7 +26,8 @@
 %>
 
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"  %>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"%>
 <%
     
 
@@ -44,22 +46,18 @@
     SortHashtable sorter = new SortHashtable();
                       Collections.sort(list,sorter);
              
-    %>                   
-      <div class="preventionSection"  id="preventionSection<%=ran%>" >
-            <div class="headPrevention" id="headPrevention<%=ran%>">
-               <p > 
-               <a id="ahead<%=ran%>" title="fade=[on] header=[<%=testName%>] body=[]" href="javascript: function myFunction() {return false; }">
-               <span title="<%=""%>" style="font-weight:bold;">
-                <%=StringUtils.maxLenString(testName, 10, 8, "...")%>
-                <%=""/*testName*/%>
-               </span>
-               </a>
-               <!--&nbsp;
-               <a href="">#</a-->                              
-               <br/>                                 
-               </p>
-            </div>
-            <%     
+    %>
+<div class="preventionSection" id="preventionSection<%=ran%>">
+<div class="headPrevention" id="headPrevention<%=ran%>">
+<p><a id="ahead<%=ran%>"
+	title="fade=[on] header=[<%=testName%>] body=[]"
+	href="javascript: function myFunction() {return false; }"> <span
+	title="<%=""%>" style="font-weight: bold;"> <%=StringUtils.maxLenString(testName, 10, 8, "...")%>
+<%=""/*testName*/%> </span> </a> <!--&nbsp;
+               <a href="">#</a--> <br />
+</p>
+</div>
+<%     
             for (int k = 0; k < list.size(); k++){
                 Hashtable hdata = (Hashtable) list.get(k);
                 String labDisplayLink = "";
@@ -72,19 +70,21 @@
                 }else if (labType.equals(LabResultData.EXCELLERIS)) {
                     labDisplayLink = "../lab/CA/BC/labDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
                 }
-            %>                            
-            <div style="text-align:justify;" title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"  class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>" onclick="javascript:popup(660,960,'<%= labDisplayLink %>','labReport')" >
-                <p <%=r(hdata.get("abn"))%>><%=hdata.get("result")%> &nbsp;&nbsp;&nbsp;
-                   <%=hdata.get("collDate")%>
-                </p>
-            </div>
-           <%}%>                           
-      </div> 
-      
-      
- 
-                                                                     
-      <script type="text/javascript">
+            %>
+<div style="text-align: justify;"
+	title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"
+	class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>"
+	onclick="javascript:popup(660,960,'<%= labDisplayLink %>','labReport')">
+<p <%=r(hdata.get("abn"))%>><%=hdata.get("result")%>
+&nbsp;&nbsp;&nbsp; <%=hdata.get("collDate")%></p>
+</div>
+<%}%>
+</div>
+
+
+
+
+<script type="text/javascript">
           ///alert("HI");
           //var ele = document.getElementById("preventionSection<%=ran%>");
           //alert(ele);
@@ -96,7 +96,7 @@
           
           scanDOM(document.getElementById("ahead<%=ran%>"));
       </script>
-      
+
 
 <%!
 String r(Object re){ 

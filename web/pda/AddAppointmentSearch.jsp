@@ -24,14 +24,16 @@
  */
 -->
 
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
- 
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
+
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 
 <% 
   if(session.getValue("user") == null)    response.sendRedirect("logout.jsp");
@@ -59,8 +61,8 @@
 
 </head>
 <body>
-<table  border="0">
-<%
+<table border="0">
+	<%
  // if has search result
 if( rs.next()){
 

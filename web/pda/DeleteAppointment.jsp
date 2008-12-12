@@ -24,17 +24,18 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="ErrorPage.jsp" %>
+<%@ page import="java.sql.*, java.util.*" errorPage="ErrorPage.jsp"%>
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
- 
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
+
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
 <head>
 <title>DeleteAppointment</title>
 </head>
 <body>
- 
+
 <%
   if(session.getValue("user") == null)    response.sendRedirect("logout.jsp");
 
@@ -62,7 +63,11 @@
 //if action is failed,
   } else {
 %>
-<br><br>Sorry, deletion <br>has failed. 
+<br>
+<br>
+Sorry, deletion
+<br>
+has failed.
 <%  
   }
 
@@ -73,8 +78,11 @@
     int appointment_quantity = beanDBQuery.getAppointmentNo(haveAppointmentOnThatDayOrNot,provider_no);
  
 %>
-<br><br><a href="main.jsp?todayString=<%=haveAppointmentOnThatDayOrNot%>&apt_no=<%=appointment_quantity%>">Return</a>
+<br>
+<br>
+<a
+	href="main.jsp?todayString=<%=haveAppointmentOnThatDayOrNot%>&apt_no=<%=appointment_quantity%>">Return</a>
 
- 
+
 </body>
 </html>

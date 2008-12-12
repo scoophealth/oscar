@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String formClass = "GrowthChart";
@@ -50,21 +51,23 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>CDC US Growth Charts</title>
-    <link rel="stylesheet" type="text/css" href="bcArStyle.css" >
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<title>CDC US Growth Charts</title>
+<link rel="stylesheet" type="text/css" href="bcArStyle.css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-    <html:base/>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<html:base />
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -313,7 +316,8 @@ function calcBMIMetric(source) {
     }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"
+	onLoad="setfocus()">
 <!--
 @oscar.formDB Table="formGrowthChart"
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -323,372 +327,434 @@ function calcBMIMetric(source) {
 @oscar.formDB Field="formEdited" Type="timestamp"
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="provider_no"
+		value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="submit" value="exit" />
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <!--input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight();return false;"/>
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left"><input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <input
+				type="submit" value="Exit" onclick="javascript:return onExit();" />
+			<!--input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight();return false;"/>
             <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI();return false;"/-->
-        </td>
-    </tr>
-</table>
+			</td>
+		</tr>
+	</table>
 
-<center>
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-  <tr><td>
-
-
-  <table width="100%" border="0"  cellspacing="0" cellpadding="0" bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-    <th align="left"><%= bGirl? "GIRLS:" : "BOYS:"%> 2 TO 20 YEARS<br>
-    CDC US GROWTH CHARTS</th>
-    </tr>
-  </table>
-
-  <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-    <tr>
-    <td align="right">Name
-      <input type="text" name="patientName" size="50" maxlength="80" value="<%= props.getProperty("patientName", "") %>" @oscar.formDB />
-      Record #
-      <input type="text" name="recordNo" size="10" maxlength="10" value="<%= props.getProperty("recordNo", "") %>" @oscar.formDB />
-      </td>
-    </tr>
-  </table>
-
-  <table border="0"  cellspacing="0" cellpadding="0">
-    <tr>
-    <td nowrap>Mother's Stature</td><td>
-      <input type="text" name="motherStature" size="50" maxlength="80" value="<%= props.getProperty("motherStature", "") %>" @oscar.formDB />
-	</td>
-    </tr><tr>
-    <td nowrap>Father's Stature</td><td>
-      <input type="text" name="fatherStature" size="50" maxlength="80" value="<%= props.getProperty("fatherStature", "") %>" @oscar.formDB />
-	</td>
-    </tr>
-  </table>
-
-  </td>
-  </tr>
-</table>
+	<center>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
 
 
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th align="left"><%= bGirl? "GIRLS:" : "BOYS:"%> 2 TO 20 YEARS<br>
+					CDC US GROWTH CHARTS</th>
+				</tr>
+			</table>
 
-<table width="100%" border="0"  cellspacing="0" cellpadding="1" >
-  <tr><td width="50%">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td align="right">Name <input type="text" name="patientName"
+						size="50" maxlength="80"
+						value="<%= props.getProperty("patientName", "") %>" @oscar.formDB />
+					Record # <input type="text" name="recordNo" size="10"
+						maxlength="10" value="<%= props.getProperty("recordNo", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+			</table>
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td nowrap>Mother's Stature</td>
+					<td><input type="text" name="motherStature" size="50"
+						maxlength="80"
+						value="<%= props.getProperty("motherStature", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<tr>
+					<td nowrap>Father's Stature</td>
+					<td><input type="text" name="fatherStature" size="50"
+						maxlength="80"
+						value="<%= props.getProperty("fatherStature", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+			</table>
+
+			</td>
+		</tr>
+	</table>
+
+
+
+	<table width="100%" border="0" cellspacing="0" cellpadding="1">
+		<tr>
+			<td width="50%">
+
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	int n = 1;
 	int nRowStart = 1;
 	int nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>"  id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(1);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(1);return false;"/>
-        </td>
-    </tr>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(1);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(1);return false;" /></td>
+				</tr>
 
-	</table>
+			</table>
 
-  </td><td>
+			</td>
+			<td>
 
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	n = 2;
 	nRowStart = (n-1)*7 + 1;
 	nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>" id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(2);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(2);return false;"/>
-        </td>
-    </tr>
-	</table>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(2);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(2);return false;" /></td>
+				</tr>
+			</table>
 
 
-  </td></tr>
+			</td>
+		</tr>
 
-  <tr><td >
+		<tr>
+			<td>
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	n = 3;
 	nRowStart = (n-1)*7 + 1;
 	nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>"  id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(3);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(3);return false;"/>
-        </td>
-    </tr>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(3);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(3);return false;" /></td>
+				</tr>
 
-	</table>
+			</table>
 
-  </td><td>
+			</td>
+			<td>
 
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	n = 4;
 	nRowStart = (n-1)*7 + 1;
 	nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>" id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(4);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(4);return false;"/>
-        </td>
-    </tr>
-	</table>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(4);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(4);return false;" /></td>
+				</tr>
+			</table>
 
 
-  </td></tr>
+			</td>
+		</tr>
 
-  <tr><td >
+		<tr>
+			<td>
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	n = 5;
 	nRowStart = (n-1)*7 + 1;
 	nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>"  id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(5);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(5);return false;"/>
-        </td>
-    </tr>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(5);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(5);return false;" /></td>
+				</tr>
 
-	</table>
+			</table>
 
-  </td><td>
+			</td>
+			<td>
 
 
-	<table width="100%" border="1"  cellspacing="1" cellpadding="0"  bgcolor="<%= bGirl? girlColor:boyColor%>">
-    <tr>
-	  <th width="10%">Date</th>
-	  <th width="5%">Age</th>
-	  <th width="10%">Stature<br>(cm)</th>
-	  <th width="10%">Weight<br>(kg)</th>
-	  <th width="40%">Comment</th>
-	  <th >BMI</th>
-	</tr>
-	<%
+			<table width="100%" border="1" cellspacing="1" cellpadding="0"
+				bgcolor="<%= bGirl? girlColor:boyColor%>">
+				<tr>
+					<th width="10%">Date</th>
+					<th width="5%">Age</th>
+					<th width="10%">Stature<br>
+					(cm)</th>
+					<th width="10%">Weight<br>
+					(kg)</th>
+					<th width="40%">Comment</th>
+					<th>BMI</th>
+				</tr>
+				<%
 	n = 6;
 	nRowStart = (n-1)*7 + 1;
 	nRowEnd = nRowStart + 6;
 	for(int i=nRowStart; i<=nRowEnd; i++) { %>
-	<tr align="center">
-	  <td nowrap>
-      <input type="text" name="date_<%=i%>" id="date_<%=i%>" readonly size="8" maxlength="10" value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date_<%=i%>_cal">
-	  </td>
-	  <td>
-      <input type="text" name="age_<%=i%>"  onDblClick="calcAge(this)" size="1" maxlength="5" value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="stature_<%=i%>" onDblClick="htEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="weight_<%=i%>" onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6" value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="comment_<%=i%>" size="20" maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>" @oscar.formDB />
-	  </td>
-	  <td>
-      <input type="text" name="bmi_<%=i%>" onDblClick="calcBMIMetric(this)" size="1" maxlength="5" value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB />
-	  </td>
-    </tr>
-	<% } %>
-    <tr  class="Head">
-        <td align="center" colspan="6">
-            <input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight(6);return false;"/>
-            <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI(6);return false;"/>
-        </td>
-    </tr>
+				<tr align="center">
+					<td nowrap><input type="text" name="date_<%=i%>"
+						id="date_<%=i%>" readonly size="8" maxlength="10"
+						value="<%= props.getProperty("date_"+i, "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="date_<%=i%>_cal">
+					</td>
+					<td><input type="text" name="age_<%=i%>"
+						onDblClick="calcAge(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("age_"+i, "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="stature_<%=i%>"
+						onDblClick="htEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("stature_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="weight_<%=i%>"
+						onDblClick="wtEnglish2Metric(this)" size="3" maxlength="6"
+						value="<%= props.getProperty("weight_"+i, "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="comment_<%=i%>" size="20"
+						maxlength="25" value="<%= props.getProperty("comment_"+i, "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="bmi_<%=i%>"
+						onDblClick="calcBMIMetric(this)" size="1" maxlength="5"
+						value="<%= props.getProperty("bmi_"+i, "") %>" @oscar.formDB /></td>
+				</tr>
+				<% } %>
+				<tr class="Head">
+					<td align="center" colspan="6"><input type="submit"
+						value="Print Growth"
+						onclick="javascript:return onPrintStatureWeight(6);return false;" />
+					<input type="submit" value="Print BMI"
+						onclick="javascript:return onPrintBMI(6);return false;" /></td>
+				</tr>
+			</table>
+
+
+			</td>
+		</tr>
+
 	</table>
+	</center>
 
-
-  </td></tr>
-
-</table>
-</center>
-
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <!--input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight();return false;"/>
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left"><input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <input
+				type="submit" value="Exit" onclick="javascript:return onExit();" />
+			<!--input type="submit" value="Print Growth" onclick="javascript:return onPrintStatureWeight();return false;"/>
             <input type="submit" value="Print BMI" onclick="javascript:return onPrintBMI();return false;"/-->
-        </td>
-    </tr>
-</table>
+			</td>
+		</tr>
+	</table>
 
 </html:form>
 <script type="text/javascript">

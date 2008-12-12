@@ -52,11 +52,15 @@
   String user_no = (String) session.getAttribute("user");
   String creator = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="scheduleDateBean" class="java.util.Hashtable"
+	scope="session" />
 <%
   //String provider_name = URLDecoder.decode(request.getParameter("provider_name"));
   String sdate ="";
@@ -97,7 +101,7 @@
 %>
 <html:html locale="true">
 <head>
-<title><bean:message key="schedule.scheduledatefinal.title"/></title>
+<title><bean:message key="schedule.scheduledatefinal.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -117,68 +121,73 @@ function upCaseCtrl(ctrl) {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <form method="post" name="schedule" action="schedulecreatedate.jsp">
 
 <table border="0" width="100%">
-<tr>
-      <td width="150" bgcolor="#009966"> 
-        <!--left column-->
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd"> 
-            <th align="CENTER" bgcolor="#009966">
-              <p>&nbsp;</p>
-              <p><font face="Helvetica" color="#FFFFFF"><bean:message key="schedule.scheduledatefinal.msgMainLabel"/></font></p>
-            </th>
-    </tr>
-  </table>
-        <table width="98%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td>
-              <p>&nbsp;</p>
-              <p><font size="-1"><bean:message key="schedule.scheduledatefinal.msgStepOne"/></font></p>
-              <p><font size="-1"><bean:message key="schedule.scheduledatefinal.msgStepTwo"/></font></p>
-              <p>&nbsp;</p>
-              <p>&nbsp;</p>
-              <p>&nbsp;</p>
-              <p>&nbsp;</p>
-              <p>&nbsp;</p>
-            </td>
-          </tr>
-        </table>
+	<tr>
+		<td width="150" bgcolor="#009966"><!--left column-->
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr bgcolor="#486ebd">
+				<th align="CENTER" bgcolor="#009966">
+				<p>&nbsp;</p>
+				<p><font face="Helvetica" color="#FFFFFF"><bean:message
+					key="schedule.scheduledatefinal.msgMainLabel" /></font></p>
+				</th>
+			</tr>
+		</table>
+		<table width="98%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td>
+				<p>&nbsp;</p>
+				<p><font size="-1"><bean:message
+					key="schedule.scheduledatefinal.msgStepOne" /></font></p>
+				<p><font size="-1"><bean:message
+					key="schedule.scheduledatefinal.msgStepTwo" /></font></p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				</td>
+			</tr>
+		</table>
 
-      </td><td>
-
-          <br>
-        <center>
-<p>
-          <table width="95%" border="0" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td><bean:message key="schedule.scheduledatefinal.msgSettingFinished"/></td>
-            </tr>
-            <tr> 
-              <td>&nbsp;</td>
-            </tr>
-            <tr> 
-              <td>&nbsp;</td>
-            </tr>
-            <tr> 
-              <td>&nbsp;</td>
-            </tr>
-            <tr> 
-              <td bgcolor="#CCFFCC"> 
-                <div align="right"> 
-                  <input type="button" name="Button" value='<bean:message key="schedule.scheduledatefinal.btnDoAgain"/>' onclick="self.location.href='scheduletemplatesetting.jsp'">
-                  <input type="button" name="Cancel" value='<bean:message key="schedule.scheduledatefinal.btnFinish"/>' onclick="window.close()">
-                </div>
-              </td>
-            </tr>
-          </table>
-<p> 
-
-          <p>&nbsp;</p>
-        </center>
-  </td></tr>
+		</td>
+		<td><br>
+		<center>
+		<p>
+		<table width="95%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td><bean:message
+					key="schedule.scheduledatefinal.msgSettingFinished" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td bgcolor="#CCFFCC">
+				<div align="right"><input type="button" name="Button"
+					value='<bean:message key="schedule.scheduledatefinal.btnDoAgain"/>'
+					onclick="self.location.href='scheduletemplatesetting.jsp'">
+				<input type="button" name="Cancel"
+					value='<bean:message key="schedule.scheduledatefinal.btnFinish"/>'
+					onclick="window.close()"></div>
+				</td>
+			</tr>
+		</table>
+		<p>
+		<p>&nbsp;</p>
+		</center>
+		</td>
+	</tr>
 </table>
 
 </form>

@@ -24,39 +24,21 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.ResourceBundle" %>
+<%@ page language="java"%>
+<%@ page import="java.util.ResourceBundle"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 
 
 <head>
-<title>
-<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.title"/>
+<title><bean:message
+	key="oscarEncounter.oscarConsultationRequest.config.AddService.title" />
 </title>
-<html:base/>
-<style type="text/css">
-
-.ChooseRecipientsBox1{
-	font-size: 80%;
-	height: 340px;
-	/*width: 800px;*/
-	overflow: auto;
-        margin-left: 4px;
-	border: 1px solid #dcdcdc;
-}
-.currGroup{
-        color: #6666ff;
-        FONT-FAMILY: tahoma;
-        font-size: 14pt;
-}
-
-
-
-</style>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <script language="javascript">
 function BackToOscar()
@@ -66,90 +48,80 @@ function BackToOscar()
 </script>
 
 <link rel="stylesheet" type="text/css" href="../../encounterStyles.css">
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Consultation
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header">
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.title"/>
-                        </td>
-                        <td>
-                        </td>                        
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
-                <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Consultation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td class="Header"><bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.AddService.title" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr style="vertical-align: top">
+		<td class="MainTableLeftColumn">
+		<%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                 out.print(titlebar.estBar(request));
                 %>
-            </td>
-            <td class="MainTableRightColumn">  
-             <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+		</td>
+		<td class="MainTableRightColumn">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-                <!----Start new rows here-->
+			<!----Start new rows here-->
 
-                   <tr>
-                      <td >
-                      
-                      </td>
-                   </tr>
-                   <%
+			<tr>
+				<td></td>
+			</tr>
+			<%
                       String added = (String) request.getAttribute("SERVADD");
                       if (added != null){  %>
-                      <tr>
-                         <td>
-                            <font color="red"><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.msgServiceAdded" arg0="<%=added%>"/></font>
-                         </td>
-                      </tr>
-                   <%}%>                  
-                   <tr>
-                      <td>
+			<tr>
+				<td><font color="red"><bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.AddService.msgServiceAdded"
+					arg0="<%=added%>" /></font></td>
+			</tr>
+			<%}%>
+			<tr>
+				<td>
 
-                         <table>
-                            <html:form action="/oscarEncounter/AddService">
-                            <tr>
-                               <td>
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.service"/>
-                               </td>
-                               <td>
-                               <input type="text" name="service"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td colspan="2">
-                               <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.btnAddService"/>"/>
-                               </td>
-                            </tr>
-                            </html:form>
-                         </table>
-                      </td>
-                   </tr>
-                <!----End new rows here-->
+				<table>
+					<html:form action="/oscarEncounter/AddService">
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddService.service" />
+							</td>
+							<td><input type="text" name="service" /></td>
+						</tr>
+						<tr>
+							<td colspan="2"><input type="submit"
+								value="<bean:message key="oscarEncounter.oscarConsultationRequest.config.AddService.btnAddService"/>" />
+							</td>
+						</tr>
+					</html:form>
+				</table>
+				</td>
+			</tr>
+			<!----End new rows here-->
 
-                            <tr height="100%">
-                        <td>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 

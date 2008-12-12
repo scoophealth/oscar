@@ -24,9 +24,9 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
@@ -53,10 +53,10 @@
     
     String appointment_date = new String(request.getParameter("appointment_date").trim());
     
-%>     
+%>
 <table border="1">
 
-<%
+	<%
  
 // if only have one appointment, then display it
 
@@ -110,7 +110,7 @@
     }
  	    
 %>
-	
-</table> 
+
+</table>
 </body>
 </HTML>

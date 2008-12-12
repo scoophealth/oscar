@@ -45,12 +45,17 @@ function Attach(lname, fname, hin, yob,mob,dob) {
 -->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" onLoad="setfocus()" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" onLoad="setfocus()" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		DETAIL RECORD</font></th>
+	</tr>
 </table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-<% String card = request.getParameter("card_no");
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<% String card = request.getParameter("card_no");
    String hin = card.substring(8,card.indexOf("^")); 
    String lastname = card.substring(card.indexOf("^")+1, card.indexOf("/")).toUpperCase();
    String subcard = card.substring(card.indexOf("/")+1);
@@ -58,9 +63,10 @@ function Attach(lname, fname, hin, yob,mob,dob) {
    String dobyear = subcard.substring(subcard.indexOf("^")+9,subcard.indexOf("^")+13);
    String dobmonth = subcard.substring(subcard.indexOf("^")+13, subcard.indexOf("^")+15);
    String dobdate = subcard.substring(subcard.indexOf("^")+15, subcard.indexOf("^")+17);
-   %> 
-   <td>HIN: <%=hin%>  FName: <%=firstname%>  LName: <%=lastname%> DOBYEAR: <%=dobyear%>-<%=dobmonth%>-<%=dobdate%></td>
-  <script LANGUAGE="JavaScript">
+   %>
+	<td>HIN: <%=hin%> FName: <%=firstname%> LName: <%=lastname%>
+	DOBYEAR: <%=dobyear%>-<%=dobmonth%>-<%=dobdate%></td>
+	<script LANGUAGE="JavaScript">
 <!--
  	Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>');
      
@@ -71,8 +77,7 @@ function Attach(lname, fname, hin, yob,mob,dob) {
 
 <br>
 <br>
-<form>
-  <input type="button" name="Button" value="Cancel" onclick=self.close();>
-</form>
+<form><input type="button" name="Button" value="Cancel"
+	onclick=self.close();></form>
 </body>
 </html>

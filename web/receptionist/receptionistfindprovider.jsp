@@ -23,10 +23,10 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 
 <%
@@ -36,9 +36,12 @@
   String month = request.getParameter("pmonth")!=null?request.getParameter("pmonth"):"5";
   String day = request.getParameter("pday")!=null?request.getParameter("pday"):"8";
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="findProviderBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="findProviderBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_provider", "select provider_no, last_name, first_name from provider where last_name like ? and first_name like ? order by last_name"}, 
@@ -64,8 +67,9 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 %>
 <html>
 <head>
-<title> <bean:message key="receptionist.receptionistfindprovider.title"/></title>
-<link rel="stylesheet" href="../web.css" >
+<title><bean:message
+	key="receptionist.receptionistfindprovider.title" /></title>
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 
 
@@ -84,29 +88,38 @@ function selectProviderCaisi(p,pn) {
 
 </SCRIPT>
 </head>
-<body  bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr>
-    <th NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"><bean:message key="receptionist.receptionistfindprovider.2ndtitle"/></font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"><bean:message
+			key="receptionist.receptionistfindprovider.2ndtitle" /></font></th>
+	</tr>
 </table>
 
 <table width="100%" border="0">
-<tr>
-<td align="left"><i><bean:message key="receptionist.receptionistfindprovider.keywords"/></i> <%=providername%></td>
-<td align="right"><INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="<bean:message key="receptionist.receptionistfindprovider.btnExit"/>" SIZE="17" onClick="window.close();"></td>
-</tr>
+	<tr>
+		<td align="left"><i><bean:message
+			key="receptionist.receptionistfindprovider.keywords" /></i> <%=providername%></td>
+		<td align="right"><INPUT TYPE="SUBMIT" NAME="displaymode"
+			VALUE="<bean:message key="receptionist.receptionistfindprovider.btnExit"/>"
+			SIZE="17" onClick="window.close();"></td>
+	</tr>
 </table>
 
 <CENTER>
-  <table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" >
-    <tr bgcolor="#CCCCFF"> 
-      <TH width="20%"><bean:message key="receptionist.receptionistfindprovider.no"/></TH>
-      <TH width="40%"><bean:message key="receptionist.receptionistfindprovider.lastname"/></TH>
-      <TH width="40%"><bean:message key="receptionist.receptionistfindprovider.firstname"/></TH>
-    </tr>
-<%
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor="#CCCCFF">
+		<TH width="20%"><bean:message
+			key="receptionist.receptionistfindprovider.no" /></TH>
+		<TH width="40%"><bean:message
+			key="receptionist.receptionistfindprovider.lastname" /></TH>
+		<TH width="40%"><bean:message
+			key="receptionist.receptionistfindprovider.firstname" /></TH>
+	</tr>
+	<%
   boolean bGrpSearch = providername.startsWith(".")?true:false ;
   String dboperation = bGrpSearch?"search_providersgroup":"search_provider" ;
   String field1 = bGrpSearch?"mygroup_no":"provider_no" ;
@@ -131,18 +144,20 @@ function selectProviderCaisi(p,pn) {
     sp = rsdemo.getString(field1) ;
     spnl = rsdemo.getString("last_name") ;
     spnf = rsdemo.getString("first_name") ;
-%>    
-    <tr bgcolor="<%=bColor?bgcolordef:"white"%>"> 
-      <td>
-      <%if(caisi) { %>
-	      <a href=# onClick="selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
-	  <%} else { %>
-      <a href=# onClick="selectProvider('<%=sp%>','<%=URLEncoder.encode(spnl+", "+spnf)%>')"><%=sp%></a></td>
-	  <%} %>
-      <td><%=spnl%></td>
-      <td><%=spnf%></td>
-    </tr>
-<%
+%>
+	<tr bgcolor="<%=bColor?bgcolordef:"white"%>">
+		<td>
+		<%if(caisi) { %> <a href=#
+			onClick="selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
+		<%} else { %>
+		<a href=#
+			onClick="selectProvider('<%=sp%>','<%=URLEncoder.encode(spnl+", "+spnf)%>')"><%=sp%></a>
+		</td>
+		<%} %>
+		<td><%=spnl%></td>
+		<td><%=spnf%></td>
+	</tr>
+	<%
     nItems++;
   }
   
@@ -151,16 +166,16 @@ function selectProviderCaisi(p,pn) {
     rsdemo = findProviderBean.queryResults( (providername+"%"), "search_mygroup");
     while (rsdemo.next()) { 
       sp = rsdemo.getString("mygroup_no") ;
-%>    
-    <tr bgcolor="#CCCCFF"> 
-      <td colspan='3'>
-      <%if(caisi) { %>
-      <a href=# onClick="selectProviderCaisi('<%=sp%>','')"><%=sp%></a></td>
-      <%} else { %>
-      <a href=# onClick="selectProvider('<%=sp%>','')"><%=sp%></a></td>
-      <%} %>
-    </tr>
-<%
+%>
+	<tr bgcolor="#CCCCFF">
+		<td colspan='3'>
+		<%if(caisi) { %> <a href=# onClick="selectProviderCaisi('<%=sp%>','')"><%=sp%></a></td>
+		<%} else { %>
+		<a href=# onClick="selectProvider('<%=sp%>','')"><%=sp%></a>
+		</td>
+		<%} %>
+	</tr>
+	<%
       nItems++;
     }
   }
@@ -168,8 +183,8 @@ function selectProviderCaisi(p,pn) {
   findProviderBean.closePstmtConn();
 
   if(nItems==1) { //if there is only one search result, it should go to the appoint page directly.
-%> 
-<script language="JavaScript">
+%>
+	<script language="JavaScript">
 <!--
   <%if(caisi) {%>
   	selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>') ;
@@ -178,12 +193,14 @@ function selectProviderCaisi(p,pn) {
   <%}%>
 //-->
 </SCRIPT>
-<%
+	<%
   }
 %>
-  </table>
+</table>
 <br>
 
-<p><bean:message key="receptionist.receptionistfindprovider.msgSelect"/></p></center>
+<p><bean:message
+	key="receptionist.receptionistfindprovider.msgSelect" /></p>
+</center>
 </body>
 </html>

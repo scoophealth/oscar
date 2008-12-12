@@ -1,3 +1,4 @@
+
 <%/*
 
     spellcheck-dictionary.jsp - This file is responsible for setting the
@@ -23,7 +24,8 @@
 
 */%>
 
-<%@ page import="java.io.InputStreamReader,com.swabunga.spell.engine.SpellDictionary"%>
+<%@ page
+	import="java.io.InputStreamReader,com.swabunga.spell.engine.SpellDictionary"%>
 
 <%
 

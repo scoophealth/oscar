@@ -24,17 +24,20 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../login.jsp");
 %>
-<%@ page import="java.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*" errorPage="errorpage.jsp"%>
 
 <html:html locale="true">
-<head><title><bean:message key="receptionist.receptionistpreference.title"/></title></head>
-<meta http-equiv="Cache-Control" content="no-cache" >
+<head>
+<title><bean:message
+	key="receptionist.receptionistpreference.title" /></title>
+</head>
+<meta http-equiv="Cache-Control" content="no-cache">
 
 <script language="javascript">
 <!-- start javascript 
@@ -92,74 +95,97 @@ function checkTypeInAll() {
 // stop javascript -->
 </script>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="receptionistcontrol.jsp" onSubmit="return(checkTypeInAll())">
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="receptionist.receptionistpreference.description"/></font></th>
-  </tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<FORM NAME="UPDATEPRE" METHOD="post" ACTION="receptionistcontrol.jsp"
+	onSubmit="return(checkTypeInAll())">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="receptionist.receptionistpreference.description" /></font></th>
+	</tr>
 </table>
 
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr><td width="100%">
-  
-        <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0">
-          <tr valign="middle"> 
-            <td width="25%" BGCOLOR="#C4D9E7" ALIGN="right"> 
-              <font face="arial"><bean:message key="receptionist.preference.formStartHour"/>:</font>
-            </td>
-            <td width="25%" BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="2" onBlur="checkTypeIn(this)">
-            </td>
-            <td width="28%" BGCOLOR="#C4D9E7" ALIGN="right"> 
-              <font face="arial"><bean:message key="receptionist.preference.formEndHour"/>:<font size='-2'>(<24)</font> :</font>
-            </td>
-            <td width="22%" BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>'  onBlur="checkTypeIn(this)" WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="3">
-            </td>
-          </tr>
-          <tr valign="middle"> 
-            <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <div align="right"><font face="arial"><font face="arial"><bean:message key="receptionist.preference.formPeriod"/>:</font></font></div>
-            </td>
-            <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="3" onBlur="checkTypeIn(this)">
-            </td>
-			<td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <div align="right"><font face="arial"> <a href=# onClick ="popupPage(360,600,'receptionistcontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' )"><font size="-3"><bean:message key="receptionist.receptionistpreference.viewEdit"/></font><bean:message key="receptionist.receptionistpreference.btnGroupNo"/></a>:</font></div>
-            </td>
-            <td BGCOLOR="#C4D9E7" ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10" maxlength="10">
-            </td>
-          </tr>
-              <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=request.getParameter("provider_no")%>'>
-              <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
-              <INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
-              <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
+	<tr>
+		<td width="100%">
 
-        </table>
-	
-	</td></tr>
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
+			BGCOLOR="#C0C0C0">
+			<tr valign="middle">
+				<td width="25%" BGCOLOR="#C4D9E7" ALIGN="right"><font
+					face="arial"><bean:message
+					key="receptionist.preference.formStartHour" />:</font></td>
+				<td width="25%" BGCOLOR="#C4D9E7" ALIGN="LEFT"><INPUT
+					TYPE="TEXT" NAME="start_hour"
+					VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25"
+					HEIGHT="20" border="0" hspace="2" size="10" maxlength="2"
+					onBlur="checkTypeIn(this)"></td>
+				<td width="28%" BGCOLOR="#C4D9E7" ALIGN="right"><font
+					face="arial"><bean:message
+					key="receptionist.preference.formEndHour" />:<font size='-2'>(<24)</font>
+				:</font></td>
+				<td width="22%" BGCOLOR="#C4D9E7" ALIGN="LEFT"><INPUT
+					TYPE="TEXT" NAME="end_hour"
+					VALUE='<%=request.getParameter("end_hour")%>'
+					onBlur="checkTypeIn(this)" WIDTH="25" HEIGHT="20" border="0"
+					hspace="2" size="10" maxlength="3"></td>
+			</tr>
+			<tr valign="middle">
+				<td BGCOLOR="#C4D9E7" ALIGN="LEFT">
+				<div align="right"><font face="arial"><font
+					face="arial"><bean:message
+					key="receptionist.preference.formPeriod" />:</font></font></div>
+				</td>
+				<td BGCOLOR="#C4D9E7" ALIGN="LEFT"><INPUT TYPE="TEXT"
+					NAME="every_min" VALUE='<%=request.getParameter("every_min")%>'
+					WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10"
+					maxlength="3" onBlur="checkTypeIn(this)"></td>
+				<td BGCOLOR="#C4D9E7" ALIGN="LEFT">
+				<div align="right"><font face="arial"> <a href=#
+					onClick="popupPage(360,600,'receptionistcontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' )"><font
+					size="-3"><bean:message
+					key="receptionist.receptionistpreference.viewEdit" /></font><bean:message
+					key="receptionist.receptionistpreference.btnGroupNo" /></a>:</font></div>
+				</td>
+				<td BGCOLOR="#C4D9E7" ALIGN="LEFT"><INPUT TYPE="TEXT"
+					NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>'
+					WIDTH="25" HEIGHT="20" border="0" hspace="2" size="10"
+					maxlength="10"></td>
+			</tr>
+			<INPUT TYPE="hidden" NAME="provider_no"
+				VALUE='<%=request.getParameter("provider_no")%>'>
+			<INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
+			<INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
+			<INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
+
+		</table>
+
+		</td>
+	</tr>
 </table>
 
 <table width="100%" BGCOLOR="#486ebd">
-  <tr>
-    <TD align="RIGHT" width="50%">
-        <INPUT TYPE="submit" VALUE='<bean:message key="receptionist.receptionistpreference.btnSubmit"/>' SIZE="7">
-      </TD>
-    <TD></TD>
-    <TD align="LEFT"><INPUT TYPE = "RESET" VALUE ='<bean:message key="receptionist.receptionistpreference.btnReset"/>' onClick="window.close();"></TD>
-  </tr>
+	<tr>
+		<TD align="RIGHT" width="50%"><INPUT TYPE="submit"
+			VALUE='<bean:message key="receptionist.receptionistpreference.btnSubmit"/>'
+			SIZE="7"></TD>
+		<TD></TD>
+		<TD align="LEFT"><INPUT TYPE="RESET"
+			VALUE='<bean:message key="receptionist.receptionistpreference.btnReset"/>'
+			onClick="window.close();"></TD>
+	</tr>
 </TABLE>
 
 </FORM>
 
 <table width="100%" BGCOLOR="eeeeee">
-   <tr> 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'../provider/providerchangepassword.jsp');return false;"><bean:message key="receptionist.receptionistpreference.btnChangePassword"/></a>
-    </td>
-  </tr>
+	<tr>
+		<TD align="center"><a href=#
+			onClick="popupPage(230,600,'../provider/providerchangepassword.jsp');return false;"><bean:message
+			key="receptionist.receptionistpreference.btnChangePassword" /></a></td>
+	</tr>
 </table>
 
 </body>

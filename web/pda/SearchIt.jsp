@@ -24,13 +24,14 @@
  */
 -->
 
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 
 <% 
 //  if(session.getValue("user") == null)    response.sendRedirect("logout.jsp");
@@ -115,8 +116,8 @@ ResultSet RS = null;
 </head>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
 <body>
-<table  border="1">
-<%
+<table border="1">
+	<%
 
 if ( button.equals("name")){
        out.print("<tr><td><a href=\"Search.jsp\">Return</a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspName</td><td>DOB</td><td>RS</td><td>sex</td></tr>");   
@@ -162,8 +163,8 @@ if ( button.equals("ChartNo")){
 
 
 RS.close();   
-%> 
- 
+%>
+
 </table>
 </body>
 </html>

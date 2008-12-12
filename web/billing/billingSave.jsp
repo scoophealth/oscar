@@ -1,3 +1,4 @@
+
 <%      
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -28,7 +29,7 @@
  */
 --%>
 
- 
+
 
 <%
     if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
@@ -38,10 +39,12 @@
     userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../admin/dbconnection.jsp" %>
-<%@ include file="dbBilling.jsp" %>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
@@ -58,10 +61,11 @@ function closeit() {
 
 <body onload="start()">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="90%" >
-  <tr bgcolor="#486ebd">
-    <th><font face="Helvetica" color="#FFFFFF">ADD A BILLING RECORD</font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th><font face="Helvetica" color="#FFFFFF">ADD A BILLING
+		RECORD</font></th>
+	</tr>
 </table>
 
 <%
@@ -134,28 +138,30 @@ function closeit() {
         rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
         while (rsdemo.next()) {    
 %>
-  <p><h1>Successful Addition of a billing Record.</h1></p>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
     if (self.opener.document.inputForm)
 		self.opener.document.inputForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
 	self.close();
 	if (!self.opener.document.inputForm) self.opener.refresh();
-</script>
-<%
+</script> <%
             break; //get only one billing_no
         }//end of while
     }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
     }
     apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

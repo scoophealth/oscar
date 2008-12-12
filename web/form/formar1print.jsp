@@ -31,13 +31,13 @@
   if(request.getParameter("ooy")!=null) ooy += Integer.parseInt(request.getParameter("ooy"));
 %>
 <%@ page language="java"%>
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"  %>
-<%@ page import="oscar.form.*" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*"%>
+<%@ page import="oscar.form.*"%>
 
 <html>
 <head>
-<title> ANTENATAL RECORD 1</title>
-<link rel="stylesheet" href="antenatalRecordPrint.css" >
+<title>ANTENATAL RECORD 1</title>
+<link rel="stylesheet" href="antenatalRecordPrint.css">
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -68,8 +68,9 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 %>
 
 
-<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1" bgcolor="navy">
-<img src="graphics/formAR1.gif"/>
+<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1"
+	bgcolor="navy">
+<img src="graphics/formAR1.gif" />
 
 <script language="JavaScript">
 ff(750,10,50,20,'<span class="title"><a href="javascript: window.print();">Print</a></span>' );
@@ -567,42 +568,44 @@ ff(180,958,350,20,"<span class=\"smalltdname\">Canary - Mother's chart - forward
 ff(665,958,200,20,'<span class="smalltdname">7530-4654</span>' );
 </script>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=480+oox%>px; top:<%=ooy+175%>px; width:230px; height:30px;">
-<pre><%= props.getProperty("pg1_ethnicBg")%></pre>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=480+oox%>px; top:<%=ooy+175%>px; width:230px; height:30px;">
+<pre><%= props.getProperty("pg1_ethnicBg")%></pre></div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=80+oox%>px; top:<%=ooy+228%>px; width:280px; height:50px;">
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=80+oox%>px; top:<%=ooy+228%>px; width:280px; height:50px;">
 <span class="smalltdname"><%= props.getProperty("c_allergies", "")%></span>
 </div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=395+oox%>px; top:<%=ooy+228%>px; width:280px; height:50px;">
-<span class="smalltdname"><%= props.getProperty("c_meds", "")%></span>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=395+oox%>px; top:<%=ooy+228%>px; width:280px; height:50px;">
+<span class="smalltdname"><%= props.getProperty("c_meds", "")%></span></div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=440+oox%>px; top:<%=ooy+748%>px; width:150px; height:60px;">
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=440+oox%>px; top:<%=ooy+748%>px; width:150px; height:60px;">
 <span class="smalltdname"><%= props.getProperty("c_riskFactors", "")%></span>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=12+oox%>px; top:<%=ooy+830%>px; width:300px; height:60px;">
-<pre><%= props.getProperty("pg1_commentsAR1", "")%></pre>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=12+oox%>px; top:<%=ooy+830%>px; width:300px; height:60px;">
+<pre><%= props.getProperty("pg1_commentsAR1", "")%></pre></div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+421%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments1", "")%>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+439%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments2", "")%>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+457%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments3", "")%>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+476%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments4", "")%>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+494%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments5", "")%>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+512%>px; width:340px; height:20px;">
-<%= props.getProperty("pg1_oh_comments6", "")%>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+421%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments1", "")%></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+439%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments2", "")%></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+457%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments3", "")%></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+476%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments4", "")%></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+494%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments5", "")%></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=392+oox%>px; top:<%=ooy+512%>px; width:340px; height:20px;">
+<%= props.getProperty("pg1_oh_comments6", "")%></div>
 </body>
 </html>

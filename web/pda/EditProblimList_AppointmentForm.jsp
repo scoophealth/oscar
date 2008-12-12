@@ -24,20 +24,22 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>EditProblimList_AppointmentForm</title>
+<head>
+<title>EditProblimList_AppointmentForm</title>
 </head>
 <body>
-  
+
 
 <%   
 
@@ -68,7 +70,11 @@ content = "<xml_Problem_List>"+xml_Problem_List+"</xml_Problem_List>"
 //if action is failed,
     } else {
 %>
-<br><br>Sorry, update <br>has failed. 
+<br>
+<br>
+Sorry, update
+<br>
+has failed.
 <%  
     }
 

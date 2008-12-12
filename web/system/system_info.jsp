@@ -27,54 +27,62 @@
 <%@page import="java.util.*"%>
 
 <html>
-	<head>
-		<title>system info</title>
-	</head>
-	<body>
-	<h1>MemInfo</h1>
-	<%=VMStat.getMemoryFormat() %><br />
-	<%
+<head>
+<title>system info</title>
+</head>
+<body>
+<h1>MemInfo</h1>
+<%=VMStat.getMemoryFormat() %><br />
+<%
 		List<MemoryPoolMXBean> memoryPools=ManagementFactory.getMemoryPoolMXBeans();
 		
 		for (MemoryPoolMXBean memoryPool : memoryPools)
 		{
 			String memInfo=VMStat.getMemoryInfo(memoryPool);
 			%>
-				<%=memInfo%><br />
-			<%
+<%=memInfo%><br />
+<%
 		}
 		
 	%>
-	<br /><br />
-	<h1>GCInfo</h1>
-	<%=VMStat.getGCFormat() %><br />
-	<%
+<br />
+<br />
+<h1>GCInfo</h1>
+<%=VMStat.getGCFormat() %><br />
+<%
 		List<GarbageCollectorMXBean> garbageCollectorMXBeans=ManagementFactory.getGarbageCollectorMXBeans();
 		
 		for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
 		{
 			String gcInfo=VMStat.getGCInfo(garbageCollectorMXBean);
 			%>
-				<%=gcInfo%><br />
-			<%
+<%=gcInfo%><br />
+<%
 		}
 	%>
-	<br /><br />
-	<h1>ThreadInfo</h1>
-	<%=VMStat.getThreadFormat() %><br />
-	<%=VMStat.getThreadInfo()%><br />
-	<br /><br />
-	<h1>DbConnections</h1>
-	connections : <%=DbConnectionFilter.debugMap.size()%>
-	<br /><br />
-	<%
+<br />
+<br />
+<h1>ThreadInfo</h1>
+<%=VMStat.getThreadFormat() %><br />
+<%=VMStat.getThreadInfo()%><br />
+<br />
+<br />
+<h1>DbConnections</h1>
+connections :
+<%=DbConnectionFilter.debugMap.size()%>
+<br />
+<br />
+<%
 		for (Map.Entry<Thread, StackTraceElement[]> entry : DbConnectionFilter.debugMap.entrySet())
 		{
 			%>
-				<%=entry.getKey().getName()%> : <%=Arrays.toString(entry.getValue()) %>
-				<br /><br />
-			<%
+<%=entry.getKey().getName()%>
+:
+<%=Arrays.toString(entry.getValue()) %>
+<br />
+<br />
+<%
 		}
 	%>
-	</body>
+</body>
 </html>

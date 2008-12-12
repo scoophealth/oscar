@@ -1,7 +1,8 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.sql.*,oscar.oscarDB.*" %>
-<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
+<%@page import="java.sql.*,oscar.oscarDB.*"%>
+<%@page
+	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 <%
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -36,10 +37,10 @@
 %>
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Reorder Children</title>
-	<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Reorder Children</title>
+<script type="text/javascript">
             function move(dirn, pos) {
 		if (pos!="") {
 		    form_reorder.child_move.value=dirn;
@@ -52,35 +53,33 @@
 		form_reorder.submit();
 	    }
 	</script>
-    </head>
-    <body>
-	<h2>Reorder Children</h2>
-	<form name="form_reorder" method="post" action="ReorderNode.jsp">
-	    
-	    <table width="370">
-		<tr>
-		    <td>
-			<select name="child_node" size="9">
-		<% for (int i=0; i<children.length; i++) { %>
-			    <option value="<%=children[i].getPos()%>" <%=children[i].getPos().equals(nwpos) ? "selected" : ""%>><%=children[i].getLabelStr()%></option>
-		<% } %>
-			</select>
-		    </td>
-		    <td>
-			<input type="button" value="Move Up" onclick="move('up', child_node.value)" />
-			<br>
-			<input type="button" value="Move Down" onclick="move('down', child_node.value)" />
-			<input type="hidden" name="done_reorder" />
-			<input type="hidden" name="child_move" />
-			<input type="hidden" name="id" value="<%=id%>" />
-		    </td>
-		</tr>
-		<tr><td colspan="2">
-			<input type="submit" value="OK" onclick="done('1');" />
-		</td></tr>
-	    </table>
-	</form>
-    </body>
+</head>
+<body>
+<h2>Reorder Children</h2>
+<form name="form_reorder" method="post" action="ReorderNode.jsp">
+
+<table width="370">
+	<tr>
+		<td><select name="child_node" size="9">
+			<% for (int i=0; i<children.length; i++) { %>
+			<option value="<%=children[i].getPos()%>"
+				<%=children[i].getPos().equals(nwpos) ? "selected" : ""%>><%=children[i].getLabelStr()%></option>
+			<% } %>
+		</select></td>
+		<td><input type="button" value="Move Up"
+			onclick="move('up', child_node.value)" /> <br>
+		<input type="button" value="Move Down"
+			onclick="move('down', child_node.value)" /> <input type="hidden"
+			name="done_reorder" /> <input type="hidden" name="child_move" /> <input
+			type="hidden" name="id" value="<%=id%>" /></td>
+	</tr>
+	<tr>
+		<td colspan="2"><input type="submit" value="OK"
+			onclick="done('1');" /></td>
+	</tr>
+</table>
+</form>
+</body>
 </html>
 
 <%!

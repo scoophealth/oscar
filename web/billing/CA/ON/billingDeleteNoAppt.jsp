@@ -28,14 +28,16 @@
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 
 String curUser_no = (String) session.getAttribute("user");String userfirstname = (String) session.getAttribute("userfirstname");String userlastname = (String) session.getAttribute("userlastname");
-%>    
+%>
 
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.*"  errorPage="errorpage.jsp"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*" %>
-<%@ page import="oscar.oscarBilling.ca.on.data.*" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
@@ -48,14 +50,14 @@ function start(){
 </script>
 </head>
 
-<body  onload="start()">
+<body onload="start()">
 <center>
 
-<table border="0" cellspacing="0" cellpadding="0" width="90%" >
-<tr bgcolor="#486ebd"> 
-	<th align="CENTER">
-	<font face="Helvetica" color="#FFFFFF">DELETE A BILLING RECORD</font></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">DELETE
+		A BILLING RECORD</font></th>
+	</tr>
 </table>
 
 <%
@@ -64,9 +66,8 @@ if (billCode.substring(0,1).compareTo("B") == 0) {
 %>
 
 <h1>Sorry, cannot delete billed items.</h1>
-<form>
-<input type="button" value="Back to previous page" onClick="history.go(-1);return false;">
-</form>
+<form><input type="button" value="Back to previous page"
+	onClick="history.go(-1);return false;"></form>
 
 <%
 } else{
@@ -84,9 +85,7 @@ if (billCode.substring(0,1).compareTo("B") == 0) {
 <script LANGUAGE="JavaScript">
 self.close();
 self.opener.refresh();
-</script>
-
-<%
+</script> <%
 	if(!props.getProperty("isNewONbilling", "").equals("true")) {
 		apptMainBean.closePstmtConn();
 	}

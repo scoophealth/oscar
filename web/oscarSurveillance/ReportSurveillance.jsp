@@ -25,8 +25,8 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="oscar.oscarSurveillance.*,java.util.*"%>
 
 
@@ -41,104 +41,68 @@ SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
 
 
 <head>
-<html:base/>
-<title>
-<bean:message key="oscarSurveillance.Surveillance.title"/>
+<html:base />
+<title><bean:message key="oscarSurveillance.Surveillance.title" />
 </title>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
 
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF"  >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarSurveillance.Surveillance.msgSurveillance"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            Current Surveys: <%=sMaster.numSurveys()%>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-          &nbsp;           
-            </td>
-            <td class="MainTableRightColumn">
-				<table>
-        <tr> 
-          <td style="text-align: center">
-              
-              Current surveys: <br/>
-              <% ArrayList list = sMaster.getCurrentSurveys();
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarSurveillance.Surveillance.msgSurveillance" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Current Surveys: <%=sMaster.numSurveys()%></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
+			<tr>
+				<td style="text-align: center">Current surveys: <br />
+				<% ArrayList list = sMaster.getCurrentSurveys();
                  for (int i = 0; i < list.size() ; i++){ 
-                    Survey survey = (Survey) list.get(i);%>
-                    <a href="ReportSurvey.jsp?surveyId=<%=survey.getSurveyId()%>">
-                    <%=survey.getSurveyTitle()%>  
-                    </a>
-                    &nbsp; 
-                     </br>
-                 
-               <%}%>
-               
-			</td>
-        </tr>
-        <tr> 
-          <td style="text-align: center">&nbsp;</td>
-        </tr>
-        <tr>
-          <td style="text-align: center">&nbsp;</td>
-        </tr>
-      </table>
-			</td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+                    Survey survey = (Survey) list.get(i);%> <a
+					href="ReportSurvey.jsp?surveyId=<%=survey.getSurveyId()%>"> <%=survey.getSurveyTitle()%>
+				</a> &nbsp; </br>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+				<%}%>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center">&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="text-align: center">&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 
 

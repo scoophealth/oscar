@@ -1,16 +1,11 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList"%>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<style type="text/css">
-<!--
-select       { width: 300px; }
-.button      { width: 100px; }
--->
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <!--  
 /*
  * 
@@ -38,9 +33,7 @@ select       { width: 300px; }
 -->
 <html>
 <head>
-<title>
-<bean:message key="oscarMDS.selectProvider.title"/>
-</title>
+<title><bean:message key="oscarMDS.selectProvider.title" /></title>
 </head>
 
 <script language='JavaScript'>
@@ -69,20 +62,24 @@ function doStuff() {
 </script>
 
 <body>
-    <form name="providerSelectForm" method="post" action="AssignLab.do">
-        <center>
-        <p><font size="-1"><bean:message key="oscarMDS.selectProvider.msgSelectProvider"/>:</font></p>        
-            <select name="selectedProviders" size="10" multiple>
-                <% ArrayList providers = ProviderData.getProviderList();
+<form name="providerSelectForm" method="post" action="AssignLab.do">
+<center>
+<p><font size="-1"><bean:message
+	key="oscarMDS.selectProvider.msgSelectProvider" />:</font></p>
+<select name="selectedProviders" size="10" multiple>
+	<% ArrayList providers = ProviderData.getProviderList();
                        for (int i=0; i < providers.size(); i++) { %>
-                           <option value="<%= (String) ((ArrayList) providers.get(i)).get(0) %>"<%= ( ((String) ((ArrayList) providers.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers.get(i)).get(1) %> <%= (String) ((ArrayList) providers.get(i)).get(2) %></option>
-                <% } %>
-            </select>
-            <p>
-                <input type="button" class="button" value="<bean:message key="oscarMDS.selectProvider.btnOk"/>" onclick="doStuff()">
-                <input type="button" class="button" value="<bean:message key="oscarMDS.selectProvider.btnCancel"/>" onclick="window.close()">
-            </p>
-        </center>
-    </form>
+	<option value="<%= (String) ((ArrayList) providers.get(i)).get(0) %>"
+		<%= ( ((String) ((ArrayList) providers.get(i)).get(0)).equals(request.getParameter("providerNo")) ? " selected" : "" ) %>><%= (String) ((ArrayList) providers.get(i)).get(1) %>
+	<%= (String) ((ArrayList) providers.get(i)).get(2) %></option>
+	<% } %>
+</select>
+<p><input type="button" class="button"
+	value="<bean:message key="oscarMDS.selectProvider.btnOk"/>"
+	onclick="doStuff()"> <input type="button" class="button"
+	value="<bean:message key="oscarMDS.selectProvider.btnCancel"/>"
+	onclick="window.close()"></p>
+</center>
+</form>
 </body>
 </html>

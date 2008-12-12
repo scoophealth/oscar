@@ -21,8 +21,8 @@
 * Toronto, Ontario, Canada 
 */
  -->
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ page import="java.util.ArrayList"%>
 
 <!--  logic:redirect forward="/admissionListAction.admit"  / -->
 
@@ -43,16 +43,17 @@
 %>
 
 <jsp:forward page="/CaseManagementEntry.do">
-    <jsp:param name="method" value="edit"/>
-    <jsp:param name="from" value="casemgmt"/>
-    <jsp:param name="chain" value="list" />
-    <jsp:param name="demographicNo" value='<%=request.getParameter("demographicNo")%>'/>
-</jsp:forward>        
+	<jsp:param name="method" value="edit" />
+	<jsp:param name="from" value="casemgmt" />
+	<jsp:param name="chain" value="list" />
+	<jsp:param name="demographicNo"
+		value='<%=request.getParameter("demographicNo")%>' />
+</jsp:forward>
 <%
     }
     else {
 %>
-        <jsp:forward  page="/CaseManagementView.do"  />
+<jsp:forward page="/CaseManagementView.do" />
 <%
     }
 %>

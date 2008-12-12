@@ -1,3 +1,4 @@
+
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
@@ -573,7 +574,7 @@ function onDblClickServiceCode(item) {
 
 <body onload="setfocus();" topmargin="0">
 <div id="Layer1"
-	style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+	style="position: absolute; left: 360px; top: 165px; width: 410px; height: 200px; z-index: 1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 <table width="98%" border="0" cellspacing="0" cellpadding="0"
 	align=center>
 	<tr bgcolor="#393764">
@@ -606,7 +607,7 @@ int ctlCount = 0;
 </table>
 </div>
 <div id="Layer2"
-	style="position:absolute; left:1px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+	style="position: absolute; left: 1px; top: 26px; width: 332px; height: 600px; z-index: 2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 <table width="98%" border="0" cellspacing="0" cellpadding="0"
 	align=center>
 	<tr>
@@ -626,9 +627,11 @@ ctlCount = 0;
 	ctldiagcodename = rs.getString("des");
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
-		<td width="18%"><b><font size="-2" color="#7A388D"><a href="#"
+		<td width="18%"><b><font size="-2" color="#7A388D"><a
+			href="#"
 			onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
-		<td colspan="2"><font size="-2" color="#7A388D"><a href="#"
+		<td colspan="2"><font size="-2" color="#7A388D"><a
+			href="#"
 			onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;">
 		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></a></font></td>
 	</tr>
@@ -648,9 +651,10 @@ ctlCount = 0;
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><b>OscarBilling </b></td>
-				<td align="right"><input type="submit" name="submit" value="Next"
-					style="width: 120px;" /> <input type="button" name="button"
-					value="Exit" style="width: 120px;" onClick="self.close();" /></td>
+				<td align="right"><input type="submit" name="submit"
+					value="Next" style="width: 120px;" /> <input type="button"
+					name="button" value="Exit" style="width: 120px;"
+					onClick="self.close();" /></td>
 			</tr>
 		</table>
 		</td>
@@ -676,25 +680,25 @@ ctlCount = 0;
 					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 					bgcolor="ivory">
 					<tr>
-						<td nowrap width="30%" align="center"><a id="trigger" href="#">[Service
-						Date]</a><br>
+						<td nowrap width="30%" align="center"><a id="trigger"
+							href="#">[Service Date]</a><br>
 						<textarea name="billDate" cols="11" rows="5" readonly><%=request.getParameter("billDate")!=null?request.getParameter("billDate"):""%></textarea>
 						</td>
 						<td align="center" width="33%">Service Code x Unit<br>
 						<input type="text" name="serviceDate0" size="5" maxlength="5"
 							value="<%=request.getParameter("serviceDate0")!=null?request.getParameter("serviceDate0"):""%>">x
 						<input type="text" name="serviceUnit0" size="2" maxlength="2"
-							style="width=20px"
+							style=""
 							value="<%=request.getParameter("serviceUnit0")!=null?request.getParameter("serviceUnit0"):""%>"><br>
 						<input type="text" name="serviceDate1" size="5" maxlength="5"
 							value="<%=request.getParameter("serviceDate1")!=null?request.getParameter("serviceDate1"):""%>">x
 						<input type="text" name="serviceUnit1" size="2" maxlength="2"
-							style="width=20px"
+							style=""
 							value="<%=request.getParameter("serviceUnit1")!=null?request.getParameter("serviceUnit1"):""%>"><br>
 						<input type="text" name="serviceDate2" size="5" maxlength="5"
 							value="<%=request.getParameter("serviceDate2")!=null?request.getParameter("serviceDate2"):""%>">x
 						<input type="text" name="serviceUnit2" size="2" maxlength="2"
-							style="width=20px"
+							style=""
 							value="<%=request.getParameter("serviceUnit2")!=null?request.getParameter("serviceUnit2"):""%>"><br>
 						</td>
 						<td valign="top">
@@ -710,7 +714,8 @@ ctlCount = 0;
 								<select name="rulePerc">
 									<% String rulePerc= request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):""; %>
 									<option value="onlyAboveCode"
-										<%="onlyAboveCode".equals(rulePerc)?"selected":""%>>Only Above</option>
+										<%="onlyAboveCode".equals(rulePerc)?"selected":""%>>Only
+									Above</option>
 									<option value="allAboveCode"
 										<%="allAboveCode".equals(rulePerc)?"selected":""%>>All</option>
 								</select></td>
@@ -736,7 +741,8 @@ ctlCount = 0;
 					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 					bgcolor="#EEEEFF">
 					<tr>
-						<td nowrap width="30%" align="center"><b>Billing Physician</b></td>
+						<td nowrap width="30%" align="center"><b>Billing
+						Physician</b></td>
 						<td width="20%"><select name="xml_provider">
 							<%
 				if(vecProvider.size()==1) {
@@ -769,28 +775,34 @@ ctlCount = 0;
 						<td width="30%"><b>Visit Type</b></td>
 						<td width="20%"><select name="xml_visittype">
 							<option value="00| Clinic Visit"
-								<%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
+								<%=visitType.startsWith("00")?"selected":""%>>00 |
+							Clinic Visit</option>
 							<option value="01| Outpatient Visit"
-								<%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient
-							Visit</option>
+								<%=visitType.startsWith("01")?"selected":""%>>01 |
+							Outpatient Visit</option>
 							<option value="02| Hospital Visit"
-								<%=visitType.startsWith("02")?"selected":""%>>02 | Hospital
-							Visit</option>
+								<%=visitType.startsWith("02")?"selected":""%>>02 |
+							Hospital Visit</option>
 							<option value="03| ER"
 								<%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
 							<option value="04| Nursing Home"
-								<%=visitType.startsWith("04")?"selected":""%>>04 | Nursing Home</option>
+								<%=visitType.startsWith("04")?"selected":""%>>04 |
+							Nursing Home</option>
 							<option value="05| Home Visit"
-								<%=visitType.startsWith("05")?"selected":""%>>05 | Home Visit</option>
+								<%=visitType.startsWith("05")?"selected":""%>>05 | Home
+							Visit</option>
 						</select></td>
 
 						<td width="30%"><b>Billing Type</b></td>
-						<td width="20%"><% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
+						<td width="20%">
+						<% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
 						<select name="xml_billtype">
 							<option value="ODP | Bill OHIP"
-								<%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill OHIP</option>
+								<%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill
+							OHIP</option>
 							<option value="PAT | Bill Patient"
-								<%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill Patient</option>
+								<%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill
+							Patient</option>
 							<option value="WCB | Worker's Compensation Board"
 								<%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
 						</select></td>
@@ -814,15 +826,16 @@ ctlCount = 0;
 					</tr>
 					<tr>
 						<td><b>Admission Date</b></td>
-						<td><%
+						<td>
+						<%
 				String admDate = "";
 				if(visitType.startsWith("02") ) {
 					admDate = visitdate;
 				} %> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
 						<input type="text" name="xml_vdate" id="xml_vdate"
 							value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>"
-							size='10' maxlength='10'> <img src="../../../images/cal.gif"
-							id="xml_vdate_cal"></td>
+							size='10' maxlength='10'> <img
+							src="../../../images/cal.gif" id="xml_vdate_cal"></td>
 						<td colspan="2"><a href="#"
 							onClick="showHideLayers('Layer1','','show');return false;">Billing
 						form</a>:</font></b> <%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
@@ -852,7 +865,8 @@ ctlCount = 0;
 					<tr bgcolor="#CCCCFF">
 						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle1%>
 						</font></th>
-						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1"
+							color="#000000">Description</font></th>
 						<th><font size="-1" color="#000000"> Fee</font></th>
 					</tr>
 					<%
@@ -866,8 +880,8 @@ ctlCount = 0;
 					else premiumFlag = "";
 			%>
 					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
-							value="checked"
+						<td nowrap><input type="checkbox"
+							name="code_xml_<%=serviceCode%>" value="checked"
 							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
 						<b><font size="-1"
 							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
@@ -875,7 +889,7 @@ ctlCount = 0;
 							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 						<input type="text" name="unit_xml_<%=serviceCode%>"
 							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
-							size="1" maxlength="2" style="width:20px; height:12px;"></td>
+							size="1" maxlength="2" style="width: 20px; height: 12px;"></td>
 						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
 							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 						<input type="hidden" name="desc_xml_<%=serviceCode%>"
@@ -897,7 +911,8 @@ ctlCount = 0;
 					<tr bgcolor="#CCCCFF">
 						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle2%>
 						</font></th>
-						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1"
+							color="#000000">Description</font></th>
 						<th><font size="-1" color="#000000"> Fee</font></th>
 					</tr>
 					<%
@@ -911,8 +926,8 @@ ctlCount = 0;
 					else premiumFlag = "";
 			%>
 					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
-							value="checked"
+						<td nowrap><input type="checkbox"
+							name="code_xml_<%=serviceCode%>" value="checked"
 							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
 						<b><font size="-1"
 							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
@@ -920,7 +935,7 @@ ctlCount = 0;
 							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 						<input type="text" name="unit_xml_<%=serviceCode%>"
 							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
-							size="1" maxlength="2" style="width:20px; height:12px;" /></td>
+							size="1" maxlength="2" style="width: 20px; height: 12px;" /></td>
 						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
 							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 						<input type="hidden" name="desc_xml_<%=serviceCode%>"
@@ -943,7 +958,8 @@ ctlCount = 0;
 					<tr bgcolor="#CCCCFF">
 						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle3%>
 						</font></th>
-						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1"
+							color="#000000">Description</font></th>
 						<th><font size="-1" color="#000000"> Fee</font></th>
 					</tr>
 					<%
@@ -957,8 +973,8 @@ ctlCount = 0;
 					else premiumFlag = "";
 			%>
 					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
-							value="checked"
+						<td nowrap><input type="checkbox"
+							name="code_xml_<%=serviceCode%>" value="checked"
 							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
 						<b><font size="-1"
 							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
@@ -966,7 +982,7 @@ ctlCount = 0;
 							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
 						<input type="text" name="unit_xml_<%=serviceCode%>"
 							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
-							size="1" maxlength="2" style="width:20px; height:12px;" /></td>
+							size="1" maxlength="2" style="width: 20px; height: 12px;" /></td>
 						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
 							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
 						<input type="hidden" name="desc_xml_<%=serviceCode%>"
@@ -1019,14 +1035,14 @@ ctlCount = 0;
 </form>
 
 
-<br/>
+<br />
 <%   if(!props.getProperty("isNewONbilling", "").equals("true")) {
 %>
 <table border="0" cellpadding="0" cellspacing="2" width="100%"
 	bgcolor="#CCCCFF">
 	<tr>
-		<td colspan="6" class="RowTop"><%= demoname %> - <b>Billing History</b>
-		(last 5 records)</td>
+		<td colspan="6" class="RowTop"><%= demoname %> - <b>Billing
+		History</b> (last 5 records)</td>
 	</tr>
 	<tr>
 		<td>
@@ -1062,13 +1078,16 @@ ctlCount = 0;
 	</tr>
 </table>
 <% } else { %>
-<table border="0" cellpadding="1" cellspacing="2" width="100%" class="myIvory">
+<table border="0" cellpadding="1" cellspacing="2" width="100%"
+	class="myIvory">
 	<tr class="myYellow">
-		<td colspan="6"><%=demoname%> - <b>Billing History</b> (last 5 records)</td>
+		<td colspan="6"><%=demoname%> - <b>Billing History</b> (last 5
+		records)</td>
 	</tr>
 	<tr>
 		<td>
-		<table border="1" cellspacing="0" cellpadding="1" bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
+		<table border="1" cellspacing="0" cellpadding="1"
+			bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
 			<tr class="myYellow" align="center">
 				<th nowrap>Serial No.</th>
 				<th nowrap>Billing Date</th>

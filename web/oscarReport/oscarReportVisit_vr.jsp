@@ -24,24 +24,24 @@
  */
 -->
 <table width="75%" border="0" cellpadding="2">
-  <tr>
-    <td bgcolor="#CCCCFF">Provider</td>
-    <td bgcolor="#CCCCFF">&nbsp;</td>
-    <td bgcolor="#CCCCFF">Clinic</td>
-    <td bgcolor="#CCCCFF">Outpatient</td>
-    <td bgcolor="#CCCCFF">Hospital</td>
-    <td bgcolor="#CCCCFF">ER</td>
-    <td bgcolor="#CCCCFF">Nursing Home</td>
-    <td bgcolor="#CCCCFF">Home</td>
-    <td bgcolor="#FFCC00">Clinic</td>
-    <td bgcolor="#FFCC00">Outpatient</td>
-    <td bgcolor="#FFCC00">Hospital</td>
-    <td bgcolor="#FFCC00">ER</td>
-    <td bgcolor="#FFCC00">Nursing Home</td>
-    <td bgcolor="#FFCC00">Home</td>
-  </tr>
+	<tr>
+		<td bgcolor="#CCCCFF">Provider</td>
+		<td bgcolor="#CCCCFF">&nbsp;</td>
+		<td bgcolor="#CCCCFF">Clinic</td>
+		<td bgcolor="#CCCCFF">Outpatient</td>
+		<td bgcolor="#CCCCFF">Hospital</td>
+		<td bgcolor="#CCCCFF">ER</td>
+		<td bgcolor="#CCCCFF">Nursing Home</td>
+		<td bgcolor="#CCCCFF">Home</td>
+		<td bgcolor="#FFCC00">Clinic</td>
+		<td bgcolor="#FFCC00">Outpatient</td>
+		<td bgcolor="#FFCC00">Hospital</td>
+		<td bgcolor="#FFCC00">ER</td>
+		<td bgcolor="#FFCC00">Nursing Home</td>
+		<td bgcolor="#FFCC00">Home</td>
+	</tr>
 
-<%
+	<%
 String cTotal="0",hTotal="0",oTotal="0", mNum="", fNum="";
 String p_last="",p_no="",p_first="", team="", oldteam="";
 String dateBegin = request.getParameter("xml_vdate");
@@ -129,23 +129,23 @@ while(rs.next()){
     if (oldteam.compareTo(team) != 0)  bodd=bodd?false:true; //for the color of rows
 
     %>
-    <tr>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=oldteam.equals(team)?"":team%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=p_no%> <%=p_last%>,<%=p_first%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[0]%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[1]%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[2]%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[3]%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[4]%></td>
-        <td  bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[5]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[0]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[1]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[2]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[3]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[4]%></td>
-        <td  bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[5]%></td>
-    </tr>
-    <%
+	<tr>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=oldteam.equals(team)?"":team%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=p_no%> <%=p_last%>,<%=p_first%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[0]%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[1]%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[2]%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[3]%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[4]%></td>
+		<td bgcolor="<%=bodd?"#EEEEFF":"white"%>"><%=visitcount[5]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[0]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[1]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[2]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[3]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[4]%></td>
+		<td bgcolor="<%=bodd?"#FFCC00":"white"%>"><%=apptvisitcount[5]%></td>
+	</tr>
+	<%
     Total0= new BigDecimal(Integer.parseInt(visitcount[0].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
     Total1= new BigDecimal(Integer.parseInt(visitcount[1].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
     Total2= new BigDecimal(Integer.parseInt(visitcount[2].toString())).setScale(0, BigDecimal.ROUND_HALF_UP);    
@@ -174,20 +174,20 @@ while(rs.next()){
     oldteam = team;
 } %>
 
-  <tr>
-    <td bgcolor="#CCCCFF">&nbsp;</td>
-    <td bgcolor="#CCCCFF">TOTAL</td>
-    <td bgcolor="#CCCCFF"><%=BigTotal0%></td>
-    <td bgcolor="#CCCCFF"><%=BigTotal1%></td>
-    <td bgcolor="#CCCCFF"><%=BigTotal2%></td>
-    <td bgcolor="#CCCCFF"><%=BigTotal3%></td>
-    <td bgcolor="#CCCCFF"><%=BigTotal4%></td>
-    <td bgcolor="#CCCCFF"><%=BigTotal5%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal0%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal1%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal2%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal3%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal4%></td>
-    <td bgcolor="#FFCC00"><%=ABigTotal5%></td>
-  </tr>
+	<tr>
+		<td bgcolor="#CCCCFF">&nbsp;</td>
+		<td bgcolor="#CCCCFF">TOTAL</td>
+		<td bgcolor="#CCCCFF"><%=BigTotal0%></td>
+		<td bgcolor="#CCCCFF"><%=BigTotal1%></td>
+		<td bgcolor="#CCCCFF"><%=BigTotal2%></td>
+		<td bgcolor="#CCCCFF"><%=BigTotal3%></td>
+		<td bgcolor="#CCCCFF"><%=BigTotal4%></td>
+		<td bgcolor="#CCCCFF"><%=BigTotal5%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal0%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal1%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal2%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal3%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal4%></td>
+		<td bgcolor="#FFCC00"><%=ABigTotal5%></td>
+	</tr>
 </table>

@@ -63,7 +63,8 @@
 
 			%>
 
-<%@ page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@ page import="java.math.*,java.util.*,java.sql.*,oscar.*,java.net.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
@@ -82,14 +83,17 @@
 <title><bean:message key="billing.billingCorrection.title" /></title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
 <!-- main calendar program -->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
-<script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/lang/calendar-en.js"></script>
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -190,7 +194,8 @@ function popupPage(vheight,vwidth,varpage) {
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
-<body bgcolor="ivory" text="#000000" topmargin="0" leftmargin="0" rightmargin="0" onLoad="setfocus()">
+<body bgcolor="ivory" text="#000000" topmargin="0" leftmargin="0"
+	rightmargin="0" onLoad="setfocus()">
 <!--  <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#000000">
 		<th height="40" width="10%"></th>
@@ -276,10 +281,13 @@ function popupPage(vheight,vwidth,varpage) {
 <table width="100%" border="0" class="myYellow">
 	<form name="form1" method="post" action="billingONCorrection.jsp">
 	<tr>
-		<th width="30%" align="left"><a href="billingON3rdInv.jsp?billingNo=<%=nullToEmpty(ch1Obj.getId())%>">
-		<bean:message key="billing.billingCorrection.formInvoiceNo" /></a> </th>
-		<th width="10%"><input type="text" name="billing_no" value="<%=nullToEmpty(ch1Obj.getId()) %>" maxsize="10"></th>
-		<th width="50%" align="left"><bean:message key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(ch1Obj.getUpdate_datetime())%></th>
+		<th width="30%" align="left"><a
+			href="billingON3rdInv.jsp?billingNo=<%=nullToEmpty(ch1Obj.getId())%>">
+		<bean:message key="billing.billingCorrection.formInvoiceNo" /></a></th>
+		<th width="10%"><input type="text" name="billing_no"
+			value="<%=nullToEmpty(ch1Obj.getId()) %>" maxsize="10"></th>
+		<th width="50%" align="left"><bean:message
+			key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(ch1Obj.getUpdate_datetime())%></th>
 		<th><input type="submit" name="submit" value="Search"></th>
 	</tr>
 	</form>
@@ -295,7 +303,7 @@ if(bFlag) {
 	JdbcBillingErrorCodeImpl errorObj = new JdbcBillingErrorCodeImpl();
 %>
 <table width="100%" border="0" class="myIvory">
-<% for(int i=0; i<lError.size(); i++) { 
+	<% for(int i=0; i<lError.size(); i++) { 
 	String codeNo = (String) lError.get(i);
 	if("".equals(codeNo)) continue;
 	String codeDesc = errorObj.getCodeDesc((String)lError.get(i));
@@ -305,64 +313,83 @@ if(bFlag) {
 		<th width="10%"><b><%=codeNo %></b></th>
 		<td align="left"><%=codeDesc %></td>
 	</tr>
-<% } %>
+	<% } %>
 </table>
 <% } %>
 
-<form name="serviceform" method="post" action="billingONCorrectionSave.jsp" onsubmit="return validateAllItems()"><input
-	type="hidden" name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden" name="update_date"
-	value="<%=UpdateDate%>" />
+<form name="serviceform" method="post"
+	action="billingONCorrectionSave.jsp"
+	onsubmit="return validateAllItems()"><input type="hidden"
+	name="xml_billing_no" value="<%=billNo%>" /> <input type="hidden"
+	name="update_date" value="<%=UpdateDate%>" />
 
 <table width="600" border="0">
 	<tr class="myGreen">
-		<th align="left" colspan="2"><b><bean:message key="billing.billingCorrection.msgPatientInformation" /></b></th>
+		<th align="left" colspan="2"><b><bean:message
+			key="billing.billingCorrection.msgPatientInformation" /></b></th>
 	</tr>
 	<tr>
-		<td width="54%"><b><bean:message key="billing.billingCorrection.msgPatientName" />: 
-		<a href=# onclick="popupPage(720,860,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=DemoNo %>&displaymode=edit&dboperation=search_detail');return false;">
-		<%=DemoName%></a>
-		<input type="hidden" name="demo_name" value="<%=DemoName%>"> </b></td>
-		<td width="46%"><b><bean:message key="billing.billingCorrection.formHealth" />: <%=hin%> <input type="hidden"
-			name="xml_hin" value="<%=hin%>">&nbsp; &nbsp; RS: <%=DemoRS%> </b></td>
+		<td width="54%"><b><bean:message
+			key="billing.billingCorrection.msgPatientName" />: <a href=#
+			onclick="popupPage(720,860,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=DemoNo %>&displaymode=edit&dboperation=search_detail');return false;">
+		<%=DemoName%></a> <input type="hidden" name="demo_name"
+			value="<%=DemoName%>"> </b></td>
+		<td width="46%"><b><bean:message
+			key="billing.billingCorrection.formHealth" />: <%=hin%> <input
+			type="hidden" name="xml_hin" value="<%=hin%>">&nbsp; &nbsp;
+		RS: <%=DemoRS%> </b></td>
 	</tr>
 	<tr>
-		<td><b><bean:message key="billing.billingCorrection.msgSex" />: <%=DemoSex%> <input type="hidden" name="demo_sex"
-			value="<%=DemoSex%>"> <input type="hidden" name="hc_sex" value="<%=HCSex%>"> </b></td>
-		<td><b><bean:message key="billing.billingCorrection.formDOB" />: <input type="hidden" name="xml_dob"
-			value="<%=DemoDOB%>"> <%=DemoDOB%> </b></td>
+		<td><b><bean:message key="billing.billingCorrection.msgSex" />:
+		<%=DemoSex%> <input type="hidden" name="demo_sex" value="<%=DemoSex%>">
+		<input type="hidden" name="hc_sex" value="<%=HCSex%>"> </b></td>
+		<td><b><bean:message key="billing.billingCorrection.formDOB" />:
+		<input type="hidden" name="xml_dob" value="<%=DemoDOB%>"> <%=DemoDOB%>
+		</b></td>
 	</tr>
 	<tr>
-		<td><strong><bean:message key="billing.billingCorrection.msgDoctor" />: <input type="text" name="rd"
-			value="<%=r_doctor%>" size=20 readonly></strong></td>
-		<td><strong><bean:message key="billing.billingCorrection.msgDoctorNo" />: <input type="text" name="rdohip"
-			value="<%=r_doctor_ohip%>" size=8 readonly /></strong> <a href="javascript:referralScriptAttach2('rdohip','rd')">Search</a></td>
+		<td><strong><bean:message
+			key="billing.billingCorrection.msgDoctor" />: <input type="text"
+			name="rd" value="<%=r_doctor%>" size=20 readonly></strong></td>
+		<td><strong><bean:message
+			key="billing.billingCorrection.msgDoctorNo" />: <input type="text"
+			name="rdohip" value="<%=r_doctor_ohip%>" size=8 readonly /></strong> <a
+			href="javascript:referralScriptAttach2('rdohip','rd')">Search</a></td>
 	</tr>
 </table>
 
 <table width="600" border="0">
 	<tr class="myGreen">
-		<td colspan=2><strong><bean:message key="billing.billingCorrection.msgAditInfo" /></strong></td>
+		<td colspan=2><strong><bean:message
+			key="billing.billingCorrection.msgAditInfo" /></strong></td>
 		<!--  td width="270"><strong><bean:message
 			key="billing.billingCorrection.formSpecialty" /> </strong> <select name="specialty" style="font-size:80%;">
 			<option value="none"><bean:message key="billing.billingCorrection.formNone" /></option>
 			<option value="flu" <%=specialty.equals("flu")?"selected":""%>><bean:message key="billing.billingCorrection.formFlu" /></option></td>-->
 	</tr>
 	<tr class="myIvory">
-		<td width="320"><strong><bean:message key="billing.billingCorrection.formHCType" />:</strong> <select
-			name="hc_type" style="font-size:80%;">
+		<td width="320"><strong><bean:message
+			key="billing.billingCorrection.formHCType" />:</strong> <select
+			name="hc_type" style="font-size: 80%;">
 			<option value="ON" <%=HCTYPE.equals("ON")?"selected":""%>>ON-Ontario</option>
 			<option value="AB" <%=HCTYPE.equals("AB")?"selected":""%>>AB-Alberta</option>
-			<option value="BC" <%=HCTYPE.equals("BC")?"selected":""%>>BC-British Columbia</option>
+			<option value="BC" <%=HCTYPE.equals("BC")?"selected":""%>>BC-British
+			Columbia</option>
 			<option value="MB" <%=HCTYPE.equals("MB")?"selected":""%>>MB-Manitoba</option>
 			<option value="NL" <%=HCTYPE.equals("NL")?"selected":""%>>NL-Newfoundland</option>
-			<option value="NB" <%=HCTYPE.equals("NB")?"selected":""%>>NB-New Brunswick</option>
+			<option value="NB" <%=HCTYPE.equals("NB")?"selected":""%>>NB-New
+			Brunswick</option>
 			<option value="YT" <%=HCTYPE.equals("YT")?"selected":""%>>YT-Yukon</option>
-			<option value="NS" <%=HCTYPE.equals("NS")?"selected":""%>>NS-Nova Scotia</option>
-			<option value="PE" <%=HCTYPE.equals("PE")?"selected":""%>>PE-Prince Edward Island</option>
+			<option value="NS" <%=HCTYPE.equals("NS")?"selected":""%>>NS-Nova
+			Scotia</option>
+			<option value="PE" <%=HCTYPE.equals("PE")?"selected":""%>>PE-Prince
+			Edward Island</option>
 			<option value="SK" <%=HCTYPE.equals("SK")?"selected":""%>>SK-Saskatchewan</option>
 		</select></td>
-		<td width="270"><strong><bean:message key="billing.billingCorrection.formManualReview" />: <input type="checkbox"
-			name="m_review" value="Y" <%=m_review.equals("Y")?"checked":""%>> </strong></td>
+		<td width="270"><strong><bean:message
+			key="billing.billingCorrection.formManualReview" />: <input
+			type="checkbox" name="m_review" value="Y"
+			<%=m_review.equals("Y")?"checked":""%>> </strong></td>
 	</tr>
 	<!--  tr bgcolor="#EEEEFF">
 		<td><strong><bean:message key="billing.billingCorrection.msgDoctor" />:
@@ -374,27 +401,43 @@ if(bFlag) {
 
 <table width="600" border="0">
 	<tr class="myGreen">
-		<td><b><bean:message key="billing.billingCorrection.msgBillingInf" /></b></td>
-		<td width="46%"><bean:message key="billing.billingCorrection.btnBillingDate" /><img src="../../../images/cal.gif"
-			id="xml_appointment_date_cal" />: <input type="text" id="xml_appointment_date" name="xml_appointment_date"
+		<td><b><bean:message
+			key="billing.billingCorrection.msgBillingInf" /></b></td>
+		<td width="46%"><bean:message
+			key="billing.billingCorrection.btnBillingDate" /><img
+			src="../../../images/cal.gif" id="xml_appointment_date_cal" />: <input
+			type="text" id="xml_appointment_date" name="xml_appointment_date"
 			value="<%=BillDate%>" size=10 /></td>
 	</tr>
 	<tr>
-		<td width="54%"><b><bean:message key="billing.billingCorrection.formBillingType" />: </b> <input type="hidden"
-			name="xml_status" value="<%=BillType%>"> <select style="font-size:80%;" name="status">
-			<option value=""><bean:message key="billing.billingCorrection.formSelectBillType" /></option>
-			<option value="H" <%=BillType.equals("H")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeH" /></option>
-			<option value="O" <%=BillType.equals("O")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeO" /></option>
-			<option value="P" <%=BillType.equals("P")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeP" /></option>
-			<option value="N" <%=BillType.equals("N")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeN" /></option>
-			<option value="W" <%=BillType.equals("W")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeW" /></option>
-			<option value="B" <%=BillType.equals("B")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeB" /></option>
-			<option value="S" <%=BillType.equals("S")?"selected":""%>>S | Settled</option>
-			<option value="X" <%=BillType.equals("X")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeX" /></option>
-			<option value="D" <%=BillType.equals("D")?"selected":""%>><bean:message key="billing.billingCorrection.formBillTypeD" /></option>
+		<td width="54%"><b><bean:message
+			key="billing.billingCorrection.formBillingType" />: </b> <input
+			type="hidden" name="xml_status" value="<%=BillType%>"> <select
+			style="font-size: 80%;" name="status">
+			<option value=""><bean:message
+				key="billing.billingCorrection.formSelectBillType" /></option>
+			<option value="H" <%=BillType.equals("H")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeH" /></option>
+			<option value="O" <%=BillType.equals("O")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeO" /></option>
+			<option value="P" <%=BillType.equals("P")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeP" /></option>
+			<option value="N" <%=BillType.equals("N")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeN" /></option>
+			<option value="W" <%=BillType.equals("W")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeW" /></option>
+			<option value="B" <%=BillType.equals("B")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeB" /></option>
+			<option value="S" <%=BillType.equals("S")?"selected":""%>>S
+			| Settled</option>
+			<option value="X" <%=BillType.equals("X")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeX" /></option>
+			<option value="D" <%=BillType.equals("D")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeD" /></option>
 		</select></td>
-		<td width="46%"><b> Pay Program:</b> <input type="hidden" name="xml_payProgram" value="<%=BillDate%>" /><select
-			style="font-size:80%;" name="payProgram">
+		<td width="46%"><b> Pay Program:</b> <input type="hidden"
+			name="xml_payProgram" value="<%=BillDate%>" /><select
+			style="font-size: 80%;" name="payProgram">
 			<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
 
 					%>
@@ -406,63 +449,83 @@ if(bFlag) {
 		</select></td>
 	</tr>
 	<tr class="myGreen">
-		<td width="54%"><b><bean:message key="billing.billingCorrection.formVisit" />:</b> <input type="hidden"
-			name="xml_clinic_ref_code" value="<%=location%>"> <select name="clinic_ref_code">
-			<option value=""><bean:message key="billing.billingCorrection.msgSelectLocation" /></option>
+		<td width="54%"><b><bean:message
+			key="billing.billingCorrection.formVisit" />:</b> <input type="hidden"
+			name="xml_clinic_ref_code" value="<%=location%>"> <select
+			name="clinic_ref_code">
+			<option value=""><bean:message
+				key="billing.billingCorrection.msgSelectLocation" /></option>
 			<%//
 				List lLocation = obj.getFacilty_num();
 				for (int i = 0; i < lLocation.size(); i = i + 2) {
 					BillLocationNo = (String) lLocation.get(i);
 					BillLocation = (String) lLocation.get(i + 1);
 %>
-			<option value="<%=BillLocationNo%>" <%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%> | <%=BillLocation%></option>
+			<option value="<%=BillLocationNo%>"
+				<%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%>
+			| <%=BillLocation%></option>
 
 			<%}
 
 				%>
 		</select></td>
-		<td width="46%"><b><bean:message key="billing.billingCorrection.formBillingPhysician" />: </b> <select id="provider_no"
-			style="font-size:80%;" name="provider_no">
-			<option value=""><bean:message key="billing.billingCorrection.msgSelectProvider" /></option>
+		<td width="46%"><b><bean:message
+			key="billing.billingCorrection.formBillingPhysician" />: </b> <select
+			id="provider_no" style="font-size: 80%;" name="provider_no">
+			<option value=""><bean:message
+				key="billing.billingCorrection.msgSelectProvider" /></option>
 			<%List pList = (Vector) (new JdbcBillingPageUtil()).getCurProviderStr();
 				for (int i = 0; i < pList.size(); i++) {
 					String temp[] = ((String) pList.get(i)).split("\\|");
 
 					%>
-			<option value="<%=temp[0]%>" <%=Provider.equals(temp[0])?"selected":""%>><%=temp[0]%> | <%=temp[1]%>, <%=temp[2]%></option>
+			<option value="<%=temp[0]%>"
+				<%=Provider.equals(temp[0])?"selected":""%>><%=temp[0]%> |
+			<%=temp[1]%>, <%=temp[2]%></option>
 			<%}
 
 				%>
 		</select> <input type="hidden" name="xml_provider_no" value="<%=Provider%>"></td>
 	</tr>
 	<tr>
-		<td width="54%"><b> <bean:message key="billing.billingCorrection.formVisitType" />: </b> <input type="hidden"
-			name="xml_visittype" value="<%=visittype%>"> <select style="font-size:80%;" name="visittype">
-			<option value=""><bean:message key="billing.billingCorrection.msgSelectVisitType" /></option>
+		<td width="54%"><b> <bean:message
+			key="billing.billingCorrection.formVisitType" />: </b> <input
+			type="hidden" name="xml_visittype" value="<%=visittype%>"> <select
+			style="font-size: 80%;" name="visittype">
+			<option value=""><bean:message
+				key="billing.billingCorrection.msgSelectVisitType" /></option>
 			<option value="00" <%=visittype.equals("00")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formClinicVisit" /></option>
 			<option value="01" <%=visittype.equals("01")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formOutpatientVisit" /></option>
 			<option value="02" <%=visittype.equals("02")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formHospitalVisit" /></option>
-			<option value="03" <%=visittype.equals("03")?"selected":""%>><bean:message key="billing.billingCorrection.formER" /></option>
+			<option value="03" <%=visittype.equals("03")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formER" /></option>
 			<option value="04" <%=visittype.equals("04")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formNursingHome" /></option>
 			<option value="05" <%=visittype.equals("05")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formHomeVisit" /></option>
 		</select></td>
-		<td width="46%"><b> <input type="hidden" name="xml_visitdate" value="<%=visitdate%>" /> <bean:message
-			key="billing.billingCorrection.btnAdmissionDate" /><img src="../../../images/cal.gif" id="xml_vdate_cal" />: <input
-			type="text" id="xml_vdate" name="xml_vdate" value="<%=visitdate%>" size=10 /></b></td>
+		<td width="46%"><b> <input type="hidden" name="xml_visitdate"
+			value="<%=visitdate%>" /> <bean:message
+			key="billing.billingCorrection.btnAdmissionDate" /><img
+			src="../../../images/cal.gif" id="xml_vdate_cal" />: <input
+			type="text" id="xml_vdate" name="xml_vdate" value="<%=visitdate%>"
+			size=10 /></b></td>
 	</tr>
 </table>
 
-<table width="600" border="0"  cellspacing="1" cellpadding="0">
+<table width="600" border="0" cellspacing="1" cellpadding="0">
 	<tr class="myYellow">
-		<td width="30%" colspan=2><b><bean:message key="billing.billingCorrection.formServiceCode" /></b></td>
-		<th width="50%"><b><bean:message key="billing.billingCorrection.formDescription" /></b></th>
-		<th width="3%"><b><bean:message key="billing.billingCorrection.formUnit" /></b></th>
-		<th width="13%" align="right"><b><bean:message key="billing.billingCorrection.formFee" /></b></th>
+		<td width="30%" colspan=2><b><bean:message
+			key="billing.billingCorrection.formServiceCode" /></b></td>
+		<th width="50%"><b><bean:message
+			key="billing.billingCorrection.formDescription" /></b></th>
+		<th width="3%"><b><bean:message
+			key="billing.billingCorrection.formUnit" /></b></th>
+		<th width="13%" align="right"><b><bean:message
+			key="billing.billingCorrection.formFee" /></b></th>
 		<th><font size="-1">Settle</font></th>
 	</tr>
 	<%//
@@ -489,16 +552,24 @@ if(bFlag) {
 							%>
 
 	<tr>
-		<th width="25%"><input type="hidden" name="xml_service_code<%=rowCount%>" value="<%=serviceCode%>"> 
-		<input type="text"	style="width:100%" name="servicecode<%=rowCount-1%>" value="<%=serviceCode%>"></th>
+		<th width="25%"><input type="hidden"
+			name="xml_service_code<%=rowCount%>" value="<%=serviceCode%>">
+		<input type="text" style="width: 100%"
+			name="servicecode<%=rowCount-1%>" value="<%=serviceCode%>"></th>
 		<td><a href=# onClick="scScriptAttach('servicecode<%=i-1%>')">Search</a></td>
 		<th><font size="-1"><%=serviceDesc%></th>
-		<th><input type="hidden" name="xml_billing_unit<%=rowCount%>" value="<%=billingunit%>"> 
-		<input type="text"	style="width:100%" name="billingunit<%=rowCount-1%>" value="<%=billingunit%>" size="5" maxlength="5"></th>
-		<th align="right"><input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount%>"> 
-		<input type="text" style="width:100%" size="5" maxlength="6" id="billingamount<%=rowCount-1%>"
-			name="billingamount<%=rowCount-1%>" value="<%=billAmount%>" onchange="javascript:validateNum(this)"></th>
-		<td align="center"><input type="checkbox" name="itemStatus<%=rowCount-1%>" id="itemStatus<%=rowCount-1%>" value="S" <%=itemStatus %>></td>
+		<th><input type="hidden" name="xml_billing_unit<%=rowCount%>"
+			value="<%=billingunit%>"> <input type="text"
+			style="width: 100%" name="billingunit<%=rowCount-1%>"
+			value="<%=billingunit%>" size="5" maxlength="5"></th>
+		<th align="right"><input type="hidden"
+			name="xml_billing_amount<%=rowCount%>" value="<%=billAmount%>">
+		<input type="text" style="width: 100%" size="5" maxlength="6"
+			id="billingamount<%=rowCount-1%>" name="billingamount<%=rowCount-1%>"
+			value="<%=billAmount%>" onchange="javascript:validateNum(this)"></th>
+		<td align="center"><input type="checkbox"
+			name="itemStatus<%=rowCount-1%>" id="itemStatus<%=rowCount-1%>"
+			value="S" <%=itemStatus %>></td>
 	</tr>
 	<%//
 						}
@@ -508,12 +579,16 @@ if(bFlag) {
 					rowCount++;
 						%>
 	<tr>
-		<td><input type="text" style="width:100%" name="servicecode<%=rowCount-1%>" value=""></td>
-		<td><a href=# onClick="scScriptAttach('servicecode<%=rowCount-1%>')">Search</a></td>
+		<td><input type="text" style="width: 100%"
+			name="servicecode<%=rowCount-1%>" value=""></td>
+		<td><a href=#
+			onClick="scScriptAttach('servicecode<%=rowCount-1%>')">Search</a></td>
 		<td>&nbsp;</td>
-		<td><input type="text" style="width:100%" name="billingunit<%=rowCount-1%>" value="" size="5" maxlength="5"></td>
-		<td align="right"><input type="text" style="width:100%" name="billingamount<%=rowCount-1%>" id="billingamount<%=rowCount-1%>" value=""
-			size="5" maxlength="5"></td>
+		<td><input type="text" style="width: 100%"
+			name="billingunit<%=rowCount-1%>" value="" size="5" maxlength="5"></td>
+		<td align="right"><input type="text" style="width: 100%"
+			name="billingamount<%=rowCount-1%>" id="billingamount<%=rowCount-1%>"
+			value="" size="5" maxlength="5"></td>
 	</tr>
 
 	<%//}
@@ -522,32 +597,36 @@ if(bFlag) {
 %>
 
 	<tr class="myGreen">
-		<td colspan="4"><b> <bean:message key="billing.billingCorrection.formDiagnosticCode" /></b></td>
+		<td colspan="4"><b> <bean:message
+			key="billing.billingCorrection.formDiagnosticCode" /></b></td>
 		<td colspan="2"><b></b></td>
 	</tr>
 	<tr>
-		<td colspan="4"><input type="hidden" name="xml_diagnostic_code" value="<%=diagCode%>"> <input type="text"
-			style="font-size:80%;" name="xml_diagnostic_detail" value="<%=diagCode%>" size="50"> <input type="hidden"
-			name="xml_dig_search1"> <a href="javascript:ScriptAttach()"><bean:message key="billing.billingCorrection.btnDXSearch" /></a></td>
+		<td colspan="4"><input type="hidden" name="xml_diagnostic_code"
+			value="<%=diagCode%>"> <input type="text"
+			style="font-size: 80%;" name="xml_diagnostic_detail"
+			value="<%=diagCode%>" size="50"> <input type="hidden"
+			name="xml_dig_search1"> <a href="javascript:ScriptAttach()"><bean:message
+			key="billing.billingCorrection.btnDXSearch" /></a></td>
 		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
-		<td colspan="4" align='right'><input type="submit" name="submit" value="Submit&Correct Another"></td>
+		<td colspan="2"><input type="submit" name="submit"
+			value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
+		<td colspan="4" align='right'><input type="submit" name="submit"
+			value="Submit&Correct Another"></td>
 	</tr>
 	<tr>
 		<td colspan="6">Billing Notes:<br>
-			<textarea name="comment" value="" cols=60 rows=4><%=comment %></textarea>
+		<textarea name="comment" value="" cols=60 rows=4><%=comment %></textarea>
 		</td>
 	</tr>
-        <tr>
-		<td>
-		<a href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
+	<tr>
+		<td><a href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
 		</td>
 	</tr>
 </table>
-<%=htmlPaid %>
-</form>
+<%=htmlPaid %></form>
 </body>
 <script type="text/javascript">
 Calendar.setup( { inputField : "xml_appointment_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "xml_appointment_date_cal", singleClick : true, step : 1 } );

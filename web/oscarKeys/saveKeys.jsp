@@ -1,8 +1,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,
+<%@ page
+	import="java.util.*,
 java.io.*,
-oscar.oscarLab.ca.all.util.KeyPairGen" %>
+oscar.oscarLab.ca.all.util.KeyPairGen"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">

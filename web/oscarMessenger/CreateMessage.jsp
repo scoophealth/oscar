@@ -24,22 +24,24 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="org.w3c.dom.*" %>
-<%@ page import="oscar.oscarMessenger.util.Msgxml" %>
-<%@ page import="oscar.oscarDemographic.data.*" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="org.w3c.dom.*"%>
+<%@ page import="oscar.oscarMessenger.util.Msgxml"%>
+<%@ page import="oscar.oscarDemographic.data.*"%>
 
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
@@ -63,115 +65,12 @@ String demographic_no = (String) request.getAttribute("demographic_no");
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarMessenger.CreateMessage.title"/>
+<title><bean:message key="oscarMessenger.CreateMessage.title" />
 </title>
 
-<style type="text/css">
-td.messengerButtonsA{
-    /*background-color: #6666ff;*/
-    /*background-color: #6699cc;*/
-    background-color: #003399;
-}
-td.messengerButtonsD{
-    /*background-color: #84c0f4;*/
-    background-color: #555599;
-}
-a.messengerButtons{
-    color: #ffffff;
-    font-size: 9pt;
-    text-decoration: none;
-}
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-
-</style>
-
-<style type="text/css">
-    BODY
-    {
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        font-size: 10pt;
-        text-decoration: none;
-    }
-
-    SPAN.treeNode
-    {
-        font-size: 10pt;
-        font-weight: bold;
-        cursor: hand;
-    }
-
-    IMG.treeNode
-    {
-        vertical-align: middle;
-    }
-
-    IMG.collapse
-    {
-        cursor: hand;
-        margin-left: 10px;
-    }
-
-
-    TABLE.treeTable
-    {
-        margin-left: 15px;
-    }
-
-    TH.treeTable
-    {
-        font-weight: bold;
-    }
-
-    PRE
-    {
-        font-size: 9pt;
-        font-weight: normal;
-    }
-
-    .content
-    {
-        margin-left: 15px;
-        border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        //padding: 3px;
-        background-color: #F5F5F5;
-        font-size: 9pt;
-    }
-
-    .groupIndent
-    {
-        margin-left: 19px;
-        /*border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        padding: 3px;
-        background-color: #F5F5F5;*/
-        font-size: 9pt;
-    }
-
-    .borderTop
-    {
-        border-top-width: 1px;
-        border-top-color: #A9A9A9;
-        border-top-style: solid;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
 
@@ -405,98 +304,108 @@ function popupAttachDemo(demographic){ // open a new popup window
 
 </head>
 
-<jsp:useBean id="docListBean" scope="session" class="oscar.oscarMessenger.pageUtil.MsgDocListForm" />
+<jsp:useBean id="docListBean" scope="session"
+	class="oscar.oscarMessenger.pageUtil.MsgDocListForm" />
 <% String lastName =null; int i = 0;%>
 
 
 
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarMessenger.CreateMessage.msgMessenger"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            <bean:message key="oscarMessenger.CreateMessage.msgCreate"/>
-                        </td>
-                        <td  >
-                            &nbsp;
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-                <table >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarMessenger.CreateMessage.msgMessenger" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message key="oscarMessenger.CreateMessage.msgCreate" />
+				</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
 
-                    <tr>
-                        <td>
-                            <table cellspacing=3 >
-                                <tr >
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                            <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
-                                             <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
-                                            </html:link>
-                                        </td></tr></table>
-                                    </td>
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                            <html:link page="/oscarMessenger/ClearMessage.do" styleClass="messengerButtons">
-                                             <bean:message key="oscarMessenger.CreateMessage.btnClear"/>
-                                            </html:link>
-                                        </td></tr></table>
-                                    </td>
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
-                                            <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.CreateMessage.btnExit"/></a>
-                                        </td></tr></table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+			<tr>
+				<td>
+				<table cellspacing=3>
+					<tr>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><html:link
+									page="/oscarMessenger/DisplayMessages.jsp"
+									styleClass="messengerButtons">
+									<bean:message key="oscarMessenger.ViewMessage.btnInbox" />
+								</html:link></td>
+							</tr>
+						</table>
+						</td>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><html:link
+									page="/oscarMessenger/ClearMessage.do"
+									styleClass="messengerButtons">
+									<bean:message key="oscarMessenger.CreateMessage.btnClear" />
+								</html:link></td>
+							</tr>
+						</table>
+						</td>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a
+									href="javascript:BackToOscar()" class="messengerButtons"><bean:message
+									key="oscarMessenger.CreateMessage.btnExit" /></a></td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
 
-                    <tr>
-                        <td>
-                            <table>
-                             
-                                                                                                   
-                                <html:form action="/oscarMessenger/CreateMessage" onsubmit="return validatefields()">
-                              
-                                    <tr>
-                                        <th bgcolor="#DDDDFF" width="75">
-                                            <bean:message key="oscarMessenger.CreateMessage.msgRecipients"/>
-                                        </th>
-                                        <th align="left" bgcolor="#DDDDFF">
-                                            <bean:message key="oscarMessenger.CreateMessage.msgMessage"/>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <td bgcolor="#EEEEFF" valign=top>
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <input type="submit" class="ControlPushButton" value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>" >
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <div class="ChooseRecipientsBox">
-                                                <table>
-                                                    <%
+			<tr>
+				<td>
+				<table>
+
+
+					<html:form action="/oscarMessenger/CreateMessage"
+						onsubmit="return validatefields()">
+
+						<tr>
+							<th bgcolor="#DDDDFF" width="75"><bean:message
+								key="oscarMessenger.CreateMessage.msgRecipients" /></th>
+							<th align="left" bgcolor="#DDDDFF"><bean:message
+								key="oscarMessenger.CreateMessage.msgMessage" /></th>
+						</tr>
+						<tr>
+							<td bgcolor="#EEEEFF" valign=top>
+							<table>
+								<tr>
+									<td><input type="submit" class="ControlPushButton"
+										value="<bean:message key="oscarMessenger.CreateMessage.btnSendMessage"/>">
+									</td>
+								</tr>
+							</table>
+							<div class="ChooseRecipientsBox">
+							<table>
+								<%
                                                         if ( request.getAttribute("ReMessage") != null){
                                                             oscar.oscarMessenger.pageUtil.MsgCreateMessageForm thisForm ;
                                                             thisForm = (oscar.oscarMessenger.pageUtil.MsgCreateMessageForm)request.getAttribute("msgCreateMessageForm");
@@ -518,22 +427,22 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                         }
                                                      %>
 
-                                                    <tr>
-                                                        <td> <!--list of the providers cell Start-->
-                                                           <table>
-                                                                <%if (xmlVector.size() > 0){%><!--the remotes-->
-                                                                <tr>
-                                                                    <td>
-                                                                            <span class="treeNode" onclick="javascript:showTbl('tblREMO', event);">
-                                                                                <img class="treeNode" src="img/plusblue.gif" border="0" />
-                                                                                    <bean:message key="oscarMessenger.CreateMessage.msgRemoteLocations"/>
-                                                                            </span>
+								<tr>
+									<td><!--list of the providers cell Start-->
+									<table>
+										<%if (xmlVector.size() > 0){%><!--the remotes-->
+										<tr>
+											<td><span class="treeNode"
+												onclick="javascript:showTbl('tblREMO', event);"> <img
+												class="treeNode" src="img/plusblue.gif" border="0" /> <bean:message
+												key="oscarMessenger.CreateMessage.msgRemoteLocations" /> </span>
 
-                                                                            <table class="treeTable" id="tblREMO" style="display:none" cellspacing=0 cellpadding=3>
-                                                                                <%for (int j = 0; j < xmlVector.size() ; j++){/*this is the remotes*/%>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <%
+											<table class="treeTable" id="tblREMO" style="display: none"
+												cellspacing=0 cellpadding=3>
+												<%for (int j = 0; j < xmlVector.size() ; j++){/*this is the remotes*/%>
+												<tr>
+													<td>
+													<%
                                                                                             String[] tmpPros = new String[] {};
                                                                                             java.util.ArrayList listy = reData.remoList;
                                                                                             if (listy != null){
@@ -556,16 +465,15 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                                                               }
                                                                                             }
                                                                                         %>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <%}%>
-                                                                            </table>
-                                                                    </td>
-                                                                </tr>
-                                                                <%}/*if(xmlVec...*/%>
-                                                                <tr>
-                                                                    <td>  <!-- the locals -->
-                                                                    <%
+													</td>
+												</tr>
+												<%}%>
+											</table>
+											</td>
+										</tr>
+										<%}/*if(xmlVec...*/%>
+										<tr>
+											<td><!-- the locals --> <%
                                                                         Document xmlDoc = Msgxml.parseXML(myAddressBookXmlString);
                                                                         Element myAddressBook = xmlDoc.getDocumentElement();
                                                                         NodeList lst = myAddressBook.getChildNodes();
@@ -575,54 +483,58 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                                            displayNodes(firstnode,out,0,theProviders,CurrentLocationName);
                                                                         }
                                                                     %>
-                                                                   </td>
-                                                                </tr>
-                                                           </table>
-                                                        </td>
-                                                    </tr>
+											</td>
+										</tr>
+									</table>
+									</td>
+								</tr>
 
-                                                </table>
-                                            </div>
-                                        </td><!--list of the providers cell End-->
-                                        <td bgcolor="#EEEEFF" valign=top>   <!--Message and Subject Cell-->
-                                            <bean:message key="oscarMessenger.CreateMessage.formSubject"/> :
-                                                <html:text name="msgCreateMessageForm" property="subject" size="67"/>
-                                                <br><br>
-                                                <html:textarea name="msgCreateMessageForm" property="message" cols="60" rows="18" />
-                                                <%
+							</table>
+							</div>
+							</td>
+							<!--list of the providers cell End-->
+							<td bgcolor="#EEEEFF" valign=top><!--Message and Subject Cell-->
+							<bean:message key="oscarMessenger.CreateMessage.formSubject" /> :
+							<html:text name="msgCreateMessageForm" property="subject"
+								size="67" /> <br>
+							<br>
+							<html:textarea name="msgCreateMessageForm" property="message"
+								cols="60" rows="18" /> <%
                                                 String att = bean.getAttachment();
                                                 String pdfAtt = bean.getPDFAttachment();
                                                 if (att != null || pdfAtt != null){ %>
-                                                    <br><bean:message key="oscarMessenger.CreateMessage.msgAttachments"/>
+							<br>
+							<bean:message key="oscarMessenger.CreateMessage.msgAttachments" />
 
-                                                <% }
+							<% }
 
                                                 %>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td bgcolor="#B8B8FF" ></td>
-                                        <td bgcolor="#B8B8FF" ><font style="font-weight:bold">Link this message to ...</font></td>
-                                    </tr>
+							</td>
+						</tr>
 
-                                    <tr>
-                                        <td bgcolor="#EEEEFF" ></td>             
-                                        <td bgcolor="#EEEEFF" >
-                                            <input type="text" name="keyword" size="30" />
-                                            <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>  
-                                            <input type="button" class="ControlPushButton" name="searchDemo" value="Search Demographic" onclick="popupSearchDemo(document.forms[0].keyword.value)" />
-                                            
+						<tr>
+							<td bgcolor="#B8B8FF"></td>
+							<td bgcolor="#B8B8FF"><font style="font-weight: bold">Link
+							this message to ...</font></td>
+						</tr>
 
-                                        </td>
+						<tr>
+							<td bgcolor="#EEEEFF"></td>
+							<td bgcolor="#EEEEFF"><input type="text" name="keyword"
+								size="30" /> <input type="hidden" name="demographic_no"
+								value="<%=demographic_no%>" /> <input type="button"
+								class="ControlPushButton" name="searchDemo"
+								value="Search Demographic"
+								onclick="popupSearchDemo(document.forms[0].keyword.value)" /></td>
 
-                                    </tr>
-                                    <tr>
-                                        <td bgcolor="#EEEEFF" ></td>
-                                        <td bgcolor="#EEEEFF" ><font style="font-weight:bold">Selected Demographic</font></td>
-                                    </tr>
+						</tr>
+						<tr>
+							<td bgcolor="#EEEEFF"></td>
+							<td bgcolor="#EEEEFF"><font style="font-weight: bold">Selected
+							Demographic</font></td>
+						</tr>
 
-                                   <%
+						<%
 
                                     
                                     DemographicData demoData = new  DemographicData();
@@ -631,46 +543,44 @@ function popupAttachDemo(demographic){ // open a new popup window
                                     if ( demo != null ) {
                                         demoName = demo.getLastName()+", "+demo.getFirstName();
 
-                                    } %> 
-                                    <tr>
-                                        <td bgcolor="#EEEEFF" ></td>             
-                                        <td bgcolor="#EEEEFF" >
-                                            <input type="text" name="selectedDemo" size="20" readonly style="background:#EEEEFF;border:none" value="none"/>
-                                            <script>
+                                    } %>
+						<tr>
+							<td bgcolor="#EEEEFF"></td>
+							<td bgcolor="#EEEEFF"><input type="text"
+								name="selectedDemo" size="20" readonly
+								style="background: #EEEEFF; border: none" value="none" /> <script>
                                                 if ( "<%=demoName%>" != "null" && "<%=demoName%>" != "") {
                                                     document.forms[0].selectedDemo.value = "<%=demoName%>";
                                                     document.forms[0].demographic_no.value = "<%=demographic_no%>";
                                                 }
-                                            </script>
-                                               <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
-                                               <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:" />                                               
-                                        </td>
+                                            </script> <input type="button"
+								class="ControlPushButton" name="clearDemographic"
+								value="Clear selected demographic"
+								onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"' />
+							<input type="button" class="ControlPushButton" name="attachDemo"
+								value="Attach Demographic"
+								onclick="popupAttachDemo(document.forms[0].demographic_no.value)"
+								style="display: " /></td>
 
-                                    </tr> 
-                                    </html:form>                                                                                                                                                                            
-                                </table>                            
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <script language="JavaScript">
+						</tr>
+					</html:form>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td><script language="JavaScript">
                             document.forms[0].message.focus();
-                            </script>
-                        </td>
-                    </tr>
-                    
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+                            </script></td>
+			</tr>
+
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html:html>
 

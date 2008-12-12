@@ -24,18 +24,20 @@
  */
 -->
 
-<%@ page import="java.sql.*" %>
-<%@ page import="java.lang.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.*" %>
-<%@ page import="java.net.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="bean.*" %>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.lang.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.text.*"%>
+<%@ page import="java.net.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="bean.*"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
 
 
 <%
@@ -45,7 +47,7 @@
 
 %>
 
-<%@ include file="admin/dbconnection.jsp" %>  
+<%@ include file="admin/dbconnection.jsp"%>
 
 <HTML>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
@@ -236,7 +238,7 @@ System.out.print("request.getParameter( year )!!!!!==null)");
     response.sendRedirect("AppointmentMonth.jsp?start_date="+start_date+"&end_date="+end_date);
  
  
-%>     
+%>
 
 
 </body>

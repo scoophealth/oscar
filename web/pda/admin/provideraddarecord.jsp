@@ -24,20 +24,24 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html>
-<head><title>add a provider - provideraddarecord</title>
+<head>
+<title>add a provider - provideraddarecord</title>
 <link rel="stylesheet" href="../web.css">
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A PROVIDER RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A PROVIDER RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then congratulations
   //if action is good, then give me the result
@@ -63,17 +67,14 @@
   if (rowsAffected ==1) {
   //System.out.println("********************");}
 %>
-  <h1>Successful Addition of a Provider Record.
-  </h1>
+<h1>Successful Addition of a Provider Record.</h1>
 <%  
   } else {
 %>
-  <h1>Sorry, addition has failed.
-<%  
+<h1>Sorry, addition has failed. <%  
   }
   apptMainBean.closePstmtConn();
-%>
-<%@ include file="footer2.htm" %>
+%> <%@ include file="footer2.htm"%>
 </center>
 </body>
 </html>

@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbReport.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbReport.jsp"%>
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
@@ -43,32 +45,17 @@ String demo_no="", demo_sex="", provider_no="", roster="", patient_status="", st
 String demographic_dob="1800";
 String action = request.getParameter("action");
 String last_name="", first_name="", mygroup="";
-%> 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarReport.manageProvider.title"/> </title>
-<link rel="stylesheet" href="oscarReport.css" >
-<style type="text/css">
-<!--
-.bodytext
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<title><bean:message key="oscarReport.manageProvider.title" /></title>
+<link rel="stylesheet" href="oscarReport.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!--
 
 function selectprovider(s) {
@@ -93,38 +80,39 @@ function refresh() {
 
 
 </head>
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="10">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%">
-      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
-    </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report</font></font></b></font></p>
-    </td> 
-  </tr>
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"><input type='button' name='print'
+			value='<bean:message key="global.btnPrint"/>'
+			onClick='window.print()'></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3">Report</font></font></b></font></p>
+		</td>
+	</tr>
 </table>
 <form name="form1" action="dbManageProvider.jsp" method="post">
 <table width="50%" border="0" cellspacing="0" cellpadding="2">
-  <tr bgcolor="#CCCCFF"> 
-    <td  width="100%" colspan="3" align="center">
-<b><bean:message key="oscarReport.manageProvider.msgManageProvider"/> <%=action.toUpperCase()%></b>
-    </td>
-  </tr>
-  <tr bgcolor="#CCCCFF"> 
-    <td  width="40%">
-    <bean:message key="oscarReport.manageProvider.msgTeam"/>
-    </td>
-    <td width="50%" align="left"> 
-    <bean:message key="oscarReport.manageProvider.msgProviderName"/>
-    </td>
-    <td width="10%" align="left"> 
-        <bean:message key="oscarReport.manageProvider.msgCheck"/>
-    </td>
-  </tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="100%" colspan="3" align="center"><b><bean:message
+			key="oscarReport.manageProvider.msgManageProvider" /> <%=action.toUpperCase()%></b>
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="40%"><bean:message
+			key="oscarReport.manageProvider.msgTeam" /></td>
+		<td width="50%" align="left"><bean:message
+			key="oscarReport.manageProvider.msgProviderName" /></td>
+		<td width="10%" align="left"><bean:message
+			key="oscarReport.manageProvider.msgCheck" /></td>
+	</tr>
 
-<% 
+	<% 
 
     ResultSet rsdemo = null;
   boolean bodd=true;	
@@ -158,14 +146,18 @@ function refresh() {
 		 	             
 %>
 
-  <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>"> 
-    <td  width="40%">
-<%=rsdemo2.getString("mygroup_no")%>    </td>
-    <td width="50%" align="left"> 
-<%=rsdemo2.getString("last_name")%>, <%=rsdemo2.getString("first_name")%></tr><td width="10%" align="left"> <input type="checkbox" name="provider<%=count1%>" value="<%=rsdemo2.getString("provider_no")%>|<%=rsdemo2.getString("mygroup_no")%>" <%=status.equals("A")?"checked":""%>>    </td>
-  </tr>
+	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<td width="40%"><%=rsdemo2.getString("mygroup_no")%></td>
+		<td width="50%" align="left"><%=rsdemo2.getString("last_name")%>,
+		<%=rsdemo2.getString("first_name")%>
+	</tr>
+	<td width="10%" align="left"><input type="checkbox"
+		name="provider<%=count1%>"
+		value="<%=rsdemo2.getString("provider_no")%>|<%=rsdemo2.getString("mygroup_no")%>"
+		<%=status.equals("A")?"checked":""%>></td>
+	</tr>
 
-<%
+	<%
 count1 = count1 + 1;
 
 		 	          }
@@ -175,11 +167,14 @@ count1 = count1 + 1;
 }
  	    
 %>
-<tr>
-<td colspan=3>
-<input type="hidden" name="submit" value="Submit">
-<input type=submit value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
-<input type=hidden name=action value=<%=action%>>
-<input type=hidden name=count value=<%=count1%>>
-</td></tr></table>
-</form></body></html:html> 
+	<tr>
+		<td colspan=3><input type="hidden" name="submit" value="Submit">
+		<input type=submit
+			value=<bean:message key="oscarReport.manageProvider.btnSubmit"/>>
+		<input type=hidden name=action value=<%=action%>> <input
+			type=hidden name=count value=<%=count1%>></td>
+	</tr>
+</table>
+</form>
+</body>
+</html:html>

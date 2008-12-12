@@ -22,40 +22,31 @@
 */
  -->
 
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 <td colspan="2">
 <table border="1" width="100%">
-<tr>
-	<td colspan="2">
-		<c:if test="${section.bold eq 'true'}">
+	<tr>
+		<td colspan="2"><c:if test="${section.bold eq 'true'}">
 			<b>
-		</c:if>
-		<c:if test="${section.underline eq 'true'}">
+		</c:if> <c:if test="${section.underline eq 'true'}">
 			<u>
-		</c:if>
-		<c:if test="${section.italics eq 'true'}">
+		</c:if> <c:if test="${section.italics eq 'true'}">
 			<i>
-		</c:if>
-		
-		<c:out value="${section.description}"/>
-		
-		<c:if test="${section.bold eq 'true'}">
+		</c:if> <c:out value="${section.description}" /> <c:if
+			test="${section.bold eq 'true'}">
 			</b>
-		</c:if>
-		<c:if test="${section.underline eq 'true'}">
+		</c:if> <c:if test="${section.underline eq 'true'}">
 			</u>
-		</c:if>
-		<c:if test="${section.italics eq 'true'}">
+		</c:if> <c:if test="${section.italics eq 'true'}">
 			</i>
-		</c:if>		
-	</td>
-</tr>
-		<c:forEach var="question" items="${section.questionArray}">
-			<tr>
-				<c:set var="question" value="${question}" scope="request"/>
-				<c:set var="sectionId" value="${section.id}" scope="request"/>
-				<jsp:include page="questionPrintPreview.jsp"/>
-			</tr>
-		</c:forEach>
+		</c:if></td>
+	</tr>
+	<c:forEach var="question" items="${section.questionArray}">
+		<tr>
+			<c:set var="question" value="${question}" scope="request" />
+			<c:set var="sectionId" value="${section.id}" scope="request" />
+			<jsp:include page="questionPrintPreview.jsp" />
+		</tr>
+	</c:forEach>
 </table>
 </td>

@@ -1,3 +1,4 @@
+
 <% 
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
@@ -28,10 +29,11 @@
  * Ontario, Canada 
  */
 -->
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"  %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <% String search = "search_service_price";      
    String formName = request.getParameter("formName");
    String formElementCode = request.getParameter("formElementCode");
@@ -55,27 +57,32 @@ function CodeAttach(cost) {
 }
 </script>
 </head>
-<body bgcolor="#FFFFFF" text="#000000"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000">Service Code Search </font><font face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3 selections)</font></th>
-  </tr>
-</table> 
-<table width="800" border="1">     
-  <%
+<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"
+			color="#000000">Service Code Search </font><font
+			face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3
+		selections)</font></th>
+	</tr>
+</table>
+<table width="800" border="1">
+	<%
    ResultSet rslocal = apptMainBean.queryResults(param, search);
    if(rslocal.next()){      
-      String cost  = rslocal.getString("value"); %>      
-      <script LANGUAGE="JavaScript">
+      String cost  = rslocal.getString("value"); %>
+	<script LANGUAGE="JavaScript">
        <!--
           CodeAttach('<%=cost%>'); 
        -->
-      </script>            
- <%}else{%>    
-  <tr bgcolor="#ffffff"> 
-    <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2">No match found. </font></td>    
-  </tr>
- <%}%>    
+      </script>
+	<%}else{%>
+	<tr bgcolor="#ffffff">
+		<td colspan="2"><font face="Arial, Helvetica, sans-serif"
+			size="2">No match found. </font></td>
+	</tr>
+	<%}%>
 </table>
 </body>
 </html>

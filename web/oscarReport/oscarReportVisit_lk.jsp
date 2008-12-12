@@ -89,39 +89,52 @@ oTotal = apptMainBean.getString(rs,"n");
    BigTotal = BigTotal.add(ooTotal);
    %>
 <p></p>
-<table width="60%" border="0" cellspacing="0" cellpadding="2" align="center">
-  <tr bgcolor="#CCCCFF"> 
-    <td colspan="2"><font size="2" face="Arial, Helvetica, sans-serif"><b>Encounter Statistics - Larry Kain Report</b></font></td>
-  </tr>
-  <tr bgcolor="#F1E9FE"> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif"><%=clinic%></font></td>
-    <td><font size="2" face="Arial, Helvetica, sans-serif">Run on  <%=MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay)%></font></td>
-  </tr>
-  <tr bgcolor="#F1E9FE"> 
-    <td colspan="2"><font size="2" face="Arial, Helvetica, sans-serif">Visits between <%=dateBegin%> and <%=dateEnd%></font></td>
-  </tr>
-    <tr> 
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-  </tr>
-  <tr> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif">Clinic visits</font></td>
-    <td align="right"><font size="2" face="Arial, Helvetica, sans-serif"><%=cTotal%></font></td>
-  </tr>
-  <tr> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif">HHS visits</font></td>
-    <td align="right"><font size="2" face="Arial, Helvetica, sans-serif"><%=hTotal%></font></td>
-  </tr>
-  <tr> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif">All other visits</font></td>
-    <td align="right"><font size="2" face="Arial, Helvetica, sans-serif"><%=oTotal%></font></td>
-  </tr>
-  <tr> 
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr bgcolor="#CCCCFF"> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif"><b>Total</b></font></td>
-    <td align="right"><font size="2" face="Arial, Helvetica, sans-serif"><b><%=BigTotal%><b></font></td>
-  </tr>
+<table width="60%" border="0" cellspacing="0" cellpadding="2"
+	align="center">
+	<tr bgcolor="#CCCCFF">
+		<td colspan="2"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b>Encounter
+		Statistics - Larry Kain Report</b></font></td>
+	</tr>
+	<tr bgcolor="#F1E9FE">
+		<td><font size="2" face="Arial, Helvetica, sans-serif"><%=clinic%></font></td>
+		<td><font size="2" face="Arial, Helvetica, sans-serif">Run
+		on <%=MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay)%></font></td>
+	</tr>
+	<tr bgcolor="#F1E9FE">
+		<td colspan="2"><font size="2"
+			face="Arial, Helvetica, sans-serif">Visits between <%=dateBegin%>
+		and <%=dateEnd%></font></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td><font size="2" face="Arial, Helvetica, sans-serif">Clinic
+		visits</font></td>
+		<td align="right"><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=cTotal%></font></td>
+	</tr>
+	<tr>
+		<td><font size="2" face="Arial, Helvetica, sans-serif">HHS
+		visits</font></td>
+		<td align="right"><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=hTotal%></font></td>
+	</tr>
+	<tr>
+		<td><font size="2" face="Arial, Helvetica, sans-serif">All
+		other visits</font></td>
+		<td align="right"><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=oTotal%></font></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td><font size="2" face="Arial, Helvetica, sans-serif"><b>Total</b></font></td>
+		<td align="right"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b><%=BigTotal%><b></font></td>
+	</tr>
 </table>

@@ -1,3 +1,4 @@
+
 <%/*
 
     spellcheck-configuration.jsp - This file can contain the configuration

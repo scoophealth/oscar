@@ -1,7 +1,7 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
 
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -36,17 +36,18 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="SelectPharmacy.title"/></title>
-<html:base/>
+<title><bean:message key="SelectPharmacy.title" /></title>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 
 <%
@@ -54,100 +55,107 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 %>
 
-<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient"/>
+<bean:define id="patient"
+	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-  <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-  <tr>
-      <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                  <tr>
-            	    <td width="0%" valign="top">
-            	    <div class="DivCCBreadCrumbs">
-                        <a href="SearchDrug.jsp">
-                        <bean:message key="SearchDrug.title"/></a>                                                
-                    </div>
-                    </td>
-            	  </tr>
-            <!----Start new rows here-->
-                  <tr>
-                    <td>
- 		                 <div class="DivContentTitle">                           
- 		                         <b><bean:message key="SearchDrug.nameText"/></b>
-                                <jsp:getProperty name="patient" property="surname"/>,
-                                <jsp:getProperty name="patient" property="firstName"/>                                 		                 
- 		                 </div> 		       		  
-                       <br/>
- 		                 &nbsp; <bean:message key="SelectPharmacy.instructions"/>
-                    </td>                                                                          
-		            </tr>
-                  <tr>
-                    <td>
-                      <div class="DivContentSectionHead"><a href="ManagePharmacy.jsp?type=Add"><bean:message key="SelectPharmacy.addLink"/></a></div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <% RxPharmacyData pharmacy = new RxPharmacyData(); 
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<%@ include file="SideLinksNoEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
+					key="SearchDrug.title" /></a></div>
+				</td>
+			</tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle"><b><bean:message
+					key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient"
+					property="surname" />, <jsp:getProperty name="patient"
+					property="firstName" /></div>
+				<br />
+				&nbsp; <bean:message key="SelectPharmacy.instructions" /></td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><a
+					href="ManagePharmacy.jsp?type=Add"><bean:message
+					key="SelectPharmacy.addLink" /></a></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<% RxPharmacyData pharmacy = new RxPharmacyData(); 
                          ArrayList pharList = pharmacy.getAllPharmacies();
                        %>
-                        <table>
-                               <tr>
-                                  <td><bean:message key="SelectPharmacy.table.pharmacyName"/></td>
-                                  <td><bean:message key="SelectPharmacy.table.address"/></td>
-                                  <td><bean:message key="SelectPharmacy.table.city"/></td>
-                                  <td><bean:message key="SelectPharmacy.table.phone"/></td>
-                                  <td><bean:message key="SelectPharmacy.table.fax"/></td>
-                                  <td>&nbsp;</td>
-                               </tr>
-                           <% for (int i = 0 ; i < pharList.size(); i++){ 
+				<table>
+					<tr>
+						<td><bean:message key="SelectPharmacy.table.pharmacyName" /></td>
+						<td><bean:message key="SelectPharmacy.table.address" /></td>
+						<td><bean:message key="SelectPharmacy.table.city" /></td>
+						<td><bean:message key="SelectPharmacy.table.phone" /></td>
+						<td><bean:message key="SelectPharmacy.table.fax" /></td>
+						<td>&nbsp;</td>
+					</tr>
+					<% for (int i = 0 ; i < pharList.size(); i++){ 
                                RxPharmacyData.Pharmacy ph = (RxPharmacyData.Pharmacy) pharList.get(i);
                             %>
-                               <tr>
-                                   <td><a href="LinkPharmacy.do?ID=<%=ph.ID%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.name%></a></td>
-                                   <td><%=ph.address%></td>                                   
-                                   <td><%=ph.city%></td>                                   
-                                   <td><%=ph.phone1%></td>                                   
-                                   <td><%=ph.fax%></td>                                   
-                                   <td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.ID%>"><bean:message key="SelectPharmacy.editLink"/></a></td>
-                               </tr>
-                           <% } %>
-                        </table>
-                    </td>
-                  </tr>
-                  
-                  <tr>
-                    <td>
-                        
-                      <%
+					<tr>
+						<td><a
+							href="LinkPharmacy.do?ID=<%=ph.ID%>&DemoId=<jsp:getProperty name="patient" property="demographicNo"/>"><%=ph.name%></a></td>
+						<td><%=ph.address%></td>
+						<td><%=ph.city%></td>
+						<td><%=ph.phone1%></td>
+						<td><%=ph.fax%></td>
+						<td><a href="ManagePharmacy.jsp?type=Edit&ID=<%=ph.ID%>"><bean:message
+							key="SelectPharmacy.editLink" /></a></td>
+					</tr>
+					<% } %>
+				</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+				<%
                         String sBack="SearchDrug.jsp";
-                      %>
-                      <input type=button class="ControlPushButton" onclick="javascript:window.location.href='<%=sBack%>';" value="Back to Search Drug"/>
-                    </td>
-                  </tr>
-            <!----End new rows here-->
-		  <tr height="100%">
-                    <td>
-                    </td>
-                  </tr>
-                </table>
-        </td>
-     </tr>
-     <tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+                      %> <input type=button class="ControlPushButton"
+					onclick="javascript:window.location.href='<%=sBack%>';"
+					value="Back to Search Drug" /></td>
+			</tr>
+			<!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 
 

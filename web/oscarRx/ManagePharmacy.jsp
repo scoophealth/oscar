@@ -1,8 +1,9 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="oscar.oscarRx.pageUtil.*,oscar.oscarRx.data.*,java.util.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="oscar.oscarRx.pageUtil.*,oscar.oscarRx.data.*,java.util.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--  
@@ -35,17 +36,18 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="ManagePharmacy.title"/></title>
-<html:base/>
+<title><bean:message key="ManagePharmacy.title" /></title>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 
 <%
@@ -57,41 +59,42 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-  <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-  <tr>
-      <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                  <tr>
-            	    <td width="0%" valign="top">
-            	    <div class="DivCCBreadCrumbs">
-                        <a href="SearchDrug.jsp">
-                        <bean:message key="SearchDrug.title"/></a>                                                
-                    </div>
-                    </td>
-            	  </tr>
-            <!----Start new rows here-->
-                  <tr>
-                    <td>
- 		      <div class="DivContentTitle"><bean:message key="ManagePharmacy.title"/>  </div>
-                    </td>
-		  </tr>
-                  <tr>
-                    <td>
-                      <div class="DivContentSectionHead">
-                         <% if (request.getParameter("ID") ==  null){ %>
-                         <bean:message key="ManagePharmacy.subTitle.add"/>
-                         <%}else{%>
-                         <bean:message key="ManagePharmacy.subTitle.update"/>
-                         <%}%>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <html:form action="/oscarRx/managePharmacy">
-                         <% 
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<%@ include file="SideLinksNoEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
+					key="SearchDrug.title" /></a></div>
+				</td>
+			</tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle"><bean:message
+					key="ManagePharmacy.title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead">
+				<% if (request.getParameter("ID") ==  null){ %> <bean:message
+					key="ManagePharmacy.subTitle.add" /> <%}else{%> <bean:message
+					key="ManagePharmacy.subTitle.update" /> <%}%>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td><html:form action="/oscarRx/managePharmacy">
+					<% 
                             if (request.getParameter("ID") != null){ 
                                RxManagePharmacyForm frm = (RxManagePharmacyForm) request.getAttribute("RxManagePharmacyForm");
                                String ID = (String) request.getParameter("ID");
@@ -109,119 +112,100 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                frm.setPostalCode(ph.postalCode);
                                frm.setProvince(ph.province);                               
                             }%>
-                         <table>
-                            <tr>
-                               <td>
-                                  <html:hidden property="pharmacyAction" value="<%=request.getParameter("type")%>"/>
-                                  <html:hidden property="ID"/>
-                                  <bean:message key="ManagePharmacy.txtfld.label.pharmacyName"/> :
-                               </td>
-                               <td>
-                                  <html:text property="name"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.address"/> : 
-                               </td>
-                               <td> <html:text property="address"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.city"/> : 
-                               </td>
-                               <td><html:text property="city"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.province"/> : 
-                               </td>
-                               <td><html:text property="province"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.postalCode"/> : 
-                               </td>
-                               <td><html:text property="postalCode"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.phone1"/> : 
-                               </td>
-                               <td><html:text property="phone1"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.phone2"/> : </td>
-                               <td><html:text property="phone2"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.fax"/> : </td>
-                               <td><html:text property="fax"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td>
-                                  <bean:message key="ManagePharmacy.txtfld.label.email"/> : </td>
-                               <td><html:text property="email"/>
-                               </td>
-                            </tr>
-                            <tr>
-                               <td colspan="2">
-                                  <bean:message key="ManagePharmacy.txtfld.label.notes"/> : 
-                               </td>
-                            </tr>                            
-                            <tr>
-                               <td>&nbsp;</td>
-                               <td >
-                                  <html:textarea property="notes"/>
-                               </td>
-                            </tr>
-                            
-                            <tr>
-                               <td>
-                               <input type="submit" value="<bean:message key="ManagePharmacy.submitBtn.label.submit"/>"/>
-                               </td>
-                            </tr>
-                         </table>
-                      </html:form>                      
-                    </td>
-                  </tr>
-                  
-                  <tr>
-                    <td>
-                        
-                      <%
+					<table>
+						<tr>
+							<td><html:hidden property="pharmacyAction"
+								value="<%=request.getParameter("type")%>" /> <html:hidden
+								property="ID" /> <bean:message
+								key="ManagePharmacy.txtfld.label.pharmacyName" /> :</td>
+							<td><html:text property="name" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.address" />
+							:</td>
+							<td><html:text property="address" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.city" />
+							:</td>
+							<td><html:text property="city" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.province" />
+							:</td>
+							<td><html:text property="province" /></td>
+						</tr>
+						<tr>
+							<td><bean:message
+								key="ManagePharmacy.txtfld.label.postalCode" /> :</td>
+							<td><html:text property="postalCode" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.phone1" />
+							:</td>
+							<td><html:text property="phone1" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.phone2" />
+							:</td>
+							<td><html:text property="phone2" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.fax" /> :
+							</td>
+							<td><html:text property="fax" /></td>
+						</tr>
+						<tr>
+							<td><bean:message key="ManagePharmacy.txtfld.label.email" />
+							:</td>
+							<td><html:text property="email" /></td>
+						</tr>
+						<tr>
+							<td colspan="2"><bean:message
+								key="ManagePharmacy.txtfld.label.notes" /> :</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><html:textarea property="notes" /></td>
+						</tr>
+
+						<tr>
+							<td><input type="submit"
+								value="<bean:message key="ManagePharmacy.submitBtn.label.submit"/>" />
+							</td>
+						</tr>
+					</table>
+				</html:form></td>
+			</tr>
+
+			<tr>
+				<td>
+				<%
                         String sBack="SearchDrug.jsp";
-                      %>
-                      <input type=button class="ControlPushButton" onclick="javascript:window.location.href='<%=sBack%>';" value="Back to Search Drug"/>
-                    </td>
-                  </tr>
-            <!----End new rows here-->
-		  <tr height="100%">
-                    <td>
-                    </td>
-                  </tr>
-                </table>
-        </td>
-     </tr>
-     <tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-     </tr>
-     <tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+                      %> <input type=button class="ControlPushButton"
+					onclick="javascript:window.location.href='<%=sBack%>';"
+					value="Back to Search Drug" /></td>
+			</tr>
+			<!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 
 </body>

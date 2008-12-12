@@ -33,7 +33,8 @@
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@page import="java.util.*, oscar.oscarDemographic.data.*"%>
-<%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.oscarClinic.*"%>
+<%@page
+	import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.oscarClinic.*"%>
 <%
   double totalPayments = 0;
   double totalRefunds = 0;
@@ -68,79 +69,54 @@
 %>
 <html:html>
 <head>
-<title>
-  <bean:message key="billing.bc.title"/>
-</title>
-  <style type="text/css" media="print">
-
-  BODY
-{
-    background-color: white;
-    color: black;
-    width:600px;
-    font-size:7pt;
-    margin-top: 0px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px
+<title><bean:message key="billing.bc.title" /></title>
+<style type="text/css" media="print">
+BODY {
+	background-color: white;
+	color: black;
+	width: 600px;
+	font-size: 7pt;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px
 }
 
-    .detailHeader {
-    font-weight: bold;
-    text-decoration: underline;
-    text-align: center;
-    }
+.detailHeader {
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: center;
+}
 
-    .header {
-    display:none;
-    }
-    .header INPUT {
-    display:none;
-    }
+.header {
+	display: none;
+}
 
-    .header A {
-    display:none;
-    }
+.header INPUT {
+	display: none;
+}
 
-    input {
-    border:none;
-    }
-     select {
-    border:none;
-    }
-    .totals_cell {
-    text-align: right;
-    }
+.header A {
+	display: none;
+}
 
-    .rcvPayment{
-    display:none
-    }
+input {
+	border: none;
+}
 
+select {
+	border: none;
+}
 
-  </style>
-  <style type="text/css">
-    .detailHeader {
-    font-weight: bold;
-    text-decoration: underline;
-    text-align: center;
-    }
-	.payTo{border:solid black 1px;
-	}
-    .secHead {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    color: #000000;
-    background-color: #FFFFFF;
-    border-top: thin none #000000;
-    border-right: thin none #000000;
-    border-bottom: thin solid #000000;
-    border-left: thin none #000000;
-    }
-    <!--
-      A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:12px;}
-    -->
-  </style>
+.totals_cell {
+	text-align: right;
+}
+
+.rcvPayment {
+	display: none
+}
+</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
 <!--
 
@@ -197,210 +173,196 @@ function scriptAttach(elementName) {
 
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css">
-  <style type="text/css">
-    <!--
-      .style1 {
-      font-size: 18px;
-      font-weight: bold;
-      }
-      .style2 {font-size: 12px}
-	  .tbBody{
-	  width:750;
-	  }
-    -->
-  </style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0">
-  <html:form action="/billing/CA/BC/UpdateBilling">
-    <html:hidden property="billingNo"/>
-    <table width="650" border="0" align="center" style="border:black solid 1px ">
-      <tr>
-        <td>
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td valign="top" height="221">
-                <table width="100%">
-                  <tr valign="top">
-                    <td width="59%">
-                      <table width="100%" border="0" name="innerTable">
-                        <tr valign="top">
-                          <td colspan="2" class="title4">
-                            <table width="100%" border="0">
-                              <tr>
-                                <td class="secHead" align="left">
-                                  <h2>                                    INVOICE -
-<%=bean.getBillingNo()%>                                  </h2>
-                                </td>
-                              <%
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
+	topmargin="10" marginwidth="0" marginheight="0">
+<html:form action="/billing/CA/BC/UpdateBilling">
+	<html:hidden property="billingNo" />
+	<table width="650" border="0" align="center"
+		style="border: black solid 1px">
+		<tr>
+			<td>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td valign="top" height="221">
+					<table width="100%">
+						<tr valign="top">
+							<td width="59%">
+							<table width="100%" border="0" name="innerTable">
+								<tr valign="top">
+									<td colspan="2" class="title4">
+									<table width="100%" border="0">
+										<tr>
+											<td class="secHead" align="left">
+											<h2>INVOICE - <%=bean.getBillingNo()%></h2>
+											</td>
+											<%
                                 java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("MMM d, yyyy 'at' h:mm aaa");
                                 String fmtDate = fmt.format(new java.util.Date());
                               %>
-                                <td class="secHead" align="right">                                  Date:
-<%=fmtDate%>                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2" class="title4">
-                            <div align="left" class="style1"><%=clinic.getClinicName()%>                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2" class="address"><%=clinic.getClinicAddress()%>                            ,
-<%=clinic.getClinicCity()%>                            ,
-<%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%>                          </td>
-                        </tr>
-                        <tr>
-                          <td class="address" id="clinicPhone">                            Telephone:
-<%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>                          </td>
-                          <td class="address" id="clinicFax">&nbsp;</td>
-                        </tr>
-                        <tr>
-                          <td class="address" id="clinicFax">                            Fax:
-<%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>                          </td>
-                          <td class="address" id="clinicFax">&nbsp;</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-                <table width="100%" border="0">
-                  <tr>
-                    <td valign="top">
-                      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-                        <tr>
-                          <td colspan="6" class="secHead">Billing To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>] </td>
-                        </tr>
-                        <tr>
-                          <td colspan="6">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<td class="secHead" align="right">Date: <%=fmtDate%></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" class="title4">
+									<div align="left" class="style1"><%=clinic.getClinicName()%>
+									</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" class="address"><%=clinic.getClinicAddress()%>
+									, <%=clinic.getClinicCity()%> , <%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%>
+									</td>
+								</tr>
+								<tr>
+									<td class="address" id="clinicPhone">Telephone: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>
+									</td>
+									<td class="address" id="clinicFax">&nbsp;</td>
+								</tr>
+								<tr>
+									<td class="address" id="clinicFax">Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
+									</td>
+									<td class="address" id="clinicFax">&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0">
+						<tr>
+							<td valign="top">
+							<table width="100%" border="0" cellspacing="2" cellpadding="2">
+								<tr>
+									<td colspan="6" class="secHead">Billing To [<a href=#
+										onclick="scriptAttach('billto'); return false;">Search</a>]</td>
+								</tr>
+								<tr>
+									<td colspan="6">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 
-                              <tr>
-                                <td>
-                                  <strong>Name:</strong>                                </td>
-                                <td>
-                                  <html:text styleClass="billTo" maxlength="100" property="recipientName" size="50"/>                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>Address:</strong>                                </td>
-                                <td>
-                                  <html:text styleClass="billTo" maxlength="100" property="recipientAddress" size="50"/>                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>City:</strong>                                </td>
-                                <td>
-                                  <html:text styleClass="billTo" maxlength="100" property="recipientCity" size="50"/>                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>Province:</strong>                                </td>
-                                <td>
-                                  <html:text styleClass="billTo" maxlength="100" property="recipientProvince" size="50"/>                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <strong>Postal:</strong>                                </td>
-                                <td>
-                                  <html:text styleClass="billTo" maxlength="6" property="recipientPostal" size="50"/>                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td width="50%" valign="top">
-                      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-                        <tr>
-                          <td colspan="2" valign="top" class="secHead">                            Patient (
-<%=bean.getPatientPHN()%>                            )
-</td>
-                        </tr>
-                        <tr>
-                          <td height="64" colspan="2" valign="top">
-                            <p>
-                              <strong>Name:</strong>
-<%=bean.getPatientLastName()%>                              ,
-<%=bean.getPatientFirstName()%>                              &nbsp;
-                              <br>
-                              <strong>Address:</strong>
-                              <br>
-<%=demo.getAddress()%>                              <br>
-<%=demo.getCity()%>                              ,
-<%=demo.getProvince()%>                              <br>
-<%=demo.getPostal()%>                              <br>
-                              <strong>Gender:</strong>
-<%=demo.getSex()%>                              <br>
-                              <strong>Birth Date :</strong>
-<%=demo.getDob("-")%>                            </p>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-                <table width="100%" border="0">
-                  <tr>
-                    <td class="secHead">Bill  Details</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <table width="100%" border="0">
-                        <tr class="detailHeader">
-                          <td>Date</td>
-                          <td>Practitioner</td>
-                          <td>Payee</td>
-                          <td>Ref. Doctor 1:</td>
-                          <td>Ref. Type 1:</td>
-                          <td>Ref. Doctor 2:</td>
-                          <td>Ref. Type 2:</td>
-                        </tr>
-                        <tr align="center">
-                          <td><%=bean.getServiceDate()%>                          </td>
-                          <td><%=billform.getProviderName(bean.getApptProviderNo())%>                          </td>
-                          <td><%=billform.getProviderName(bean.getBillingProvider())%>                          </td>
-                          <td><%=bean.getReferral1()%>                          </td>
-                          <td><%=bean.getReferType1()%>                          </td>
-                          <td><%=bean.getReferral2()%>                          </td>
-                          <td><%=bean.getReferType2()%>                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
-                  <tr>
-                    <td valign="top">
-                      <table width="100%" border="0" cellspacing="1" cellpadding="1">
-                        <tr class="detailHeader">
-                          <td class="rcvPayment">&nbsp;</td>
-                          <td>Line#</td>
-                          <td>
-                            <bean:message key="billing.service.desc"/>                          </td>
-                          <td>Service Code</td>
-                          <td>QTY</td>
-                          <td>DX Codes</td>
-                          <td>Amount</td>
-                        </tr>
-                      <%for (int i = 0; i < billItem.size(); i++) {                      %>
-                        <tr align="center">
-                          <td class="rcvPayment"><a href="#" onClick="popupPage(300,450,'viewReceivePaymentAction.do?lineNo=<%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>&amp;billNo=<%=bean.getBillingNo()%> ')">Receive Payment</a></td>
-                          <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>                          </td>
-                          <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%>                          </td>
-                          <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%>                          </td>
-                          <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%>                          </td>
-                          <td align="right"><%=bean.getDx1()%>                            &nbsp;
-<%=bean.getDx2()%>                            &nbsp;
-<%=bean.getDx3()%>                          </td>
-<%
+										<tr>
+											<td><strong>Name:</strong></td>
+											<td><html:text styleClass="billTo" maxlength="100"
+												property="recipientName" size="50" /></td>
+										</tr>
+										<tr>
+											<td><strong>Address:</strong></td>
+											<td><html:text styleClass="billTo" maxlength="100"
+												property="recipientAddress" size="50" /></td>
+										</tr>
+										<tr>
+											<td><strong>City:</strong></td>
+											<td><html:text styleClass="billTo" maxlength="100"
+												property="recipientCity" size="50" /></td>
+										</tr>
+										<tr>
+											<td><strong>Province:</strong></td>
+											<td><html:text styleClass="billTo" maxlength="100"
+												property="recipientProvince" size="50" /></td>
+										</tr>
+										<tr>
+											<td><strong>Postal:</strong></td>
+											<td><html:text styleClass="billTo" maxlength="6"
+												property="recipientPostal" size="50" /></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							</td>
+							<td width="50%" valign="top">
+							<table width="100%" border="0" cellspacing="2" cellpadding="2">
+								<tr>
+									<td colspan="2" valign="top" class="secHead">Patient ( <%=bean.getPatientPHN()%>
+									)</td>
+								</tr>
+								<tr>
+									<td height="64" colspan="2" valign="top">
+									<p><strong>Name:</strong> <%=bean.getPatientLastName()%> ,
+									<%=bean.getPatientFirstName()%> &nbsp; <br>
+									<strong>Address:</strong> <br>
+									<%=demo.getAddress()%> <br>
+									<%=demo.getCity()%> , <%=demo.getProvince()%> <br>
+									<%=demo.getPostal()%> <br>
+									<strong>Gender:</strong> <%=demo.getSex()%> <br>
+									<strong>Birth Date :</strong> <%=demo.getDob("-")%></p>
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0">
+						<tr>
+							<td class="secHead">Bill Details</td>
+						</tr>
+						<tr>
+							<td>
+							<table width="100%" border="0">
+								<tr class="detailHeader">
+									<td>Date</td>
+									<td>Practitioner</td>
+									<td>Payee</td>
+									<td>Ref. Doctor 1:</td>
+									<td>Ref. Type 1:</td>
+									<td>Ref. Doctor 2:</td>
+									<td>Ref. Type 2:</td>
+								</tr>
+								<tr align="center">
+									<td><%=bean.getServiceDate()%></td>
+									<td><%=billform.getProviderName(bean.getApptProviderNo())%>
+									</td>
+									<td><%=billform.getProviderName(bean.getBillingProvider())%>
+									</td>
+									<td><%=bean.getReferral1()%></td>
+									<td><%=bean.getReferType1()%></td>
+									<td><%=bean.getReferral2()%></td>
+									<td><%=bean.getReferType2()%></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0"
+						height="137">
+						<tr>
+							<td valign="top">
+							<table width="100%" border="0" cellspacing="1" cellpadding="1">
+								<tr class="detailHeader">
+									<td class="rcvPayment">&nbsp;</td>
+									<td>Line#</td>
+									<td><bean:message key="billing.service.desc" /></td>
+									<td>Service Code</td>
+									<td>QTY</td>
+									<td>DX Codes</td>
+									<td>Amount</td>
+								</tr>
+								<%for (int i = 0; i < billItem.size(); i++) {                      %>
+								<tr align="center">
+									<td class="rcvPayment"><a href="#"
+										onClick="popupPage(300,450,'viewReceivePaymentAction.do?lineNo=<%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>&amp;billNo=<%=bean.getBillingNo()%> ')">Receive
+									Payment</a></td>
+									<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>
+									</td>
+									<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%>
+									</td>
+									<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%>
+									</td>
+									<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%>
+									</td>
+									<td align="right"><%=bean.getDx1()%> &nbsp; <%=bean.getDx2()%>
+									&nbsp; <%=bean.getDx3()%></td>
+									<%
 double lnTotal = ((BillingBillingManager.BillingItem)billItem.get(i)).getPrice();
 System.out.println(lnTotal);
  %>
-                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(lnTotal).replace('$',' ')%>                         </td>
-                        </tr>
-						   <%
+									<td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(lnTotal).replace('$',' ')%>
+									</td>
+								</tr>
+								<%
 						   	  String num = String.valueOf(((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo());
                               List trans = dao.getBillHistory(num);
 							  System.out.print(trans.size());
@@ -421,117 +383,129 @@ System.out.println(lnTotal);
                                   totalPayments += amtReceived;
                                 }
                             %>
-                              <tr align="center">
-							  	 <td colspan="3">&nbsp;</td>
-                                <td><%=label%>(<%=item.getPaymentTypeDesc()%>)</td>
-								 <td colspan="2"><%=item.getArchiveDate()%></td>
+								<tr align="center">
+									<td colspan="3">&nbsp;</td>
+									<td><%=label%>(<%=item.getPaymentTypeDesc()%>)</td>
+									<td colspan="2"><%=item.getArchiveDate()%></td>
 
-                                <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
-                              </tr>
-                            <%}}}%>
-                      <%}                      %>
-                        <tr>
-                          <td colspan="7">&nbsp;</td>
-                        </tr>
+									<td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
+								</tr>
+								<%}}}%>
+								<%}                      %>
+								<tr>
+									<td colspan="7">&nbsp;</td>
+								</tr>
 
-                        <tr>
-                          <td colspan="7" class="secHead">
-                            <table align="right" width="50%" cellpadding="1" cellspacing="1">
-                            </table>                          </td>
-                        </tr>
-                        <tr valign="top">
-                          <td colspan="5" rowspan="5"><table class="payTo" width="100%" border="0">
-                            <tr>
-                              <td align="right" colspan="2"></td>
-                            </tr>
-                            <tr class="secHead">
-                              <td height="14" colspan="2">Please Make Cheque Payable To: </td>
-                            </tr>
-                            <tr>
-                             <td class="title4">
-                             Dr. <%=bean.getDefaultPayeeFirstName() + " " + bean.getDefaultPayeeLastName() %>
-                            </td>
-                            </tr>
-                             <tr>
-                             <td class="title4">
-                              <%=clinic.getClinicName()%>
-                            </td>
-                            </tr>
-                            <tr>
-                              <td class="address"><%=clinic.getClinicAddress()%> , <%=clinic.getClinicCity()%> , <%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%> </td>
-                            </tr>
-                            <tr>
-                              <td class="address" id="clinicPhone"> Telephone: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%> </td>
-                            </tr>
-                            <tr>
-                              <td class="address" id="clinicFax"> Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%> </td>
-                            </tr>
-                          </table></td>
-                          <td align="right">Total:</td>
-                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(bean.calculateSubtotal()).replace('$',' ')%>                          </td>
-                        </tr>
-                        <tr>
-                          <td align="right">Payments:</td>
-                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalPayments).replace('$',' ')%>                          </td>
-                        </tr>
-                        <tr>
-                          <td align="right">Refunds:</td>
-                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalRefunds).replace('$',' ')%>                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div align="right" class="style2">
-                              <strong>Balance</strong>
-                              :</div>                          </td>
-                        <%double gtotal = bean.calculateSubtotal() - totalPayments - totalRefunds;                        %>
-                          <td align="right">
-                            <strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$',' ')%>                            </strong>                          </td>
-                        </tr>
-                        <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                        </tr>
-                      </table>
-                      <table width="100%" border="0" cellspacing="1" cellpadding="1">
-                        <tr>
-                          <td width="17%" class="header">Billing Notes:</td>
-                        </tr>
-                        <tr>
-                          <td rowspan="2">
-                            <html:textarea cols="60" styleClass="header" rows="5" property="messageNotes"></html:textarea>
-                          </td>
-                        </tr>
+								<tr>
+									<td colspan="7" class="secHead">
+									<table align="right" width="50%" cellpadding="1"
+										cellspacing="1">
+									</table>
+									</td>
+								</tr>
+								<tr valign="top">
+									<td colspan="5" rowspan="5">
+									<table class="payTo" width="100%" border="0">
+										<tr>
+											<td align="right" colspan="2"></td>
+										</tr>
+										<tr class="secHead">
+											<td height="14" colspan="2">Please Make Cheque Payable
+											To:</td>
+										</tr>
+										<tr>
+											<td class="title4">Dr. <%=bean.getDefaultPayeeFirstName() + " " + bean.getDefaultPayeeLastName() %>
+											</td>
+										</tr>
+										<tr>
+											<td class="title4"><%=clinic.getClinicName()%></td>
+										</tr>
+										<tr>
+											<td class="address"><%=clinic.getClinicAddress()%> , <%=clinic.getClinicCity()%>
+											, <%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%>
+											</td>
+										</tr>
+										<tr>
+											<td class="address" id="clinicPhone">Telephone: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%>
+											</td>
+										</tr>
+										<tr>
+											<td class="address" id="clinicFax">Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
+											</td>
+										</tr>
+									</table>
+									</td>
+									<td align="right">Total:</td>
+									<td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(bean.calculateSubtotal()).replace('$',' ')%>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">Payments:</td>
+									<td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalPayments).replace('$',' ')%>
+									</td>
+								</tr>
+								<tr>
+									<td align="right">Refunds:</td>
+									<td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalRefunds).replace('$',' ')%>
+									</td>
+								</tr>
+								<tr>
+									<td>
+									<div align="right" class="style2"><strong>Balance</strong>
+									:</div>
+									</td>
+									<%double gtotal = bean.calculateSubtotal() - totalPayments - totalRefunds;                        %>
+									<td align="right"><strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$',' ')%>
+									</strong></td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							<table width="100%" border="0" cellspacing="1" cellpadding="1">
+								<tr>
+									<td width="17%" class="header">Billing Notes:</td>
+								</tr>
+								<tr>
+									<td rowspan="2"><html:textarea cols="60"
+										styleClass="header" rows="5" property="messageNotes"></html:textarea>
+									</td>
+								</tr>
 
-                      </table>
+							</table>
 
-                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td align="right">    <table width="100%" border="0">
-                        <tr>
-                          <td align="right" colspan="2">                          </td>
-                        </tr>
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td align="right">
+									<table width="100%" border="0">
+										<tr>
+											<td align="right" colspan="2"></td>
+										</tr>
 
-                        <tr>
-                          <td colspan="2" align="left" valign="bottom">
-                            <html:submit styleClass="header" value="Update Invoice" property=""/>
-                            <html:button styleClass="header" value="Print" property="Submit" onclick="javascript:printInvoice()"/>
-                            <html:button styleClass="header" value="Cancel" property="Submit2" onclick="javascript:window.close()"/>
-&nbsp;                          </td>
-                        </tr>
-                      </table>                         </td>
-					  </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
+										<tr>
+											<td colspan="2" align="left" valign="bottom"><html:submit
+												styleClass="header" value="Update Invoice" property="" /> <html:button
+												styleClass="header" value="Print" property="Submit"
+												onclick="javascript:printInvoice()" /> <html:button
+												styleClass="header" value="Cancel" property="Submit2"
+												onclick="javascript:window.close()" /> &nbsp;</td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
 
 
-        </td>
-      </tr>
-    </table>
-  </html:form>
+			</td>
+		</tr>
+	</table>
+</html:form>
 </body>
 </html:html>

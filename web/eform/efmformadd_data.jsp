@@ -23,9 +23,9 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page import = "oscar.util.*, oscar.eform.data.*"%>
+<%@ page import="oscar.util.*, oscar.eform.data.*"%>
 <%@ page import="java.util.*"%>
-<%@taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
   if (request.getAttribute("page_errors") != null) {
 %>
@@ -44,12 +44,9 @@ function hideDiv() {
     }
 }
 </script>
-<div id="hideshow" style="position: relative; z-index:999;">
-<a href="javascript:hideDiv()">Hide Errors</a>
-<font style="font-size: 10; font-color: darkred;">
-<html:errors/>
-</font>
-</div>
+<div id="hideshow" style="position: relative; z-index: 999;"><a
+	href="javascript:hideDiv()">Hide Errors</a> <font
+	style="font-size: 10; font-color: darkred;"> <html:errors /> </font></div>
 <% } %>
 
 <%

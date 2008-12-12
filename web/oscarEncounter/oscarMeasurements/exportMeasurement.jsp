@@ -1,3 +1,4 @@
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
@@ -28,7 +29,9 @@
 -->
 <%@page contentType="text/xml"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.data.*"%><%
+<%@page
+	import="oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.data.*"%>
+<%
    String mstring = request.getParameter("mType");
    String export ="<ERROR>";
    if (mstring != null){

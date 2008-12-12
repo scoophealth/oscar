@@ -24,48 +24,19 @@
  */
 -->
 
-<%@ page language="java" %>
+<%@ page language="java"%>
 
-<%@ page import="java.util.*, org.w3c.dom.*, oscar.util.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="java.util.*, org.w3c.dom.*, oscar.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.immunization.config.immunizationSetDisplay.title"/>
+<title><bean:message
+	key="oscarEncounter.immunization.config.immunizationSetDisplay.title" />
 </title>
-<style type="text/css">
-
-.ellipsis
-{
-    height:15px;
-    width:15px;
-    text-align:right;
-    valign:middle;
-}
-
-TD
-{
-    height:30px;
-    width:90px;
-}
-
-TD.head
-{
-    background-color: #b3cefd;
-    font-weight:bold;
-    height:30px;
-    width:90px;
-}
-
-TD.grey
-{
-    background-color: #CCCCCC;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
     function edit(nodeName)
@@ -149,15 +120,19 @@ String setNamed = set.getAttribute("name");
 
 int i = 0;
 %>
-<h1><bean:message key="oscarEncounter.immunization.config.immunizationSetDisplay.msgSet"/>: <%=setNamed%></h1>
-<table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>" style="margin-bottom:10px">
-    <%
+<h1><bean:message
+	key="oscarEncounter.immunization.config.immunizationSetDisplay.msgSet" />:
+<%=setNamed%></h1>
+<table cellpadding=2 cellspacing=0 border="2px" rules="all"
+	id="tblSet<%=i%>" style="margin-bottom: 10px">
+	<%
     int colCount = -1;
 
 if(set.getAttribute("headers").equalsIgnoreCase("true"))
     {
         %><tr>
-        <td class="head">&nbsp;</td><%
+		<td class="head">&nbsp;</td>
+		<%
 
         Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
         NodeList columns = columnList.getElementsByTagName("column");
@@ -166,13 +141,15 @@ if(set.getAttribute("headers").equalsIgnoreCase("true"))
         for(int j=0; j<columns.getLength(); j++){
             Element column = (Element)columns.item(j);
 
-            %><td class="head"><%= column.getAttribute("name") %>&nbsp;</td><%
+            %><td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
+		<%
 
             colCount = j+2;
         }
 
         %><td class="head">Comments</td>
-        </tr><%
+	</tr>
+	<%
     }
 
     Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
@@ -187,9 +164,15 @@ if(set.getAttribute("headers").equalsIgnoreCase("true"))
         //System.out.println("sName = "+sName);
         if(sName.length()<1){
             String s = "tdSet" + i + "_Row" + j + "_name";
-            %><tr><td class="head" id="<%=s%>"><%=genText(s)%></td><%
+            %><tr>
+		<td class="head" id="<%=s%>"><%=genText(s)%></td>
+		<%
         }else{
-            %><tr><td class="head"><%= sName %></td><%
+            %>
+	
+	<tr>
+		<td class="head"><%= sName %></td>
+		<%
         }
 
         if(colCount>0){
@@ -200,13 +183,16 @@ if(set.getAttribute("headers").equalsIgnoreCase("true"))
                     if (cell != null){
                         if (String.valueOf(k).equals(cell.getAttribute("index") ) ){
                             String s = "tdSet" + i + "_Row" + j + "_Col" + k;
-                            %><td id="<%=s%>"><%= genCell(s, cell)%></td><%
+                            %><td id="<%=s%>"><%= genCell(s, cell)%></td>
+		<%
                             n++;
                         }else{
-                            %><td class="grey">&nbsp;</td><%
+                            %><td class="grey">&nbsp;</td>
+		<%
                         }
                     }else{
-                            %><td class="grey">&nbsp;</td><%
+                            %><td class="grey">&nbsp;</td>
+		<%
                     }
                 //System.out.println("i get here");
             }
@@ -219,30 +205,33 @@ if(set.getAttribute("headers").equalsIgnoreCase("true"))
                 Element cell = (Element)cells.item(k);
                 if(cell.getAttribute("index").equals(String.valueOf(k+1))){
                     String s = "tdSet" + i + "_Row" + j + "_Col" + (k+1);
-                    %><td id="<%=s%>"><%= genCell(s, cell)%></td><%
+                    %><td id="<%=s%>"><%= genCell(s, cell)%></td>
+		<%
                 }
                 else{
-                    %><td class="grey">&nbsp;</td><%
+                    %><td class="grey">&nbsp;</td>
+		<%
                 }
             }
         }
 
         String s = "tdSet" + i + "_Row" + j + "_comments";
 
-        %><td id="<%=s%>"><%= genText(s)%></td><%
+        %><td id="<%=s%>"><%= genText(s)%></td>
+		<%
 
 
-        %></tr><%
+        %>
+	</tr>
+	<%
     }
 
     %>
-    </table>
-    <%
+</table>
+<%
 
 
-%>
-
-<%!
+%> <%!
 String genText(String id)
 {
     String s = "<span style='width:100%'>";
@@ -299,10 +288,7 @@ String genCell(String id, Element cell)
 
 
 
-%>
-
-
-<%/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/%>
+%> <%/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/%>
 </form>
 
 </body>

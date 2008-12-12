@@ -1,9 +1,10 @@
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "Caregiver";
@@ -53,111 +54,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Caregiver Questionnaire</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;            
-        }
-
-        .checkbox{       
-            height: 22px;
-            width: 22px;    
-            background-color: #FFFFFF;
-        }
-        
-        .checkboxError{
-            height: 22px;
-            width: 22px;     
-            background-color: red;
-        }
-
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-            height:15pt;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: left;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            text-align: center;             
-        }
-        .question{
-            text-align: left;
-            vertical-align: top;
-        }
-        .answer{            
-            vertical-align: center;
-            background-color: white;
-        }
-        .answerYN{ 
-            text-align: center;
-            vertical-align: center;
-            background-color: white;
-        }
-
-    </style>
+<title>Caregiver Questionnaire</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -237,7 +136,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -247,484 +147,397 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="710px">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" >
- <tr>
-      <th class="subject">Caregiver Questionnaire</th>
- </tr>
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="660px" width="740px" id="page1">    
-    <tr>        
-        <td  valign="top" colspan="2">
-            <table width="740px" height="630px" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title" >
-                    <th colspan="4">Caregiver Demographic Questions:</th>
-                </tr>
-                <tr>                                    
-                <tr class="question">
-                    <th class="question" width="4%">
-                        1. 
-                    </th>
-                    <th class="question">
-                        Sex
-                    </th>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="sexM" <%= props.getProperty("sexM", "") %>/> M
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="sexF" <%= props.getProperty("sexF", "") %>/> F
-                    </td>
-                </tr>
-                
-                <tr class="question">
-                    <th class="question" width="4%">
-                        2. 
-                    </th>
-                    <th class="question">
-                        Date of Birth: (yyyy/mm/dd)
-                    </th>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="text" name="dobYear" size="5" value="<%= props.getProperty("dobYear", "") %>"/>/
-                        <input type="text" name="dobMonth" size="5" value="<%= props.getProperty("dobMonth", "") %>"/>/
-                        <input type="text" name="dobDay" size="5" value="<%= props.getProperty("dobDay", "") %>"/>
-                    </td>
-                </tr>
-                
-                <tr class="question">
-                    <th class="question" width="4%">
-                        3. 
-                    </th>
-                    <th class="question">
-                        What is your relationship to the patient?
-                    </th>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="spouseY" <%= props.getProperty("spouseY", "") %>/>
-                        Spouse
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="childY" <%= props.getProperty("childY", "") %>/>
-                        Child
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="grandchildY" <%= props.getProperty("grandchildY", "") %>/>
-                        Grandchild
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="siblingY" <%= props.getProperty("siblingY", "") %>/>
-                        Sibling
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="friendY" <%= props.getProperty("friendY", "") %>/>
-                        Friend
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="otherY" <%= props.getProperty("otherY", "") %>/>
-                        Other, please specify: <input type="text" name="otherRelation" value="<%=props.getProperty("otherRelation", "")%>"/>
-                    </td>
-                </tr>
-                <tr class="question">
-                    <th class="question" width="4%">
-                        4. 
-                    </th>
-                    <th class="question">
-                        Do you reside with the patient?
-                    </th>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="resideY" <%= props.getProperty("resideY", "") %>/> 
-                        Yes
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="resideN" <%= props.getProperty("resideN", "") %>/> 
-                        No
-                    </td>
-                </tr>            
-                <tr class="question">
-                    <th class="question">
-                        5. 
-                    </th>
-                    <th class="question">
-                        In general, would you say your health is: (check one)
-                    </th>
-                    <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="healthEx" <%= props.getProperty("healthEx", "") %>/>
-                        Excellent
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="healthVG" <%= props.getProperty("healthVG", "") %>/>
-                        Very Good
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="healthG" <%= props.getProperty("healthG", "") %>/>
-                        Good
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="healthF" <%= props.getProperty("healthF", "") %>/>
-                        Fair
-                    </td>
-                </tr>
-                <tr class="answer"> 
-                    <td></td>
-                    <td class="answer">
-                        <input type="checkbox"  class="checkbox" name="healthP" <%= props.getProperty("healthP", "") %>/>
-                        Poor
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">            
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage2();">Next Page >></a>
-        </td>
-    </tr>
-</table>
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" height="660px" width="740px" id="page2">    
-    <tr>        
-        <td  valign="top" colspan="2">
-            <table width="740px" height="630px" border="0"  cellspacing="1" cellpadding="0" >
-                <tr class="title" >
-                    <th colspan="4">Caregiver Strain Index:</th>
-                </tr>
-                <tr>                    
-                    <th colspan="2" class="question">
-                    Below is a list of things that other people have found to be difficult. <br>
-                    Would you please check of any that apply to you?
-                    </th>
-                    <th>
-                        Yes (1)
-                    </th>
-                    <th>
-                        No (0)
-                    </th>                    
-                </tr>
-                <tr>
-                    <td class="question" width="2%">
-                        1. 
-                    </td>
-                    <td class="question" width="80%">
-                        Sleep is disturbed (e.g., because _____ is in and out of bed or wanders around at night)
-                    </td>
-                    <td class="answerYN"  width="9%">
-                        <input type="checkbox"  onchange="javascript: calScore();" class="checkbox" name="Q1Y" <%= props.getProperty("Q1Y", "") %>/>
-                    </td>
-                    <td class="answerYN"  width="9%">
-                        <input type="checkbox"  class="checkbox" name="Q1N" <%= props.getProperty("Q1N", "") %>/>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td class="question">
-                        2. 
-                    </td>
-                    <td class="question">
-                        It is inconvenient (e.g., because helping takes so much time or it's a long drive over to help)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q2Y" <%= props.getProperty("Q2Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q2N" <%= props.getProperty("Q2N", "") %>/>
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td class="question">
-                        3. 
-                    </td>
-                    <td class="question">
-                        It is a physical strain (e.g. because of lifting in and out of a chair; effort or concentration is required)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q3Y" <%= props.getProperty("Q3Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q3N" <%= props.getProperty("Q3N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        4. 
-                    </td>
-                    <td class="question">
-                        It is confining (e.g., helping restricts free time or canno go visiting)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q4Y" <%= props.getProperty("Q4Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q4N" <%= props.getProperty("Q4N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        5. 
-                    </td>
-                    <td class="question">
-                        There have been family adjustments (e.g., because helping has disrupted routine; there has been
-                        no privacy)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q5Y" <%= props.getProperty("Q5Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q5N" <%= props.getProperty("Q5N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        6. 
-                    </td>
-                    <td class="question">
-                        There have been changes in personal plans (e.g. had to turn down a job; could not go on vacation)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q6Y" <%= props.getProperty("Q6Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q6N" <%= props.getProperty("Q6N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        7. 
-                    </td>
-                    <td class="question">
-                        There have been other demands on my time (e.g., from other family members)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q7Y" <%= props.getProperty("Q7Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q7N" <%= props.getProperty("Q7N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        8. 
-                    </td>
-                    <td class="question">
-                        There have been emotional adjustments (e.g., because of severe arguments)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q8Y" <%= props.getProperty("Q8Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q8N" <%= props.getProperty("Q8N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        9. 
-                    </td>
-                    <td class="question">
-                        Some behaviour is upsetting (e.g., because of incontinence; _____
-                        has trouble remmebering things; or _____ accuses people of taking things
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q9Y" <%= props.getProperty("Q9Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q9N" <%= props.getProperty("Q9N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        10. 
-                    </td>
-                    <td class="question">
-                        It is upsetting to find _____ has changed so much from his/her former self 
-                        (e.g., he/she is a different person than he/she used to be)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q10Y" <%= props.getProperty("Q10Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q10N" <%= props.getProperty("Q10N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        11. 
-                    </td>
-                    <td class="question">
-                        There have been work adjustments (e.g., because of having to take time off)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q11Y" <%= props.getProperty("Q11Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q11N" <%= props.getProperty("Q11N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        12. 
-                    </td>
-                    <td class="question">
-                        It is a financial strain
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q12Y" <%= props.getProperty("Q12Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q12N" <%= props.getProperty("Q12N", "") %>/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td class="question">
-                        13. 
-                    </td>
-                    <td class="question">
-                        Feeling completely overwhelmed (e.g., because of worry about _____;
-                        concerns about how you will manage)
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox" onchange="javascript: calScore();"  class="checkbox" name="Q13Y" <%= props.getProperty("Q13Y", "") %>/>
-                    </td>
-                    <td class="answerYN">
-                        <input type="checkbox"  class="checkbox" name="Q13N" <%= props.getProperty("Q13N", "") %>/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="question" colspan="2">
-                    <font style="font-weight: bold">TOTAL SCORE</font> (Count yes responses. Any positive answer may indicate a need for intervention in that area. 
-                    A score of 7 or higher indicates a high level of stress.)
-                    </td>
-                    <td class="answerYN" colspan="2">
-                        <input type="text" name="score1" size="10" value="<%= props.getProperty("score1", "") %>"/>
-                    </td>
-            </table>
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage1();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage3();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="710px">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px">
+				<tr>
+					<th class="subject">Caregiver Questionnaire</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="660px"
+				width="740px" id="page1">
+				<tr>
+					<td valign="top" colspan="2">
+					<table width="740px" height="630px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="4">Caregiver Demographic Questions:</th>
+						</tr>
+						<tr>
+						<tr class="question">
+							<th class="question" width="4%">1.</th>
+							<th class="question">Sex</th>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="sexM" <%= props.getProperty("sexM", "") %> /> M</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="sexF" <%= props.getProperty("sexF", "") %> /> F</td>
+						</tr>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="660px" id="page3" >    
-    <tr> 
-        <td  valign="top" colspan='2'>
-            <table width="740px" height="40%" border="0"  cellspacing="0" cellpadding="0" >
-                <tr class="title" >
-                    <th valign="top" colspan="8">Self-rate burden (SRB)</th>
-                </tr> 
-                <tr>                    
-                    <td align="left">
-                    On the scale below '0' means that you feel that caring for or accompanying _____
-                    at the moment is not hard at all; '100' means that you feel that caring for or accompanying 
-                    _____ at the moment is much too hard. Please indicate with an 'X' one the scale 
-                    <i> how burdensome you feel caring for or accompanying your
-                    family member/friend is at the moment.</i>
-                    </td>                    
-                </tr>
-                <tr class="answer" align="center">
-                    <td>
-                        <img src="graphics/caregiver/SRB.jpg" border="0"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="answer">
-                        SRB Score <input type="text" name="SRBScore" value="<%= props.getProperty("SRBScore", "")%>"/>
-                    </td>
-                </tr>
-            </table>                      
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage2();"><< Previous Page</a>
-        </td> 
-        <td align="right">            
-        </td>
-    </tr>
-</table>
-</td></tr>
-<tr><td valign="top">
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+						<tr class="question">
+							<th class="question" width="4%">2.</th>
+							<th class="question">Date of Birth: (yyyy/mm/dd)</th>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="text" name="dobYear"
+								size="5" value="<%= props.getProperty("dobYear", "") %>" />/ <input
+								type="text" name="dobMonth" size="5"
+								value="<%= props.getProperty("dobMonth", "") %>" />/ <input
+								type="text" name="dobDay" size="5"
+								value="<%= props.getProperty("dobDay", "") %>" /></td>
+						</tr>
+
+						<tr class="question">
+							<th class="question" width="4%">3.</th>
+							<th class="question">What is your relationship to the
+							patient?</th>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="spouseY" <%= props.getProperty("spouseY", "") %> /> Spouse
+							</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="childY" <%= props.getProperty("childY", "") %> /> Child</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="grandchildY" <%= props.getProperty("grandchildY", "") %> />
+							Grandchild</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="siblingY" <%= props.getProperty("siblingY", "") %> />
+							Sibling</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="friendY" <%= props.getProperty("friendY", "") %> /> Friend
+							</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="otherY" <%= props.getProperty("otherY", "") %> /> Other,
+							please specify: <input type="text" name="otherRelation"
+								value="<%=props.getProperty("otherRelation", "")%>" /></td>
+						</tr>
+						<tr class="question">
+							<th class="question" width="4%">4.</th>
+							<th class="question">Do you reside with the patient?</th>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="resideY" <%= props.getProperty("resideY", "") %> /> Yes</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="resideN" <%= props.getProperty("resideN", "") %> /> No</td>
+						</tr>
+						<tr class="question">
+							<th class="question">5.</th>
+							<th class="question">In general, would you say your health
+							is: (check one)</th>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="healthEx" <%= props.getProperty("healthEx", "") %> />
+							Excellent</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="healthVG" <%= props.getProperty("healthVG", "") %> /> Very
+							Good</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="healthG" <%= props.getProperty("healthG", "") %> /> Good</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="healthF" <%= props.getProperty("healthF", "") %> /> Fair</td>
+						</tr>
+						<tr class="answer">
+							<td></td>
+							<td class="answer"><input type="checkbox" class="checkbox"
+								name="healthP" <%= props.getProperty("healthP", "") %> /> Poor</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"></td>
+					<td align="right"><a href="javascript: goToPage2();">Next
+					Page >></a></td>
+				</tr>
+			</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" height="660px" width="740px" id="page2">
+				<tr>
+					<td valign="top" colspan="2">
+					<table width="740px" height="630px" border="0" cellspacing="1"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="4">Caregiver Strain Index:</th>
+						</tr>
+						<tr>
+							<th colspan="2" class="question">Below is a list of things
+							that other people have found to be difficult. <br>
+							Would you please check of any that apply to you?</th>
+							<th>Yes (1)</th>
+							<th>No (0)</th>
+						</tr>
+						<tr>
+							<td class="question" width="2%">1.</td>
+							<td class="question" width="80%">Sleep is disturbed (e.g.,
+							because _____ is in and out of bed or wanders around at night)</td>
+							<td class="answerYN" width="9%"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q1Y"
+								<%= props.getProperty("Q1Y", "") %> /></td>
+							<td class="answerYN" width="9%"><input type="checkbox"
+								class="checkbox" name="Q1N" <%= props.getProperty("Q1N", "") %> />
+							</td>
+						</tr>
+
+						<tr>
+							<td class="question">2.</td>
+							<td class="question">It is inconvenient (e.g., because
+							helping takes so much time or it's a long drive over to help)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q2Y"
+								<%= props.getProperty("Q2Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q2N" <%= props.getProperty("Q2N", "") %> /></td>
+						</tr>
+
+						<tr>
+							<td class="question">3.</td>
+							<td class="question">It is a physical strain (e.g. because
+							of lifting in and out of a chair; effort or concentration is
+							required)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q3Y"
+								<%= props.getProperty("Q3Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q3N" <%= props.getProperty("Q3N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">4.</td>
+							<td class="question">It is confining (e.g., helping
+							restricts free time or canno go visiting)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q4Y"
+								<%= props.getProperty("Q4Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q4N" <%= props.getProperty("Q4N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">5.</td>
+							<td class="question">There have been family adjustments
+							(e.g., because helping has disrupted routine; there has been no
+							privacy)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q5Y"
+								<%= props.getProperty("Q5Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q5N" <%= props.getProperty("Q5N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">6.</td>
+							<td class="question">There have been changes in personal
+							plans (e.g. had to turn down a job; could not go on vacation)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q6Y"
+								<%= props.getProperty("Q6Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q6N" <%= props.getProperty("Q6N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">7.</td>
+							<td class="question">There have been other demands on my
+							time (e.g., from other family members)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q7Y"
+								<%= props.getProperty("Q7Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q7N" <%= props.getProperty("Q7N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">8.</td>
+							<td class="question">There have been emotional adjustments
+							(e.g., because of severe arguments)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q8Y"
+								<%= props.getProperty("Q8Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q8N" <%= props.getProperty("Q8N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">9.</td>
+							<td class="question">Some behaviour is upsetting (e.g.,
+							because of incontinence; _____ has trouble remmebering things; or
+							_____ accuses people of taking things</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q9Y"
+								<%= props.getProperty("Q9Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q9N" <%= props.getProperty("Q9N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">10.</td>
+							<td class="question">It is upsetting to find _____ has
+							changed so much from his/her former self (e.g., he/she is a
+							different person than he/she used to be)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q10Y"
+								<%= props.getProperty("Q10Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q10N" <%= props.getProperty("Q10N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">11.</td>
+							<td class="question">There have been work adjustments (e.g.,
+							because of having to take time off)</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q11Y"
+								<%= props.getProperty("Q11Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q11N" <%= props.getProperty("Q11N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">12.</td>
+							<td class="question">It is a financial strain</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q12Y"
+								<%= props.getProperty("Q12Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q12N" <%= props.getProperty("Q12N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question">13.</td>
+							<td class="question">Feeling completely overwhelmed (e.g.,
+							because of worry about _____; concerns about how you will manage)
+							</td>
+							<td class="answerYN"><input type="checkbox"
+								onchange="javascript: calScore();" class="checkbox" name="Q13Y"
+								<%= props.getProperty("Q13Y", "") %> /></td>
+							<td class="answerYN"><input type="checkbox" class="checkbox"
+								name="Q13N" <%= props.getProperty("Q13N", "") %> /></td>
+						</tr>
+						<tr>
+							<td class="question" colspan="2"><font
+								style="font-weight: bold">TOTAL SCORE</font> (Count yes
+							responses. Any positive answer may indicate a need for
+							intervention in that area. A score of 7 or higher indicates a
+							high level of stress.)</td>
+							<td class="answerYN" colspan="2"><input type="text"
+								name="score1" size="10"
+								value="<%= props.getProperty("score1", "") %>" /></td>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage1();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage3();">Next
+					Page >></a></td>
+				</tr>
+			</table>
+
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="660px" id="page3">
+				<tr>
+					<td valign="top" colspan='2'>
+					<table width="740px" height="40%" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th valign="top" colspan="8">Self-rate burden (SRB)</th>
+						</tr>
+						<tr>
+							<td align="left">On the scale below '0' means that you feel
+							that caring for or accompanying _____ at the moment is not hard
+							at all; '100' means that you feel that caring for or accompanying
+							_____ at the moment is much too hard. Please indicate with an 'X'
+							one the scale <i> how burdensome you feel caring for or
+							accompanying your family member/friend is at the moment.</i></td>
+						</tr>
+						<tr class="answer" align="center">
+							<td><img src="graphics/caregiver/SRB.jpg" border="0" /></td>
+						</tr>
+						<tr>
+							<td class="answer">SRB Score <input type="text"
+								name="SRBScore" value="<%= props.getProperty("SRBScore", "")%>" />
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage2();"><<
+					Previous Page</a></td>
+					<td align="right"></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript: return onSave();" /> <input type="submit"
+						value="Save and Exit"
+						onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

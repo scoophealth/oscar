@@ -1,5 +1,6 @@
-  <%@ page errorPage="errorpage.jsp"import="java.util.*" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+
+<%@ page errorPage="errorpage.jsp" import="java.util.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 	int nS = 1;
 	int nE = 10;
@@ -57,8 +58,8 @@
 <html>
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-    <title>CDC US Growth Charts</title>
-	<script  type="text/javascript" language="JavaScript">
+<title>CDC US Growth Charts</title>
+<script type="text/javascript" language="JavaScript">
     function go() {
 		if (document.all){
 		<% if(cfgGraphic.length>1) {%>
@@ -80,8 +81,8 @@
 	}
 	</script>
 </head>
-<body  onload='window.setTimeout("go()",1000);' >
-<form id="growth" name="growth" action="../form/createpdf"  method="post">
+<body onload='window.setTimeout("go()",1000);'>
+<form id="growth" name="growth" action="../form/createpdf" method="post">
 <%
 	Properties prop = new Properties();
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -92,7 +93,8 @@
 			continue;
 		}
 %>
-	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
+<input type="hidden" name="<%= temp %>"
+	value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
 <%
 }
 %>
@@ -122,12 +124,13 @@
 	for (Enumeration e = prop.propertyNames() ; e.hasMoreElements() ;) {
 		String temp = e.nextElement().toString();
 %>
-	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(prop.getProperty(temp, ""))%>" />
+<input type="hidden" name="<%= temp %>"
+	value="<%=StringEscapeUtils.escapeHtml(prop.getProperty(temp, ""))%>" />
 <%
 }
 %>
-                <!--input type="submit" value="Save" onclick="go()" style="width: 120px;"/-->
-                One second ......
-    </form>
+<!--input type="submit" value="Save" onclick="go()" style="width: 120px;"/-->
+One second ......
+</form>
 </body>
 </html>

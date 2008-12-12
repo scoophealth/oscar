@@ -1,15 +1,19 @@
- <%
+
+<%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.htm");
 String curUser_no = (String) session.getAttribute("user");
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*" errorPage="../errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*"
+	errorPage="../errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <!--
 /*
  * 
@@ -39,10 +43,13 @@ String userlastname = (String) session.getAttribute("userlastname");
 <head>
 <title>Billing Summary</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
-<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
+<script type="text/javascript"
+	src="../../../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../../../share/javascript/nifty.js"></script>
-<link rel="stylesheet" type="text/css" href="../../../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css" href="../../../share/css/niftyPrint.css" media="print"/>
+<link rel="stylesheet" type="text/css"
+	href="../../../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../../share/css/niftyPrint.css" media="print" />
 
 <script type="text/javascript">
 window.onload=function(){
@@ -53,82 +60,9 @@ Rounded("div.dxBox","bottom","transparent","#EEEEFF","small border #CCCCFF");
 }
 </script>
 
-<style type="text/css">
-<!--
-A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family: Arial, Verdana, Helvetica;  }
--->
-</style>  
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-<style type="text/css">
-div.wrapper{
-  background-color: #eeeeff;
-  margin-top:0px;
-  padding-top:0px;
-  margin-bottom:0px;
-  padding-bottom:0px;	
-}
-
-div.wrapper br{
-  clear: left;
-}
-
-div.wrapper ul{
-  width: 80%;
-  background-color: #eeeeff;
-  list-style:none;
-  list-style-type:none; 
-  list-style-position:outside;       
-  padding-left:1px;
-  margin-left:1px;    
-  margin-top:0px;
-  padding-top:1px;
-  margin-bottom:0px;
-  padding-bottom:0px;	
-}
-
-div.wrapper ul li{
-  background-color: #eeeeff;
-}
-
-div.dxBox{
-   width:90%;
-   background-color: #eeeeff;
-   margin-top: 2px;
-   margin-left:3px;
-   margin-right:3px;   
-   margin-bottom:0px;
-   padding-bottom:0px;
-   float: left;
-}
-
-div.dxBox h3 {  
-   background-color: #ccccff; 
-   /*font-size: 1.25em;*/
-   font-size: 10pt;
-   font-variant:small-caps;
-   font-weight: bold;
-   margin-top:0px;
-   padding-top:0px;
-   margin-bottom:0px;
-   padding-bottom:0px;
-}
-
-
-div.dxBox form { 
-  margin-top:0px;
-  padding-top:0px;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
-
-div.dxBox input {
-  margin-top:0px;
-  padding-top:0px;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="JavaScript">
 <!--
@@ -141,7 +75,7 @@ function validate_form(){
 //-->
 </SCRIPT>
 </head>
-           
+
 <% 
 String errorMsg="", errorFlag = "";
 String warningMsg="";
@@ -351,24 +285,27 @@ if (visittype.substring(0,2).compareTo("00") == 0) {
 %>
 
 <body bgcolor="#FFFFFF" text="#000000">
-<form name="form1" method="post" action="billingSave.jsp" onsubmit="return(validate_form());">
+<form name="form1" method="post" action="billingSave.jsp"
+	onsubmit="return(validate_form());">
 <table width="100%" border="0">
-<tr> 
-  <td><b>Generic Billing Form for General Practice</b></td>
-</tr><tr bgcolor="#CCCCFF">
-  <td><b><u>Billing Summary</u></b></td>
-</tr>
+	<tr>
+		<td><b>Generic Billing Form for General Practice</b></td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td><b><u>Billing Summary</u></b></td>
+	</tr>
 </table>
-  
+
 <table width="80%" border="0" cellspacing="2" cellpadding="1">
-<tr bgcolor="#EEEEFF"> 
-	<td width="54%">Patient : <b><%=request.getParameter("demographic_name")%></b></td>
-	<td width="46%">Health# : <b><%=demoHIN%></b></td>
-</tr><tr> 
-	<td width="54%">Billing Type: <b><%=billtype%></b></td>
-	<td width="46%">Service Date: <b><%=request.getParameter("xml_appointment_date")%></b></td>
-</tr>
-<%  
+	<tr bgcolor="#EEEEFF">
+		<td width="54%">Patient : <b><%=request.getParameter("demographic_name")%></b></td>
+		<td width="46%">Health# : <b><%=demoHIN%></b></td>
+	</tr>
+	<tr>
+		<td width="54%">Billing Type: <b><%=billtype%></b></td>
+		<td width="46%">Service Date: <b><%=request.getParameter("xml_appointment_date")%></b></td>
+	</tr>
+	<%  
 String local_desc="";
 String location1 = request.getParameter("xml_location");
 ResultSet rslocation = apptMainBean.queryResults(location1, "search_visit_location");
@@ -377,22 +314,29 @@ while(rslocation.next()){
 }
 rslocation.close();
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="54%">Visit Type Code: <b><%=request.getParameter("xml_visittype")%></b></td>
-	<td width="46%">Billing Physician: <b><%=proFirst%> <%=proLast%></b></td>
-</tr><tr> 
-	<td width="54%">Visit Location: <b><%=local_desc%></b></td>
-	<td width="46%">Admission Date: <b><%=visitdate%></b></td>
-</tr><tr bgcolor="#EEEEFF"> 
-	<td width="54%">Appointment Physician: <b> <%=apptFirst%> <%=apptLast%>  </b></td>
-	<td width="46%">Secordary Physician: <b><%=asstFirst%>  <%=asstLast%> </b></td>
-</tr><tr> 
-	<td width="54%">Referral Physician: <b> <%=r_doctor%> </b></td>
-	<td width="46%">Referral Physician Number: <b><%=r_doctor_ohip%> </b></td>
-</tr><tr bgcolor="#EEEEFF"> 
-	<td width="54%">Creator: <b><%=crFirst%> <%=crLast%>  </b></td>
-	<td width="46%">Creation Date:<b> <%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%></b></td>
-</tr>
+	<tr bgcolor="#EEEEFF">
+		<td width="54%">Visit Type Code: <b><%=request.getParameter("xml_visittype")%></b></td>
+		<td width="46%">Billing Physician: <b><%=proFirst%> <%=proLast%></b></td>
+	</tr>
+	<tr>
+		<td width="54%">Visit Location: <b><%=local_desc%></b></td>
+		<td width="46%">Admission Date: <b><%=visitdate%></b></td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td width="54%">Appointment Physician: <b> <%=apptFirst%> <%=apptLast%>
+		</b></td>
+		<td width="46%">Secordary Physician: <b><%=asstFirst%> <%=asstLast%>
+		</b></td>
+	</tr>
+	<tr>
+		<td width="54%">Referral Physician: <b> <%=r_doctor%> </b></td>
+		<td width="46%">Referral Physician Number: <b><%=r_doctor_ohip%>
+		</b></td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td width="54%">Creator: <b><%=crFirst%> <%=crLast%> </b></td>
+		<td width="46%">Creation Date:<b> <%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%></b></td>
+	</tr>
 </table>
 
 <%
@@ -726,15 +670,14 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 %>
 
 <table width="600" border="0">
-<tr bgcolor="#CCCCFF"> 
-	<th width="22%"><font size="2">Service Code</th>
-	<th width="58%"><font size="2">Description</th>
-	<th width="6%" align="right"><font size="2" >#Unit</th>
-	<th width="14%" align="right"> 
-	<font size="2">$ Fee</th>
-</tr>
+	<tr bgcolor="#CCCCFF">
+		<th width="22%"><font size="2">Service Code</th>
+		<th width="58%"><font size="2">Description</th>
+		<th width="6%" align="right"><font size="2">#Unit</th>
+		<th width="14%" align="right"><font size="2">$ Fee</th>
+	</tr>
 
-<% 
+	<% 
 // get the list of checked codes
 Properties checkedCode = new Properties();
 for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -847,17 +790,17 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			sBuffer.insert(i,"");
 			str = sBuffer.toString();
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=scode%></td>
-	<input type="hidden" name="billrec<%=counter%>" value="<%=scode%>">
-	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
-	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=desc%>">
-	<input type="hidden" name="billrecunit<%=counter%>" value="1">
-	<td width="58%"><font size="2"><%=desc%></td>
-	<td width="6%" align="right"><font size="2">1</td>
-	<td width="14%" align="right"><font size="2"><%=fee%></td>
-</tr>
-<% 
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=scode%></td>
+		<input type="hidden" name="billrec<%=counter%>" value="<%=scode%>">
+		<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
+		<input type="hidden" name="billrecdesc<%=counter%>" value="<%=desc%>">
+		<input type="hidden" name="billrecunit<%=counter%>" value="1">
+		<td width="58%"><font size="2"><%=desc%></td>
+		<td width="6%" align="right"><font size="2">1</td>
+		<td width="14%" align="right"><font size="2"><%=fee%></td>
+	</tr>
+	<% 
 			counter = counter + 1; 
 		}
 	}
@@ -865,55 +808,66 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 
 if (otherflag1 == 1) { 
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=otherdbcode1%></td>
-		<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode1%>">
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=otherdbcode1%></td>
+		<input type="hidden" name="billrec<%=counter%>"
+			value="<%=otherdbcode1%>">
 		<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr%>">
-		<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc1%>">
-		<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode1unit%>">
-	<td width="58%"><font size="2"><%=otherdesc1%></td>
-	<td width="6%" align="right"><font size="2"><%=othercode1unit%></td>
-	<td width="14%" align="right"><font size="2"><%=otherfee%></td>
-</tr>
-<% 
+		<input type="hidden" name="billrecdesc<%=counter%>"
+			value="<%=otherdesc1%>">
+		<input type="hidden" name="billrecunit<%=counter%>"
+			value="<%=othercode1unit%>">
+		<td width="58%"><font size="2"><%=otherdesc1%></td>
+		<td width="6%" align="right"><font size="2"><%=othercode1unit%></td>
+		<td width="14%" align="right"><font size="2"><%=otherfee%></td>
+	</tr>
+	<% 
 	counter = counter + 1;
 } 
 if (otherflag2 == 1) { 
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=otherdbcode2%></td>
-	<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode2%>">
-	<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr2%>">
-	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc2%>">
-	<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode2unit%>">
-	<td width="58%"><font size="2"><%=otherdesc2%></td>
-	<td width="6%"> 
-	<div align="right"><font size="2"><%=othercode2unit%></div>
-	</td>
-	<td width="14%"> 
-	<div align="right"><font size="2"><%=otherfee02%></div>
-	</td>
-</tr>
-<% 
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=otherdbcode2%></td>
+		<input type="hidden" name="billrec<%=counter%>"
+			value="<%=otherdbcode2%>">
+		<input type="hidden" name="pricerec<%=counter%>"
+			value="<%=otherstr2%>">
+		<input type="hidden" name="billrecdesc<%=counter%>"
+			value="<%=otherdesc2%>">
+		<input type="hidden" name="billrecunit<%=counter%>"
+			value="<%=othercode2unit%>">
+		<td width="58%"><font size="2"><%=otherdesc2%></td>
+		<td width="6%">
+		<div align="right"><font size="2"><%=othercode2unit%></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font size="2"><%=otherfee02%></div>
+		</td>
+	</tr>
+	<% 
 	counter = counter + 1;
 } 
 if (otherflag3 == 1) { 
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=otherdbcode3%></td>
-	<input type="hidden" name="billrec<%=counter%>" value="<%=otherdbcode3%>">
-	<input type="hidden" name="pricerec<%=counter%>" value="<%=otherstr3%>">
-	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=otherdesc3%>">
-	<input type="hidden" name="billrecunit<%=counter%>" value="<%=othercode3unit%>">
-	<td width="58%"><font size="2"><%=otherdesc3%></td>
-	<td width="6%"> 
-	<div align="right"><font size="2"><%=othercode3unit%></div>
-	</td>
-	<td width="14%"> 
-	<div align="right"><font size="2"><%=otherfee03%></div>
-	</td>
-</tr>
-<% 
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=otherdbcode3%></td>
+		<input type="hidden" name="billrec<%=counter%>"
+			value="<%=otherdbcode3%>">
+		<input type="hidden" name="pricerec<%=counter%>"
+			value="<%=otherstr3%>">
+		<input type="hidden" name="billrecdesc<%=counter%>"
+			value="<%=otherdesc3%>">
+		<input type="hidden" name="billrecunit<%=counter%>"
+			value="<%=othercode3unit%>">
+		<td width="58%"><font size="2"><%=otherdesc3%></td>
+		<td width="6%">
+		<div align="right"><font size="2"><%=othercode3unit%></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font size="2"><%=otherfee03%></div>
+		</td>
+	</tr>
+	<% 
 	counter = counter + 1;
 } 
 
@@ -929,21 +883,21 @@ if (eFlag.compareTo("1")==0) {
 	sBuffer.insert(i,"");
 	str = sBuffer.toString();
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=eCode%></td>
-	<input type="hidden" name="billrec<%=counter%>" value="<%=eCode%>">
-	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
-	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=eDesc%>">
-	<input type="hidden" name="billrecunit<%=counter%>" value="<%=eUnit%>">
-	<td width="58%"><font size="2"><%=eDesc%></td>
-	<td width="6%"> 
-	<div align="right"><font size="2"><%=eUnit%></div>
-	</td>
-	<td width="14%"> 
-	<div align="right"><font size="2"><%=percentPremium%></div>
-	</td>
-</tr>
-<% 
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=eCode%></td>
+		<input type="hidden" name="billrec<%=counter%>" value="<%=eCode%>">
+		<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
+		<input type="hidden" name="billrecdesc<%=counter%>" value="<%=eDesc%>">
+		<input type="hidden" name="billrecunit<%=counter%>" value="<%=eUnit%>">
+		<td width="58%"><font size="2"><%=eDesc%></td>
+		<td width="6%">
+		<div align="right"><font size="2"><%=eUnit%></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font size="2"><%=percentPremium%></div>
+		</td>
+	</tr>
+	<% 
 	counter = counter + 1;
 } 
 
@@ -981,21 +935,21 @@ if (xFlag.compareTo("1")==0) {
 	sBuffer.insert(i,"");
 	str = sBuffer.toString();
 %>
-<tr bgcolor="#EEEEFF"> 
-	<td width="22%"><font size="2"><%=xCode%></td>
-	<input type="hidden" name="billrec<%=counter%>" value="<%=xCode%>">
-	<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
-	<input type="hidden" name="billrecdesc<%=counter%>" value="<%=xDesc%>">
-	<input type="hidden" name="billrecunit<%=counter%>" value="<%=xUnit%>">
-	<td width="58%"><font size="2"><%=xDesc%></td>
-	<td width="6%"> 
-	<div align="right"><font size="2"><%=xUnit%></div>
-	</td>
-	<td width="14%"> 
-	<div align="right"><font size="2"><%=xPercentPremium%></div>
-	</td>
-</tr>
-<% 
+	<tr bgcolor="#EEEEFF">
+		<td width="22%"><font size="2"><%=xCode%></td>
+		<input type="hidden" name="billrec<%=counter%>" value="<%=xCode%>">
+		<input type="hidden" name="pricerec<%=counter%>" value="<%=str%>">
+		<input type="hidden" name="billrecdesc<%=counter%>" value="<%=xDesc%>">
+		<input type="hidden" name="billrecunit<%=counter%>" value="<%=xUnit%>">
+		<td width="58%"><font size="2"><%=xDesc%></td>
+		<td width="6%">
+		<div align="right"><font size="2"><%=xUnit%></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font size="2"><%=xPercentPremium%></div>
+		</td>
+	</tr>
+	<% 
 	counter = counter + 1;
 } 
 
@@ -1011,17 +965,17 @@ if (errorFlag.compareTo("1")==0){
 
 <p bgcolor="orange"><%=errorMsg%></p>
 <% session.setAttribute("content", content); %>
-<form>
-<input type=button name=back value='Go Back and Change' onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
+<form><input type=button name=back value='Go Back and Change'
+	onClick='javascript:location.href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0"'>
 </form>
-    
+
 <% 
 } else { %>
-    
-<tr bgcolor="#EEEEFF"> 
+
+<tr bgcolor="#EEEEFF">
 	<td width="22%"><font size="2"><b>Diagnostic Code</b></td>
 	<td colspan="2"><font size="2"><%=diagnostic_code%></td>
-	<td width="14%"> 
+	<td width="14%">
 	<div align="right"><font size="2"></div>
 	</td>
 </tr>
@@ -1029,12 +983,12 @@ if (errorFlag.compareTo("1")==0){
 <% 
 	if (request.getParameter("xml_research1") == null || request.getParameter("xml_research1").compareTo("") == 0) { 
 %>
-<tr bgcolor="#EEEEFF"> 
+<tr bgcolor="#EEEEFF">
 	<td width="22%"><font size="2"></td>
-	<td colspan="2"> 
+	<td colspan="2">
 	<div align="right"><font size="2">Total:</div>
 	</td>
-	<td width="14%"> 
+	<td width="14%">
 	<div align="right"><font size="2"><%=BigTotal%></div>
 	</td>
 </tr>
@@ -1043,27 +997,29 @@ if (errorFlag.compareTo("1")==0){
 <%
 	} else { 
 %>
-      
-<tr bgcolor="#EEEEFF"> 
+
+<tr bgcolor="#EEEEFF">
 	<td width="22%"><font size="2"><b>Research Code</b></td>
-	<td colspan="2"><font size="2"><%=request.getParameter("xml_research1")%> <%=request.getParameter("xml_research2").compareTo("")==0?"":", "+request.getParameter("xml_research2")%> <%=request.getParameter("xml_research3").compareTo("")==0?"":", "+request.getParameter("xml_research3")%></td>
-	<td width="14%"> 
+	<td colspan="2"><font size="2"><%=request.getParameter("xml_research1")%>
+	<%=request.getParameter("xml_research2").compareTo("")==0?"":", "+request.getParameter("xml_research2")%>
+	<%=request.getParameter("xml_research3").compareTo("")==0?"":", "+request.getParameter("xml_research3")%></td>
+	<td width="14%">
 	<div align="right"><font size="2"></div>
 	</td>
 </tr>
-<tr bgcolor="#EEEEFF"> 
+<tr bgcolor="#EEEEFF">
 	<td width="22%"><font size="2"></td>
-	<td colspan="2"> 
+	<td colspan="2">
 	<div align="right"><font size="2">Total:</div>
 	</td>
-	<td width="14%"> 
+	<td width="14%">
 	<div align="right"><font size="2"><%=BigTotal%></div>
 	</td>
 </tr>
 </table>
 
 <%	} %>
-  <p>         
+<p>
 <%
 	content = content + "<xml_providername>" +  proFirst + " " + proLast + "</xml_providername>";
 	content = content + "<xml_apptprovidername>" + apptFirst + " " + apptLast + "</xml_apptprovidername>";
@@ -1071,45 +1027,50 @@ if (errorFlag.compareTo("1")==0){
 	content = content + "<xml_creator>" +  crFirst + " " + crLast + "</xml_creator>";
 	content = content + "<rdohip>" + r_doctor_ohip+"</rdohip>" + "<rd>" + r_doctor + "</rd>";
 	content = content + "<hctype>" + demoHCTYPE+"</hctype>" + "<demosex>" + demoSex + "</demosex>";
-%>
-  
-<input type="hidden" name="pohip_no" value="<%=proOHIPNO%>">		
-<input type="hidden" name="prma_no" value="<%=proRMA%>">
-<input type="hidden" name="record" value="<%=counter%>">		
-<input type="hidden" name="diagcode" value="<%=diagcode%>">
-<input type="hidden" name="visittype" value="<%=request.getParameter("xml_visittype").substring(0,2)%>">
-<input type="hidden" name="billtype" value="<%=billtype.substring(0,1)%>">
-<!--input type="hidden" name="content" value="<%--=content--%>"-->
-<input type="hidden" name="provider_no" value="<%=proNO%>">
-<input type="hidden" name="clinic_no" value="<%=request.getParameter("clinic_no")%>">
-<input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-<input type="hidden" name="billing_name" value="OB2">
-<!--input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>"-->
-<input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>">
-<input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>">
-<!--input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>"-->
+%> <input type="hidden" name="pohip_no" value="<%=proOHIPNO%>">
+<input type="hidden" name="prma_no" value="<%=proRMA%>"> <input
+	type="hidden" name="record" value="<%=counter%>"> <input
+	type="hidden" name="diagcode" value="<%=diagcode%>"> <input
+	type="hidden" name="visittype"
+	value="<%=request.getParameter("xml_visittype").substring(0,2)%>">
+<input type="hidden" name="billtype"
+	value="<%=billtype.substring(0,1)%>"> <!--input type="hidden" name="content" value="<%--=content--%>"-->
+<input type="hidden" name="provider_no" value="<%=proNO%>"> <input
+	type="hidden" name="clinic_no"
+	value="<%=request.getParameter("clinic_no")%>"> <input
+	type="hidden" name="demographic_no"
+	value="<%=request.getParameter("demographic_no")%>"> <input
+	type="hidden" name="billing_name" value="OB2"> <!--input type="hidden" name="user_no" value="<%=request.getParameter("user_no")%>"-->
+<input type="hidden" name="apptProvider_no"
+	value="<%=request.getParameter("apptProvider_no")%>"> <input
+	type="hidden" name="asstProvider_no"
+	value="<%=request.getParameter("asstProvider_no")%>"> <!--input type="hidden" name="billing_date" value="<%=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)%>"-->
 <!--input type="hidden" name="billing_time" value="<%=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)%>"-->
-<input type="hidden" name="billingservice_code" value="">
-<input type="hidden" name="dboperation" value="save_bill">
-<input type="hidden" name="appointment_date" value="<%=request.getParameter("xml_appointment_date")%>">
-<input type="hidden" name="appointment_no" value="<%=request.getParameter("appointment_no")%>">
-<input type="hidden" name="status" value="<%=request.getParameter("status")%>">
-<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>">
-<input type="hidden" name="displaymode" value="savebill">
-<input type="hidden" name="demographic_dob" value="<%=demoDOB%>">
-<input type="hidden" name="demographic_name" value="<%=demoname%>">
-<input type="hidden" name="hin" value="<%=demoHIN%>">
-<input type="hidden" name="ohip_version" value="V03G">
-<input type="hidden" name="total" value="<%=BigTotal%>">
-<input type="hidden" name="clinic_ref_code" value="<%=location1%>">
-<input type="hidden" name="visitdate" value="<%=visitdate%>">
-<input type="submit" name="Submit" value="Confirm" onDblClick="" >
-<a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
+<input type="hidden" name="billingservice_code" value=""> <input
+	type="hidden" name="dboperation" value="save_bill"> <input
+	type="hidden" name="appointment_date"
+	value="<%=request.getParameter("xml_appointment_date")%>"> <input
+	type="hidden" name="appointment_no"
+	value="<%=request.getParameter("appointment_no")%>"> <input
+	type="hidden" name="status" value="<%=request.getParameter("status")%>">
+<input type="hidden" name="start_time"
+	value="<%=request.getParameter("start_time")%>"> <input
+	type="hidden" name="displaymode" value="savebill"> <input
+	type="hidden" name="demographic_dob" value="<%=demoDOB%>"> <input
+	type="hidden" name="demographic_name" value="<%=demoname%>"> <input
+	type="hidden" name="hin" value="<%=demoHIN%>"> <input
+	type="hidden" name="ohip_version" value="V03G"> <input
+	type="hidden" name="total" value="<%=BigTotal%>"> <input
+	type="hidden" name="clinic_ref_code" value="<%=location1%>"> <input
+	type="hidden" name="visitdate" value="<%=visitdate%>"> <input
+	type="submit" name="Submit" value="Confirm" onDblClick=""> <a
+	href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
 
 <% 
 	if (warningMsg.length() > 0) {
 %>
-	<p bgcolor="yellow"><%=warningMsg%></p>
+
+<p bgcolor="yellow"><%=warningMsg%></p>
 <%
 	}
 	session.setAttribute("content", content); 
@@ -1120,8 +1081,6 @@ if(bPercS) {
     billing_pCode = oscarVariables.getProperty("billing_pCode","");
 }
 %>
-
-
 </form>
 
 <script language="JavaScript">
@@ -1167,36 +1126,35 @@ function getNewCurrentDxCodeList(origRequest){
 </script>
 
 
-<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW" value="yes">
+<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW"
+	value="yes">
 
-<div class="dxBox">
-    <h3>&nbsp;Dx Quick Pick Add List</h3>
-       <form id="dxForm">
-       <input type="hidden" name="demographicNo" value="<%=demoNO%>" />
-       <input type="hidden" name="providerNo" value="<%=proNO%>" />
-       <input type="hidden" name="forward" value="" />
-       <input type="hidden" name="forwardTo" value="codeList"/>
-       <div class="wrapper" id="dxListing">
-       <jsp:include page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
-          <jsp:param name="demographicNo" value="<%=demoNO%>"/>
-       </jsp:include>
-       </div>
-       <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
-       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
-<input type="button" value="check" onclick="validateItems()"/--> 
-       </form>
-</div>
+	<div class="dxBox">
+	<h3>&nbsp;Dx Quick Pick Add List</h3>
+	<form id="dxForm"><input type="hidden" name="demographicNo"
+		value="<%=demoNO%>" /> <input type="hidden" name="providerNo"
+		value="<%=proNO%>" /> <input type="hidden" name="forward" value="" />
+	<input type="hidden" name="forwardTo" value="codeList" />
+	<div class="wrapper" id="dxListing"><jsp:include
+		page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
+		<jsp:param name="demographicNo" value="<%=demoNO%>" />
+	</jsp:include></div>
+	<input type="button" value="Add To Disease Registry"
+		onclick="addToDiseaseRegistry()" /> <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
+<input type="button" value="check" onclick="validateItems()"/--></form>
+	</div>
 
 
-<div class="dxBox">
-    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
-       <div class="wrapper" id="dxFullListing"  style="display:none;">
-       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
-          <jsp:param name="demographicNo" value="<%=demoNO%>"/>
-       </jsp:include>
-       </div>
-</div>
+	<div class="dxBox">
+	<h3>&nbsp;Current Patient Dx List <a href="#"
+		onclick="Element.toggle('dxFullListing'); return false;"
+		style="font-size: small;">show/hide</a></h3>
+	<div class="wrapper" id="dxFullListing" style="display: none;"><jsp:include
+		page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
+		<jsp:param name="demographicNo" value="<%=demoNO%>" />
+	</jsp:include></div>
+	</div>
 </oscar:oscarPropertiesCheck>
 
-</body>    
+</body>
 </html>

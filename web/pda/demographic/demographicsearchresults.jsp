@@ -32,13 +32,15 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> PATIENT SEARCH RESULTS </title>
-<link rel="stylesheet" href="../web.css" >
+<title>PATIENT SEARCH RESULTS</title>
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -49,30 +51,46 @@ function setfocus() {
 </SCRIPT>
 <!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">SEARCH FOR PATIENT RECORDS</font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">SEARCH
+		FOR PATIENT RECORDS</font></th>
+	</tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.htm"%>
 <table width="95%" border="0">
-<tr>
-<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
-</tr>
+	<tr>
+		<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
+	</tr>
 </table>
 <hr>
-<CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
-<tr bgcolor="silver">
-<TH align="center" width="20%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">DEMOGP' NO</a></b></font></TH>
-<TH align="center" width="20%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">LAST NAME</a> </b></font></TH>
-<TH align="center" width="20%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>">FIRST NAME</a> </b></font></TH>
-<TH align="center" width="10%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">AGE</a></b></font></TH>
-<TH align="center" width="10%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit2%>">ROSTER STATUS</a></b></font></TH>
-<TH align="center" width="10%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit2%>">SEX</a></B></font></TH>
-<TH align="center" width="10%"><b><a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">DOB(yy/mm/dd)</a></B></Font></TH>
-</tr>
-<%
+<CENTER>
+<table width="100%" border="2" bgcolor="#ffffff">
+	<tr bgcolor="silver">
+		<TH align="center" width="20%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">DEMOGP'
+		NO</a></b></font></TH>
+		<TH align="center" width="20%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">LAST
+		NAME</a> </b></font></TH>
+		<TH align="center" width="20%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>">FIRST
+		NAME</a> </b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">AGE</a></b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit2%>">ROSTER
+		STATUS</a></b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit2%>">SEX</a></B></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">DOB(yy/mm/dd)</a></B></Font></TH>
+	</tr>
+	<%
 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -131,20 +149,21 @@ function setfocus() {
      }	
    
 %>
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="20%" align="center"> <a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("demographic_no")%></a></td>
-      <td align="center" width="20%"><%=rs.getString("last_name")%></td>
-      <td align="center" width="20%"><%=rs.getString("first_name")%></td>
-      <td align="center" width="10%"><%=age%></td>
-      <td align="center" width="10%"><%=rs.getString("roster_status")%></td>
-      <td align="center" width="10%"><%=rs.getString("sex")%></td>
-      <td align="center" width="10%"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-</tr>
-<%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td width="20%" align="center"><a
+			href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("demographic_no")%></a></td>
+		<td align="center" width="20%"><%=rs.getString("last_name")%></td>
+		<td align="center" width="20%"><%=rs.getString("first_name")%></td>
+		<td align="center" width="10%"><%=age%></td>
+		<td align="center" width="10%"><%=rs.getString("roster_status")%></td>
+		<td align="center" width="10%"><%=rs.getString("sex")%></td>
+		<td align="center" width="10%"><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
+	</tr>
+	<%
     }
   }
   apptMainBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>
@@ -153,16 +172,18 @@ function setfocus() {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="demographiccontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
 }
 %>
-<p>Please select by clicking on the patient's demographic id for details.</p></center>
+<p>Please select by clicking on the patient's demographic id for
+details.</p>
+</center>
 </body>
 </html>

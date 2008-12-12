@@ -25,19 +25,21 @@
 --%>
 
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<%@page import="oscar.oscarEncounter.data.*,java.net.*,oscar.oscarPrevention.*,java.util.*,oscar.util.*,org.apache.commons.lang.*"%>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@page
+	import="oscar.oscarEncounter.data.*,java.net.*,oscar.oscarPrevention.*,java.util.*,oscar.util.*,org.apache.commons.lang.*"%>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 
 <html:html>
 
 <head>
-<title> Cumulative Patient Profile</title>
-<link rel="stylesheet" type="text/css" media="print" href="print.css"/>
-<link rel="stylesheet" type="text/css" href="encounterPrintStyles.css"/>
+<title>Cumulative Patient Profile</title>
+<link rel="stylesheet" type="text/css" media="print" href="print.css" />
+<link rel="stylesheet" type="text/css" href="encounterPrintStyles.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/wz_dragdrop.js"></script>
 <%System.out.println("here1");%>
@@ -92,31 +94,9 @@
     if (cppPref != null){
        divList = CPPData.getListFromString(cppPref);    
     }
-%>            
+%>
 
-<style type="text/css">
-pre {
-font-size:7.5pt;
-margin-top:2pt;
-
-}
-
-ul{
-    padding-left:5pt;
-}
-li{
-    list-style-type: none;
-    font-size:8pt;
-    padding-right: 15px;
-}
-
-a.hideShow{
-    font-size:xx-small;    
-}
-br{
-clear: left;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <%System.out.println("here2");%>
 <script type="text/javascript" language="Javascript">
     var dirty = false;
@@ -395,96 +375,130 @@ function setCheckedAll(){
 </head>
 
 <%System.out.println("here3");%>
-<body topmargin="0" leftmargin="0" vlink="#0000FF" >
-<html:errors/>
-<div style="width:7in">
+<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<html:errors />
+<div style="width: 7in">
 
-    <div class="Header" >    
-        <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" style="margin-left:2px;" />    
-        <input type="button" value="<bean:message key="global.btnClose"/>" onclick="javascript:return onClose();"/>          
-        <input type="button" value="Save Changes" onclick="javascript:fillMedAllerg();" />        
-        <input type="button" value="Options" onclick="javascript:showHideItem('optionss');" />
-    </div>                
+<div class="Header"><input type="button"
+	value="<bean:message key="global.btnPrint"/>"
+	onclick="javascript:return onPrint();" style="margin-left: 2px;" /> <input
+	type="button" value="<bean:message key="global.btnClose"/>"
+	onclick="javascript:return onClose();" /> <input type="button"
+	value="Save Changes" onclick="javascript:fillMedAllerg();" /> <input
+	type="button" value="Options"
+	onclick="javascript:showHideItem('optionss');" /></div>
 
-    <div style="width:100%;">
-        <div style="width:100%;clear:left;" >            
-            <span style="float:left; font-weight:bold; margin-top:4pt;"><%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span>                
-            <span style="float:right; font-weight:bold; margin-top:4pt;"><bean:message key="oscarEncounter.encounterPrint.msgDr"/>. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>            
-        </div>
-        <br/>
-        
-        <div style="width:100%;clear:left;">
-            
-                <div style="position:relative;float:left; margin-left:5pt;margin-top:5pt;<%=displayNone("socialFam",divList)%>" id="socialFam">
-                    <div class="RowTop" style="white-space: nowrap;"><bean:message key="oscarEncounter.Index.socialFamHist"/>: 
-                    <!--a class="hideShow" onclick="javascript:showHideItem('socialFam');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','socialFamText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder"  id="socialFamText" ondblclick="javascript:showElementHere(event,'editable');"  style="min-width:200px;">
-                        <pre name='shTextarea' ><%=hashval(h.get("socialFam"))%><%=""/*bean.socialHistory*/%>&nbsp;</pre>
-                    </div>
-                </div>                            
-                
-                <div style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("ongoingCon",divList)%>" id="ongoingCon">
-                    <div class="RowTop" style="white-space: nowrap;"><bean:message key="oscarEncounter.encounterPrint.msgOngCon"/>:aka Problem List
-                    <!--a class="hideShow" onclick="javascript:showHideItem('ongoingCon');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','ongoingConText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="ongoingConText" style="min-width:200px;">
-                        <pre name='ocTextarea' ><%=hashval(h.get("ongoingCon"))%><%=""/*bean.ongoingConcerns*/%>&nbsp;</pre>
-                    </div>
-                </div>                                
-               
-                <div style="position:relative;float:left; margin-left:5pt;margin-top:5pt;<%=displayNone("medHist",divList)%>" id="medHist">
-                    <div class="RowTop" style="white-space: nowrap;"><bean:message key="oscarEncounter.Index.medHist"/>:
-                    <!--a class="hideShow" onclick="javascript:showHideItem('medHist');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','medHistText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="medHistText" style="min-width:200px;">
-                        <pre name='mhTextarea' ><%=hashval(h.get("medHist"))%><%=""/*bean.medicalHistory*/%>&nbsp;</pre>
-                    </div>
-                </div>                   
-                                            
-                <div style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("reminder",divList)%>" id="reminder">
-                    <div class="RowTop" style="white-space: nowrap;"><bean:message key="oscarEncounter.encounterPrint.msgReminders"/>: aka Med alerts and special needs
-                    <!--a class="hideShow" onclick="javascript:showHideItem('reminder');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','reminderText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="reminderText" style="min-width:200px;">
-                        <pre name='reTextarea' ><%=hashval(h.get("reminder"))%><%=""/*bean.reminders*/%>&nbsp;</pre>
-                    </div>
-                </div>                        
-               
-                <div style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("riskfactor",divList)%>"" id="riskfactor">
-                    <div class="RowTop" style="white-space: nowrap;">Risk Factors:
-                    <!--a class="hideShow" onclick="javascript:showHideItem('riskfactor');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','riskfactorText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="riskfactorText" style="min-width:200px;">
-                        <pre name='reTextarea' ><%=hashval(h.get("riskfactor"))%><%=""/*bean.reminders*/%>&nbsp;</pre>
-                    </div>
-                </div>                        
-            
-        </div>                
-        <%System.out.println("here3.5");%>
-        <div style="margin-left:5pt;width:100%;clear:left;<%=displayNone("presBox",divList)%>" id="presBox">       
-            <div class="RowTop">Medications
-            <a class="hideShow" onclick="javascript:showHideItem('presBox');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-            </div>            
-            <div class="presBox" >            
-                <div style=" float:left; margin-left:3pt;<%=displayNone("otherMed",divList)%> " id="otherMed">
-                    <div class="RowTop"><bean:message key="oscarEncounter.Index.otherMed"/>:
-                    <!--a class="hideShow" onclick="javascript:showHideItem('otherMed');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->      
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','otherMedText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                                                              
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="otherMedText" style="min-width:200px;">
-                        <pre name='fhTextarea' ><%=hashval(h.get("otherMed"))%><%=""/*bean.familyHistory*/%>&nbsp;</pre>                                                
-                    </div>
-                </div>
-                <br/>
-                <ul>
-                <%System.out.println("here3.6");%>
-                    <%for (int i = 0; i < arr.length; i++){
+<div style="width: 100%;">
+<div style="width: 100%; clear: left;"><span
+	style="float: left; font-weight: bold; margin-top: 4pt;"><%=bean.patientLastName %>,
+<%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%></span> <span
+	style="float: right; font-weight: bold; margin-top: 4pt;"><bean:message
+	key="oscarEncounter.encounterPrint.msgDr" />. <%=providerBean.getProperty(bean.familyDoctorNo)%></span>
+</div>
+<br />
+
+<div style="width: 100%; clear: left;">
+
+<div
+	style="position:relative;float:left; margin-left:5pt;margin-top:5pt;<%=displayNone("socialFam",divList)%>"
+	id="socialFam">
+<div class="RowTop" style="white-space: nowrap;"><bean:message
+	key="oscarEncounter.Index.socialFamHist" />: <!--a class="hideShow" onclick="javascript:showHideItem('socialFam');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','socialFamText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder" id="socialFamText"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	style="min-width: 200px;"><pre name='shTextarea'><%=hashval(h.get("socialFam"))%><%=""/*bean.socialHistory*/%>&nbsp;</pre>
+</div>
+</div>
+
+<div
+	style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("ongoingCon",divList)%>"
+	id="ongoingCon">
+<div class="RowTop" style="white-space: nowrap;"><bean:message
+	key="oscarEncounter.encounterPrint.msgOngCon" />:aka Problem List <!--a class="hideShow" onclick="javascript:showHideItem('ongoingCon');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','ongoingConText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="ongoingConText" style="min-width: 200px;"><pre
+	name='ocTextarea'><%=hashval(h.get("ongoingCon"))%><%=""/*bean.ongoingConcerns*/%>&nbsp;</pre>
+</div>
+</div>
+
+<div
+	style="position:relative;float:left; margin-left:5pt;margin-top:5pt;<%=displayNone("medHist",divList)%>"
+	id="medHist">
+<div class="RowTop" style="white-space: nowrap;"><bean:message
+	key="oscarEncounter.Index.medHist" />: <!--a class="hideShow" onclick="javascript:showHideItem('medHist');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','medHistText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="medHistText" style="min-width: 200px;"><pre name='mhTextarea'><%=hashval(h.get("medHist"))%><%=""/*bean.medicalHistory*/%>&nbsp;</pre>
+</div>
+</div>
+
+<div
+	style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("reminder",divList)%>"
+	id="reminder">
+<div class="RowTop" style="white-space: nowrap;"><bean:message
+	key="oscarEncounter.encounterPrint.msgReminders" />: aka Med alerts and
+special needs <!--a class="hideShow" onclick="javascript:showHideItem('reminder');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','reminderText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="reminderText" style="min-width: 200px;"><pre
+	name='reTextarea'><%=hashval(h.get("reminder"))%><%=""/*bean.reminders*/%>&nbsp;</pre>
+</div>
+</div>
+
+<div
+	style="position:relative;float:left;margin-left:5pt;margin-top:5pt;<%=displayNone("riskfactor",divList)%>"
+	" id="riskfactor">
+<div class="RowTop" style="white-space: nowrap;">Risk Factors: <!--a class="hideShow" onclick="javascript:showHideItem('riskfactor');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','riskfactorText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="riskfactorText" style="min-width: 200px;"><pre
+	name='reTextarea'><%=hashval(h.get("riskfactor"))%><%=""/*bean.reminders*/%>&nbsp;</pre>
+</div>
+</div>
+
+</div>
+<%System.out.println("here3.5");%>
+<div
+	style="margin-left:5pt;width:100%;clear:left;<%=displayNone("presBox",divList)%>"
+	id="presBox">
+<div class="RowTop">Medications <a class="hideShow"
+	onclick="javascript:showHideItem('presBox');setCheckedAll();"
+	href="javascript: function myFunction() {return false; }">hide</a></div>
+<div class="presBox">
+<div
+	style=" float:left; margin-left:3pt;<%=displayNone("otherMed",divList)%> "
+	id="otherMed">
+<div class="RowTop"><bean:message
+	key="oscarEncounter.Index.otherMed" />: <!--a class="hideShow" onclick="javascript:showHideItem('otherMed');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','otherMedText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="otherMedText" style="min-width: 200px;"><pre
+	name='fhTextarea'><%=hashval(h.get("otherMed"))%><%=""/*bean.familyHistory*/%>&nbsp;</pre>
+</div>
+</div>
+<br />
+<ul>
+	<%System.out.println("here3.6");%>
+	<%for (int i = 0; i < arr.length; i++){
                         String rxD = arr[i].getRxDate().toString();                        
                         String rxP = arr[i].getFullOutLine().replaceAll(";"," ");
                         rxP = rxP + "   " + arr[i].getEndDate();
@@ -492,84 +506,90 @@ function setCheckedAll(){
                         String id = ""+arr[i].getDrugId();
                         if(arr[i].isCurrent() == true){  styleColor="color:red;";  }
                     %>
-                        <li  style="border-bottom: 1pt solid #888888; font-size:8pt;margin-top:1px; <%=styleColor%><%=displayNone(id,medsList)%>" id="pres<%=id%>">
-                            <a class="hideShow" onclick="javascript:showHideItem('pres<%=id%>');addToHiddenPres('<%=id%>');" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-                            <%=rxD%>&nbsp;
-                            <%=rxP%>
-                        </li>
-                    <%}%>
-                    <%System.out.println("here3.7");%>
-                </ul>            
-            </div>
-        </div>
-        <div style="margin-left:5pt;clear:left;<%=displayNone("allergyBox",divList)%>" id="allergyBox">       
-            <div class="RowTop">Allergies
-            <a class="hideShow" onclick="javascript:showHideItem('allergyBox');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-            </div>
-            <div class="presBox" >
-                <div style=" float:left; margin-left:3pt;<%=displayNone("otherAller",divList)%>" id="otherAller">
-                    <div class="RowTop">Other Allergies:
-                    <!--a class="hideShow" onclick="javascript:showHideItem('otherAller');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->                                          
-                    <a class="hideShow" onclick="javascript:showEdit(event,'editable','otherAllerText');" href="javascript: function myFunction() {return false; }" >Edit</a>                                          
-                    </div>
-                    <div class="TableWithBorder" ondblclick="javascript:showElementHere(event,'editable');" id="otherAllerText" style="min-width:200px;">
-                        <pre name='fhTextarea' ><%=hashval(h.get("otherAller"))%><%=""/*bean.familyHistory*/%>&nbsp;</pre>
-                    </div>
-                </div>
-                <br/>
-                <ul>
-                    <%for (int j=0; j<allergies.length; j++){%>              
-                    <li id="allergy<%=allergies[j].getAllergyId()%>" style="<%=displayNone(""+allergies[j].getAllergyId(),allergyList)%>">                       
-                               <a class="hideShow" onclick="javascript:showHideItem('allergy<%=allergies[j].getAllergyId()%>');addToHiddenAllergy('<%=allergies[j].getAllergyId()%>');" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-                    <b><%= allergies[j].getAllergy().getDESCRIPTION() %></b>
-                    <!--%= allergies[j].getAllergy().getTypeDesc() %-->   
-                    &nbsp;Severity: <%= allergies[j].getAllergy().getSeverityOfReactionDesc() %>                       
-                    Onset: <%= allergies[j].getAllergy().getOnSetOfReactionDesc() %>   
-                    Reaction: <%= allergies[j].getAllergy().getReaction() %>   
-                                                                                               
-                                        
-                                                                           
-                                        
-                    </li>                                        
-                    <%}%>                                    
-                </ul>
-            </div>
-        </div>
-        <%System.out.println("here4");%>
-        <div style="margin-left:5pt;width:100%;clear:left;<%=displayNone("imms",divList)%>" id="imms" >       
-        <div class="RowTop">Immunizations
-        <a class="hideShow" onclick="javascript:showHideItem('imms');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-        </div>        
-            <ul>
-            <%for (int i = 0; i < inject.size(); i++ ){                 
+	<li
+		style="border-bottom: 1pt solid #888888; font-size:8pt;margin-top:1px; <%=styleColor%><%=displayNone(id,medsList)%>"
+		id="pres<%=id%>"><a class="hideShow"
+		onclick="javascript:showHideItem('pres<%=id%>');addToHiddenPres('<%=id%>');"
+		href="javascript: function myFunction() {return false; }">hide</a> <%=rxD%>&nbsp;
+	<%=rxP%></li>
+	<%}%>
+	<%System.out.println("here3.7");%>
+</ul>
+</div>
+</div>
+<div
+	style="margin-left:5pt;clear:left;<%=displayNone("allergyBox",divList)%>"
+	id="allergyBox">
+<div class="RowTop">Allergies <a class="hideShow"
+	onclick="javascript:showHideItem('allergyBox');setCheckedAll();"
+	href="javascript: function myFunction() {return false; }">hide</a></div>
+<div class="presBox">
+<div
+	style=" float:left; margin-left:3pt;<%=displayNone("otherAller",divList)%>"
+	id="otherAller">
+<div class="RowTop">Other Allergies: <!--a class="hideShow" onclick="javascript:showHideItem('otherAller');setCheckedAll();" href="javascript: function myFunction() {return false; }" >hide</a-->
+<a class="hideShow"
+	onclick="javascript:showEdit(event,'editable','otherAllerText');"
+	href="javascript: function myFunction() {return false; }">Edit</a></div>
+<div class="TableWithBorder"
+	ondblclick="javascript:showElementHere(event,'editable');"
+	id="otherAllerText" style="min-width: 200px;"><pre
+	name='fhTextarea'><%=hashval(h.get("otherAller"))%><%=""/*bean.familyHistory*/%>&nbsp;</pre>
+</div>
+</div>
+<br />
+<ul>
+	<%for (int j=0; j<allergies.length; j++){%>
+	<li id="allergy<%=allergies[j].getAllergyId()%>"
+		style="<%=displayNone(""+allergies[j].getAllergyId(),allergyList)%>">
+	<a class="hideShow"
+		onclick="javascript:showHideItem('allergy<%=allergies[j].getAllergyId()%>');addToHiddenAllergy('<%=allergies[j].getAllergyId()%>');"
+		href="javascript: function myFunction() {return false; }">hide</a> <b><%= allergies[j].getAllergy().getDESCRIPTION() %></b>
+	<!--%= allergies[j].getAllergy().getTypeDesc() %--> &nbsp;Severity: <%= allergies[j].getAllergy().getSeverityOfReactionDesc() %>
+	Onset: <%= allergies[j].getAllergy().getOnSetOfReactionDesc() %>
+	Reaction: <%= allergies[j].getAllergy().getReaction() %></li>
+	<%}%>
+</ul>
+</div>
+</div>
+<%System.out.println("here4");%>
+<div
+	style="margin-left:5pt;width:100%;clear:left;<%=displayNone("imms",divList)%>"
+	id="imms">
+<div class="RowTop">Immunizations <a class="hideShow"
+	onclick="javascript:showHideItem('imms');setCheckedAll();"
+	href="javascript: function myFunction() {return false; }">hide</a></div>
+<ul>
+	<%for (int i = 0; i < inject.size(); i++ ){                 
                  ArrayList list = pd.getPreventionData((String) inject.get(i),bean.demographicNo);                  
                  if ( list.size() > 0 ){%>
-                 <li id="imm<%=i%>"> 
-                            <a class="hideShow" onclick="javascript:showHideItem('imm<%=i%>')" href="javascript: function myFunction() {return false; }" >hide</a>                                          
-                 <b><%=(String) inject.get(i)%></b>
-                 
-                    <%for (int k =0 ; k < list.size(); k++){
+	<li id="imm<%=i%>"><a class="hideShow"
+		onclick="javascript:showHideItem('imm<%=i%>')"
+		href="javascript: function myFunction() {return false; }">hide</a> <b><%=(String) inject.get(i)%></b>
+
+	<%for (int k =0 ; k < list.size(); k++){
                         Hashtable a = (Hashtable) list.get(k);              
-                            if (a != null && inject.contains((String) a.get("type")) ){%>                            
-                                 (<%=completeRefused(a.get("refused"))%>: <%=(String) a.get("prevention_date")%>)
-                                
-                          <%}                      
+                            if (a != null && inject.contains((String) a.get("type")) ){%>
+	(<%=completeRefused(a.get("refused"))%>: <%=(String) a.get("prevention_date")%>)
+
+	<%}                      
                        }
                     %>
-                                        
-                 </li>
-                 <%}%>
-            <%}%>
-              </ul>        
-        </div>
-
-    </div> <!--printing div-->
-                    
-    <div style="clear:left;">&nbsp;</div>
-<div class="Header" style="width:100%;">    
-    <input type="button" value="<bean:message key="global.btnPrint"/>" onclick="javascript:return onPrint();" style="margin-left:2px;"/>
-    <input type="button" value="<bean:message key="global.btnClose"/>" onclick="javascript:return onClose();"/>    
+	</li>
+	<%}%>
+	<%}%>
+</ul>
 </div>
+
+</div>
+<!--printing div-->
+
+<div style="clear: left;">&nbsp;</div>
+<div class="Header" style="width: 100%;"><input type="button"
+	value="<bean:message key="global.btnPrint"/>"
+	onclick="javascript:return onPrint();" style="margin-left: 2px;" /> <input
+	type="button" value="<bean:message key="global.btnClose"/>"
+	onclick="javascript:return onClose();" /></div>
 </div>
 
 
@@ -604,62 +624,98 @@ function putDataInTextArea(tarea) {
 
 </script>
 
-<div id="editable" style="position:absolute;left:3.5in;top:4in;border:2px outset #ccccff;background:#ccccff;display:none;">
- <div>
-   <select id="encDataSelection" >
-     <option value="0"><bean:message key="oscarEncounter.Index.socialFamHist"/></option>
-     <option value="1"><bean:message key="oscarEncounter.encounterPrint.msgOngCon"/></option>
-     <option value="2"><bean:message key="oscarEncounter.Index.medHist"/></option>
-     <option value="3"><bean:message key="oscarEncounter.encounterPrint.msgReminders"/></option>
-    </select>  
-    <input type="button" value="Get Data" onclick="javascript: getDataFromEnc();"/>   
- </div>        
- 
- <textarea cols="40" rows="20" id="editableText" wrap="hard" onchange="javascript: dirty = true;"></textarea>
- <input type="button" value="<<" onclick="javascript:putDataInTextArea('encText')"/>
- <textarea cols="40" rows="20" id="encText" wrap="hard" ></textarea>
- <br/>
- <input type="button" value="Finish" onclick="javascript:processEditable('editableText','editableVal');hideItem('editable');setDirtyFalse();" /> 
- <input type="button" value="Cancel" onclick="javascript:hideItem('editable');setDirtyFalse();" />
- <input type="hidden" id="editableVal" />
-</div>
+<div id="editable"
+	style="position: absolute; left: 3.5in; top: 4in; border: 2px outset #ccccff; background: #ccccff; display: none;">
+<div><select id="encDataSelection">
+	<option value="0"><bean:message
+		key="oscarEncounter.Index.socialFamHist" /></option>
+	<option value="1"><bean:message
+		key="oscarEncounter.encounterPrint.msgOngCon" /></option>
+	<option value="2"><bean:message
+		key="oscarEncounter.Index.medHist" /></option>
+	<option value="3"><bean:message
+		key="oscarEncounter.encounterPrint.msgReminders" /></option>
+</select> <input type="button" value="Get Data"
+	onclick="javascript: getDataFromEnc();" /></div>
+
+<textarea cols="40" rows="20" id="editableText" wrap="hard"
+	onchange="javascript: dirty = true;"></textarea> <input type="button"
+	value="<<" onclick=" javascript:putDataInTextArea('encText')"/> <textarea
+	cols="40" rows="20" id="encText" wrap="hard"></textarea> <br />
+<input type="button" value="Finish"
+	onclick="javascript:processEditable('editableText','editableVal');hideItem('editable');setDirtyFalse();" />
+<input type="button" value="Cancel"
+	onclick="javascript:hideItem('editable');setDirtyFalse();" /> <input
+	type="hidden" id="editableVal" /></div>
 
 <html:form action="oscarEncounter/SaveCPPAction">
-<input type="hidden" name="demoNo" value="<%=bean.demographicNo%>" />
-<input type="hidden" name="socialFamVal"  id="socialFamTextVal"  value="<%=hashval(h.get("socialFam"))%>"    />
-<input type="hidden" name="ongoingConVal" id="ongoingConTextVal" value="<%=hashval(h.get("ongoingCon"))%>"/>
-<input type="hidden" name="medHistVal"    id="medHistTextVal"    value="<%=hashval(h.get("medHist"))%>"/>
-<input type="hidden" name="reminderVal"   id="reminderTextVal"   value="<%=hashval(h.get("reminder"))%>"/>
-<input type="hidden" name="riskfactorVal" id="riskfactorTextVal" value="<%=hashval(h.get("riskfactor"))%>"/>
-<input type="hidden" name="presBoxVal"    id="presBoxTextVal"/>
-<input type="hidden" name="otherMedVal"   id="otherMedTextVal"   value="<%=hashval(h.get("otherMed"))%>"/>
-<input type="hidden" name="allergyBoxVal" id="allergyBoxTextVal"/>
-<input type="hidden" name="otherAllerVal" id="otherAllerTextVal" value="<%=hashval(h.get("otherAller"))%>"/>
-<input type="hidden" name="immsVal"       id="immsTextVal"/>
+	<input type="hidden" name="demoNo" value="<%=bean.demographicNo%>" />
+	<input type="hidden" name="socialFamVal" id="socialFamTextVal"
+		value="<%=hashval(h.get("socialFam"))%>" />
+	<input type="hidden" name="ongoingConVal" id="ongoingConTextVal"
+		value="<%=hashval(h.get("ongoingCon"))%>" />
+	<input type="hidden" name="medHistVal" id="medHistTextVal"
+		value="<%=hashval(h.get("medHist"))%>" />
+	<input type="hidden" name="reminderVal" id="reminderTextVal"
+		value="<%=hashval(h.get("reminder"))%>" />
+	<input type="hidden" name="riskfactorVal" id="riskfactorTextVal"
+		value="<%=hashval(h.get("riskfactor"))%>" />
+	<input type="hidden" name="presBoxVal" id="presBoxTextVal" />
+	<input type="hidden" name="otherMedVal" id="otherMedTextVal"
+		value="<%=hashval(h.get("otherMed"))%>" />
+	<input type="hidden" name="allergyBoxVal" id="allergyBoxTextVal" />
+	<input type="hidden" name="otherAllerVal" id="otherAllerTextVal"
+		value="<%=hashval(h.get("otherAller"))%>" />
+	<input type="hidden" name="immsVal" id="immsTextVal" />
 
-<input type="hidden" name="medsList" id="medsList"/>
-<input type="hidden" name="allegryList" id="allergyList"/>
-<input type="hidden" name="divArr" id="divArr"/>
+	<input type="hidden" name="medsList" id="medsList" />
+	<input type="hidden" name="allegryList" id="allergyList" />
+	<input type="hidden" name="divArr" id="divArr" />
 
 </html:form>
 
-<div id="optionss" style="position:absolute;left:7.5in;top:2px;border:2pxoutset #ccccff;background:#ccccff;display:none;">
- <html:form action="oscarEncounter/SaveCPPUserPrefAction">
- <ul>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="socialFam" id="socialFamCheck" ><bean:message key="oscarEncounter.Index.socialFamHist"/></li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="ongoingCon"id="ongoingConCheck" ><bean:message key="oscarEncounter.encounterPrint.msgOngCon"/>:aka Problem List</li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="medHist"  id="medHistCheck"><bean:message key="oscarEncounter.Index.medHist"/></li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="reminder" id="reminderCheck"><bean:message key="oscarEncounter.encounterPrint.msgReminders"/>: aka Med alerts and special needs</li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="riskfactor" id="riskfactorCheck">Risk Factors</li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="presBox" id="presBoxCheck">Medications</li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="otherMed" id="otherMedCheck"><bean:message key="oscarEncounter.Index.otherMed"/></li>
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="allergyBox" id="allergyBoxCheck">Allergies</li>                                                                                                                                                                                                   
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="otherAller" id="otherAllerCheck">Other Allergies</li>                                                                                                                                                                                                               
-    <li><input type="checkbox" onchange="javascript:checkTheBox(event);" name="imms" id="immsCheck">Immunizations</li>                
- </ul>
- <input type="submit" value="Save This as my Default View"/>
- </html:form>
-</div>
+<div id="optionss"
+	style="position: absolute; left: 7.5in; top: 2px; border: 2pxoutset #ccccff; background: #ccccff; display: none;">
+<html:form action="oscarEncounter/SaveCPPUserPrefAction">
+	<ul>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="socialFam"
+			id="socialFamCheck"><bean:message
+			key="oscarEncounter.Index.socialFamHist" /></li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="ongoingCon"
+			id="ongoingConCheck"><bean:message
+			key="oscarEncounter.encounterPrint.msgOngCon" />:aka Problem List</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="medHist"
+			id="medHistCheck"><bean:message
+			key="oscarEncounter.Index.medHist" /></li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="reminder"
+			id="reminderCheck"><bean:message
+			key="oscarEncounter.encounterPrint.msgReminders" />: aka Med alerts
+		and special needs</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="riskfactor"
+			id="riskfactorCheck">Risk Factors</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="presBox"
+			id="presBoxCheck">Medications</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="otherMed"
+			id="otherMedCheck"><bean:message
+			key="oscarEncounter.Index.otherMed" /></li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="allergyBox"
+			id="allergyBoxCheck">Allergies</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="otherAller"
+			id="otherAllerCheck">Other Allergies</li>
+		<li><input type="checkbox"
+			onchange="javascript:checkTheBox(event);" name="imms" id="immsCheck">Immunizations</li>
+	</ul>
+	<input type="submit" value="Save This as my Default View" />
+</html:form></div>
 
 
 <script type="text/javascript">

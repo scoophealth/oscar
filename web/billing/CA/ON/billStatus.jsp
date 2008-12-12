@@ -27,10 +27,11 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 
-<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page
+	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%--
 The taglib directive below imports the JSTL library. If you uncomment it,
 you must also add the JSTL library to the project. The Add Library... action
@@ -79,15 +80,18 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bill Status</title>
-        <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
-        <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" /> 
-        <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-        <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
-        <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
-        <script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Bill Status</title>
+<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript">
         function fillEndDate(d){
            document.serviceform.xml_appointment_date.value= d;  
         }
@@ -96,204 +100,109 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
            document.serviceform.demographicNo.value = demoNo;
         }
         </script>
-        <style type="text/css">
-            body {
-              margin:0;
-              padding:0;
-              font-family: verdana,arial,helvetica,sans-serif;
-            }
-            
-            div.statusTypeList{
-              margin-top:0px;
-              padding-top:0px;
-              margin-bottom:0px;
-              padding-bottom:0px;
-            
-            }
-            
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+<body>
 
-            div.statusTypeList ul{
-              list-style-type:none; 
-              list-style-position:outside;       
-              padding-left:1px;
-              margin-left:1px;    
-              margin-top:0px;
-              padding-top:1px;
-              margin-bottom:0px;
-              padding-bottom:0px;
-	      font-size: x-small;
-            }
+<table width="100%" border="1" cellspacing="0" cellpadding="0">
+	<tr bgcolor="#FFFFFF">
+		<div align="right"><a
+			href="javascript: function myFunction() {return false; }"
+			onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font
+			face="Arial, Helvetica, sans-serif" size="1">Manage Provider
+		List </font></a></div>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3">Billing</font></font></b></font></p>
+		</td>
+		<td nowrap valign="bottom"><font
+			face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><%=DateUtils.sumDate("yyyy-M-d","0")%></b></font>
+		</td>
+	</tr>
+</table>
+<form name="serviceform" method="get" action="billStatus.jsp">
 
-            div.statusTypeList ul li{
-              display: inline;
-            }
-            
-            
-            div.wrapper{
-              background-color: #eeeeff;
-              margin-top:0px;
-              padding-top:0px;
-              margin-bottom:0px;
-              padding-bottom:0px;	
-            }
 
-            div.wrapper br{
-              clear: left;
-            }
-
-            div.wrapper ul{
-              width: 80%;
-              background-color: #eeeeff;
-              list-style:none;
-              list-style-type:none; 
-              list-style-position:outside;       
-              padding-left:1px;
-              margin-left:1px;    
-              margin-top:0px;
-              padding-top:1px;
-              margin-bottom:0px;
-              padding-bottom:0px;
-	      font-size: x-small;
-            }
-
-            div.wrapper ul li{
-              display: inline;
-              background-color: #eeeeff;
-              vertical-align: middle;
-            }
-            
-            div.tableListing table {
-               width: 100%;
-               margin-top:0px;
-               border-width: 1px 1px 1px 1px;
-	       border-spacing: 0px;
-	       border-style: outset outset outset outset;
-	       border-color: gray gray gray gray;
-	       border-collapse: collapse;
-	
-        
-            }
-            
-            div.tableListing table tr td{
-               font-size: x-small;
-               text-align: center;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-            
-            div.tableListing table tr th{
-               font-size: small;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-   
-            div.selectionForm{
-            background-color: #eeeeff;
-            padding-bottom:3px;
-            }
-            div.selectionForm a{
-             font-size: x-small;
-            }
-            
-            form{
-              margin: 0px;
-              padding: 0px;
-            }
-        </style>
-    </head>
-    <body>
-
-    <table width="100%" border="1" cellspacing="0" cellpadding="0">
-      <tr bgcolor="#FFFFFF"> 
-        <div align="right"><a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,720,'../../../oscarReport/manageProvider.jsp?action=billingreport')"><font face="Arial, Helvetica, sans-serif" size="1">Manage Provider List </font></a></div>
-      </tr>
-    </table>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-      <tr bgcolor="#000000"> 
-        <td height="40" width="10%"></td>
-        <td width="90%" align="left"> 
-          <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing</font></font></b></font> 
-          </p>
-        </td>
-        <td nowrap valign="bottom">
-        <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><%=DateUtils.sumDate("yyyy-M-d","0")%></b></font>
-        </td>
-      </tr>
-    </table>
-    <form name="serviceform" method="get" action="billStatus.jsp">
-    
-
-    <div class="selectionForm" align="center">
-    
-    Select Provider 
-    <select name="providerview">
-       <option value="all">All Providers</option>
-    <% for (int i = 0 ; i < pList.size(); i++) { 
+<div class="selectionForm" align="center">Select Provider <select
+	name="providerview">
+	<option value="all">All Providers</option>
+	<% for (int i = 0 ; i < pList.size(); i++) { 
        Hashtable h = (Hashtable) pList.get(i);%>
-       <option value="<%=h.get("providerNo")%>" <%=providerNo.equals(h.get("providerNo"))?"selected":""%>><%=h.get("firstName")%>, <%=h.get("lastName")%></option>
-    <% } %>
-    </select>
-    <input type="submit" name="Submit" value="Create Report">
-        <div >
-          Service Date-Range&nbsp;&nbsp;
-          <font size="1"><a href="javascript: function myFunction() {return false; }" id="hlSDate">Begin:</a></font> 
-          <input type="text" name="xml_vdate" id="xml_vdate" value="<%=startDate%>">          
-        
-          <font size="1" ><a href="javascript: function myFunction() {return false; }" id="hlADate" >End:</a></font> 
-          <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=endDate%>">        
-          
-          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-30")%>')" >30</a>&nbsp;
-          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-60")%>')" >60</a>&nbsp;
-          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-90")%>')" >90</a>&nbsp;
-          
-          Demographic:<input type="text" name="demographicNo" size="5"value="<%=demoNo%>"/>
-          
-          <input type='button' name='print' value='Print' onClick='window.print()'>  
-        </div>                                
-    
-    </div>
-    
-    <div class="statusTypeList">
-      <ul>
-        <li><input type="radio" name="billTypes" value="H" <%=statusType.equals("H")?"checked":""%>>Capitated</input></li>
-        <li><input type="radio" name="billTypes" value="O" <%=statusType.equals("O")?"checked":""%>>Bill OHIP</input></li>
-        <li><input type="radio" name="billTypes" value="P" <%=statusType.equals("P")?"checked":""%>>Bill Patient</input></li>
-        <li><input type="radio" name="billTypes" value="N" <%=statusType.equals("N")?"checked":""%>>Do Not Bill</input></li>
-        <li><input type="radio" name="billTypes" value="W" <%=statusType.equals("W")?"checked":""%>>WCB</input></li>
-        <li><input type="radio" name="billTypes" value="B" <%=statusType.equals("B")?"checked":""%>>Summitted OHIP</input></li>
-        <li><input type="radio" name="billTypes" value="S" <%=statusType.equals("S")?"checked":""%>>Settled/Paid by OHIP</input></li>
-        <li><input type="radio" name="billTypes" value="X" <%=statusType.equals("X")?"checked":""%>>Bad Debt</input></li>
-        <li><input type="radio" name="billTypes" value="D" <%=statusType.equals("D")?"checked":""%>>Deleted Bill</input></li>
-        <li><input type="radio" name="billTypes" value="%" <%=statusType.equals("%")?"checked":""%>>All</input></li>
-      </ul>
-    </div>
-    </form>
-    <div class="tableListing">
-       <table >
-          <tr > 
-             <th>SERVICE DATE</th>
-             <th>PATIENT</th>
-             <th title="Status">STAT</th>
-             <th title="Code Billed">CODE</th>
-             <th title="Amount Billed">BILLED</th>
-             <th title="Amount Paid"  >PAID</th>
-             <th>DX1</th>
-             <th>DX2</th>
-             <th>DX3</th>
-             <th>ACCOUNT</th>
-             <th>MESSAGES</th>
-          </tr>
-       
-          
-       <% 
+	<option value="<%=h.get("providerNo")%>"
+		<%=providerNo.equals(h.get("providerNo"))?"selected":""%>><%=h.get("firstName")%>,
+	<%=h.get("lastName")%></option>
+	<% } %>
+</select> <input type="submit" name="Submit" value="Create Report">
+<div>Service Date-Range&nbsp;&nbsp; <font size="1"><a
+	href="javascript: function myFunction() {return false; }" id="hlSDate">Begin:</a></font>
+<input type="text" name="xml_vdate" id="xml_vdate"
+	value="<%=startDate%>"> <font size="1"><a
+	href="javascript: function myFunction() {return false; }" id="hlADate">End:</a></font>
+<input type="text" name="xml_appointment_date" id="xml_appointment_date"
+	value="<%=endDate%>"> <a
+	href="javascript: function myFunction() {return false; }"
+	onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-30")%>')">30</a>&nbsp;
+<a href="javascript: function myFunction() {return false; }"
+	onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-60")%>')">60</a>&nbsp;
+<a href="javascript: function myFunction() {return false; }"
+	onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-M-d","-90")%>')">90</a>&nbsp;
+
+Demographic:<input type="text" name="demographicNo" size="5"
+	value="<%=demoNo%>" /> <input type='button' name='print' value='Print'
+	onClick='window.print()'></div>
+
+</div>
+
+<div class="statusTypeList">
+<ul>
+	<li><input type="radio" name="billTypes" value="H"
+		<%=statusType.equals("H")?"checked":""%>>Capitated</input></li>
+	<li><input type="radio" name="billTypes" value="O"
+		<%=statusType.equals("O")?"checked":""%>>Bill OHIP</input></li>
+	<li><input type="radio" name="billTypes" value="P"
+		<%=statusType.equals("P")?"checked":""%>>Bill Patient</input></li>
+	<li><input type="radio" name="billTypes" value="N"
+		<%=statusType.equals("N")?"checked":""%>>Do Not Bill</input></li>
+	<li><input type="radio" name="billTypes" value="W"
+		<%=statusType.equals("W")?"checked":""%>>WCB</input></li>
+	<li><input type="radio" name="billTypes" value="B"
+		<%=statusType.equals("B")?"checked":""%>>Summitted OHIP</input></li>
+	<li><input type="radio" name="billTypes" value="S"
+		<%=statusType.equals("S")?"checked":""%>>Settled/Paid by OHIP</input></li>
+	<li><input type="radio" name="billTypes" value="X"
+		<%=statusType.equals("X")?"checked":""%>>Bad Debt</input></li>
+	<li><input type="radio" name="billTypes" value="D"
+		<%=statusType.equals("D")?"checked":""%>>Deleted Bill</input></li>
+	<li><input type="radio" name="billTypes" value="%"
+		<%=statusType.equals("%")?"checked":""%>>All</input></li>
+</ul>
+</div>
+</form>
+<div class="tableListing">
+<table>
+	<tr>
+		<th>SERVICE DATE</th>
+		<th>PATIENT</th>
+		<th title="Status">STAT</th>
+		<th title="Code Billed">CODE</th>
+		<th title="Amount Billed">BILLED</th>
+		<th title="Amount Paid">PAID</th>
+		<th>DX1</th>
+		<th>DX2</th>
+		<th>DX3</th>
+		<th>ACCOUNT</th>
+		<th>MESSAGES</th>
+	</tr>
+
+
+	<% 
        System.out.println(" Error calculating value for bList.size(): "+bList.size()); 
 
        for (int i = 0 ; i < bList.size(); i++) { 
@@ -316,49 +225,67 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
        paidTotal.add(new BigDecimal(amountPaid).setScale(2,BigDecimal.ROUND_HALF_UP));
        System.out.println(" E rr or calculating value for bList.size(): "+bList.size()); 
        
-       %>       
-          <tr> 
-             <td><%=h.get("billing_date")%>  <%=h.get("billing_time")%></td>  <!--SERVICE DATE-->
-             <td><a href="javascript: setDemographic('<%=h.get("demographic_no")%>');"><%=h.get("demographic_name")%></a></td> <!--PATIENT-->
-             <td><%=h.get("status")%></td> <!--STAT-->
-             <td>&nbsp;</td><!--CODE-->
-             <td><%=h.get("total")%></td><!--BILLED-->
-             <td>
-                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingRAView.jsp?billing_no=<%=h.get("billing_no")%>','RAView<%=h.get("billing_no")%>')">
-                 <%=amountPaid%>
-                 </a>
-             </td><!--PAID-->
-             <td>&nbsp;</td><!--DX1-->
-             <td>&nbsp;</td><!--DX2-->
-             <td>&nbsp;</td><!--DX3-->
-             <td>
-                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'../../../billing/CA/BC/billingView.do?billing_no=<%=h.get("billing_no")%>','BillView<%=h.get("billing_no")%>')"><%=h.get("billing_no")%></a>
-             </td><!--ACCOUNT-->
-             <td>
-                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingCorrection.jsp?billing_no=<%=h.get("billing_no")%>','BillCorrection<%=h.get("billing_no")%>')">Edit</a>
-                 <%=raData.getErrorCodes(raList)%>
-             </td><!--MESSAGES-->
-          </tr>
-       <% } %>  
-       
-          <tr> 
-             <td>Count:</td>  
-             <td><%=bList.size()%></td> 
-             <td>&nbsp;</td> <!--STAT-->
-             <td>Total:</td><!--CODE-->
-             <td><%=total.toString()%></td><!--BILLED-->
-             <td><%=paidTotal.toString()%></td><!--PAID-->
-             <td>&nbsp;</td><!--DX1-->
-             <td>&nbsp;</td><!--DX2-->
-             <td>&nbsp;</td><!--DX3-->
-             <td>&nbsp;</td><!--ACCOUNT-->
-             <td>&nbsp;</td><!--MESSAGES-->
-          </tr>
-       <table>
-    </div>
-    <script language='javascript'>
+       %>
+	<tr>
+		<td><%=h.get("billing_date")%> <%=h.get("billing_time")%></td>
+		<!--SERVICE DATE-->
+		<td><a
+			href="javascript: setDemographic('<%=h.get("demographic_no")%>');"><%=h.get("demographic_name")%></a></td>
+		<!--PATIENT-->
+		<td><%=h.get("status")%></td>
+		<!--STAT-->
+		<td>&nbsp;</td>
+		<!--CODE-->
+		<td><%=h.get("total")%></td>
+		<!--BILLED-->
+		<td><a href="javascript: function myFunction() {return false; }"
+			onclick="javascript:popup(700,700,'billingRAView.jsp?billing_no=<%=h.get("billing_no")%>','RAView<%=h.get("billing_no")%>')">
+		<%=amountPaid%> </a></td>
+		<!--PAID-->
+		<td>&nbsp;</td>
+		<!--DX1-->
+		<td>&nbsp;</td>
+		<!--DX2-->
+		<td>&nbsp;</td>
+		<!--DX3-->
+		<td><a href="javascript: function myFunction() {return false; }"
+			onclick="javascript:popup(700,700,'../../../billing/CA/BC/billingView.do?billing_no=<%=h.get("billing_no")%>','BillView<%=h.get("billing_no")%>')"><%=h.get("billing_no")%></a>
+		</td>
+		<!--ACCOUNT-->
+		<td><a href="javascript: function myFunction() {return false; }"
+			onclick="javascript:popup(700,700,'billingCorrection.jsp?billing_no=<%=h.get("billing_no")%>','BillCorrection<%=h.get("billing_no")%>')">Edit</a>
+		<%=raData.getErrorCodes(raList)%></td>
+		<!--MESSAGES-->
+	</tr>
+	<% } %>
+
+	<tr>
+		<td>Count:</td>
+		<td><%=bList.size()%></td>
+		<td>&nbsp;</td>
+		<!--STAT-->
+		<td>Total:</td>
+		<!--CODE-->
+		<td><%=total.toString()%></td>
+		<!--BILLED-->
+		<td><%=paidTotal.toString()%></td>
+		<!--PAID-->
+		<td>&nbsp;</td>
+		<!--DX1-->
+		<td>&nbsp;</td>
+		<!--DX2-->
+		<td>&nbsp;</td>
+		<!--DX3-->
+		<td>&nbsp;</td>
+		<!--ACCOUNT-->
+		<td>&nbsp;</td>
+		<!--MESSAGES-->
+	</tr>
+	<table>
+		</div>
+		<script language='javascript'>
        Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});          
        Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});                      
    </script>
-    </body>
+</body>
 </html>

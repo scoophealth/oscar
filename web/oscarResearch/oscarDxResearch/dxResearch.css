@@ -20,82 +20,92 @@
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
- */
-
- /* styles.css -- Style sheet for the dxResearch.
+ */ /* styles.css -- Style sheet for the dxResearch.
 	
 */
+A:link {
+	font-family: verdana, arial, helvetica;
+	color: #336666;
+	cursor: pointer;
+}
 
-        A:link{            
-            font-family: verdana,arial,helvetica; 
-            color: #336666;
-            cursor: pointer ;
-        }
-	A:visited{            
-            font-family: verdana,arial,helvetica; 
-            color: #336666; }
-	A:hover{
-            font-weight: bold; 
-            font-family: verdana,arial,helvetica; 
-            color: #000000; 
-            background-color: #FFFFFF;}
-	
-	BODY{
-            font-size: 10pt ; 
-            font-family: verdana,arial,helvetica; 
-            color: #000000; 
-            background-color: #FFFFFF;
-        }
-	TD{             
-            font-size: 10pt;
-            font-family: verdana,arial,helvetica;
-            height: 15pt;
-        }
-	TD.black{
-            font-weight: bold; 
-            font-family: verdana,arial,helvetica; 
-            color: #FFFFFF; 
-            background-color: #666699;
-        }
-	.heading{
-            font-weight: bold  ; 
-            font-size: 11pt ; 
-            font-family: verdana,arial,helvetica; 
-            color: #000000; 
-            background-color: #6699cc;
-            height: 20pt;
-        }
-        .notResolved{
-            font-size: 10pt;
-            color: blue;
-        }
-        .quickList{
-            font-size: 9pt;
-        }
-        .subject{
-            font-size: 18pt;
-            font-weight: bold;
-            color: #FFFFFF;
-            height:40pt;
-        }
-	.sbttn {
-            background: #EEEEFF;
-            border-bottom: 1px solid #104A7B;
-            border-right: 1px solid #104A7B;
-            border-left: 1px solid #AFC4D5;
-            border-top:1px solid #AFC4D5;
-            color:#000066;
-            height:19px;
-            text-decoration:none;
-            cursor: pointer;
-        }          
-	.mbttn{
-            background: #D7DBF2;
-            border-bottom: 1px solid #104A7B;
-            border-right: 1px solid #104A7B;
-            border-left: 1px solid #AFC4D5;
-            border-top:1px solid #AFC4D5;
-            color:#000066;height:19px;
-            text-decoration:none;
-            cursor: pointer;
-        }
+A:visited {
+	font-family: verdana, arial, helvetica;
+	color: #336666;
+}
+
+A:hover {
+	font-weight: bold;
+	font-family: verdana, arial, helvetica;
+	color: #000000;
+	background-color: #FFFFFF;
+}
+
+BODY {
+	font-size: 10pt;
+	font-family: verdana, arial, helvetica;
+	color: #000000;
+	background-color: #FFFFFF;
+}
+
+TD {
+	font-size: 10pt;
+	font-family: verdana, arial, helvetica;
+	height: 15pt;
+}
+
+TD.black {
+	font-weight: bold;
+	font-family: verdana, arial, helvetica;
+	color: #FFFFFF;
+	background-color: #666699;
+}
+
+.heading {
+	font-weight: bold;
+	font-size: 11pt;
+	font-family: verdana, arial, helvetica;
+	color: #000000;
+	background-color: #6699cc;
+	height: 20pt;
+}
+
+.notResolved {
+	font-size: 10pt;
+	color: blue;
+}
+
+.quickList {
+	font-size: 9pt;
+}
+
+.subject {
+	font-size: 18pt;
+	font-weight: bold;
+	color: #FFFFFF;
+	height: 40pt;
+}
+
+.sbttn {
+	background: #EEEEFF;
+	border-bottom: 1px solid #104A7B;
+	border-right: 1px solid #104A7B;
+	border-left: 1px solid #AFC4D5;
+	border-top: 1px solid #AFC4D5;
+	color: #000066;
+	height: 19px;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.mbttn {
+	background: #D7DBF2;
+	border-bottom: 1px solid #104A7B;
+	border-right: 1px solid #104A7B;
+	border-left: 1px solid #AFC4D5;
+	border-top: 1px solid #AFC4D5;
+	color: #000066;
+	height: 19px;
+	text-decoration: none;
+	cursor: pointer;
+}

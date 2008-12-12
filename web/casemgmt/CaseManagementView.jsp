@@ -322,7 +322,7 @@ setTimeout(string,time);
 		page='<%="/casemgmt/"
 					+ selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 
-	
+
 
 	<c:if
 		test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
@@ -389,8 +389,7 @@ Progress Note Report View:
 				</html:select></td>
 			</tr>
 		</table>
-		<c:if
-			test="${param.note_view!='detailed'}">
+		<c:if test="${param.note_view!='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<tr class="title">
@@ -475,8 +474,7 @@ Progress Note Report View:
 				</c:forEach>
 			</table>
 		</c:if>
-		<c:if
-			test="${param.note_view=='detailed'}">
+		<c:if test="${param.note_view=='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<%

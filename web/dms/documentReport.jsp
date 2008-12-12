@@ -34,19 +34,22 @@ String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="page" />
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 <%
 for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
     String name = (String)e.nextElement();
@@ -128,17 +131,20 @@ if( viewstatus == null ) {
 %>
 <html:html locale="true">
 <head>
-<title><bean:message key="dms.documentReport.title"/></title>
+<title><bean:message key="dms.documentReport.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
-<link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css" href="dms.css"/>
-<link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="dms.css" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
 <script type="text/javascript">
@@ -272,30 +278,28 @@ function popup1(height, width, url, windowName){
 </script>
 
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>
-
 <body class="bodystyle">
-   
-  <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
-      <tr class="MainTableRowTop">
-          <td class="MainTableTopRowLeftColumn" width="60px">
-             eDocs
-          </td>
-          <td class="MainTableTopRowRightColumn">
-              <table class="TopStatusBar">
-                  <tr>
-                     <td>Documents</td>
-                     <td>&nbsp;</td>
-                     <td style="text-align: right;">
-                         <a href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | 
-                         <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
-                         <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
-                     </td>
-                  </tr>
-              </table>
-          </td>
-      </tr>
-      <tr>
-      <%--
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable"
+	style="margin: 0px;">
+	<tr class="MainTableRowTop">
+		<td class="MainTableTopRowLeftColumn" width="60px">eDocs</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Documents</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right;"><a
+					href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | <a
+					href="javascript: popupStart(300, 400, 'About.jsp')">About</a> | <a
+					href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<%--
          <td class="MainTableLeftColumn" valign="top">
              <div class="leftplane">
                   <h3>&nbsp; Tags</h3>
@@ -309,15 +313,11 @@ function popup1(height, width, url, windowName){
              </div>
          </td>
          --%>
-         <td class="MainTableRightColumn" colspan="2" valign="top">
-           <jsp:include page="addDocument.jsp"/>
-           
-           <html:form action="/dms/combinePDFs">
-           <input type="hidden" name="curUser" value="<%=curUser%>">
-           <input type="hidden" name="demoId" value="<%=moduleid%>">
-           <div class="documentLists">
-               <%-- STUFF TO DISPLAY --%>
-             <%
+		<td class="MainTableRightColumn" colspan="2" valign="top"><jsp:include
+			page="addDocument.jsp" /> <html:form action="/dms/combinePDFs">
+			<input type="hidden" name="curUser" value="<%=curUser%>">
+			<input type="hidden" name="demoId" value="<%=moduleid%>">
+			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%
                 ArrayList categories = new ArrayList();
                 ArrayList categoryKeys = new ArrayList();
                 ArrayList privatedocs = new ArrayList();
@@ -338,48 +338,54 @@ function popup1(height, width, url, windowName){
                     String currentkey = (String) categoryKeys.get(i);
                     ArrayList category = (ArrayList) categories.get(i);
              %>
-              <div class="doclist">
-                   <div class="headerline">
-                         <div class="docHeading">
-                         <% if( i == 0 ) {
-                         %>                                
-                             <span class="tabs" style="float:right">
-                                 View Status
-                                 <select id="viewstatus" name="viewstatus"  style="text-size:8px; margin-bottom:-4px;" onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus='+this.options[this.selectedIndex].value;">
-                                     <option value="all" <%=viewstatus.equalsIgnoreCase("all") ? "selected":""%> >All</option>
-                                     <option value="deleted" <%=viewstatus.equalsIgnoreCase("deleted") ? "selected":""%> >Deleted</option>
-                                     <option value="active" <%=viewstatus.equalsIgnoreCase("active") ? "selected":""%>>Published</option>
-                                 </select>
-                             </span>
-                          <%
+			<div class="doclist">
+			<div class="headerline">
+			<div class="docHeading">
+			<% if( i == 0 ) {
+                         %> <span class="tabs" style="float: right">
+			View Status <select id="viewstatus" name="viewstatus"
+				style="text-size: 8px; margin-bottom: -4px;"
+				onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus='+this.options[this.selectedIndex].value;">
+				<option value="all"
+					<%=viewstatus.equalsIgnoreCase("all") ? "selected":""%>>All</option>
+				<option value="deleted"
+					<%=viewstatus.equalsIgnoreCase("deleted") ? "selected":""%>>Deleted</option>
+				<option value="active"
+					<%=viewstatus.equalsIgnoreCase("active") ? "selected":""%>>Published</option>
+			</select> </span> <%
                           }
-                          %>
-                                <a id="plusminus<%=i%>" href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
-                                  -- <%= currentkey%> 
-                                </a>
-                                <span class="tabs">
-                                     View: <a href="?function=<%=module%>&functionid=<%=moduleid%>">All</a>
-                                     <% for (int i3=0; i3<doctypes.size(); i3++) { %>
-                                        | <a href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
-                                     <%}%>                                     
-                                </span>
-                                
-                         </div>
-                   </div>
-                 <div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
-                        <table id="privateDocs" class="docTable">
-                           <tr>
-                               <td><input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');"/></td>
-                               <td width="50%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message key="dms.documentReport.msgDocDesc"/></a></b></td>
-                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Content</a></b></td>
-                               <td width="10%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Type</a></b></td>
-                               <td width="15%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message key="dms.documentReport.msgCreator"/></a></b></td>
-                               <td width="10%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>" title="Observation Date"><b>Date</b></a></td>
-                              <%-- <td width="10%"><b>Status</b></td> --%>
-                               <td width="5%">&nbsp;</td>
-                           </tr>
+                          %> <a id="plusminus<%=i%>"
+				href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
+			-- <%= currentkey%> </a> <span class="tabs"> View: <a
+				href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> <% for (int i3=0; i3<doctypes.size(); i3++) { %>
+			| <a
+				href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
+			<%}%> </span></div>
+			</div>
+			<div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
+			<table id="privateDocs" class="docTable">
+				<tr>
+					<td><input class="tightCheckbox" type="checkbox"
+						id="pdfCheck<%=i%>"
+						onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" /></td>
+					<td width="50%"><b><a
+						href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
+						key="dms.documentReport.msgDocDesc" /></a></b></td>
+					<td width="10%"><b><a
+						href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Content</a></b></td>
+					<td width="10%"><b><a
+						href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Type</a></b></td>
+					<td width="15%"><b><a
+						href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
+						key="dms.documentReport.msgCreator" /></a></b></td>
+					<td width="10%"><a
+						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
+						title="Observation Date"><b>Date</b></a></td>
+					<%-- <td width="10%"><b>Status</b></td> --%>
+					<td width="5%">&nbsp;</td>
+				</tr>
 
-              <%
+				<%
                 for (int i2=0; i2<category.size(); i2++) {
                     EDoc curdoc = (EDoc) category.get(i2);
                     //content type (take everything following '/')
@@ -394,105 +400,116 @@ function popup1(height, width, url, windowName){
                     else 
                         dStatus="active";
             %>
-                           <tr>
-                              <td>
-                                  <% if (curdoc.isPDF()){%>
-                                        <input class="tightCheckbox<%=i%>" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>" style="margin:0px; padding:0px;"/>
-                                  <%}else{%>
-                                        &nbsp;
-                                  <%}%>
-                              </td>
-                              <td>
-                              <% 
+				<tr>
+					<td>
+					<% if (curdoc.isPDF()){%> <input class="tightCheckbox<%=i%>"
+						type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>"
+						value="<%=curdoc.getDocId()%>" style="margin: 0px; padding: 0px;" />
+					<%}else{%> &nbsp; <%}%>
+					</td>
+					<td>
+					<% 
                               String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
-                              if (curdoc.getStatus() == 'H') { %>
-                                 <a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%> href="<%=url%>" target="_blank">
-                              <% } else { %>
-                                  <a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%> href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
-                                      <% } %>
-                                  <%=curdoc.getDescription()%></a>
-                              </td>
-                              <td><%=contentType%></td>
-                              <td><%=curdoc.getType()%></td>
-                              <td><%=curdoc.getCreatorName()%></td>
-                              <td><%=curdoc.getObservationDate()%></td>
-                              <%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
-                              <td>
-                              <% 
+                              if (curdoc.getStatus() == 'H') { %> <a
+						<%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
+						href="<%=url%>" target="_blank"> <% } else { %> <a
+						<%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
+						href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
+					<% } %> <%=curdoc.getDescription()%></a></td>
+					<td><%=contentType%></td>
+					<td><%=curdoc.getType()%></td>
+					<td><%=curdoc.getCreatorName()%></td>
+					<td><%=curdoc.getObservationDate()%></td>
+					<%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
+					<td>
+					<% 
                                  
                                  if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
                                     if( curdoc.getStatus() == 'D' ) {
-                              %>                              
-                                        <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img src="<c:out value="${ctx}/images/user-trash.png"/>" title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a> &nbsp; 
-                              <%    }
+                              %> <a
+						href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
+						src="<c:out value="${ctx}/images/user-trash.png"/>"
+						title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a>
+					&nbsp; <%    }
                                     else {
-                              %>
-                                        <a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a> &nbsp;
-                              <%      }    
-                                 } else { %>
-                              <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.edocdelete" rights="r">                                  
-                                  <%if( curdoc.getStatus() == 'D' ) {%>
-                                        <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img src="<c:out value="${ctx}/images/user-trash.png"/>" title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a> &nbsp;
+                              %> <a
+						href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
+						src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a>
+					&nbsp; <%      }    
+                                 } else { %> <security:oscarSec
+						roleName="<%=roleName$%>" objectName="_admin,_admin.edocdelete"
+						rights="r">
+						<%if( curdoc.getStatus() == 'D' ) {%>
+						<a
+							href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
+							src="<c:out value="${ctx}/images/user-trash.png"/>"
+							title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a> &nbsp;
                                   <%
                                     } 
                                     else {
                                   %>
-                                        <a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a> &nbsp;
+						<a
+							href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
+							src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a> &nbsp;
                                   <% } %>
-                              </security:oscarSec>
-                              <% } %>
-                              <% 
+					</security:oscarSec> <% } %> <% 
                                 if( curdoc.getStatus() != 'D' ) {
                                     if (curdoc.getStatus() == 'H') { %>
-                                    <a href="#" onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
-                                  <% } else { %>
-                                    <a href="#" onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
-                                  <% } %>
-                                  <img height="15px" width="15px" src="<c:out value="${ctx}/images/notepad.gif"/>" title="<bean:message key="dms.documentReport.btnEdit"/>"></a></td>
-                              <% } %>
-                           </tr>
+					<a href="#"
+						onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+					<% } else { %> <a href="#"
+						onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+					<% } %> <img height="15px" width="15px"
+						src="<c:out value="${ctx}/images/notepad.gif"/>"
+						title="<bean:message key="dms.documentReport.btnEdit"/>"></a></td>
+					<% } %>
+				</tr>
 
-            <%}
+				<%}
             if (category.size() == 0) {%>
-            <tr><td colspan="6">No documents to display</td></tr>
-            <%}%>
-                        </table>
-                        
-                   </div>
-              </div>
-              <%}%>
+				<tr>
+					<td colspan="6">No documents to display</td>
+				</tr>
+				<%}%>
+			</table>
 
-            </div>
-            <div>
-              <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
-              <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
-              <input type="button" value="Combine PDFs" onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');"/>
-              <%
+			</div>
+			</div>
+			<%}%>
+			</div>
+			<div><input type="button" name="Button"
+				value="<bean:message key="dms.documentReport.btnDoneClose"/>"
+				onclick=self.close();> <input type="button" name="print"
+				value='<bean:message key="global.btnPrint"/>'
+				onClick="window.print()"> <input type="button"
+				value="Combine PDFs"
+				onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');" />
+			<%
                     if( module.equals("demographic") ) {
-              %>
-                        <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                            <indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">    
-                                
-                                <%-- input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/  
+              %> <oscarProp:oscarPropertiesCheck property="MY_OSCAR"
+				value="yes">
+				<indivo:indivoRegistered demographic="<%=moduleid%>"
+					provider="<%=curUser%>">
+
+					<%-- input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/  
                                 --%>
-                                
-                                <input type="button" onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');" value="Send To PHR"/>
-                                
-                            </indivo:indivoRegistered>
-                        </oscarProp:oscarPropertiesCheck>
-              <%
+
+					<input type="button"
+						onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');"
+						value="Send To PHR" />
+
+				</indivo:indivoRegistered>
+			</oscarProp:oscarPropertiesCheck> <%
                     }
               %>
-            </div>
-           </html:form>
-         </td>
-      </tr>
-      <tr>
-         <td colspan="2" class="MainTableBottomRowRightColumn">
-         </td>
-      </tr>
-  </table>
-   
-  
+			</div>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+
+
 </body>
 </html:html>

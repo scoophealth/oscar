@@ -1,0 +1,294 @@
+body {
+	font-size: 100%
+}
+
+div.leftBox {
+	width: 90%;
+	margin-top: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
+	float: left;
+}
+
+span.footnote {
+	background-color: #ccccee;
+	border: 1px solid #000;
+	width: 4px;
+}
+
+div.leftBox h3 {
+	background-color: #ccccff;
+	/*font-size: 1.25em;*/
+	font-size: 8pt;
+	font-variant: small-caps;
+	font-weight: bold;
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.leftBox ul { /*border-top: 1px solid #F11;*/
+	/*border-bottom: 1px solid #F11;*/
+	font-size: 1.0em;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	padding-left: 1px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.leftBox li {
+	padding-right: 15px;
+	white-space: nowrap;
+}
+
+div.headPrevention {
+	position: relative;
+	float: left;
+	width: 11em;
+	height: 2.9em;
+}
+
+div.headPrevention p {
+	background: #ddddff;
+	font-family: verdana, tahoma, sans-serif;
+	margin: 0;
+	padding: 4px 4px;
+	line-height: 1.2;
+	/*text-align: justify;*/
+	height: 2em;
+	font-family: sans-serif;
+}
+
+div.headPrevention a {
+	text-decoration: none;
+}
+
+div.headPrevention a:active {
+	color: blue;
+}
+
+div.headPrevention a:hover {
+	color: blue;
+}
+
+div.headPrevention a:link {
+	color: blue;
+}
+
+div.headPrevention a:visited {
+	color: blue;
+}
+
+div.preventionProcedure {
+	width: 9em;
+	float: left;
+	margin-left: 3px;
+	margin-bottom: 3px;
+}
+
+div.preventionProcedure p {
+	font-size: 0.8em;
+	font-family: verdana, tahoma, sans-serif;
+	background: #F0F0E7;
+	margin: 0;
+	padding: 1px 2px;
+	/*line-height: 1.3;*/ /*text-align: justify*/
+}
+
+div.preventionSection {
+	width: 100%;
+	position: relative;
+	margin-top: 5px;
+	float: left;
+	clear: left;
+}
+
+div.preventionSet {
+	border: thin solid grey;
+	clear: left;
+}
+
+div.recommendations {
+	font-family: verdana, tahoma, sans-serif;
+	font-size: 1.2em;
+}
+
+div.recommendations ul {
+	padding-left: 15px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.recommendations li {
+	
+}
+
+body {
+	font-family: Verdana, helvetica, sans-serif;
+	margin: 0px;
+	padding: 0px;
+}
+
+td.topbar {
+	background-color: gold;
+}
+
+td.leftbar {
+	background-color: #009966;
+	color: white;
+}
+
+td.leftinput {
+	background-color: #f5fffa; //
+	background-color: #ffffff;
+	font-size: small;
+}
+
+span.extrasmall {
+	font-size: x-small;
+}
+
+body {
+	font-size: 100%
+}
+
+//
+div.news {
+	width: 100px;
+	background: #FFF;
+	margin-bottom: 20px;
+	margin-left: 20px;
+}
+
+div.leftBox {
+	width: 90%;
+	margin-top: 2px;
+	margin-left: 3px;
+	margin-right: 3px;
+	float: left;
+}
+
+div.leftBox h3 {
+	background-color: #ccccff;
+	/*font-size: 1.25em;*/
+	font-size: 8pt;
+	font-variant: small-caps;
+	font: bold;
+	margin-top: 0px;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.leftBox ul { /*border-top: 1px solid #F11;*/
+	/*border-bottom: 1px solid #F11;*/
+	font-size: 1.0em;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	padding-left: 1px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.leftBox li {
+	padding-right: 15px;
+	white-space: nowrap;
+}
+
+div.headPrevention {
+	position: relative;
+	float: left;
+	width: 8.4em;
+	height: 2.5em;
+}
+
+div.headPrevention p {
+	background: #EEF;
+	font-family: verdana, tahoma, sans-serif;
+	margin: 0;
+	padding: 4px 5px;
+	line-height: 1.3;
+	text-align: justify height : 2em;
+	font-family: sans-serif;
+	border-left: 0px;
+}
+
+div.headPrevention a {
+	text-decoration: none;
+}
+
+div.headPrevention a:active {
+	color: blue;
+}
+
+div.headPrevention a:hover {
+	color: blue;
+}
+
+div.headPrevention a:link {
+	color: blue;
+}
+
+div.headPrevention a:visited {
+	color: blue;
+}
+
+div.preventionProcedure {
+	width: 10em;
+	float: left;
+	margin-left: 3px;
+	margin-bottom: 3px;
+}
+
+div.preventionProcedure p {
+	font-size: 0.8em;
+	font-family: verdana, tahoma, sans-serif;
+	background: #F0F0E7;
+	margin: 0;
+	padding: 1px 2px;
+	/*line-height: 1.3;*/ /*text-align: justify*/
+}
+
+div.preventionSection {
+	width: 100%;
+	postion: relative;
+	margin-top: 5px;
+	float: left;
+	clear: left;
+}
+
+div.preventionSet {
+	border: thin solid grey;
+	clear: left;
+}
+
+div.recommendations {
+	font-family: verdana, tahoma, sans-serif;
+	font-size: 1.2em;
+}
+
+div.recommendations ul {
+	padding-left: 15px;
+	margin-left: 1px;
+	margin-top: 0px;
+	padding-top: 1px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+div.recommendations li {
+	
+}

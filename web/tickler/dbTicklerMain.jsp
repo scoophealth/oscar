@@ -24,16 +24,18 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.log.*"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbTicker.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.log.*"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbTicker.jsp"%>
 <%
 String[] param = new String[2];
 String[] temp = request.getParameterValues("checkbox");
 if (temp == null){
 %>
-  <% response.sendRedirect("ticklerMain.jsp"); %>
+<% response.sendRedirect("ticklerMain.jsp"); %>
 <%}else{
 		//temp=e.nextElement().toString();		    
     for (int i=0; i<temp.length; i++){

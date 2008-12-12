@@ -22,29 +22,28 @@
 */
  -->
 
-<%@ include file="/taglibs.jsp"%> 
+<%@ include file="/taglibs.jsp"%>
 <title>Caisi Editor Details</title>
 <p>Please fill in information below:</p>
 <!-- html:form action="/caisiEditor" focus="caisiEditor.code" onsubmit="return validateIssueAdminForm(this)" -->
 <html:form action="/CaisiEditor" focus="caisiEditor.category">
-<input type="hidden" name="method" value="save"/>
-<html:hidden property="caisiEditor.id"/>
+	<input type="hidden" name="method" value="save" />
+	<html:hidden property="caisiEditor.id" />
 
-<div style="color:red">
-<%@ include file="messages.jsp" %>
+	<div style="color: red"><%@ include file="messages.jsp"%>
 
-<table>
-<tr>
-     <th>Category: </th>
-     <td><html:text maxlength="50" property="caisiEditor.category"/></td>
-</tr>
-<tr>
-     <th>Label: </th>
-     <td><html:text maxlength="255" property="caisiEditor.label"/></td>
-</tr>
-<input type="hidden" name="caisiEditor.type" value=""/>
-<input type="hidden" name="caisiEditor.horizontal" value=""/>
-<!-- tr>
+	<table>
+		<tr>
+			<th>Category:</th>
+			<td><html:text maxlength="50" property="caisiEditor.category" /></td>
+		</tr>
+		<tr>
+			<th>Label:</th>
+			<td><html:text maxlength="255" property="caisiEditor.label" /></td>
+		</tr>
+		<input type="hidden" name="caisiEditor.type" value="" />
+		<input type="hidden" name="caisiEditor.horizontal" value="" />
+		<!-- tr>
      <th>Type: </th>
      <td>
      <select name="caisiEditor.type">
@@ -84,15 +83,15 @@
      </select>
      </td>
 </tr -->
-<tr>
-     <th>Label Value: </th>
-     <td><html:text maxlength="255" property="caisiEditor.labelValue"/></td>
-</tr>
-<tr>
-     <th>Label Code: </th>
-     <td><html:text maxlength="50" property="caisiEditor.labelCode"/></td>
-</tr>
-<!--  tr>
+		<tr>
+			<th>Label Value:</th>
+			<td><html:text maxlength="255" property="caisiEditor.labelValue" /></td>
+		</tr>
+		<tr>
+			<th>Label Code:</th>
+			<td><html:text maxlength="50" property="caisiEditor.labelCode" /></td>
+		</tr>
+		<!--  tr>
      <th>Horizontal: </th>
      <td>
      <select name="caisiEditor.horizontal">
@@ -116,44 +115,39 @@
      </select>
      </td>
 </tr -->
-<tr>
-     <th>Active?</th>
-     <td>
-     <select name="caisiEditor.isActive">
-     	<option value="">&nbsp;</option>
-     	<c:choose>
-             <c:when test="${caisiEditorForm.map.caisiEditor.isActive == 'Yes'}">
-             <option value="Yes" selected>Yes</option>
-             </c:when>
-             <c:otherwise>
-             <option value="Yes">Yes</option>
-             </c:otherwise>
-        </c:choose>
-     	<c:choose>
-             <c:when test="${caisiEditorForm.map.caisiEditor.isActive == 'No'}">
-             <option value="No" selected>No</option>
-             </c:when>
-             <c:otherwise>
-             <option value="No">No</option>
-             </c:otherwise>
-        </c:choose>     	
-     </select>
-     </td>
-</tr>
+		<tr>
+			<th>Active?</th>
+			<td><select name="caisiEditor.isActive">
+				<option value="">&nbsp;</option>
+				<c:choose>
+					<c:when test="${caisiEditorForm.map.caisiEditor.isActive == 'Yes'}">
+						<option value="Yes" selected>Yes</option>
+					</c:when>
+					<c:otherwise>
+						<option value="Yes">Yes</option>
+					</c:otherwise>
+				</c:choose>
+				<c:choose>
+					<c:when test="${caisiEditorForm.map.caisiEditor.isActive == 'No'}">
+						<option value="No" selected>No</option>
+					</c:when>
+					<c:otherwise>
+						<option value="No">No</option>
+					</c:otherwise>
+				</c:choose>
+			</select></td>
+		</tr>
 
-<tr>
-     <td></td>
-     <td>
-          <html:submit styleClass="button">Save</html:submit>
-          <!--
+		<tr>
+			<td></td>
+			<td><html:submit styleClass="button">Save</html:submit> <!--
        <c:if test="${not empty param.id}">
           <html:submit styleClass="button"   
               onclick="this.form.method.value='delete'">
               Delete</html:submit>
        </c:if>
-       	-->
-       <html:submit styleClass="button" onclick="this.form.method.value='cancel'">Cancel</html:submit> 
-     </td>
-</table>
+       	--> <html:submit styleClass="button"
+				onclick="this.form.method.value='cancel'">Cancel</html:submit></td>
+	</table>
 </html:form>
 <!-- html:javascript formName="caisiEditorForm"/ -->

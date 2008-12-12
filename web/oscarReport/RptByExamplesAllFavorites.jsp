@@ -26,18 +26,19 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 
 <head>
-<title>
-    <bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/> - <bean:message key="oscarReport.RptByExample.MsgMyFavorites"/>
-</title>
+<title><bean:message
+	key="oscarReport.RptByExample.MsgQueryByExamples" /> - <bean:message
+	key="oscarReport.RptByExample.MsgMyFavorites" /></title>
 
 </head>
 <script type="text/javascript">    
@@ -59,58 +60,65 @@
         self.close();
     }
 </script>
-<body vlink="#0000FF" class="BodyStyle" >
+<body vlink="#0000FF" class="BodyStyle">
 
 <html:form action="/oscarReport/RptByExamplesFavorite.do">
-<table  class="MainTable" id="scrollNumber1" name="encounterTable">
-    <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td><bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/> - <bean:message key="oscarReport.RptByExample.MsgMyFavorites"/></td>                                               
-                    </tr>                  
-                </table>
-            </td>
-    </tr>
-    <tr>
-        <td class="MainTableLeftColumn" valign="top"> 
-        </td>
-        <td class="MainTableRightColumn">
-            <table>              
-                <tr class="Header">
-                    <td align="left"  width="150">
-                        <bean:message key="oscarReport.RptByExample.MsgName"/>
-                    </td>                                                    
-                    <td align="left"  width="500">
-                        <bean:message key="oscarReport.RptByExample.MsgQuery"/>
-                    </td>                
-                    <td width="100"></td>
-                </tr>            
-                <input type="hidden" name="newName" />
-                <input type="hidden" name="newQuery" />
-                <input type="hidden" name="toDelete"  value="false"/>
-                <input type="hidden" name="id" value="error"/>
-                <logic:iterate id="favorite" name="allFavorites" property="favoriteVector">
-                <tr class="data">
-                    <td><bean:write name="favorite" property="queryName"/></td>
-                    <td><bean:write name="favorite" property="query"/></td>                
-                    <td><input type="button" name="editButton" value="<bean:message key='oscarReport.RptByExample.MsgEdit'/>" onClick="javascript:set('<bean:write name="favorite" property="queryWithEscapeChar"/>','<bean:write name="favorite" property="queryName"/>'); submit(); return false;" /><input type="button" name="deleteButton" value="<bean:message key='oscarReport.RptByExample.MsgDelete'/>" onClick="javascript:confirmDelete('<bean:write name="favorite" property="id"/>'); return false;" /></td></td>
-                </tr>
-                </logic:iterate>
-                <tr>
-                    <td><input type="button" value="<bean:message key='global.btnClose'/>" onClick="javascript:closeAndRefresh();"/>
-                </tr>
-            </table>   
-        </td>
-    </tr>
-    <tr>
-        <td class="MainTableBottomRowLeftColumn"></td>
-        <td class="MainTableBottomRowRightColumn"></td>
-    </tr>
-</table>
+	<table class="MainTable" id="scrollNumber1" name="encounterTable">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><bean:message
+				key="oscarReport.CDMReport.msgReport" /></td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td><bean:message
+						key="oscarReport.RptByExample.MsgQueryByExamples" /> - <bean:message
+						key="oscarReport.RptByExample.MsgMyFavorites" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn" valign="top"></td>
+			<td class="MainTableRightColumn">
+			<table>
+				<tr class="Header">
+					<td align="left" width="150"><bean:message
+						key="oscarReport.RptByExample.MsgName" /></td>
+					<td align="left" width="500"><bean:message
+						key="oscarReport.RptByExample.MsgQuery" /></td>
+					<td width="100"></td>
+				</tr>
+				<input type="hidden" name="newName" />
+				<input type="hidden" name="newQuery" />
+				<input type="hidden" name="toDelete" value="false" />
+				<input type="hidden" name="id" value="error" />
+				<logic:iterate id="favorite" name="allFavorites"
+					property="favoriteVector">
+					<tr class="data">
+						<td><bean:write name="favorite" property="queryName" /></td>
+						<td><bean:write name="favorite" property="query" /></td>
+						<td><input type="button" name="editButton"
+							value="<bean:message key='oscarReport.RptByExample.MsgEdit'/>"
+							onClick="javascript:set('<bean:write name="favorite" property="queryWithEscapeChar"/>','<bean:write name="favorite" property="queryName"/>'); submit(); return false;" /><input
+							type="button" name="deleteButton"
+							value="<bean:message key='oscarReport.RptByExample.MsgDelete'/>"
+							onClick="javascript:confirmDelete('<bean:write name="favorite" property="id"/>'); return false;" /></td>
+						</td>
+					</tr>
+				</logic:iterate>
+				<tr>
+					<td><input type="button"
+						value="<bean:message key='global.btnClose'/>"
+						onClick="javascript:closeAndRefresh();" />
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn"></td>
+			<td class="MainTableBottomRowRightColumn"></td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

@@ -1,3 +1,4 @@
+
 <%/*
 <!--  
 /*
@@ -25,16 +26,20 @@
  */
 %>
 <tr>
-  <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-    <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-    <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-    <a href="Disclaimer.htm">Disclaimer</a></span></p>
-  </td>
+	<td width="100%"
+		style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
+		height="0%" colspan="2">
+	<p class="HelpAboutLogout"><span class="FakeLink"><a
+		href="Help.htm">Help</a></span> | <span class="FakeLink"><a
+		href="About.htm">About</a></span> | <span class="FakeLink"> <a
+		href="Disclaimer.htm">Disclaimer</a></span></p>
+	</td>
 </tr>
 
 <tr>
-  <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-  <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-    <p class="ScreenTitle">oscarRx</p>
-  </td>
+	<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
+	<td width="100%" bgcolor="#000000"
+		style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
+	<p class="ScreenTitle">oscarRx</p>
+	</td>
 </tr>

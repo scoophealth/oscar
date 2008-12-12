@@ -24,21 +24,26 @@
 
 <%@ include file="/taglibs.jsp"%>
 <div class="tabs" id="tabs">
-    <table cellpadding="3" cellspacing="0" border="0">
-        <tr>
-            <th title="Service Restrictions">Service Restrictions</th>
-        </tr>
-    </table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Service Restrictions">Service Restrictions</th>
+	</tr>
+</table>
 </div>
-<display:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restrictions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
-    <display:setProperty name="paging.banner.placement" value="bottom" />
-    <display:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
-    <display:column property="id" sortable="true" title="Id" />
-    <display:column property="client.formattedName" sortable="true" title="Client" />
-    <display:column property="provider.formattedName" sortable="true" title="Restricted By"/>
-    <display:column property="comments" sortable="true" title="Comments" />
-    <display:column property="startDate" sortable="true" title="Start date" />
-    <display:column property="endDate" sortable="true" title="End date" />
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="restriction" name="service_restrictions" export="false"
+	pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<display:setProperty name="basic.msg.empty_list"
+		value="No service restrictions currently in place for this program." />
+	<display:column property="id" sortable="true" title="Id" />
+	<display:column property="client.formattedName" sortable="true"
+		title="Client" />
+	<display:column property="provider.formattedName" sortable="true"
+		title="Restricted By" />
+	<display:column property="comments" sortable="true" title="Comments" />
+	<display:column property="startDate" sortable="true" title="Start date" />
+	<display:column property="endDate" sortable="true" title="End date" />
 </display:table>
 
 

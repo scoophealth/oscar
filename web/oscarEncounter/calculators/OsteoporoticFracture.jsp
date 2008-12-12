@@ -24,17 +24,16 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 
 
 
 <head>
-<title>
-<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.title"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.calculators.OsteoporoticFracture.title" /></title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <script type="text/javascript">
 
@@ -361,228 +360,204 @@ function setValues(){
 }
 </script>
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCalculators"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.title"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">&nbsp;
-            
-            </td>
-            <td class="MainTableRightColumn">
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarEncounter.calculators.OsteoporoticFracture.msgCalculators" />
+		</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message
+					key="oscarEncounter.calculators.OsteoporoticFracture.title" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
+			<tr>
+				<td>
+				<form name="calCorArDi">
 				<table>
 					<tr>
-						<td>
-							<form name="calCorArDi">
-							<table>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgFemale"/>:</td>
-									<td><input type="radio" name="sex" value="F" checked onClick="switchData();"/></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgMale"/>:</td>
-									<td><input type="radio" name="sex" value="M"  onClick="switchData();"/></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAge"/>:</td>
-									<td><input type="text" name="age" size="4"/></td>
-								</tr>
-								<tr>
-									<td><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore"/>:</td>										
-	                                <td> <select name="tScore">
-										  <option value="1">1</option>
-										  <option value="2">0</option>
-										  <option value="3">-1</option>
-										  <option value="4">-2</option>
-										  <option value="5">&lt; -2.5</option>										  
-										 </select>
-									</td>
-								</tr>
-								
-								<tr >
-										<td colspan="2"><input type="button" value="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnCalculate"/>" onClick="calculate();"/> </td>
-								</tr>
-									<!--<tr>
+						<td><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgFemale" />:</td>
+						<td><input type="radio" name="sex" value="F" checked
+							onClick="switchData();" /></td>
+					</tr>
+					<tr>
+						<td><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgMale" />:</td>
+						<td><input type="radio" name="sex" value="M"
+							onClick="switchData();" /></td>
+					</tr>
+					<tr>
+						<td><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgAge" />:</td>
+						<td><input type="text" name="age" size="4" /></td>
+					</tr>
+					<tr>
+						<td><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore" />:</td>
+						<td><select name="tScore">
+							<option value="1">1</option>
+							<option value="2">0</option>
+							<option value="3">-1</option>
+							<option value="4">-2</option>
+							<option value="5">&lt; -2.5</option>
+						</select></td>
+					</tr>
+
+					<tr>
+						<td colspan="2"><input type="button"
+							value="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnCalculate"/>"
+							onClick="calculate();" /></td>
+					</tr>
+					<!--<tr>
 										<td><input type="text" name="<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.btnTotalVal"/>" visible="false"/></td>
 									</tr>-->
-							</table>
-							</form>
-			
-							<form name="second">
-								<textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
-          				    </form>
-				<input type="button" value="Paste" onClick="write2Parent();"/> 
-            			</td>
-						<td>&nbsp;</td>
-						<td align="center" valign="top">
-							<table class="outline">
-								<tr>
-									<td>
-										<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgCompare"/>
-									</td>
-								</tr>
-								<tr>
-									<td align="center">
-										<bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgProbability"/>
-									</td>
-								</tr>
-								<tr>
-									<td  >
-										<table class="grid" width="100%"  align="center" cellspacing="0">
-											<tr>
-												<td rowspan=2  class="gridTitles"><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAge"/></td>
-												<td   class="gridTitlesWOBottom"  ><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall"/></td>
-												<td colspan=5 class="gridTitlesWOBottom" ><bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore"/></td>
-												
-											</tr>
-											<tr>
-												<td  align="center" class="gridTitles"> <bean:message key="oscarEncounter.calculators.OsteoporoticFracture.msgAvg"/></td>
-												<td class="gridTitles" >1</td>
-												<td class="gridTitles">0</td>
-												<td class="gridTitles">-1</td>
-												<td class="gridTitles">-2</td>
-												<td class="gridTitles"> <-5</td>
-											</tr>
-											<tr>
-												<td id="cell[1][6]">50</td>
-												<td class="middleGrid" id="cell[1][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[1][1]">1.8</td>
-												<td class="middleGrid" id="cell[1][2]">2.7</td>
-												<td class="middleGrid" id="cell[1][3]">4.2</td>
-												<td class="middleGrid" id="cell[1][4]">6.3</td>
-												<td id="cell[1][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[2][6]">55</td>
-												<td class="middleGrid" id="cell[2][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[2][1]">1.8</td>
-												<td class="middleGrid" id="cell[2][2]">2.7</td>
-												<td class="middleGrid" id="cell[2][3]">4.2</td>
-												<td class="middleGrid" id="cell[2][4]">6.3</td>
-												<td id="cell[2][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[3][6]">60</td>
-												<td class="middleGrid" id="cell[3][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[3][1]">1.8</td>
-												<td class="middleGrid" id="cell[3][2]">2.7</td>
-												<td class="middleGrid" id="cell[3][3]">4.2</td>
-												<td class="middleGrid" id="cell[3][4]">6.3</td>
-												<td id="cell[3][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[4][6]">65</td>
-												<td class="middleGrid" id="cell[4][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[4][1]">1.8</td>
-												<td class="middleGrid" id="cell[4][2]">2.7</td>
-												<td class="middleGrid" id="cell[4][3]">4.2</td>
-												<td class="middleGrid" id="cell[4][4]">6.3</td>
-												<td id="cell[4][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[5][6]">70</td>
-												<td class="middleGrid" id="cell[5][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[5][1]">1.8</td>
-												<td class="middleGrid" id="cell[5][2]">2.7</td>
-												<td class="middleGrid" id="cell[5][3]">4.2</td>
-												<td class="middleGrid" id="cell[5][4]">6.3</td>
-												<td id="cell[5][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[6][6]">75</td>
-												<td class="middleGrid" id="cell[6][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[6][1]">1.8</td>
-												<td class="middleGrid" id="cell[6][2]">2.7</td>
-												<td class="middleGrid" id="cell[6][3]">4.2</td>
-												<td class="middleGrid" id="cell[6][4]">6.3</td>
-												<td id="cell[6][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[7][6]">80</td>
-												<td class="middleGrid" id="cell[7][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[7][1]">1.8</td>
-												<td class="middleGrid" id="cell[7][2]">2.7</td>
-												<td class="middleGrid" id="cell[7][3]">4.2</td>
-												<td class="middleGrid" id="cell[7][4]">6.3</td>
-												<td id="cell[7][5]">9.2</td>
-											</tr>
-											<tr>
-												<td id="cell[8][6]">85</td>
-												<td class="middleGrid" id="cell[8][0]">3.3</td>												
-							                    <td class="middleGrid" id="cell[8][1]">1.8</td>
-												<td class="middleGrid" id="cell[8][2]">2.7</td>
-												<td class="middleGrid" id="cell[8][3]">4.2</td>
-												<td class="middleGrid" id="cell[8][4]">6.3</td>
-												<td id="cell[8][5]">9.2</td>
-											</tr>
-										</table>
-										
-									</td>
-								</tr>
-							</table>
+				</table>
+				</form>
+
+				<form name="second"><textarea name="prediction" rows="10"
+					cols="42" style="overflow: hidden"></textarea></form>
+				<input type="button" value="Paste" onClick="write2Parent();" /></td>
+				<td>&nbsp;</td>
+				<td align="center" valign="top">
+				<table class="outline">
+					<tr>
+						<td><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgCompare" />
+						</td>
+					</tr>
+					<tr>
+						<td align="center"><bean:message
+							key="oscarEncounter.calculators.OsteoporoticFracture.msgProbability" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+						<table class="grid" width="100%" align="center" cellspacing="0">
+							<tr>
+								<td rowspan=2 class="gridTitles"><bean:message
+									key="oscarEncounter.calculators.OsteoporoticFracture.msgAge" /></td>
+								<td class="gridTitlesWOBottom"><bean:message
+									key="oscarEncounter.calculators.OsteoporoticFracture.msgOverall" /></td>
+								<td colspan=5 class="gridTitlesWOBottom"><bean:message
+									key="oscarEncounter.calculators.OsteoporoticFracture.msgTScore" /></td>
+
+							</tr>
+							<tr>
+								<td align="center" class="gridTitles"><bean:message
+									key="oscarEncounter.calculators.OsteoporoticFracture.msgAvg" /></td>
+								<td class="gridTitles">1</td>
+								<td class="gridTitles">0</td>
+								<td class="gridTitles">-1</td>
+								<td class="gridTitles">-2</td>
+								<td class="gridTitles"><-5</td>
+							</tr>
+							<tr>
+								<td id="cell[1][6]">50</td>
+								<td class="middleGrid" id="cell[1][0]">3.3</td>
+								<td class="middleGrid" id="cell[1][1]">1.8</td>
+								<td class="middleGrid" id="cell[1][2]">2.7</td>
+								<td class="middleGrid" id="cell[1][3]">4.2</td>
+								<td class="middleGrid" id="cell[1][4]">6.3</td>
+								<td id="cell[1][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[2][6]">55</td>
+								<td class="middleGrid" id="cell[2][0]">3.3</td>
+								<td class="middleGrid" id="cell[2][1]">1.8</td>
+								<td class="middleGrid" id="cell[2][2]">2.7</td>
+								<td class="middleGrid" id="cell[2][3]">4.2</td>
+								<td class="middleGrid" id="cell[2][4]">6.3</td>
+								<td id="cell[2][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[3][6]">60</td>
+								<td class="middleGrid" id="cell[3][0]">3.3</td>
+								<td class="middleGrid" id="cell[3][1]">1.8</td>
+								<td class="middleGrid" id="cell[3][2]">2.7</td>
+								<td class="middleGrid" id="cell[3][3]">4.2</td>
+								<td class="middleGrid" id="cell[3][4]">6.3</td>
+								<td id="cell[3][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[4][6]">65</td>
+								<td class="middleGrid" id="cell[4][0]">3.3</td>
+								<td class="middleGrid" id="cell[4][1]">1.8</td>
+								<td class="middleGrid" id="cell[4][2]">2.7</td>
+								<td class="middleGrid" id="cell[4][3]">4.2</td>
+								<td class="middleGrid" id="cell[4][4]">6.3</td>
+								<td id="cell[4][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[5][6]">70</td>
+								<td class="middleGrid" id="cell[5][0]">3.3</td>
+								<td class="middleGrid" id="cell[5][1]">1.8</td>
+								<td class="middleGrid" id="cell[5][2]">2.7</td>
+								<td class="middleGrid" id="cell[5][3]">4.2</td>
+								<td class="middleGrid" id="cell[5][4]">6.3</td>
+								<td id="cell[5][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[6][6]">75</td>
+								<td class="middleGrid" id="cell[6][0]">3.3</td>
+								<td class="middleGrid" id="cell[6][1]">1.8</td>
+								<td class="middleGrid" id="cell[6][2]">2.7</td>
+								<td class="middleGrid" id="cell[6][3]">4.2</td>
+								<td class="middleGrid" id="cell[6][4]">6.3</td>
+								<td id="cell[6][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[7][6]">80</td>
+								<td class="middleGrid" id="cell[7][0]">3.3</td>
+								<td class="middleGrid" id="cell[7][1]">1.8</td>
+								<td class="middleGrid" id="cell[7][2]">2.7</td>
+								<td class="middleGrid" id="cell[7][3]">4.2</td>
+								<td class="middleGrid" id="cell[7][4]">6.3</td>
+								<td id="cell[7][5]">9.2</td>
+							</tr>
+							<tr>
+								<td id="cell[8][6]">85</td>
+								<td class="middleGrid" id="cell[8][0]">3.3</td>
+								<td class="middleGrid" id="cell[8][1]">1.8</td>
+								<td class="middleGrid" id="cell[8][2]">2.7</td>
+								<td class="middleGrid" id="cell[8][3]">4.2</td>
+								<td class="middleGrid" id="cell[8][4]">6.3</td>
+								<td id="cell[8][5]">9.2</td>
+							</tr>
+						</table>
+
 						</td>
 					</tr>
 				</table>
-			</td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

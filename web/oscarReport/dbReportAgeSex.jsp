@@ -24,10 +24,12 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbReport.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbReport.jsp"%>
 <%    
  
 GregorianCalendar now=new GregorianCalendar();
@@ -76,5 +78,5 @@ GregorianCalendar now=new GregorianCalendar();
 
  	    
 %>
-<jsp:forward page='oscarReportAgeSex.jsp'/>
+<jsp:forward page='oscarReportAgeSex.jsp' />
 

@@ -24,13 +24,13 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
@@ -44,10 +44,9 @@
 <html:html locale="true">
 
 <head>
-<title>
-<bean:message key="oscarEncounter.Index.oldMeasurements"/>
+<title><bean:message key="oscarEncounter.Index.oldMeasurements" />
 </title>
-<html:base/>
+<html:base />
 
 </head>
 
@@ -56,52 +55,58 @@
 <script type="text/javascript" language=javascript>
     
 </script>
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
-<html:errors/>
+<body topmargin="0" leftmargin="0" vlink="#0000FF"
+	onload="window.focus();">
+<html:errors />
 <html:form action="/oscarEncounter/oscarMeasurements/DeleteData">
-<table>
-    <tr>
-        <td>
-            <table>
-                <tr>
-                    <th colspan='3'>Old Measurements Index</th>
-                </tr>               
-                <tr>                                                       
-                    <th align="left" class="Header" width="20">
-                        <bean:message key="oscarEncounter.oscarMeasurements.displayHistory.headingType"/>
-                    </th>
-                    <th align="left" class="Header" width="200">
-                        Type Description
-                    </th>                                                                             
-                    <th align="left" class="Header" width="50">
-
-                    </th>
-                 </tr>
-                <logic:present name="measurementsData">
-                <logic:iterate id="data" name="measurementsData" property="measurementsDataVector" indexId = "ctr" >                       
-                <tr class="data">                            
-                    <td width="20"><bean:write name="data" property="type" /></td>
-                    <td width="200"><bean:write name="data" property="typeDescription" /></td>                                                                                    
-                    <td width="50"><a href="#" name='<bean:message key="oscarEncounter.Index.oldMeasurements"/>' onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="data" property="type" />'); return false;">more...</a></td>
-                </tr>                        
-                </logic:iterate>
-                </logic:present>                    
-            </table>
-            <table>
-                <tr>
-                    <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
-                    <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>                    
-                    <logic:present name="type">
-                        <input type="hidden" name="type" value="<bean:write name="type" />"/>
-                    </logic:present>
-                </tr>
-            </table>
-        </td>   
-    </tr>
-</table>
+	<table>
+		<tr>
+			<td>
+			<table>
+				<tr>
+					<th colspan='3'>Old Measurements Index</th>
+				</tr>
+				<tr>
+					<th align="left" class="Header" width="20"><bean:message
+						key="oscarEncounter.oscarMeasurements.displayHistory.headingType" />
+					</th>
+					<th align="left" class="Header" width="200">Type Description</th>
+					<th align="left" class="Header" width="50"></th>
+				</tr>
+				<logic:present name="measurementsData">
+					<logic:iterate id="data" name="measurementsData"
+						property="measurementsDataVector" indexId="ctr">
+						<tr class="data">
+							<td width="20"><bean:write name="data" property="type" /></td>
+							<td width="200"><bean:write name="data"
+								property="typeDescription" /></td>
+							<td width="50"><a href="#"
+								name='<bean:message key="oscarEncounter.Index.oldMeasurements"/>'
+								onClick="popupPage(300,800,'SetupDisplayHistory.do?type=<bean:write name="data" property="type" />'); return false;">more...</a></td>
+						</tr>
+					</logic:iterate>
+				</logic:present>
+			</table>
+			<table>
+				<tr>
+					<td><input type="button" name="Button"
+						value="<bean:message key="global.btnPrint"/>"
+						onClick="window.print()"></td>
+					<td><input type="button" name="Button"
+						value="<bean:message key="global.btnClose"/>"
+						onClick="window.close()"></td>
+					<logic:present name="type">
+						<input type="hidden" name="type"
+							value="<bean:write name="type" />" />
+					</logic:present>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>
-                             
-                                   
-                                
+
+
+

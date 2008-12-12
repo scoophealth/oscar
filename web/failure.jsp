@@ -1,5 +1,5 @@
-<%@ page session="true" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page session="true"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--  
 /*
  * 
@@ -30,9 +30,7 @@
 <html>
 
 <head>
-   <html:errors/>
+<html:errors />
 </head>
-
 <html>
-
 </html:html>

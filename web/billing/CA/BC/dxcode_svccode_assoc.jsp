@@ -1,21 +1,17 @@
-<%@ page language="java" contentType="text/html" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@ page language="java" contentType="text/html"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@page import="oscar.oscarDemographic.data.*"%>
-<%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@page
+	import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <html:html>
 <head>
-<title>
-  <bean:message key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.title"/>
-</title>
-  <html:base/>
-  <style type="text/css">
-    <!--
-      A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
-    -->
-  </style>
+<title><bean:message
+	key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.title" /></title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
 <!--
 var remote=null;
@@ -56,71 +52,65 @@ function OtherScriptAttach() {
 }
 
 //-->
-</SCRIPT>  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</SCRIPT>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <script language="JavaScript">
-</script>  <link rel="stylesheet" href="../../../oscarBilling/CA/billing/billing.css" type="text/css">
+</script>
+<link rel="stylesheet"
+	href="../../../oscarBilling/CA/billing/billing.css" type="text/css">
 </head>
 <%
 String mode = request.getAttribute("mode")!=null?(String)request.getAttribute("mode"):"";
 %>
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0">
-<h2>
-<html:errors />
-</h2>
-  <html:form action="/billing/CA/BC/saveAssocAction" target="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm">
-    <html:hidden property="mode"/>
-    <table width="75%" border="1" align="center" cellpadding="3" cellspacing="3" bgcolor="EEEEFF">
-      <tr bgcolor="#000000">
-        <td width="90%" height="40" align="left">
-          <p>
-            <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF">
-              <b>
-                <font face="Arial, Helvetica, sans-serif" size="2"><bean:message key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.title"/></font>
-              </b>
-            </font>
-          </p>
-        </td>
-      </tr>
-      <tr bgcolor="CCCCFF">
-        <td>
-          <strong><bean:message key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.step1"/></strong>
-        </td>
-      </tr>
-      <tr>
-        <td width="78%">
-          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-            <%
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
+	topmargin="10" marginwidth="0" marginheight="0">
+<h2><html:errors /></h2>
+<html:form action="/billing/CA/BC/saveAssocAction"
+	target="oscar.oscarBilling.ca.bc.pageUtil.BillingCreateBillingForm">
+	<html:hidden property="mode" />
+	<table width="75%" border="1" align="center" cellpadding="3"
+		cellspacing="3" bgcolor="EEEEFF">
+		<tr bgcolor="#000000">
+			<td width="90%" height="40" align="left">
+			<p><font face="Verdana, Arial, Helvetica, sans-serif"
+				color="#FFFFFF"> <b> <font
+				face="Arial, Helvetica, sans-serif" size="2"><bean:message
+				key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.title" /></font> </b> </font>
+			</p>
+			</td>
+		</tr>
+		<tr bgcolor="CCCCFF">
+			<td><strong><bean:message
+				key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.step1" /></strong></td>
+		</tr>
+		<tr>
+			<td width="78%"><font
+				face="Verdana, Arial, Helvetica, sans-serif" size="1"> <%
            boolean state= mode.equals("edit")?true:false;
-            %>
-            <html:text property="xml_other1" size="40" readonly="<%=state%>" />
-            <a href="javascript:OtherScriptAttach()">
-              <img src="../../../images/search_code.jpg" border="0">
-            </a>
-          </font>
-        </td>
-      </tr>
-      <tr bgcolor="CCCCFF">
-        <td>
-          <strong><bean:message key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.step2"/></strong>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <font face="Verdana, Arial, Helvetica, sans-serif" size="1"> <bean:message key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.dxcode"/>
-            <html:text property="xml_diagnostic_detail1" size="25"/>
-          </font> <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-            <a href="javascript:ScriptAttach()">
-              <img src="../../../images/search_dx_code.jpg" border="0">
-            </a>
-          </font>
-          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;</font>
-        </td>
-      </tr>
-      <!--This is really quite redundant but its code copied from bcBilling.jsp
+            %> <html:text property="xml_other1" size="40"
+				readonly="<%=state%>" /> <a href="javascript:OtherScriptAttach()">
+			<img src="../../../images/search_code.jpg" border="0"> </a> </font></td>
+		</tr>
+		<tr bgcolor="CCCCFF">
+			<td><strong><bean:message
+				key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.step2" /></strong></td>
+		</tr>
+		<tr>
+			<td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+			<bean:message
+				key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.dxcode" /> <html:text
+				property="xml_diagnostic_detail1" size="25" /> </font> <font
+				face="Verdana, Arial, Helvetica, sans-serif" size="1"> <a
+				href="javascript:ScriptAttach()"> <img
+				src="../../../images/search_dx_code.jpg" border="0"> </a> </font> <font
+				face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;</font>
+			</td>
+		</tr>
+		<!--This is really quite redundant but its code copied from bcBilling.jsp
       using the same search screens, therefore the hidden fields need to be here so that the javascript doesn't break -->
-      <html:hidden property="xml_diagnostic_detail2"/>
-      <html:hidden property="xml_diagnostic_detail3"/>
-      <!--Technically don't need three but just in case
+		<html:hidden property="xml_diagnostic_detail2" />
+		<html:hidden property="xml_diagnostic_detail3" />
+		<!--Technically don't need three but just in case
       <tr>
         <td>
           <font face="Verdana, Arial, Helvetica, sans-serif" size="1">            DX Code #2:
@@ -137,17 +127,14 @@ String mode = request.getAttribute("mode")!=null?(String)request.getAttribute("m
       </tr>
       <tr>
         -->
-        <td>
-
-        </td>
-      </tr>
-      <tr bgcolor="CCCCFF">
-        <td align="center">
-          <html:submit value="Save" property="Submit"/>
-          <html:button value="Cancel" property="Button" onclick="window.close();"/>
-        </td>
-      </tr>
-    </table>
-  </html:form>
+		<td></td>
+		</tr>
+		<tr bgcolor="CCCCFF">
+			<td align="center"><html:submit value="Save" property="Submit" />
+			<html:button value="Cancel" property="Button"
+				onclick="window.close();" /></td>
+		</tr>
+	</table>
+</html:form>
 </body>
 </html:html>

@@ -21,109 +21,113 @@
  * Hamilton 
  * Ontario, Canada 
  */
-.contain{table-layout:fixed;}
+.contain {
+	table-layout: fixed;
+}
 
 BODY {
-	font-size:10pt;
-    background-color:#DAEBFC;
-	font-family:"Times New Roman", Times, serif;
-/*   #c1ddf9; */
+	font-size: 10pt;
+	background-color: #DAEBFC;
+	font-family: "Times New Roman", Times, serif;
+	/*   #c1ddf9; */
 }
 
 html,TABLE {
-	font-size:10pt;
+	font-size: 10pt;
 }
 
 /**************************************/
-A:link
-{
-    color:#486EBD;
+A:link {
+	color: #486EBD;
 }
+
 .Header {
-    padding-top:3px;
-    padding-bottom:3px;
-/*    width:937px; */
-    width:100%;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	/*    width:937px; */
+	width: 100%;
 }
 
 .Header INPUT {
-    width: 100px;
+	width: 100px;
 }
 
-.column {
-/*   background-color:#FFF0FF; */
-    width:15%;
-    background-color:#486EBD;
-    color:#FFFFFF;
-    vertical-align:top;
-    text-align:center;
+.column { /*   background-color:#FFF0FF; */
+	width: 15%;
+	background-color: #486EBD;
+	color: #FFFFFF;
+	vertical-align: top;
+	text-align: center;
 }
 
 .column A {
-    font-weight:bold;
+	font-weight: bold;
 }
 
 .column TABLE {
-    background-color:#486EBD;
-    color:#FFFFFF;
-    vertical-align:top;
-    font-weight:bold;
+	background-color: #486EBD;
+	color: #FFFFFF;
+	vertical-align: top;
+	font-weight: bold;
 }
 
 .row {
-    background-color:#486EBD;
-    color:#FFFFFF;
-    width:22.5%;
-    padding-top:5px;
-    padding-bottom:5px;
-
+	background-color: #486EBD;
+	color: #FFFFFF;
+	width: 22.5%;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .row A {
-    font-weight:bold;
-	font-family:"Times New Roman", Times, serif;
-	font-size:10pt;
+	font-weight: bold;
+	font-family: "Times New Roman", Times, serif;
+	font-size: 10pt;
 }
 
 .titleBar {
-    background-color:#486ebd;
-    font-size:12pt;
-    color:#FFFFFF;
-    text-align:center;
-    padding-top:2px;
-    padding-bottom:2px;
+	background-color: #486ebd;
+	font-size: 12pt;
+	color: #FFFFFF;
+	text-align: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 .wide {
-   width:100%; 
+	width: 100%;
 }
 
 .data {
-    font-size:10pt;
-	font-family:"Times New Roman", Times, serif;
+	font-size: 10pt;
+	font-family: "Times New Roman", Times, serif;
 }
-tr{vertical-align:top;}
 
-textarea { 
-    font-size: 8pt;
+tr {
+	vertical-align: top;
 }
-input, select, textarea { 
-  background-color: #F4EaD7; 
-  border: 1px solid #0097cf;  
+
+textarea {
+	font-size: 8pt;
+}
+
+input,select,textarea {
+	background-color: #F4EaD7;
+	border: 1px solid #0097cf;
 }
 
 .edcol {
-    font-size: 8pt;
-    padding-right: 5pt;
-    padding-left: 5pt;    
+	font-size: 8pt;
+	padding-right: 5pt;
+	padding-left: 5pt;
 }
 
-.delete {  
-  font-size: 8pt;
+.delete {
+	font-size: 8pt;
 }
 
 table.division {
-    border-style: solid;
-    border-width: 1px;
-    border-color: grey;
+	border-style: solid;
+	border-width: 1px;
+	border-color: grey;
 }

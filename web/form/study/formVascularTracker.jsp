@@ -24,7 +24,8 @@
  */
 --%>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.oscarProvider.data.* " %>
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.oscarProvider.data.* "%>
 
 <%
 if(session.getAttribute("user") == null || !( ((String) session.getAttribute("userprofession")).equalsIgnoreCase("doctor") ))

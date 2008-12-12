@@ -1,9 +1,13 @@
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*" errorPage="errorpage.jsp" %> 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <!--  
 /*
@@ -36,17 +40,17 @@
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
-<html:html locale="true"> 
+<html:html locale="true">
 <head></head>
 
 <body>
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            UPDATE demographic RECORD</font></th>
-      </tr>
-    </table>
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		UPDATE demographic RECORD</font></th>
+	</tr>
+</table>
 <%
   //check to see if new case management is request
 ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
@@ -141,10 +145,11 @@ if( users != null && users.size() > 0 )
            
             if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { 
                 if (rsHin.getString("ver") != null && !rsHin.getString("ver").equals("66")){%>
-                ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
-                <br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
-          
-                <% return;
+***<font color='red'><bean:message
+	key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br>
+<br>
+<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message
+	key="global.btnBack" /></b></a> <% return;
                 }
             }
         }
@@ -253,15 +258,19 @@ if( users != null && users.size() > 0 )
  	  request.getParameter("demographic_no"), request.getParameter("waiting_list_referral_date")); 
  	 
         %>
-        <form name="add2WLFrm" action="../oscarWaitingList/Add2WaitingList.jsp"> 
-            <input type="hidden" name="listId" value="<%=request.getParameter("list_id")%>"/>
-            <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographic_no")%>"/>        
-            <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>"/>        
-            <input type="hidden" name="waitingListNote" value="<%=request.getParameter("waiting_list_note")%>"/>  
-            <input type="hidden" name="onListSince" value="<%=request.getParameter("waiting_list_referral_date")%>"/> 
-            <input type="hidden" name="displaymode" value="edit"/>
-            <input type="hidden" name="dboperation" value="search_detail"/>
-        <%
+<form name="add2WLFrm" action="../oscarWaitingList/Add2WaitingList.jsp">
+<input type="hidden" name="listId"
+	value="<%=request.getParameter("list_id")%>" /> <input type="hidden"
+	name="demographicNo"
+	value="<%=request.getParameter("demographic_no")%>" /> <input
+	type="hidden" name="demographic_no"
+	value="<%=request.getParameter("demographic_no")%>" /> <input
+	type="hidden" name="waitingListNote"
+	value="<%=request.getParameter("waiting_list_note")%>" /> <input
+	type="hidden" name="onListSince"
+	value="<%=request.getParameter("waiting_list_referral_date")%>" /> <input
+	type="hidden" name="displaymode" value="edit" /> <input type="hidden"
+	name="dboperation" value="search_detail" /> <%
         if(!request.getParameter("list_id").equalsIgnoreCase("0")){
             String[] paramWLChk = new String[2];
             paramWLChk[0] = request.getParameter("demographic_no");
@@ -274,8 +283,7 @@ if( users != null && users.size() > 0 )
                 ResultSet rsAppt = apptMainBean.queryResults(paramWLChk[0], "search_future_appt");
                 if(rsAppt.next()){                
                     System.out.println("has appointment in the future");
-            %>                                              
-                    <script language="JavaScript">                    
+            %> <script language="JavaScript">                    
                     var add2List = confirm("The patient already has an appointment, do you still want to add him/her to the waiting list?");                
                     if(add2List){                       
                         document.add2WLFrm.action = "../oscarWaitingList/Add2WaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listId=<%=request.getParameter("list_id")%>&waitingListNote=<%=request.getParameter("waiting_list_note")==null?"":request.getParameter("waiting_list_note")%>&onListSince=<%=request.getParameter("waiting_list_referral_date")==null?"":request.getParameter("waiting_list_referral_date")%>"; 
@@ -284,16 +292,11 @@ if( users != null && users.size() > 0 )
                         document.add2WLFrm.action ="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail";
                     }                    
                     document.add2WLFrm.submit();  
-                    </script>
-                   
-                <%}            
-                else{%>
-                <script language="JavaScript">
+                    </script> <%}            
+                else{%> <script language="JavaScript">
                    document.add2WLFrm.action = "../oscarWaitingList/Add2WaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listId=<%=request.getParameter("list_id")%>&waitingListNote=<%=request.getParameter("waiting_list_note")==null?"":request.getParameter("waiting_list_note")%>&onListSince=<%=request.getParameter("waiting_list_referral_date")==null?"":request.getParameter("waiting_list_referral_date")%>";                         
                     document.add2WLFrm.submit();  
-                </script> 
-
-                <%}
+                </script> <%}
             }
             else{
                 response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
@@ -303,33 +306,34 @@ if( users != null && users.size() > 0 )
             response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
         }
         %>
-    </form><%
+</form>
+<%
     }
     else{
         response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
     }
 %>
-  <h2> Update a Provider Record Successfully ! 
-  <p><a href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("demographic_no") %></a></p>
-  </h2>
+<h2>Update a Provider Record Successfully !
+<p><a
+	href="demographiccontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("demographic_no") %></a></p>
+</h2>
 <%--
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
       //self.close();
 </script>
---%>
-<%  
+--%> <%  
     //response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
     //response.sendRedirect("search.jsp");
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>
+<h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
-  <p></p>
+<p></p>
 
-  </center>
+</center>
 </body>
 </html:html>

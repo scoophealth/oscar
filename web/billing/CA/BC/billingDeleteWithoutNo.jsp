@@ -31,14 +31,16 @@ String curUser_no,userfirstname,userlastname;
 curUser_no = (String) session.getAttribute("user");
 userfirstname = (String) session.getAttribute("userfirstname");
 userlastname = (String) session.getAttribute("userlastname");
-%>    
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+%>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <html>
 <head>
-    <script LANGUAGE="JavaScript">
+<script LANGUAGE="JavaScript">
     <!--
     function start(){
       this.focus();
@@ -50,13 +52,13 @@ userlastname = (String) session.getAttribute("userlastname");
     //-->
     </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="90%" >
-    <tr bgcolor="#486ebd"> 
-        <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-        DELETE A BILLING RECORD</font></th>
-    </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		DELETE A BILLING RECORD</font></th>
+	</tr>
 </table>
 <%
 
@@ -77,10 +79,11 @@ while(rsprovider.next()){
 }
 if (cannotDelete) {
 %>
-<p><h1>Sorry, cannot delete billed items.</h1></p>
-<form>
-    <input type="button" value="Back to previous page" onClick="window.close()">
-</form>
+<p>
+<h1>Sorry, cannot delete billed items.</h1>
+</p>
+<form><input type="button" value="Back to previous page"
+	onClick="window.close()"></form>
 <% } else{
     
     boolean updateApptStatus = false;
@@ -101,20 +104,23 @@ if (cannotDelete) {
         param1[1]=request.getParameter("appointment_no");
         apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
 %>
-<p><h1>Successful Addition of a billing Record.</h1></p>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
       //self.top.location = 'providercontrol.jsp?appointment_no=<%// =request.getParameter("appointment_no")%>&demographic_no=<%// =Integer.parseInt(request.getParameter("demographic_no"))%>&curProvider_no=<%// =curUser_no%>&username=<%// = userfirstname+" "+userlastname %>&appointment_date=<%// =request.getParameter("appointment_date")%>&start_time=<%// =request.getParameter("start_time")%>&status=B&displaymode=encounter&dboperation=search_demograph&template=';
     //  self.opener.document.encounter.encounterattachment.value +="<billing>../billing/billingOB2.jsp?billing_no=<%// =rsdemo.getString("billing_no")%>^dboperation=search_bill^hotclick=0</billing>"; //providercontrol.jsp?billing_no=<%// =rsdemo.getString("billing_no")%>^displaymode=vary^displaymodevariable=<%// =URLEncoder.encode("../billing/")%>billing<%// =request.getParameter("billing_name")%>.jsp^dboperation=search_bill^hotclick=0</billing>";
      // self.opener.document.encounter.attachmentdisplay.value +="Billing "; //:<%=request.getParameter("billing_name")%> ";
      	self.opener.refresh();
-</script>
-<%
+</script> <%
 //  break; //get only one billing_no
 //  }//end of while
     }  else {
 %>
-<p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
     }
     apptMainBean.closePstmtConn();
@@ -122,9 +128,8 @@ if (cannotDelete) {
 %>
 <p></p>
 <hr width="90%"></hr>
-<form>
-    <input type="button" value="Close this window" onClick="window.close()">
-</form>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

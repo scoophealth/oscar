@@ -1,4 +1,4 @@
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 <%
 	int diff = 0;
 	if(request.getAttribute("difference") != null) {
@@ -67,9 +67,11 @@ function StartTheTimer()
 </head>
 <body onload="doAll()">
 
-You have <c:out value="${sessionScope.num_ticklers}"/> ticklers.
+You have
+<c:out value="${sessionScope.num_ticklers}" />
+ticklers.
 <html:form action="/UnreadTickler.do">
-	<input type="hidden" name="method" value="refresh"/>
+	<input type="hidden" name="method" value="refresh" />
 </html:form>
 
 <!-- 
@@ -83,7 +85,8 @@ You have <c:out value="${sessionScope.num_ticklers}"/> ticklers.
 	</c:forEach>
 </table>
 -->
-<br/>
-<input type="button" value="Logout" onclick="document.unreadTicklerForm.method.value='logout';document.unreadTicklerForm.submit()"/>
+<br />
+<input type="button" value="Logout"
+	onclick="document.unreadTicklerForm.method.value='logout';document.unreadTicklerForm.submit()" />
 </body>
 </html>

@@ -1,29 +1,28 @@
 .editLabel {
-	font-size : small;
-	padding : 0 5px;
-	display : none;
+	font-size: small;
+	padding: 0 5px;
+	display: none;
 }
 
 .editableRegionDisabled {
-	cursor : pointer;
-	_cursor : hand;
+	cursor: pointer;
+	_cursor: hand;
 }
 
 .editableRegion {
-	background-color : #ffc !important;
-	cursor : pointer;
-	_cursor : hand;
+	background-color: #ffc !important;
+	cursor: pointer;
+	_cursor: hand;
 }
 
 .editableRegion .editLabel {
-	display : inline;
+	display: inline;
 }
 
 .editableTextareaRegion .editLabel {
-	display : block;
+	display: block;
 }
 
-.inlineEditBox {
-	/*background-color : #ffc;*/
-	display : inline;
+.inlineEditBox { /*background-color : #ffc;*/
+	display: inline;
 }

@@ -33,8 +33,10 @@
   //display the main provider page
   //includeing the provider name and a month calendar
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -57,12 +59,16 @@ function upCaseCtrl(ctrl) {
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		DETAIL RECORD</font></th>
+	</tr>
 </table>
 
-<%@ include file="zdemographicfulltitlesearch.htm" %>
+<%@ include file="zdemographicfulltitlesearch.htm"%>
 
 <%
 	GregorianCalendar now=new GregorianCalendar();
@@ -92,96 +98,98 @@ function upCaseCtrl(ctrl) {
     	}	
      }
         
-%> 
+%>
 <table width="100%" border="1" cellspacing="1" cellpadding="1">
-  <tr>
-    <td><div align="center"><a href="" >Problem list</a></div></td>
-    <td><div align="center"><a href="" >Lab Reports</a></div></td>
-    <td><div align="center"><a href='admincontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'>Appt.History</a></div></td>
-    <td><div align="center"><a href="" >Enc. Hist.</a></div></td>
-  </tr>
+	<tr>
+		<td>
+		<div align="center"><a href="">Problem list</a></div>
+		</td>
+		<td>
+		<div align="center"><a href="">Lab Reports</a></div>
+		</td>
+		<td>
+		<div align="center"><a
+			href='admincontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'>Appt.History</a></div>
+		</td>
+		<td>
+		<div align="center"><a href="">Enc. Hist.</a></div>
+		</td>
+	</tr>
 </table>
 
-<div align="center"><b><font color="navy">DEMOGRAPHIC NO : <%=rs.getString("demographic_no")%></font></b></div>
+<div align="center"><b><font color="navy">DEMOGRAPHIC
+NO : <%=rs.getString("demographic_no")%></font></b></div>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<form method="post" name="updatedelete" action="admincontrol.jsp">
-	<input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
-      <tr> 
-      <td align="right"> <b>Last Name: </b></td>
-      <td align="left"> 
-        <input type="text" name="last_name" value="<%=rs.getString("last_name")%>"  onBlur="upCaseCtrl(this)">
-      </td>
-      <td align="right"><b>First Name: </b> </td>
-      <td align="left"> 
-        <input type="text" name="first_name" value="<%=rs.getString("first_name")%>" onBlur="upCaseCtrl(this)">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td  align="right"> <b>Address: </b></td>
-      <td align="left" > 
-        <input type="text" name="address" value="<%=rs.getString("address")%>">
-      </td>
-      <td align="right"><b>City: </b></td>
-      <td align="left"> 
-        <input type="text" name="city" value="<%=rs.getString("city")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>Province: </b> </td>
-      <td  align="left"> 
-        <input type="text" name="province" value="<%=rs.getString("province")%>">
-      </td>
-      <td  align="right"><b>Postal: </b> </td>
-      <td  align="left"> 
-        <input type="text" name="postal" value="<%=rs.getString("postal")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td  align="right"><b>Phone(H): </b> </td>
-      <td align="left" > 
-        <input type="text" name="phone" value="<%=rs.getString("phone")%>">
-      </td>
-      <td  align="right"><b>Phone(O):</b> </td>
-      <td  align="left"> 
-        <input type="text" name="phone2" value="<%=rs.getString("phone2")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td  align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b> 
-      </td>
-      <td  align="left" > 
-        <table border="0" cellpadding="0" cellspacing="0">
-          <tr> 
-            <td> 
-              <input type="text" name="year_of_birth" value="<%=rs.getString("year_of_birth")%>" size="4" maxlength="4">
-            </td>
-            <td>-</td>
-            <td> 
-              <input type="text" name="month_of_birth" value="<%=rs.getString("month_of_birth")%>" size="2" maxlength="2">
-            </td>
-            <td>-</td>
-            <td> 
-              <input type="text" name="date_of_birth" value="<%=rs.getString("date_of_birth")%>" size="2" maxlength="2">
-            </td>
-          </tr>
-        </table>
-      </td>
-      <td  align="right"><b>Age: </b></td>
-      <td align="left"> 
-        <input type="text" name="age" value="<%=age%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>HIN: </b></td>
-      <td align="left" > 
-        <input type="text" name="hin" value="<%=rs.getString("hin")%>">
-      </td>
-      <td align="right"><b>Ver.</b> </td>
-      <td align="left"> 
-        <input type="text" name="ver" value="<%=rs.getString("ver")%>">
-      </td>
-    </tr>
-    <!--tr valign="top"> 
+	<input type="hidden" name="demographic_no"
+		value="<%=rs.getString("demographic_no")%>">
+	<tr>
+		<td align="right"><b>Last Name: </b></td>
+		<td align="left"><input type="text" name="last_name"
+			value="<%=rs.getString("last_name")%>" onBlur="upCaseCtrl(this)">
+		</td>
+		<td align="right"><b>First Name: </b></td>
+		<td align="left"><input type="text" name="first_name"
+			value="<%=rs.getString("first_name")%>" onBlur="upCaseCtrl(this)">
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Address: </b></td>
+		<td align="left"><input type="text" name="address"
+			value="<%=rs.getString("address")%>"></td>
+		<td align="right"><b>City: </b></td>
+		<td align="left"><input type="text" name="city"
+			value="<%=rs.getString("city")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Province: </b></td>
+		<td align="left"><input type="text" name="province"
+			value="<%=rs.getString("province")%>"></td>
+		<td align="right"><b>Postal: </b></td>
+		<td align="left"><input type="text" name="postal"
+			value="<%=rs.getString("postal")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Phone(H): </b></td>
+		<td align="left"><input type="text" name="phone"
+			value="<%=rs.getString("phone")%>"></td>
+		<td align="right"><b>Phone(O):</b></td>
+		<td align="left"><input type="text" name="phone2"
+			value="<%=rs.getString("phone2")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b>:</b>
+		</td>
+		<td align="left">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td><input type="text" name="year_of_birth"
+					value="<%=rs.getString("year_of_birth")%>" size="4" maxlength="4">
+				</td>
+				<td>-</td>
+				<td><input type="text" name="month_of_birth"
+					value="<%=rs.getString("month_of_birth")%>" size="2" maxlength="2">
+				</td>
+				<td>-</td>
+				<td><input type="text" name="date_of_birth"
+					value="<%=rs.getString("date_of_birth")%>" size="2" maxlength="2">
+				</td>
+			</tr>
+		</table>
+		</td>
+		<td align="right"><b>Age: </b></td>
+		<td align="left"><input type="text" name="age" value="<%=age%>">
+		</td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>HIN: </b></td>
+		<td align="left"><input type="text" name="hin"
+			value="<%=rs.getString("hin")%>"></td>
+		<td align="right"><b>Ver.</b></td>
+		<td align="left"><input type="text" name="ver"
+			value="<%=rs.getString("ver")%>"></td>
+	</tr>
+	<!--tr valign="top"> 
       <td align="right"><b>Roster Status: </b> </td>
       <td align="left" > 
         <input type="text" name="roster_status" value="<%=rs.getString("roster_status")%>">
@@ -191,84 +199,71 @@ function upCaseCtrl(ctrl) {
         <input type="text" name="patient_status" value="<%=rs.getString("patient_status")%>">
       </td>
     </tr-->
-    <tr valign="top"> 
-      <td align="right"><b>Date Joined: </b></td>
-      <td align="left" > 
-        <input type="text" name="date_joined" value="<%=rs.getString("date_joined")%>">
-      </td>
-      <td align="right"><b>HC Type: </b></td>
-      <td align="left">
-        <input type="text" name="hc_type" value="<%=rs.getString("hc_type")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>Doctor: </b></td>
-      <td align="left" > 
-        <input type="text" name="provider_no" value="<%=rs.getString("provider_no")%>">
-      </td>
-      <td align="right"><b>Sex: </b></td>
-      <td align="left"> 
-        <input type="text" name="sex" value="<%=rs.getString("sex")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>End Date: </b></td>
-      <td align="left" > 
-        <input type="text" name="end_date" value="<%=rs.getString("end_date")%>">
-      </td>
-      <td align="right"> <b>EFF Date: </b></td>
-      <td align="left"> 
-        <input type="text" name="eff_date" value="<%=rs.getString("eff_date")%>">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>PCN Indicator: </b></td>
-      <td align="left" > 
-        <input type="text" name="pcn_indicator" value="<%=rs.getString("pcn_indicator")%>">
-      </td>
-      <td align="right"><b>Chart No.:</b> </td>
-      <td align="left">
-        <input type="text" name="chart_no" value="<%=rs.getString("chart_no")%>">
-      </td>
-    <tr valign="top"> 
-      <td align="right"><b>HC Renew Date: </b></td>
-      <td align="left" > 
-        <input type="text" name="hc_renew_date" value="<%=rs.getString("hc_renew_date")%>">
-      </td>
-      <td align="right"><b>Family Doctor: </b></td>
-      <td align="left">
-        <input type="text" name="family_doctor" value="<%=rs.getString("family_doctor")%>">
-      </td>
-    
-    <tr> 
-      <td colspan="4">&nbsp;</td>
-    </tr>
-    <tr bgcolor="#486ebd"> 
-      <td colspan="4"> 
-        <div align="center"> 
-          <input type="hidden" name="dboperation" value="demographic_update_record">
-          <input type="hidden" name="displaymode" value="Demographic_Update">
-          <input type="submit" name="subbutton" value="Update Record">
-          <a href='admincontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=Demographic_Delete&dboperation=demographic_delete'> 
-          <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a> 
-          <!--input type="button" name="Button" value="Cancel" onclick=self.close();-->
+	<tr valign="top">
+		<td align="right"><b>Date Joined: </b></td>
+		<td align="left"><input type="text" name="date_joined"
+			value="<%=rs.getString("date_joined")%>"></td>
+		<td align="right"><b>HC Type: </b></td>
+		<td align="left"><input type="text" name="hc_type"
+			value="<%=rs.getString("hc_type")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Doctor: </b></td>
+		<td align="left"><input type="text" name="provider_no"
+			value="<%=rs.getString("provider_no")%>"></td>
+		<td align="right"><b>Sex: </b></td>
+		<td align="left"><input type="text" name="sex"
+			value="<%=rs.getString("sex")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>End Date: </b></td>
+		<td align="left"><input type="text" name="end_date"
+			value="<%=rs.getString("end_date")%>"></td>
+		<td align="right"><b>EFF Date: </b></td>
+		<td align="left"><input type="text" name="eff_date"
+			value="<%=rs.getString("eff_date")%>"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>PCN Indicator: </b></td>
+		<td align="left"><input type="text" name="pcn_indicator"
+			value="<%=rs.getString("pcn_indicator")%>"></td>
+		<td align="right"><b>Chart No.:</b></td>
+		<td align="left"><input type="text" name="chart_no"
+			value="<%=rs.getString("chart_no")%>"></td>
+	<tr valign="top">
+		<td align="right"><b>HC Renew Date: </b></td>
+		<td align="left"><input type="text" name="hc_renew_date"
+			value="<%=rs.getString("hc_renew_date")%>"></td>
+		<td align="right"><b>Family Doctor: </b></td>
+		<td align="left"><input type="text" name="family_doctor"
+			value="<%=rs.getString("family_doctor")%>"></td>
+	<tr>
+		<td colspan="4">&nbsp;</td>
+	</tr>
+	<tr bgcolor="#486ebd">
+		<td colspan="4">
+		<div align="center"><input type="hidden" name="dboperation"
+			value="demographic_update_record"> <input type="hidden"
+			name="displaymode" value="Demographic_Update"> <input
+			type="submit" name="subbutton" value="Update Record"> <a
+			href='admincontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=Demographic_Delete&dboperation=demographic_delete'>
+		<img src="../images/buttondelete.gif" width="73" height="28"
+			border="0" align="absmiddle" alt="Delete the Record"></a> <!--input type="button" name="Button" value="Cancel" onclick=self.close();-->
 
-	  <%--
+		<%--
 	     if (rs.getString("sex").compareTo("F") == 0) {
          out.println("<input type=\"button\" name=\"Button2\" value=\"Antenatal Care Planner\" onClick=\"window.location='../ob/risks.jsp?demographic_no="+rs.getString("demographic_no")+"'\">");
 	     }
-	  --%>
-         
-        </div>
-      </td>
-    </tr>
-</form>
-  </table>
+	  --%></div>
+		</td>
+	</tr>
+	</form>
+</table>
 <%
     }
   }
-%> 
-<%@ include file="footer.htm" %>
+%>
+<%@ include file="footer.htm"%>
 
 </body>
 </html>

@@ -29,11 +29,13 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
 
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*, oscar.oscarLab.ca.on.*, oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="page" />
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*, oscar.oscarLab.ca.on.*, oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
@@ -51,17 +53,20 @@ ArrayList doctypes = EDocUtil.getDoctypes(module);
 %>
 <html:html locale="true">
 <head>
-<title><bean:message key="dms.documentReport.title"/></title>
+<title><bean:message key="dms.documentReport.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
 
-<link rel="stylesheet" type="text/css" href="../../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css" href="report.css"/>
-<link rel="stylesheet" type="text/css" href="../../share/css/niftyPrint.css" media="print" />
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="report.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../../share/javascript/nifty.js"></script>
 <script type="text/javascript">
 window.onload=function(){
@@ -121,12 +126,12 @@ function popup1(height, width, url, windowName){
 </script>
 
 <script src="../../share/javascript/prototype.js" type="text/javascript"></script>
-
 <body class="bodystyle">
-   
-  <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">      
-      <tr>
-      <%--
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable"
+	style="margin: 0px;">
+	<tr>
+		<%--
          <td class="MainTableLeftColumn" valign="top">
              <div class="leftplane">
                   <h3>&nbsp; Tags</h3>
@@ -140,35 +145,38 @@ function popup1(height, width, url, windowName){
              </div>
          </td>
          --%>
-         <td class="MainTableRightColumn" colspan="2" valign="top">
-           <%--<jsp:include page="addDocument.jsp"/>--%>
-           
-           <html:form action="/oscarEncounter/oscarConsultation/printAttached" onsubmit="return verifyChecks(this);">
-           
-           <div class="documentLists">
-               <%-- STUFF TO DISPLAY --%>
-             <%                            
+		<td class="MainTableRightColumn" colspan="2" valign="top"><%--<jsp:include page="addDocument.jsp"/>--%>
+
+		<html:form action="/oscarEncounter/oscarConsultation/printAttached"
+			onsubmit="return verifyChecks(this);">
+
+			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%                            
 	          	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
                 ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED, currentFacilityId);                                               
              %>
-              <div class="doclist">
-                   <div class="headerline">
-                         <div class="docHeading">
-                                  <%=demoName%> <bean:message key="oscarEncounter.oscarConsultationRequest.PrintReport.docs"/>                                 
-                         </div>
-                   </div>
-                 <div id="documentsInnerDiv1" style="background-color: #f2f7ff;">
-                        <table id="privateDocs" class="docTable">
-                           <tr>   
-                               <td><input class="tightCheckbox" type="checkbox" id="pdfCheck" onclick="checkAll(this);"/></td>
-                               <td width="30%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-                               <td width="10%"><b><bean:message key="oscarEncounter.oscarConsultationRequest.PrintReport.ContentType"/></b></td>
-                               <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-                               <td width="20%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>
-                               <td width="25%"><b><bean:message key="oscarEncounter.oscarConsultationRequest.PrintReport.Observation"/></b></td>                               
-                           </tr>
+			<div class="doclist">
+			<div class="headerline">
+			<div class="docHeading"><%=demoName%> <bean:message
+				key="oscarEncounter.oscarConsultationRequest.PrintReport.docs" /></div>
+			</div>
+			<div id="documentsInnerDiv1" style="background-color: #f2f7ff;">
+			<table id="privateDocs" class="docTable">
+				<tr>
+					<td><input class="tightCheckbox" type="checkbox" id="pdfCheck"
+						onclick="checkAll(this);" /></td>
+					<td width="30%"><b><bean:message
+						key="dms.documentReport.msgDocDesc" /></b></td>
+					<td width="10%"><b><bean:message
+						key="oscarEncounter.oscarConsultationRequest.PrintReport.ContentType" /></b></td>
+					<td width="15%"><b><bean:message
+						key="dms.documentReport.msgDocType" /></b></td>
+					<td width="20%"><b><bean:message
+						key="dms.documentReport.msgCreator" /></b></td>
+					<td width="25%"><b><bean:message
+						key="oscarEncounter.oscarConsultationRequest.PrintReport.Observation" /></b></td>
+				</tr>
 
-              <%
+				<%
                 for (int i2=0; i2<consultdocs.size(); i2++) {
                     EDoc curdoc = (EDoc) consultdocs.get(i2);
                     //content type (take everything following '/')
@@ -181,31 +189,27 @@ function popup1(height, width, url, windowName){
                     if ((curdoc.getStatus() + "").compareTo("A") == 0) dStatus="active";
                     else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
             %>
-                           <tr>
-                              <td>
-                                  <% if (curdoc.isPDF()){%>
-                                        <input class="tightCheckbox1" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getFileName()%>" style="margin:0px; padding:0px;"/>
-                                  <%}else{%>
-                                        &nbsp;
-                                  <%}%>
-                              </td>
-                              <td>
-                              <% 
+				<tr>
+					<td>
+					<% if (curdoc.isPDF()){%> <input class="tightCheckbox1"
+						type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>"
+						value="<%=curdoc.getFileName()%>"
+						style="margin: 0px; padding: 0px;" /> <%}else{%> &nbsp; <%}%>
+					</td>
+					<td>
+					<% 
                               String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
-                              if (curdoc.getStatus() == 'H') { %>
-                                 <a href="<%=url%>" target="_blank">
-                              <% } else { %>
-                                 <a href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
-                              <% } %>
-                                 <%=curdoc.getDescription()%>
-                              </td>
-                              <td><%=contentType%></td>
-                              <td><%=curdoc.getType()%></td>
-                              <td><%=curdoc.getCreatorName()%></td>
-                              <td><%=curdoc.getObservationDate()%></td>                              
-                           </tr>
+                              if (curdoc.getStatus() == 'H') { %> <a
+						href="<%=url%>" target="_blank"> <% } else { %> <a
+						href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
+					<% } %> <%=curdoc.getDescription()%></td>
+					<td><%=contentType%></td>
+					<td><%=curdoc.getType()%></td>
+					<td><%=curdoc.getCreatorName()%></td>
+					<td><%=curdoc.getObservationDate()%></td>
+				</tr>
 
-            <%}
+				<%}
                 CommonLabResultData consultLabs = new CommonLabResultData();
                 ArrayList attachedLabs = consultLabs.populateLabResultsData(demoNo, reqId, CommonLabResultData.ATTACHED);
                 
@@ -232,40 +236,40 @@ function popup1(height, width, url, windowName){
                     
                     
             %>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td><a href="<%=labURL%>" target="_blank"><%=labDisplayName%></a></td>
-                    <td>html</td>
-                    <td>Lab Result</td>
-                    <td style="text-align:center">---</td>
-                    <td><%=result.getDateTime()%></td>
-                </tr>
-                    
-            <%
+				<tr>
+					<td>&nbsp;</td>
+					<td><a href="<%=labURL%>" target="_blank"><%=labDisplayName%></a></td>
+					<td>html</td>
+					<td>Lab Result</td>
+					<td style="text-align: center">---</td>
+					<td><%=result.getDateTime()%></td>
+				</tr>
+
+				<%
                 }
                 
             if (consultdocs.size() == 0 && attachedLabs.size() == 0 ) {%>
-            <tr><td colspan="6">No attached documents to display</td></tr>
-            <%}%>
-                        </table>
-                        
-                   </div>
-              </div>              
-            </div>
-            <div>
-              <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>              
-              <input type="submit" value="Print PDFs"/>
-              <input type="button" value="Back" onclick="window.history.back()"/>
-            </div>
-           </html:form>
-         </td>
-      </tr>
-      <tr>
-         <td colspan="2" class="MainTableBottomRowRightColumn">
-         </td>
-      </tr>
-  </table>
-   
-  
+				<tr>
+					<td colspan="6">No attached documents to display</td>
+				</tr>
+				<%}%>
+			</table>
+
+			</div>
+			</div>
+			</div>
+			<div><input type="button" name="Button"
+				value="<bean:message key="dms.documentReport.btnDoneClose"/>"
+				onclick=self.close();> <input type="submit"
+				value="Print PDFs" /> <input type="button" value="Back"
+				onclick="window.history.back()" /></div>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td colspan="2" class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+
+
 </body>
 </html:html>

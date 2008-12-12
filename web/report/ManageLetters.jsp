@@ -25,11 +25,13 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 
 <%
   
@@ -42,27 +44,23 @@
 <html:html locale="true">
 
 <head>
-<html:base/>
-<title>manage Letters</title><!-- i18n -->
+<html:base />
+<title>manage Letters</title>
+<!-- i18n -->
 
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" > 
-     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1">
+
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
-<style type="text/css">
-  div.ImmSet { background-color: #ffffff; }
-  div.ImmSet h2 {  }
-  div.ImmSet ul {  }
-  div.ImmSet li {  }
-  div.ImmSet li a { text-decoration:none; color:blue;}
-  div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <SCRIPT type="text/javascript">
 
@@ -133,97 +131,24 @@ function disableifchecked(ele,nextDate){
         //alert(nextProcedureTD.innerText);
 
     }
-</script>  
+</script>
 
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	
-label{
-float: left;
-width: 120px;
-font-weight: bold;
-}
-
-span.labelLook{
-font-weight:bold;
-
-}
-
-input, textarea,select{
-
-margin-bottom: 5px;
-}
-
-textarea{
-width: 250px;
-height: 150px;
-}
-
-.boxes{
-width: 1em;
-}
-
-#submitbutton{
-margin-left: 120px;
-margin-top: 5px;
-width: 90px;
-}
-
-br{
-clear: left;
-}
-
-table.ele {
-   
-   border-collapse:collapse;
-}
-
-table.ele td{
-    border:1px solid grey;
-    padding:2px;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <style type="text/css" media="print">
 .MainTable {
-    display:none;
-}
-.hiddenInPrint{
-    display:none;
-}
-.shownInPrint{
-    display:block;
+	display: none;
 }
 
+.hiddenInPrint {
+	display: none;
+}
+
+.shownInPrint {
+	display: block;
+}
 </style>
 
 
@@ -231,89 +156,73 @@ table.ele td{
 
 <body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" >
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="100" >
-               manageLetters
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            &nbsp;
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-               &nbsp;
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-               <html:form action="/report/ManageLetters" enctype="multipart/form-data">
-                <input type="hidden" name="goto" value="<%=request.getParameter("goto")%>"/>
-               <div>
-                  Select Letter:
-                  <input type="file" name="reportFile" value="upload"/>
-                  Report Name: <input type="text" name="reportName"/>
-                             
-               </div>
-               
-               <input type="submit" />
-               
-               
-               </html:form>
-               
-               
-               <%
+<table class="MainTable" id="scrollNumber1">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="100">manageLetters
+		</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td valign="top" class="MainTableRightColumn"><html:form
+			action="/report/ManageLetters" enctype="multipart/form-data">
+			<input type="hidden" name="goto"
+				value="<%=request.getParameter("goto")%>" />
+			<div>Select Letter: <input type="file" name="reportFile"
+				value="upload" /> Report Name: <input type="text" name="reportName" />
+
+			</div>
+
+			<input type="submit" />
+
+
+		</html:form> <%
                  ManageLetters mLetter = new ManageLetters() ;
                  ArrayList list = mLetter.getActiveReportList();
                   
                if (list.size() > 0){%>
-               <table>      
-               <%     for(int i = 0; i < list.size(); i++){
+		<table>
+			<%     for(int i = 0; i < list.size(); i++){
                         Hashtable h = (Hashtable) list.get(i);
                %>
-                    <tr>
-                       <td><%=h.get("ID")%></td>
-                       <td><%=h.get("provider_no")%></td>
-                       <td><%=h.get("report_name")%></td>
-                       <td><a href="DownloadLetter.do?reportID=<%=h.get("ID")%>"><%=h.get("file_name")%></a></td>
-                       <td><%=h.get("date_time")%></td>
-                       <td><a href="DeleteLetter.do?reportID=<%=h.get("ID")%>">del</a></td>
-                    </tr>
-                  <%}%>
-               </table>
-               <%}%>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
-    
-    <div>
-                    
-                    
-                
-           
-               </div>
-    
+			<tr>
+				<td><%=h.get("ID")%></td>
+				<td><%=h.get("provider_no")%></td>
+				<td><%=h.get("report_name")%></td>
+				<td><a href="DownloadLetter.do?reportID=<%=h.get("ID")%>"><%=h.get("file_name")%></a></td>
+				<td><%=h.get("date_time")%></td>
+				<td><a href="DeleteLetter.do?reportID=<%=h.get("ID")%>">del</a></td>
+			</tr>
+			<%}%>
+		</table>
+		<%}%>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
+<div></div>
+
 <script type="text/javascript">
    // Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-</script>    
+</script>
 
 </body>
 </html:html>

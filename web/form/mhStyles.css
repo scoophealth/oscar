@@ -21,91 +21,85 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
-BODY
-{
-    FONT-SIZE: x-small;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
-}
-
-TABLE
-{
+BODY {
 	FONT-SIZE: x-small;
-    border-color:#999999;
+	FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
 }
 
-TH
-{
-    FONT-SIZE: small;
-    font-weight: bold;
+TABLE {
+	FONT-SIZE: x-small;
+	border-color: #999999;
 }
 
-A IMG
-{
-    border: 0px;
+TH {
+	FONT-SIZE: small;
+	font-weight: bold;
+}
+
+A IMG {
+	border: 0px;
 }
 
 /*These are my additions************************/
-
 .TableWithBorder {
-    border-width:2px;
-    border-style:solid;
-    border-color:#999999;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #999999;
 }
 
 .Head {
-    background-color:#BBBBBB;
-    padding-top:5px;
-    padding-bottom:5px;
-    width:940px;
+	background-color: #BBBBBB;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 940px;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 .mainTable {
-    width:940px;
+	width: 940px;
 }
 
 .mhList {
-    font-size: 8pt;
+	font-size: 8pt;
 }
 
 .mhList:first-line {
-    text-decoration: underline;
-    font-weight: bold;
-    font-size: 9pt;
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: 9pt;
 }
 
 .mhAssTextarea {
-    width: 100%;
-    height: 250px;
-    overflow: auto;
+	width: 100%;
+	height: 250px;
+	overflow: auto;
 }
 
 .mhRefTextarea {
-    width: 100%;
-    height: 230px;
-    overflow: auto;
+	width: 100%;
+	height: 230px;
+	overflow: auto;
 }
 
 .mhOutTextarea {
-    width: 100%;
-    height: 200px;
-    overflow: auto;
+	width: 100%;
+	height: 200px;
+	overflow: auto;
 }
 
 .mhSelect {
-    overflow: auto;
+	overflow: auto;
 }
 
 .mhSelect:first-line {
-    text-decoration: underline;
-    font-weight: bold;
-    font-size: 9pt;
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: 9pt;
 }

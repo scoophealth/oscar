@@ -24,25 +24,25 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties"%>
 
 <%
 
 %>
 
-<link rel="stylesheet" type="text/css" href="../../oscarMDS/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../oscarMDS/encounterStyles.css">
 
 <html>
-    <head>
-        <title>
-            Measurement Mapping Configuration
-        </title>
-        
-        <script type="text/javascript" language=javascript>
+<head>
+<title>Measurement Mapping Configuration</title>
+
+<script type="text/javascript" language=javascript>
             
             function popupStart(vheight,vwidth,varpage,windowname) {
                 var page = varpage;
@@ -83,97 +83,86 @@
                 }   
             }%>
 
-        </script>    
-        <style type="text/css">
-            .Cell{
-                padding-left:15px;
-            }
-            .TableCell{
-                padding-left:15px;
-                border: 1px solid black;
-            }
-            .ButtonCell{
-                border: 1px solid black;
-            }
-            .Header{
-                padding:5px;
-            }
-            .HeaderCell{
-                padding:5px;
-                font-size:90%;
-                font-weight:bold;
-                background-color:#669999;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <form method="post" name="CONFIG" action="RemoveMeasurementMap.do">
-            <input type="hidden" name="id" value="">
-            <input type="hidden" name="identifier" value="">
-            <input type="hidden" name="name" value="">
-            <input type="hidden" name="type" value="">            
-            <input type="hidden" name="provider_no" value="<%= session.getValue("user") %>">
-            <table width="100%" height="100%" border="0">
-                <tr class="MainTableTopRow">
-                    <td class="MainTableTopRow" colspan="9" align="left">                       
-                        <table width="100%">
-                            <tr> 
-                                <td align="left">
-                                    <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                </td>
-                                <td align="right">
-                                    <a href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'../About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'../License.jsp')" ><bean:message key="global.license"/></a>
-                                </td>
-                            </tr>
-                        </table>                        
-                    </td>
-                </tr>
-                <tr>
-                    <td valign="middle">
-                        <center>
-                            <table width="100%">
-                                <tr>
-                                    <td colspan="6" valign="bottom" class="Header">
-                                        Measurement Mapping Table
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="Cell" colspan="6">
-                                        <%String searchstring = request.getParameter("searchstring");
+        </script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+
+<body>
+<form method="post" name="CONFIG" action="RemoveMeasurementMap.do">
+<input type="hidden" name="id" value=""> <input type="hidden"
+	name="identifier" value=""> <input type="hidden" name="name"
+	value=""> <input type="hidden" name="type" value=""> <input
+	type="hidden" name="provider_no"
+	value="<%= session.getValue("user") %>">
+<table width="100%" height="100%" border="0">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRow" colspan="9" align="left">
+		<table width="100%">
+			<tr>
+				<td align="left"><input type="button"
+					value=" <bean:message key="global.btnClose"/> "
+					onClick="window.close()"></td>
+				<td align="right"><a
+					href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'../About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'../License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td valign="middle">
+		<center>
+		<table width="100%">
+			<tr>
+				<td colspan="6" valign="bottom" class="Header">Measurement
+				Mapping Table</td>
+			</tr>
+			<tr>
+				<td class="Cell" colspan="6">
+				<%String searchstring = request.getParameter("searchstring");
                                         if (searchstring == null)
-                                            searchstring = "";%>
-                                        Search table for name: <input type="text" size="30" name="searchstring" value="<%= searchstring %>"/> <input type="submit" value="Search" onclick="return reloadPage()" />
-                                    </td>                                   
-                                <tr>
-                                <tr><td><br /></td></tr>
-                                <tr>
-                                    <th width="5%"></th>
-                                    <th width="5%"></th>
-                                    <th class="HeaderCell" width="15%">Identifier</th>
-                                    <th class="HeaderCell" width="15%">Loinc Code</th>
-                                    <th class="HeaderCell" width="45%">Name</th>
-                                    <th class="HeaderCell" width="15%">Lab Type</th>
-                                </tr>
-                                <%MeasurementMapConfig mmc = new MeasurementMapConfig();
+                                            searchstring = "";%> Search
+				table for name: <input type="text" size="30" name="searchstring"
+					value="<%= searchstring %>" /> <input type="submit" value="Search"
+					onclick="return reloadPage()" /></td>
+			<tr>
+			<tr>
+				<td><br />
+				</td>
+			</tr>
+			<tr>
+				<th width="5%"></th>
+				<th width="5%"></th>
+				<th class="HeaderCell" width="15%">Identifier</th>
+				<th class="HeaderCell" width="15%">Loinc Code</th>
+				<th class="HeaderCell" width="45%">Name</th>
+				<th class="HeaderCell" width="15%">Lab Type</th>
+			</tr>
+			<%MeasurementMapConfig mmc = new MeasurementMapConfig();
                                 ArrayList mappings = mmc.getMeasurementMap(searchstring);
                                 for (int i=0; i < mappings.size(); i++){
                                     Hashtable ht = (Hashtable) mappings.get(i);%>
-                                    <tr>
-                                        <td class="ButtonCell"><input type="submit" value="DELETE" onclick="deleteMapping(<%= (String) ht.get("id") %>)"></td>
-                                        <td class="ButtonCell"><input type="button" value="REMAP" onclick="remap(<%= "'"+ (String) ht.get("id") +"','"+ (String) ht.get("ident_code") +"','"+ (String) ht.get("name") +"','"+ (String) ht.get("lab_type")+"'" %>)"></td>
-                                        <td class="TableCell"><%= (String) ht.get("ident_code") %></td>
-                                        <td class="TableCell"><%= (String) ht.get("loinc_code") %></td>
-                                        <td class="TableCell"><%= (String) ht.get("name") %></td>
-                                        <td class="TableCell"><%= (String) ht.get("lab_type") %></td>
-                                    </tr>       
-                                <%}%>
-                                
-                            </table>
-                        </center>
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </body>
+			<tr>
+				<td class="ButtonCell"><input type="submit" value="DELETE"
+					onclick="deleteMapping(<%= (String) ht.get("id") %>)"></td>
+				<td class="ButtonCell"><input type="button" value="REMAP"
+					onclick="remap(<%= "'"+ (String) ht.get("id") +"','"+ (String) ht.get("ident_code") +"','"+ (String) ht.get("name") +"','"+ (String) ht.get("lab_type")+"'" %>)"></td>
+				<td class="TableCell"><%= (String) ht.get("ident_code") %></td>
+				<td class="TableCell"><%= (String) ht.get("loinc_code") %></td>
+				<td class="TableCell"><%= (String) ht.get("name") %></td>
+				<td class="TableCell"><%= (String) ht.get("lab_type") %></td>
+			</tr>
+			<%}%>
+
+		</table>
+		</center>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
 </html>

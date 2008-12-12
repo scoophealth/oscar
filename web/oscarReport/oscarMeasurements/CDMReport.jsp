@@ -24,13 +24,13 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.oscarReport.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.*, java.sql.*, java.text.*, java.net.*;"%>
 <%
@@ -49,95 +49,93 @@
 <html:html locale="true">
 
 <head>
-<title>
-<logic:present name="title">
-<bean:write name="title"/>  
-</logic:present> 
-</title>
-<html:base/>
-<style type="text/css">
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
+<title><logic:present name="title">
+	<bean:write name="title" />
+</logic:present></title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
-<link rel="stylesheet" type="text/css" href="../../oscarEncounter/encounterStyles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();">
-<html:errors/>
-<table  class="MainTable" id="scrollNumber1" name="encounterTable">
-    <tr class="MainTableTopRow">
-        <td class="MainTableTopRowLeftColumn">
-            <bean:message key="oscarReport.CDMReport.msgReport"/>
-        </td>
-        <td class="MainTableTopRowRightColumn">
-            <table class="TopStatusBar" >             
-                <tr>
-                    <td ><bean:message key="oscarReport.CDMReport.msgTitle"/>: <bean:write name="CDMGroup"/>  </td>
-                    <td></td>
-                    <td style="text-align:right">
-                            <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                    </td>
-                </tr>              
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="MainTableLeftColumn">
-         &nbsp;
-        </td>
-        <td class="MainTableRightColumn">
-            <table border=0 cellspacing=4 width=900>                
-                <tr>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>                              
-                                    <tr>
-                                        <th align="left" class="subTitles" width="600">
-                                            <logic:present name="title">
-                                            <bean:write name="title"/>  
-                                            </logic:present> 
-                                        </th>
-                                    </tr>
-                                    <logic:present name="headings">
-                                    <tr>
-                                        <logic:iterate id="hd" name="headings">                                    
-                                            <td><bean:write name="hd"/></td>
-                                        </logic:iterate>
-                                    </tr>
-                                    </logic:present>
-                                    <logic:present name="messages">
-                                    <logic:iterate id="msg" name="messages">
-                                    <tr>
-                                        <td><bean:write name="msg"/></td>
-                                    </tr>   
-                                    </logic:iterate>
-                                    </logic:present>                                                                                   
-                                </td>
-                            </tr>
-                        </table>
-                    </td>   
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td class="MainTableBottomRowLeftColumn">
-
-        </td>
-        <td class="MainTableBottomRowRightColumn">
-        <table>
-            <tr>
-                <td><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"></td>
-                <td><input type="button" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-            </tr>
-        </table>
-        </td>
-    </tr>
+<link rel="stylesheet" type="text/css"
+	href="../../oscarEncounter/encounterStyles.css">
+<body topmargin="0" leftmargin="0" vlink="#0000FF"
+	onload="window.focus();">
+<html:errors />
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarReport.CDMReport.msgReport" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message key="oscarReport.CDMReport.msgTitle" />: <bean:write
+					name="CDMGroup" /></td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table border=0 cellspacing=4 width=900>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td>
+					<tr>
+						<th align="left" class="subTitles" width="600"><logic:present
+							name="title">
+							<bean:write name="title" />
+						</logic:present></th>
+					</tr>
+					<logic:present name="headings">
+						<tr>
+							<logic:iterate id="hd" name="headings">
+								<td><bean:write name="hd" /></td>
+							</logic:iterate>
+						</tr>
+					</logic:present>
+					<logic:present name="messages">
+						<logic:iterate id="msg" name="messages">
+							<tr>
+								<td><bean:write name="msg" /></td>
+							</tr>
+						</logic:iterate>
+					</logic:present>
+					</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn">
+		<table>
+			<tr>
+				<td><input type="button" name="Button"
+					value="<bean:message key="global.btnPrint"/>"
+					onClick="window.print()"></td>
+				<td><input type="button" name="Button"
+					value="<bean:message key="global.btnClose"/>"
+					onClick="window.close()"></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 </table>
 </body>
 </html:html>
-                             
-                                   
-                                
+
+
+

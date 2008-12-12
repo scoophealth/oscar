@@ -61,7 +61,7 @@
 <html>
 <head>
 <title>Consent Form</title>
-	<script>
+<script>
 	
 		function getRadioValue(ctl) {
 			for(var x=0;x<ctl.length;x++) {
@@ -161,15 +161,16 @@
 		improve the services offered, to do research, and to compile
 		statistics for advocacy.</p>
 
-		<p>Your care at <%=currentFacility.getName()%> will not change by allowing agencies
-		to send information and work together through CAISI.</p>
+		<p>Your care at <%=currentFacility.getName()%> will not change by
+		allowing agencies to send information and work together through CAISI.</p>
 
 		<p>You may withdraw permission to send information to other
-		agencies at any time. To withdraw, contact <%=currentFacility.getName()%> or any other
-		CAISI partner. Your care at <%=currentFacility.getName()%> will not change if you
-		withdraw permission.</p>
+		agencies at any time. To withdraw, contact <%=currentFacility.getName()%>
+		or any other CAISI partner. Your care at <%=currentFacility.getName()%>
+		will not change if you withdraw permission.</p>
 
-		<p>Any questions can be directed to <%=currentFacility.getName()%> staff.</p>
+		<p>Any questions can be directed to <%=currentFacility.getName()%>
+		staff.</p>
 
 		<p>You are allowed to ask for more information about CAISI and/or
 		to talk to your worker or other people about CAISI. You are allowed to
@@ -179,10 +180,11 @@
 		</i>
 
 
-		<form name="consentForm" method="post" action="complex_integrator_consent_b_action.jsp">
-			<input type="hidden" name="demographicId" value="<%=currentDemographicId%>">
-			<input type="hidden" name="consent" value="ALL">
-			<input type="hidden" name="gotoOptout" value="false" />
+		<form name="consentForm" method="post"
+			action="complex_integrator_consent_b_action.jsp"><input
+			type="hidden" name="demographicId" value="<%=currentDemographicId%>">
+		<input type="hidden" name="consent" value="ALL"> <input
+			type="hidden" name="gotoOptout" value="false" />
 		</td>
 	</tr>
 	<tr>
@@ -197,20 +199,22 @@
 
 		<td width="100%">
 		<p>1.<i>What is the purpose of the CAISI project? </i><br>
-		<input type="radio" name="answer1" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct <input
+		<input type="radio" name="answer1" value="1"
+			<%=viewOnly?"checked=\"checked\"":""%>>Correct <input
 			type="radio" name="answer1" value="0">Incorrect</p>
 		<p>[Correct includes any one of: to send information to agencies
 		when they care for you; to provide better care for clients; to give
 		clients control over their information or any combination of these]</p>
 		<p>2.<i>When are you able to withdraw from CAISI?</i><input
-			type="radio" name="answer2" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct <input
+			type="radio" name="answer2" value="1"
+			<%=viewOnly?"checked=\"checked\"":""%>>Correct <input
 			type="radio" name="answer2" value="0">Incorrect</p>
 
 		<p>[Correct includes: any time]</p>
-		<p>3.<i>Will your care at <%=currentFacility.getName()%> be affected by your
-		participation in CAISI? </i> <input type="radio" name="answer3"
-			value="1" <%=viewOnly?"checked=\"checked\"":""%> > Correct <input type="radio" name="answer3"
-			value="0">Incorrect</p>
+		<p>3.<i>Will your care at <%=currentFacility.getName()%> be
+		affected by your participation in CAISI? </i> <input type="radio"
+			name="answer3" value="1" <%=viewOnly?"checked=\"checked\"":""%>>
+		Correct <input type="radio" name="answer3" value="0">Incorrect</p>
 		<p>[Correct = no]</p>
 		</td>
 
@@ -228,8 +232,8 @@
 		<td>
 
 		<p><br>
-		I, <b><U><%=currentDemographic.getFormattedName()%></U></b>, understand the terms and conditions of the
-		CAISI project above
+		I, <b><U><%=currentDemographic.getFormattedName()%></U></b>,
+		understand the terms and conditions of the CAISI project above
 		</td>
 	</tr>
 
@@ -262,24 +266,25 @@
 	</tr>
 	<tr>
 
-		<td><input type="checkbox" name="signatureDeclaration"
-			value="on" onclick="if (form.elements['signatureDeclaration'].checked) form.elements['refusedToSign'].checked=false" <%=viewOnly?"checked=\"checked\"":""%> > I,
-		<%=provider.getFormattedName()%>, state that I have aquired the client's signature
-		on a printed copy of this form</td>
+		<td><input type="checkbox" name="signatureDeclaration" value="on"
+			onclick="if (form.elements['signatureDeclaration'].checked) form.elements['refusedToSign'].checked=false"
+			<%=viewOnly?"checked=\"checked\"":""%>> I, <%=provider.getFormattedName()%>,
+		state that I have aquired the client's signature on a printed copy of
+		this form</td>
 	</tr>
 
 	<tr>
-		<td><input type="checkbox" name="refusedToSign"
-			value="on" onclick="if (form.elements['refusedToSign'].checked) form.elements['signatureDeclaration'].checked=false"> The Client has
-		refused to sign the form.</td>
+		<td><input type="checkbox" name="refusedToSign" value="on"
+			onclick="if (form.elements['refusedToSign'].checked) form.elements['signatureDeclaration'].checked=false">
+		The Client has refused to sign the form.</td>
 
 	</tr>
 
 	<tr>
-		<td><input type="checkbox" id="readOptOutStatement" <%=viewOnly?"checked=\"checked\"":""%> /> I have
-		read the following to the client "You may withdraw permission to send
-		information to other CAISI agencies thatare caring for you at any
-		time."</td>
+		<td><input type="checkbox" id="readOptOutStatement"
+			<%=viewOnly?"checked=\"checked\"":""%> /> I have read the following
+		to the client "You may withdraw permission to send information to
+		other CAISI agencies thatare caring for you at any time."</td>
 	</tr>
 
 </table>
@@ -291,15 +296,14 @@
 <tr>
 
 	<td><br>
-	<input <%=viewOnly?"disabled=\"disabled\"":""%>  type="button" value="Continue to Opt-Out Form"
-		onclick="submitConsent(document.consentForm,true)" /> 
-   <input <%=viewOnly?"disabled=\"disabled\"":""%> 
-		type="button" value="Save the Form"
-		onclick="submitConsent(document.consentForm,false)" /> 
-   <input
+	<input <%=viewOnly?"disabled=\"disabled\"":""%> type="button"
+		value="Continue to Opt-Out Form"
+		onclick="submitConsent(document.consentForm,true)" /> <input
+		<%=viewOnly?"disabled=\"disabled\"":""%> type="button"
+		value="Save the Form"
+		onclick="submitConsent(document.consentForm,false)" /> <input
 		type="button" value="Cancel" onclick="window.close()" /> <input
-		type="button" value="Print to Sign" onClick="window.print()" />
-	</td>
+		type="button" value="Print to Sign" onClick="window.print()" /></td>
 </tr>
 
 <tr>

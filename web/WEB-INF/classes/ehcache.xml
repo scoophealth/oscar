@@ -1,23 +1,14 @@
 
 <ehcache>
 
-    <diskStore path="java.io.tmpdir"/>
+	<diskStore path="java.io.tmpdir" />
 
-    <defaultCache
-        maxElementsInMemory="100"
-        eternal="false"
-        timeToIdleSeconds="120"
-        timeToLiveSeconds="120"
-        overflowToDisk="true"
-        diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="120"        
-        />
-        
-    <cache name="org.oscarehr.PMmodule.model.AccessType"
-        maxElementsInMemory="100"
-        eternal="true"
-        overflowToDisk="false"
-        />
+	<defaultCache maxElementsInMemory="100" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true"
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120" />
+
+	<cache name="org.oscarehr.PMmodule.model.AccessType"
+		maxElementsInMemory="100" eternal="true" overflowToDisk="false" />
 
 </ehcache>
 

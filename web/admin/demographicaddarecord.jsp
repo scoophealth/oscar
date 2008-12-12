@@ -24,11 +24,13 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <head>
@@ -44,14 +46,15 @@
     //-->
 </script>
 </head>
-<body  onload="start()"  background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="start()" background="../images/gray_bg.jpg"
+	bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            <bean:message key="admin.demographicaddrecord.title"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		<bean:message key="admin.demographicaddrecord.title" /></font></th>
+	</tr>
+</table>
 
 <%
   //if action is good, then give me the result
@@ -100,11 +103,10 @@
     System.out.println("2["+paramName[2]+"]");
     System.out.println("3["+paramName[3]+"]");
     System.out.println("4["+paramName[4]+"]");
-    if(rs.next()){ //!rs.getString("cpp_id").equals(""))%>
-      ***<font color='red'><bean:message key="admin.demographicaddrecord.msgDuplicated"/>***</font><br>
-    <%}%>
-    
-    <%
+    if(rs.next()){ //!rs.getString("cpp_id").equals(""))%> ***<font
+	color='red'><bean:message
+	key="admin.demographicaddrecord.msgDuplicated" />***</font><br>
+<%}%> <%
     // int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, param, request.getParameter("dboperation"));
     
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
@@ -145,18 +147,21 @@
       
   
 %>
-  <p><h2><bean:message key="admin.demographicaddrecord.msgSuccessful"/>
-  </h2></p>
+<p>
+<h2><bean:message key="admin.demographicaddrecord.msgSuccessful" />
+</h2>
+</p>
 <%  
   } else {
 %>
-  <p><h1><bean:message key="admin.demographicaddrecord.msgFailed"/></h1></p>
+<p>
+<h1><bean:message key="admin.demographicaddrecord.msgFailed" /></h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-<%@ include file="footer2htm.jsp" %>
-</center>
+<p></p>
+<%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>

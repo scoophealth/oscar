@@ -24,14 +24,14 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<title><bean:message key="oscarEncounter.StartCookie.title"/></title>
+<title><bean:message key="oscarEncounter.StartCookie.title" /></title>
 <script type="text/javascript" language=javascript>
 //tilde operator function variables
     var handlePressState = 0;
@@ -68,12 +68,13 @@ function popupStart2(vheight,vwidth,varpage) {
 
 </script>
 
-<html:base/>
+<html:base />
 <%
     Cookie cookie = new Cookie("myCookie","myValue");
     cookie.setPath("/");
     response.addCookie(cookie);
 %>
+
 <body>
 <%
 String provider_no      ="xyz";
@@ -87,22 +88,74 @@ String start_time       ="192021";
 String todaysDate       ="eggs";
 String status           ="222324";
 %>
-<a name="Bob" href="javascript:popupStart1(700,980,'/oscarEncounter/IncomingEncounter.do?appointmentNo=5&demographicNo=10000048&curProvideNo=174&reason=&userName=David+H+Chan&appointmentDate=2002-6-14&startTime=10:0&status=t')"><bean:message key="oscarEncounter.StartCookie.msgLaunch"/></a>
+<a name="Bob"
+	href="javascript:popupStart1(700,980,'/oscarEncounter/IncomingEncounter.do?appointmentNo=5&demographicNo=10000048&curProvideNo=174&reason=&userName=David+H+Chan&appointmentDate=2002-6-14&startTime=10:0&status=t')"><bean:message
+	key="oscarEncounter.StartCookie.msgLaunch" /></a>
 
-<a name="Bob" href="javascript:popupStart1(700,980,'/oscarEncounter/IncomingEncounter.do?providerNo=<%=provider_no%>&appointmentNo=<%=appointment_no%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no%>&reason=<%=reason%>&userName=<%=username%>&appointmentDate=<%=appointment_date%>&startTime=<%=start_time%>&status=<%=status%>')"><bean:message key="oscarEncounter.StartCookie.msgLaunch"/></a>
-<table bgcolor="#555555"><tr><td>#555555</td></tr></table>
-<table bgcolor="#6699cc"><tr><td>#6699cc</td></tr></table>
-<table bgcolor="#f1f1f1"><tr><td>#f1f1f1</td></tr></table>
-<table bgcolor="#003399"><tr><td>#003399</td></tr></table>
-<table bgcolor="#ff3300"><tr><td>#ff3300</td></tr></table>
+<a name="Bob"
+	href="javascript:popupStart1(700,980,'/oscarEncounter/IncomingEncounter.do?providerNo=<%=provider_no%>&appointmentNo=<%=appointment_no%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no%>&reason=<%=reason%>&userName=<%=username%>&appointmentDate=<%=appointment_date%>&startTime=<%=start_time%>&status=<%=status%>')"><bean:message
+	key="oscarEncounter.StartCookie.msgLaunch" /></a>
+<table bgcolor="#555555">
+	<tr>
+		<td>#555555</td>
+	</tr>
+</table>
+<table bgcolor="#6699cc">
+	<tr>
+		<td>#6699cc</td>
+	</tr>
+</table>
+<table bgcolor="#f1f1f1">
+	<tr>
+		<td>#f1f1f1</td>
+	</tr>
+</table>
+<table bgcolor="#003399">
+	<tr>
+		<td>#003399</td>
+	</tr>
+</table>
+<table bgcolor="#ff3300">
+	<tr>
+		<td>#ff3300</td>
+	</tr>
+</table>
 
-<table bgcolor="#fbe249"><tr><td>#fbe249</td></tr></table>
-<table bgcolor="#666699"><tr><td>#666699</td></tr></table>
-<table bgcolor="#555555"><tr><td>#555555</td></tr></table>
-<table bgcolor="#ff3300"><tr><td>#ff3300</td></tr></table>
-<table bgcolor="#ff3300"><tr><td>#ff3300</td></tr></table>
-<table bgcolor="#ff3300"><tr><td>#ff3300</td></tr></table>
-<table bgcolor="#ff3300"><tr><td>#ff3300</td></tr></table>
+<table bgcolor="#fbe249">
+	<tr>
+		<td>#fbe249</td>
+	</tr>
+</table>
+<table bgcolor="#666699">
+	<tr>
+		<td>#666699</td>
+	</tr>
+</table>
+<table bgcolor="#555555">
+	<tr>
+		<td>#555555</td>
+	</tr>
+</table>
+<table bgcolor="#ff3300">
+	<tr>
+		<td>#ff3300</td>
+	</tr>
+</table>
+<table bgcolor="#ff3300">
+	<tr>
+		<td>#ff3300</td>
+	</tr>
+</table>
+<table bgcolor="#ff3300">
+	<tr>
+		<td>#ff3300</td>
+	</tr>
+</table>
+<table bgcolor="#ff3300">
+	<tr>
+		<td>#ff3300</td>
+	</tr>
+</table>
 </body>
 </html:html>
 

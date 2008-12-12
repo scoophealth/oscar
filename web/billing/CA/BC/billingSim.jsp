@@ -29,11 +29,14 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="../../../errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
+	errorPage="../../../errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -86,19 +89,33 @@ function checkData() {
 </script>
 
 <style type='text/css'>
-<!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; -->
+<!--
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none;
+}
+-->
 </style>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-	<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-	Billing File Simulation</font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0" onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+		Billing File Simulation</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 <%
@@ -109,15 +126,14 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 %>
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-<form name="serviceform" method="post" action="genSimulation.jsp" onSubmit="return checkData();">
-<tr> 
-	<td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">
-	Select Provider </font></b>
-	</td>
-	<td width="254">
-	<select name="provider">
-	   <option value="%" ><b>All Providers</b></option>		
-<% 
+	<form name="serviceform" method="post" action="genSimulation.jsp"
+		onSubmit="return checkData();">
+	<tr>
+		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"> Select Provider </font></b></td>
+		<td width="254"><select name="provider">
+			<option value="%"><b>All Providers</b></option>
+			<% 
 String proFirst="";
 String proLast="";
 String proOHIP="";
@@ -132,41 +148,39 @@ while(rslocal.next()){
 	billinggroup_no= rslocal.getString("billing_no"); //SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_billinggroup_no>","</xml_p_billinggroup_no>");
 	specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 %>
-           <option value="<%=proOHIP%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
+			<option value="<%=proOHIP%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,<%=proFirst%></option>
 
-<% 
+			<% 
 }
 rslocal.close();
 apptMainBean.closePstmtConn();
 %>
 
-	</select>
-	</td>
-	<td width="277"> <font color="#003366"> 
-	<input type="hidden" name="monthCode" value="<%=monthCode%>">
-	<input type="hidden" name="verCode" value="V03">
-	<input type="hidden" name="curUser" value="<%=user_no%>">
-	<input type="hidden" name="curDate" value="<%=nowDate%>">
-	</font></td>
-</tr>
-<tr> 
-	<td><font face="Arial, Helvetica, sans-serif" size="2"><b> 
-	Service Date: </b></font> </td>
-	<td><font size="1" face="Arial, Helvetica, sans-serif">
-	<a href="#" onClick="openBrWindow('../../../share/CalendarPopup.jsp?urlfrom=../billing/CA/BC/billingSim.jsp&year=<%=curYear%>&month=<%=curMonth%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].xml_vdate.value")%>','','top=0,left=0,width=430,height=310'); return false;">
-	From:</a></font> 
-	<input type="text" name="xml_vdate" maxlength="10" value="<%=xml_vdate%>" readonly>
-	</td>
-	<td><font size="1" face="Arial, Helvetica, sans-serif">
-	<a href="#" onClick="openBrWindow('../../../share/CalendarPopup.jsp?urlfrom=../billing/CA/BC/billingSim.jsp&year=<%=curYear%>&month=<%=curMonth%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].xml_appointment_date.value")%>','','top=0,left=0,width=430,height=310'); return false;">
-	To:</a></font> 
-	<input type="text" name="xml_appointment_date" maxlength="10" value="<%=xml_appointment_date%>" readonly>
-	</td>
-	<td>
-	<input type="submit" name="Submit" value="Create Report">
-	</td>
-</tr>
-</form>
+		</select></td>
+		<td width="277"><font color="#003366"> <input
+			type="hidden" name="monthCode" value="<%=monthCode%>"> <input
+			type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"> </font></td>
+	</tr>
+	<tr>
+		<td><font face="Arial, Helvetica, sans-serif" size="2"><b>
+		Service Date: </b></font></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif"> <a
+			href="#"
+			onClick="openBrWindow('../../../share/CalendarPopup.jsp?urlfrom=../billing/CA/BC/billingSim.jsp&year=<%=curYear%>&month=<%=curMonth%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].xml_vdate.value")%>','','top=0,left=0,width=430,height=310'); return false;">
+		From:</a></font> <input type="text" name="xml_vdate" maxlength="10"
+			value="<%=xml_vdate%>" readonly></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif"> <a
+			href="#"
+			onClick="openBrWindow('../../../share/CalendarPopup.jsp?urlfrom=../billing/CA/BC/billingSim.jsp&year=<%=curYear%>&month=<%=curMonth%>&param=<%=URLEncoder.encode("&formdatebox=document.forms[0].xml_appointment_date.value")%>','','top=0,left=0,width=430,height=310'); return false;">
+		To:</a></font> <input type="text" name="xml_appointment_date" maxlength="10"
+			value="<%=xml_appointment_date%>" readonly></td>
+		<td><input type="submit" name="Submit" value="Create Report">
+		</td>
+	</tr>
+	</form>
 </table>
 
 <%=request.getAttribute("html") == null?"":request.getAttribute("html")%>

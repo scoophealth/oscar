@@ -49,12 +49,12 @@
     }
   }
 %>
-  <%@ page errorPage="../errorpage.jsp" %>
-  <%@ page import="java.util.*" %>
-  <%@ page import="java.sql.*" %>
-  <%@ page import="oscar.oscarBilling.data.BillingONDataHelp" %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="oscar.oscarBilling.data.BillingONDataHelp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
   DBPreparedHandler dbObj = new DBPreparedHandler();
   // select provider list
@@ -84,23 +84,23 @@
       providerName = dbObj.getString(rs,"first_name") + " " + dbObj.getString(rs,"last_name");
   }
 %>
-  <%@page import="oscar.oscarDB.DBPreparedHandler"%>
+<%@page import="oscar.oscarDB.DBPreparedHandler"%>
 <html:html locale="true">
-    <head>
-      <title>
-        PHCP Report
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <!-- calendar stylesheet -->
-      <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-      <!-- main calendar program -->
-      <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-      <!-- language for the calendar -->
-      <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-      <!-- the following script defines the Calendar.setup helper function, which makes
+<head>
+<title>PHCP Report</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-      <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-      <script language="JavaScript">
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script language="JavaScript">
 
                 <!--
 function setfocus() {
@@ -121,112 +121,89 @@ function onSub() {
 //-->
 
       </script>
-    </head>
-    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-              PHCP Encounter Report
-            </font>
-          </th>
-        </tr>
-      </table>
-        <form name="myform" action="reportonbilledphcp.jsp" method="POST" onSubmit="return ( onSub());">
-      <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="lightsteelblue">
-            <td>
-              Code:
-              <br>
-              <select name="codeType">
-                <option value="">
-                --Code--
-                </option>
-                <option value="DxCode">
-                DxCode
-                </option>
-                <option value="ServiceCode">
-                ServiceCode
-                </option>
-              </select>
-            </td>
-            <td nowrap>
-              start
-              <input type="text" name="startDate" id="startDate" value="<%=startDate!=null?startDate:""%>" size="10" readonly>
-              <img src="../images/cal.gif" id="startDate_cal">
-              end
-              <input type="text" name="endDate" id="endDate" value="<%=endDate!=null?endDate:""%>" size="10" readonly>
-              <img src="../images/cal.gif" id="endDate_cal">
-            </td>
-            <td>
-              Provider:
-              <select name="providerNoDoctor">
-                <option value="">
-                ------Doctor------
-                </option>
-<%
+</head>
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> PHCP Encounter Report </font></th>
+	</tr>
+</table>
+<form name="myform" action="reportonbilledphcp.jsp" method="POST"
+	onSubmit="return ( onSub());">
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="lightsteelblue">
+		<td>Code: <br>
+		<select name="codeType">
+			<option value="">--Code--</option>
+			<option value="DxCode">DxCode</option>
+			<option value="ServiceCode">ServiceCode</option>
+		</select></td>
+		<td nowrap>start <input type="text" name="startDate"
+			id="startDate" value="<%=startDate!=null?startDate:""%>" size="10"
+			readonly> <img src="../images/cal.gif" id="startDate_cal">
+		end <input type="text" name="endDate" id="endDate"
+			value="<%=endDate!=null?endDate:""%>" size="10" readonly> <img
+			src="../images/cal.gif" id="endDate_cal"></td>
+		<td>Provider: <select name="providerNoDoctor">
+			<option value="">------Doctor------</option>
+			<%
                 for (int i = 0; i < VEC_PROVIDER[0].size(); i++) {
 %>
-                  <option value="<%=((Properties)VEC_PROVIDER[0].get(i)).getProperty("providerNo", "")  %>">
-                  <%= ((Properties)VEC_PROVIDER[0].get(i)).getProperty("firstName", "") + " " +
+			<option
+				value="<%=((Properties)VEC_PROVIDER[0].get(i)).getProperty("providerNo", "")  %>">
+			<%= ((Properties)VEC_PROVIDER[0].get(i)).getProperty("firstName", "") + " " +
                           ((Properties)VEC_PROVIDER[0].get(i)).getProperty("lastName", "") %>
-                  </option>
-<%
+			</option>
+			<%
                 }
 %>
-              </select>
-              <select name="providerNoResident">
-                <option value="">
-                ------Resident------
-                </option>
-<%
+		</select> <select name="providerNoResident">
+			<option value="">------Resident------</option>
+			<%
                 for (int i = 0; i < VEC_PROVIDER[1].size(); i++) {
 %>
-                  <option value="<%=((Properties)VEC_PROVIDER[1].get(i)).getProperty("providerNo", "")  %>">
-                  <%= ((Properties)VEC_PROVIDER[1].get(i)).getProperty("firstName", "") + " " +
+			<option
+				value="<%=((Properties)VEC_PROVIDER[1].get(i)).getProperty("providerNo", "")  %>">
+			<%= ((Properties)VEC_PROVIDER[1].get(i)).getProperty("firstName", "") + " " +
                           ((Properties)VEC_PROVIDER[1].get(i)).getProperty("lastName", "") %>
-                  </option>
-<%
+			</option>
+			<%
                 }
 %>
-              </select>
-              <select name="providerNoNP">
-                <option value="">
-                ------Nurse------
-                </option>
-<%
+		</select> <select name="providerNoNP">
+			<option value="">------Nurse------</option>
+			<%
                 for (int i = 0; i < VEC_PROVIDER[2].size(); i++) {
 %>
-                  <option value="<%=((Properties)VEC_PROVIDER[2].get(i)).getProperty("providerNo", "")  %>">
-                  <%= ((Properties)VEC_PROVIDER[2].get(i)).getProperty("firstName", "") + " " +
+			<option
+				value="<%=((Properties)VEC_PROVIDER[2].get(i)).getProperty("providerNo", "")  %>">
+			<%= ((Properties)VEC_PROVIDER[2].get(i)).getProperty("firstName", "") + " " +
                           ((Properties)VEC_PROVIDER[2].get(i)).getProperty("lastName", "") %>
-                  </option>
-<%
+			</option>
+			<%
                 }
 %>
-              </select>
-              <select name="providerNoSW">
-                <option value="">
-                ------Social Worker------
-                </option>
-<%
+		</select> <select name="providerNoSW">
+			<option value="">------Social Worker------</option>
+			<%
                 for (int i = 0; i < VEC_PROVIDER[3].size(); i++) {
 %>
-                  <option value="<%=((Properties)VEC_PROVIDER[3].get(i)).getProperty("providerNo", "")  %>">
-                  <%= ((Properties)VEC_PROVIDER[3].get(i)).getProperty("firstName", "") + " " +
+			<option
+				value="<%=((Properties)VEC_PROVIDER[3].get(i)).getProperty("providerNo", "")  %>">
+			<%= ((Properties)VEC_PROVIDER[3].get(i)).getProperty("firstName", "") + " " +
                           ((Properties)VEC_PROVIDER[3].get(i)).getProperty("lastName", "") %>
-                  </option>
-<%
+			</option>
+			<%
                 }
 %>
-              </select>
-            </td>
-            <td>
-              <input type="submit" name="submit" value="Go">
-            </td>
-          </tr>
-      </table>
-        </form>
+		</select></td>
+		<td><input type="submit" name="submit" value="Go"></td>
+	</tr>
+</table>
+</form>
 <%
 	out.flush();
       if (request.getParameter("submit") != null && providerNo!=null) {
@@ -764,144 +741,63 @@ if(bDx) {
 
         }
 %>
-        <table border="0" cellspacing="0" cellpadding="0" width="100%">
-          <tr bgcolor="<%="#669999"%>">
-            <th align="left">
-              <font face="Helvetica" color="white">
-                <%=providerName%> - PATIENT VISIT LIST
-              </font>
-            </th>
-            <th width="10%" nowrap>
-              <input type="button" name="Button" value="Print" onClick="window.print()">
-              <input type="button" name="Button" value=" Exit " onClick="window.close()">
-            </th>
-          </tr>
-        </table>
-        <table border="0" cellspacing="0" cellpadding="0" width="100%">
-          <tr>
-            <td>
-              Period: (
-              <%= startDate %>
-              ~
-              <%= endDate %>
-              )
-            </td>
-          </tr>
-        </table>
-        <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="0">
-          <tr bgcolor="<%=tdTitleColor%>">
-            <TH colspan="2" width="10%">
-              <%=bDx?"Dx Code":"ServiceCode"%>
-            </TH>
-            <TH colspan="2" width="6%">
-              Total
-            </TH>
-            <TH colspan="2" width="6%">
-              Sex F
-            </TH>
-            <TH colspan="2" width="6%">
-              Sex M
-            </TH>
-            <TH colspan="2" width="6%">
-              0-1 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              2-11 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              12-20 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              21-34 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              35-50 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              51-64 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              65-70 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              71+ yr
-            </TH>
-          </tr>
-          <tr align="center" bgcolor="<%=tdTitleColor%>">
-            <td>
-              Code
-            </td>
-            <td>
-              Description
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-          </tr>
-<%
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%="#669999"%>">
+		<th align="left"><font face="Helvetica" color="white"> <%=providerName%>
+		- PATIENT VISIT LIST </font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="Print" onClick="window.print()"> <input type="button"
+			name="Button" value=" Exit " onClick="window.close()"></th>
+	</tr>
+</table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td>Period: ( <%= startDate %> ~ <%= endDate %> )</td>
+	</tr>
+</table>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"
+	cellpadding="0">
+	<tr bgcolor="<%=tdTitleColor%>">
+		<TH colspan="2" width="10%"><%=bDx?"Dx Code":"ServiceCode"%></TH>
+		<TH colspan="2" width="6%">Total</TH>
+		<TH colspan="2" width="6%">Sex F</TH>
+		<TH colspan="2" width="6%">Sex M</TH>
+		<TH colspan="2" width="6%">0-1 yr</TH>
+		<TH colspan="2" width="6%">2-11 yr</TH>
+		<TH colspan="2" width="6%">12-20 yr</TH>
+		<TH colspan="2" width="6%">21-34 yr</TH>
+		<TH colspan="2" width="6%">35-50 yr</TH>
+		<TH colspan="2" width="6%">51-64 yr</TH>
+		<TH colspan="2" width="6%">65-70 yr</TH>
+		<TH colspan="2" width="6%">71+ yr</TH>
+	</tr>
+	<tr align="center" bgcolor="<%=tdTitleColor%>">
+		<td>Code</td>
+		<td>Description</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+	</tr>
+	<%
 String catName = "";
 String color = "";
 int codeNum = 0;
@@ -928,12 +824,10 @@ for (int i = 0; i < vServiceCode.size(); i++) {
             // new level2
             catName = curCatName;
 %>
-            <tr bgcolor="<%=tdSubtitleColor%>">
-              <td colspan="24">
-                <%= curCatName %>
-              </td>
-            </tr>
-<%
+	<tr bgcolor="<%=tdSubtitleColor%>">
+		<td colspan="24"><%= curCatName %></td>
+	</tr>
+	<%
           }
     color = i%2==0?tdInterlColor:"white";
   } else {
@@ -941,35 +835,35 @@ for (int i = 0; i < vServiceCode.size(); i++) {
   }
   }
 %>
-<tr bgcolor="<%=color %>" align="center">
-          <td><%=vServiceCode.get(i)%></td>
-		  <td><%=vServiceDesc.get(i)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i)), 0)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i)), 1)%></td>
+	<tr bgcolor="<%=color %>" align="center">
+		<td><%=vServiceCode.get(i)%></td>
+		<td><%=vServiceDesc.get(i)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i)), 0)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i)), 1)%></td>
 
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i)), 2)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i)), 3)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i)), 4)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i)), 5)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "patSexF" + vServiceDesc.get(i)), 2)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "visSexF" + vServiceDesc.get(i)), 3)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "patSexM" + vServiceDesc.get(i)), 4)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "visSexM" + vServiceDesc.get(i)), 5)%></td>
 
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat0_1" + vServiceDesc.get(i)), 6)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis0_1" + vServiceDesc.get(i)), 7)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i)), 8)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i)), 9)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i)), 10)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i)), 11)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i)), 12)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i)), 13)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i)), 14)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i)), 15)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i)), 16)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i)), 17)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i)), 18)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i)), 19)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i)), 20)%></td>
-          <td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i)), 21)%></td>
-          </tr>
-<%
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat0_1" + vServiceDesc.get(i)), 6)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis0_1" + vServiceDesc.get(i)), 7)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat2_11" + vServiceDesc.get(i)), 8)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis2_11" + vServiceDesc.get(i)), 9)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat12_20" + vServiceDesc.get(i)), 10)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis12_20" + vServiceDesc.get(i)), 11)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat21_34" + vServiceDesc.get(i)), 12)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis21_34" + vServiceDesc.get(i)), 13)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat35_50" + vServiceDesc.get(i)), 14)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis35_50" + vServiceDesc.get(i)), 15)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat51_64" + vServiceDesc.get(i)), 16)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis51_64" + vServiceDesc.get(i)), 17)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat65_70" + vServiceDesc.get(i)), 18)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis65_70" + vServiceDesc.get(i)), 19)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i)), 20)%></td>
+		<td><%=getNumAndCalTotal(props.getProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i)), 21)%></td>
+	</tr>
+	<%
           total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i)), 0);
           total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i)), 1);
 
@@ -995,139 +889,67 @@ for (int i = 0; i < vServiceCode.size(); i++) {
           total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "pat71_" + vServiceDesc.get(i)), 20);
           total=getNumAndCalTotal(total,props.getProperty(vServiceCode.get(i) + "vis71_" + vServiceDesc.get(i)), 21);
 	} %>
-          <tr bgcolor="<%=tdTitleColor%>">
-            <TH colspan="2" width="10%">
-              <%=bDx?"Dx Code":"ServiceCode"%>
-            </TH>
-            <TH colspan="2" width="6%">
-              Total
-            </TH>
-            <TH colspan="2" width="6%">
-              Sex F
-            </TH>
-            <TH colspan="2" width="6%">
-              Sex M
-            </TH>
-            <TH colspan="2" width="6%">
-              0-1 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              2-11 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              12-20 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              21-34 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              35-50 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              51-64 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              65-70 yr
-            </TH>
-            <TH colspan="2" width="6%">
-              71+ yr
-            </TH>
-          </tr>
-          <tr align="center" bgcolor="<%=tdTitleColor%>">
-            <td>
-              Code
-            </td>
-            <td>
-              Description
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-            <td>
-              Pt.
-            </td>
-            <td>
-              Visit
-            </td>
-          </tr>
-          <tr align="center">
-            <td colspan="2" align="right">Sub. Total:</td>
-            <% for(int i=0; i<total.length; i++) { %>
-            <td><%=total[i]%></td>
-            <% } %>
-		  </tr>
-          <!--tr align="center">
+	<tr bgcolor="<%=tdTitleColor%>">
+		<TH colspan="2" width="10%"><%=bDx?"Dx Code":"ServiceCode"%></TH>
+		<TH colspan="2" width="6%">Total</TH>
+		<TH colspan="2" width="6%">Sex F</TH>
+		<TH colspan="2" width="6%">Sex M</TH>
+		<TH colspan="2" width="6%">0-1 yr</TH>
+		<TH colspan="2" width="6%">2-11 yr</TH>
+		<TH colspan="2" width="6%">12-20 yr</TH>
+		<TH colspan="2" width="6%">21-34 yr</TH>
+		<TH colspan="2" width="6%">35-50 yr</TH>
+		<TH colspan="2" width="6%">51-64 yr</TH>
+		<TH colspan="2" width="6%">65-70 yr</TH>
+		<TH colspan="2" width="6%">71+ yr</TH>
+	</tr>
+	<tr align="center" bgcolor="<%=tdTitleColor%>">
+		<td>Code</td>
+		<td>Description</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+		<td>Pt.</td>
+		<td>Visit</td>
+	</tr>
+	<tr align="center">
+		<td colspan="2" align="right">Sub. Total:</td>
+		<% for(int i=0; i<total.length; i++) { %>
+		<td><%=total[i]%></td>
+		<% } %>
+	</tr>
+	<!--tr align="center">
             <td colspan="2" align="right">Total:</td>
             < %for(int i=0; i<total1.length; i++) { %>
             <td>< %=total1[i]%></td>
             < % } %>
 		  </tr-->
-        </table>
+</table>
 <%
       }
 %>
-      <script type="text/javascript">
+<script type="text/javascript">
 Calendar.setup({ inputField : "startDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "startDate_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "endDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "endDate_cal", singleClick : true, step : 1 });
       </script>
-    </body>
+</body>
 <%! int[] total1 = {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0};
 %>
 <%! String getNumAndCalTotal(String str, int i) {
@@ -1144,4 +966,4 @@ Calendar.setup({ inputField : "endDate", ifFormat : "%Y/%m/%d", showsTime :false
 	return sTotal;
 }
 %>
-  </html:html>
+</html:html>

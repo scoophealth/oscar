@@ -21,76 +21,82 @@
 * Toronto, Ontario, Canada
 */
 -->
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 <html:html locale="true">
-    <head>
-        <title>Referral Details</title>
+<head>
+<title>Referral Details</title>
 
-        <style type="text/css">
-            @import "<html:rewrite page="/css/tigris.css" />";
-            @import "<html:rewrite page="/css/displaytag.css" />";
-            @import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
-        </style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<body>
+<html:form action="/PMmodule/ClientManager.do">
 
-    <body>
-    <html:form action="/PMmodule/ClientManager.do">
+	<html:hidden property="referral.id" />
 
-        <html:hidden property="referral.id"/>
+	<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr class="b">
+			<td width="20%">Client name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="client.formattedName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Provider name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="provider.formattedName" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Program name:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.programName" /></td>
+		</tr>
 
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-            <tr class="b">
-                <td width="20%">Client name:</td>
-                <td><bean:write name="clientManagerForm" property="client.formattedName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Provider name:</td>
-                <td><bean:write name="clientManagerForm" property="provider.formattedName"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Program name:</td>
-                <td><bean:write name="clientManagerForm" property="referral.programName"/></td>
-            </tr>
-          
-            <tr class="b">
-                <td width="20%">Provider:</td>
-                <td><bean:write name="clientManagerForm" property="referral.providerFormattedName"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Provider:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.providerFormattedName" /></td>
+		</tr>
 
-            <tr class="b">
-                <td width="20%">Completion date:</td>
-                <td><bean:write name="clientManagerForm" property="referral.completionDate"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Completion status:</td>
-                <td><bean:write name="clientManagerForm" property="referral.status"/></td>
-            </tr>
-            <tr class="b">
-                <td width="20%">Completion notes:</td>
-                <td><bean:write name="clientManagerForm" property="referral.completionNotes"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Completion date:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.completionDate" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Completion status:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.status" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Completion notes:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.completionNotes" /></td>
+		</tr>
 
-            <tr class="b">
-                <td width="20%">Referral date:</td>
-                <td><bean:write name="clientManagerForm" property="referral.referralDate"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Referral date:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.referralDate" /></td>
+		</tr>
 
-            <tr class="b">
-                <td width="20%">Temporary admission:</td>
-                <td><bean:write name="clientManagerForm" property="referral.temporaryAdmission"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Temporary admission:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.temporaryAdmission" /></td>
+		</tr>
 
-            <tr class="b">
-                <td width="20%">Present problems:</td>
-                <td><bean:write name="clientManagerForm" property="referral.presentProblems"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Present problems:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.presentProblems" /></td>
+		</tr>
 
-            <tr class="b">
-                <td width="20%">Rejection reason:</td>
-                <td><bean:write name="clientManagerForm" property="referral.radioRejectionReason"/></td>
-            </tr>
+		<tr class="b">
+			<td width="20%">Rejection reason:</td>
+			<td><bean:write name="clientManagerForm"
+				property="referral.radioRejectionReason" /></td>
+		</tr>
 
-        </table>
+	</table>
 
-    </html:form>
-    </body>
+</html:form>
+</body>
 </html:html>

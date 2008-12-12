@@ -27,13 +27,17 @@
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="oscar.OscarProperties" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="oscar.OscarProperties"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean"
+	scope="page" />
 <% //save or delete the settings
   int rowsAffected = 0;
   OscarProperties props = OscarProperties.getInstance();
@@ -58,7 +62,7 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="schedule.scheduleedittemplate.title"/></title>
+<title><bean:message key="schedule.scheduleedittemplate.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <!--link rel="stylesheet" href="../web.css" /-->
@@ -99,24 +103,26 @@ function changeGroup(s) {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
 
-  <table border="0" width="100%">
-    <tr>
-      <td width="50" bgcolor="#009966">&nbsp;</td>
-      <td align="center">
+<table border="0" width="100%">
+	<tr>
+		<td width="50" bgcolor="#009966">&nbsp;</td>
+		<td align="center">
 
-  <form name="addtemplatecode1" method="post" action="scheduleedittemplate.jsp">
-        <table width="100%" border="0" cellspacing="0" cellpadding="5">
-		<input type="hidden" name="dboperation" value="">
-		<input type="hidden" name="step" value="">
-          <tr bgcolor="#CCFFCC">
-            <td nowrap>
-              <p><bean:message key="schedule.scheduleedittemplate.formProvider"/>: <%=request.getParameter("providername")%></p>
-            </td>
-            <td align='right'>
-      <select name="name" >
-	<%
+		<form name="addtemplatecode1" method="post"
+			action="scheduleedittemplate.jsp">
+		<table width="100%" border="0" cellspacing="0" cellpadding="5">
+			<input type="hidden" name="dboperation" value="">
+			<input type="hidden" name="step" value="">
+			<tr bgcolor="#CCFFCC">
+				<td nowrap>
+				<p><bean:message
+					key="schedule.scheduleedittemplate.formProvider" />: <%=request.getParameter("providername")%></p>
+				</td>
+				<td align='right'><select name="name">
+					<%
    ResultSet rsdemo = null;
    boolean bEdit=request.getParameter("dboperation")!=null&&request.getParameter("dboperation").equals(" Edit ")?true:false;
    String[] param =new String[2];
@@ -132,95 +138,124 @@ function changeGroup(s) {
    rsdemo = scheduleMainBean.queryResults(param[0], "search_scheduletemplate");
    while (rsdemo.next()) {
 	%>
-        <option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
-  <%
+					<option value="<%=rsdemo.getString("name")%>"><%=rsdemo.getString("name")+" |"+rsdemo.getString("summary")%></option>
+					<%
      }
 	%>
-      </select>
-                <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
-                <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
-            <td align='right'><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnEdit"/>' onclick="document.forms['addtemplatecode1'].dboperation.value=' Edit '; document.forms['addtemplatecode1'].submit();"></td>
-          </tr>
-        </table>
-  </form>
-
-  <form name="addtemplatecode2" method="post" action="scheduleedittemplate.jsp">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
-  			<tr>
-        	  <td width="50%" align="right" >&nbsp;
-      			<select name="step1" onChange="changeGroup(this)" >
-      			<% for(int i=5; i<35; i+=5) {
-      			if(i==25) continue;%>
-				<option value="<%=i%>" <%=STEP==i? "selected":""%>> <%=i%></option>
-      			<% }	%>
-				</select>
-                <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
-                <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
-            <input type="button" value='Go' onclick="document.forms['addtemplatecode1'].step.value=document.forms[1].step1.options[document.forms[1].step1.selectedIndex].value; document.forms['addtemplatecode1'].submit();"></td>
-  			</td></tr>
+				</select> <input type="hidden" name="providerid"
+					value="<%=request.getParameter("providerid")%>"> <input
+					type="hidden" name="providername"
+					value="<%=request.getParameter("providername")%>">
+				<td align='right'><input type="button"
+					value='<bean:message key="schedule.scheduleedittemplate.btnEdit"/>'
+					onclick="document.forms['addtemplatecode1'].dboperation.value=' Edit '; document.forms['addtemplatecode1'].submit();"></td>
+			</tr>
 		</table>
-  </form>
-<form name="addtemplatecode" method="post" action="scheduleedittemplate.jsp">
-          <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-            <tr bgcolor="#FOFOFO" align="center">
-              <td colspan=3><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.scheduleedittemplate.msgMainLabel"/></font></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td nowrap><bean:message key="schedule.scheduleedittemplate.formTemplateName"/>:</td>
-             <td><input type="text" name="name" size="30" maxlength="20" <%=bEdit?("value='"+myTempBean.getName()+"'"):"value=''"%> > <font size='-2'><bean:message key="schedule.scheduleedittemplate.msgLessTwentyChars"/></font></td>
-             <td></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td><bean:message key="schedule.scheduleedittemplate.formSummary"/>:</td>
-             <td><input type="text" name="summary" size="30" maxlength="30" <%=bEdit?("value='"+myTempBean.getSummary()+"'"):"value=''"%> ></td>
-             <td nowrap><a href=# title="	<%
+		</form>
+
+		<form name="addtemplatecode2" method="post"
+			action="scheduleedittemplate.jsp">
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
+			<tr>
+				<td width="50%" align="right">&nbsp; <select name="step1"
+					onChange="changeGroup(this)">
+					<% for(int i=5; i<35; i+=5) {
+      			if(i==25) continue;%>
+					<option value="<%=i%>" <%=STEP==i? "selected":""%>><%=i%></option>
+					<% }	%>
+				</select> <input type="hidden" name="providerid"
+					value="<%=request.getParameter("providerid")%>"> <input
+					type="hidden" name="providername"
+					value="<%=request.getParameter("providername")%>"> <input
+					type="button" value='Go'
+					onclick="document.forms['addtemplatecode1'].step.value=document.forms[1].step1.options[document.forms[1].step1.selectedIndex].value; document.forms['addtemplatecode1'].submit();"></td>
+				</td>
+			</tr>
+		</table>
+		</form>
+		<form name="addtemplatecode" method="post"
+			action="scheduleedittemplate.jsp">
+		<table width="95%" border="1" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<tr bgcolor="#FOFOFO" align="center">
+				<td colspan=3><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+					color="red"><bean:message
+					key="schedule.scheduleedittemplate.msgMainLabel" /></font></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td nowrap><bean:message
+					key="schedule.scheduleedittemplate.formTemplateName" />:</td>
+				<td><input type="text" name="name" size="30" maxlength="20"
+					<%=bEdit?("value='"+myTempBean.getName()+"'"):"value=''"%>>
+				<font size='-2'><bean:message
+					key="schedule.scheduleedittemplate.msgLessTwentyChars" /></font></td>
+				<td></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td><bean:message
+					key="schedule.scheduleedittemplate.formSummary" />:</td>
+				<td><input type="text" name="summary" size="30" maxlength="30"
+					<%=bEdit?("value='"+myTempBean.getSummary()+"'"):"value=''"%>></td>
+				<td nowrap><a href=#
+					title="	<%
    rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
    while (rsdemo.next()) {   %>
  <%=rsdemo.getString("code")+" - "+rsdemo.getString("description")%>  <%}	%>
-             "><bean:message key="schedule.scheduleedittemplate.formTemplateCode"/></a></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td colspan='3' align='center'>
-             <table>
-             <%
+             "><bean:message
+					key="schedule.scheduleedittemplate.formTemplateCode" /></a></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td colspan='3' align='center'>
+				<table>
+					<%
              int cols=4, rows=6, step=bEdit?myTempBean.getStep():STEP;
 
              int icols=60/step, n=0;
              for(int i=0; i<rows; i++) {
              %>
-               <tr>
-             <% for(int j=0; j<cols; j++) { %>
-               <td bgcolor='silver'><%=(n<10?"0":"")+n+":00"%></td>
-             <%   for(int k=0; k<icols; k++) { %>
-               <td><input type="text" name="timecode<%=i*(cols*icols)+j*icols+k%>" size="1" maxlength="1" <%=bEdit?("value='"+myTempBean.getTimecodeCharAt(i*(cols*icols)+j*icols+k)+"'"):"value=''"%> ></td>
-             <%   }
+					<tr>
+						<% for(int j=0; j<cols; j++) { %>
+						<td bgcolor='silver'><%=(n<10?"0":"")+n+":00"%></td>
+						<%   for(int k=0; k<icols; k++) { %>
+						<td><input type="text"
+							name="timecode<%=i*(cols*icols)+j*icols+k%>" size="1"
+							maxlength="1"
+							<%=bEdit?("value='"+myTempBean.getTimecodeCharAt(i*(cols*icols)+j*icols+k)+"'"):"value=''"%>></td>
+						<%   }
                 n++;
                 }%>
-               </tr>
-             <%} %>
-             </table>
-             </td>
-            </tr>
-          </table>
+					</tr>
+					<%} %>
+				</table>
+				</td>
+			</tr>
+		</table>
 
 
-          <table width="100%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-          <tr bgcolor="#FOFOFO">
-            <td><input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnDelete"/>' onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();"></td>
-			<td align="right">
-                <input type="hidden" name="providerid" value="<%=request.getParameter("providerid")%>">
-                <input type="hidden" name="providername" value="<%=request.getParameter("providername")%>">
-                <input type="hidden" name="dboperation" value="">
-                <input type="button" value='<bean:message key="schedule.scheduleedittemplate.btnSave"/>' onclick="document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();">
-                <input type="button" name="Button" value='<bean:message key="global.btnExit"/>' onclick="window.close()">
-            </td>
-          </tr>
-        </table>
-</form>
+		<table width="100%" border="0" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<tr bgcolor="#FOFOFO">
+				<td><input type="button"
+					value='<bean:message key="schedule.scheduleedittemplate.btnDelete"/>'
+					onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();"></td>
+				<td align="right"><input type="hidden" name="providerid"
+					value="<%=request.getParameter("providerid")%>"> <input
+					type="hidden" name="providername"
+					value="<%=request.getParameter("providername")%>"> <input
+					type="hidden" name="dboperation" value=""> <input
+					type="button"
+					value='<bean:message key="schedule.scheduleedittemplate.btnSave"/>'
+					onclick="document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();">
+				<input type="button" name="Button"
+					value='<bean:message key="global.btnExit"/>'
+					onclick="window.close()"></td>
+			</tr>
+		</table>
+		</form>
 
-      </td>
-    </tr>
-  </table>
+		</td>
+	</tr>
+</table>
 
 </body>
 </html:html>

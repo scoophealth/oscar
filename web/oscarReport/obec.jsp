@@ -1,4 +1,5 @@
- <!--  
+
+<!--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -23,19 +24,23 @@
  * Ontario, Canada 
  */
 -->
-<%@ page language="java" %>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*" errorPage="errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.util.DateUtils, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <%       
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no; 
   user_no = (String) session.getAttribute("user");
 
-%><%
+%>
+<%
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -48,7 +53,8 @@
   session.setAttribute("obecdownload", homepath);
   
   
-  %><% 
+  %>
+<% 
     int flag = 0, rowCount=0;
     String obectxt=(String) request.getAttribute("obectxt") == null?"":(String)request.getAttribute("obectxt");
     String xml_vdate=request.getParameter("xml_vdate") == null?tomorrowDate:request.getParameter("xml_vdate");
@@ -56,27 +62,12 @@
 %>
 <html>
 <head>
-<title>oscarReport -  OBEC Report</title>
-<link rel="stylesheet" href="oscarReport.css" >
-<style type="text/css">
-<!--
-.bodytext
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<title>oscarReport - OBEC Report</title>
+<link rel="stylesheet" href="oscarReport.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!-- 
 
 function selectprovider(s) {
@@ -102,62 +93,70 @@ function refresh() {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="5">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="5">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#FFFFFF"> 
-    <div align="right"></div>
-  </tr>
+	<tr bgcolor="#FFFFFF">
+		<div align="right"></div>
+	</tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%">
-      <input type='button' name='print' value='Print' onClick='window.print()'>
-    </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Report - Overnight Batch Eligibility Checking</font></font></b></font></p>
-    </td>
-  </tr>
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"><input type='button' name='print'
+			value='Print' onClick='window.print()'></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3">Report - Overnight Batch Eligibility Checking</font></font></b></font></p>
+		</td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
-<html:errors/>
-  <form name="serviceform" method="get" action="obec.do">
-    <tr> 
-      <td width="50%" align="left"> <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
-	</td>
-      <td width="40%"> 
+	<html:errors />
+	<form name="serviceform" method="get" action="obec.do">
+	<tr>
+		<td width="50%" align="left"><font size="1" color="#333333"
+			face="Verdana, Arial, Helvetica, sans-serif"></td>
+		<td width="40%"></td>
+		<td width="10%"><font color="#333333" size="1"
+			face="Verdana, Arial, Helvetica, sans-serif"> </font></td>
+	</tr>
+	<tr>
+		<td width="50%">
+		<div align="left"><font color="#003366"><font
+			face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>
 
-      </td>
-      <td width="10%"> <font color="#333333" size="1" face="Verdana, Arial, Helvetica, sans-serif"> 
-        </font></td>
-    </tr>
-<tr> 
-      <td width="50%"> 
-        <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b> 
-          
-          <font color="#333333">Service Date-Range</font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-                  
-   </div>
-      </td>
-      <td colspan='2' > 
-        <div align="left">    <font size="1" face="Arial, Helvetica, sans-serif">Number of Days:</font> <input type="text" name="numDays" value="<%=numDays%>">
-         <input type="submit" name="Submit" value="Create Report">
+		<font color="#333333">Service Date-Range</font></b></font></font> &nbsp; &nbsp; <font
+			size="1" face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin
+		Date:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
 
-              </div>
-      </td>
-       </tr>
-  </form>
+		</div>
+		</td>
+		<td colspan='2'>
+		<div align="left"><font size="1"
+			face="Arial, Helvetica, sans-serif">Number of Days:</font> <input
+			type="text" name="numDays" value="<%=numDays%>"> <input
+			type="submit" name="Submit" value="Create Report"></div>
+		</td>
+	</tr>
+	</form>
 </table>
 <pre>
 <% if (obectxt.compareTo("0")!=0 && obectxt.compareTo("")!=0 ){ %>
 
-<a href="../servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>" target="_blank">File Created <%=obectxt%></a>
+<a
+	href="../servlet/OscarDownload?homepath=obecdownload&filename=<%=obectxt%>"
+	target="_blank">File Created <%=obectxt%></a>
 <%}
     else{%>
-        <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif">File not created!</font>
+        <font size="1" color="#333333"
+	face="Verdana, Arial, Helvetica, sans-serif">File not created!</font>
 <%}%>
 </pre>
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp"%>
 
 </body>
 </html>

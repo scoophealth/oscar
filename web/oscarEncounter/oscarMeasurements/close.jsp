@@ -6,7 +6,8 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-<head><title>close</title>
+<head>
+<title>close</title>
 <script LANGUAGE="JavaScript">
 function closeWin() {
       

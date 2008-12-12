@@ -22,7 +22,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 OscarProperties props = OscarProperties.getInstance();
 session.setAttribute("homepath", props.getProperty("project_home", ""));      
 %>
-<%@ page import="oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.*" errorPage="errorpage.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -66,31 +66,31 @@ function onSubmit(){
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
-<tr>
-	<th><font color="#FFFFFF">
-	Upload MOH Files </font></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	class="myDarkGreen">
+	<tr>
+		<th><font color="#FFFFFF"> Upload MOH Files </font></th>
+	</tr>
 </table>
 
 <p>
 <table width="400" border="0">
-<form id="form1" name="form1" method="post" action="" ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
-<tr> 
-	<td width="181">
-	<b>Select diskette</b></td>
-	<td width="209">
-	<input type="file" name="file1" value=""></td>
-</tr><tr> 
-	<td width="181"> 
-	<input type="submit" name="Submit" value="Create Report">
-	</td>
-	<td width="209">&nbsp;</td>
-</tr>
-</form>
+	<form id="form1" name="form1" method="post" action=""
+		ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
+	<tr>
+		<td width="181"><b>Select diskette</b></td>
+		<td width="209"><input type="file" name="file1" value=""></td>
+	</tr>
+	<tr>
+		<td width="181"><input type="submit" name="Submit"
+			value="Create Report"></td>
+		<td width="209">&nbsp;</td>
+	</tr>
+	</form>
 </table>
 
-<p><font face="Arial, Helvetica, sans-serif" size="2">* Select a file downloaded from EDT.</font></p>
+<p><font face="Arial, Helvetica, sans-serif" size="2">*
+Select a file downloaded from EDT.</font></p>
 
 </body>
 </html>

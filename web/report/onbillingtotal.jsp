@@ -1,11 +1,15 @@
+
 <%
 	// this page is only for correcting total fields with no point
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 %>
-<%@ page import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_billing", "select total, billing_no, billing_date from billing where total not like ? order by billing_no desc" }, 
@@ -40,12 +44,13 @@
 -->
 <html>
 <head>
-<title>Billing Total - ON </title>
+<title>Billing Total - ON</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 </head>
 <body>
-..................................................<br>
+..................................................
+<br>
 <%
 	ResultSet rsdemo = null ;
 	int rowsAffected = 0; 
@@ -64,8 +69,9 @@
 	}
 	out.println("total: " + rowsAffected);
 	daySheetBean.closePstmtConn();
-%> 
+%>
 
-<p><h1>done.</h1>
+<p>
+<h1>done.</h1>
 </body>
 </html>

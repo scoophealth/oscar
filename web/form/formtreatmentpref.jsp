@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "TreatmentPref";
@@ -54,102 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Treatment Preference</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;            
-        }
-
-        .checkbox{
-            height: 25px;
-            width: 25px;     
-            background-color: #FFFFFF;
-        }
-
-        .checkboxError{
-            height: 25px;
-            width: 25px;     
-            background-color: red;
-        }
-
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: left;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            text-align: center;             
-        }
-        .question{
-            text-align: left;
-        }
-        
-        
-
-    </style>
+<title>Treatment Preference</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -166,7 +74,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -176,88 +85,91 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
-    <tr>
-        <th class="subject">Treatment Preference</th>
-    </tr>    
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
-    <tr>        
-        <td colspan="2" valign="top">
-            <table width="740px" height="200px" border="0"  cellspacing="0" cellpadding="0" >                  
-                <tr>
-                    <td width="5%" valign="top" align="right"></td>
-                    <td valign="top">                        
-                        You will be randomly assigned to a treatment group or a control group. <br>
-                        We are interested in your preference which will in no way influence which group
-                        you are ultimately assigned by chance
-                    </td>
-                </tr>
-                <tr>                                                
-                <tr bgcolor="white">                                    
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="treatmentGr" <%= props.getProperty("treatmentGr", "") %>/>
-                        I would prefer to be assigned to the treatment group
-                    </td>                                  
-                </tr>
-                <tr bgcolor="white">                                    
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="controlGr" <%= props.getProperty("controlGr", "") %>/>
-                        I would prefer to be assigned to the control group
-                    </td>                                  
-                </tr>
-                <tr bgcolor="white">                                    
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="95%">
-                        <input type="checkbox"  class="checkbox" name="eitherGr" <%= props.getProperty("eitherGr", "") %>/>
-                        I have no preference for either group
-                    </td>                                  
-                </tr>                                
-            </table>            
-        </td>
-    </tr>   
-</table>
-</td></tr>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="95%">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px"
+				height="10%">
+				<tr>
+					<th class="subject">Treatment Preference</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="85%"
+				width="740px" id="page1">
+				<tr>
+					<td colspan="2" valign="top">
+					<table width="740px" height="200px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr>
+							<td width="5%" valign="top" align="right"></td>
+							<td valign="top">You will be randomly assigned to a
+							treatment group or a control group. <br>
+							We are interested in your preference which will in no way
+							influence which group you are ultimately assigned by chance</td>
+						</tr>
+						<tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="95%"><input type="checkbox" class="checkbox"
+								name="treatmentGr" <%= props.getProperty("treatmentGr", "") %> />
+							I would prefer to be assigned to the treatment group</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="95%"><input type="checkbox" class="checkbox"
+								name="controlGr" <%= props.getProperty("controlGr", "") %> /> I
+							would prefer to be assigned to the control group</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="95%"><input type="checkbox" class="checkbox"
+								name="eitherGr" <%= props.getProperty("eitherGr", "") %> /> I
+							have no preference for either group</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
 
-<tr><td valign="top">
-<table class="Head" class="hidePrint" height="5%">
-    <tr>
-        <td align="left">
-<%
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint" height="5%">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript: return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript: return onSave();" /> <input type="submit"
+						value="Save and Exit" onclick="javascript: return onSaveExit();" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

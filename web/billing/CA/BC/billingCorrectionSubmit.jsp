@@ -23,25 +23,29 @@
  * Ontario, Canada 
  */
 -->
- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title></title>
 </head>
 <body>
-<%@ page import="oscar.*,java.text.*, java.util.*" %>
+<%@ page import="oscar.*,java.text.*, java.util.*"%>
 <jsp:useBean id="billing" scope="session" class="oscar.BillingBean" />
 <jsp:useBean id="billingItem" scope="page" class="oscar.BillingItemBean" />
-<jsp:useBean id="billingDataBean" class="oscar.BillingDataBean" scope="session"/>
-<jsp:useBean id="billingPatientDataBean" class="oscar.BillingPatientDataBean" scope="session"/>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<%@ include file="dbBilling.jsp" %>
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Billing Correction Successfully Done</font></th>
-  </tr>
+<jsp:useBean id="billingDataBean" class="oscar.BillingDataBean"
+	scope="session" />
+<jsp:useBean id="billingPatientDataBean"
+	class="oscar.BillingPatientDataBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<%@ include file="dbBilling.jsp"%>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">Billing
+		Correction Successfully Done</font></th>
+	</tr>
 </table>
 <%
  
@@ -95,7 +99,7 @@
   
  %>
 
-    <%
+<%
     int recordAffected = 0;
     ListIterator it	=	billing.getBillingItems().listIterator();
  
@@ -122,16 +126,16 @@
   }
    apptMainBean.closePstmtConn();
   %>
- 
-    <%
+
+<%
   }
    catch (java.lang.ArrayIndexOutOfBoundsException _e0) {
  }%>
 
-<form action="billingCorrection.jsp">
-<input type="hidden" name="billing_no" value="">
-<input type="submit" value="Correct Another One" name="submit">
-<input type="button" value="Successful - Close this window" onClick="window.close()">
+<form action="billingCorrection.jsp"><input type="hidden"
+	name="billing_no" value=""> <input type="submit"
+	value="Correct Another One" name="submit"> <input type="button"
+	value="Successful - Close this window" onClick="window.close()">
 </form>
 </body>
 </html>

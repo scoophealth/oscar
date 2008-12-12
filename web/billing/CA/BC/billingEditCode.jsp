@@ -24,19 +24,19 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 
 <html:html locale="true">
 
 
 
 <head>
-<title>
-Edit Billing Code
-</title>
-<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<title>Edit Billing Code</title>
+<link rel="stylesheet" type="text/css"
+	href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
 
@@ -45,67 +45,35 @@ Edit Billing Code
 
 </script>
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                billing
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						Edit Billing Code
-                        </td>
-                        <td  >&nbsp;
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">&nbsp;
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-              <html:form action="/billing/CA/BC/billingEditCode" >
-              <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">billing</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Edit Billing Code</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; &nbsp;</td>
+		<td class="MainTableRightColumn"><html:form
+			action="/billing/CA/BC/billingEditCode">
+			<%
                 BillingEditCodeForm frm = (BillingEditCodeForm) request.getAttribute("BillingEditCodeForm");
 
                 if ( request.getParameter("codeId") != null){
@@ -117,42 +85,37 @@ Edit Billing Code
                     frm.setWhereTo(request.getParameter("whereTo"));
                 }
               %>
-                <table>
-                    <html:hidden property="whereTo"/>
-                    <html:hidden property="codeId"/>
-                    <!--<tr>
+			<table>
+				<html:hidden property="whereTo" />
+				<html:hidden property="codeId" />
+				<!--<tr>
                         <td>Code ID</td>
                         <td></td>
                     </tr>-->
-                    <tr>
-                        <td>Code</td>
-                        <td><html:text property="code"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Desc</td>
-                        <td><html:text property="desc"/></td>
-                    </tr>
-                    <tr>
-                        <td>Price</td>
-                        <td><html:text property="value"/></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><html:submit property="submitButton" value="Edit"/><html:submit property="submitButton" value="Back"/>
-                    </tr>
-                </table>
-              </html:form>
-			   </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+				<tr>
+					<td>Code</td>
+					<td><html:text property="code" /></td>
+				</tr>
+				<tr>
+					<td>Desc</td>
+					<td><html:text property="desc" /></td>
+				</tr>
+				<tr>
+					<td>Price</td>
+					<td><html:text property="value" /></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td><html:submit property="submitButton" value="Edit" /><html:submit
+						property="submitButton" value="Back" />
+				</tr>
+			</table>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

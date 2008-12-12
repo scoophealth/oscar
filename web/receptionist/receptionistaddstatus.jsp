@@ -24,8 +24,10 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <%
   String[] param =new String[2];
@@ -46,7 +48,9 @@
     }
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();

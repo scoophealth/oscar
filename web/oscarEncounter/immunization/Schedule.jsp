@@ -24,9 +24,10 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*" %>
-<%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
+<%@ page language="java"%>
+<%@ page import="oscar.oscarEncounter.immunization.data.*, oscar.util.*"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*"%>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 //System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO *****");
@@ -43,44 +44,16 @@ Element root = doc.getDocumentElement();
 NodeList sets = root.getElementsByTagName("immunizationSet");
        
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <html>
 <head>
-<title>
-<bean:message key="oscarEncounter.immunization.Schedule.title"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.immunization.Schedule.title" /></title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<style type="text/css">
-
-.ellipsis{
-    height:15px;
-    width:15px;
-    text-align:right;
-    valign:middle;
-}
-
-TD.normal{
-    height:30px;
-    width:90px;
-}
-
-TD.head{
-    background-color: #b3cefd;
-    font-weight:bold;
-    height:30px;
-    width:90px;
-}
-
-TD.grey{
-    height:30px;
-    width:90px;
-    background-color: #CCCCCC;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
     function onClose() {
@@ -166,62 +139,55 @@ TD.grey{
 </script>
 
 </head>
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.immunization.Schedule.msgImm"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
-                        </td>
-                        <td  >
-                        </td>
-                        <td style="text-align:right" NOWRAP>
-                                <a href="javascript:window.close();"  ><bean:message key="global.btnClose"/></a> |  
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarEncounter.immunization.Schedule.msgImm" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td class="Header"
+					style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
+					NOWRAP><%=bean.patientLastName %>, <%=bean.patientFirstName%>
+				<%=bean.patientSex%> <%=bean.patientAge%></td>
+				<td></td>
+				<td style="text-align: right" NOWRAP><a
+					href="javascript:window.close();"><bean:message
+					key="global.btnClose" /></a> |</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr style="vertical-align: top">
+		<td class="MainTableLeftColumn"></td>
+		<td class="MainTableRightColumn"><html:form
+			action="/oscarEncounter/immunization/saveSchedule">
+			<table name="encounterTableRightCol" width="100%">
+				<tr>
+					<td>
 
-            </td>
-            <td class="MainTableRightColumn">
-            <html:form action="/oscarEncounter/immunization/saveSchedule">
-            <table name="encounterTableRightCol"  width="100%">
-                <tr>
-                    <td>
-
-                        <table  border=0>
-                            <tr>
-                                <td>
-                        
-                        <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
-                                </td>
-                                <td align="right">
-                                    <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
-                                </td>
-                                <td>
-                                   <input type="button" value="Show All" onclick="formSubmit('ShowAll');" style="width:100px" />
-                                </td>
-                                <td>
-                                   <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-
-                        <input type="hidden" name="xmlDoc" value='<%= UtilMisc.encode64(UtilXML.toXML(doc)) %>' />
-                        <%
+					<table border=0>
+						<tr>
+							<td><input type="button"
+								value="<bean:message key="global.btnSave"/>"
+								onclick="formSubmit('Save');" style="width: 100px" /></td>
+							<td align="right"><input type="button"
+								value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>"
+								onclick="formSubmit('Configure');" style="width: 100px" /></td>
+							<td><input type="button" value="Show All"
+								onclick="formSubmit('ShowAll');" style="width: 100px" /></td>
+							<td><input type="button"
+								value="<bean:message key="global.btnClose"/>"
+								onclick="window.close();" style="width: 100px" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="hidden" name="xmlDoc"
+						value='<%= UtilMisc.encode64(UtilXML.toXML(doc)) %>' /> <%
 
                         for(int i=0; i<sets.getLength(); i++){
                             Element set = (Element)sets.item(i);
@@ -232,40 +198,44 @@ TD.grey{
                            
                             if ( (status != null && !status.equals("deleted"))  || showDeleted.equals("true") ){
                                String fontStyle = ""; 
-                               if (status.equals("deleted")){ fontStyle= "style=\"text-decoration: line-through;\"";}  %> 
-                               <div style="font-weight: bold">
-                                  <input type="checkbox" onclick="javascript:showSet('tblSet<%=i%>', event);" id="chkSet<%=i%>"  />
-                                     <a href=# onclick="javascript:showSetName('tblSet<%=i%>', 'chkSet<%=i%>');" <%=fontStyle%> >
-                                     <%= set.getAttribute("name") %></a> 
-                                     &nbsp;&nbsp;
-                                     
-                                     <% if (!status.equals("deleted")){ %>
-                                     <a href="deleteSchedule.do?method=delete&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>" onclick="return confirm('Are you sure you want to delete this record ?');" >del</a> 
-                                     <%}else{%>
-                                     <a href="deleteSchedule.do?method=restore&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>" onclick="return confirm('Are you sure you want to restore this record ?');" >restore</a> 
-                                     <%}%>
-                                     
-                               </div>
-                            <%}%>
-                               <table cellpadding=2 cellspacing=0 border="2px" rules="all" id="tblSet<%=i%>"  style="display:none" >
-                               <%
+                               if (status.equals("deleted")){ fontStyle= "style=\"text-decoration: line-through;\"";}  %>
+					<div style="font-weight: bold"><input type="checkbox"
+						onclick="javascript:showSet('tblSet<%=i%>', event);"
+						id="chkSet<%=i%>" /> <a href=#
+						onclick="javascript:showSetName('tblSet<%=i%>', 'chkSet<%=i%>');"
+						<%=fontStyle%>> <%= set.getAttribute("name") %></a> &nbsp;&nbsp;
+
+					<% if (!status.equals("deleted")){ %> <a
+						href="deleteSchedule.do?method=delete&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>"
+						onclick="return confirm('Are you sure you want to delete this record ?');">del</a>
+					<%}else{%> <a
+						href="deleteSchedule.do?method=restore&tblSet=<%=i%>&demoNo=<%=bean.demographicNo%>"
+						onclick="return confirm('Are you sure you want to restore this record ?');">restore</a>
+					<%}%>
+					</div>
+					<%}%>
+					<table cellpadding=2 cellspacing=0 border="2px" rules="all"
+						id="tblSet<%=i%>" style="display: none">
+						<%
 
                                   int colCount = -1;
                                   Element columnList = (Element)set.getElementsByTagName("columnList").item(0);
                                   NodeList columns = columnList.getElementsByTagName("column");
 
                                   if(set.getAttribute("headers").equalsIgnoreCase("true")){%>
-                                  <tr>
-                                     <td class="head">&nbsp;</td><%
+						<tr>
+							<td class="head">&nbsp;</td>
+							<%
  System.out.println("***********   are we here?");
                                      for(int j=0; j<columns.getLength(); j++){
                                         Element column = (Element)columns.item(j);%>
-                                        <td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
-                                   <%colCount = j+2;
-                                     }%>  
-                                     <td class="head"><bean:message key="oscarEncounter.immunization.Schedule.msgComments"/></td>
-                                  </tr>
-                                <%}
+							<td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
+							<%colCount = j+2;
+                                     }%>
+							<td class="head"><bean:message
+								key="oscarEncounter.immunization.Schedule.msgComments" /></td>
+						</tr>
+						<%}
 System.out.println("****************"+colCount);
                                   Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
                                   NodeList rows = rowList.getElementsByTagName("row");
@@ -276,12 +246,13 @@ System.out.println("****************"+colCount);
                                      String sName = row.getAttribute("name");
                                      if(sName.length()<1){
                                         String s = "tdSet" + i + "_Row" + j + "_name"; %>
-                                        <tr> 
-                                           <td class="head" id="<%=s%>"><%=genText(s, "")%></td>
-                                <%   }else{%>
-                                        <tr>
-                                           <td class="head"><%= sName %></td>
-                                <%   }
+						<tr>
+							<td class="head" id="<%=s%>"><%=genText(s, "")%></td>
+							<%   }else{%>
+						
+						<tr>
+							<td class="head"><%= sName %></td>
+							<%   }
 
                                      if(colCount>0){
                                         int n=0;
@@ -291,16 +262,16 @@ System.out.println("****************"+colCount);
                                            if(cell != null){
                                               if(String.valueOf(k).equals(cell.getAttribute("index"))){
                                                  String s = "tdSet" + i + "_Row" + j + "_Col" + k; %>
-                                                    <td class="normal" id="<%=s%>">
-                                                       <%= genCell(s, cell, sName+" - "+((Element)columns.item(k-1)).getAttribute("name"))%>
-                                                    </td>
-                                            <%   n++;
+							<td class="normal" id="<%=s%>"><%= genCell(s, cell, sName+" - "+((Element)columns.item(k-1)).getAttribute("name"))%>
+							</td>
+							<%   n++;
                                               }else{ %>
-                                                    <td class="grey">&nbsp;</td><%
+							<td class="grey">&nbsp;</td>
+							<%
                                               }
                                            }else{ %>
-                                              <td class="grey">&nbsp;</td>
-                                         <%}
+							<td class="grey">&nbsp;</td>
+							<%}
                                         }
                                      }else{
                                         NodeList cells = row.getElementsByTagName("cell");
@@ -309,12 +280,10 @@ System.out.println("****************"+colCount);
 
                                            if(cell.getAttribute("index").equals(String.valueOf(k+1))){
                                               String s = "tdSet" + i + "_Row" + j + "_Col" + (k+1); %>
-                                                 <td id="<%=s%>">
-                                                    <%= genCell(s, cell, "")%>
-                                                 </td>
-                                         <%}else{%>
-                                                 <td class="grey">&nbsp;</td>
-                                         <%}
+							<td id="<%=s%>"><%= genCell(s, cell, "")%></td>
+							<%}else{%>
+							<td class="grey">&nbsp;</td>
+							<%}
                                         }
                                      }
 
@@ -325,20 +294,16 @@ System.out.println("****************"+colCount);
                                      if(comments.getLength()>0){
                                         sValue = UtilXML.getText(comments.item(0));
                                      }%>
-                                     <td id="<%=sID%>">
-                                        <%= genText(sID, sValue)%>
-                                     </td>
-                                  </tr>
-                          <%
+							<td id="<%=sID%>"><%= genText(sID, sValue)%></td>
+						</tr>
+						<%
                                   }
                             %>
-                            </table>
-                          <%//}
+					</table>
+					<%//}
                         }
 
-                        %>
-
-                        <%!
+                        %> <%!
                         String genText(String id, String value){
                             String s = "\n<span style='width:100%'>"
                                 + "<input type=text style='width:100%;' name='"
@@ -382,50 +347,40 @@ System.out.println("****************"+colCount);
 
                             return s;
                         }
-                        %>
-
-                        <script language="javascript">
+                        %> <script language="javascript">
                             function formSubmit(action)
                             {
                                 document.forms[0].hdnAction.value = action;
                                 document.forms[0].submit();
                             }
                         </script>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <input type="hidden" name="hdnAction"/>
-                                        </td>
-                                        <td>
-                                            <input type="button" value="<bean:message key="global.btnSave"/>" onclick="formSubmit('Save');" style="width:100px" />
-                                        </td>
-                                        <td>
-                                            <input type="button" value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>" onclick="formSubmit('Configure');" style="width:100px" />
-                                        </td>
-                                        <td>
-                                            <input type="button" value="Show All" onclick="formSubmit('ShowAll');" style="width:100px" />
-                                        </td>
-                                        <td>
-                                            <input type="button" value="<bean:message key="global.btnClose"/>" onclick="window.close();" style="width:100px" />
-                                        </td>
-                                    </tr>
-                                </table>
-                    </td>
-                </tr>
-<!----End new rows here-->
-            </table>
-        </html:form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+					<table>
+						<tr>
+							<td><input type="hidden" name="hdnAction" /></td>
+							<td><input type="button"
+								value="<bean:message key="global.btnSave"/>"
+								onclick="formSubmit('Save');" style="width: 100px" /></td>
+							<td><input type="button"
+								value="<bean:message key="oscarEncounter.immunization.Schedule.btnConf"/>"
+								onclick="formSubmit('Configure');" style="width: 100px" /></td>
+							<td><input type="button" value="Show All"
+								onclick="formSubmit('ShowAll');" style="width: 100px" /></td>
+							<td><input type="button"
+								value="<bean:message key="global.btnClose"/>"
+								onclick="window.close();" style="width: 100px" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<!----End new rows here-->
+			</table>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 
 </body>
 </html>

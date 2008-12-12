@@ -113,16 +113,18 @@
 */
  -->
 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
-   
+
 <script type="text/javascript">            
            
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>    
                   
 </script>
 
-<div class="leftBox"><h3>Right Menu</h3></div>
+<div class="leftBox">
+<h3>Right Menu</h3>
+</div>
 <div id="rightNavBar"></div>

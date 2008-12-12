@@ -1,6 +1,6 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%--
 The taglib directive below imports the JSTL library. If you uncomment it,
 you must also add the JSTL library to the project. The Add Library... action
@@ -14,13 +14,14 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Indivo</title>
-    </head>
-    <body style="background-color: #ccccd7;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Indivo</title>
+</head>
+<body style="background-color: #ccccd7;">
 
-    <h3 style="text-align:center;"><bean:message key="indivo.successMsg"/></h3>        
-    
-    </body>
+<h3 style="text-align: center;"><bean:message
+	key="indivo.successMsg" /></h3>
+
+</body>
 </html>

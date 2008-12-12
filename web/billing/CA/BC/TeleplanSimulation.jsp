@@ -1,13 +1,16 @@
+
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"  %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el"
+	prefix="html-el"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
 
 <%
@@ -66,57 +69,10 @@ pageContext.setAttribute("billActivityList",billList);
 -->
 <html>
 <head>
-    <title>Billing Report</title>
-    <meta http-equiv="Content-Type" content="text/html; ">
-    <style type="text/css">
-        html { font-size:100.01%; }
-        body { font-size:1em; }    
-        
-        html, body, form, fieldset {
-        margin: 0;
-        padding: 0;
-        
-        }
-        
-        /* Neutralize styling: 
-        Elements with a vertical margin: */
-        h1, h2, h3, h4, h5, h6, p, pre,
-        blockquote, ul, ol, dl, address {
-        margin: 1em 0;
-        padding: 0;
-        }
-        
-        /* Apply left margin:
-        Only to the few elements that need it: */
-        li, dd, blockquote {
-        margin-left: 1em;
-        }
-        
-        /* Miscellaneous conveniences: */
-        form label {
-        cursor: pointer;
-        }
-        fieldset {
-        border: none;
-        }
-        input, select, textarea {
-        font-size: 100%;
-        font-family: inherit;
-        }
-      
-        body {
-        font-family: Arial, Helvetica, sans-serif;
-        margin: 0;
-        padding: 0;
-        
-        }
-        
-        table.acttable {
-        font-size: 0.8em;
-        }
-        
-    </style>
-    <script language="JavaScript">
+<title>Billing Report</title>
+<meta http-equiv="Content-Type" content="text/html; ">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script language="JavaScript">
 
 
 
@@ -157,46 +113,48 @@ function showHideLayers() { //v3.0
 
 <body bgcolor="#FFFFFF" text="#000000">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
-    <tr bgcolor="#486ebd">
-        <td align="LEFT"><input type='button' name='print' value='Print' onClick='window.print()'> </td>
-        <th align="CENTER" style="color: #FFFFFF" >Simulate Teleplan Report - <%=thisyear%></th>
-        <td align="RIGHT"><input type='button' name='close' value='Close' onClick='window.close()'></td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <c:if test="${!empty error}">
-                <c:out value="${error}" />
-            </c:if> 
-        </td>
-    </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
+	<tr bgcolor="#486ebd">
+		<td align="LEFT"><input type='button' name='print' value='Print'
+			onClick='window.print()'></td>
+		<th align="CENTER" style="color: #FFFFFF">Simulate Teleplan
+		Report - <%=thisyear%></th>
+		<td align="RIGHT"><input type='button' name='close' value='Close'
+			onClick='window.close()'></td>
+	</tr>
+	<tr>
+		<td colspan="2"><c:if test="${!empty error}">
+			<c:out value="${error}" />
+		</c:if></td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-    <html:form   action="/billing/CA/BC/SimulateTeleplanFile.do" onsubmit="return checkSubmit();">
-        <tr>
-            <td width="220">&nbsp;</td>
-            <td width="220">Select provider </td>
-            <td width="254">
-                <select name="provider">
-                    <option value="all">All Providers</option>
-                    <%ProviderData pd = new ProviderData();
+	<html:form action="/billing/CA/BC/SimulateTeleplanFile.do"
+		onsubmit="return checkSubmit();">
+		<tr>
+			<td width="220">&nbsp;</td>
+			<td width="220">Select provider</td>
+			<td width="254"><select name="provider">
+				<option value="all">All Providers</option>
+				<%ProviderData pd = new ProviderData();
                     List list = pd.getProviderListWithInsuranceNo();
                     for (int i=0;i < list.size(); i++){
                     String provNo = (String) list.get(i);
                     ProviderData provider = new ProviderData(provNo);%>
-                    <option value="<%=provider.getOhip_no()%>" ><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
-                    <%}%>
-                </select>
-            </td>
-            <td width="181">&nbsp;</td>
-            <td width="254">&nbsp;</td>
-            <td width="277"><input type="submit" name="Submit" value="Create Report"></td>
-        </tr>
-        <tr>
-            <td colspan="4">&nbsp;</td>
-        </tr>
-    </html:form>
+				<option value="<%=provider.getOhip_no()%>"><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
+				<%}%>
+			</select></td>
+			<td width="181">&nbsp;</td>
+			<td width="254">&nbsp;</td>
+			<td width="277"><input type="submit" name="Submit"
+				value="Create Report"></td>
+		</tr>
+		<tr>
+			<td colspan="4">&nbsp;</td>
+		</tr>
+	</html:form>
 </table>
 
 </body>

@@ -86,4 +86,4 @@ function write2Parent(text){
 </html:html>
 
 --%>
-<%=request.getAttribute("templateValue")%> 
+<%=request.getAttribute("templateValue")%>

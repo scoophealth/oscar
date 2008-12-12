@@ -28,9 +28,11 @@
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
   String curProvider_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%//operation available to the client - dboperation
   String [][] dbQueries=new String[][] {
     {"search_detail", "select * from demographic where demographic_no=?"},
@@ -42,7 +44,7 @@
 
 <html>
 <head>
-<title> </title>
+<title></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
@@ -62,11 +64,14 @@ function checkTotal() {
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S LABELS</font></th>
-  </tr>
+<body background="../images/gray_bg.jpg" bgcolor="white"
+	bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		LABELS</font></th>
+	</tr>
 </table>
 
 <%
@@ -103,79 +108,80 @@ function checkTotal() {
   String label1 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br><br><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br></font>";
   String label2 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "  &nbsp;" +chart_no+ "</b><br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br>Home: " +phone+ "<br>" +dob+ " " +sex+ "<br>" +hin+ "<br>Bus: " +phone2+ "<br></font>";
   String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
-%> 
+%>
 
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
-  <form method="post" name="labelprint" action="demographicprintdemographic.jsp">
-    <tr bgcolor="gold" align="center"> 
-      <td>Label</td>
-      <td>Number of Label
-      <td>Location</td>
-    </tr>
-    <tr> 
-      <td align="center"><br>
-        <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
-            <td><%=label1%></td>
-          </tr>
-        </table>
-      </td>
-      <td align="center" bgcolor="#CCCCCC"> <a href="#" onClick="onNewPatient()">New Patient Label</a><br>
-        <input type="checkbox" name="label1checkbox" value="checked" checked>
-        <input type="text" name="label1no" size="2" maxlength="2" value="1">
-      </td>
-      <td bgcolor="#999999" rowspan="3" valign="middle" align="right"> 
-        <p>left:
-          <input type="text" name="left" size="3" maxlength="3" value="155">
-          px </p>
-        <p>top: 
-          <input type="text" name="top" size="3" maxlength="3" value="0">
-          px </p>
-        <p>height:
-          <input type="text" name="height" size="3" maxlength="3" value="145">
-          px</p>
-        <p>gap:
-          <input type="text" name="gap" size="3" maxlength="3" value="0">
-          px</p>
-      </td>
-    </tr>
-    <tr> 
-      <td align="center"><br>
-        <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
-            <td><%=label2%></td>
-          </tr>
-        </table>
-      </td>
-      <td align="center" bgcolor="#CCCCCC"> 
-        <input type="checkbox" name="label2checkbox" value="checked" checked>
-        <input type="text" name="label2no" size="2" maxlength="2" value="1">
-      </td>
-    </tr>
-    <tr> 
-      <td align="center"><br>
-        <table width="90%" border="1" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF">
-          <tr> 
-            <td><%=label3%></td>
-          </tr>
-        </table>
-        <br>
-      </td>
-      <td align="center" bgcolor="#CCCCCC"> 
-        <input type="checkbox" name="label3checkbox" value="checked" checked>
-        <input type="text" name="label3no" size="2" maxlength="2" value="1">
-      </td>
-    </tr>
-    <tr bgcolor="#486ebd"> 
-      <td align="center" colspan="3"> 
-        <input type="submit" name="Submit" value="Print Preview/Print">
-        <input type="button" name="button" value="Back" onClick="javascript:history.go(-1);return false;">
-      </td>
-    </tr>
-    <input type="hidden" name="label1" value='<%=label1%>'>
-    <input type="hidden" name="label2" value='<%=label2%>'>
-    <input type="hidden" name="label3" value='<%=label3%>'>
-  </form>
+	<form method="post" name="labelprint"
+		action="demographicprintdemographic.jsp">
+	<tr bgcolor="gold" align="center">
+		<td>Label</td>
+		<td>Number of Label
+		<td>Location</td>
+	</tr>
+	<tr>
+		<td align="center"><br>
+		<table width="90%" border="1" cellspacing="0" cellpadding="0"
+			bgcolor="#FFFFFF">
+			<tr>
+				<td><%=label1%></td>
+			</tr>
+		</table>
+		</td>
+		<td align="center" bgcolor="#CCCCCC"><a href="#"
+			onClick="onNewPatient()">New Patient Label</a><br>
+		<input type="checkbox" name="label1checkbox" value="checked" checked>
+		<input type="text" name="label1no" size="2" maxlength="2" value="1">
+		</td>
+		<td bgcolor="#999999" rowspan="3" valign="middle" align="right">
+		<p>left: <input type="text" name="left" size="3" maxlength="3"
+			value="155"> px</p>
+		<p>top: <input type="text" name="top" size="3" maxlength="3"
+			value="0"> px</p>
+		<p>height: <input type="text" name="height" size="3" maxlength="3"
+			value="145"> px</p>
+		<p>gap: <input type="text" name="gap" size="3" maxlength="3"
+			value="0"> px</p>
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><br>
+		<table width="90%" border="1" cellspacing="0" cellpadding="0"
+			bgcolor="#FFFFFF">
+			<tr>
+				<td><%=label2%></td>
+			</tr>
+		</table>
+		</td>
+		<td align="center" bgcolor="#CCCCCC"><input type="checkbox"
+			name="label2checkbox" value="checked" checked> <input
+			type="text" name="label2no" size="2" maxlength="2" value="1">
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><br>
+		<table width="90%" border="1" cellspacing="0" cellpadding="0"
+			bgcolor="#FFFFFF">
+			<tr>
+				<td><%=label3%></td>
+			</tr>
+		</table>
+		<br>
+		</td>
+		<td align="center" bgcolor="#CCCCCC"><input type="checkbox"
+			name="label3checkbox" value="checked" checked> <input
+			type="text" name="label3no" size="2" maxlength="2" value="1">
+		</td>
+	</tr>
+	<tr bgcolor="#486ebd">
+		<td align="center" colspan="3"><input type="submit" name="Submit"
+			value="Print Preview/Print"> <input type="button"
+			name="button" value="Back"
+			onClick="javascript:history.go(-1);return false;"></td>
+	</tr>
+	<input type="hidden" name="label1" value='<%=label1%>'>
+	<input type="hidden" name="label2" value='<%=label2%>'>
+	<input type="hidden" name="label3" value='<%=label3%>'>
+	</form>
 </table>
 
 </body>

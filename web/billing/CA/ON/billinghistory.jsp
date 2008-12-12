@@ -40,22 +40,25 @@
   OscarProperties props = OscarProperties.getInstance();
   if(props.getProperty("isNewONbilling", "").equals("true")) {
   %>
-  <jsp:forward page="billingONHistory.jsp" />
-  <% } 
-%> 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<jsp:forward page="billingONHistory.jsp" />
+<% } 
+%>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %> 
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <html>
-<head> 
-<title> BILLING HISTORY</title>
-<link rel="stylesheet" href="billingON.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<head>
+<title>BILLING HISTORY</title>
+<link rel="stylesheet" href="billingON.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 
 <script language="JavaScript">
 <!--
@@ -65,53 +68,59 @@
 </head>
 <body topmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr class="myDarkGreen">
-    <th><font color="#FFFFFF">BILLING HISTORY 
-      </font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr class="myDarkGreen">
+		<th><font color="#FFFFFF">BILLING HISTORY </font></th>
+	</tr>
 </table>
 
 <table width="95%" border="0">
-  <tr><td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%> (<%=request.getParameter("demographic_no")%>)</td></tr>
+	<tr>
+		<td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%>
+		(<%=request.getParameter("demographic_no")%>)</td>
+	</tr>
 </table>
-<CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
-<tr class="myYellow">
-      <TH align="center" width="5%"><b>INVOICE#</b></TH>
-      <TH align="left" width="25%"><b>APPT DATE</b></TH>      
-      <TH align="center" width="10%"><b>BILL TYPE</b></TH>
-      <TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
-      <TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
-      <TH align="center" width="10%"><b>COMMENTS</b></TH>
-</tr>
-<% // new billing records
+<CENTER>
+<table width="100%" border="2" bgcolor="#ffffff">
+	<tr class="myYellow">
+		<TH align="center" width="5%"><b>INVOICE#</b></TH>
+		<TH align="left" width="25%"><b>APPT DATE</b></TH>
+		<TH align="center" width="10%"><b>BILL TYPE</b></TH>
+		<TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
+		<TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
+		<TH align="center" width="10%"><b>COMMENTS</b></TH>
+	</tr>
+	<% // new billing records
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
 for(int i=0; i<aL.size(); i=i+2) {
 	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
 %>
-<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
-      <td width="5%" align="center" height="25">
-        <a href=# onClick="popupPage(600,800, 'billingView.do?billing_no=<%=obj.getId()%>&dboperation=search_bill&hotclick=0')"><%=obj.getId()%></a>
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r">
-        <a href=# onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
-        </security:oscarSec>
-      </td>
-      <td align="left" width="25%" height="25"><%=obj.getBilling_date()%> &nbsp; &nbsp; &nbsp; &nbsp; <%=obj.getBilling_time()%></td>
-      <td align="center" width="10%" height="25"><%=BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"")%></td>
-      <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getProviderNo(), "")%></td>
-       <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getApptProvider_no(), "")%></td>
-    
-      <% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
-      <td align="center" width="10%" height="25">&nbsp;</td>
-      <% } else { %>
-      <td align="center" width="10%" height="25"><a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
-      <% } %>
-</tr>
-<% 
+	<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
+		<td width="5%" align="center" height="25"><a href=#
+			onClick="popupPage(600,800, 'billingView.do?billing_no=<%=obj.getId()%>&dboperation=search_bill&hotclick=0')"><%=obj.getId()%></a>
+		<security:oscarSec roleName="<%=roleName$%>"
+			objectName="_admin,_admin.billing" rights="r">
+			<a href=#
+				onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
+		</security:oscarSec></td>
+		<td align="left" width="25%" height="25"><%=obj.getBilling_date()%>
+		&nbsp; &nbsp; &nbsp; &nbsp; <%=obj.getBilling_time()%></td>
+		<td align="center" width="10%" height="25"><%=BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"")%></td>
+		<td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getProviderNo(), "")%></td>
+		<td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getApptProvider_no(), "")%></td>
+
+		<% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
+		<td align="center" width="10%" height="25">&nbsp;</td>
+		<% } else { %>
+		<td align="center" width="10%" height="25"><a
+			href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+		<% } %>
+	</tr>
+	<% 
 }
 %>
-<%
+	<%
 //OscarProperties props = OscarProperties.getInstance();
 if(!props.getProperty("isNewONbilling", "").equals("true")) {
  String proFirst="";
@@ -155,29 +164,32 @@ if(!props.getProperty("isNewONbilling", "").equals("true")) {
 }
 }
 %>
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="5%" align="center" height="25">
-        <a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a>
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r">
-        <a href=# onClick="popupPage(600,800, 'billingCorrection.jsp?billing_no=<%=rs.getString("billing_no")%>')">edit</a>
-        </security:oscarSec>
-      </td>
-      <td align="left" width="25%" height="25"><%=rs.getString("billing_date")%> &nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
-      <td align="center" width="10%" height="25"><%=billType%></td>
-      <td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
-       <td align="center" width="15%" height="25"><%=proLast+" "+proFirst%></td>
-    
-      <% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
-      <td align="center" width="10%" height="25">&nbsp;</td>
-      <% } else { %>
-      <td align="center" width="10%" height="25"><a href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
-      <% } %>
-</tr>
-<% 
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td width="5%" align="center" height="25"><a href=#
+			onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a>
+		<security:oscarSec roleName="<%=roleName$%>"
+			objectName="_admin,_admin.billing" rights="r">
+			<a href=#
+				onClick="popupPage(600,800, 'billingCorrection.jsp?billing_no=<%=rs.getString("billing_no")%>')">edit</a>
+		</security:oscarSec></td>
+		<td align="left" width="25%" height="25"><%=rs.getString("billing_date")%>
+		&nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
+		<td align="center" width="10%" height="25"><%=billType%></td>
+		<td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
+		<td align="center" width="15%" height="25"><%=proLast+" "+proFirst%></td>
+
+		<% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
+		<td align="center" width="10%" height="25">&nbsp;</td>
+		<% } else { %>
+		<td align="center" width="10%" height="25"><a
+			href="billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+		<% } %>
+	</tr>
+	<% 
     }
   }
   apptMainBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>
@@ -186,27 +198,30 @@ if(!props.getProperty("isNewONbilling", "").equals("true")) {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
 }
 
 }
 %>
 <p>
-  <hr width="100%">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href=# onClick="javascript:history.go(-1);return false;"> <img src="images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back </a></td>
-      <td align="right"><a href="" onClick="self.close();">Close the Window<img src="images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+<hr width="100%">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href=# onClick="javascript:history.go(-1);return false;">
+		<img src="images/leftarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"> Back </a></td>
+		<td align="right"><a href="" onClick="self.close();">Close
+		the Window<img src="images/rightarrow.gif" border="0" width="25"
+			height="20" align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

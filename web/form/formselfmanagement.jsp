@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "SelfManagement";
@@ -54,114 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Self Management Behaviors</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;    
-            height:10px;
-        }
-
-        .checkbox{
-            height: 25px;
-            width: 25px;    
-            border: 0px solid #A9A9A9;
-            background-color: #FFFFFF;              
-        }
-
-        .checkboxError{
-            height: 25px;
-            width: 25px;   
-            border: 0px solid #A9A9A9;
-            background-color: red;                   
-        }
-        
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: Center;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            text-align: center;             
-        }
-        .question{
-            text-align: left;
-        }
-        .scoreHeavy{
-            border-top: 2px solid #A9A9A9;
-            text-align: center;
-        }
-        .scoreLight{
-            border-top: 1px solid #A9A9A9;
-            text-align: center;
-        }
-        .score{
-            font-size=80%;
-        }
-
-    </style>
+<title>Self Management Behaviors</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -425,7 +321,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -435,827 +332,811 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
-    <tr>
-        <th class="subject">Self-Management Behaviors</th>
-    </tr>    
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="5">Exercise</th>
-                </tr>                
-                <tr>
-                    <td colspan="5">
-                        <font style="font-weight:bold">During the past week</font> (even if it was <font style="font-weight:bold">not</font> a typical week), how much
-                        <font style="font-weight:bold">total</font> time (for the <font style="font-weight:bold"> entire week</font>) did you spend on each of the 
-                        following? (Please enter score in the box for <font style="font-weight:bold">each</font> question).
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5">&nbsp;</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td width="20%" class="scoreLight">None</td>
-                    <td width="20%" class="scoreLight">Less than 30 <br>minutes/week</td>
-                    <td width="20%" class="scoreLight">30-60 minutes/week</td>
-                    <td width="20%" class="scoreLight">1-3 hours/week</td>
-                    <td width="20%" class="scoreLight">More than 3 hours/week</td>                    
-                </tr>
-                <tr class="scoreHeavy">                    
-                    <td width="20%" class="scoreHeavy">0</td>
-                    <td width="20%" class="scoreHeavy">1</td>
-                    <td width="20%" class="scoreHeavy">2</td>
-                    <td width="20%" class="scoreHeavy">3</td>
-                    <td width="20%" class="scoreHeavy">4</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="5"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    1. Stretching or strengthening exercises (ranges of motion, using weights, etc.)
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex1" size="5" maxLength="1" onchange="javascript: exScore1();" value="<%= props.getProperty("ex1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    2. Walk for exercise
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex2" size="5" maxLength="1" onchange="javascript: exScore2();" value="<%= props.getProperty("ex2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    3. Swimming or aquatic exercise
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex3" size="5" maxLength="1" onchange="javascript: exScore2();" value="<%= props.getProperty("ex3", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    4. Bicycling (including stationary exercise bike)
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex4" size="5" maxLength="1" onchange="javascript: exScore2();" value="<%= props.getProperty("ex4", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    5. Other aerobic exercise equipment (stairmaster, rowing or skiing machine)
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex5" size="5" maxLength="1" onchange="javascript: exScore2();" value="<%= props.getProperty("ex5", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="2">
-                    6. Other aerobic exercise - specify:
-                    </td>         
-                    <td colspan="2" align="center">
-                        <input type="text" name="ex6Spec" size="45" maxLength="255" value="<%= props.getProperty("ex6Spec", "") %>"/>
-                    </td>
-                    <td align="center">
-                        <input type="text" name="ex6" size="5" maxLength="1" onchange="javascript: exScore2();" value="<%= props.getProperty("ex6", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="5" class="score" >Scoring: Each category is converted to the following number of minutes spent:</td>
-                </tr>
-                <tr>
-                    <td colspan="5">&nbsp;</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td width="20%" class="scoreLight">None</td>
-                    <td width="20%" class="scoreLight">Less than 30 <br>minutes/week</td>
-                    <td width="20%" class="scoreLight">30-60 minutes/week</td>
-                    <td width="20%" class="scoreLight">1-3 hours/week</td>
-                    <td width="20%" class="scoreLight">More than 3 hours/week</td>                    
-                </tr>
-                <tr class="scoreHeavy">                    
-                    <td width="20%" class="scoreHeavy">0</td>
-                    <td width="20%" class="scoreHeavy">15</td>
-                    <td width="20%" class="scoreHeavy">45</td>
-                    <td width="20%" class="scoreHeavy">120</td>
-                    <td width="20%" class="scoreHeavy">180</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="5"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    Time spent in stretching or strengthening exercise is the value for Item 1.
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="exTime1" size="5" maxLength="3" readonly="true" value="<%= props.getProperty("exTime1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="4">
-                    Time spent in aerobic exercise is the sum of the values for Items 2 through 6.
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="exTime2To6" size="5" maxLength="3" readonly="true" value="<%= props.getProperty("exTime2To6", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    <table height="50"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>            
-        </td>
-    </tr>
-    <tr class="subject">
-        <td></td>
-        <td align="right">
-            <a href="javascript: goToPage2();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="95%">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px"
+				height="10%">
+				<tr>
+					<th class="subject">Self-Management Behaviors</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="85%"
+				width="740px" id="page1">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="5">Exercise</th>
+						</tr>
+						<tr>
+							<td colspan="5"><font style="font-weight: bold">During
+							the past week</font> (even if it was <font style="font-weight: bold">not</font>
+							a typical week), how much <font style="font-weight: bold">total</font>
+							time (for the <font style="font-weight: bold"> entire week</font>)
+							did you spend on each of the following? (Please enter score in
+							the box for <font style="font-weight: bold">each</font>
+							question).</td>
+						</tr>
+						<tr>
+							<td colspan="5">&nbsp;</td>
+						</tr>
+						<tr class="scoreLight">
+							<td width="20%" class="scoreLight">None</td>
+							<td width="20%" class="scoreLight">Less than 30 <br>
+							minutes/week</td>
+							<td width="20%" class="scoreLight">30-60 minutes/week</td>
+							<td width="20%" class="scoreLight">1-3 hours/week</td>
+							<td width="20%" class="scoreLight">More than 3 hours/week</td>
+						</tr>
+						<tr class="scoreHeavy">
+							<td width="20%" class="scoreHeavy">0</td>
+							<td width="20%" class="scoreHeavy">1</td>
+							<td width="20%" class="scoreHeavy">2</td>
+							<td width="20%" class="scoreHeavy">3</td>
+							<td width="20%" class="scoreHeavy">4</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="5" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">1. Stretching or strengthening exercises
+							(ranges of motion, using weights, etc.)</td>
+							<td align="center"><input type="text" name="ex1" size="5"
+								maxLength="1" onchange="javascript: exScore1();"
+								value="<%= props.getProperty("ex1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">2. Walk for exercise</td>
+							<td align="center"><input type="text" name="ex2" size="5"
+								maxLength="1" onchange="javascript: exScore2();"
+								value="<%= props.getProperty("ex2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">3. Swimming or aquatic exercise</td>
+							<td align="center"><input type="text" name="ex3" size="5"
+								maxLength="1" onchange="javascript: exScore2();"
+								value="<%= props.getProperty("ex3", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">4. Bicycling (including stationary exercise
+							bike)</td>
+							<td align="center"><input type="text" name="ex4" size="5"
+								maxLength="1" onchange="javascript: exScore2();"
+								value="<%= props.getProperty("ex4", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">5. Other aerobic exercise equipment
+							(stairmaster, rowing or skiing machine)</td>
+							<td align="center"><input type="text" name="ex5" size="5"
+								maxLength="1" onchange="javascript: exScore2();"
+								value="<%= props.getProperty("ex5", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="2">6. Other aerobic exercise - specify:</td>
+							<td colspan="2" align="center"><input type="text"
+								name="ex6Spec" size="45" maxLength="255"
+								value="<%= props.getProperty("ex6Spec", "") %>" /></td>
+							<td align="center"><input type="text" name="ex6" size="5"
+								maxLength="1" onchange="javascript: exScore2();"
+								value="<%= props.getProperty("ex6", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="5">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="5" class="score">Scoring: Each category is
+							converted to the following number of minutes spent:</td>
+						</tr>
+						<tr>
+							<td colspan="5">&nbsp;</td>
+						</tr>
+						<tr class="scoreLight">
+							<td width="20%" class="scoreLight">None</td>
+							<td width="20%" class="scoreLight">Less than 30 <br>
+							minutes/week</td>
+							<td width="20%" class="scoreLight">30-60 minutes/week</td>
+							<td width="20%" class="scoreLight">1-3 hours/week</td>
+							<td width="20%" class="scoreLight">More than 3 hours/week</td>
+						</tr>
+						<tr class="scoreHeavy">
+							<td width="20%" class="scoreHeavy">0</td>
+							<td width="20%" class="scoreHeavy">15</td>
+							<td width="20%" class="scoreHeavy">45</td>
+							<td width="20%" class="scoreHeavy">120</td>
+							<td width="20%" class="scoreHeavy">180</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="5" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">Time spent in stretching or strengthening
+							exercise is the value for Item 1.</td>
+							<td align="center"><input type="text" name="exTime1"
+								size="5" maxLength="3" readonly="true"
+								value="<%= props.getProperty("exTime1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="4">Time spent in aerobic exercise is the sum of
+							the values for Items 2 through 6.</td>
+							<td align="center"><input type="text" name="exTime2To6"
+								size="5" maxLength="3" readonly="true"
+								value="<%= props.getProperty("exTime2To6", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">
+							<table height="50">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td></td>
+					<td align="right"><a href="javascript: goToPage2();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page2" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="6">Cognitive Symptom Management</th>
-                </tr>                
-                <tr>
-                    <td colspan="6">
-                        When you are feeling down in the dumps, feeling pain, or having other unpleasant symptoms, how often do you...
-                        (please enter score in box for <font style="font-weight:bold">each</font> question).
-                    </td>
-                </tr>    
-                <tr class="scoreLight">                    
-                    <td colspan="6">&nbsp;</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td width="13%" class="scoreLight">Never</td>
-                    <td width="13%" class="scoreLight">Almost never</td>
-                    <td width="13%" class="scoreLight">Sometimes</td>
-                    <td width="13%" class="scoreLight">Fairly often</td>
-                    <td width="13%" class="scoreLight">Very often</td>
-                    <td width="13%" class="scoreLight">Always</td>
-                </tr>
-                <tr class="scoreHeavy">                    
-                    <td width="13%" class="scoreHeavy">0</td>
-                    <td width="13%" class="scoreHeavy">1</td>
-                    <td width="13%" class="scoreHeavy">2</td>
-                    <td width="13%" class="scoreHeavy">3</td>
-                    <td width="13%" class="scoreHeavy">4</td>                    
-                    <td width="13%" class="scoreHeavy">5</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="6"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    1. Try to feel distant from the discomfort and pretend that it is not part of your body?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog1" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    2. Don't think of it as discomfort but as some other sensation, like a warm, numb feeling?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog2" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    3. Play mental games or sing songs to keep your mind off the discomfort?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog3" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog3", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    4. Practice progressive muscle relaxation?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog4" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog4", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    5. Practice visualization or guided imagery, such as picturing yourself somewhere else?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog5" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog5", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    6. Talk to yourself in positive ways?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="cog6" size="5" maxLength="1" onchange="javascript: cognitiveScore()" value="<%= props.getProperty("cog6", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="6">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="6"  class="score">
-                        Scoring: The score is the mean of the six items. If more than two items are missing answers, set the value 
-                        of the score for this scale to missing. Scores range from 0 to 5, with a higher score indicating more practice
-                        these techniques.
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="6">
-                        Score: <input type="text" name="cogScore" readonly="true" value="<%= props.getProperty("cogScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6">
-                    <table height="150"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>      
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage1();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage3();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page2">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="6">Cognitive Symptom Management</th>
+						</tr>
+						<tr>
+							<td colspan="6">When you are feeling down in the dumps,
+							feeling pain, or having other unpleasant symptoms, how often do
+							you... (please enter score in box for <font
+								style="font-weight: bold">each</font> question).</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="6">&nbsp;</td>
+						</tr>
+						<tr class="scoreLight">
+							<td width="13%" class="scoreLight">Never</td>
+							<td width="13%" class="scoreLight">Almost never</td>
+							<td width="13%" class="scoreLight">Sometimes</td>
+							<td width="13%" class="scoreLight">Fairly often</td>
+							<td width="13%" class="scoreLight">Very often</td>
+							<td width="13%" class="scoreLight">Always</td>
+						</tr>
+						<tr class="scoreHeavy">
+							<td width="13%" class="scoreHeavy">0</td>
+							<td width="13%" class="scoreHeavy">1</td>
+							<td width="13%" class="scoreHeavy">2</td>
+							<td width="13%" class="scoreHeavy">3</td>
+							<td width="13%" class="scoreHeavy">4</td>
+							<td width="13%" class="scoreHeavy">5</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="6" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">1. Try to feel distant from the discomfort
+							and pretend that it is not part of your body?</td>
+							<td align="center"><input type="text" name="cog1" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">2. Don't think of it as discomfort but as
+							some other sensation, like a warm, numb feeling?</td>
+							<td align="center"><input type="text" name="cog2" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">3. Play mental games or sing songs to keep
+							your mind off the discomfort?</td>
+							<td align="center"><input type="text" name="cog3" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog3", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">4. Practice progressive muscle relaxation?</td>
+							<td align="center"><input type="text" name="cog4" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog4", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">5. Practice visualization or guided imagery,
+							such as picturing yourself somewhere else?</td>
+							<td align="center"><input type="text" name="cog5" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog5", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">6. Talk to yourself in positive ways?</td>
+							<td align="center"><input type="text" name="cog6" size="5"
+								maxLength="1" onchange="javascript: cognitiveScore()"
+								value="<%= props.getProperty("cog6", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="6">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="score">Scoring: The score is the mean
+							of the six items. If more than two items are missing answers, set
+							the value of the score for this scale to missing. Scores range
+							from 0 to 5, with a higher score indicating more practice these
+							techniques.</td>
+						</tr>
+						<tr>
+							<td colspan="6">Score: <input type="text" name="cogScore"
+								readonly="true" value="<%= props.getProperty("cogScore", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="6">
+							<table height="150">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage1();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage3();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page3" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >                                  
-                <tr class="title" >
-                    <th colspan="2">Mental Stress Management/Relaxation</th>
-                </tr>                
-                <tr>
-                    <td colspan="2">
-                        In the past week (even if it was <font style="font-weight:bold">not</font> a typical week), how many
-                        <font style="font-weight:bold">times</font> did you do mental stress management or relaxation technique?
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="35%">                    
-                    </td>
-                    <td width="65%">
-                        <input type="text" name="mentalStressTimes" onchange="javascript:calMentalStressScore()" size="5" value="<%= props.getProperty("mentalStressTimes", "") %>"/> times
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Describe what you do to relax: 
-                    </td>
-                    <td>
-                        <input type="text" name="mentalStressToRelax" size="60" value="<%= props.getProperty("mentalStressToRelax", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="2">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="2"  class="score">
-                        Scoring: Single item only. If technique described is not a cognitive stress management technique, code as "0".
-                        Examples of cognitive techniques include progressive muscle relaxation, imagery, prayer and meditation.
-                        Activities such as reading, listening to music, napping and deep breathing are not considered cognitive 
-                        strategies and should receive a score of "0". The number of times is then categorized into an ordinal scale
-                        with the following categories:
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td class="score">
-                        1 = None                        
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td class="score">
-                        2 = 1 - 7 times/week                        
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    </td>
-                    <td class="score">
-                        3 = 8 or more times/week                        
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="score">
-                        This item can also be left as a continuous measure: that is, the actual times per week coded.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Score: <input type="text" name="mentalStressScore" value="<%= props.getProperty("mentalStressScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                    <table height="280"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>      
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage2();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage4();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page3">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="2">Mental Stress Management/Relaxation</th>
+						</tr>
+						<tr>
+							<td colspan="2">In the past week (even if it was <font
+								style="font-weight: bold">not</font> a typical week), how many <font
+								style="font-weight: bold">times</font> did you do mental stress
+							management or relaxation technique?</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="35%"></td>
+							<td width="65%"><input type="text" name="mentalStressTimes"
+								onchange="javascript:calMentalStressScore()" size="5"
+								value="<%= props.getProperty("mentalStressTimes", "") %>" />
+							times</td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Describe what you do to relax:</td>
+							<td><input type="text" name="mentalStressToRelax" size="60"
+								value="<%= props.getProperty("mentalStressToRelax", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="score">Scoring: Single item only. If
+							technique described is not a cognitive stress management
+							technique, code as "0". Examples of cognitive techniques include
+							progressive muscle relaxation, imagery, prayer and meditation.
+							Activities such as reading, listening to music, napping and deep
+							breathing are not considered cognitive strategies and should
+							receive a score of "0". The number of times is then categorized
+							into an ordinal scale with the following categories:</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="score">1 = None</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="score">2 = 1 - 7 times/week</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="score">3 = 8 or more times/week</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="score">This item can also be left as
+							a continuous measure: that is, the actual times per week coded.</td>
+						</tr>
+						<tr>
+							<td>Score: <input type="text" name="mentalStressScore"
+								value="<%= props.getProperty("mentalStressScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+							<table height="280">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage2();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage4();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page4" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="3">Use of community Services for Tangible Help</th>
-                </tr>                
-                <tr>
-                    <td colspan="3">
-                        In the <font style="font-weight:bold">past 9 months</font>, have you gotten help from resources other
-                        than friends or family for the following services? (Please check Yes or No for each category).
-                    </td>
-                </tr>    
-                <tr>                    
-                    <td colspan="3">&nbsp;</td>                    
-                </tr>
-                <tr>                    
-                    <td width="40%" class="scoreLight">&nbsp;</td>
-                    <td width="30%" class="scoreLight" >No</td>
-                    <td width="30%" class="scoreLight">Yes</td>                    
-                </tr>
-                <tr>                    
-                    <td colspan="3" class="scoreHeavy">&nbsp;</td>                                  
-                </tr>                
-                <tr bgcolor="white">
-                    <td>
-                    Housecleaning
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHouseN" <%= props.getProperty("tangibleHelpHouseN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHouseY" <%= props.getProperty("tangibleHelpHouseY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Yard work
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpYardN" <%= props.getProperty("tangibleHelpYardN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpYardY" <%= props.getProperty("tangibleHelpYardY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Home maintenance/repairs
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHomeN" <%= props.getProperty("tangibleHelpHomeN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHomeY" <%= props.getProperty("tangibleHelpHomeY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Meals
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpMealN" <%= props.getProperty("tangibleHelpMealN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpMealY" <%= props.getProperty("tangibleHelpMealY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Personal hygiene
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHygieneN" <%= props.getProperty("tangibleHelpHygieneN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpHygieneY" <%= props.getProperty("tangibleHelpHygieneY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Errands
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpErrandsN" <%= props.getProperty("tangibleHelpErrandsN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpErrandsY" <%= props.getProperty("tangibleHelpErrandsY", "") %>/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td>
-                    Transportation
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpTransportN" <%= props.getProperty("tangibleHelpTransportN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onchange="javascript:tangibleScore()" name="tangibleHelpTransportY" <%= props.getProperty("tangibleHelpTransportY", "") %>/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="3">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="3" class="score">    
-                        Scoring: The score is the count of resources circled "Yes", with a possible range of 0 to 7.
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Score: <input type="text" name="tangibleHelpScore" readonly="true" value="<%= props.getProperty("tangibleHelpScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="3">&nbsp;</td>                    
-                </tr>
-                <tr class="title" >
-                    <th colspan="3">Use of community Services for Emotional Support</th>
-                </tr>                
-                <tr>
-                    <td colspan="3">
-                        In the <font style="font-weight:bold">past 9 months</font>, have you gotten help from resources other
-                        than friends or family for the following services? (Please check Yes or No for each category).
-                    </td>
-                </tr>    
-                <tr>                    
-                    <td colspan="3">&nbsp;</td>                    
-                </tr>
-                <tr>                    
-                    <td width="40%" class="scoreLight">&nbsp;</td>
-                    <td width="30%" class="scoreLight" >No</td>
-                    <td width="30%" class="scoreLight">Yes</td>                    
-                </tr>
-                <tr>                    
-                    <td colspan="3" class="scoreHeavy">&nbsp;</td>                                  
-                </tr>                
-                <tr bgcolor="white">
-                    <td>
-                    Emotional support or counselling
-                    </td>                                     
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onclick="javascript:emotionScore()" name="emotionalSupportN" <%= props.getProperty("emotionalSupportN", "") %>/>
-                    </td>
-                    <td align="center">
-                        <input type="checkbox" class="checkbox" onclick="javascript:emotionScore()" name="emotionalSupportY" <%= props.getProperty("emotionalSupportY", "") %>/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="3">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="3" class="score">    
-                        Scoring: This is a single dischotomous item.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        Score: <input type="text" name="emotionalSupportScore" readonly="true" value="<%= props.getProperty("emotionalSupportScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                    <table height="50"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>   
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage3();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage5();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page4">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="3">Use of community Services for Tangible Help</th>
+						</tr>
+						<tr>
+							<td colspan="3">In the <font style="font-weight: bold">past
+							9 months</font>, have you gotten help from resources other than friends
+							or family for the following services? (Please check Yes or No for
+							each category).</td>
+						</tr>
+						<tr>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="40%" class="scoreLight">&nbsp;</td>
+							<td width="30%" class="scoreLight">No</td>
+							<td width="30%" class="scoreLight">Yes</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="scoreHeavy">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Housecleaning</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpHouseN"
+								<%= props.getProperty("tangibleHelpHouseN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpHouseY"
+								<%= props.getProperty("tangibleHelpHouseY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Yard work</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpYardN"
+								<%= props.getProperty("tangibleHelpYardN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpYardY"
+								<%= props.getProperty("tangibleHelpYardY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Home maintenance/repairs</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpHomeN"
+								<%= props.getProperty("tangibleHelpHomeN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpHomeY"
+								<%= props.getProperty("tangibleHelpHomeY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Meals</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpMealN"
+								<%= props.getProperty("tangibleHelpMealN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()" name="tangibleHelpMealY"
+								<%= props.getProperty("tangibleHelpMealY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Personal hygiene</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpHygieneN"
+								<%= props.getProperty("tangibleHelpHygieneN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpHygieneY"
+								<%= props.getProperty("tangibleHelpHygieneY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Errands</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpErrandsN"
+								<%= props.getProperty("tangibleHelpErrandsN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpErrandsY"
+								<%= props.getProperty("tangibleHelpErrandsY", "") %> /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Transportation</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpTransportN"
+								<%= props.getProperty("tangibleHelpTransportN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onchange="javascript:tangibleScore()"
+								name="tangibleHelpTransportY"
+								<%= props.getProperty("tangibleHelpTransportY", "") %> /></td>
+						</tr>
+						<tr>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="score">Scoring: The score is the
+							count of resources circled "Yes", with a possible range of 0 to
+							7.</td>
+						</tr>
+						<tr>
+							<td>Score: <input type="text" name="tangibleHelpScore"
+								readonly="true"
+								value="<%= props.getProperty("tangibleHelpScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr class="title">
+							<th colspan="3">Use of community Services for Emotional
+							Support</th>
+						</tr>
+						<tr>
+							<td colspan="3">In the <font style="font-weight: bold">past
+							9 months</font>, have you gotten help from resources other than friends
+							or family for the following services? (Please check Yes or No for
+							each category).</td>
+						</tr>
+						<tr>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="40%" class="scoreLight">&nbsp;</td>
+							<td width="30%" class="scoreLight">No</td>
+							<td width="30%" class="scoreLight">Yes</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="scoreHeavy">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td>Emotional support or counselling</td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onclick="javascript:emotionScore()" name="emotionalSupportN"
+								<%= props.getProperty("emotionalSupportN", "") %> /></td>
+							<td align="center"><input type="checkbox" class="checkbox"
+								onclick="javascript:emotionScore()" name="emotionalSupportY"
+								<%= props.getProperty("emotionalSupportY", "") %> /></td>
+						</tr>
+						<tr>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="score">Scoring: This is a single
+							dischotomous item.</td>
+						</tr>
+						<tr>
+							<td colspan="3">Score: <input type="text"
+								name="emotionalSupportScore" readonly="true"
+								value="<%= props.getProperty("emotionalSupportScore", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+							<table height="50">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage3();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage5();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page5" >    
-    <tr>        
-        <td colspan="2">
-        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="4">Use of community Education Services/Support Groups for Health Problems</th>
-                </tr>                
-                <tr>
-                    <td colspan="4">
-                        <font style="font-weight:bold">Outside of this study</font>, have you attended any classes, lectures, or
-                        support groups about your health problem in the <font style="font-weight:bold">past 9 month</font>?
-                    </td>
-                </tr>    
-                <tr>                    
-                    <td colspan="4">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</td>
-                    <td width="15%">
-                        <input type="checkbox" class="checkbox" onchange="javascript: healthEdScore()" name="healthEducationN" <%= props.getProperty("healthEducationN", "") %>/> No
-                    </td>
-                    <td width="15%">
-                        <input type="checkbox" class="checkbox" onchange="javascript: healthEdScore()" name="healthEducationY" <%= props.getProperty("healthEducationY", "") %>/> Yes
-                    </td>   
-                    <td width="65%">
-                        If Yes, how many <font style="font-weight:bold">total</font> hours did attend in the 
-                        <font style="font-weight:bold">last 9 months</font>?
-                        <input type="text" name="healthEducationHours"  onchange="javascript: healthEdScore()" size="10" value="<%= props.getProperty("healthEducationHours", "") %>"/>
-                    </td>    
-                </tr>  
-                <tr>                    
-                    <td colspan="4">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="4" class="score">
-                        Scoring: The score is the hours attened that can then be categorized into an ordinal score with the following categories:                        
-                    </td>
-                </tr>                
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        1 = None
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        2 = 1 - 5 hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        3 = 6 - 10 hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        4 = 11 or more hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="score">
-                        This item may also be divided into two separate questions: one asking about attendance at classes or lectures
-                        and the other asking about attendance at support groups. The same categorical choices from above can be used.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        Score: <input type="text" name="healthEducationScore" readonly="true" value="<%= props.getProperty("healthEducationScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <td colspan="4">&nbsp;</td>                    
-                </tr>
-                <tr class="title" >
-                    <th colspan="4">Use of Organized Exercise Programs</th>
-                </tr>                
-                <tr>
-                    <td colspan="4">
-                        In the <font style="font-weight:bold">past 9 months</font>, have you attended any organized exercise programs
-                        (such as walking clubs, aerobic classes or water exercise programs)?.
-                    </td>
-                </tr>    
-                <tr>                    
-                    <td colspan="4">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">                    
-                    <td width="5%">&nbsp;</td>
-                    <td width="15%">
-                        <input type="checkbox" class="checkbox" onchange="javascript:exPrgmScore()" name="exercisePrgmN" <%= props.getProperty("exercisePrgmN", "") %>/> No
-                    </td>
-                    <td width="15%">
-                        <input type="checkbox" class="checkbox" onchange="javascript:exPrgmScore()" name="exercisePrgmY" <%= props.getProperty("exercisePrgmY", "") %>/> Yes
-                    </td>   
-                    <td width="65%">
-                        If Yes, how many <font style="font-weight:bold">total</font> hours did attend in the 
-                        <font style="font-weight:bold">last 9 months</font>?
-                        <input type="text" name="exercisePrgmHours" onchange="javascript:exPrgmScore()" size="10" value="<%= props.getProperty("exercisePrgmHours", "") %>"/>
-                    </td>    
-                </tr>  
-                <tr>                    
-                    <td colspan="4">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="4" class="score">
-                        Scoring: The score is the hours attened that can then be categorized into an ordinal score with the following categories:                        
-                    </td>
-                </tr>                
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        1 = None
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        2 = 1 - 18 hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        3 = 19 - 47 hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td colspan="2" class="score">
-                        4 = 48 or more hours
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="score">
-                        This item may also be divided into two separate questions: one asking about attendance at classes or lectures
-                        and the other asking about attendance at support groups. The same categorical choices from above can be used.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        Score: <input type="text" name="exercisePrgmScore" readonly="true" value="<%= props.getProperty("exercisePrgmScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                    <table height="50"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>              
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage4();"><< Previous Page</a>
-        </td>    
-        <td align="right">
-            <a href="javascript: goToPage6();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page5">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="4">Use of community Education Services/Support
+							Groups for Health Problems</th>
+						</tr>
+						<tr>
+							<td colspan="4"><font style="font-weight: bold">Outside
+							of this study</font>, have you attended any classes, lectures, or
+							support groups about your health problem in the <font
+								style="font-weight: bold">past 9 month</font>?</td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</td>
+							<td width="15%"><input type="checkbox" class="checkbox"
+								onchange="javascript: healthEdScore()" name="healthEducationN"
+								<%= props.getProperty("healthEducationN", "") %> /> No</td>
+							<td width="15%"><input type="checkbox" class="checkbox"
+								onchange="javascript: healthEdScore()" name="healthEducationY"
+								<%= props.getProperty("healthEducationY", "") %> /> Yes</td>
+							<td width="65%">If Yes, how many <font
+								style="font-weight: bold">total</font> hours did attend in the <font
+								style="font-weight: bold">last 9 months</font>? <input
+								type="text" name="healthEducationHours"
+								onchange="javascript: healthEdScore()" size="10"
+								value="<%= props.getProperty("healthEducationHours", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="score">Scoring: The score is the
+							hours attened that can then be categorized into an ordinal score
+							with the following categories:</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">1 = None</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">2 = 1 - 5 hours</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">3 = 6 - 10 hours</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">4 = 11 or more hours</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="score">This item may also be divided
+							into two separate questions: one asking about attendance at
+							classes or lectures and the other asking about attendance at
+							support groups. The same categorical choices from above can be
+							used.</td>
+						</tr>
+						<tr>
+							<td colspan="4">Score: <input type="text"
+								name="healthEducationScore" readonly="true"
+								value="<%= props.getProperty("healthEducationScore", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+						<tr class="title">
+							<th colspan="4">Use of Organized Exercise Programs</th>
+						</tr>
+						<tr>
+							<td colspan="4">In the <font style="font-weight: bold">past
+							9 months</font>, have you attended any organized exercise programs (such
+							as walking clubs, aerobic classes or water exercise programs)?.</td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%">&nbsp;</td>
+							<td width="15%"><input type="checkbox" class="checkbox"
+								onchange="javascript:exPrgmScore()" name="exercisePrgmN"
+								<%= props.getProperty("exercisePrgmN", "") %> /> No</td>
+							<td width="15%"><input type="checkbox" class="checkbox"
+								onchange="javascript:exPrgmScore()" name="exercisePrgmY"
+								<%= props.getProperty("exercisePrgmY", "") %> /> Yes</td>
+							<td width="65%">If Yes, how many <font
+								style="font-weight: bold">total</font> hours did attend in the <font
+								style="font-weight: bold">last 9 months</font>? <input
+								type="text" name="exercisePrgmHours"
+								onchange="javascript:exPrgmScore()" size="10"
+								value="<%= props.getProperty("exercisePrgmHours", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="4">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="score">Scoring: The score is the
+							hours attened that can then be categorized into an ordinal score
+							with the following categories:</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">1 = None</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">2 = 1 - 18 hours</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">3 = 19 - 47 hours</td>
+						</tr>
+						<tr>
+							<td colspan="2"></td>
+							<td colspan="2" class="score">4 = 48 or more hours</td>
+						</tr>
+						<tr>
+							<td colspan="4" class="score">This item may also be divided
+							into two separate questions: one asking about attendance at
+							classes or lectures and the other asking about attendance at
+							support groups. The same categorical choices from above can be
+							used.</td>
+						</tr>
+						<tr>
+							<td colspan="4">Score: <input type="text"
+								name="exercisePrgmScore" readonly="true"
+								value="<%= props.getProperty("exercisePrgmScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="4">
+							<table height="50">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage4();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage6();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page6" >    
-    <tr>        
-        <td valign="top" colspan="2">
-        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="6">Communication With Physician</th>
-                </tr>                
-                <tr>
-                    <td colspan="6">
-                        When you visit your doctor, how often do you do the following? (Please enter score in box for
-                        <font style="font-weight:bold">each</font> question).
-                    </td>
-                </tr>    
-                <tr class="scoreLight">                    
-                    <td colspan="6">&nbsp;</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td width="13%" class="scoreLight">Never</td>
-                    <td width="13%" class="scoreLight">Almost never</td>
-                    <td width="13%" class="scoreLight">Sometimes</td>
-                    <td width="13%" class="scoreLight">Fairly often</td>
-                    <td width="13%" class="scoreLight">Very often</td>
-                    <td width="13%" class="scoreLight">Always</td>
-                </tr>
-                <tr class="scoreHeavy">                    
-                    <td width="13%" class="scoreHeavy">0</td>
-                    <td width="13%" class="scoreHeavy">1</td>
-                    <td width="13%" class="scoreHeavy">2</td>
-                    <td width="13%" class="scoreHeavy">3</td>
-                    <td width="13%" class="scoreHeavy">4</td>                    
-                    <td width="13%" class="scoreHeavy">5</td>                    
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="6"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    1. Prepare a list of questions for your doctor?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicate1" onchange="javascript: commScore()" size="5" value="<%= props.getProperty("communicate1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    2. Ask questions about the things you want to know and the things you don't understand about your treatment?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicate2" onchange="javascript: commScore()" size="5" value="<%= props.getProperty("communicate2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="5">
-                    3. Discuss any personal problems that may be related to your illness?
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicate3" onchange="javascript: commScore()" size="5" value="<%= props.getProperty("communicate3", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>                    
-                    <td colspan="6">&nbsp;</td>                    
-                </tr>
-                <tr>
-                    <td colspan="6"  class="score">
-                        Scoring: The score is the mean of the three items. If more than one items is missing answers, set the value 
-                        of the score for this scale to missing. Scores range from 0 to 5, with a higher score indicating better 
-                        communication with the physician.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6">
-                        Score: <input type="text" name="communicateScore" readonly="true" value="<%= props.getProperty("communicateScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="6">
-                    <table height="250"><tr><td>&nbsp;</td></tr></table>
-                    </td>
-                </tr>
-            </table>               
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage5();"><< Previous Page</a>
-        </td>    
-        <td>
-           &nbsp;
-        </td>
-    </tr>
-</table>
-</td></tr>
-<tr><td valign="top">
-<table class="Head" class="hidePrint" height="5%">
-    <tr>
-        <td align="left">
-<%
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page6">
+				<tr>
+					<td valign="top" colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="6">Communication With Physician</th>
+						</tr>
+						<tr>
+							<td colspan="6">When you visit your doctor, how often do you
+							do the following? (Please enter score in box for <font
+								style="font-weight: bold">each</font> question).</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="6">&nbsp;</td>
+						</tr>
+						<tr class="scoreLight">
+							<td width="13%" class="scoreLight">Never</td>
+							<td width="13%" class="scoreLight">Almost never</td>
+							<td width="13%" class="scoreLight">Sometimes</td>
+							<td width="13%" class="scoreLight">Fairly often</td>
+							<td width="13%" class="scoreLight">Very often</td>
+							<td width="13%" class="scoreLight">Always</td>
+						</tr>
+						<tr class="scoreHeavy">
+							<td width="13%" class="scoreHeavy">0</td>
+							<td width="13%" class="scoreHeavy">1</td>
+							<td width="13%" class="scoreHeavy">2</td>
+							<td width="13%" class="scoreHeavy">3</td>
+							<td width="13%" class="scoreHeavy">4</td>
+							<td width="13%" class="scoreHeavy">5</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="6" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">1. Prepare a list of questions for your
+							doctor?</td>
+							<td align="center"><input type="text" name="communicate1"
+								onchange="javascript: commScore()" size="5"
+								value="<%= props.getProperty("communicate1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">2. Ask questions about the things you want
+							to know and the things you don't understand about your treatment?
+							</td>
+							<td align="center"><input type="text" name="communicate2"
+								onchange="javascript: commScore()" size="5"
+								value="<%= props.getProperty("communicate2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="5">3. Discuss any personal problems that may be
+							related to your illness?</td>
+							<td align="center"><input type="text" name="communicate3"
+								onchange="javascript: commScore()" size="5"
+								value="<%= props.getProperty("communicate3", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="6">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="6" class="score">Scoring: The score is the mean
+							of the three items. If more than one items is missing answers,
+							set the value of the score for this scale to missing. Scores
+							range from 0 to 5, with a higher score indicating better
+							communication with the physician.</td>
+						</tr>
+						<tr>
+							<td colspan="6">Score: <input type="text"
+								name="communicateScore" readonly="true"
+								value="<%= props.getProperty("communicateScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="6">
+							<table height="250">
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage5();"><<
+					Previous Page</a></td>
+					<td>&nbsp;</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint" height="5%">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript: return onSave();" /> <input type="submit"
+						value="Save and Exit"
+						onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

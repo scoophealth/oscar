@@ -26,13 +26,9 @@
 
 <html>
 <head>
-<title>
-billing
-</title>
+<title>billing</title>
 </head>
 <body>
-<h1>
-This would be the link to the billing page
-</h1>
+<h1>This would be the link to the billing page</h1>
 </body>
 </html>

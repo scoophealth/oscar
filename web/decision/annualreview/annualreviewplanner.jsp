@@ -36,16 +36,20 @@
                           : ("0");
   String curUser_no     = (String)session.getAttribute("user");
 %>
-  <%@ page errorPage="../../appointment/errorpage.jsp"import="java.util.*,
+<%@ page errorPage="../../appointment/errorpage.jsp"
+	import="java.util.*,
                                                               java.sql.*,
                                                               oscar.*,
-                                                              oscar.util.*" %>
-  <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
-  <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
-  <!--jsp:useBean id="risks" class="oscar.decision.DesAnnualReviewPlannerRisk" scope="page" /-->
-  <jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
-  <jsp:useBean id="checklist" class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
-  <%@ include file="../../admin/dbconnection.jsp" %>
+                                                              oscar.util.*"%>
+<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
+<!--jsp:useBean id="risks" class="oscar.decision.DesAnnualReviewPlannerRisk" scope="page" /-->
+<jsp:useBean id="risks"
+	class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
+<jsp:useBean id="checklist"
+	class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
+<%@ include file="../../admin/dbconnection.jsp"%>
 <%
   String[][] dbQueries = new String[][]{{"search_demographic", 
           "select sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?"}, {"search_des", 
@@ -56,15 +60,13 @@
 
   plannerBean.doConfigure(dbParams, dbQueries);
 %>
-  <html>
+<html>
 <%
     response.setHeader("Cache-Control", "no-cache");
 %>
-    <head>
-      <title>
-        ANNUAL HEALTH REVIEW PLANNER
-      </title>
-      <script type="text/javascript" language="Javascript">
+<head>
+<title>ANNUAL HEALTH REVIEW PLANNER</title>
+<script type="text/javascript" language="Javascript">
         function onExit() {
           if (confirm("Are you sure you wish to exit without saving your changes?") == true) {
             window.close();
@@ -84,11 +86,11 @@
           var popup = window.open(page, "editxml", windowprops);
         }
       </script>
-    </head>
-    <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-      <form name="planner" method="post" action="annualreviewplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>">
-      <!--%@ include file="zgetarriskdata.jsp" % -->
-<%
+</head>
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<form name="planner" method="post"
+	action="annualreviewplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>">
+<!--%@ include file="zgetarriskdata.jsp" % --> <%
       //save risk&checklist data if required
       if (request.getParameter("submit") != null && 
               (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit"))) {
@@ -124,14 +126,8 @@
       while (rsdemo.next()) {
         String risk_content      = rsdemo.getString("risk_content");
         String checklist_content = rsdemo.getString("checklist_content");
-%>
-        <xml id="xml_list">
-          <planner>
-            <%= risk_content %>
-            <%= checklist_content %>
-          </planner>
-        </xml>
-<%
+%> <xml id="xml_list"> <planner> <%= risk_content %> <%= checklist_content %>
+</planner> </xml> <%
         //set the riskdata bean from xml file
         Properties   savedar1risk1 = risks.getRiskName("../webapps/" + oscarVariables.getProperty("project_home") + 
                 "/decision/annualreview/desannualreviewplannerrisk.xml");
@@ -177,59 +173,54 @@
 
       plannerBean.closePstmtConn();
 %>
-      <table bgcolor='silver' width='100%'>
-        <tr>
-          <td align="left">
-            <input type="submit" name="submit" value=" Save " />
-            <input type="submit" name="submit" value="Save and Exit" />
-            <input type="button" value="  Exit  " onclick="javascript:return onExit();" />
-            <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-          </td>
-          <td align="right">
-            <a href=# onClick="popupPage(600,930,'riskedit.jsp');return false;">
-              Edit Risk
-            </a>
-            |
-            <a href=# onClick="popupPage(600,930,'checklistedit.jsp');return false;">
-              Edit CheckList
-            </a>
-          </td>
-        </tr>
-      </table>
-      <table bgcolor='silver' width='100%'>
-        <tr>
-          <td width="20%" valign='top'>
-<%
+<table bgcolor='silver' width='100%'>
+	<tr>
+		<td align="left"><input type="submit" name="submit"
+			value=" Save " /> <input type="submit" name="submit"
+			value="Save and Exit" /> <input type="button" value="  Exit  "
+			onclick="javascript:return onExit();" /> <input type="button"
+			name="submit" value="Print"
+			onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+		</td>
+		<td align="right"><a href=#
+			onClick="popupPage(600,930,'riskedit.jsp');return false;"> Edit
+		Risk </a> | <a href=#
+			onClick="popupPage(600,930,'checklistedit.jsp');return false;">
+		Edit CheckList </a></td>
+	</tr>
+</table>
+<table bgcolor='silver' width='100%'>
+	<tr>
+		<td width="20%" valign='top'>
+		<%
             out.println(risks.doStuff(new String("../webapps/" + oscarVariables.getProperty("project_home") + 
                     "/decision/annualreview/desannualreviewplannerrisk.xml")));
 %>
-          </td>
-          <td>
-<%
+		</td>
+		<td>
+		<%
             out.println(checklist.doStuff(new String("../webapps/" + oscarVariables.getProperty("project_home") + 
                     "/decision/annualreview/desannualreviewplannerriskchecklist.xml"), riskDataBean));
 %>
-          </tr>
-        </table>
-        <table bgcolor='silver' width='100%'>
-          <tr>
-            <td align="left">
-              <input type="submit" name="submit" value=" Save " />
-              <input type="submit" name="submit" value="Save and Exit" />
-              <input type="button" value="  Exit  " onclick="javascript:return onExit();" />
-              <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-            </td>
-            <td align="right">
-              <a href=# onClick="popupPage(600,930,'riskedit.jsp');return false;">
-                Edit Risks
-              </a>
-              |
-              <a href=# onClick="popupPage(600,930,'checklistedit.jsp');return false;">
-                Edit CheckList
-              </a>
-            </td>
-          </tr>
-        </table>
-      </form>
-    </body>
-  </html>
+		
+	</tr>
+</table>
+<table bgcolor='silver' width='100%'>
+	<tr>
+		<td align="left"><input type="submit" name="submit"
+			value=" Save " /> <input type="submit" name="submit"
+			value="Save and Exit" /> <input type="button" value="  Exit  "
+			onclick="javascript:return onExit();" /> <input type="button"
+			name="submit" value="Print"
+			onclick="popupPage(700,800,'annualreviewplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+		</td>
+		<td align="right"><a href=#
+			onClick="popupPage(600,930,'riskedit.jsp');return false;"> Edit
+		Risks </a> | <a href=#
+			onClick="popupPage(600,930,'checklistedit.jsp');return false;">
+		Edit CheckList </a></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

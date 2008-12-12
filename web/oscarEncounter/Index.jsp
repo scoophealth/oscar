@@ -24,8 +24,8 @@
  * Ontario, Canada
  */
 --%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -33,36 +33,44 @@
     boolean bPrincipalControl = false;
     boolean bPrincipalDisplay = false;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=true%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
+	rights="r" reverse="<%=true%>">
 "You have no right to access this page!"
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<security:oscarSec roleName="<%=roleName$%>" objectName='<%="_eChart$"+demographic$%>' rights="o" reverse="<%=false%>" >
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName='<%="_eChart$"+demographic$%>' rights="o"
+	reverse="<%=false%>">
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
 <%-- only principal has the save rights --%>
-<security:oscarSec roleName='<%="_principal"%>' objectName='<%="_eChart"%>' rights="ow" reverse="<%=false%>" >
-<% 	bPrincipalControl = true;
+<security:oscarSec roleName='<%="_principal"%>'
+	objectName='<%="_eChart"%>' rights="ow" reverse="<%=false%>">
+	<% 	bPrincipalControl = true;
 	if(EctPatientData.getProviderNo(demographic$).equals((String) session.getAttribute("user")) ) {
 		bPrincipalDisplay = true;
 	}
 %>
 </security:oscarSec>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-<%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
-<%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
-<%@page import="oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarResearch.oscarDxResearch.bean.*"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@page
+	import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
+<%@page
+	import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
+<%@page
+	import="oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarResearch.oscarDxResearch.bean.*"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String ip = request.getRemoteAddr();
@@ -80,9 +88,9 @@ You have no rights to access the data!
     return;
   }
 %>
-<!-- add by caisi  --> 
+<!-- add by caisi  -->
 <caisi:isModuleLoad moduleName="caisi">
-<%
+	<%
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
@@ -94,7 +102,7 @@ if (request.getParameter("casetoEncounter")==null)
 }
 %>
 </caisi:isModuleLoad>
-<!-- add by caisi end--> 
+<!-- add by caisi end-->
 <%
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
@@ -137,34 +145,12 @@ if (request.getParameter("casetoEncounter")==null)
 
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=demoNo%>"/></title>
-<html:base/>
-<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
-<style type="text/css">
-	div.presBox {
-		height: <%=windowSizes.getProperty("presBoxSize")%>;
-		overflow: auto;
-	}
-
-	div.presBox ul{
-       width:8em;
-       list-style:none;
-       list-style-type:none;
-       list-style-position:outside;
-       padding-left:1px;
-       margin-left:1px;
-       margin-top:1px;
-       padding-top:1px;
-	}
-
-	div.presBox li{
-	    border-bottom: 1pt solid #888888;
-	}
-
-	div.presBox li a{
-	   font-size:10px;
-	}
-</style>
+<title><bean:message key="oscarEncounter.Index.title" /> - <oscar:nameage
+	demographicNo="<%=demoNo%>" /></title>
+<html:base />
+<script language="javascript" type="text/javascript"
+	src="../share/javascript/Oscar.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <!--<script type="application/x-javascript" language="javascript" src="/javascript/sizing.js"></script>-->
@@ -697,7 +683,8 @@ function grabEnter(event){
 }
 </script>
 
-<script language="javascript" type="text/javascript" src="../share/javascript/prototype.js" ></script> 
+<script language="javascript" type="text/javascript"
+	src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" language=javascript>
 // Written by wreby
 // This code supports the autosave function
@@ -792,157 +779,153 @@ function removeSaveFeedback()  {
 
 </script>
 
-<style type="text/css">
-td.menuLayer{
-        background-color: #ccccff;
-        font-size: 14px;
-}
-table.layerTable{
-        border-top: 2px solid #cfcfcf;
-        border-left: 2px solid #cfcfcf;
-        border-bottom: 2px solid #333333;
-        border-right: 2px solid #333333;
-}
-
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 </head>
 
-<body  onload="javascript:loader();"  onUnload="notifyChildren();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
-<html:errors/>
+<body onload="javascript:loader();" onUnload="notifyChildren();"
+	topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0"
+	vlink="#0000FF">
+<html:errors />
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;width:100%;height:680" bordercolor="#111111" id="scrollNumber1" name="<bean:message key="oscarEncounter.Index.encounterTable"/>">
-    <tr>
-        <td class="hidePrint" bgcolor="#003399" style="border-right: 2px solid #A9A9A9;height:34px;" >
-            <div class="Title">
-			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>
-            </div>
-        </td>
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse; width: 100%; height: 680"
+	bordercolor="#111111" id="scrollNumber1"
+	name="<bean:message key="oscarEncounter.Index.encounterTable"/>">
+	<tr>
+		<td class="hidePrint" bgcolor="#003399"
+			style="border-right: 2px solid #A9A9A9; height: 34px;">
+		<div class="Title">&nbsp;<bean:message
+			key="oscarEncounter.Index.msgEncounter" /></div>
+		</td>
 
-        <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
-                <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
-                    <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
-                    <caisi:isModuleLoad moduleName="caisi">
-					<input type="hidden" name="casetoEncounter" value="true">
-  		    </caisi:isModuleLoad>
-                    
-                    <tr>
-                        <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
-                            <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
-                        </td>
-                        <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
-                        <!--div class="FakeLink">
-                        </div-->
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')"><bean:message key="global.about"/></a>
-                        </td>
-                    </tr>
-                    </form>
-                </table>
+		<td bgcolor="#003399"
+			style="text-align: right; height: 34px; padding-left: 3px;">
+		<table name="tileTable"
+			style="vertical-align: middle; border-collapse: collapse;">
+			<form name="appointmentListForm"
+				action="./oscarEncounter.Index/IncomingEncounter.do"><caisi:isModuleLoad
+				moduleName="caisi">
+				<input type="hidden" name="casetoEncounter" value="true">
+			</caisi:isModuleLoad>
+			<tr>
+				<td width=70% class="Header"
+					style="padding-left: 2px; padding-right: 2px; border-right: 2px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
+					NOWRAP><%=bean.patientLastName %>, <%=bean.patientFirstName%>
+				<%=bean.patientSex%> <%=bean.patientAge%> <span
+					style="margin-left: 20px;"><i>Next Appointment: <oscar:nextAppt
+					demographicNo="<%=bean.demographicNo%>" /></i></span></td>
+				<td class="Header"
+					style="text-align: center; border-right: 3px solid #003399" NOWRAP>
+				<!--div class="FakeLink">
+                        </div--> <a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a></td>
+			</tr>
+			</form>
+		</table>
 
-            </td>
-    </tr>
-    <tr style="height:100%">
-        <td style="font-size:80%;border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
-            <table class="LeftTable">
-            <caisi:isModuleLoad moduleName="caisi">
-       <%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+		</td>
+	</tr>
+	<tr style="height: 100%">
+		<td
+			style="font-size: 80%; border-top: 2px solid #A9A9A9; border-right: 2px solid #A9A9A9; vertical-align: top">
+		<table class="LeftTable">
+			<caisi:isModuleLoad moduleName="caisi">
+				<%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 %>
-        		<tr>
-        			<td>
-        			<a href="<%=hrefurl2%>">Case Management Encounter</a>
-        			</td>
-        		</tr>
-        	</caisi:isModuleLoad>
-                <tr class="Header">
-                    <td style="font-weight:bold">
-                        <bean:message key="oscarEncounter.Index.clinicalModules"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
- 	            <%if (vLocale.getCountry().equals("BR")) {%>
-                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
-                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-		    <%}else{%>
-                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
-                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-    		    <%}%><br>
-             <%
-                if (vLocale.getCountry().equals("BR")) { %>
-               <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
-             <% } else {%>
-                   <% if(bean.status.indexOf('B')==-1) { %>
-                        <!--a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode("MFP")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a-->
-						<a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
-                   <% } else {%>
-                        <!--a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a-->
-                                                <a href=# onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?status=<%=bean.status%>&appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
-                   <% } %>
-             <% } %>
-                <br>
-                        <%  if (!vLocale.getCountry().equals("BR")) { %>
-                            <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a><br>
-                        <% } %>
-                        <a href=# onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a><br>
+				<tr>
+					<td><a href="<%=hrefurl2%>">Case Management Encounter</a></td>
+				</tr>
+			</caisi:isModuleLoad>
+			<tr class="Header">
+				<td style="font-weight: bold"><bean:message
+					key="oscarEncounter.Index.clinicalModules" /></td>
+			</tr>
+			<tr>
+				<td>
+				<%if (vLocale.getCountry().equals("BR")) {%> <a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
+					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message
+					key="global.master" /></a> <%}else{%> <a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
+					title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message
+					key="global.master" /></a> <%}%><br>
+				<%
+                if (vLocale.getCountry().equals("BR")) { %> <a href=#
+					onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>");return false;'
+					title="<bean:message key="global.billing"/>"><bean:message
+					key="global.billing" /></a> <% } else {%> <% if(bean.status.indexOf('B')==-1) { %>
+				<!--a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode("MFP")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a-->
+				<a href=#
+					onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;'
+					title="<bean:message key="global.billing"/>"><bean:message
+					key="global.billing" /></a> <% } else {%> <!--a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a-->
+				<a href=#
+					onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?status=<%=bean.status%>&appointment_no=<%=bean.appointmentNo%>");return false;'
+					title="<bean:message key="global.unbil"/>">-<bean:message
+					key="global.billing" /></a> <% } %> <% } %> <br>
+				<%  if (!vLocale.getCountry().equals("BR")) { %> <a href=#
+					onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+					key="global.prescriptions" /></a><br>
+				<% } %> <a href=#
+					onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message
+					key="global.consultations" /></a><br>
 
-                        <oscar:oscarPropertiesCheck property="IMMUNIZATION" value="yes" defaultVal="true">
-                        <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
-                            <a style="color:red" href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
-                        <% } else {%>
-                            <a href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message key="global.immunizations"/></a><br>
-                        <% } %>
-                        </oscar:oscarPropertiesCheck>
+				<oscar:oscarPropertiesCheck property="IMMUNIZATION" value="yes"
+					defaultVal="true">
+					<% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(demoNo)) { %>
+					<a style="color: red"
+						href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message
+						key="global.immunizations" /></a>
+					<br>
+					<% } else {%>
+					<a
+						href="javascript:popUpImmunizations(700,960,'<rewrite:reWrite jspPage="immunization/initSchedule.do"/>')"><bean:message
+						key="global.immunizations" /></a>
+					<br>
+					<% } %>
+				</oscar:oscarPropertiesCheck> <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
+					<a
+						href="javascript:popUpImmunizations(700,960,'../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
+					<oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
+					<br>
+				</oscar:oscarPropertiesCheck> <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
+				<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message
+					key="global.oscarComm" /></a><br>
+				<% } else {%> <a
+					href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message
+					key="global.oscarComm" /></a><br>
+				<% } %> <a href=#
+					onClick="popupOscarComm(580,900,'../oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=provNo%>&quickList=');return false;"><bean:message
+					key="global.disease" /></a><br>
+				<a href=#
+					onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;"><bean:message
+					key="oscarEncounter.Index.addTickler" /></a><br>
+				</td>
+			</tr>
+			<!-- <tr><td>&nbsp;</td></tr> -->
+		</table>
 
-                        <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
-                            <a href="javascript:popUpImmunizations(700,960,'../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
-                            <oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
-                            <br>
-                        </oscar:oscarPropertiesCheck>
-
-
-
-                        <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
-                        	<a href="javascript:popupOscarComm(700,960,'RemoteAttachments.jsp')"><bean:message key="global.oscarComm"/></a><br>
-                        <% } else {%>
-                        	<a href="javascript:popupOscarComm(700,960,'../packageNA.jsp?pkg=oscarComm')"><bean:message key="global.oscarComm"/></a><br>
-                        <% } %>
-                        <a href=# onClick="popupOscarComm(580,900,'../oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=provNo%>&quickList=');return false;"><bean:message key="global.disease"/></a><br>
-                  <a href=# onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="oscarEncounter.Index.addTickler"/></a><br>
-                 </td>
-                </tr>
-                <!-- <tr><td>&nbsp;</td></tr> -->
-            </table>
-
-            <table class="LeftTable">
-            <form name="leftColumnForm">
-            <caisi:isModuleLoad moduleName="caisi">
-		<input type="hidden" name="casetoEncounter" value="true">
- 	</caisi:isModuleLoad>
-                <tr class="Header">
-                    <td style="font-weight:bold">
-                        <bean:message key="oscarEncounter.Index.msgForms"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View any of <%=patientName%>\'s current forms.'; return true;">
-                            <option value="null" selected>-<bean:message key="oscarEncounter.Index.currentForms"/>-
-                            <%
+		<table class="LeftTable">
+			<form name="leftColumnForm"><caisi:isModuleLoad
+				moduleName="caisi">
+				<input type="hidden" name="casetoEncounter" value="true">
+			</caisi:isModuleLoad>
+			<tr class="Header">
+				<td style="font-weight: bold"><bean:message
+					key="oscarEncounter.Index.msgForms" /></td>
+			</tr>
+			<tr>
+				<td><select name="selectCurrentForms"
+					onChange="javascript:selectBox(this)" class="ControlSelect"
+					onMouseOver="javascript:window.status='View any of <%=patientName%>\'s current forms.'; return true;">
+					<option value="null" selected>-<bean:message
+						key="oscarEncounter.Index.currentForms" />- <%
                             for(int j=0; j<forms.length; j++) {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
@@ -951,58 +934,61 @@ border-right: 2px solid #cfcfcf;
                                     if(pforms.length>0) {
                                         EctFormData.PatientForm pfrm = pforms[0];
                                 %>
-                                <option value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
-                                <%}}}
+					
+					<option
+						value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
+					<%}}}
 
                             %>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="selectForm" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='<bean:message key="oscarEncounter.Index.createForm"/> <%=patientName%>.'; return true;">
-                        <option value="null" selected>-<bean:message key="oscarEncounter.Index.addForm"/>-
-                        <%
+					
+				</select></td>
+			</tr>
+			<tr>
+				<td><select name="selectForm"
+					onChange="javascript:selectBox(this)" class="ControlSelect"
+					onMouseOver="javascript:window.status='<bean:message key="oscarEncounter.Index.createForm"/> <%=patientName%>.'; return true;">
+					<option value="null" selected>-<bean:message
+						key="oscarEncounter.Index.addForm" />- <%
                         //EctFormData.Form[] forms = new EctFormData().getForms();
                         for(int j=0; j<forms.length; j++) {
                             EctFormData.Form frm = forms[j];
                             if (!frm.isHidden()) {
                         %>
-                        <option value="<%=frm.getFormPage()+demoNo+"&formId=0&provNo="+provNo%>"><%=frm.getFormName()%>
-                        <%
+					
+					<option
+						value="<%=frm.getFormPage()+demoNo+"&formId=0&provNo="+provNo%>"><%=frm.getFormName()%>
+					<%
 
                             }
                         }
 
                         %>
-                        </select>
+					
+				</select></td>
+			</tr>
+			<tr>
+				<td><a href=#
+					onClick='popupPage2("<rewrite:reWrite jspPage="formlist.jsp"/>?demographic_no=<%=demoNo%>"); return false;'>
+				-<bean:message key="oscarEncounter.Index.msgOldForms" />-</a></td>
+			</tr>
 
-                    </td>
-                </tr>
-                <tr>
-                    <td><a href=# onClick='popupPage2("<rewrite:reWrite jspPage="formlist.jsp"/>?demographic_no=<%=demoNo%>"); return false;' >
-					-<bean:message key="oscarEncounter.Index.msgOldForms"/>-</a>
-                    </td>
-                </tr>
-
-                <!-- <tr><td>&nbsp;</td></tr> -->
-            </form>
-            </table>
-            <table class="LeftTable">
-            <form name="msgForm">
-            <caisi:isModuleLoad moduleName="caisi">
-					<input type="hidden" name="casetoEncounter" value="true">
+			<!-- <tr><td>&nbsp;</td></tr> -->
+			</form>
+		</table>
+		<table class="LeftTable">
+			<form name="msgForm"><caisi:isModuleLoad moduleName="caisi">
+				<input type="hidden" name="casetoEncounter" value="true">
 			</caisi:isModuleLoad>
-                <tr class="Header">
-                    <td style="font-weight:bold">
-                        oscarMessenger <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send Msg</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="msgSelect" class="ControlSelect" onChange="javascript:popUpMsg(600,900,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
-                        <option value="null" selected>-Select Message-
-                         <%
+			<tr class="Header">
+				<td style="font-weight: bold">oscarMessenger <a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send
+				Msg</a></td>
+			</tr>
+			<tr>
+				<td><select name="msgSelect" class="ControlSelect"
+					onChange="javascript:popUpMsg(600,900,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
+					<option value="null" selected>-Select Message- <%
                             String msgId;
                             String msgSubject;
                             String msgDate;
@@ -1012,330 +998,402 @@ border-right: 2px solid #cfcfcf;
                                 msgSubject = msgData.getSubject();
                                 msgDate = msgData.getDate();
                          %>
-                         <option value="<%=j%>"><%=msgSubject + " - " + msgDate %></option>
-                         <% }%>
-                        </select>
-                    </td>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href=# onClick='popupOscarRx(600,900,"<rewrite:reWrite jspPage="../oscarMessenger/DisplayDemographicMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;' >
-					-All Messages-</a>
-                    </td>
-                </tr>
-                <!-- <tr><td>&nbsp;</td></tr> -->
-            </form>
-            </table>
-            <table class="LeftTable">
-            <form name="insertTemplateForm">
-            <caisi:isModuleLoad moduleName="caisi">
-					<input type="hidden" name="casetoEncounter" value="true">
+					
+					<option value="<%=j%>"><%=msgSubject + " - " + msgDate %></option>
+					<% }%>
+				</select></td>
+				</td>
+			</tr>
+			<tr>
+				<td><a href=#
+					onClick='popupOscarRx(600,900,"<rewrite:reWrite jspPage="../oscarMessenger/DisplayDemographicMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;'>
+				-All Messages-</a></td>
+			</tr>
+			<!-- <tr><td>&nbsp;</td></tr> -->
+			</form>
+		</table>
+		<table class="LeftTable">
+			<form name="insertTemplateForm"><caisi:isModuleLoad
+				moduleName="caisi">
+				<input type="hidden" name="casetoEncounter" value="true">
 			</caisi:isModuleLoad>
-                <tr class="Header">
-                    <td style="font-weight:bold">
-                        <bean:message key="oscarEncounter.Index.encounterTemplate"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select name="templateSelect" class="ControlSelect" onChange="javascript:popUpInsertTemplate(40,50,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
-                        <option value="null" selected>-<bean:message key="oscarEncounter.Index.insertTemplate"/>-
-                         <%
+			<tr class="Header">
+				<td style="font-weight: bold"><bean:message
+					key="oscarEncounter.Index.encounterTemplate" /></td>
+			</tr>
+			<tr>
+				<td><select name="templateSelect" class="ControlSelect"
+					onChange="javascript:popUpInsertTemplate(40,50,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
+					<option value="null" selected>-<bean:message
+						key="oscarEncounter.Index.insertTemplate" />- <%
                             String encounterTmp ="NONE";
                             String encounterTmpValue="NONE";
                             for(int j=0; j<bean.templateNames.size(); j++) {
                                 encounterTmp = (String)bean.templateNames.get(j);
                          %>
-                                <option value="<%=encounterTmp%>"><%=encounterTmp %></option>
-                         <% }%>
-                        </select>
-                    </td>
-                </tr>
-                <!-- <tr><td>&nbsp;</td></tr> -->
-            </form>
-            </table>
-            <table class="LeftTable">
-                <tr class="Header">
-                    <td style="font-weight:bold" colspan="2"><bean:message key="oscarEncounter.Index.measurements"/></td>
-                </tr>
-                <tr>
-                    <td>
-                        <%
+					
+					<option value="<%=encounterTmp%>"><%=encounterTmp %></option>
+					<% }%>
+				</select></td>
+			</tr>
+			<!-- <tr><td>&nbsp;</td></tr> -->
+			</form>
+		</table>
+		<table class="LeftTable">
+			<tr class="Header">
+				<td style="font-weight: bold" colspan="2"><bean:message
+					key="oscarEncounter.Index.measurements" /></td>
+			</tr>
+			<tr>
+				<td>
+				<%
                         dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
                         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
                         ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
                         for (int f = 0; f < flowsheets.size();f++){
                             String flowsheetName = (String) flowsheets.get(f);
-                        %>
-                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
-                        <%}%>
-                        
-                        <form name="measurementGroupForm">
-                        <caisi:isModuleLoad moduleName="caisi">
+                        %> <a
+					href="javascript: function myFunction() {return false; }"
+					onClick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
+				<%}%>
+
+				<form name="measurementGroupForm"><caisi:isModuleLoad
+					moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-					</caisi:isModuleLoad>
-                        <select name="measurementGroupSelect" class="ControlSelect" onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
-                        <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
-                         <%
+				</caisi:isModuleLoad> <select name="measurementGroupSelect" class="ControlSelect"
+					onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
+					<option value="null" selected>-<bean:message
+						key="oscarEncounter.Index.SelectGroup" />- <%
                             for(int j=0; j<bean.measurementGroupNames.size(); j++) {
                             String tmp = (String)bean.measurementGroupNames.get(j);
                          %>
-                         <option value="<%=tmp%>"><%=tmp %>
-                         <%}%>
-                        </select>
+					
+					<option value="<%=tmp%>"><%=tmp %> <%}%>
+					
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td><a href=#
+					onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupHistoryIndex.do"/>'); return false;"><bean:message
+					key="oscarEncounter.Index.oldMeasurements" /></a></td>
+			</tr>
+			</form>
+		</table>
+		<table class="LeftTable">
+			<tr class="Header">
+				<td style="font-weight: bold"><bean:message
+					key="oscarEncounter.Index.clinicalResources" /></td>
+			</tr>
+			<tr>
+				<td><a href="#"
+					ONCLICK="popupPage2('http://resource.oscarmcmaster.org/oscarResource/');return false;"
+					title="<bean:message key="oscarEncounter.Index.resource"/>"
+					onmouseover="window.status='<bean:message key="oscarEncounter.Index.viewResource"/>';return true"><bean:message
+					key="oscarEncounter.Index.resource" /></a><br>
+				<a href="#"
+					onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message
+					key="oscarEncounter.Index.msgDocuments" /></a><br>
+				<a href="#"
+					onClick="popupPage(500,950, '../eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message
+					key="global.eForms" /></a><br>
+				<a href="#"
+					onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message
+					key="global.viewTickler" /></a><br>
+				<a href="javascript: function myFunction() {return false; }"
+					onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;"><bean:message
+					key="oscarEncounter.Index.calculators" /></a><br>
+				<!--a href="#" onClick="popupPage(700,1000, '../lab/CumulativeLabValues.jsp?demographic_no=<%=bean.demographicNo%>');return false;">Cumulative Labs</a><br-->
 
-                    </td>
-                </tr>
-                <tr>
-                    <td><a href=# onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupHistoryIndex.do"/>'); return false;" ><bean:message key="oscarEncounter.Index.oldMeasurements"/></a>
-                    </td>
-                </tr>
-                </form>
-            </table>
-            <table class="LeftTable">
-                <tr class="Header">
-                    <td style="font-weight:bold">
-                            <bean:message key="oscarEncounter.Index.clinicalResources"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="#" ONCLICK ="popupPage2('http://resource.oscarmcmaster.org/oscarResource/');return false;" title="<bean:message key="oscarEncounter.Index.resource"/>" onmouseover="window.status='<bean:message key="oscarEncounter.Index.viewResource"/>';return true"><bean:message key="oscarEncounter.Index.resource"/></a><br>
-                        <a href="#" onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message key="oscarEncounter.Index.msgDocuments"/></a><br>
-                        <a href="#" onClick="popupPage(500,950, '../eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
-                 	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
-                        <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a><br>
-                        <!--a href="#" onClick="popupPage(700,1000, '../lab/CumulativeLabValues.jsp?demographic_no=<%=bean.demographicNo%>');return false;">Cumulative Labs</a><br-->
-                        
-                        <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
-                            <option value="null" selected>-lab results-</option>
-                            <%
+				<select name="selectCurrentForms"
+					onChange="javascript:selectBox(this)" class="ControlSelect"
+					onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
+					<option value="null" selected>-lab results-</option>
+					<%
                                 for(int j=0; j<labs.size(); j++) {
                                     LabResultData result =  (LabResultData) labs.get(j);
                                     if ( result.isMDS() ){ %>
-                                        <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.getReportStatus()%>"><%=result.getDateTime()%> <%=result.getDiscipline()%></option>
-                                    <% }else if (result.isCML()){ %>
-                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.getDateTime()%> <%=result.getDiscipline()%></option>
-                                    <% }else {%>
-                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.getDateTime()%> <%=result.getDiscipline()%></option>
-                                    <% }%>
+					<option
+						value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.getReportStatus()%>"><%=result.getDateTime()%>
+					<%=result.getDiscipline()%></option>
+					<% }else if (result.isCML()){ %>
+					<option
+						value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>">
+					<%=result.getDateTime()%> <%=result.getDiscipline()%></option>
+					<% }else {%>
+					<option
+						value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>"><%=result.getDateTime()%>
+					<%=result.getDiscipline()%></option>
+					<% }%>
 
-                            <% } %>
-                        </select>
-                 </td>
-                </tr>
-                <!-- <tr><td>&nbsp;</td></tr> -->
-            </table>
-            <table class="LeftTable">
-                <form name="ksearch" >
-                <caisi:isModuleLoad moduleName="caisi">
-					<input type="hidden" name="casetoEncounter" value="true">
-				</caisi:isModuleLoad>
-                    <tr class="Header">
-                        <td style="font-weight:bold">
-                            <bean:message key="oscarEncounter.Index.internetResources"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><bean:message key="oscarEncounter.Index.searchFor"/><%= request.getParameter("userName")%></td>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="keyword" class="ControlSelect" onkeypress="return grabEnter(event)"/></td>
-                    </tr>
-                    <tr>
-                        <td><bean:message key="oscarEncounter.Index.using"/></td>
-                    </tr>
-                    <tr>
-                        <td>
-                                <select class="ControlSelect" name="channel" >
-                                    <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
-                                    <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
-                                    <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term="><bean:message key="global.pubmed"/></option>
-                                    <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER="><bean:message key="global.medlineplus"/></option>
-                                    <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q="><bean:message key="global.BNF"/></option>
-                                </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="button" name="button" class="ControlPushButton" value="<bean:message key="oscarEncounter.Index.btnGo"/>" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
-                        </td>
-                    </tr>
-                </form>
-            </table>
-        </td>
-        <td valign="top">
-        <form name="encForm" action="SaveEncounter.do" method="POST">
-        <caisi:isModuleLoad moduleName="caisi">
-					<input type="hidden" name="casetoEncounter" value="true">
+					<% } %>
+				</select></td>
+			</tr>
+			<!-- <tr><td>&nbsp;</td></tr> -->
+		</table>
+		<table class="LeftTable">
+			<form name="ksearch"><caisi:isModuleLoad moduleName="caisi">
+				<input type="hidden" name="casetoEncounter" value="true">
+			</caisi:isModuleLoad>
+			<tr class="Header">
+				<td style="font-weight: bold"><bean:message
+					key="oscarEncounter.Index.internetResources" /></td>
+			</tr>
+			<tr>
+				<td><bean:message key="oscarEncounter.Index.searchFor" /><%= request.getParameter("userName")%></td>
+			</tr>
+			<tr>
+				<td><input type="text" name="keyword" class="ControlSelect"
+					onkeypress="return grabEnter(event)" /></td>
+			</tr>
+			<tr>
+				<td><bean:message key="oscarEncounter.Index.using" /></td>
+			</tr>
+			<tr>
+				<td><select class="ControlSelect" name="channel">
+					<option
+						value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message
+						key="oscarEncounter.Index.oscarSearch" /></option>
+					<option value="http://www.google.com/search?q="><bean:message
+						key="global.google" /></option>
+					<option
+						value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term="><bean:message
+						key="global.pubmed" /></option>
+					<option
+						value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER="><bean:message
+						key="global.medlineplus" /></option>
+					<option
+						value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q="><bean:message
+						key="global.BNF" /></option>
+				</select></td>
+			</tr>
+			<tr>
+				<td><input type="button" name="button"
+					class="ControlPushButton"
+					value="<bean:message key="oscarEncounter.Index.btnGo"/>"
+					onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
+				</td>
+			</tr>
+			</form>
+		</table>
+		</td>
+		<td valign="top">
+		<form name="encForm" action="SaveEncounter.do" method="POST"><caisi:isModuleLoad
+			moduleName="caisi">
+			<input type="hidden" name="casetoEncounter" value="true">
 		</caisi:isModuleLoad>
-            <table  name="encounterTableRightCol" >
-    <!-- social history row --><!-- start new rows here -->
-                <tr>
-                    <td>
-                        <table bgcolor="#CCCCFF" id="rowOne" width="100%">
-                            <tr>
-                               <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
-                                </td>
-                                <td>
-                                    <div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
+		<table name="encounterTableRightCol">
+			<!-- social history row -->
+			<!-- start new rows here -->
+			<tr>
+				<td>
+				<table bgcolor="#CCCCFF" id="rowOne" width="100%">
+					<tr>
+						<td>
+						<div class="RowTop"><bean:message
+							key="oscarEncounter.Index.socialFamHist" />:</div>
+						<input type="hidden" name="shInput" /></td>
+						<td>
+						<div class="RowTop">
+						<% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("otherMedications", ""));
-                                    %>
-                                    <% } else { %>
-                                    <bean:message key="oscarEncounter.Index.otherMed"/>:
-                                    <% } %>
-                                    </div>
-                                </td>
-                                <td><div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
+                                    %> <% } else { %> <bean:message
+							key="oscarEncounter.Index.otherMed" />: <% } %>
+						</div>
+						</td>
+						<td>
+						<div class="RowTop">
+						<% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("medicalHistory", ""));
-                                    %>
-                                    <% } else { %>
-                                    <bean:message key="oscarEncounter.Index.medHist"/>:
-                                    <% } %>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                                        <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                                        <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowOneNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                                        <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowOneLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                                        <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowOneFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                                        <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                                        <bean:message key="oscarEncounter.Index.r"/></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr width="100%">
-                                <!-- This is the Social History cell ...sh...-->
-                                <td  valign="top">
-                                    <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-                                       <textarea name="shTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
-                                </td>
-                                <!-- This is the Family History cell ...fh...-->
-                                <td  valign="top">
-                                       <textarea name="fhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
-                                </td>
-                                <!-- This is the Medical History cell ...mh...-->
-                                <td  valign="top" colspan="2">
-                                       <textarea name="mhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-    <!-- ongoing concerns row -->
-                <tr>
-                    <td>
-                        <table bgcolor="#CCCCFF" id="rowTwo" width="100%">
-                            <tr>
-                                <td><div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
+                                    %> <% } else { %> <bean:message
+							key="oscarEncounter.Index.medHist" />: <% } %>
+						</div>
+						</td>
+						<td>
+						<div
+							style="font-size: 8pt; text-align: right; vertical-align: bottom">
+						<a onMouseOver="javascript:window.status='Minimize'; return true;"
+							href="javascript:rowOneX();"
+							title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+						<bean:message key="oscarEncounter.Index.x" /></a> | <a
+							onMouseOver="javascript:window.status='Small Size'; return true;"
+							href="javascript:rowOneSmall();"
+							title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+						<bean:message key="oscarEncounter.Index.s" /></a> | <a
+							onMouseOver="javascript:window.status='Medium Size'; return true;"
+							href="javascript:rowOneNormal();"
+							title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+						<bean:message key="oscarEncounter.Index.n" /></a> | <a
+							onMouseOver="javascript:window.status='Large Size'; return true;"
+							href="javascript:rowOneLarge();"
+							title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+						<bean:message key="oscarEncounter.Index.l" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:rowOneFull();"
+							title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+						<bean:message key="oscarEncounter.Index.f" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:reset();"
+							title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+						<bean:message key="oscarEncounter.Index.r" /></a></div>
+						</td>
+					</tr>
+					<tr width="100%">
+						<!-- This is the Social History cell ...sh...-->
+						<td valign="top"><!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
+						<textarea name="shTextarea" wrap="hard" cols="31"
+							style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
+						</td>
+						<!-- This is the Family History cell ...fh...-->
+						<td valign="top"><textarea name="fhTextarea" wrap="hard"
+							cols="31"
+							style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
+						</td>
+						<!-- This is the Medical History cell ...mh...-->
+						<td valign="top" colspan="2"><textarea name="mhTextarea"
+							wrap="hard" cols="31"
+							style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<!-- ongoing concerns row -->
+			<tr>
+				<td>
+				<table bgcolor="#CCCCFF" id="rowTwo" width="100%">
+					<tr>
+						<td>
+						<div class="RowTop">
+						<% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("ongoingConcerns", ""));
-                                    %>
-                                    <% } else { %>
-                                    <bean:message key="oscarEncounter.Index.msgConcerns"/>:
-                                    <% } %>
-                                    </div><input type="hidden" name="ocInput"/>
-                                </td>
+                                    %> <% } else { %> <bean:message
+							key="oscarEncounter.Index.msgConcerns" />: <% } %>
+						</div>
+						<input type="hidden" name="ocInput" /></td>
 
-                                <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>
-                                </td>
-                                <td>
-                                    <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                                        <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                                        <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowTwoNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                                        <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowTwoLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                                        <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowTwoFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                                        <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                                        <bean:message key="oscarEncounter.Index.r"/></a>
-                                    </div>
-                               </td>
-                            </tr>
-                            <tr width="100%">
-                                <td valign="top" style="border-right:2px solid #ccccff">
-                                       <textarea name='ocTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
-                                </td>
-                                <td colspan= "2" valign="top">
-                                       <textarea name='reTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-    <!-- prescription row -->
-		<tr>
-		   <td >
-		      <table bgcolor="#ccccff" id="presTopTable" border="0">
-                        <tr>  <!--hr style="border-bottom: 0pt solid #888888; background-color: #888888;"-->
-                            <td valign="top">
-                                    <div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/showAllergy.do?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.allergies"/></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
-                                    <div class="presBox" id="allergyBox">
-                                    <ul >
-                                    <%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
+						<td>
+						<div class="RowTop"><bean:message
+							key="oscarEncounter.Index.msgReminders" />:</div>
+						</td>
+						<td>
+						<div
+							style="font-size: 8pt; text-align: right; vertical-align: bottom">
+						<a onMouseOver="javascript:window.status='Minimize'; return true;"
+							href="javascript:rowTwoX();"
+							title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+						<bean:message key="oscarEncounter.Index.x" /></a> | <a
+							onMouseOver="javascript:window.status='Small Size'; return true;"
+							href="javascript:rowTwoSmall();"
+							title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+						<bean:message key="oscarEncounter.Index.s" /></a> | <a
+							onMouseOver="javascript:window.status='Medium Size'; return true;"
+							href="javascript:rowTwoNormal();"
+							title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+						<bean:message key="oscarEncounter.Index.n" /></a> | <a
+							onMouseOver="javascript:window.status='Large Size'; return true;"
+							href="javascript:rowTwoLarge();"
+							title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+						<bean:message key="oscarEncounter.Index.l" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:rowTwoFull();"
+							title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+						<bean:message key="oscarEncounter.Index.f" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:reset();"
+							title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+						<bean:message key="oscarEncounter.Index.r" /></a></div>
+						</td>
+					</tr>
+					<tr width="100%">
+						<td valign="top" style="border-right: 2px solid #ccccff"><textarea
+							name='ocTextarea' wrap="hard" cols="48"
+							style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
+						</td>
+						<td colspan="2" valign="top"><textarea name='reTextarea'
+							wrap="hard" cols="48"
+							style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<!-- prescription row -->
+			<tr>
+				<td>
+				<table bgcolor="#ccccff" id="presTopTable" border="0">
+					<tr>
+						<!--hr style="border-bottom: 0pt solid #888888; background-color: #888888;"-->
+						<td valign="top">
+						<div class="RowTop"><a href=#
+							onClick="popupOscarRx(700,960,'../oscarRx/showAllergy.do?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+							key="global.allergies" /></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
+						<div class="presBox" id="allergyBox">
+						<ul>
+							<%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
                                             = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demoNo)).getAllergies();
 
                                             for (int j=0; j<allergies.length; j++){%>
-                                        <li>
-                                           <a title="<%= allergies[j].getAllergy().getDESCRIPTION() %>" >
-                                              <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%>
-                                           </a>
-                                        </li>
-                                    <%}%>
-                                    </ul>
-                                    </div>
+							<li><a
+								title="<%= allergies[j].getAllergy().getDESCRIPTION() %>">
+							<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></li>
+							<%}%>
+						</ul>
+						</div>
 
-                            </td>
-                            <td width="100%" style="font-size: 10px;">
-                                    <table width="100%" cellpadding=0 cellspacing=0 border="0">
-                                        <tr>
-                                            <td width=60><div class="RowTop" >Rx Date</td>
-                                            <td>
-                                                 <div class="RowTop" ><div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a></div></div>
-                                            </td>
-                                            <td align=right>
-                                                <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:presBoxX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                                                        <bean:message key="oscarEncounter.Index.x"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:presBoxSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                                                        <bean:message key="oscarEncounter.Index.s"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:presBoxNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                                                        <bean:message key="oscarEncounter.Index.n"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:presBoxLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                                                        <bean:message key="oscarEncounter.Index.l"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:presBoxFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                                                        <bean:message key="oscarEncounter.Index.f"/></a> |
-                                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                                                        <bean:message key="oscarEncounter.Index.r"/></a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <div class="presBox" id="presBox">
-
-                                    <%
+						</td>
+						<td width="100%" style="font-size: 10px;">
+						<table width="100%" cellpadding=0 cellspacing=0 border="0">
+							<tr>
+								<td width=60>
+								<div class="RowTop">Rx Date
+								</td>
+								<td>
+								<div class="RowTop">
+								<div class="RowTop"><a href=#
+									onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message
+									key="global.prescriptions" /></a></div>
+								</div>
+								</td>
+								<td align=right>
+								<div
+									style="font-size: 8pt; text-align: right; vertical-align: bottom">
+								<a
+									onMouseOver="javascript:window.status='Minimize'; return true;"
+									href="javascript:presBoxX();"
+									title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+								<bean:message key="oscarEncounter.Index.x" /></a> | <a
+									onMouseOver="javascript:window.status='Small Size'; return true;"
+									href="javascript:presBoxSmall();"
+									title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+								<bean:message key="oscarEncounter.Index.s" /></a> | <a
+									onMouseOver="javascript:window.status='Medium Size'; return true;"
+									href="javascript:presBoxNormal();"
+									title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+								<bean:message key="oscarEncounter.Index.n" /></a> | <a
+									onMouseOver="javascript:window.status='Large Size'; return true;"
+									href="javascript:presBoxLarge();"
+									title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+								<bean:message key="oscarEncounter.Index.l" /></a> | <a
+									onMouseOver="javascript:window.status='Full Size'; return true;"
+									href="javascript:presBoxFull();"
+									title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+								<bean:message key="oscarEncounter.Index.f" /></a> | <a
+									onMouseOver="javascript:window.status='Full Size'; return true;"
+									href="javascript:reset();"
+									title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+								<bean:message key="oscarEncounter.Index.r" /></a></div>
+								</td>
+							</tr>
+						</table>
+						<div class="presBox" id="presBox">
+						<%
                                     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
                                     oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
                                     arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(bean.demographicNo));
                                     if (arr.length > 0){%>
-                                        <table>
-                                            <%for (int i = 0; i < arr.length; i++){
+						<table>
+							<%for (int i = 0; i < arr.length; i++){
                                                 String rxD = arr[i].getRxDate().toString();
                                                 //String rxP = arr[i].getRxDisplay();
                                                 String rxP = arr[i].getFullOutLine().replaceAll(";"," ");
@@ -1343,40 +1401,40 @@ border-right: 2px solid #cfcfcf;
                                                 String styleColor = "";
                                                 if(arr[i].isCurrent() == true){  styleColor="style='color:red;'";  }
                                             %>
-                                                <tr>
-                                                    <td <%=styleColor%> valign=top style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxD%></td>
-                                                    <td width=600 <%=styleColor%> style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxP%></td>
-                                                </tr>
-                                            <%}%>
-                                        </table>
-                                    <%}else{out.write("&nbsp;");}%>
-                                    </div>
-                            </td>
+							<tr>
+								<td <%=styleColor%> valign=top
+									style="border-bottom: 1pt solid #888888; font-size: 10px;"><%=rxD%></td>
+								<td width=600 <%=styleColor%>
+									style="border-bottom: 1pt solid #888888; font-size: 10px;"><%=rxP%></td>
+							</tr>
+							<%}%>
+						</table>
+						<%}else{out.write("&nbsp;");}%>
+						</div>
+						</td>
+					</tr>
+				</table>
+				</td>
 			</tr>
-                      </table>
-		   </td>
-		</tr>
-    <!-- encounter row -->
-                <tr>
-                    <td>
-                        <table bgcolor="#CCCCFF" width="100%" id="rowThree">
-                           <tr>
-                                <td nowrap>
-                                    <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
-									  <tr><td width='75%' >
-									         <div class="RowTop" >
-                                    <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
-                                       <bean:message key="global.encounter"/>: <%=bean.patientLastName %>, <%=bean.patientFirstName%>
-                                    </a>
-                                    <%if (sChart) {%>
-                                    &nbsp; &nbsp; &nbsp;<!--http://localhost:8084/oscar/oscarEncounter/echarthistoryprint.jsp?echartid=7491&demographic_no=10090-->
-                                    <a href="javascript: function myFunction() {return false; }"  onClick="showpic('splitChartLayer','splitChartId');"  id="splitChartId" >
-                                       Split Chart
-                                    </a>
-                                    <%}%>
-                                    </div>
-                                    <input type="hidden" name="enInput"/>
-									  </td><td width='5%' >
+			<!-- encounter row -->
+			<tr>
+				<td>
+				<table bgcolor="#CCCCFF" width="100%" id="rowThree">
+					<tr>
+						<td nowrap>
+						<table border="0" cellpadding="0" cellspacing="0" width='100%'>
+							<tr>
+								<td width='75%'>
+								<div class="RowTop"><a href=#
+									onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
+								<bean:message key="global.encounter" />: <%=bean.patientLastName %>,
+								<%=bean.patientFirstName%> </a> <%if (sChart) {%> &nbsp; &nbsp; &nbsp;<!--http://localhost:8084/oscar/oscarEncounter/echarthistoryprint.jsp?echartid=7491&demographic_no=10090-->
+								<a href="javascript: function myFunction() {return false; }"
+									onClick="showpic('splitChartLayer','splitChartId');"
+									id="splitChartId"> Split Chart </a> <%}%>
+								</div>
+								<input type="hidden" name="enInput" /></td>
+								<td width='5%'>
 								<%
 										boolean bSplit = request.getParameter("splitchart")!=null?true:false;
 										int nEctLen = bean.encounter.length();
@@ -1385,35 +1443,59 @@ border-right: 2px solid #cfcfcf;
                     consumption = consumption == 0 ? 1 : consumption;
 									    String ccolor = consumption>=70? "red":(consumption>=50?"orange":"green");
 								%>
-									  <div class="RowTop"><%=consumption+"%"%></div>
-									  </td><td align='right'>
-                                     <table  border="0" cellpadding="0" cellspacing="0" bgcolor="white" width="100%" %>
-									  <tr><td width='<%=consumption+"%"%>' bgcolor='<%=ccolor%>'><div class="RowTop">&nbsp;</div></td>
-									  <td><% if (consumption<100) { %><div class="RowTop">&nbsp;</div><% } %></td>
-									  </tr>
-									 </table>
-									</td></tr></table>
-                                </td>
-                                <td nowrap>
-                                    <div style="font-size:8pt;text-align:right;vertical-align:bottom">
-                                    <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowThreeX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
-                                        <bean:message key="oscarEncounter.Index.x"/></a> |
-                                    <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowThreeSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
-                                        <bean:message key="oscarEncounter.Index.s"/></a> |
-                                    <a onMouseOver="javascript:window.status='Normal Size'; return true;" href="javascript:rowThreeNormal();" title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
-                                        <bean:message key="oscarEncounter.Index.n"/></a> |
-                                    <a onMouseOver="javascript:window.status='Medium Size'; return true;" href="javascript:rowThreeMedium();" title="<bean:message key="oscarEncounter.Index.tooltipMedium"/>">
-                                        <bean:message key="oscarEncounter.Index.m"/></a> |
-                                    <a onMouseOver="javascript:window.status='Large Size'; return true;" href="javascript:rowThreeLarge();" title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
-                                        <bean:message key="oscarEncounter.Index.l"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:rowThreeFull();" title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
-                                        <bean:message key="oscarEncounter.Index.f"/></a> |
-                                    <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
-                                        <bean:message key="oscarEncounter.Index.r"/></a>
-                                   </div>
-                                </td>
-                            </tr>
-                            <%
+								<div class="RowTop"><%=consumption+"%"%></div>
+								</td>
+								<td align='right'>
+								<table border="0" cellpadding="0" cellspacing="0"
+									bgcolor="white" width="100%"%>
+									<tr>
+										<td width='<%=consumption+"%"%>' bgcolor='<%=ccolor%>'>
+										<div class="RowTop">&nbsp;</div>
+										</td>
+										<td>
+										<% if (consumption<100) { %><div class="RowTop">&nbsp;</div>
+										<% } %>
+										</td>
+									</tr>
+								</table>
+								</td>
+							</tr>
+						</table>
+						</td>
+						<td nowrap>
+						<div
+							style="font-size: 8pt; text-align: right; vertical-align: bottom">
+						<a onMouseOver="javascript:window.status='Minimize'; return true;"
+							href="javascript:rowThreeX();"
+							title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
+						<bean:message key="oscarEncounter.Index.x" /></a> | <a
+							onMouseOver="javascript:window.status='Small Size'; return true;"
+							href="javascript:rowThreeSmall();"
+							title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
+						<bean:message key="oscarEncounter.Index.s" /></a> | <a
+							onMouseOver="javascript:window.status='Normal Size'; return true;"
+							href="javascript:rowThreeNormal();"
+							title="<bean:message key="oscarEncounter.Index.tooltipNormal"/>">
+						<bean:message key="oscarEncounter.Index.n" /></a> | <a
+							onMouseOver="javascript:window.status='Medium Size'; return true;"
+							href="javascript:rowThreeMedium();"
+							title="<bean:message key="oscarEncounter.Index.tooltipMedium"/>">
+						<bean:message key="oscarEncounter.Index.m" /></a> | <a
+							onMouseOver="javascript:window.status='Large Size'; return true;"
+							href="javascript:rowThreeLarge();"
+							title="<bean:message key="oscarEncounter.Index.tooltipLarge"/>">
+						<bean:message key="oscarEncounter.Index.l" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:rowThreeFull();"
+							title="<bean:message key="oscarEncounter.Index.tooltipFull"/>">
+						<bean:message key="oscarEncounter.Index.f" /></a> | <a
+							onMouseOver="javascript:window.status='Full Size'; return true;"
+							href="javascript:reset();"
+							title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
+						<bean:message key="oscarEncounter.Index.r" /></a></div>
+						</td>
+					</tr>
+					<%
                             //System.out.println("reason "+bean.reason+" subject "+bean.subject);
                             String encounterText = "";
                             try{
@@ -1443,100 +1525,121 @@ border-right: 2px solid #cfcfcf;
 
                             }catch(Exception eee){eee.printStackTrace();}
                             %>
-                            <tr>
-                                <td colspan="2" valign="top" style="text-align:left">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto" onfocus="javascript: encTextareaFocus=true;" onblur="javascript: encTextareaFocus=false;"><%=encounterText%></textarea>
-                                </td>
-                            </tr>
-                        </table>
-						<table border=0  bgcolor="#CCCCFF" width=100% >
-                            <tr id="saveFeedbackRow" nowrap>
-							    <td>
-                                    <input type="hidden" name="subject" value="<%=UtilMisc.htmlEscape(bean.reason)%>">
-									<% if (consumption>=50) {%>
-                                    <input type="submit" style="height:20px"  name="buttonPressed" value="Split Chart" class="ControlPushButton"  onClick="return (onSplit());">
-									<% } %>
-                                                            </td>
-                                <td style="text-align:right" nowrap>
-                                <span id="saveFeedbackText" style="display:none">
-                                    <bean:message key="oscarEncounter.Index.saveFeedbackText"/>
-                                </span>
-                                <oscar:oscarPropertiesCheck property="CPP" value="yes">
-                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
-                                </oscar:oscarPropertiesCheck>
-                                <oscar:oscarPropertiesCheck property="encPrintOnly" value="yes">
-				    <input type="button" style="height:20px;" class="ControlPushButton" value="Print Only" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
-                                </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
-                                    <input type="hidden"  name="btnPressed" value="">
-                                    <input type="hidden" name="submitMethod" value="synchronous" />
-
-<!-- security code block -->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w">
-					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
-				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
-                                    <oscar:oscarPropertiesCheck property="billregion" value="BC">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
-                                    </oscar:oscarPropertiesCheck>
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
-	</security:oscarSec>
-					<% } %>
-	</security:oscarSec>
-<!-- security code block -->
-                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
-                                    <!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
-                                    <input type="hidden" name="rowOneSize" value="<%=windowSizes.getProperty("rowOneSize")%>">
-                                    <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
-                                    <input type="hidden" name="presBoxSize" value="<%=windowSizes.getProperty("presBoxSize")%>">
-                                    <input type="hidden" name="rowThreeSize" value="<%=windowSizes.getProperty("rowThreeSize")%>">
-                                    <input type="hidden" name="status" value="t" />
-                                    <input type="hidden" name="appointment_no" value="<%=bean.appointmentNo%>"/>
-                                </td>
-                            </tr>
-                        </table>
-                        <%
-                            if(bSplit){%>
-                            <script>
+					<tr>
+						<td colspan="2" valign="top" style="text-align: left"><textarea
+							name='enTextarea' wrap="hard" cols="99"
+							style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"
+							onfocus="javascript: encTextareaFocus=true;"
+							onblur="javascript: encTextareaFocus=false;"><%=encounterText%></textarea>
+						</td>
+					</tr>
+				</table>
+				<table border=0 bgcolor="#CCCCFF" width=100%>
+					<tr id="saveFeedbackRow" nowrap>
+						<td><input type="hidden" name="subject"
+							value="<%=UtilMisc.htmlEscape(bean.reason)%>"> <% if (consumption>=50) {%>
+						<input type="submit" style="height: 20px" name="buttonPressed"
+							value="Split Chart" class="ControlPushButton"
+							onClick="return (onSplit());"> <% } %>
+						</td>
+						<td style="text-align: right" nowrap><span
+							id="saveFeedbackText" style="display: none"> <bean:message
+							key="oscarEncounter.Index.saveFeedbackText" /> </span> <oscar:oscarPropertiesCheck
+							property="CPP" value="yes">
+							<input type="button" style="height: 20px;"
+								class="ControlPushButton" value="CPP"
+								onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');" />
+						</oscar:oscarPropertiesCheck> <oscar:oscarPropertiesCheck property="encPrintOnly" value="yes">
+							<input type="button" style="height: 20px;"
+								class="ControlPushButton" value="Print Only"
+								onClick="javascript:popupPageK('encounterPrint.jsp');" />
+						</oscar:oscarPropertiesCheck> <input type="button" style="height: 20px;"
+							class="ControlPushButton"
+							value="<bean:message key="global.btnPrint"/>"
+							onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');" />
+						<input type="hidden" name="btnPressed" value=""> <input
+							type="hidden" name="submitMethod" value="synchronous" /> <!-- security code block -->
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
+							rights="w">
+							<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
+							<input type="button" style="height: 20px"
+								value="<bean:message key="oscarEncounter.Index.btnSave"/>"
+								class="ControlPushButton"
+								onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
+							<input type="button" style="height: 20px"
+								value="<bean:message key="oscarEncounter.Index.btnSignSave"/>"
+								class="ControlPushButton"
+								onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
+							<oscar:oscarPropertiesCheck property="billregion" value="BC">
+								<input type="button" style="height: 20px"
+									value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>"
+									class="ControlPushButton"
+									onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
+							</oscar:oscarPropertiesCheck>
+							<security:oscarSec roleName="<%=roleName$%>"
+								objectName="_eChart.verifyButton" rights="w">
+								<input type="button" style="height: 20px"
+									value="<bean:message key="oscarEncounter.Index.btnSign"/>"
+									class="ControlPushButton"
+									onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
+							</security:oscarSec>
+							<% } %>
+						</security:oscarSec> <!-- security code block --> <input type="button"
+							style="height: 20px" name="buttonPressed"
+							value="<bean:message key="global.btnExit"/>"
+							class="ControlPushButton"
+							onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
+						<!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
+						<input type="hidden" name="rowOneSize"
+							value="<%=windowSizes.getProperty("rowOneSize")%>"> <input
+							type="hidden" name="rowTwoSize"
+							value="<%=windowSizes.getProperty("rowTwoSize")%>"> <input
+							type="hidden" name="presBoxSize"
+							value="<%=windowSizes.getProperty("presBoxSize")%>"> <input
+							type="hidden" name="rowThreeSize"
+							value="<%=windowSizes.getProperty("rowThreeSize")%>"> <input
+							type="hidden" name="status" value="t" /> <input type="hidden"
+							name="appointment_no" value="<%=bean.appointmentNo%>" /></td>
+					</tr>
+				</table>
+				<%
+                            if(bSplit){%> <script>
                                 document.forms['encForm'].btnPressed.value='Save';
                                 document.forms['encForm'].submit();
-                            </script>
-                            <%}
+                            </script> <%}
                         %>
-                    </td>
-                </tr>
-<!-- end new rows here -->
-            </table>
-        </td>
-    </tr>
+				</td>
+			</tr>
+			<!-- end new rows here -->
+		</table>
+		</td>
+	</tr>
 </table>
 </form>
 
 <%if (sChart){ %>
-<div id="splitChartLayer" style="position:absolute; left:1px; top:1px; width:150px; height:311px; visibility: hidden; z-index:1"   >
+<div id="splitChartLayer"
+	style="position: absolute; left: 1px; top: 1px; width: 150px; height: 311px; visibility: hidden; z-index: 1">
 
-   <table width="98%" border="1" cellspacing="1" cellpadding="1" align=center bgcolor="#CCCCFF">
-      <tr class="LightBG">
-         <td class="wcblayerTitle">Date</td>
-         <td class="wcblayerTitle" align="right">
-            <a href="javascript: function myFunction() {return false; }" onClick="hidepic('splitChartLayer');" style="text-decoration: none;">X</a>
-         </td>
-      </tr>
-      <% for (int i = 0 ; i < splitChart.size(); i++){
+<table width="98%" border="1" cellspacing="1" cellpadding="1"
+	align=center bgcolor="#CCCCFF">
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Date</td>
+		<td class="wcblayerTitle" align="right"><a
+			href="javascript: function myFunction() {return false; }"
+			onClick="hidepic('splitChartLayer');" style="text-decoration: none;">X</a>
+		</td>
+	</tr>
+	<% for (int i = 0 ; i < splitChart.size(); i++){
             String[] s = (String[]) splitChart.get(i);%>
-      <tr class="background-color : #ccccff;">
-         <td class="wcblayerTitle">
-            <a href=# onClick="hidepic('splitChartLayer');popupPage2('echarthistoryprint.jsp?echartid=<%=s[0]%>&demographic_no=<%=bean.demographicNo%>');return false;">
-               <%=s[1]%>
-            </a>
-         </td>
-	      <td class="wcblayerItem" >&nbsp;
-            
-	      </td>
-      </tr>
-      <%}%>
-   </table>
+	<tr class="background-color : #ccccff;">
+		<td class="wcblayerTitle"><a href=#
+			onClick="hidepic('splitChartLayer');popupPage2('echarthistoryprint.jsp?echartid=<%=s[0]%>&demographic_no=<%=bean.demographicNo%>');return false;">
+		<%=s[1]%> </a></td>
+		<td class="wcblayerItem">&nbsp;</td>
+	</tr>
+	<%}%>
+</table>
 </div>
 <%}System.out.println("Session:" + session.getAttribute("user"));%>
 

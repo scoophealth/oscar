@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "Falls";
@@ -54,55 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>History of Falls Questionnaire</title>    
-    <html:base/>
-    <style type="text/css">
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:739px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #c4e9f6;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:20pt;
-        }
-
-        TH{
-            font-size:20pt;
-        }
-
-        INPUT.checkbox{
-            height: 30px;
-            width: 30px;            
-        }
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: centre;
-        }
-        
-
-    </style>
+<title>History of Falls Questionnaire</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -123,7 +78,8 @@
 <script type="text/javascript" src="formScripts.js">
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,670)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,670)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -133,130 +89,134 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="1" cellpadding="0" width="100%" >
- <tr bgcolor="#486ebd">
-      <th align='Left'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">History of Falls Questionaire</font></th>
- </tr>
-</table>
-
-
-<table width="100%" border="0"  cellspacing="0" cellpadding="0" >
-    <tr>
-        <td colspan="2">1. Have you fallen in the last 6 months?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="fallenLast12MY" class="checkbox" <%= props.getProperty("fallenLast12MY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" name="fallenLast12MN" class="checkbox" <%= props.getProperty("fallenLast12MN", "") %>/>
-        </td>
-        <td>No - go to #5</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="fallenLast12MNotRemember" <%= props.getProperty("fallenLast12MNotRemember", "") %>/>
-        </td>
-        <td>Cannot Remember - go to #5</td>
-    </tr>
-    <tr>
-        <td colspan="2">If Yes, </td>
-    </tr>
-    <tr>
-        <td colspan="2">2. Were you injured because of your fall?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="injuredY"  <%= props.getProperty("injuredY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="injuredN" <%= props.getProperty("injuredN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">3. Did you receive medical attention due to the fall?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="medAttnY" <%= props.getProperty("medAttnY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="medAttnN" <%= props.getProperty("medAttnN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">4. Were you hospitalized because of the fall?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="hospitalizedY" <%= props.getProperty("hospitalizedY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="hospitalizedN" <%= props.getProperty("hospitalizedN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-    <tr>
-        <td colspan="2">5. Do you limit your activities because of a fear of falling?</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="limitActY" <%= props.getProperty("limitActY", "") %>/>
-        </td>
-        <td>Yes</td>
-    </tr>
-    <tr bgcolor="white">
-        <td width="5%" align="right">
-            <input type="checkbox" class="checkbox" name="limitActN" <%= props.getProperty("limitActN", "") %>/>
-        </td>
-        <td>No</td>
-    </tr>
-</table>
+	<table border="0" cellspacing="1" cellpadding="0" width="100%">
+		<tr bgcolor="#486ebd">
+			<th align='Left'><font face="Arial, Helvetica, sans-serif"
+				color="#FFFFFF">History of Falls Questionaire</font></th>
+		</tr>
+	</table>
 
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td colspan="2">1. Have you fallen in the last 6 months?</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				name="fallenLast12MY" class="checkbox"
+				<%= props.getProperty("fallenLast12MY", "") %> /></td>
+			<td>Yes</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				name="fallenLast12MN" class="checkbox"
+				<%= props.getProperty("fallenLast12MN", "") %> /></td>
+			<td>No - go to #5</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="fallenLast12MNotRemember"
+				<%= props.getProperty("fallenLast12MNotRemember", "") %> /></td>
+			<td>Cannot Remember - go to #5</td>
+		</tr>
+		<tr>
+			<td colspan="2">If Yes,</td>
+		</tr>
+		<tr>
+			<td colspan="2">2. Were you injured because of your fall?</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="injuredY"
+				<%= props.getProperty("injuredY", "") %> /></td>
+			<td>Yes</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="injuredN"
+				<%= props.getProperty("injuredN", "") %> /></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td colspan="2">3. Did you receive medical attention due to the
+			fall?</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="medAttnY"
+				<%= props.getProperty("medAttnY", "") %> /></td>
+			<td>Yes</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="medAttnN"
+				<%= props.getProperty("medAttnN", "") %> /></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td colspan="2">4. Were you hospitalized because of the fall?</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="hospitalizedY"
+				<%= props.getProperty("hospitalizedY", "") %> /></td>
+			<td>Yes</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="hospitalizedN"
+				<%= props.getProperty("hospitalizedN", "") %> /></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td colspan="2">5. Do you limit your activities because of a
+			fear of falling?</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="limitActY"
+				<%= props.getProperty("limitActY", "") %> /></td>
+			<td>Yes</td>
+		</tr>
+		<tr bgcolor="white">
+			<td width="5%" align="right"><input type="checkbox"
+				class="checkbox" name="limitActN"
+				<%= props.getProperty("limitActN", "") %> /></td>
+			<td>No</td>
+		</tr>
+	</table>
+
+
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit"
+				onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+			<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
+%> <input type="button" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="button"
+				value="Print" onclick="javascript:window.print();" /></td>
+			<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+			<input type="hidden" name="studyID"
+				value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+		</tr>
+	</table>
 
 
 </html:form>

@@ -1,3 +1,4 @@
+
 <%
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
@@ -45,13 +46,14 @@ function PopupLab(pid)
 <body>
 <form action="searchreports.jsp" method="post">
 <table width="100%" class="DarkBG">
-  <tr> 
-    <td height="40" width="25"></td>
-    <td width="50%" align="left"> 
-      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - Search Lab Reports</font></font></b></font> 
-    </td>
-    <td class="Text" align="right"><a href="index.jsp">Patient Linking</a>&nbsp;</td>
-  </tr>
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="50%" align="left"><font color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">PathNET - Search Lab
+		Reports</font></font></b></font></td>
+		<td class="Text" align="right"><a href="index.jsp">Patient
+		Linking</a>&nbsp;</td>
+	</tr>
 </table>
 <table width="100%">
 	<tr bgcolor="E6E6E6">
@@ -61,13 +63,19 @@ function PopupLab(pid)
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
-		<td class="Text">
-			<select name="provider_no" id="provider_no" size=1>
-				<option value="-APL" <%=(provider_no.equals("-APL")? "selected" : "")%>>Linked Labs</option>
-				<option value="-ULL" <%=(provider_no.equals("-ULL")? "selected" : "")%>>Unlinked Labs</option>
-				<option value="-UAP" <%=(provider_no.equals("-UAP")? "selected" : "")%>>Unassigned Patients</option>
-				
-<%
+		<td class="Text"><select name="provider_no" id="provider_no"
+			size=1>
+			<option value="-APL"
+				<%=(provider_no.equals("-APL")? "selected" : "")%>>Linked
+			Labs</option>
+			<option value="-ULL"
+				<%=(provider_no.equals("-ULL")? "selected" : "")%>>Unlinked
+			Labs</option>
+			<option value="-UAP"
+				<%=(provider_no.equals("-UAP")? "selected" : "")%>>Unassigned
+			Patients</option>
+
+			<%
 	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 	java.sql.ResultSet rs = db.GetSQL(select_providers_with_reports);
 	while(rs.next()){
@@ -75,38 +83,45 @@ function PopupLab(pid)
 	}
 	rs.close();
 %>
-			</select>
-		</td>
+		</select></td>
 		<td class="Text"><input name="start" value="<%=start%>" /></td>
 		<td class="Text"><input name="end" value="<%=end%>" /></td>
-		<td class="Text"><input type="submit" name="cmd_search" value="Search" /></td>
+		<td class="Text"><input type="submit" name="cmd_search"
+			value="Search" /></td>
 	</tr>
 </table>
 </form>
 <table width="100%">
 	<tr>
 		<td class="Header" nowrap><a href="<%=url%>">Lab Id</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=patient_name"%>">Patient Name</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=ordering_provider"%>">Ordering Provider</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=result_copies_to"%>">Result Copies To</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=patient_name"%>">Patient Name</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=ordering_provider"%>">Ordering Provider</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=result_copies_to"%>">Result Copies To</a></td>
 		<td class="Header" nowrap><a href="<%=url + "&orderby=status"%>">Status</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=signed_on"%>">Signed</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=last_name"%>">Signing Provider</a></td>
-		<td class="Header" nowrap><a href="<%=url + "&orderby=date_time"%>">Date Received</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=signed_on"%>">Signed</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=last_name"%>">Signing Provider</a></td>
+		<td class="Header" nowrap><a
+			href="<%=url + "&orderby=date_time"%>">Date Received</a></td>
 	</tr>
-<%
+	<%
 	if(sql != null){
 		rs = db.GetSQL(sql);
 		boolean other = true;
 		while(rs.next()){
 %>
 	<tr class="<%=(other? "LightBG" : "WhiteBG")%>">
-		<td class="Text"><a href="searchreports.jsp" onclick="PopupLab('<%=db.getString(rs,"pid_id")%>'); return false;"><%=db.getString(rs,"pid_id")%></a></td>
+		<td class="Text"><a href="searchreports.jsp"
+			onclick="PopupLab('<%=db.getString(rs,"pid_id")%>'); return false;"><%=db.getString(rs,"pid_id")%></a></td>
 		<td class="Text" nowrap><%=oscar.Misc.check(db.getString(rs,"patient_name"), "")%></td>
 		<td class="Text" nowrap><%=oscar.Misc.check(db.getString(rs,"ordering_provider"), "").replaceAll("~", ",<br/>")%></td>
 		<td class="Text"><%=oscar.Misc.check(db.getString(rs,"result_copies_to"), "").replaceAll("~", ",<br/>")%></td>
 		<td class="Text" nowrap>
-<%
+		<%
 			if(db.getString(rs,"status") != null){
 				switch(db.getString(rs,"status").toCharArray()[0]){
 					case 'S':
@@ -125,12 +140,14 @@ function PopupLab(pid)
 			}
 %>
 		</td>
-		<td class="Text" nowrap><%String signed = oscar.Misc.check(db.getString(rs,"signed_on"), "");
-									out.print( (signed.indexOf(" ")>-1)? signed.substring(0, signed.indexOf(" ")) : signed);%></td>
+		<td class="Text" nowrap>
+		<%String signed = oscar.Misc.check(db.getString(rs,"signed_on"), "");
+									out.print( (signed.indexOf(" ")>-1)? signed.substring(0, signed.indexOf(" ")) : signed);%>
+		</td>
 		<td class="Text" nowrap><%=((db.getString(rs,"last_name") != null && !db.getString(rs,"last_name").equals(""))? oscar.Misc.check(db.getString(rs,"last_name"), "") + ", " + oscar.Misc.check(db.getString(rs,"first_name"), "") : "&nbsp;")%></td>
 		<td class="Text" nowrap><%=db.getString(rs,"date_time").substring(0, db.getString(rs,"date_time").indexOf(" "))%></td>
 	</tr>
-<%
+	<%
 		other = !other;
 		}
 		rs.close();

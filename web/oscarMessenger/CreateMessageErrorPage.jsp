@@ -24,7 +24,7 @@
  */
 --%>
 
-<%@ page isErrorPage="true" %>
+<%@ page isErrorPage="true"%>
 <html>
 <body>
 <script language="javascript">
@@ -41,17 +41,23 @@ function BackToOscar()
 
 <h1>Error page createMessage</h1>
 
-<br>An error occured in the bean. Error Message is: <%= exception.getMessage() %><br>
-Stack Trace is : <pre><font color="red"><%
+<br>
+An error occured in the bean. Error Message is:
+<%= exception.getMessage() %><br>
+Stack Trace is :
+<pre><font color="red">
+<%
  java.io.CharArrayWriter cw = new java.io.CharArrayWriter();
  java.io.PrintWriter pw = new java.io.PrintWriter(cw,true);
  exception.printStackTrace(pw);
  out.println(cw.toString());
- %></font></pre>
+ %>
+</font></pre>
 <br>
-&lt;<a href="javascript:BackToOscar()">
-<bean:message key="backToOscar.link"/>
-</a>&gt;
+&lt;
+<a href="javascript:BackToOscar()"> <bean:message
+	key="backToOscar.link" /> </a>
+&gt;
 
 
 </body>

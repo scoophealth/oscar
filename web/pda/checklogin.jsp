@@ -24,14 +24,17 @@
  */
 -->
 
-<%@ page language="java" import="java.util.*, java.io.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page language="java" import="java.util.*, java.io.*, oscar.*"
+	errorPage="errorpage.jsp"%>
 
 <jsp:useBean id="loginBean" scope="page" class="oscar.Login">
-  <jsp:setProperty name="loginBean" property="*" />
+	<jsp:setProperty name="loginBean" property="*" />
 </jsp:useBean>
 <jsp:useBean id="monitor" scope="session" class="java.util.HashMap" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-<jsp:useBean id="loginInfo" scope="application" class="java.util.Hashtable" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="loginInfo" scope="application"
+	class="java.util.Hashtable" />
 //monitor is used to trace the session available even if no logout
 
 <%

@@ -1,10 +1,12 @@
 
 <%@ page language="java"%>
-<%@ page import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData, oscar.oscarRx.data.RxPrescriptionData" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="java.util.*, oscar.util.UtilDateUtilities, oscar.form.*, oscar.form.data.*, oscar.oscarPrevention.PreventionData, oscar.oscarRx.data.RxPrescriptionData"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 String formClass = "BCHP";
@@ -125,23 +127,26 @@ props.setProperty("c_lastVisited", "pg1");
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>B.C. Health Passport</title>
-    
-    <link rel="stylesheet" type="text/css" href="<%=bView?"bcHpStyleView.css" : "bcHpStyle.css"%>">
-    <!-- calendar stylesheet -->
-    <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-    
-    <!-- main calendar program -->
-    <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-    
-    <!-- language for the calendar -->
-    <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-    
-    <!-- the following script defines the Calendar.setup helper function, which makes
+<title>B.C. Health Passport</title>
+
+<link rel="stylesheet" type="text/css"
+	href="<%=bView?"bcHpStyleView.css" : "bcHpStyle.css"%>">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-    <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-    
-    <script type="text/javascript">
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
+<script type="text/javascript">
         <!--
         
         var dtCh= "/";
@@ -427,754 +432,886 @@ props.setProperty("c_lastVisited", "pg1");
         }
         -->
     </script>
-    <html:base/>    
+<html:base />
 </head>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-    
-<div id="comment1Div" class="comment" style="top:956px; left:135px; width:300px; height:17px;">
-    <center>1 dose &#64; &ge; 65; 1 Booster &#64; &ge; 5 yrs if chronic dz* &amp; &uArr; risk</center>
+
+<div id="comment1Div" class="comment"
+	style="top: 956px; left: 135px; width: 300px; height: 17px;">
+<center>1 dose &#64; &ge; 65; 1 Booster &#64; &ge; 5 yrs if
+chronic dz* &amp; &uArr; risk</center>
 </div>
-<div id="comment2Div" class="comment" style="top:981px; left:135px; width:300px; height:17px;">
-    <center>Repeat every 10 years</center>
+<div id="comment2Div" class="comment"
+	style="top: 981px; left: 135px; width: 300px; height: 17px;">
+<center>Repeat every 10 years</center>
 </div>
-<div id="comment3Div" class="comment" style="top:1006px; left:135px; width:300px; height:17px;">
-    <center>2 doses* &#64; 6 - 12 months or in combo B vaccine</center>
+<div id="comment3Div" class="comment"
+	style="top: 1006px; left: 135px; width: 300px; height: 17px;">
+<center>2 doses* &#64; 6 - 12 months or in combo B vaccine</center>
 </div>
-<div id="comment4Div" class="comment" style="top:1031px; left:135px; width:300px; height:17px;">
-    <center>3 doses* &#64; 0, 1 &amp; 6 months</center>
+<div id="comment4Div" class="comment"
+	style="top: 1031px; left: 135px; width: 300px; height: 17px;">
+<center>3 doses* &#64; 0, 1 &amp; 6 months</center>
 </div>
 
 <html:form action="/form/formname">
-<input type="hidden" name="c_lastVisited" value="pg1" />
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
-<input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
-<input type="hidden" name="printPageSize" value="PageSize.HALFLETTER" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="c_lastVisited" value="pg1" />
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="provider_no"
+		value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="provNo"
+		value="<%= request.getParameter("provNo") %>" />
+	<input type="hidden" name="printPageSize" value="PageSize.HALFLETTER" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
             if (!bView) {
-            %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <%
+            %> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
             }
-            %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-        </td>
-        <%
+            %> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print" onclick="javascript:return onPrint();" /></td>
+			<%
         if (!bView) {
         %>
-        
-        <td align="right"><b>Edit:</b>HP <font size=-2>(pg.1)</font> |
-            <a href="formbchppg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">HP <font size=-2>(pg.2)</font></a> 
-        </td>
-        <%
+
+			<td align="right"><b>Edit:</b>HP <font size=-2>(pg.1)</font> | <a
+				href="formbchppg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">HP
+			<font size=-2>(pg.2)</font></a></td>
+			<%
         }
         %>
-    </tr>
-</table>
-<br />
-<table width="90%" border="1"  cellspacing="0" cellpadding="0" align="center">
-    
-    <tr><td>
-            
-            <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-                <tr align="left">
-                    <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-                    B.C. Health Passport
-                    </th>
-                </tr>
-            </table>
-            <br />
-            <table width="100%" border="0" cellpadding="0" cellspacing="2">
-                <tr>
-                    <td width="25%">
-                        Patient Name: 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_patientName" id="pg1_patientName" style="width:100%" size="30" maxlength="40" value="<%= props.getProperty("pg1_patientName", "") %>" @oscar.formDB  />
-                    </td>
-                    <td>
-                        Date: 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_formDate" id="pg1_formDate" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Personal Health Number(PHN): 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_phn" id="pg1_phn" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_phn", "") %>" @oscar.formDB  />
-                    </td>
-                    <td>
-                        Tel: 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_phone" id="pg1_phone" style="width:100%" size="15" maxlength="15" value="<%= props.getProperty("pg1_phone", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Emergency Contact Name:
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_emergContact" id="pg1_emergContact" style="width:100%" size="30" maxlength="40" value="<%= props.getProperty("pg1_emergContact", "") %>" @oscar.formDB  />
-                    </td>
-                    <td>
-                        Tel: 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_emergContactPhone" id="pg1_emergContactPhone" style="width:100%" size="15" maxlength="15" value="<%= props.getProperty("pg1_emergContactPhone", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Allergies:
-                    </td>
-                    <td colspan="3">
-                    <input type="text" name="pg1_allergies" id="pg1_allergies" style="width:100%" size="60" maxlength="90" value="<%= props.getProperty("pg1_allergies", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        MD: <input type="text" name="pg1_md" id="pg1_md" style="width:60%" size="30" maxlength="40" value="<%= props.getProperty("pg1_md", "") %>" @oscar.formDB  />
-                        MSP for lab cc: <input type="text" name="pg1_msp" id="pg1_msp" style="width:15%" size="10" maxlength="9" value="<%= props.getProperty("pg1_msp", "") %>" @oscar.formDB  />
-                    </td>
-                    <td>
-                        Tel: 
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_mdPhone" id="pg1_mdPhone" style="width:100%" size="15" maxlength="15" value="<%= props.getProperty("pg1_mdPhone", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        Living Will / Advanced Care Directive: 
-                        &nbsp;&nbsp;Yes <input type="checkbox" name="pg1_livingWillY" id="pg1_livingWillY" <%= props.getProperty("pg1_livingWillY", "") %> @oscar.formDB dbType="tinyint(1)" />
-                        &nbsp;&nbsp;No <input type="checkbox" name="pg1_livingWillN" id="pg1_livingWillN" <%= props.getProperty("pg1_livingWillN", "") %> @oscar.formDB dbType="tinyint(1)" />
-                        &nbsp;&nbsp;(If DNR - enclose copy of orders with passport)
-                    </td>
-                </tr>
-            </table>
-            <br />
-            <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-                <tr align="left">
-                    <th>
-                    Medical Conditions
-                    </th>
-                </tr>
-            </table>
-            <table width="100%" border="0" cellpadding="0" cellspacing="2">
-                <tr>
-                    <td width="1%">
-                        <input type="checkbox" name="pg1_diabetes" id="pg1_diabetes" <%= props.getProperty("pg1_diabetes", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td width="24%">
-                        Diabetes
-                    </td>    
-                    <td width="1%">
-                        <input type="checkbox" name="pg1_atrialFib" id="pg1_atrialFib" <%= props.getProperty("pg1_atrialFib", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td width="24%">
-                        Atrial fibrillation
-                    </td>  
-                    <td width="1%">
-                        <input type="checkbox" name="pg1_coronary" id="pg1_coronary" <%= props.getProperty("pg1_coronary", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td width="34%">
-                        Coronary heart disease
-                    </td>  
-                    <td width="1%">
-                        <input type="checkbox" name="pg1_highBP" id="pg1_highBP" <%= props.getProperty("pg1_highBP", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td width="14%">
-                        High BP
-                    </td>  
-                </tr>    
-                <tr>
-                    <td>
-                        <input type="checkbox" name="pg1_chf" id="pg1_chf" <%= props.getProperty("pg1_chf", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        CHF
-                    </td>    
-                    <td>
-                        <input type="checkbox" name="pg1_stroke" id="pg1_stroke" <%= props.getProperty("pg1_stroke", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        Stroke
-                    </td>  
-                    <td>
-                        <input type="checkbox" name="pg1_kidneyDisease" id="pg1_kidneyDisease" <%= props.getProperty("pg1_kidneyDisease", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        Kidney disease / low GFR
-                        <input type="text" name="pg1_lowGFR" id="pg1_lowGFR" size="5" maxlength="10" value="<%= props.getProperty("pg1_lowGFR", "") %>" @oscar.formDB  />
-                    </td>  
-                    <td>
-                        <input type="checkbox" name="pg1_asthma" id="pg1_asthma" <%= props.getProperty("pg1_asthma", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        Asthma
-                    </td>  
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" name="pg1_copd" id="pg1_copd" <%= props.getProperty("pg1_copd", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        COPD
-                    </td>    
-                    <td>
-                        <input type="checkbox" name="pg1_co2retainer" id="pg1_co2retainer" <%= props.getProperty("pg1_co2retainer", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td>
-                        CO2 retainer
-                    </td>  
-                    <td>
-                        <input type="checkbox" name="pg1_cancer" id="pg1_cancer" <%= props.getProperty("pg1_cancer", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td colspan="3">
-                        Cancer
-                        <input type="text" name="pg1_cancerSpec" id="pg1_cancerSpec" size="48" maxlength="40" value="<%= props.getProperty("pg1_cancerSpec", "") %>" @oscar.formDB  />
-                    </td>  
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" name="pg1_other" id="pg1_other" <%= props.getProperty("pg1_other", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td colspan="7">
-                        Other
-                        <input type="text" name="pg1_otherSpec" id="pg1_otherSpec" size="108" maxlength="90" value="<%= props.getProperty("pg1_otherSpec", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="checkbox" name="pg1_majorSurg" id="pg1_majorSurg" <%= props.getProperty("pg1_majorSurg", "") %> @oscar.formDB dbType="tinyint(1)" />
-                    </td>
-                    <td colspan="7">
-                        Major surg.&nbsp;
-                        <input type="text" name="pg1_majorSurgSpec" id="pg1_majorSurgSpec" size="103" maxlength="80" value="<%= props.getProperty("pg1_majorSurgSpec", "") %>" @oscar.formDB  />
-                    </td>
-                </tr>
-            </table> 
-            <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                <tr></td><td width="96%" style="border-bottom:1px solid black;"><br /></td></tr>
-                <tr><td><br /></td></tr>
-            </table>
-            <table width="100%" border="1" cellpadding="0" cellspacing="0">
-                <tr>
-                    <th>Date</th>
-                    <th>Medication name</th>
-                    <th>Dose</th>
-                    <th>How often</th>
-                    <th>Reason</th>
-                </tr>    
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date1" id="pg1_date1" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName1" id="pg1_medName1" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName1", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose1" id="pg1_dose1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose1", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften1" id="pg1_howOften1" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften1", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason1" id="pg1_reason1" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason1", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>    
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date2" id="pg1_date2" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName2" id="pg1_medName2" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName2", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose2" id="pg1_dose2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose2", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften2" id="pg1_howOften2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften2", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason2" id="pg1_reason2" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason2", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date3" id="pg1_date3" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName3" id="pg1_medName3" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName3", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose3" id="pg1_dose3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose3", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften3" id="pg1_howOften3" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften3", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason3" id="pg1_reason3" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason3", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date4" id="pg1_date4" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName4" id="pg1_medName4" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName4", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose4" id="pg1_dose4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose4", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften4" id="pg1_howOften4" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften4", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason4" id="pg1_reason4" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason4", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date5" id="pg1_date5" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName5" id="pg1_medName5" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName5", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose5" id="pg1_dose5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose5", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften5" id="pg1_howOften5" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften5", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason5" id="pg1_reason5" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason5", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date6" id="pg1_date6" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName6" id="pg1_medName6" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName6", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose6" id="pg1_dose6" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose6", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften6" id="pg1_howOften6" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften6", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason6" id="pg1_reason6" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason6", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date7" id="pg1_date7" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date7_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName7" id="pg1_medName7" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName7", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose7" id="pg1_dose7" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose7", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften7" id="pg1_howOften7" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften7", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason7" id="pg1_reason7" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason7", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date8" id="pg1_date8" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date8", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date8_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName8" id="pg1_medName8" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName8", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose8" id="pg1_dose8" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose8", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften8" id="pg1_howOften8" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften8", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason8" id="pg1_reason8" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason8", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date9" id="pg1_date9" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date9", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date9_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName9" id="pg1_medName9" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName9", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose9" id="pg1_dose9" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose9", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften9" id="pg1_howOften9" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften9", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason9" id="pg1_reason9" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason9", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date10" id="pg1_date10" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date10", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date10_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName10" id="pg1_medName10" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName10", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose10" id="pg1_dose10" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose10", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften10" id="pg1_howOften10" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften10", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason10" id="pg1_reason10" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason10", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date11" id="pg1_date11" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date11", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date11_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName11" id="pg1_medName11" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName11", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose11" id="pg1_dose11" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose11", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften11" id="pg1_howOften11" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften11", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason11" id="pg1_reason11" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason11", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date12" id="pg1_date12" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date12", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date12_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName12" id="pg1_medName12" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName12", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose12" id="pg1_dose12" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose12", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften12" id="pg1_howOften12" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften12", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason12" id="pg1_reason12" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason12", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date13" id="pg1_date13" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date13", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date13_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName13" id="pg1_medName13" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName13", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose13" id="pg1_dose13" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose13", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften13" id="pg1_howOften13" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften13", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason13" id="pg1_reason13" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason13", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td>
-                        <input type="text" name="pg1_date14" id="pg1_date14" style="width:80%" size="10" maxlength="15" value="<%= props.getProperty("pg1_date14", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_date14_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_medName14" id="pg1_medName14" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("pg1_medName14", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_dose14" id="pg1_dose14" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_dose14", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_howOften14" id="pg1_howOften14" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_howOften14", "") %>" @oscar.formDB/>
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_reason14" id="pg1_reason14" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("pg1_reason14", "") %>" @oscar.formDB/>
-                    </td>
-                </tr>  
-            </table>
-            <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                <tr></td><td width="96%" style="border-bottom:1px solid black;"><br /></td></tr>
-                <tr><td><br /></td></tr>
-            </table>
-            <table width="100%" border="1" cellpadding="0" cellspacing="0">
-                <tr>
-                    <th width="10%">Vaccines</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                    <th width="13%">Date</th>
-                </tr>
-                <tr>                    
-                    <td>Flu</td>
-                    <td>
-                        <input type="text" name="pg1_fluDate1" id="pg1_fluDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate2" id="pg1_fluDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate3" id="pg1_fluDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate4" id="pg1_fluDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate5" id="pg1_fluDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate6" id="pg1_fluDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_fluDate7" id="pg1_fluDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_fluDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_fluDate7_cal">
-                    </td>
-                </tr>
-                <tr onmouseover="showHideBox('comment1Div',1)" onmouseout="showHideBox('comment1Div',0)">
-                    <td>Pneumo vacc</td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate1" id="pg1_pneumoVaccDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate2" id="pg1_pneumoVaccDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate3" id="pg1_pneumoVaccDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate4" id="pg1_pneumoVaccDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate5" id="pg1_pneumoVaccDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate6" id="pg1_pneumoVaccDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_pneumoVaccDate7" id="pg1_pneumoVaccDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_pneumoVaccDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_pneumoVaccDate7_cal">
-                    </td>
-                </tr>
-                <tr onmouseover="showHideBox('comment2Div',1)" onmouseout="showHideBox('comment2Div',0)">
-                    <td>Td</td>
-                    <td>
-                        <input type="text" name="pg1_tdDate1" id="pg1_tdDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate2" id="pg1_tdDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate3" id="pg1_tdDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate4" id="pg1_tdDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate5" id="pg1_tdDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate6" id="pg1_tdDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_tdDate7" id="pg1_tdDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_tdDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_tdDate7_cal">
-                    </td>
-                </tr>
-                <tr onmouseover="showHideBox('comment3Div',1)" onmouseout="showHideBox('comment3Div',0)">
-                    <td>Hep A</td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate1" id="pg1_hepaDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate2" id="pg1_hepaDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate3" id="pg1_hepaDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate4" id="pg1_hepaDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate5" id="pg1_hepaDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate6" id="pg1_hepaDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepaDate7" id="pg1_hepaDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepaDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepaDate7_cal">
-                    </td>
-                </tr>
-                <tr onmouseover="showHideBox('comment4Div',1)" onmouseout="showHideBox('comment4Div',0)">
-                    <td>Hep B</td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate1" id="pg1_hepbDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate2" id="pg1_hepbDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate3" id="pg1_hepbDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate4" id="pg1_hepbDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate5" id="pg1_hepbDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate6" id="pg1_hepbDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_hepbDate7" id="pg1_hepbDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_hepbDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_hepbDate7_cal">
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="pg1_otherVac" id="pg1_otherVac" style="width:100%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherVac", "") %>" @oscar.formDB/></td>
-                    <td>
-                        <input type="text" name="pg1_otherDate1" id="pg1_otherDate1" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate1", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate1_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate2" id="pg1_otherDate2" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate2", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate2_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate3" id="pg1_otherDate3" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate3", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate3_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate4" id="pg1_otherDate4" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate4", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate4_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate5" id="pg1_otherDate5" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate5", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate5_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate6" id="pg1_otherDate6" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate6", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate6_cal">
-                    </td>
-                    <td>
-                        <input type="text" name="pg1_otherDate7" id="pg1_otherDate7" style="width:75%" size="10" maxlength="15" value="<%= props.getProperty("pg1_otherDate7", "") %>" @oscar.formDB  dbType="date"/>
-                        <img src="../images/cal.gif" id="pg1_otherDate7_cal">
-                    </td>
-                </tr>
-            </table>
-            <table align="right">
-                <tr>
-                    <td>* verify with health unit which chronic dz covered for free vaccine &amp;/or booster</td>
-                </tr>    
-            </table>
-        </td>
-    </tr>
-</table>
+		</tr>
+	</table>
+	<br />
+	<table width="90%" border="1" cellspacing="0" cellpadding="0"
+		align="center">
 
-<br />
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <%
+		<tr>
+			<td>
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr align="left">
+					<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
+					B.C. Health Passport</th>
+				</tr>
+			</table>
+			<br />
+			<table width="100%" border="0" cellpadding="0" cellspacing="2">
+				<tr>
+					<td width="25%">Patient Name:</td>
+					<td><input type="text" name="pg1_patientName"
+						id="pg1_patientName" style="width: 100%" size="30" maxlength="40"
+						value="<%= props.getProperty("pg1_patientName", "") %>"
+						@oscar.formDB /></td>
+					<td>Date:</td>
+					<td><input type="text" name="pg1_formDate" id="pg1_formDate"
+						style="width: 100%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB
+						dbType="date" /></td>
+				</tr>
+				<tr>
+					<td>Personal Health Number(PHN):</td>
+					<td><input type="text" name="pg1_phn" id="pg1_phn"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_phn", "") %>" @oscar.formDB />
+					</td>
+					<td>Tel:</td>
+					<td><input type="text" name="pg1_phone" id="pg1_phone"
+						style="width: 100%" size="15" maxlength="15"
+						value="<%= props.getProperty("pg1_phone", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td>Emergency Contact Name:</td>
+					<td><input type="text" name="pg1_emergContact"
+						id="pg1_emergContact" style="width: 100%" size="30" maxlength="40"
+						value="<%= props.getProperty("pg1_emergContact", "") %>"
+						@oscar.formDB /></td>
+					<td>Tel:</td>
+					<td><input type="text" name="pg1_emergContactPhone"
+						id="pg1_emergContactPhone" style="width: 100%" size="15"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_emergContactPhone", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<tr>
+					<td>Allergies:</td>
+					<td colspan="3"><input type="text" name="pg1_allergies"
+						id="pg1_allergies" style="width: 100%" size="60" maxlength="90"
+						value="<%= props.getProperty("pg1_allergies", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<tr>
+					<td colspan="2">MD: <input type="text" name="pg1_md"
+						id="pg1_md" style="width: 60%" size="30" maxlength="40"
+						value="<%= props.getProperty("pg1_md", "") %>" @oscar.formDB />
+					MSP for lab cc: <input type="text" name="pg1_msp" id="pg1_msp"
+						style="width: 15%" size="10" maxlength="9"
+						value="<%= props.getProperty("pg1_msp", "") %>" @oscar.formDB />
+					</td>
+					<td>Tel:</td>
+					<td><input type="text" name="pg1_mdPhone" id="pg1_mdPhone"
+						style="width: 100%" size="15" maxlength="15"
+						value="<%= props.getProperty("pg1_mdPhone", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">Living Will / Advanced Care Directive:
+					&nbsp;&nbsp;Yes <input type="checkbox" name="pg1_livingWillY"
+						id="pg1_livingWillY"
+						<%= props.getProperty("pg1_livingWillY", "") %> @oscar.formDB
+						dbType="tinyint(1)" /> &nbsp;&nbsp;No <input type="checkbox"
+						name="pg1_livingWillN" id="pg1_livingWillN"
+						<%= props.getProperty("pg1_livingWillN", "") %> @oscar.formDB
+						dbType="tinyint(1)" /> &nbsp;&nbsp;(If DNR - enclose copy of
+					orders with passport)</td>
+				</tr>
+			</table>
+			<br />
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr align="left">
+					<th>Medical Conditions</th>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="2">
+				<tr>
+					<td width="1%"><input type="checkbox" name="pg1_diabetes"
+						id="pg1_diabetes"
+						<%= props.getProperty("pg1_diabetes", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td width="24%">Diabetes</td>
+					<td width="1%"><input type="checkbox" name="pg1_atrialFib"
+						id="pg1_atrialFib"
+						<%= props.getProperty("pg1_atrialFib", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td width="24%">Atrial fibrillation</td>
+					<td width="1%"><input type="checkbox" name="pg1_coronary"
+						id="pg1_coronary"
+						<%= props.getProperty("pg1_coronary", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td width="34%">Coronary heart disease</td>
+					<td width="1%"><input type="checkbox" name="pg1_highBP"
+						id="pg1_highBP"
+						<%= props.getProperty("pg1_highBP", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td width="14%">High BP</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="pg1_chf" id="pg1_chf"
+						<%= props.getProperty("pg1_chf", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>CHF</td>
+					<td><input type="checkbox" name="pg1_stroke" id="pg1_stroke"
+						<%= props.getProperty("pg1_stroke", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>Stroke</td>
+					<td><input type="checkbox" name="pg1_kidneyDisease"
+						id="pg1_kidneyDisease"
+						<%= props.getProperty("pg1_kidneyDisease", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>Kidney disease / low GFR <input type="text"
+						name="pg1_lowGFR" id="pg1_lowGFR" size="5" maxlength="10"
+						value="<%= props.getProperty("pg1_lowGFR", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="checkbox" name="pg1_asthma" id="pg1_asthma"
+						<%= props.getProperty("pg1_asthma", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>Asthma</td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="pg1_copd" id="pg1_copd"
+						<%= props.getProperty("pg1_copd", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>COPD</td>
+					<td><input type="checkbox" name="pg1_co2retainer"
+						id="pg1_co2retainer"
+						<%= props.getProperty("pg1_co2retainer", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td>CO2 retainer</td>
+					<td><input type="checkbox" name="pg1_cancer" id="pg1_cancer"
+						<%= props.getProperty("pg1_cancer", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td colspan="3">Cancer <input type="text"
+						name="pg1_cancerSpec" id="pg1_cancerSpec" size="48" maxlength="40"
+						value="<%= props.getProperty("pg1_cancerSpec", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="pg1_other" id="pg1_other"
+						<%= props.getProperty("pg1_other", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td colspan="7">Other <input type="text" name="pg1_otherSpec"
+						id="pg1_otherSpec" size="108" maxlength="90"
+						value="<%= props.getProperty("pg1_otherSpec", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+				<tr>
+					<td><input type="checkbox" name="pg1_majorSurg"
+						id="pg1_majorSurg"
+						<%= props.getProperty("pg1_majorSurg", "") %> @oscar.formDB
+						dbType="tinyint(1)" /></td>
+					<td colspan="7">Major surg.&nbsp; <input type="text"
+						name="pg1_majorSurgSpec" id="pg1_majorSurgSpec" size="103"
+						maxlength="80"
+						value="<%= props.getProperty("pg1_majorSurgSpec", "") %>"
+						@oscar.formDB /></td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="10">
+				<tr>
+					</td>
+					<td width="96%" style="border-bottom: 1px solid black;"><br />
+					</td>
+				</tr>
+				<tr>
+					<td><br />
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="1" cellpadding="0" cellspacing="0">
+				<tr>
+					<th>Date</th>
+					<th>Medication name</th>
+					<th>Dose</th>
+					<th>How often</th>
+					<th>Reason</th>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date1" id="pg1_date1"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date1", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date1_cal">
+					</td>
+					<td><input type="text" name="pg1_medName1" id="pg1_medName1"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName1", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose1" id="pg1_dose1"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose1", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften1" id="pg1_howOften1"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften1", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason1" id="pg1_reason1"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason1", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date2" id="pg1_date2"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date2", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date2_cal">
+					</td>
+					<td><input type="text" name="pg1_medName2" id="pg1_medName2"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName2", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose2" id="pg1_dose2"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose2", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften2" id="pg1_howOften2"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften2", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason2" id="pg1_reason2"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason2", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date3" id="pg1_date3"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date3", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date3_cal">
+					</td>
+					<td><input type="text" name="pg1_medName3" id="pg1_medName3"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName3", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose3" id="pg1_dose3"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose3", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften3" id="pg1_howOften3"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften3", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason3" id="pg1_reason3"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason3", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date4" id="pg1_date4"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date4", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date4_cal">
+					</td>
+					<td><input type="text" name="pg1_medName4" id="pg1_medName4"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName4", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose4" id="pg1_dose4"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose4", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften4" id="pg1_howOften4"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften4", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason4" id="pg1_reason4"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason4", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date5" id="pg1_date5"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date5", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date5_cal">
+					</td>
+					<td><input type="text" name="pg1_medName5" id="pg1_medName5"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName5", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose5" id="pg1_dose5"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose5", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften5" id="pg1_howOften5"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften5", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason5" id="pg1_reason5"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason5", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date6" id="pg1_date6"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date6", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date6_cal">
+					</td>
+					<td><input type="text" name="pg1_medName6" id="pg1_medName6"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName6", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose6" id="pg1_dose6"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose6", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften6" id="pg1_howOften6"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften6", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason6" id="pg1_reason6"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason6", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date7" id="pg1_date7"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date7", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date7_cal">
+					</td>
+					<td><input type="text" name="pg1_medName7" id="pg1_medName7"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName7", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose7" id="pg1_dose7"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose7", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften7" id="pg1_howOften7"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften7", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason7" id="pg1_reason7"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason7", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date8" id="pg1_date8"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date8", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date8_cal">
+					</td>
+					<td><input type="text" name="pg1_medName8" id="pg1_medName8"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName8", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose8" id="pg1_dose8"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose8", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften8" id="pg1_howOften8"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften8", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason8" id="pg1_reason8"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason8", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date9" id="pg1_date9"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date9", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date9_cal">
+					</td>
+					<td><input type="text" name="pg1_medName9" id="pg1_medName9"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName9", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_dose9" id="pg1_dose9"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose9", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften9" id="pg1_howOften9"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften9", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason9" id="pg1_reason9"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason9", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date10" id="pg1_date10"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date10", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date10_cal">
+					</td>
+					<td><input type="text" name="pg1_medName10" id="pg1_medName10"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName10", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_dose10" id="pg1_dose10"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose10", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften10"
+						id="pg1_howOften10" style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften10", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason10" id="pg1_reason10"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason10", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date11" id="pg1_date11"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date11", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date11_cal">
+					</td>
+					<td><input type="text" name="pg1_medName11" id="pg1_medName11"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName11", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_dose11" id="pg1_dose11"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose11", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften11"
+						id="pg1_howOften11" style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften11", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason11" id="pg1_reason11"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason11", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date12" id="pg1_date12"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date12", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date12_cal">
+					</td>
+					<td><input type="text" name="pg1_medName12" id="pg1_medName12"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName12", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_dose12" id="pg1_dose12"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose12", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften12"
+						id="pg1_howOften12" style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften12", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason12" id="pg1_reason12"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason12", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date13" id="pg1_date13"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date13", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date13_cal">
+					</td>
+					<td><input type="text" name="pg1_medName13" id="pg1_medName13"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName13", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_dose13" id="pg1_dose13"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose13", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften13"
+						id="pg1_howOften13" style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften13", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason13" id="pg1_reason13"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason13", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_date14" id="pg1_date14"
+						style="width: 80%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_date14", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_date14_cal">
+					</td>
+					<td><input type="text" name="pg1_medName14" id="pg1_medName14"
+						style="width: 100%" size="30" maxlength="30"
+						value="<%= props.getProperty("pg1_medName14", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_dose14" id="pg1_dose14"
+						style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_dose14", "") %>" @oscar.formDB />
+					</td>
+					<td><input type="text" name="pg1_howOften14"
+						id="pg1_howOften14" style="width: 100%" size="10" maxlength="10"
+						value="<%= props.getProperty("pg1_howOften14", "") %>"
+						@oscar.formDB /></td>
+					<td><input type="text" name="pg1_reason14" id="pg1_reason14"
+						style="width: 100%" size="20" maxlength="20"
+						value="<%= props.getProperty("pg1_reason14", "") %>" @oscar.formDB />
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="10">
+				<tr>
+					</td>
+					<td width="96%" style="border-bottom: 1px solid black;"><br />
+					</td>
+				</tr>
+				<tr>
+					<td><br />
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="1" cellpadding="0" cellspacing="0">
+				<tr>
+					<th width="10%">Vaccines</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+					<th width="13%">Date</th>
+				</tr>
+				<tr>
+					<td>Flu</td>
+					<td><input type="text" name="pg1_fluDate1" id="pg1_fluDate1"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate1", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate1_cal"></td>
+					<td><input type="text" name="pg1_fluDate2" id="pg1_fluDate2"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate2", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate2_cal"></td>
+					<td><input type="text" name="pg1_fluDate3" id="pg1_fluDate3"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate3", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate3_cal"></td>
+					<td><input type="text" name="pg1_fluDate4" id="pg1_fluDate4"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate4", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate4_cal"></td>
+					<td><input type="text" name="pg1_fluDate5" id="pg1_fluDate5"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate5", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate5_cal"></td>
+					<td><input type="text" name="pg1_fluDate6" id="pg1_fluDate6"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate6", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate6_cal"></td>
+					<td><input type="text" name="pg1_fluDate7" id="pg1_fluDate7"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_fluDate7", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_fluDate7_cal"></td>
+				</tr>
+				<tr onmouseover="showHideBox('comment1Div',1)"
+					onmouseout="showHideBox('comment1Div',0)">
+					<td>Pneumo vacc</td>
+					<td><input type="text" name="pg1_pneumoVaccDate1"
+						id="pg1_pneumoVaccDate1" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate1", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate1_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate2"
+						id="pg1_pneumoVaccDate2" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate2", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate2_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate3"
+						id="pg1_pneumoVaccDate3" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate3", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate3_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate4"
+						id="pg1_pneumoVaccDate4" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate4", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate4_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate5"
+						id="pg1_pneumoVaccDate5" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate5", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate5_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate6"
+						id="pg1_pneumoVaccDate6" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate6", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate6_cal"></td>
+					<td><input type="text" name="pg1_pneumoVaccDate7"
+						id="pg1_pneumoVaccDate7" style="width: 75%" size="10"
+						maxlength="15"
+						value="<%= props.getProperty("pg1_pneumoVaccDate7", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_pneumoVaccDate7_cal"></td>
+				</tr>
+				<tr onmouseover="showHideBox('comment2Div',1)"
+					onmouseout="showHideBox('comment2Div',0)">
+					<td>Td</td>
+					<td><input type="text" name="pg1_tdDate1" id="pg1_tdDate1"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate1", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate1_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate2" id="pg1_tdDate2"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate2", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate2_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate3" id="pg1_tdDate3"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate3", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate3_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate4" id="pg1_tdDate4"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate4", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate4_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate5" id="pg1_tdDate5"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate5", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate5_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate6" id="pg1_tdDate6"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate6", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate6_cal">
+					</td>
+					<td><input type="text" name="pg1_tdDate7" id="pg1_tdDate7"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_tdDate7", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="pg1_tdDate7_cal">
+					</td>
+				</tr>
+				<tr onmouseover="showHideBox('comment3Div',1)"
+					onmouseout="showHideBox('comment3Div',0)">
+					<td>Hep A</td>
+					<td><input type="text" name="pg1_hepaDate1" id="pg1_hepaDate1"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate1", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate1_cal"></td>
+					<td><input type="text" name="pg1_hepaDate2" id="pg1_hepaDate2"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate2", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate2_cal"></td>
+					<td><input type="text" name="pg1_hepaDate3" id="pg1_hepaDate3"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate3", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate3_cal"></td>
+					<td><input type="text" name="pg1_hepaDate4" id="pg1_hepaDate4"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate4", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate4_cal"></td>
+					<td><input type="text" name="pg1_hepaDate5" id="pg1_hepaDate5"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate5", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate5_cal"></td>
+					<td><input type="text" name="pg1_hepaDate6" id="pg1_hepaDate6"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate6", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate6_cal"></td>
+					<td><input type="text" name="pg1_hepaDate7" id="pg1_hepaDate7"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepaDate7", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepaDate7_cal"></td>
+				</tr>
+				<tr onmouseover="showHideBox('comment4Div',1)"
+					onmouseout="showHideBox('comment4Div',0)">
+					<td>Hep B</td>
+					<td><input type="text" name="pg1_hepbDate1" id="pg1_hepbDate1"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate1", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate1_cal"></td>
+					<td><input type="text" name="pg1_hepbDate2" id="pg1_hepbDate2"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate2", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate2_cal"></td>
+					<td><input type="text" name="pg1_hepbDate3" id="pg1_hepbDate3"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate3", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate3_cal"></td>
+					<td><input type="text" name="pg1_hepbDate4" id="pg1_hepbDate4"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate4", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate4_cal"></td>
+					<td><input type="text" name="pg1_hepbDate5" id="pg1_hepbDate5"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate5", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate5_cal"></td>
+					<td><input type="text" name="pg1_hepbDate6" id="pg1_hepbDate6"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate6", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate6_cal"></td>
+					<td><input type="text" name="pg1_hepbDate7" id="pg1_hepbDate7"
+						style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_hepbDate7", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_hepbDate7_cal"></td>
+				</tr>
+				<tr>
+					<td><input type="text" name="pg1_otherVac" id="pg1_otherVac"
+						style="width: 100%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherVac", "") %>" @oscar.formDB /></td>
+					<td><input type="text" name="pg1_otherDate1"
+						id="pg1_otherDate1" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate1", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate1_cal"></td>
+					<td><input type="text" name="pg1_otherDate2"
+						id="pg1_otherDate2" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate2", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate2_cal"></td>
+					<td><input type="text" name="pg1_otherDate3"
+						id="pg1_otherDate3" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate3", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate3_cal"></td>
+					<td><input type="text" name="pg1_otherDate4"
+						id="pg1_otherDate4" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate4", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate4_cal"></td>
+					<td><input type="text" name="pg1_otherDate5"
+						id="pg1_otherDate5" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate5", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate5_cal"></td>
+					<td><input type="text" name="pg1_otherDate6"
+						id="pg1_otherDate6" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate6", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate6_cal"></td>
+					<td><input type="text" name="pg1_otherDate7"
+						id="pg1_otherDate7" style="width: 75%" size="10" maxlength="15"
+						value="<%= props.getProperty("pg1_otherDate7", "") %>"
+						@oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+						id="pg1_otherDate7_cal"></td>
+				</tr>
+			</table>
+			<table align="right">
+				<tr>
+					<td>* verify with health unit which chronic dz covered for
+					free vaccine &amp;/or booster</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+
+	<br />
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
             if (!bView) {
-            %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-            <%
+            %> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
             }
-            %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-        </td>
-        <%
+            %> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print" onclick="javascript:return onPrint();" /></td>
+			<%
         if (!bView) {
         %>
-        <td>
-            <!--a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a-->
-        </td>
-        <td align="right"><b>Edit:</b>HP <font size=-2>(pg.1)</font> |
-            <a href="formbchppg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">HP <font size=-2>(pg.2)</font></a> 
-        </td>
-        <%
+			<td><!--a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a-->
+			</td>
+			<td align="right"><b>Edit:</b>HP <font size=-2>(pg.1)</font> | <a
+				href="formbchppg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">HP
+			<font size=-2>(pg.2)</font></a></td>
+			<%
         }
         %>
-    </tr>
-</table>
+		</tr>
+	</table>
 
 </html:form>
 </body>

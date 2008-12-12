@@ -25,7 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%><script>
 	function resetClientFields() {
@@ -74,11 +74,16 @@
 	</tr>
 </table>
 </div>
-<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referrals" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="referral" name="referrals" export="false" pagesize="0"
+	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:column property="programName" sortable="true" title="Program Name" />
-	<display:column property="referralDate" sortable="true" title="Referral Date" />
-	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
+	<display:column property="programName" sortable="true"
+		title="Program Name" />
+	<display:column property="referralDate" sortable="true"
+		title="Referral Date" />
+	<display:column property="providerFormattedName" sortable="true"
+		title="Referring Provider" />
 	<display:column property="status" sortable="true" title="Status" />
 	<display:column sortable="true" title="Days in Queue">
 		<%
@@ -101,35 +106,44 @@
 		<%=numDays%>
 	</display:column>
 	<!--  display:column property="notes" sortable="true" title="Notes" /> -->
-	<display:column property="notes" sortable="true" title="Reason for referral" />
-	<display:column property="presentProblems" sortable="true" title="Present Problems"/>
+	<display:column property="notes" sortable="true"
+		title="Reason for referral" />
+	<display:column property="presentProblems" sortable="true"
+		title="Present Problems" />
 </display:table>
 
-	<c:if test="${remoteReferrals!=null}">
-		<br /><br />
-		<div class="tabs" id="tabs">
-		<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-				<th title="Programs">Remote Referrals</th>
-			</tr>
-		</table>
-		</div>
-		<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
-			<display:setProperty name="paging.banner.placement" value="bottom" />
-			<display:column property="programName" sortable="true" title="Facility / Program" />
-			<display:column sortable="true" title="Referral Date" >
+<c:if test="${remoteReferrals!=null}">
+	<br />
+	<br />
+	<div class="tabs" id="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Remote Referrals</th>
+		</tr>
+	</table>
+	</div>
+	<display:table class="simple" cellspacing="2" cellpadding="3"
+		id="referral" name="remoteReferrals" export="false" pagesize="0"
+		requestURI="/PMmodule/ClientManager.do">
+		<display:setProperty name="paging.banner.placement" value="bottom" />
+		<display:column property="programName" sortable="true"
+			title="Facility / Program" />
+		<display:column sortable="true" title="Referral Date">
 			<%
 				ClientReferral temp = (ClientReferral) pageContext.getAttribute("referral");
 				String date=DateFormatUtils.ISO_DATE_FORMAT.format(temp.getReferralDate());
 				String date1=DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(temp.getReferralDate());
 			%>
 			<%=date+" "+date1%>
-			</display:column>
-			<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
-			<display:column property="notes" sortable="true" title="Reason for referral" />
-			<display:column property="presentProblems" sortable="true" title="Present Problems"/>
-		</display:table>
-	</c:if>
+		</display:column>
+		<display:column property="providerFormattedName" sortable="true"
+			title="Referring Provider" />
+		<display:column property="notes" sortable="true"
+			title="Reason for referral" />
+		<display:column property="presentProblems" sortable="true"
+			title="Present Problems" />
+	</display:table>
+</c:if>
 
 <br />
 <br />
@@ -156,18 +170,16 @@
 			<html:option value="Service">Service</html:option>
 		</html:select></td>
 	</tr>
-	 
+
 	<tr class="b">
 		<td width="20%">Man or Woman:</td>
-		<td>
-			<html:select property="program.manOrWoman">
-				<html:option value="">&nbsp;</html:option>				
-				<html:option value="Man">Man</html:option>
-				<html:option value="Woman">Woman</html:option>
-			</html:select>
-		</td>
+		<td><html:select property="program.manOrWoman">
+			<html:option value="">&nbsp;</html:option>
+			<html:option value="Man">Man</html:option>
+			<html:option value="Woman">Woman</html:option>
+		</html:select></td>
 	</tr>
-	
+
 	<tr class="b">
 		<td width="20%">Transgender:</td>
 		<td><html:checkbox property="program.transgender" /></td>
@@ -186,14 +198,12 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Abstinence Support?</td>
-		<td>
-			<html:select property="program.abstinenceSupport">
-				<html:option value="">&nbsp;</html:option>
-				<html:option value="Harm Reduction" />
-				<html:option value="Abstinence Support" />
-				<html:option value="Not Applicable" />			
-			</html:select>
-		</td>
+		<td><html:select property="program.abstinenceSupport">
+			<html:option value="">&nbsp;</html:option>
+			<html:option value="Harm Reduction" />
+			<html:option value="Abstinence Support" />
+			<html:option value="Not Applicable" />
+		</html:select></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Physical Health:</td>
@@ -206,32 +216,36 @@
 	<tr class="b">
 		<td width="20%">Housing:</td>
 		<td><html:checkbox property="program.housing" /></td>
-	</tr>	
-	 
-	
-	
-	
+	</tr>
+
+
+
+
 </table>
 <table>
 	<tr>
-		<td align="center"><input type="button" value="search" onclick="search_programs()" /></td>
-		<td align="center"><input type="button" name="reset" value="reset" onclick="javascript:resetClientFields();" /></td>
+		<td align="center"><input type="button" value="search"
+			onclick="search_programs()" /></td>
+		<td align="center"><input type="button" name="reset"
+			value="reset" onclick="javascript:resetClientFields();" /></td>
 	</tr>
 </table>
 <br />
 <c:if test="${requestScope.do_refer != null}">
 	<table class="b" border="0" width="100%">
 		<tr>
-			<th style="color:black">Program Name</th>
-			<th style="color:black">Type</th>
-			<th style="color:black">Participation</th>
-			<th style="color:black">Phone</th>
-			<th style="color:black">Email</th>
+			<th style="color: black">Program Name</th>
+			<th style="color: black">Type</th>
+			<th style="color: black">Participation</th>
+			<th style="color: black">Phone</th>
+			<th style="color: black">Email</th>
 		</tr>
 		<tr>
 			<td><c:out value="${program.name }" /></td>
 			<td><c:out value="${program.type }" /></td>
-			<td><c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" /> (<c:out value="${program.queueSize}" /> waiting)</td>
+			<td><c:out value="${program.numOfMembers}" />/<c:out
+				value="${program.maxAllowed}" /> (<c:out
+				value="${program.queueSize}" /> waiting)</td>
 			<td><c:out value="${program.phone }" /></td>
 			<td><c:out value="${program.email }" /></td>
 		</tr>
@@ -246,20 +260,23 @@
 		</tr>
 		<tr class="b">
 			<td width="20%">Presenting Problems:</td>
-			<td><html:textarea cols="50" rows="7" property="referral.presentProblems" /></td>
+			<td><html:textarea cols="50" rows="7"
+				property="referral.presentProblems" /></td>
 		</tr>
 		<c:if test="${program.type eq 'Bed' }">
 			<!-- <c:if test="${requestScope.temporaryAdmission == true}"> -->
 			<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-			<tr class="b">
-				<td width="20%">Request Temporary Admission:</td>
-				<td><html:checkbox property="referral.temporaryAdmission" /></td>
-			</tr>
+				<tr class="b">
+					<td width="20%">Request Temporary Admission:</td>
+					<td><html:checkbox property="referral.temporaryAdmission" /></td>
+				</tr>
 			</caisi:isModuleLoad>
 			<!-- </c:if> -->
 		</c:if>
 		<tr class="b">
-			<td colspan="2"><input type="button" value="Process Referral" onclick="do_referral()" /> <input type="button" value="Cancel" onclick="document.clientManagerForm.submit()" /></td>
+			<td colspan="2"><input type="button" value="Process Referral"
+				onclick="do_referral()" /> <input type="button" value="Cancel"
+				onclick="document.clientManagerForm.submit()" /></td>
 		</tr>
 	</table>
 </c:if>

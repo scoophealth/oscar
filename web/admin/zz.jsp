@@ -1,12 +1,15 @@
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.*"
+	errorPage="errorpage.jsp"%>
 <%
     //this is a quick independent page to let you add studying patient.
     
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_echart", "select * from eChart order by timeStamp desc" }, 
@@ -40,8 +43,8 @@
 -->
 <html>
 <head>
-<title>PATIENT STUDY SEARCH RESULTS </title>
-<link rel="stylesheet" href="../web.css" >
+<title>PATIENT STUDY SEARCH RESULTS</title>
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -52,22 +55,25 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th>SEARCH FOR PATIENT STUDY RECORDS</th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepColor%>">
+		<th>SEARCH FOR PATIENT STUDY RECORDS</th>
+	</tr>
 </table>
 
 <CENTER>
-<table width="100%" border="0" bgcolor="#ffffff" > 
-  <tr bgcolor="<%=deepColor%>">
-  <TH width="10%">eChartId</TH>
-  <TH width="10%">timeStamp</TH>
-  <TH width="10%">demographicNo</TH>
-  <TH width="3%">providerNo</TH>
-  <TH width="10%">encounter</TH>
-  </tr>
-<%
+<table width="100%" border="0" bgcolor="#ffffff">
+	<tr bgcolor="<%=deepColor%>">
+		<TH width="10%">eChartId</TH>
+		<TH width="10%">timeStamp</TH>
+		<TH width="10%">demographicNo</TH>
+		<TH width="3%">providerNo</TH>
+		<TH width="10%">encounter</TH>
+	</tr>
+	<%
     ResultSet rsdemo = null ;
     int nItems=0;
     int ectsize=0;
@@ -79,19 +85,20 @@ function setfocus() {
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
 		if (rsdemo.getString("encounter")!=null && rsdemo.getString("encounter").length()>32*1024) {
-%>  
-  <tr bgcolor="<%=bgcolor%>">
-    <td align="center"><%=rsdemo.getString("eChartId")%></td>
-    <td><%=rsdemo.getString("timeStamp")%></td>
-    <td><a href=# onClick="popupPage(600,700, '../demographic/demographiccontrol.jsp?demographic_no=<%=rsdemo.getString("demographicNo")%>&displaymode=edit&dboperation=search_detail')"><%=rsdemo.getString("demographicNo")%></a></td>
-    <td align="center"><%=rsdemo.getString("providerNo")%></td>
-    <td align="center"><%=rsdemo.getString("encounter").length()%></td>
-  </tr>
-<%
+%>
+	<tr bgcolor="<%=bgcolor%>">
+		<td align="center"><%=rsdemo.getString("eChartId")%></td>
+		<td><%=rsdemo.getString("timeStamp")%></td>
+		<td><a href=#
+			onClick="popupPage(600,700, '../demographic/demographiccontrol.jsp?demographic_no=<%=rsdemo.getString("demographicNo")%>&displaymode=edit&dboperation=search_detail')"><%=rsdemo.getString("demographicNo")%></a></td>
+		<td align="center"><%=rsdemo.getString("providerNo")%></td>
+		<td align="center"><%=rsdemo.getString("encounter").length()%></td>
+	</tr>
+	<%
 		}
   }
   studyBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>

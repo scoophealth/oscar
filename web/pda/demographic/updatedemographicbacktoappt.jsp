@@ -24,8 +24,9 @@
  */
 -->
 
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%
   //if action is good, then give me the result
     String[] param =new String[24];
@@ -61,9 +62,10 @@
   if (rowsAffected ==1) {
     String name = param[0]+","+param[1];
 %>
-  <h2> Update a Provider Record Successfully ! 
-  <p><a href="cppcontrol.jsp?cpp_id=<%=request.getParameter("cpp_id")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("cpp_id") %></a>
-  </h2>
+<h2>Update a Provider Record Successfully !
+<p><a
+	href="cppcontrol.jsp?cpp_id=<%=request.getParameter("cpp_id")%>&displaymode=edit&dboperation=search_detail"><%= request.getParameter("cpp_id") %></a>
+</h2>
 <%  
   if(true) {
     out.clear();
@@ -73,7 +75,7 @@
   }
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("cpp_id") %>.
+<h1>Sorry, fail to update !!! <%= request.getParameter("cpp_id") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 

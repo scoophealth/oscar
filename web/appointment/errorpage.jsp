@@ -24,22 +24,15 @@
  */
 -->
 
-<%@ page isErrorPage="true" %><!-- only true can access exception object -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page isErrorPage="true"%><!-- only true can access exception object -->
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <body>
-<h1>
-<bean:message key="error.description"/>
-</h1>
+<h1><bean:message key="error.description" /></h1>
 <hr>
-<h2>
-<bean:message key="error.msgException"/>:<br>
-<font color=red>
-<%= exception.toString() %><br>
-<%= exception.getMessage() %>
-<% exception.printStackTrace();%>
-</font>
-</h2>
+<h2><bean:message key="error.msgException" />:<br>
+<font color=red> <%= exception.toString() %><br>
+<%= exception.getMessage() %> <% exception.printStackTrace();%> </font></h2>
 </body>
 </html:html>

@@ -26,7 +26,7 @@
 
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
 
 <%
 if(session.getValue("user") == null)
@@ -39,21 +39,27 @@ if(session.getValue("user") == null)
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 <html:html>
-    <head>
-        <html:base/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title><bean:message key="provider.setNoteStaleDate.title"/></title>
-    
-        <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
-          <!-- calendar stylesheet -->
-        <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
-        
-        <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
-        <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script> 
-        
-        <script type="text/javascript">            
+<head>
+<html:base />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><bean:message key="provider.setNoteStaleDate.title" /></title>
+
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="<c:out value="${ctx}"/>/share/calendar/calendar.css"
+	title="win2k-cold-1">
+
+<script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"
+	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"
+	type="text/javascript"></script>
+
+<script type="text/javascript">            
             
             function validate() {
                 var date = document.getElementById("staleDate");
@@ -66,96 +72,89 @@ if(session.getValue("user") == null)
             }
         </script>
 
-    </head>
-        
-    <body class="BodyStyle" vlink="#0000FF">
+</head>
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.setNoteStaleDate.msgPrefs"/>
-            </td>
-            <td style="color:white" class="MainTableTopRowRightColumn">
-                <bean:message key="provider.setNoteStaleDate.msgProviderStaleDate"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td class="MainTableRightColumn">                       
-            <%
+<body class="BodyStyle" vlink="#0000FF">
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.setNoteStaleDate.msgPrefs" /></td>
+		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message
+			key="provider.setNoteStaleDate.msgProviderStaleDate" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<%
                if( request.getAttribute("status") == null )
                {
                 
-            %>
-            <html:form styleId="frmProperty" action = "/setProviderStaleDate.do" >
-               <input type="hidden" id="method" name="method" value="save"> 
-               <html:hidden property="dateProperty.name"/>
-               <html:hidden property="dateProperty.providerNo"/>
-               <html:hidden property="dateProperty.id"/>
-               <bean:message key="provider.setNoteStaleDate.msgEdit"/>
-               <html:select property="dateProperty.value" styleId="staleDate">
-                   <html:option value="A">All</html:option>
-                   <html:option value="-1">1</html:option>
-                   <html:option value="-2">2</html:option>
-                   <html:option value="-3">3</html:option>
-                   <html:option value="-4">4</html:option>
-                   <html:option value="-5">5</html:option>
-                   <html:option value="-6">6</html:option>
-                   <html:option value="-7">7</html:option>
-                   <html:option value="-8">8</html:option>
-                   <html:option value="-9">9</html:option>
-                   <html:option value="-10">10</html:option>
-                   <html:option value="-11">11</html:option>
-                   <html:option value="-12">12</html:option>
-                   <html:option value="-13">13</html:option>
-                   <html:option value="-14">14</html:option>
-                   <html:option value="-15">15</html:option>
-                   <html:option value="-16">16</html:option>
-                   <html:option value="-17">17</html:option>
-                   <html:option value="-18">18</html:option>
-                   <html:option value="-19">19</html:option>
-                   <html:option value="-20">20</html:option>
-                   <html:option value="-21">21</html:option>
-                   <html:option value="-22">22</html:option>
-                   <html:option value="-23">23</html:option>
-                   <html:option value="-24">24</html:option>
-                   <html:option value="-25">25</html:option>
-                   <html:option value="-26">26</html:option>
-                   <html:option value="-27">27</html:option>
-                   <html:option value="-28">28</html:option>
-                   <html:option value="-29">29</html:option>
-                   <html:option value="-30">30</html:option>
-                   <html:option value="-31">31</html:option>
-                   <html:option value="-32">32</html:option>
-                   <html:option value="-33">33</html:option>
-                   <html:option value="-34">34</html:option>
-                   <html:option value="-35">35</html:option>
-                   <html:option value="-36">36</html:option>
-               </html:select>
-               <input type="submit" value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />                           
-               <input type="submit" onclick="$('method').value='remove';" value="<bean:message key="provider.setNoteStaleDate.btnReset"/>" />                           
-            </html:form> 
-            <%
+            %> <html:form styleId="frmProperty"
+			action="/setProviderStaleDate.do">
+			<input type="hidden" id="method" name="method" value="save">
+			<html:hidden property="dateProperty.name" />
+			<html:hidden property="dateProperty.providerNo" />
+			<html:hidden property="dateProperty.id" />
+			<bean:message key="provider.setNoteStaleDate.msgEdit" />
+			<html:select property="dateProperty.value" styleId="staleDate">
+				<html:option value="A">All</html:option>
+				<html:option value="-1">1</html:option>
+				<html:option value="-2">2</html:option>
+				<html:option value="-3">3</html:option>
+				<html:option value="-4">4</html:option>
+				<html:option value="-5">5</html:option>
+				<html:option value="-6">6</html:option>
+				<html:option value="-7">7</html:option>
+				<html:option value="-8">8</html:option>
+				<html:option value="-9">9</html:option>
+				<html:option value="-10">10</html:option>
+				<html:option value="-11">11</html:option>
+				<html:option value="-12">12</html:option>
+				<html:option value="-13">13</html:option>
+				<html:option value="-14">14</html:option>
+				<html:option value="-15">15</html:option>
+				<html:option value="-16">16</html:option>
+				<html:option value="-17">17</html:option>
+				<html:option value="-18">18</html:option>
+				<html:option value="-19">19</html:option>
+				<html:option value="-20">20</html:option>
+				<html:option value="-21">21</html:option>
+				<html:option value="-22">22</html:option>
+				<html:option value="-23">23</html:option>
+				<html:option value="-24">24</html:option>
+				<html:option value="-25">25</html:option>
+				<html:option value="-26">26</html:option>
+				<html:option value="-27">27</html:option>
+				<html:option value="-28">28</html:option>
+				<html:option value="-29">29</html:option>
+				<html:option value="-30">30</html:option>
+				<html:option value="-31">31</html:option>
+				<html:option value="-32">32</html:option>
+				<html:option value="-33">33</html:option>
+				<html:option value="-34">34</html:option>
+				<html:option value="-35">35</html:option>
+				<html:option value="-36">36</html:option>
+			</html:select>
+			<input type="submit"
+				value="<bean:message key="provider.setNoteStaleDate.btnSubmit"/>" />
+			<input type="submit" onclick="$('method').value='remove';"
+				value="<bean:message key="provider.setNoteStaleDate.btnReset"/>" />
+		</html:form> <%
                }
                else {
-            %>                            
-                <bean:message key="provider.setNoteStaleDate.msgSuccess"/> <br>
-                
-            <%
+            %> <bean:message key="provider.setNoteStaleDate.msgSuccess" />
+		<br>
+
+		<%
                }
             %>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-             
-            </td>
-        </tr>
-    </table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

@@ -26,9 +26,9 @@
 
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import ="oscar.oscarProvider.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page import="oscar.oscarProvider.data.*"%>
 
 
 <%
@@ -44,14 +44,15 @@ String domain = "@myoscar.org";
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html:html>
-    <head>
-        <html:base/>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title><bean:message key="provider.setMyOscarLogin.title"/></title>                
-    
-        <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">  
-        
-        <script type="text/javascript">
+<head>
+<html:base />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><bean:message key="provider.setMyOscarLogin.title" /></title>
+
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
+
+<script type="text/javascript">
             function validate() {
                 var ret = true;
                 var login = document.forms["setMyOscarIdForm"].myOscarLoginId.value.replace(/^\s+|\s+$/g, '');
@@ -65,26 +66,20 @@ String domain = "@myoscar.org";
                 return ret;
             }
         </script>
-    </head>
-        
-    <body class="BodyStyle" vlink="#0000FF" >
+</head>
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.setColour.msgPrefs"/>
-            </td>
-            <td style="color:white" class="MainTableTopRowRightColumn">
-                <bean:message key="provider.setMyOscarLogin.msgMyOscarId"/>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-            <html:errors />
-            <%
+<body class="BodyStyle" vlink="#0000FF">
+
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.setColour.msgPrefs" /></td>
+		<td style="color: white" class="MainTableTopRowRightColumn"><bean:message
+			key="provider.setMyOscarLogin.msgMyOscarId" /></td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn"><html:errors /> <%
               ProviderMyOscarIdData myOscarLogin = new ProviderMyOscarIdData(curUser_no);
               String login = myOscarLogin.getMyOscarId();
                int atsign = login.indexOf("@");
@@ -94,35 +89,30 @@ String domain = "@myoscar.org";
                if( request.getAttribute("status") == null )
                {
       
-            %>
-            <html:form action = "/setMyOscarId.do" > 
-                <html:hidden property="myOscarDomain" value="<%=domain%>" />
-               <bean:message key="provider.setMyOscarLogin.msgEdit"/>&nbsp;&nbsp;
-               <html:text property="myOscarLoginId" value="<%=login%>" size="20" /><%=domain%>
-               <br>
-               <input type="submit" onclick="return validate();" value="<bean:message key="provider.setMyOscarLogin.btnSubmit"/>" />                           
-            </html:form> 
-            <%
+            %> <html:form action="/setMyOscarId.do">
+			<html:hidden property="myOscarDomain" value="<%=domain%>" />
+			<bean:message key="provider.setMyOscarLogin.msgEdit" />&nbsp;&nbsp;
+               <html:text property="myOscarLoginId" value="<%=login%>"
+				size="20" /><%=domain%>
+			<br>
+			<input type="submit" onclick="return validate();"
+				value="<bean:message key="provider.setMyOscarLogin.btnSubmit"/>" />
+		</html:form> <%
                }               
                else if( ((String)request.getAttribute("status")).equals("complete") ) {
-            %>            
-                <bean:message key="provider.setMyOscarLogin.msgSuccess"/>&nbsp;'<%=login + domain%>'
-                
-            <%
+            %> <bean:message key="provider.setMyOscarLogin.msgSuccess" />&nbsp;'<%=login + domain%>'
+
+		<%
                }
             %>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-             
-            </td>
-        </tr>
-    </table>
-    <script type="text/javascript">
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+<script type="text/javascript">
         if( document.forms.length > 0 )
             document.forms["setMyOscarIdForm"].myOscarLoginId.focus();
     </script>

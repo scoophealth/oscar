@@ -1,10 +1,13 @@
+
 <%
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
   int oox=0, ooy=0;
 %>
 <%@ page language="java"%>
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.util.*, oscar.form.graphic.*" errorPage="errorpage.jsp" %>
-<%@ page import="oscar.form.*" %>
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.util.*, oscar.form.graphic.*"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.form.*"%>
 <!--  
 /*
  * 
@@ -32,7 +35,7 @@
 -->
 <HTML>
 <HEAD>
-<TITLE> New Document </TITLE>
+<TITLE>New Document</TITLE>
 </HEAD>
 
 <%
@@ -45,7 +48,9 @@
 %>
 
 <BODY>
-<center><h3>Weight Gain</h3></center>
+<center>
+<h3>Weight Gain</h3>
+</center>
 <%
 String fedb = props.getProperty("c_finalEDB", "");
 String cppw = props.getProperty("c_ppWt", "");
@@ -91,9 +96,11 @@ if (!fedb.equals("") && !cppw.equals("")) {
 		}
 	}
 %>
-<div ID="graphic" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=100+oox%>px; top:<%=50+ooy%>px; width:600px; height:600px;">
-<embed type="image/svg+xml" src="formar2wtsvg.jsp?bgimage=<%=URLEncoder.encode("graphics/pregnancyweightgain.jpg")%>&bgimagewidth=580&bgimageheight=498<%=urlparam%>" width="600" height="600"  wmode="transparent" />
-</div>
+<div ID="graphic"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=100+oox%>px; top:<%=50+ooy%>px; width:600px; height:600px;">
+<embed type="image/svg+xml"
+	src="formar2wtsvg.jsp?bgimage=<%=URLEncoder.encode("graphics/pregnancyweightgain.jpg")%>&bgimagewidth=580&bgimageheight=498<%=urlparam%>"
+	width="600" height="600" wmode="transparent" /></div>
 <%
 }
 %>

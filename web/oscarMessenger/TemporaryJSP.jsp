@@ -24,42 +24,18 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <html:html locale="true">
 
 <html>
 <head>
-<title>
-Group Configurator
-</title>
-<html:base/>
-<style type="text/css">
-
-.ChooseRecipientsBox1{
-	font-size: 80%;
-	height: 340px;
-	/*width: 800px;*/
-	overflow: auto;
-        margin-left: 4px;
-	border: 1px solid #dcdcdc;
-}
-.currGroup{
-        color: #6666ff;
-        FONT-FAMILY: tahoma;
-        font-size: 14pt;
-}
-
-.cellButtonLook{
-       background-color: #EEEEFF
-}
-
-
-
-</style>
+<title>Group Configurator</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <script language="javascript">
 function BackToOscar()
@@ -100,154 +76,143 @@ function BackToOscar()
 ////////////////////////////////////////////////////////////////////////////////
 %>
 
-<html:errors/>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <tr>
-        <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-        <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="application.title.admin"/></p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+<html:errors />
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<tr>
+		<td width="100%"
+			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
+			height="0%" colspan="2">
+		<p class="HelpAboutLogout"><span class="FakeLink"><a
+			href="Help.htm">Help</a></span> | <span class="FakeLink"><a
+			href="About.htm">About</a></span> | <span class="FakeLink"> <a
+			href="Disclaimer.htm">Disclaimer</a></span></p>
+		</td>
+	</tr>
+	<tr>
+		<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
+		<td width="100%" bgcolor="#000000"
+			style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
+		<p class="ScreenTitle"><bean:message key="application.title.admin" /></p>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-            <!----Start new rows here-->
-                <tr>
-                    <td>
- 		                <!--<div class="DivContentTitle"><bean:message key="displayMessages.title"/> of <%
+			<!----Start new rows here-->
+			<tr>
+				<td><!--<div class="DivContentTitle"><bean:message key="displayMessages.title"/> of <%
                                 //oscar.oscarMessenger.pageUtil.SessionBean bean = (oscar.oscarMessenger.pageUtil.SessionBean)request.getSession().getAttribute("SessionBean");
 
                                 /*out.print("dsffdsfdsuserName");*/%>
-                                <!--</div>-->
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="DivContentSectionHead">
-                            <%=currGroupName%>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <table>
-                           <tr>
-                              <td class=cellButtonLook >
-                              <a href="CreateGroup.jsp?Level=<%=grpNo%>">New Group</a>
-                              </td>
-                              <td>
-                              - Click here to create a new group on this Level
-                              </td>
-                           </tr>
-                           <%
+                                <!--</div>--></td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><%=currGroupName%></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td class=cellButtonLook><a
+							href="CreateGroup.jsp?Level=<%=grpNo%>">New Group</a></td>
+						<td>- Click here to create a new group on this Level</td>
+					</tr>
+					<%
                            String par = adminUtil.parentDirectory(grpNo);
 
                            if ( !(par).equals("") ){;
                            %>
-                              <tr>
-                                 <td class=cellButtonLook >
-                                   <a href="Admin.jsp?groupNo=<%=par%>">Go Back</a>
-                                 </td>
-                                 <td>
-                                 - Click here to got the parent group
-                                 </td>
-                              </tr>
-                              <tr>
-                                 <td class=cellButtonLook >
-                                   <a href="CreateGroup.jsp?Group=<%=grpNo%>">Rename</a>
-                                 </td>
-                                 <td>
-                                 - Click here to change the current groups name
-                                 </td>
-                              </tr>
-                           <%}%>
-                        </table>
+					<tr>
+						<td class=cellButtonLook><a
+							href="Admin.jsp?groupNo=<%=par%>">Go Back</a></td>
+						<td>- Click here to got the parent group</td>
+					</tr>
+					<tr>
+						<td class=cellButtonLook><a
+							href="CreateGroup.jsp?Group=<%=grpNo%>">Rename</a></td>
+						<td>- Click here to change the current groups name</td>
+					</tr>
+					<%}%>
+				</table>
 
-                        <%
+				<%
                            adminUtil.parentDirectory(grpNo);
-                        %>
-                        <br>
+                        %> <br>
 
 
-                        <% //This Part Prints all the groups for this level
+				<% //This Part Prints all the groups for this level
 
                         String groupList = adminUtil.printGroups(grpNo);
                         int numGroups = adminUtil.numGroups;
                         if ( numGroups > 0 ){%>
-                           <table><tr><td>
-                              All the groups In this Level - click to explore the lower level groups
-                           </td></tr></table>
-                       <%    out.print (groupList);
+				<table>
+					<tr>
+						<td>All the groups In this Level - click to explore the lower
+						level groups</td>
+					</tr>
+				</table>
+				<%    out.print (groupList);
                         }
-                        %>
-
-
-                        <%
+                        %> <%
                         if (request.getAttribute("fail") != null){
                            String error = ((String) request.getAttribute("fail"));
                            out.print("<br><font color=red>"+error+"</font><br>");
                         }
 
-                        %>
-                        <html:form action="UpdateMembers">
-                        <input type=hidden name="grpNo" value=<%=grpNo%> >
-                        <input type=submit name="update" class="ControlPushButton" value="Update group members">
-                        <input type=submit name="delete" class="ControlPushButton" value="Delete This group">
-                        <br>All the Members that are in this group are checked.
+                        %> <html:form action="UpdateMembers">
+					<input type=hidden name="grpNo" value=<%=grpNo%>>
+					<input type=submit name="update" class="ControlPushButton"
+						value="Update group members">
+					<input type=submit name="delete" class="ControlPushButton"
+						value="Delete This group">
+					<br>All the Members that are in this group are checked.
                         <div class="ChooseRecipientsBox1">
-                          <table>
-                            <tr>
-                              <th>
-                                &nbsp;
-                              </th>
-                              <th bgcolor=#eeeeff>
-                                last name
-                              </th>
-                              <th bgcolor=#eeeeff>
-                                 first name
-                              </th>
-                              <th bgcolor=#eeeeff>
-                                 provider type
-                              </th>
-                           </tr>
-                           <%
+					<table>
+						<tr>
+							<th>&nbsp;</th>
+							<th bgcolor=#eeeeff>last name</th>
+							<th bgcolor=#eeeeff>first name</th>
+							<th bgcolor=#eeeeff>provider type</th>
+						</tr>
+						<%
                             adminUtil.printAllProvidersWithMembers(grpNo,out);
                            %>
-                          </table>
-                        </div>
+					</table>
+					</div>
 
-                        </html:form>
-                    </td>
-                </tr>
-            <!----End new rows here-->
+				</html:form></td>
+			</tr>
+			<!----End new rows here-->
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 
 	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 </body>
 </html:html>

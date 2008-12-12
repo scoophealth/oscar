@@ -29,13 +29,17 @@
     response.sendRedirect("../logout.jsp");
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
 
 <html:html locale="true">
-<head><title><bean:message key="provider.providerchangepassword.title"/></title></head>
-<meta http-equiv="Cache-Control" content="no-cache" >
+<head>
+<title><bean:message key="provider.providerchangepassword.title" /></title>
+</head>
+<meta http-equiv="Cache-Control" content="no-cache">
 
 <script language="javascript">
 <!-- start javascript 
@@ -57,44 +61,62 @@ function checkPwdLength() {
 // stop javascript -->
 </script>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"leftmargin="0" rightmargin="0">
-<FORM NAME = "updatepassword" METHOD="post" ACTION="providerupdatepassword.jsp" onSubmit="return(checkPwdLength())">
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message key="provider.providerchangepassword.description"/></font></th>
-  </tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<FORM NAME="updatepassword" METHOD="post"
+	ACTION="providerupdatepassword.jsp" onSubmit="return(checkPwdLength())">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="provider.providerchangepassword.description" /></font></th>
+	</tr>
 </table>
 
 <table width="100%" border="0" cellpadding="2" bgcolor="#eeeeee">
-<tr>
-      <td><font face="arial" size="2"><bean:message key="provider.providerchangepassword.msgInstructions"/><b><bean:message key="provider.providerchangepassword.msgUpdate"/></b> <bean:message key="provider.providerchangepassword.msgClickButton"/></font></td>
-    </tr>
+	<tr>
+		<td><font face="arial" size="2"><bean:message
+			key="provider.providerchangepassword.msgInstructions" /><b><bean:message
+			key="provider.providerchangepassword.msgUpdate" /></b> <bean:message
+			key="provider.providerchangepassword.msgClickButton" /></font></td>
+	</tr>
 </table>
 <center>
 
-<table border="0"  width="100%" cellpadding="4" cellspacing="0">
-<tr>
-<td align="right" width="50%"><font face="arial"><bean:message key="provider.providerchangepassword.msgEnterOld"/> <b><bean:message key="provider.providerchangepassword.formOldPassword"/>:</b></font></td>
-<td><input type=password name="oldpassword" value="" size=20 maxlength=10></td>
-</tr>
-<tr>
-<td width="50%" align="right"><font face="arial"><bean:message key="provider.providerchangepassword.msgChooseNew"/> <b><bean:message key="provider.providerchangepassword.formNewPassword"/>:</b></font></td>
-<td><input type=password name="mypassword" value="" size=20 maxlength=10>
-          <font size="-2">(<bean:message key="provider.providerchangepassword.msgPasswordLength"/>)</font></td>
-</tr>
-<tr>
-<td width="50%" align="right"><font face="arial"><bean:message key="provider.providerchangepassword.msgConfirm"/> <b><bean:message key="provider.providerchangepassword.formNewPassword"/>:</b></font></td>
-<td><input type=password name="confirmpassword" value="" size=20 maxlength=10>
-          <font size="-2">(<bean:message key="provider.providerchangepassword.msgPasswordLength"/>)</font></td>
-</tr>
+<table border="0" width="100%" cellpadding="4" cellspacing="0">
+	<tr>
+		<td align="right" width="50%"><font face="arial"><bean:message
+			key="provider.providerchangepassword.msgEnterOld" /> <b><bean:message
+			key="provider.providerchangepassword.formOldPassword" />:</b></font></td>
+		<td><input type=password name="oldpassword" value="" size=20
+			maxlength=10></td>
+	</tr>
+	<tr>
+		<td width="50%" align="right"><font face="arial"><bean:message
+			key="provider.providerchangepassword.msgChooseNew" /> <b><bean:message
+			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
+		<td><input type=password name="mypassword" value="" size=20
+			maxlength=10> <font size="-2">(<bean:message
+			key="provider.providerchangepassword.msgPasswordLength" />)</font></td>
+	</tr>
+	<tr>
+		<td width="50%" align="right"><font face="arial"><bean:message
+			key="provider.providerchangepassword.msgConfirm" /> <b><bean:message
+			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
+		<td><input type=password name="confirmpassword" value="" size=20
+			maxlength=10> <font size="-2">(<bean:message
+			key="provider.providerchangepassword.msgPasswordLength" />)</font></td>
+	</tr>
 </table>
 </center>
-<table width="100%" border="0" cellpadding="4" cellspacing="0"  BGCOLOR="#486ebd">
-  <tr>
-    <TD align="center" width="50%">
-    <INPUT TYPE="submit" VALUE='<bean:message key="provider.providerchangepassword.btnSubmit"/>' SIZE="7"> &nbsp;&nbsp;&nbsp;
-    <INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnBack"/>' onClick="window.close();"></TD>
-  </tr>
+<table width="100%" border="0" cellpadding="4" cellspacing="0"
+	BGCOLOR="#486ebd">
+	<tr>
+		<TD align="center" width="50%"><INPUT TYPE="submit"
+			VALUE='<bean:message key="provider.providerchangepassword.btnSubmit"/>'
+			SIZE="7"> &nbsp;&nbsp;&nbsp; <INPUT TYPE="RESET"
+			VALUE='<bean:message key="global.btnBack"/>'
+			onClick="window.close();"></TD>
+	</tr>
 </TABLE>
 </form>
 </body>

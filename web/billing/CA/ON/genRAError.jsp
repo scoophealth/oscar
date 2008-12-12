@@ -1,3 +1,4 @@
+
 <% 
     if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 
@@ -7,10 +8,13 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 <jsp:forward page="onGenRAError.jsp" />
 <% } %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <!--  
 /*
  * 
@@ -38,20 +42,22 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 -->
 <html>
 <head>
-<link rel="stylesheet" href="billing.css" >
+<link rel="stylesheet" href="billing.css">
 <title>Billing Reconcilliation</title>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-	<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
-	Billing Reconcilliation - Error Report</font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+		Billing Reconcilliation - Error Report</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 <% 
@@ -66,15 +72,15 @@ raNo = request.getParameter("rano");
 if (raNo == null || raNo.compareTo("") == 0) return;
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<form action="genRAError.jsp">
-<tr bgcolor="#333333">
-	<th>
-	<input type="hidden" name="rano" value="<%=raNo%>">
-	<select name="proNo">
-		<option value="all"  <%=proNo.equals("all")?"selected":""%>>All Providers</option>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<form action="genRAError.jsp">
+	<tr bgcolor="#333333">
+		<th><input type="hidden" name="rano" value="<%=raNo%>"> <select
+			name="proNo">
+			<option value="all" <%=proNo.equals("all")?"selected":""%>>All
+			Providers</option>
 
-<%   
+			<%   
 ResultSet rsdemo3 = null;
 ResultSet rsdemo2 = null;
 ResultSet rsdemo = null;
@@ -84,34 +90,34 @@ while (rsdemo.next()) {
 	plast = rsdemo.getString("last_name");
 	pfirst = rsdemo.getString("first_name");
 %>
-		<option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
-<%
+			<option value="<%=pohipno%>" <%=proNo.equals(pohipno)?"selected":""%>><%=plast%>,<%=pfirst%></option>
+			<%
 }
 %>
-	</select><input type=submit name=submit value=Generate>
-	</th>
-</tr>
-</form>
+		</select><input type=submit name=submit value=Generate></th>
+	</tr>
+	</form>
 </table>
 
 
 <% 
 if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){ 
 %>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
-<form>
-<tr> 
-	<td width="10%" height="16">Billing No</td>
-	<td width="15%" height="16">Demographic </td>
-	<td width="10%" height="16">Service Date </td>
-	<td width="10%" height="16">Service Code </td>
-	<td width="15%" height="16">Count</td>
-	<td width="15%" height="16" align=right>Claim</td>
-	<td width="15%" height="16" align=right>Pay </td>
-	<td width="10%" height="16" align=right>Error</td>
-</tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+		<td width="10%" height="16">Billing No</td>
+		<td width="15%" height="16">Demographic</td>
+		<td width="10%" height="16">Service Date</td>
+		<td width="10%" height="16">Service Code</td>
+		<td width="15%" height="16">Count</td>
+		<td width="15%" height="16" align=right>Claim</td>
+		<td width="15%" height="16" align=right>Pay</td>
+		<td width="10%" height="16" align=right>Error</td>
+	</tr>
 
-<%
+	<%
 /*
 	String[] param = new String[3];
 	param[0] = raNo;
@@ -143,36 +149,38 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 			}    
 */
 %>
-<tr> 
-	<td width="10%" height="16"><%=account%></td>
-	<td width="10%" height="16"><%=demoLast%></td>
-	<td width="10%" height="16"><%=servicedate%></td>
-	<td width="10%" height="16"><%=servicecode%></td>
-	<td width="15%" height="16"><%=serviceno%></td>
-	<td width="15%" height="16" align=right><%=amountsubmit%></td>
-	<td width="15%" height="16" align=right><%=amountpay%></td>
-	<td width="10%" height="16" align=right><%=explain%></td>
-</tr>
+	<tr>
+		<td width="10%" height="16"><%=account%></td>
+		<td width="10%" height="16"><%=demoLast%></td>
+		<td width="10%" height="16"><%=servicedate%></td>
+		<td width="10%" height="16"><%=servicecode%></td>
+		<td width="15%" height="16"><%=serviceno%></td>
+		<td width="15%" height="16" align=right><%=amountsubmit%></td>
+		<td width="15%" height="16" align=right><%=amountpay%></td>
+		<td width="10%" height="16" align=right><%=explain%></td>
+	</tr>
 
-<%
+	<%
 //		}
 //	} 
 } else {
 %>
 
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
-<tr> 
-	<td width="10%" height="16">Billing No</td>
-	<td width="15%" height="16">Demographic </td>
-	<td width="10%" height="16">Service Date </td>
-	<td width="10%" height="16">Service Code </td>
-	<td width="15%" height="16">Count</td>
-	<td width="15%" height="16" align=right>Claim</td>
-	<td width="15%" height="16" align=right>Pay </td>
-	<td width="10%" height="16" align=right>Error</td>
-</tr>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0"
+		bgcolor="#EFEFEF">
+		<form>
+		<tr>
+			<td width="10%" height="16">Billing No</td>
+			<td width="15%" height="16">Demographic</td>
+			<td width="10%" height="16">Service Date</td>
+			<td width="10%" height="16">Service Code</td>
+			<td width="15%" height="16">Count</td>
+			<td width="15%" height="16" align=right>Claim</td>
+			<td width="15%" height="16" align=right>Pay</td>
+			<td width="10%" height="16" align=right>Error</td>
+		</tr>
 
-<%
+		<%
 	String[] param0 = new String[2];
 	String[] param = new String[3];
 	param[0] = raNo;
@@ -203,28 +211,28 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 				explain = "**";
 			}      
 %>
-<tr> 
-	<td height="16"><%=account%></td>
-	<td height="16"><%=demoLast%></td>
-	<td height="16"><%=servicedate%></td>
-	<td height="16"><%=servicecode%></td>
-	<td height="16"><%=serviceno%></td>
-	<td height="16" align=right><%=amountsubmit%></td>
-	<td height="16" align=right><%=amountpay%></td>
-	<td height="16" align=right><%=explain%></td>
-</tr>
+		<tr>
+			<td height="16"><%=account%></td>
+			<td height="16"><%=demoLast%></td>
+			<td height="16"><%=servicedate%></td>
+			<td height="16"><%=servicecode%></td>
+			<td height="16"><%=serviceno%></td>
+			<td height="16" align=right><%=amountsubmit%></td>
+			<td height="16" align=right><%=amountpay%></td>
+			<td height="16" align=right><%=explain%></td>
+		</tr>
 
-<%
+		<%
 		}
 	}
 %>
 
-</table>
+	</table>
 
-<%
+	<%
 }
 apptMainBean.closePstmtConn();
-%>  
+%>
 
 </body>
 </html>

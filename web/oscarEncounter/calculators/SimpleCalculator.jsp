@@ -24,17 +24,16 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html>
 
 
 
 <head>
-<title>
-<bean:message key="oscarEncounter.calculators.SimpleCalculator.title"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.calculators.SimpleCalculator.title" /></title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -226,138 +225,131 @@ function popupStart(vheight,vwidth,varpage) {
 </SCRIPT>
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-	}
-	input.calFunctionButton{
-		width: 30px;
-		color: #ff0000;
-	}	
-	input.calDigitButton{
-		width: 30px;
-		color: #0000ff;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF"  >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-               <bean:message key="oscarEncounter.calculators.SimpleCalculator.module"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						<bean:message key="oscarEncounter.calculators.SimpleCalculator.msgTitle"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'../Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'../About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'../License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">&nbsp;
-            
-            </td>
-            <td class="MainTableRightColumn">
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarEncounter.calculators.SimpleCalculator.module" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message
+					key="oscarEncounter.calculators.SimpleCalculator.msgTitle" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'../Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'../About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'../License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
+			<tr>
+				<td style="text-align: center;">
+
+
 				<table>
 					<tr>
-						<td style="text-align: center;">
-							
-
-<table>
-	<tr>
-		<td id="blah"></td>
-	</tr>
-</table>
-<bean:message key="oscarEncounter.calculators.SimpleCalculator.MsgUsage"/>
-
-<FORM NAME="rcform">
-
-	<INPUT TYPE="text" VALUE="0" NAME="display">
-		<TABLE>
-			<TR>
-				<TD><INPUT TYPE=button VALUE="M+"  onClick="Memory(this.form, '+')" class="calFunctionButton" title="Add to Memory"></td>
-				<TD><INPUT TYPE=button VALUE="M-"  onClick="Memory(this.form, '-')" class="calFunctionButton" title="Subtract from Memory"></td>
-				<TD><INPUT TYPE=button VALUE="MS"  onClick="Memory(this.form, 'S')" class="calFunctionButton" title="Save this Number to Memory"></td>
-				<TD><INPUT TYPE=button VALUE="MC"  onClick="Memory(this.form, 'C')" class="calFunctionButton" title="Clear Memory"></td>
-				<TD><INPUT TYPE=button VALUE="MR"  onClick="Memory(this.form, 'R')" class="calFunctionButton" title="Recall Memory"></td>
-			</tr>
-			<TR>
-				<TD><INPUT TYPE=button VALUE="+/-" onClick="ReverseSign(this.form)" class="calFunctionButton"></td>
-				<TD><INPUT TYPE=button VALUE="7"   onClick="AddDigit(this.form, '7')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="8"   onClick="AddDigit(this.form, '8')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="9"   onClick="AddDigit(this.form, '9')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="/"   onClick="Op(this.form, '/')" class="calFunctionButton"></td>
-			</tr>
-			<TR>
-				<TD><INPUT TYPE=button VALUE="^"   onClick="Op(this.form, '^')" class="calFunctionButton"></td>
-				<TD><INPUT TYPE=button VALUE="4"   onClick="AddDigit(this.form, '4')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="5"   onClick="AddDigit(this.form, '5')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="6"   onClick="AddDigit(this.form, '6')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="*"   onClick="Op(this.form, '*')" class="calFunctionButton"></td>
-			</tr>
-			<TR>
-				<TD><INPUT TYPE=button VALUE="C"   onClick="Clear(this.form)" class="calFunctionButton"></td>
-				<TD><INPUT TYPE=button VALUE="1"   onClick="AddDigit(this.form, '1')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="2"   onClick="AddDigit(this.form, '2')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="3"   onClick="AddDigit(this.form, '3')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="-"   onClick="Op(this.form, '-')" class="calFunctionButton"></td>
-			</tr>
-			<TR>
-				<TD><INPUT TYPE=button VALUE="CE"  onClick="ClearEntry(this.form)"    class="calFunctionButton"></td>
-				<TD><INPUT TYPE=button VALUE="0"   onClick="AddDigit(this.form, '0')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="."   onClick="AddDigit(this.form, '.')" class="calDigitButton"></td>
-				<TD><INPUT TYPE=button VALUE="="   onClick="Eq(this.form)"            class="calFunctionButton"></td>
-				<TD><INPUT TYPE=button VALUE="+"   onClick="Op(this.form, '+')"       class="calFunctionButton"></td>
-			</tr>
-			
-		</TABLE>
-</FORM>
-
-
-				
-            			</td>						
+						<td id="blah"></td>
 					</tr>
 				</table>
-			</td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+				<bean:message
+					key="oscarEncounter.calculators.SimpleCalculator.MsgUsage" />
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
+				<FORM NAME="rcform"><INPUT TYPE="text" VALUE="0"
+					NAME="display">
+				<TABLE>
+					<TR>
+						<TD><INPUT TYPE=button VALUE="M+"
+							onClick="Memory(this.form, '+')" class="calFunctionButton"
+							title="Add to Memory"></td>
+						<TD><INPUT TYPE=button VALUE="M-"
+							onClick="Memory(this.form, '-')" class="calFunctionButton"
+							title="Subtract from Memory"></td>
+						<TD><INPUT TYPE=button VALUE="MS"
+							onClick="Memory(this.form, 'S')" class="calFunctionButton"
+							title="Save this Number to Memory"></td>
+						<TD><INPUT TYPE=button VALUE="MC"
+							onClick="Memory(this.form, 'C')" class="calFunctionButton"
+							title="Clear Memory"></td>
+						<TD><INPUT TYPE=button VALUE="MR"
+							onClick="Memory(this.form, 'R')" class="calFunctionButton"
+							title="Recall Memory"></td>
+					</tr>
+					<TR>
+						<TD><INPUT TYPE=button VALUE="+/-"
+							onClick="ReverseSign(this.form)" class="calFunctionButton"></td>
+						<TD><INPUT TYPE=button VALUE="7"
+							onClick="AddDigit(this.form, '7')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="8"
+							onClick="AddDigit(this.form, '8')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="9"
+							onClick="AddDigit(this.form, '9')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="/" onClick="Op(this.form, '/')"
+							class="calFunctionButton"></td>
+					</tr>
+					<TR>
+						<TD><INPUT TYPE=button VALUE="^" onClick="Op(this.form, '^')"
+							class="calFunctionButton"></td>
+						<TD><INPUT TYPE=button VALUE="4"
+							onClick="AddDigit(this.form, '4')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="5"
+							onClick="AddDigit(this.form, '5')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="6"
+							onClick="AddDigit(this.form, '6')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="*" onClick="Op(this.form, '*')"
+							class="calFunctionButton"></td>
+					</tr>
+					<TR>
+						<TD><INPUT TYPE=button VALUE="C" onClick="Clear(this.form)"
+							class="calFunctionButton"></td>
+						<TD><INPUT TYPE=button VALUE="1"
+							onClick="AddDigit(this.form, '1')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="2"
+							onClick="AddDigit(this.form, '2')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="3"
+							onClick="AddDigit(this.form, '3')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="-" onClick="Op(this.form, '-')"
+							class="calFunctionButton"></td>
+					</tr>
+					<TR>
+						<TD><INPUT TYPE=button VALUE="CE"
+							onClick="ClearEntry(this.form)" class="calFunctionButton"></td>
+						<TD><INPUT TYPE=button VALUE="0"
+							onClick="AddDigit(this.form, '0')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="."
+							onClick="AddDigit(this.form, '.')" class="calDigitButton"></td>
+						<TD><INPUT TYPE=button VALUE="=" onClick="Eq(this.form)"
+							class="calFunctionButton"></td>
+						<TD><INPUT TYPE=button VALUE="+" onClick="Op(this.form, '+')"
+							class="calFunctionButton"></td>
+					</tr>
 
-            </td>
-        </tr>
-    </table>
+				</TABLE>
+				</FORM>
+
+
+
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

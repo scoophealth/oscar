@@ -28,11 +28,12 @@
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="../appointment/errorpage.jsp"%>
 
 <html>
 <head>
-<title> </title>
+<title></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
@@ -43,7 +44,8 @@
 //-->
 </script>
 </head>
-<body  bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <%
   int left = Integer.parseInt(request.getParameter("left"));
   int top = Integer.parseInt(request.getParameter("top"));
@@ -56,9 +58,12 @@
   
   for (int i=0; i<b1; i++) {
 %>
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+i*(height+gap/2)%>px; width:400px; height:100px;"> 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr><td><%=request.getParameter("label1")%></td></tr>
+<div ID="blockDiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+i*(height+gap/2)%>px; width:400px; height:100px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><%=request.getParameter("label1")%></td>
+	</tr>
 </table>
 </div>
 
@@ -67,9 +72,12 @@
   for (int i=0; i<b2; i++) {
 %>
 
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+b1*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;"> 
+<div ID="blockDiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+b1*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><td><%=request.getParameter("label2")%></td></tr>
+	<tr>
+		<td><%=request.getParameter("label2")%></td>
+	</tr>
 </table>
 </div>
 <%
@@ -77,20 +85,25 @@
   for (int i=0; i<b3; i++) {
 %>
 
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+(b1+b2)*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;"> 
+<div ID="blockDiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+(b1+b2)*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr><td><%=request.getParameter("label3")%></td></tr>
+	<tr>
+		<td><%=request.getParameter("label3")%></td>
+	</tr>
 </table>
 </div>
 <%
   }
 %>
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:0px; width:70px; height:20px;"> 
-  <a href=# onClick="window.print();"><img src="../images/print.gif" width="16" height="16" border="0">Print</a> 
-</div>
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:22px; width:70px; height:20px;"> 
-  <a href=# onClick="history.go(-1);return false;"><img src="../images/previous.gif" border="0"> Back</a> 
-</div>
+<div ID="blockDiv1"
+	STYLE="position: absolute; visibility: visible; z-index: 2; left: 620px; top: 0px; width: 70px; height: 20px;">
+<a href=# onClick="window.print();"><img src="../images/print.gif"
+	width="16" height="16" border="0">Print</a></div>
+<div ID="blockDiv1"
+	STYLE="position: absolute; visibility: visible; z-index: 2; left: 620px; top: 22px; width: 70px; height: 20px;">
+<a href=# onClick="history.go(-1);return false;"><img
+	src="../images/previous.gif" border="0"> Back</a></div>
 
 </body>
 </html>

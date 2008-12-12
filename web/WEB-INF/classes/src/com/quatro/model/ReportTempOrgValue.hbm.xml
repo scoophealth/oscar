@@ -7,7 +7,7 @@
 		<id name="counter" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="templateNo" /> 
-        <property name="orgCd" /> 
+		<property name="templateNo" />
+		<property name="orgCd" />
 	</class>
 </hibernate-mapping>

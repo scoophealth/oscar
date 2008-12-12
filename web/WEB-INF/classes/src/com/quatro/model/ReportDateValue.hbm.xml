@@ -7,11 +7,11 @@
 		<id name="sessionId" column="sessionid" type="string">
 			<generator class="assigned" />
 		</id>
-        <property name="startDate" type="java.util.Date" /> 
-        <property name="endDate" type="java.util.Date" /> 
-        <property name="asOfDate" type="java.util.Date" /> 
-        <property name="startDate_S"/> 
-        <property name="endDate_S" /> 
-        <property name="asOfDate_S"/> 
+		<property name="startDate" type="java.util.Date" />
+		<property name="endDate" type="java.util.Date" />
+		<property name="asOfDate" type="java.util.Date" />
+		<property name="startDate_S" />
+		<property name="endDate_S" />
+		<property name="asOfDate_S" />
 	</class>
 </hibernate-mapping>

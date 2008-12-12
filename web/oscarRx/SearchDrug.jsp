@@ -1,31 +1,34 @@
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
+<%@ page
+	import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
 
 
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../noRights.html");%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
+	reverse="<%=true%>">
+	<%response.sendRedirect("../noRights.html");%>
 </security:oscarSec>
 
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
@@ -74,22 +77,15 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 <html:html locale="true">
 <head>
-<title><bean:message key="SearchDrug.title"/></title>
+<title><bean:message key="SearchDrug.title" /></title>
 <link rel="stylesheet" type="text/css" href="styles.css">
 
 <html:base />
 
-<style type="text/css">
-table.hiddenLayer {	
-	height: 200px;        	
-	margin-left: 20px;
-	border: 1px solid #dcdcdc;
-	background-color: #f5f5f5        
-}
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
-<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
 <script type="text/javascript">
 
 function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
@@ -214,79 +210,86 @@ function load() {
             showall = true;
 %>
 
-<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient"/>
+<bean:define id="patient"
+	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="load()">
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-    <tr>
-    <%@ include file="SideLinksEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
-    <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top"><!--Column Two Row Two-->
-        <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-            <tr>
-                <td width="0%" valign="top">
-                    <div class="DivCCBreadCrumbs">
-              	        <b><bean:message key="SearchDrug.title"/></b>
-                    </div>
-                </td>
-            </tr>
-<!----Start new rows here-->
-            <tr>
-                <td>
-                    <div class="DivContentTitle"><bean:message key="SearchDrug.title"/></div>                    
-               </td>
-            </tr>
-            <tr>
- 		        <td>
-                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section1Title"/></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table>
-                        <tr>
-                            <td>
-                                <b><bean:message key="SearchDrug.nameText"/></b>
-                                <jsp:getProperty name="patient" property="firstName"/> <jsp:getProperty name="patient" property="surname"/>
-                            </td>
-                            <td></td>
-                            <td>
-                                <b><bean:message key="SearchDrug.ageText"/></b>
-                                <jsp:getProperty name="patient" property="age"/>
-                            </td>
-                            <td></td>
-                            <td>                               
-                               <b>Prefered Pharmacy :</b>
-                               <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" ><%=prefPharmacy%></a>                               
-                            </td>
-                        </tr>
-                        <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                            <indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">                               
-                                <tr>
-                                    <td colspan="3">
-                                        <!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>-->
-                                        <a href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a>   
-                                    </td>                            
-                                </tr>                                                      
-                            </indivo:indivoRegistered>
-                        </oscar:oscarPropertiesCheck>
-                    </table>
-                </td>
-            </tr>
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+	<tr>
+		<%@ include file="SideLinksEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top"><!--Column Two Row Two-->
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<tr>
+				<td width="0%" valign="top">
+				<div class="DivCCBreadCrumbs"><b><bean:message
+					key="SearchDrug.title" /></b></div>
+				</td>
+			</tr>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle"><bean:message
+					key="SearchDrug.title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="SearchDrug.section1Title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty
+							name="patient" property="firstName" /> <jsp:getProperty
+							name="patient" property="surname" /></td>
+						<td></td>
+						<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty
+							name="patient" property="age" /></td>
+						<td></td>
+						<td><b>Prefered Pharmacy :</b> <a
+							href="javascript: function myFunction() {return false; }"
+							onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
+					</tr>
+					<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+						<indivo:indivoRegistered
+							demographic="<%=String.valueOf(bean.getDemographicNo())%>"
+							provider="<%=bean.getProviderNo()%>">
+							<tr>
+								<td colspan="3"><!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>-->
+								<a
+									href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send
+								To PHR</a></td>
+							</tr>
+						</indivo:indivoRegistered>
+					</oscar:oscarPropertiesCheck>
+				</table>
+				</td>
+			</tr>
 
-            <tr>
-                <td>
-                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title"/> 
-                                                   
-                   (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)
-                        &nbsp;&nbsp;(<a href="#" onclick="$('reprint').toggle();return false;">Reprint</a>)
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div style="height:100px; overflow:auto; background-color: #DCDCDC; border: thin solid green; display:none;" id="reprint">
-                        <%
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="SearchDrug.section2Title" /> (<a
+					href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)
+				&nbsp;&nbsp;(<a href="#"
+					onclick="$('reprint').toggle();return false;">Reprint</a>)</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div
+					style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;"
+					id="reprint">
+				<%
                            oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
                            prescribedDrugs = patient.getPrescribedDrugScripts();    //this function only returns drugs which have an entry in prescription and drugs table
                            String script_no = "";                           
@@ -294,38 +297,41 @@ function load() {
                            for(int i=0; i<prescribedDrugs.length; i++) {   
                                oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                                    if(drug.getScript_no() != null &&  script_no.equals(drug.getScript_no())) {                                                                            
-                        %>               
-                        <br><div style=" float:left; width:24%; padding-left:40px;">&nbsp;</div><a style="float:left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
-                        <%
+                        %> <br>
+				<div style="float: left; width: 24%; padding-left: 40px;">&nbsp;</div>
+				<a style="float: left;"
+					href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
+				<%
                                     }                                       
                                     else {                                                                        
-                         %>
-                         
-                             <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float:left; width:12%; padding-left:20px;"><%=drug.getRxDate()%></div><div style="float:left; width:12%; padding-left:20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div><a style="float:left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
-                             <%                                                                            
+                         %> <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div
+					style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
+				<div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
+				<a style="float: left;"
+					href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
+				<%                                                                            
                                     }
                                     script_no = drug.getScript_no() == null ? "" : drug.getScript_no();
                              }                           
-                             %>  
-                                              
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table>
-                    <tr>
-                       <td width="100%">
-                            <div class="Step1Text" style="width:100%">
-                            <table width="100%" cellpadding="3">
-                                <tr>
-                                    <th align=left><b>Rx Date</b></th>
-                                    <th align=left><b>Prescription</b></th>
-                                    <th align=center width="100px"><b>Represcribe</b></th>
-                                    <th align=center width="100px"><b>Delete</b></th>
-                                </tr>
+                             %>
+				</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td width="100%">
+						<div class="Step1Text" style="width: 100%">
+						<table width="100%" cellpadding="3">
+							<tr>
+								<th align=left><b>Rx Date</b></th>
+								<th align=left><b>Prescription</b></th>
+								<th align=center width="100px"><b>Represcribe</b></th>
+								<th align=center width="100px"><b>Delete</b></th>
+							</tr>
 
-                                <%                                
+							<%                                
 
                                 if(!showall)                                                                    
                                     prescribedDrugs = patient.getPrescribedDrugsUnique();
@@ -348,64 +354,52 @@ function load() {
                                         styleColor="style=\"text-decoration: line-through;\"";
 				    }
                                     %>
-                                    <tr>
-                                        <td valign="top">
-                                            <a <%= styleColor%>
-                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+							<tr>
+								<td valign="top"><a <%= styleColor%>
+									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                <%= drug.getRxDate() %>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a <%= styleColor%>
-                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+								<%= drug.getRxDate() %> </a></td>
+								<td><a <%= styleColor%>
+									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                
-                                                
-                                                <%=drug.getFullOutLine().replaceAll(";"," ")%>
-                                            </a>
-                                        </td>
-                                        <td width="100px" align="center">
-                                            <input type=checkbox name="chkRePrescribe" align="center" drugId=<%= drug.getDrugId() %> />
-                                        </td>
-                                        <td width="100px" align="center">
-                                            <input type=checkbox name="chkDelete" align="center" drugId=<%= drug.getDrugId() %> />
-                                        </td>
-                                    </tr>
-                                    <%
+
+
+								<%=drug.getFullOutLine().replaceAll(";"," ")%> </a></td>
+								<td width="100px" align="center"><input type=checkbox
+									name="chkRePrescribe" align="center"
+									drugId=<%= drug.getDrugId() %> /></td>
+								<td width="100px" align="center"><input type=checkbox
+									name="chkDelete" align="center" drugId=<%= drug.getDrugId() %> />
+								</td>
+							</tr>
+							<%
                                 }
                                 %>
-                            </table>
+						</table>
 
-                            </div>
-                            <div style="margin-top:10px; margin-left:20px; width:100%">
-                            <table width="100%" cellspacing=0 cellpadding=0>
-                                <tr>
-                                    <td align=left>
-                                        <% if(showall) { %>
-                                            <a href="SearchDrug.jsp">Show Current</a>
-                                        <% } else { %>
-                                            <a href="SearchDrug.jsp?show=all">Show All</a>
-                                        <% } %>
-                                    </td>
-                                    <td align=right>
-                                        <span style="width:350px;align:right">
-                                            <input type=button name="cmdAllergies" value="View / Edit Allergies"
-                                                class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';"
-                                                style="width:100px" />
-                                            <input type=button name="cmdRePrescribe" value="Represcribe"
-                                                class="ControlPushButton" onclick="javascript:RePrescribe();"
-                                                style="width:100px" />
-                                            <input type=button name="cmdDelete" value="Delete"
-                                                class="ControlPushButton" onclick="javascript:Delete();"
-                                                style="width:100px" />
-                                        </span>
-                                    </td>
-                                </tr>
-                            </table>
-                            </div>
+						</div>
+						<div style="margin-top: 10px; margin-left: 20px; width: 100%">
+						<table width="100%" cellspacing=0 cellpadding=0>
+							<tr>
+								<td align=left>
+								<% if(showall) { %> <a href="SearchDrug.jsp">Show Current</a> <% } else { %>
+								<a href="SearchDrug.jsp?show=all">Show All</a> <% } %>
+								</td>
+								<td align=right><span style="width: 350px; align: right">
+								<input type=button name="cmdAllergies"
+									value="View / Edit Allergies" class="ControlPushButton"
+									onclick="javascript:window.location.href='ShowAllergies.jsp';"
+									style="width: 100px" /> <input type=button
+									name="cmdRePrescribe" value="Represcribe"
+									class="ControlPushButton" onclick="javascript:RePrescribe();"
+									style="width: 100px" /> <input type=button name="cmdDelete"
+									value="Delete" class="ControlPushButton"
+									onclick="javascript:Delete();" style="width: 100px" /> </span></td>
+							</tr>
+						</table>
+						</div>
 
-                            <script language=javascript>
+						<script language=javascript>
                                 function reprint(drug) {
                                     document.forms[0].drugList.value = drug;
                                     document.forms[0].method.value = "reprint";
@@ -458,67 +452,62 @@ function load() {
                                         }
                                     }
                                 }
-                            </script>
+                            </script> <html:form action="/oscarRx/rePrescribe">
+							<html:hidden property="drugList" />
+							<input type="hidden" name="method">
+						</html:form> <br>
+						<html:form action="/oscarRx/deleteRx">
+							<html:hidden property="drugList" />
+						</html:form></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="SearchDrug.section3Title" /></div>
+				</td>
+			</tr>
 
-                            <html:form  action="/oscarRx/rePrescribe">
-                            <html:hidden property="drugList" />
-                            <input type="hidden" name="method">
-                            </html:form>
-                            <br>
-                            <html:form   action="/oscarRx/deleteRx">
-                            <html:hidden property="drugList" />
-                            </html:form>                           
-                        </td>
-                    </tr>
-                    </table>
-                </td>
-            </tr>
-                <tr>
- 		   <td>
-                      <div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title"/></div>
-                    </td>
-                </tr>
+			<tr>
+				<td><html:form action="/oscarRx/searchDrug"
+					focus="searchString" onsubmit="return processData();">
+					<html:hidden property="demographicNo"
+						value="<%= new Integer(patient.getDemographicNo()).toString()%>" />
+					<table>
+						<tr valign="center">
+							<td><bean:message key="SearchDrug.drugSearchTextBox" /><br>
+							<html:text styleId="searchString" property="searchString"
+								size="16" maxlength="16" /></td>
+							<td width=100><a href="javascript:goDOC();">Drug of
+							Choice</a></td>
+							<td><oscar:oscarPropertiesCheck
+								property="drugref_route_search" value="on">
+								<bean:message key="SearchDrug.drugSearchRouteLabel" />
+								<br>
+								<%  for (int i=0; i<d_route.length; i++) { %>
+								<input type=checkbox name=route <%=i%>
+									value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
+								<%  } %>
+								<html:hidden property="searchRoute" />
+							</oscar:oscarPropertiesCheck></td>
+						</tr>
+						<tr>
+							<td colspan=3><html:submit property="submit" value="Search"
+								styleClass="ControlPushButton" /> &nbsp;&nbsp;&nbsp; <input
+								type=button class="ControlPushButton"
+								onclick="searchString.value='';searchRoute.value='';searchString.focus();"
+								value="Reset" /> <input type=button class="ControlPushButton"
+								onclick="customWarning();" value="Custom Drug" /></td>
+						</tr>
+					</table>
+				</html:form></td>
+			</tr>
 
-            <tr>
- 		   <td>
-                      <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return processData();">
-                      <html:hidden property="demographicNo" value="<%= new Integer(patient.getDemographicNo()).toString()%>" />
-                      <table>
-                        <tr valign="center">
-			    <td>
-				<bean:message key="SearchDrug.drugSearchTextBox"/><br>
-				<html:text styleId="searchString" property="searchString" size="16" maxlength="16"/>
-			    </td>
-			    <td width=100>
-				<a href="javascript:goDOC();">Drug of Choice</a>                            
-			    </td>
-			    <td>
-				<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
-				    <bean:message key="SearchDrug.drugSearchRouteLabel"/><br>
-				    <%  for (int i=0; i<d_route.length; i++) { %>
-				    <input type=checkbox name=route<%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
-				    <%  } %>
-				    <html:hidden property="searchRoute"/>
-				</oscar:oscarPropertiesCheck>
-			    </td>
-                        </tr>
-                        <tr>
-                          <td colspan=3>
-                            <html:submit property="submit" value="Search" styleClass="ControlPushButton"/>
-			    &nbsp;&nbsp;&nbsp;
-                            <input type=button class="ControlPushButton"  onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="Reset" />
-                            <input type=button class="ControlPushButton"  onclick="customWarning();" value="Custom Drug" /> 
-                          </td>
-                        </tr>
-                      </table>
-                      </html:form>
-                    </td>
-                  </tr>
-
-<logic:notEqual name="bean" property="stashSize" value="0">
-                  <tr>
-                    <td>
-                        <script language=javascript>
+			<logic:notEqual name="bean" property="stashSize" value="0">
+				<tr>
+					<td><script language=javascript>
                             function submitPending(stashId, action){
                                 var frm = document.forms.RxStashForm;
                                 frm.stashId.value = stashId;
@@ -526,166 +515,148 @@ function load() {
                                 frm.submit();
                             }
 
-                        </script>
-                        <html:form action="/oscarRx/stash">                       
-                             <html:hidden property="action" />
-                             <html:hidden property="stashId" />                       
-                        </html:form>
+                        </script> <html:form action="/oscarRx/stash">
+						<html:hidden property="action" />
+						<html:hidden property="stashId" />
+					</html:form>
 
-                        <div class="DivContentSectionHead"><bean:message key="WriteScript.section5Title"/></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <script language=javascript>
+					<div class="DivContentSectionHead"><bean:message
+						key="WriteScript.section5Title" /></div>
+					</td>
+				</tr>
+				<tr>
+					<td><script language=javascript>
                             function ShowDrugInfo(GN){
                                 window.open("drugInfo.do?GN=" + escape(GN), "_blank",
                                     "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
                             }
                         </script>
-                        <table cellspacing=0 cellpadding=5>
-                        <% int i=0; %>
-                        <logic:iterate id="rx" name="bean" property="stash" length="stashSize">
-                            <tr>
-                                <td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
-                                <td><a href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
-                                <td>
-                                    <a href="javascript:submitPending(<%= i%>, 'edit');">
-                                        <bean:write name="rx" property="rxDisplay" />
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="javascript:ShowDrugInfo('<%= ((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName() %>');">Info</a>
-                                </td>
-                            </tr>
-                            <% i++; %>
-                        </logic:iterate>
-                        </table>
-                        <br>
+					<table cellspacing=0 cellpadding=5>
+						<% int i=0; %>
+						<logic:iterate id="rx" name="bean" property="stash"
+							length="stashSize">
+							<tr>
+								<td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
+								<td><a href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
+								<td><a href="javascript:submitPending(<%= i%>, 'edit');">
+								<bean:write name="rx" property="rxDisplay" /> </a></td>
+								<td><a
+									href="javascript:ShowDrugInfo('<%= ((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName() %>');">Info</a>
+								</td>
+							</tr>
+							<% i++; %>
+						</logic:iterate>
+					</table>
+					<br>
 
-                        <input type=button class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="Save and Print" />
-                    </td>
-                </tr>
-</logic:notEqual>
+					<input type=button class="ControlPushButton"
+						onclick="javascript:window.location.href='viewScript.do';"
+						value="Save and Print" /></td>
+				</tr>
+			</logic:notEqual>
 
-                        <!----End new rows here-->
-                <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+			<!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 
-    <tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    </tr>
+	<tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
 
-    <tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-    </tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
 
-    <tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-    </tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 
 </table>
 
 
-                                                         
-                                                                
-                                                                   
-      
+
+
+
+
 <% if (pharmacy != null ){ %>
-<div id="Layer1" style="position:absolute; left:1px; top:1px; width:350px; height:311px; visibility: hidden; z-index:1"   >
-<!--  This should be changed to automagically fill if this changes often -->      
-                       
-<table  border="0" cellspacing="1" cellpadding="1" align=center class="hiddenLayer">
-    <tr class="LightBG"> 
-      <td class="wcblayerTitle">&nbsp;</td>
-      <td class="wcblayerTitle">&nbsp;</td>   
-      <td class="wcblayerTitle" align="right">
-             <a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a>           
-      </td>
-    </tr>
-   
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Name
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>
-          <td><%=pharmacy.name%></td>
-    </tr>                  
-  
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Address
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.address%></td>
-    </tr>                  
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">               
-          City                 
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.city%></td>
-    </tr>                  
-	                        
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Province
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.province%></td>
-    </tr>                  
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Postal Code :
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.postalCode%></td>
-    </tr>                  	                          
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Phone 1 :
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.phone1%></td>
-    </tr>                  	                          
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Phone 2 :
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.phone2%></td>
-    </tr>                  	                                                                                        
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Fax :
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.fax%></td>
-    </tr>                  	
-    <tr class="LightBG"> 
-          <td class="wcblayerTitle">
-          Email :
-          </td>
-          <td class="wcblayerItem">&nbsp;</td>	       
-          <td><%=pharmacy.email%></td>
-    </tr>                  	                                                                                                                                                                                
-    <tr class="LightBG"> 
-          <td colspan="3" class="wcblayerTitle">
-          Notes :
-          </td>          
-    </tr>                  	                                                                                                                                                                                
-    <tr class="LightBG">           
-          <td colspan="3"><%=pharmacy.notes%></td>
-    </tr>                  	                                                                                                                                                                                
-    
-  </table>
-                                
+<div id="Layer1"
+	style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1">
+<!--  This should be changed to automagically fill if this changes often -->
+
+<table border="0" cellspacing="1" cellpadding="1" align=center
+	class="hiddenLayer">
+	<tr class="LightBG">
+		<td class="wcblayerTitle">&nbsp;</td>
+		<td class="wcblayerTitle">&nbsp;</td>
+		<td class="wcblayerTitle" align="right"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="hidepic('Layer1');" style="text-decoration: none;">X</a></td>
+	</tr>
+
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Name</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.name%></td>
+	</tr>
+
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Address</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.address%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">City</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.city%></td>
+	</tr>
+
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Province</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.province%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Postal Code :</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.postalCode%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Phone 1 :</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.phone1%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Phone 2 :</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.phone2%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Fax :</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.fax%></td>
+	</tr>
+	<tr class="LightBG">
+		<td class="wcblayerTitle">Email :</td>
+		<td class="wcblayerItem">&nbsp;</td>
+		<td><%=pharmacy.email%></td>
+	</tr>
+	<tr class="LightBG">
+		<td colspan="3" class="wcblayerTitle">Notes :</td>
+	</tr>
+	<tr class="LightBG">
+		<td colspan="3"><%=pharmacy.notes%></td>
+	</tr>
+
+</table>
+
 </div>
 <%}%>
 </body>

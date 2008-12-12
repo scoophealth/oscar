@@ -26,11 +26,13 @@
 --%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean" %>
+<%@ page
+	import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 <% String noteIndex = "";
    String encSelect = "encTypeSelect";
    String demoNo = request.getParameter("demographicNo");
@@ -45,149 +47,186 @@
         
 %>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
-    <nested:notEmpty name="newNoteIdx">
-        <% noteIndex = request.getParameter("newNoteIdx"); %>
-        <div id="sumary<nested:write name="newNoteIdx"/>">
-        <div id="observation<nested:write name="newNoteIdx"/>" style="float:right;margin-right:3px;">
-    </nested:notEmpty>
-    <nested:empty name="newNoteIdx">
-        <% noteIndex = "0";%>
-        <div id="sumary0" >
-        <div id="observation0" style="float:right;margin-right:3px;">
-    </nested:empty>
+	<nested:notEmpty name="newNoteIdx">
+		<% noteIndex = request.getParameter("newNoteIdx"); %>
+		<div id="sumary<nested:write name="newNoteIdx"/>">
+		<div id="observation<nested:write name="newNoteIdx"/>"
+			style="float: right; margin-right: 3px;">
+	</nested:notEmpty>
+	<nested:empty name="newNoteIdx">
+		<% noteIndex = "0";%>
+		<div id="sumary0">
+		<div id="observation0" style="float: right; margin-right: 3px;">
+	</nested:empty>
 </nested:empty>
-<nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">   
-    <%        
+<nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">
+	<%        
        noteIndex = String.valueOf(frm.getCaseNote().getId());       
        System.out.println("SETTING noteIndex " + noteIndex);
     %>
-    <div style="background-color:#CCCCFF;" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
-    <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
+	<div style="background-color: #CCCCFF;"
+		id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+	<div
+		id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />"
+		style="float: right; margin-right: 3px;">
 </nested:notEmpty>
-    <nested:notEmpty name="ajaxsave">
-        <i>Date:&nbsp;<span id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
-                <nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />
-            </span>&nbsp;
-        rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
-    </nested:notEmpty>    
-    <nested:empty name="ajaxsave">
-    <i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />" id="observationDate_cal" alt="calendar">&nbsp;<input type="text" id="observationDate" name="observation_date" ondblclick="this.value='';" style="font-style:italic;border:none; width:140px;" readonly value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
-                rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a>
-    </nested:empty>
-    </div>
-    <div><span style="float:left;">Editors:</span>
-        <nested:equal name="newNote" value="false">
-            <ul style="list-style: none inside none; margin:0px;">
-            <nested:iterate indexId="eIdx" id="editor" property="caseNote.editors" name="caseManagementEntryForm">
-                <c:if test="${eIdx % 2 == 0}">
-                    <li><nested:write property="formattedName"/>;
-                </c:if>
-                <c:if test="${eIdx % 2 != 0}">
-                    <nested:write property="formattedName"/></li>
-                </c:if>
-            </nested:iterate> 
-            <c:if test="${eIdx % 2 == 0}"></li></c:if>
-            </ul>
-        </nested:equal>        
-
-        <nested:equal name="newNote" value="true">
-            <div style="margin:0px;">&nbsp;</div>
-        </nested:equal>  
-    </div>    
-    <% encSelect += noteIndex; %>
-    <div style="clear:right;margin-right:3px; margin:0px; float:right;">Enc Type:&nbsp;<span id="encType<%=noteIndex%>">
-        <nested:empty name="ajaxsave">
-                <html:select styleId="<%=encSelect%>" styleClass="encTypeCombo" name="caseManagementEntryForm" property="caseNote.encounter_type">
-                    <html:option value=""></html:option>
-                    <html:option value="face to face encounter with client">face to face encounter with client</html:option>
-                    <html:option value="telephone encounter with client">telephone encounter with client</html:option>
-                    <html:option value="encounter without client">encounter without client</html:option>
-                </html:select>
-         </nested:empty>
-         <nested:notEmpty name="ajaxsave">
-            &quot;<nested:write name="caseManagementEntryForm" property="caseNote.encounter_type"/>&quot;
-         </nested:notEmpty>
-    </span></div>
-    <nested:size id="numIssues" name="caseManagementEntryForm" property="caseNote.issues" />
-   <%-- <nested:equal name="numIssues" value="0">
+<nested:notEmpty name="ajaxsave">
+	<i>Date:&nbsp;<span
+		id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+	<nested:write name="caseManagementEntryForm"
+		property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" /> </span>&nbsp;
+	rev<a href="#"
+		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
+		name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
+</nested:notEmpty>
+<nested:empty name="ajaxsave">
+	<i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />"
+		id="observationDate_cal" alt="calendar">&nbsp;<input type="text"
+		id="observationDate" name="observation_date"
+		ondblclick="this.value='';"
+		style="font-style: italic; border: none; width: 140px;" readonly
+		value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
+                rev<a href="#"
+		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
+		name="caseManagementEntryForm" property="caseNote.revision" /></a>
+</nested:empty>
+</div>
+<div><span style="float: left;">Editors:</span> <nested:equal
+	name="newNote" value="false">
+	<ul style="list-style: none inside none; margin: 0px;">
+		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
+			name="caseManagementEntryForm">
+			<c:if test="${eIdx % 2 == 0}">
+				<li><nested:write property="formattedName" />;
+			</c:if>
+			<c:if test="${eIdx % 2 != 0}">
+				<nested:write property="formattedName" />
+				</li>
+			</c:if>
+		</nested:iterate>
+		<c:if test="${eIdx % 2 == 0}">
+			</li>
+		</c:if>
+	</ul>
+</nested:equal> <nested:equal name="newNote" value="true">
+	<div style="margin: 0px;">&nbsp;</div>
+</nested:equal></div>
+<% encSelect += noteIndex; %>
+<div style="clear: right; margin-right: 3px; margin: 0px; float: right;">Enc
+Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
+	name="ajaxsave">
+	<html:select styleId="<%=encSelect%>" styleClass="encTypeCombo"
+		name="caseManagementEntryForm" property="caseNote.encounter_type">
+		<html:option value=""></html:option>
+		<html:option value="face to face encounter with client">face to face encounter with client</html:option>
+		<html:option value="telephone encounter with client">telephone encounter with client</html:option>
+		<html:option value="encounter without client">encounter without client</html:option>
+	</html:select>
+</nested:empty> <nested:notEmpty name="ajaxsave">
+            &quot;<nested:write name="caseManagementEntryForm"
+		property="caseNote.encounter_type" />&quot;
+         </nested:notEmpty> </span></div>
+<nested:size id="numIssues" name="caseManagementEntryForm"
+	property="caseNote.issues" />
+<%-- <nested:equal name="numIssues" value="0">
         <div>&nbsp;</div>
     </nested:equal> --%>
-    <nested:greaterThan name="numIssues" value="0">
-        <div style="display:block;">  
-            <span style="float:left;">Assigned Issues</span>
-            <ul style="float:left; list-style: circle inside; margin:0px;">
-                <nested:iterate id="noteIssue" property="caseNote.issues" name="caseManagementEntryForm">
-                    <li><c:out value="${noteIssue.issue.description}"/></li>
-                </nested:iterate>
-            </ul>
-            <br style="clear:both;">
-        </div>
-    </nested:greaterThan>
-    <nested:equal name="numIssues" value="0">
-        <div style="margin:0px;"><br style="clear:both;"></div>
-    </nested:equal>    
+<nested:greaterThan name="numIssues" value="0">
+	<div style="display: block;"><span style="float: left;">Assigned
+	Issues</span>
+	<ul style="float: left; list-style: circle inside; margin: 0px;">
+		<nested:iterate id="noteIssue" property="caseNote.issues"
+			name="caseManagementEntryForm">
+			<li><c:out value="${noteIssue.issue.description}" /></li>
+		</nested:iterate>
+	</ul>
+	<br style="clear: both;">
+	</div>
+</nested:greaterThan>
+<nested:equal name="numIssues" value="0">
+	<div style="margin: 0px;"><br style="clear: both;">
+	</div>
+</nested:equal>
 </div>
-                            
-                            <div id="noteIssues" style="margin:0px; background-color:#CCCCFF; font-size:8px; display:none;">
-                                <b>Reference Issues</b>
-                                <table id="setIssueList" style="font-size:8px;">
-                                <nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
-                                <%
+
+<div id="noteIssues"
+	style="margin: 0px; background-color: #CCCCFF; font-size: 8px; display: none;">
+<b>Reference Issues</b>
+<table id="setIssueList" style="font-size: 8px;">
+	<nested:iterate indexId="ind" id="issueCheckList"
+		property="issueCheckList" name="caseManagementEntryForm"
+		type="org.oscarehr.casemgmt.web.CheckBoxBean">
+		<%
                                 String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
                                 winame = winame.replaceAll("\\s|\\/", "_");
                                 winame = winame.replaceAll("'","");
                                 winame = StringEscapeUtils.escapeJavaScript(winame);
                                 if( ind % 2 == 0 ) {%>
-                                <tr>
-                                <% } %>
-                                <td style="width:50%; font-size:8px; background-color:#CCCCFF;">
-                                <%String submitString = "this.form.method.value='issueChange';";
+		<tr>
+			<% } %>
+			<td style="width: 50%; font-size: 8px; background-color: #CCCCFF;">
+			<%String submitString = "this.form.method.value='issueChange';";
                                 submitString = submitString + "this.form.lineId.value=" + "'"
                                 + ind.intValue() + "'; return ajaxUpdateIssues('issueChange', $('noteIssues').up().id);";
                                 String id = "noteIssue" + ind;
                                 org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
                                 boolean writeAccess = cbb.getIssue().isWriteAccess();
                                 boolean disabled = !writeAccess;
-                                %>
-                                
-                                <nested:checkbox styleId="<%=id%>" indexed="true" name="issueCheckList" property="checked" disabled="<%=disabled%>"></nested:checkbox>
-                                
-                                <a href="#" onclick="return displayIssue('<%=winame%>');"><nested:write name="issueCheckList" property="issue.issue.description" /></a>
-                                
-                                <nested:equal name="issueCheckList" property="used" value="false">
-                                    <%String submitDelete = "removeIssue('" + winame + "');document.forms['caseManagementEntryForm'].deleteId.value=" + "'"
+                                %> <nested:checkbox styleId="<%=id%>"
+				indexed="true" name="issueCheckList" property="checked"
+				disabled="<%=disabled%>"></nested:checkbox> <a href="#"
+				onclick="return displayIssue('<%=winame%>');"><nested:write
+				name="issueCheckList" property="issue.issue.description" /></a> <nested:equal
+				name="issueCheckList" property="used" value="false">
+				<%String submitDelete = "removeIssue('" + winame + "');document.forms['caseManagementEntryForm'].deleteId.value=" + "'"
                                     + ind.intValue() + "';return ajaxUpdateIssues('issueDelete', $('noteIssues').up().id);";
                                     %>
-                                    &nbsp;<a href="#" onclick="<%=submitDelete%>">Delete</a>&nbsp;
-                                </nested:equal>
-                                
-                                <!--  change diagnosis button -->
-                                <%String submitChange = "return changeDiagnosis('" + ind.intValue() + "');";
-                                %>					
-                                &nbsp;<a href="#" onclick="<%=submitChange%>">Change</a>
-                                <div id="<%=winame%>" style="margin-left:20px; display:none;">
-                                    
-                                        <div>
-                                            <div style="width:50%;float:left;display:inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="true" onchange="<%=submitString%>">acute</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;clear:right;"><nested:radio indexed="true" name="issueCheckList" property="issue.acute" value="false" onchange="<%=submitString%>">chronic</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">certain</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;clear:right;"><nested:radio indexed="true" name="issueCheckList" property="issue.certain" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">uncertain</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">major</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;clear:right;"><nested:radio indexed="true" name="issueCheckList" property="issue.major" disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="true" onchange="<%=submitString%>">resolved</nested:radio></div>
-                                            <div style="width:50%;float:left;display:inline;clear:right;"><nested:radio indexed="true" name="issueCheckList" property="issue.resolved" value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
-                                            <div style="text-align:center;"><nested:text indexed="true" name="issueCheckList" property="issue.type"  size="10" disabled="<%=disabled%>" /></div>
-                                        </div>                                    
-                                </div>
-                    </td>
-           <% if( ind % 2 != 0 ) { %>
-                </tr>
-           <% } %>
-            
-        </nested:iterate>
-    </table>
-</div>	
-        
+                                    &nbsp;<a href="#"
+					onclick="<%=submitDelete%>">Delete</a>&nbsp;
+                                </nested:equal> <!--  change diagnosis button --> <%String submitChange = "return changeDiagnosis('" + ind.intValue() + "');";
+                                %> &nbsp;<a href="#"
+				onclick="<%=submitChange%>">Change</a>
+			<div id="<%=winame%>" style="margin-left: 20px; display: none;">
+
+			<div>
+			<div style="width: 50%; float: left; display: inline;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.acute"
+				value="true" onchange="<%=submitString%>">acute</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.acute"
+				value="false" onchange="<%=submitString%>">chronic</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.certain"
+				disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">certain</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.certain"
+				disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">uncertain</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.major"
+				disabled="<%=disabled%>" value="true" onchange="<%=submitString%>">major</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.major"
+				disabled="<%=disabled%>" value="false" onchange="<%=submitString%>">not major</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.resolved"
+				value="true" onchange="<%=submitString%>">resolved</nested:radio></div>
+			<div style="width: 50%; float: left; display: inline; clear: right;"><nested:radio
+				indexed="true" name="issueCheckList" property="issue.resolved"
+				value="false" onchange="<%=submitString%>">unresolved</nested:radio></div>
+			<div style="text-align: center;"><nested:text indexed="true"
+				name="issueCheckList" property="issue.type" size="10"
+				disabled="<%=disabled%>" /></div>
+			</div>
+			</div>
+			</td>
+			<% if( ind % 2 != 0 ) { %>
+		</tr>
+		<% } %>
+
+	</nested:iterate>
+</table>
+</div>
+
 <script type="text/javascript">   
     
     //check to see if we need to update div containers to most recent note id
@@ -282,4 +321,4 @@
         Calendar.setup({ inputField : "observationDate", ifFormat : "%d-%b-%Y %H:%M ", showsTime :true, button : "observationDate_cal", singleClick : true, step : 1 });    
    }
 </script>
-        
+

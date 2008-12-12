@@ -24,14 +24,15 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -42,9 +43,8 @@
 
 <html:html locale="true">
 <head>
-<title>
-</title>
-<html:base/>
+<title></title>
+<html:base />
 </head>
 
 <script language="javascript">
@@ -62,11 +62,11 @@ function write2Parent(text){
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
+<html:errors />
 <table>
-    <tr>
-        <td> Processing... </td>
-        <script>
+	<tr>
+		<td>Processing...</td>
+		<script>
             var text = "<bean:write name="templateValue"/>";
             text = text.replace(/\\u000A/g, "\u000A");
             text = text.replace(/\\u003E/g, "\u003E");
@@ -75,8 +75,8 @@ function write2Parent(text){
             text = text.replace(/\\u0022/g, "\u0022");
             text = text.replace(/\\u0027/g, "\u0027");
             write2Parent(text);
-        </script>        
-    </tr>
+        </script>
+	</tr>
 </table>
 
 

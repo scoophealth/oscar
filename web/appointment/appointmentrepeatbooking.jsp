@@ -1,3 +1,4 @@
+
 <% 
 if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 String curProvider_no = request.getParameter("provider_no");
@@ -5,13 +6,16 @@ String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
 boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
 
-<%@ page import="java.util.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page import="java.util.*, oscar.*, oscar.util.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<jsp:useBean id="groupApptBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="groupApptBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 	{"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"}, 
@@ -163,7 +167,8 @@ groupApptBean.doConfigure(dbParams,dbQueries);
 <%   
     if (bSucc) {
 %>
-<h1><bean:message key="appointment.appointmentgrouprecords.msgAddSuccess"/></h1>
+<h1><bean:message
+	key="appointment.appointmentgrouprecords.msgAddSuccess" /></h1>
 <script LANGUAGE="JavaScript">
 self.close();
 self.opener.refresh();
@@ -171,7 +176,10 @@ self.opener.refresh();
 <%
         }  else {
 %>
-  <p><h1><bean:message key="appointment.appointmentgrouprecords.msgAddFailure"/></h1></p>
+<p>
+<h1><bean:message
+	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
+</p>
 <%  
     }
     groupApptBean.closePstmtConn();
@@ -206,7 +214,8 @@ self.opener.refresh();
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="appointment.appointmentgrouprecords.title"/></title>
+<title><bean:message
+	key="appointment.appointmentgrouprecords.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -237,78 +246,103 @@ function onSub() {
 }
 //-->
 </SCRIPT>
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 </head>
 
-<body  bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<form name="groupappt" method="POST" action="appointmentrepeatbooking.jsp" onSubmit="return ( onSub());">
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<form name="groupappt" method="POST"
+	action="appointmentrepeatbooking.jsp" onSubmit="return ( onSub());">
 <INPUT TYPE="hidden" NAME="groupappt" value="">
 <table width="100%" BGCOLOR="silver">
-  <tr><TD>
-<%    if (bEdit) {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>" onClick="onButDelete()">
-<%    } else {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>" >
-<%    }    %>
-  </TD>
-      <TD align="right"><INPUT TYPE = "button" VALUE = " <bean:message key="global.btnBack"/> " onClick="window.history.go(-1);return false;"> <INPUT TYPE = "button" VALUE = " <bean:message key="global.btnExit"/> " onClick="onExit()"></TD>
-  </tr>
+	<tr>
+		<TD>
+		<%    if (bEdit) {    %> <INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>"
+			onClick="onButDelete()"> <%    } else {    %> <INPUT
+			TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>">
+		<%    }    %>
+		</TD>
+		<TD align="right"><INPUT TYPE="button"
+			VALUE=" <bean:message key="global.btnBack"/> "
+			onClick="window.history.go(-1);return false;"> <INPUT
+			TYPE="button" VALUE=" <bean:message key="global.btnExit"/> "
+			onClick="onExit()"></TD>
+	</tr>
 </table>
 
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica">Repeat Booking</font></th></tr>
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica">Repeat Booking</font></th>
+	</tr>
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2" width="100%" >
-<tr><td width="20%"></td><td nowrap>How often?</td></tr>
-<tr><td></td><td nowrap>&nbsp;&nbsp;&nbsp;
-    <input type="radio" name="dateUnit" value="day"  <%="checked"%> onclick='onCheck(this, "day")'>
-	Day &nbsp;&nbsp;
-    <input type="radio" name="dateUnit" value="week"  <%=""%> onclick='onCheck(this, "week")'>
-	Week &nbsp;&nbsp;
-    <input type="radio" name="dateUnit" value="month"  <%=""%> onclick='onCheck(this, "month")'>
-	Month &nbsp;&nbsp;
-    <input type="radio" name="dateUnit" value="year"  <%=""%> onclick='onCheck(this, "year")'>
-	Year 
-</td></tr>
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<td width="20%"></td>
+		<td nowrap>How often?</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td nowrap>&nbsp;&nbsp;&nbsp; <input type="radio" name="dateUnit"
+			value="day" <%="checked"%> onclick='onCheck(this, "day")'>
+		Day &nbsp;&nbsp; <input type="radio" name="dateUnit" value="week"
+			<%=""%> onclick='onCheck(this, "week")'> Week &nbsp;&nbsp; <input
+			type="radio" name="dateUnit" value="month" <%=""%>
+			onclick='onCheck(this, "month")'> Month &nbsp;&nbsp; <input
+			type="radio" name="dateUnit" value="year" <%=""%>
+			onclick='onCheck(this, "year")'> Year</td>
+	</tr>
 </table>
 
-<table border="0" cellspacing="1" cellpadding="2" width="100%" >
-<tr><td width="20%"></td><td width="16%" nowrap>Every </td>
-	<td nowrap>
-	<select name="everyNum">
-<%	
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<td width="20%"></td>
+		<td width="16%" nowrap>Every</td>
+		<td nowrap><select name="everyNum">
+			<%	
 for (int i = 1; i < 12; i++) {
 %>
-		<option value="<%=i%>"><%=i%></option>
-<%
+			<option value="<%=i%>"><%=i%></option>
+			<%
 }
-%> 
-	</select>
-	<input type="text" name="everyUnit" id="everyUnit" size="10" value="<%="day"%>" readonly>
-	</td>
-</tr><tr>
-	<td></td>
-	<td>End on &nbsp;&nbsp;<button type="button" id="f_trigger_b">...</button><br>
-	<font size="-1">(dd/mm/yyyy)</font>
-	</td>
-	<td nowrap valign="top">
-	<input type="text" id="endDate" name="endDate" size="10" value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>" readonly>
-	</td>
-</tr>
+%>
+		</select> <input type="text" name="everyUnit" id="everyUnit" size="10"
+			value="<%="day"%>" readonly></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>End on &nbsp;&nbsp;
+		<button type="button" id="f_trigger_b">...</button>
+		<br>
+		<font size="-1">(dd/mm/yyyy)</font></td>
+		<td nowrap valign="top"><input type="text" id="endDate"
+			name="endDate" size="10"
+			value="<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy")%>"
+			readonly></td>
+	</tr>
 </table>
 <%
 String temp = null;
@@ -317,7 +351,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")) continue;
 	out.println("<input type='hidden' name='"+temp+"' value=\"" + UtilMisc.htmlEscape(request.getParameter(temp)) + "\">");
 }
-%> 
+%>
 </form>
 
 <script type="text/javascript">

@@ -24,21 +24,28 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*, oscar.util.SqlUtils" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*, oscar.util.SqlUtils"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
-<head><title><bean:message key="admin.securityupdate.title"/></title></head>
+<head>
+<title><bean:message key="admin.securityupdate.title" /></title>
+</head>
 <link rel="stylesheet" href="../web.css" />
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd">
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.securityupdate.description"/></font></th>
-      </tr>
-    </table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.securityupdate.description" /></font></th>
+	</tr>
+</table>
 <%
 //  int rowsAffected=0;
 //  if("*********".equals(request.getParameter("password"))==false && "****".equals(request.getParameter("pin"))==false && 
@@ -112,20 +119,19 @@
 //  }
   if (rowsAffected ==1) {
 %>
-  <p><h2><bean:message key="admin.securityupdate.msgUpdateSuccess"/>
-  <%=request.getParameter("provider_no")%>
-  </h2>
+<p>
+<h2><bean:message key="admin.securityupdate.msgUpdateSuccess" /> <%=request.getParameter("provider_no")%>
+</h2>
 <%
   } else {
 %>
-  <h1><bean:message key="admin.securityupdate.msgUpdateFailure"/><%= request.getParameter("provider_no") %>.
+<h1><bean:message key="admin.securityupdate.msgUpdateFailure" /><%= request.getParameter("provider_no") %>.
 <%
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-<%@ include file="footer2htm.jsp" %>
-
-  </center>
+<p></p>
+<%@ include file="footer2htm.jsp"%>
+</center>
 </body>
 </html:html>

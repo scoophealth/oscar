@@ -75,10 +75,10 @@ ProgramProvider pp = null;
 <!--  show current staff -->
 <table class="simple" cellspacing="2" cellpadding="3">
 	<tr>
-		<th style="color:black">Assigned To</th>
-		<th style="color:black">Program Name</th>
-		<th style="color:black">Role</th>
-		<th style="color:black">Team(s)</th>
+		<th style="color: black">Assigned To</th>
+		<th style="color: black">Program Name</th>
+		<th style="color: black">Role</th>
+		<th style="color: black">Team(s)</th>
 	</tr>
 	<c:forEach var="program" items="${all_programs}">
 		<tr>
@@ -101,22 +101,28 @@ ProgramProvider pp = null;
 				pageContext.setAttribute("checked", checked);
 			%> <c:choose>
 				<c:when test="${checked eq 'checked'}">
-					<input type="checkbox" <%=checked%> onclick="remove_entry('<c:out value="${pp.id}"/>')" />
+					<input type="checkbox" <%=checked%>
+						onclick="remove_entry('<c:out value="${pp.id}"/>')" />
 				</c:when>
 				<c:otherwise>
 					<input type="checkbox" <%=checked%> disabled />
 				</c:otherwise>
 			</c:choose></td>
-			<td><a href="<html:rewrite action="/PMmodule/ProgramManager"/>?id=<c:out value="${program.program.id}"/>&view.tab=staff&method=edit"><c:out value="${program.program.name}" /></a></td>
-			<td><select name="x" onchange="assignRole('<c:out value="${program.program.id}"/>',this);">
+			<td><a
+				href="<html:rewrite action="/PMmodule/ProgramManager"/>?id=<c:out value="${program.program.id}"/>&view.tab=staff&method=edit"><c:out
+				value="${program.program.name}" /></a></td>
+			<td><select name="x"
+				onchange="assignRole('<c:out value="${program.program.id}"/>',this);">
 				<option value="0">&nbsp;</option>
 				<c:forEach var="role" items="${roles}">
 					<c:choose>
 						<c:when test="${pp.roleId == role.id }">
-							<option value="<c:out value="${role.id}"/>" selected><c:out value="${role.name}" /></option>
+							<option value="<c:out value="${role.id}"/>" selected><c:out
+								value="${role.name}" /></option>
 						</c:when>
 						<c:otherwise>
-							<option value="<c:out value="${role.id}"/>"><c:out value="${role.name}" /></option>
+							<option value="<c:out value="${role.id}"/>"><c:out
+								value="${role.name}" /></option>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
@@ -126,14 +132,17 @@ ProgramProvider pp = null;
 				<c:forEach var="team" items="${pp.teams}">
 					<tr>
 						<td><c:out value="${team.name }" /></td>
-						<td><a href="javascript:void(0);return false;" onclick="removeTeam('<c:out value="${pp.programId}"/>','<c:out value="${team.id}"/>')">Remove</a>
+						<td><a href="javascript:void(0);return false;"
+							onclick="removeTeam('<c:out value="${pp.programId}"/>','<c:out value="${team.id}"/>')">Remove</a>
 					</tr>
 				</c:forEach>
 			</table>
-			<select name="x" onchange="assignTeam('<c:out value="${pp.programId}"/>',this)">
+			<select name="x"
+				onchange="assignTeam('<c:out value="${pp.programId}"/>',this)">
 				<option value="" SELECTED></option>
 				<c:forEach var="team" items="${program.teamList}">
-					<option value="<c:out value="${team.id}"/>"><c:out value="${team.name}" /></option>
+					<option value="<c:out value="${team.id}"/>"><c:out
+						value="${team.name}" /></option>
 				</c:forEach>
 			</select></td>
 	</c:forEach>

@@ -24,9 +24,9 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
@@ -61,7 +61,8 @@ System.out.print("AppointmrntForm-demographic_no "+demographic_no );
 
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>AppointmentForm</title>
+<head>
+<title>AppointmentForm</title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">
 
@@ -69,42 +70,96 @@ System.out.print("AppointmrntForm-demographic_no "+demographic_no );
 
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="EditAppointment.jsp">
 
-<input type ="hidden" name="DayString" value="<%=RS.getString("appointment_date")%>"> 
-<input type ="hidden" name="appointment_no" value="<%=appointment_no%>"> 
+<input type="hidden" name="DayString"
+	value="<%=RS.getString("appointment_date")%>"> <input
+	type="hidden" name="appointment_no" value="<%=appointment_no%>">
 <table border="0" cellpadding="0" cellspacing="0" width="42%">
-        <tr><td><input type="submit" name="submitButton" value="Update"></td>
-            <td>
-                <a href="Demographic_AppointmentForm.jsp?appointment_no=<%=appointment_no%>&demographic_no=<%=demographic_no%>">&nbsp;M&nbsp;</a> 
-                <a href="DeleteAppointment.jsp?appointment_no=<%=appointment_no%>&DayString=<%=RS.getString("appointment_date")%>">Del</a> 
-                <a href="GoAppointmentMonth.jsp">Month</a> 
-                <a href="AppointmentToday.jsp?todayString=<%=RS.getString("appointment_date")%>">Return</a>
-             </td></tr>  
-  	 
-        <tr><td>Date :</td><td><input type="text" name="appointment_date" value="<%=RS.getString("appointment_date")%>"></td></tr> 
- 
-        <tr><td>Start Time :</td><td><input type="text"  name="start_time" value="<%=RS.getString("start_time")%>"></td></tr> 
-        <tr><td>End Time :</td><td><input type="text"   name="end_time" value="<%=RS.getString("end_time")%>"></td></tr> 
+	<tr>
+		<td><input type="submit" name="submitButton" value="Update"></td>
+		<td><a
+			href="Demographic_AppointmentForm.jsp?appointment_no=<%=appointment_no%>&demographic_no=<%=demographic_no%>">&nbsp;M&nbsp;</a>
+		<a
+			href="DeleteAppointment.jsp?appointment_no=<%=appointment_no%>&DayString=<%=RS.getString("appointment_date")%>">Del</a>
+		<a href="GoAppointmentMonth.jsp">Month</a> <a
+			href="AppointmentToday.jsp?todayString=<%=RS.getString("appointment_date")%>">Return</a>
+		</td>
+	</tr>
 
-        <tr><td>Name :</td><td><input type="text" name="name" value="<%=RS.getString("name")%>"></td></tr>
-        <tr><td><input type="submit" name="submitButton" value="Search"></td><td>
-<%
+	<tr>
+		<td>Date :</td>
+		<td><input type="text" name="appointment_date"
+			value="<%=RS.getString("appointment_date")%>"></td>
+	</tr>
+
+	<tr>
+		<td>Start Time :</td>
+		<td><input type="text" name="start_time"
+			value="<%=RS.getString("start_time")%>"></td>
+	</tr>
+	<tr>
+		<td>End Time :</td>
+		<td><input type="text" name="end_time"
+			value="<%=RS.getString("end_time")%>"></td>
+	</tr>
+
+	<tr>
+		<td>Name :</td>
+		<td><input type="text" name="name"
+			value="<%=RS.getString("name")%>"></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="submitButton" value="Search"></td>
+		<td>
+		<%
     if(RS.getString("demographic_no")!=null){        
         out.print("<input type=\"text\" name=\"demographic_no\" value=\""+demographic_no+"\"> ");
     }else{
         out.print("<input type=\"text\" name=\"demographic_no\" value=\"0\">" );
     }
 %>
-        </td></tr> 
-        <tr><td colspan="2">Reason:<textarea rows="2" cols="25" name="reason"><%=RS.getString("reason")%></textarea></td></tr>
-        <tr><td>Location:</td><td><input type="text" name="location" value="<%=RS.getString("location")%>"></td></tr> 
-        <tr><td colspan="2">Notes: <textarea rows="2" cols="25" name="notes"><%=RS.getString("notes")%></textarea></td></tr>
-        <tr><td>Last Creator :</td><td><input type="text" name="creator" value="<%=beanDBQuery.getProvider(new Integer(RS.getString("provider_no")).intValue())%>"></td></tr> 
-        <tr><td>Status :</td><td><input type="text" name="status" value="<%=RS.getString("status")%>"></td></tr> 
-        <tr><td>Type :</td><td><input type="text" name="type" value="<%=RS.getString("type")%>"></td></tr> 
-        <tr><td>Chart No. :</td><td><input type="text" name="chartno" value=""></td></tr>
-<tr><td>Resources :</td><td><input type="text" name="resources" value="<%=RS.getString("resources")%>"></td></tr> 
-        <tr><td>Last Time :</td><td><input type="text" name="createdatetime" value="<%=RS.getString("createdatetime")%>"></td></tr> 
-   
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">Reason:<textarea rows="2" cols="25" name="reason"><%=RS.getString("reason")%></textarea></td>
+	</tr>
+	<tr>
+		<td>Location:</td>
+		<td><input type="text" name="location"
+			value="<%=RS.getString("location")%>"></td>
+	</tr>
+	<tr>
+		<td colspan="2">Notes: <textarea rows="2" cols="25" name="notes"><%=RS.getString("notes")%></textarea></td>
+	</tr>
+	<tr>
+		<td>Last Creator :</td>
+		<td><input type="text" name="creator"
+			value="<%=beanDBQuery.getProvider(new Integer(RS.getString("provider_no")).intValue())%>"></td>
+	</tr>
+	<tr>
+		<td>Status :</td>
+		<td><input type="text" name="status"
+			value="<%=RS.getString("status")%>"></td>
+	</tr>
+	<tr>
+		<td>Type :</td>
+		<td><input type="text" name="type"
+			value="<%=RS.getString("type")%>"></td>
+	</tr>
+	<tr>
+		<td>Chart No. :</td>
+		<td><input type="text" name="chartno" value=""></td>
+	</tr>
+	<tr>
+		<td>Resources :</td>
+		<td><input type="text" name="resources"
+			value="<%=RS.getString("resources")%>"></td>
+	</tr>
+	<tr>
+		<td>Last Time :</td>
+		<td><input type="text" name="createdatetime"
+			value="<%=RS.getString("createdatetime")%>"></td>
+	</tr>
+
 </TABLE>
 </FORM>
 </body>
@@ -113,9 +168,9 @@ System.out.print("AppointmrntForm-demographic_no "+demographic_no );
 
 <%
      RS.close();
-%> 
+%>
 
-    
+
 </TABLE>
 
 </FORM>

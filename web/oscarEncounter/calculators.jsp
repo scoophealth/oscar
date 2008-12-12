@@ -25,9 +25,10 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.oscarDemographic.data.*, oscar.oscarDemographic.data.DemographicData.Demographic"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page
+	import="oscar.oscarDemographic.data.*, oscar.oscarDemographic.data.DemographicData.Demographic"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
 String sex=request.getParameter("sex");
@@ -48,9 +49,9 @@ if(demo != null){
 
 <html:html locale="true">
 <head>
- <link rel="stylesheet" type="text/css" href="encounterStyles.css">
- <html:base/>
- <script type="text/javascript" language=javascript>
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
+<html:base />
+<script type="text/javascript" language=javascript>
    function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
      var page = varpage;
      windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
@@ -63,47 +64,51 @@ if(demo != null){
 </head>
 
 <body>
-<table border=0 cellpadding="0" cellspacing="1"  width="100%" class="layerTable" bgcolor="#FFFFFF"  >
-  <tr>
-    <td align="center" class="menuLayer">
-      <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
-        <bean:message key="oscarEncounter.Index.bodyMass"/>
-      </a>
-  </td></tr>
-  <tr><td align="center" class="menuLayer">
-      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
-         <bean:message key="oscarEncounter.Index.coronary"/>
-       </a>
-  </td></tr>
-  <tr><td align="center" class="menuLayer">
-      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/riskcalc/index.html?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
-         Framingham/UKPDS Risk Calculator
-       </a>
-  </td></tr>
+<table border=0 cellpadding="0" cellspacing="1" width="100%"
+	class="layerTable" bgcolor="#FFFFFF">
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49982.htm','BodyMassIndex');">
+		<bean:message key="oscarEncounter.Index.bodyMass" /> </a></td>
+	</tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
+		<bean:message key="oscarEncounter.Index.coronary" /> </a></td>
+	</tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(525,775,'calculators/riskcalc/index.html?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
+		Framingham/UKPDS Risk Calculator </a></td>
+	</tr>
 
-   <tr><td align="center" class="menuLayer">
-       <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%=sex%>&age=<%=age%>','OsteoporoticFracture');">
-         <bean:message key="oscarEncounter.Index.msgOsteoporotic"/>
-       </a>
-   </td></tr>
-   <tr>
-   <td align="center" class="menuLayer">
-       <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49976.htm','PregancyCalculator');">
-         <bean:message key="oscarEncounter.Index.pregnancy"/>
-       </a>
-   </td></tr>
-    <tr>
-    <td align="center" class="menuLayer">
-      <a href="javascript: function myFunction() {return false; }" onclick="popperup(400,500,'calculators/SimpleCalculator.jsp','SimpleCalc');">
-       <bean:message key="oscarEncounter.Index.simpleCalculator"/>
-      </a>
-    </td></tr>
-    <tr><td align="center" class="menuLayer">
-       <a href="javascript: function myFunction() {return false; }" onclick="popperup(650,775,'calculators/GeneralCalculators.jsp','GeneralConversions'); ">
-         <bean:message key="oscarEncounter.Index.generalConversions"/>
-       </a>
-    </td>
-    </tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%=sex%>&age=<%=age%>','OsteoporoticFracture');">
+		<bean:message key="oscarEncounter.Index.msgOsteoporotic" /> </a></td>
+	</tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(650,775,'http://www.mcw.edu/calculators/docid49976.htm','PregancyCalculator');">
+		<bean:message key="oscarEncounter.Index.pregnancy" /> </a></td>
+	</tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(400,500,'calculators/SimpleCalculator.jsp','SimpleCalc');">
+		<bean:message key="oscarEncounter.Index.simpleCalculator" /> </a></td>
+	</tr>
+	<tr>
+		<td align="center" class="menuLayer"><a
+			href="javascript: function myFunction() {return false; }"
+			onclick="popperup(650,775,'calculators/GeneralCalculators.jsp','GeneralConversions'); ">
+		<bean:message key="oscarEncounter.Index.generalConversions" /> </a></td>
+	</tr>
 </table>
 </body>
 </html:html>

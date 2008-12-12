@@ -23,10 +23,13 @@
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.administration.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*, java.util.Properties"%>
+<%@ page
+	import="oscar.oscarBilling.ca.on.pageUtil.*, java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 
 <%//
 	if (session.getAttribute("user") == null) {
@@ -456,30 +459,32 @@ function onCheckMaster() {
 -->
 </script>
 
-			</tr>
-                        <% } %>
-			<tr>
+</tr>
+<% } %>
+<tr>
 
-				<td colspan='3' align='center' bgcolor="silver">
-				    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
-                                    <% if (codeValid & !dupServiceCode) { %>
-                                    <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
-				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
-                                    <% }else {%>
-                                    <td><div class='myError'>Warning: Duplicated service codes. </div></td>
-                                    <%    } 
+	<td colspan='3' align='center' bgcolor="silver"><input
+		type="submit" name="button" value="Back to Edit" style="width: 120px;" />
+	<% if (codeValid & !dupServiceCode) { %> <input type="submit"
+		name="submit" value="Save" style="width: 120px;"
+		onClick="onClickSave();" /> <input type="submit" name="submit"
+		value="Save & Add Another Bill" onClick="onClickSave();" /> <% }else {%>
+	
+	<td>
+	<div class='myError'>Warning: Duplicated service codes.</div>
+	</td>
+	<%    } 
                                     %>
-                                    </td>
-			</tr>
-		</table>
-		</td>
-	</tr>
+	</td>
+</tr>
+</table>
+</td>
+</tr>
 <% if (codeValid) {
         if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
-	<tr>
-			<td >
-			Billing Notes:<br>
-			<%
+<tr>
+	<td>Billing Notes:<br>
+	<%
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 			String tempLoc = "";
@@ -488,10 +493,8 @@ function onCheckMaster() {
             	//System.out.println(";;; " + request.getParameter("service_date"));
             	tempLoc = request.getParameter("siteId").trim();
             }
-			%>
-			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
-			</td>
-	</tr>
+			%> <textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea></td>
+</tr>
 <%      } 
   }     %>
 <%//
@@ -546,62 +549,70 @@ if(props2.getProperty("clinicSatelliteCity") != null) {
 	clinicAddress = strClinicAddr;
 }
 %>
-<tr><td>
-		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
-			<tr class="myYellow">
-				<td colspan='2'>Private Billing</td>
-			</tr>
-			<tr><td width="80%">
-			
-			<table border="0" width="100%" >
-			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
-			<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
-			<td>Remit To<br>
-			<textarea name="remitto" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
-			</tr>
-			</table>
-			<table border="0" width="100%" >
-			<tr>
-			<td >
-			Billing Notes:<br>
-			<textarea name="comment" value="" cols=60 rows=4></textarea>
-			</td>
-			<td align="right">
-                        <input type="hidden" name="provider_no" value="<%=request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|"))%>"/>
-                        GST Billed:<input type="text" id="gst" name="gst" value="<%=gstTotal%>" size="6"/><br>
-                        <input type="hidden" id="gstBilledTotal" name="gstBilledTotal" value="<%=gstbilledtotal%>" size="6" />
-                        Total:<input type="text" id="stotal" disabled name = "stotal" value="0.00" size="6" /><br>
-			Payments:<input type="text" name="payment" value="0.00" size="6" onDblClick="settlePayment();" /><br/>
-			Refunds:<input type="text" name="refund" value="0.00" size="6"/>
-			</td>
-			</tr>
-			</table>
-			
-			<td class="myGreen">
-			Payment Method:<br/>
-			<% for(int i=0; i<al.size(); i=i+2) { %>
-			<input type="radio" name="payMethod" value="<%=al.get(i) %>"/><%=al.get(i+1) %><br/>
-			<% } %>
-			</td></tr>
-			<tr>
-				<td colspan='2' align='center' bgcolor="silver"><input type="submit" name="submit" value="Save & Print Invoice" 
-					style="width: 120px;" /><input type="submit" name="submit" 
-					value="Settle & Print Invoice" onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');" style="width: 120px;" /> 
-				<input type="hidden"  name="btnPressed" value="">
-				</td>
-			</tr>
-		</table>
+<tr>
+	<td>
+	<table border="1" width="100%" bordercolorlight="#99A005"
+		bordercolordark="#FFFFFF">
+		<tr class="myYellow">
+			<td colspan='2'>Private Billing</td>
+		</tr>
+		<tr>
+			<td width="80%">
 
-</td></tr>
+			<table border="0" width="100%">
+				<tr>
+					<td>Bill To [<a href=#
+						onclick="scriptAttach('billto'); return false;">Search</a>]<br>
+					<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
+					<td>Remit To<br>
+					<textarea name="remitto" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
+				</tr>
+			</table>
+			<table border="0" width="100%">
+				<tr>
+					<td>Billing Notes:<br>
+					<textarea name="comment" value="" cols=60 rows=4></textarea></td>
+					<td align="right"><input type="hidden" name="provider_no"
+						value="<%=request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|"))%>" />
+					GST Billed:<input type="text" id="gst" name="gst"
+						value="<%=gstTotal%>" size="6" /><br>
+					<input type="hidden" id="gstBilledTotal" name="gstBilledTotal"
+						value="<%=gstbilledtotal%>" size="6" /> Total:<input type="text"
+						id="stotal" disabled name="stotal" value="0.00" size="6" /><br>
+					Payments:<input type="text" name="payment" value="0.00" size="6"
+						onDblClick="settlePayment();" /><br />
+					Refunds:<input type="text" name="refund" value="0.00" size="6" /></td>
+				</tr>
+			</table>
+			<td class="myGreen">Payment Method:<br />
+			<% for(int i=0; i<al.size(); i=i+2) { %> <input type="radio"
+				name="payMethod" value="<%=al.get(i) %>" /><%=al.get(i+1) %><br />
+			<% } %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2' align='center' bgcolor="silver"><input
+				type="submit" name="submit" value="Save & Print Invoice"
+				style="width: 120px;" /><input type="submit" name="submit"
+				value="Settle & Print Invoice"
+				onClick="document.forms['titlesearch'].btnPressed.value='Settle'; document.forms['titlesearch'].submit();javascript:popupPage(700,720,'billingON3rdInv.jsp');"
+				style="width: 120px;" /> <input type="hidden" name="btnPressed"
+				value=""></td>
+		</tr>
+	</table>
+
+	</td>
+</tr>
 <% }} %>
-	<%for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
+<%for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
 				String temp = e.nextElement().toString();
 %>
-	<input type="hidden" name="<%= temp %>" value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
-	<%}
+<input type="hidden" name="<%= temp %>"
+	value="<%=StringEscapeUtils.escapeHtml(request.getParameter(temp))%>" />
+<%}
 
 		%>
-	
+
 
 </table>
 <% if(bPerc) { out.println("* Click the code you want the % code to apply to [1 or 2 ...]."); } %>
@@ -651,36 +662,35 @@ function getNewCurrentDxCodeList(origRequest){
 </script>
 
 
-<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW" value="yes">
+<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW"
+	value="yes">
 
-<div class="dxBox">
-    <h3>&nbsp;Dx Quick Pick Add List</h3>
-       <form id="dxForm">
-       <input type="hidden" name="demographicNo" value="<%=demo_no%>" />
-       <input type="hidden" name="providerNo" value="<%=session.getAttribute("user")%>" />
-       <input type="hidden" name="forward" value="" />
-       <input type="hidden" name="forwardTo" value="codeList"/>
-       <div class="wrapper" id="dxListing">
-       <jsp:include page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
-          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
-       </jsp:include>
-       </div>
-       <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
-       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
-<input type="button" value="check" onclick="validateItems()"/--> 
-       </form>
-</div>
+	<div class="dxBox">
+	<h3>&nbsp;Dx Quick Pick Add List</h3>
+	<form id="dxForm"><input type="hidden" name="demographicNo"
+		value="<%=demo_no%>" /> <input type="hidden" name="providerNo"
+		value="<%=session.getAttribute("user")%>" /> <input type="hidden"
+		name="forward" value="" /> <input type="hidden" name="forwardTo"
+		value="codeList" />
+	<div class="wrapper" id="dxListing"><jsp:include
+		page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
+		<jsp:param name="demographicNo" value="<%=demo_no%>" />
+	</jsp:include></div>
+	<input type="button" value="Add To Disease Registry"
+		onclick="addToDiseaseRegistry()" /> <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
+<input type="button" value="check" onclick="validateItems()"/--></form>
+	</div>
 
 
-<div class="dxBox">
-    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
-       <div class="wrapper" id="dxFullListing"  style="display:none;">
-       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
-          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
-       </jsp:include>
-       </div>
-</div>
+	<div class="dxBox">
+	<h3>&nbsp;Current Patient Dx List <a href="#"
+		onclick="Element.toggle('dxFullListing'); return false;"
+		style="font-size: small;">show/hide</a></h3>
+	<div class="wrapper" id="dxFullListing" style="display: none;"><jsp:include
+		page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
+		<jsp:param name="demographicNo" value="<%=demo_no%>" />
+	</jsp:include></div>
+	</div>
 </oscar:oscarPropertiesCheck>
-
 </body>
 </html>

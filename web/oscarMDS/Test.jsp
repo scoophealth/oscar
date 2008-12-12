@@ -1,9 +1,9 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*"%>
 <!--  
 /*
  * 
@@ -31,9 +31,7 @@
 -->
 <html>
 <head>
-<title>
-Test Page
-</title>
+<title>Test Page</title>
 </head>
 
 <body>

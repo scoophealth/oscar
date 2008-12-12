@@ -26,12 +26,14 @@
 
 <% 
 if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
-%> 
+%>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbINR.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbINR.jsp"%>
 <%
 
 GregorianCalendar now=new GregorianCalendar();
@@ -125,82 +127,84 @@ function OtherScriptAttach() {
 <link rel="stylesheet" href="../../web.css" />
 </head>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">UPDATE INR 
-      BILLING</font></th>
-  </tr>
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">UPDATE
+		INR BILLING</font></th>
+	</tr>
 </table>
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7"  >
-  <FORM NAME="serviceform" ACTION="dbUpdateINRbilling.jsp" METHOD="POST">
-    <tr valign="top"> 
-      <td rowspan="2" ALIGN="right" valign="middle"> 
-        <div align="center"> 
-          <p>&nbsp;</p>
-          <table width="80%" border="1" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td colspan="3"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Arial, Helvetica, sans-serif" color="#000000" size="1">Demographic 
-                Name </font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="hidden" name="demono" value="<%=demono%> " size="20">
-                <input type="hidden" name="billinginr_no" value="<%=billinginr_no%>">
-                <input type="text" name="demo_name" value="<%=demo_name%> " size="20" readonly>
-                </font></td>
-              <td rowspan="9" width="21%" valign="middle"> 
-                <p><br>
-                </p>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Demographic 
-                HIN</font></td>
-              <td width="50%"> 
-                <input type="text" name="demo_hin" value="<%=demo_hin%> " size="20" readonly>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Demographic 
-                DOB</font></td>
-              <td width="50%"> 
-                <input type="text" name="demo_dob" value="<%=demo_dob%> " size="20" readonly>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Arial, Helvetica, sans-serif" color="#000000" size="1">Service 
-                Code </font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="text" name="service_code"  size="10" value="<%=request.getParameter("servicecode")%>">
-               <input type="hidden" name="service_unit" value="1">
-                </font></td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Diagnostic 
-                Code</font></td>
-              <td width="50%"> 
-                <input type="text" name="diag_code" size="20" value="<%=request.getParameter("dxcode")%>">
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
-                <input type="SUBMIT" value="update" name="inraction">
-                
-                </i></b></font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="SUBMIT" value="delete" name="inraction">
-                </font></td>
-            </tr>
-          </table>
-          <p><font face="Verdana" color="#0000FF"><b><i> </i></b></font> <br>
-          </p>
-        </div>
-      </td>
-    </tr>
-  </form>
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<FORM NAME="serviceform" ACTION="dbUpdateINRbilling.jsp" METHOD="POST">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle">
+		<div align="center">
+		<p>&nbsp;</p>
+		<table width="80%" border="1" cellspacing="0" cellpadding="0">
+			<tr>
+				<td colspan="3"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
+			</tr>
+			<tr>
+				<td width="29%"><font face="Arial, Helvetica, sans-serif"
+					color="#000000" size="1">Demographic Name </font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="hidden" name="demono" value="<%=demono%> " size="20">
+				<input type="hidden" name="billinginr_no" value="<%=billinginr_no%>">
+				<input type="text" name="demo_name" value="<%=demo_name%> "
+					size="20" readonly> </font></td>
+				<td rowspan="9" width="21%" valign="middle">
+				<p><br>
+				</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Demographic HIN</font></td>
+				<td width="50%"><input type="text" name="demo_hin"
+					value="<%=demo_hin%> " size="20" readonly></td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Demographic DOB</font></td>
+				<td width="50%"><input type="text" name="demo_dob"
+					value="<%=demo_dob%> " size="20" readonly></td>
+			</tr>
+			<tr>
+				<td width="29%"><font face="Arial, Helvetica, sans-serif"
+					color="#000000" size="1">Service Code </font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="text" name="service_code" size="10"
+					value="<%=request.getParameter("servicecode")%>"> <input
+					type="hidden" name="service_unit" value="1"> </font></td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Diagnostic Code</font></td>
+				<td width="50%"><input type="text" name="diag_code" size="20"
+					value="<%=request.getParameter("dxcode")%>"></td>
+			</tr>
+			<tr>
+				<td width="29%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF"
+					size="1"><b><i> <input type="SUBMIT" value="update"
+					name="inraction"> </i></b></font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="SUBMIT" value="delete" name="inraction"> </font></td>
+			</tr>
+		</table>
+		<p><font face="Verdana" color="#0000FF"><b><i> </i></b></font> <br>
+		</p>
+		</div>
+		</td>
+	</tr>
+	</form>
 </table>
 </body>
 </html>

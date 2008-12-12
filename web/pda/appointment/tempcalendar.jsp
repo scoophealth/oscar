@@ -24,8 +24,9 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="mainBean" class="oscar.ProviderMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="mainBean" class="oscar.ProviderMainBean"
+	scope="session" />
 <%
   ResultSet rs = mainBean.queryResults(request.getParameter("keyword"));
   while (rs.next()) {
@@ -50,73 +51,75 @@
 
 <body bgproperties="fixed">
 <center>
-  <table cellspacing="0" cellpadding="6" width="640" border="0">
-    <tr> 
-      <td valign=top colspan=8 bgcolor="#FFFF66"><span class="titleweb">Calendar 
-        Page!</span> </td>
-    </tr>
-    <tr> 
-      <td colspan="8"> 
-        <hr color="blue" >
-      </td>
-    </tr>
-    <form method="post" action="../provider/providercontrol.jsp" name="updatearecord" onsubmit="return onsub()">
-      <tr> 
-        <td align="right" valign=top width="3%"> 
-          <div align="center">Sun </div>
-        </td>
-        <td valign=top  width="2%"> 
-          <div align="center">Mon</div>
-        </td>
-        <td valign=top width="2%"> 
-          <div align="center">Tue</div>
-        </td>
-        <td valign=top width="2%"> 
-          <div align="center">Wed</div>
-        </td>
-        <td valign=top  width="2%"> 
-          <div align="center">Thu</div>
-        </td>
-        <td valign=top  width="2%"> 
-          <div align="center">Fri</div>
-        </td>
-        <td valign=top width="2%" > 
-          <div align="center">Sat</div>
-        </td>
-        <td valign=top width="2%" rowspan="2"></td>
-      </tr>
-    </form>
-    <tr> 
-      <td align="right" valign=top width="3%" > 
-        <div align="center"></div>
-      </td>
-      <td valign=top  width="2%"> 
-        <div align="center">1</div>
-      </td>
-      <td valign=top  width="2%"> 
-        <div align="center"></div>
-      </td>
-      <td valign=top  width="2%"> 
-        <div align="center"></div>
-      </td>
-      <td valign=top  width="2%"> 
-        <div align="center"></div>
-      </td>
-      <td valign=top width="2%"> 
-        <div align="center"></div>
-      </td>
-      <td valign=top width="2%" > 
-        <div align="center"></div>
-      </td>
-    </tr>
-  </table>
+<table cellspacing="0" cellpadding="6" width="640" border="0">
+	<tr>
+		<td valign=top colspan=8 bgcolor="#FFFF66"><span class="titleweb">Calendar
+		Page!</span></td>
+	</tr>
+	<tr>
+		<td colspan="8">
+		<hr color="blue">
+		</td>
+	</tr>
+	<form method="post" action="../provider/providercontrol.jsp"
+		name="updatearecord" onsubmit="return onsub()">
+	<tr>
+		<td align="right" valign=top width="3%">
+		<div align="center">Sun</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Mon</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Tue</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Wed</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Thu</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Fri</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">Sat</div>
+		</td>
+		<td valign=top width="2%" rowspan="2"></td>
+	</tr>
+	</form>
+	<tr>
+		<td align="right" valign=top width="3%">
+		<div align="center"></div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center">1</div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center"></div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center"></div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center"></div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center"></div>
+		</td>
+		<td valign=top width="2%">
+		<div align="center"></div>
+		</td>
+	</tr>
+</table>
 <%
   }
   mainBean.closePstmtConn();
 %>
 
 <hr color="blue" width="640">
-  <p align="center"><font size="+2"><a href="../main.jsp">Home</a> <a href="../logout.jsp">Logout</a></font></p>
+<p align="center"><font size="+2"><a href="../main.jsp">Home</a>
+<a href="../logout.jsp">Logout</a></font></p>
 <p align="center"><font size="-2"><i>No Copyright </i></font></p>
 </center>
 </body>

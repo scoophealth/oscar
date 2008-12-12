@@ -24,10 +24,10 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <% 
     if(session.getValue("user") == null)
@@ -38,7 +38,8 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.title"/></title>
+<title><bean:message
+	key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">
 <!--
@@ -90,55 +91,33 @@ function CodesAttach() {
 }
 -->
 </script>
-<style type="text/css">
-        BODY{
-            font-size: 10pt ; 
-            font-family: verdana,arial,helvetica; 
-            color: #000000; 
-            background-color: #FFFFFF;
-        }
-        TD{
-            font-size: 10pt ; 
-            font-family: verdana,arial,helvetica;             
-        }
-	.heading{
-            font-weight: bold  ; 
-            font-size: 11pt ; 
-            font-family: verdana,arial,helvetica; 
-            color: #000000; 
-            background-color: #6699cc;
-            height: 20pt;
-        }	
-        .subject{
-            font-size: 18pt;
-            font-weight: bold;            
-            color: #FFFFFF;
-            background-color: #000000;
-            height:40pt;
-        }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 <body bgcolor="#FFFFFF">
 <form name="codeSearchForm" method="post">
 
 <table width="600" cellspacing="1">
-  <tr>
-    <td class="subject"><%=session.getAttribute("codeType")%></td>
-    <td class="subject"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/></td>
-  </tr>
-  <tr class="heading"> 
-    <td width="12%"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode"/></td>
-    <td width="88%"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgDescription"/></td>
-  </tr>
- 
-  <% 
+	<tr>
+		<td class="subject"><%=session.getAttribute("codeType")%></td>
+		<td class="subject"><bean:message
+			key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch" /></td>
+	</tr>
+	<tr class="heading">
+		<td width="12%"><bean:message
+			key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode" /></td>
+		<td width="88%"><bean:message
+			key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgDescription" /></td>
+	</tr>
+
+	<% 
     int intCount=0;
     String color="#EEEEFF";
     int Count=0;    
   %>
-  <logic:iterate id="code" name="allMatchedCodes" property="dxCodeSearchBeanVector">
-     <%  
+	<logic:iterate id="code" name="allMatchedCodes"
+		property="dxCodeSearchBeanVector">
+		<%  
         if (Count == 0){
             Count = 1;
             color = "#FFFFFF";
@@ -147,21 +126,27 @@ function CodesAttach() {
             Count = 0;
             color="#EEEEFF";
         }       
-     %>  
-  <tr bgcolor="<%=color%>"> 
-    <td width="12%"><input type="checkbox" name="searchCodes" value="<bean:write name='code' property='dxSearchCode'/>" <bean:write name='code' property='exactMatch'/> /><bean:write name='code' property='dxSearchCode'/></td>
-    <td width="88%"><bean:write name='code' property='description'/></td>
-  </tr>
-  <% intCount++; %>
-  </logic:iterate>
-  <%  if (intCount == 0 ) { %>
-  <tr bgcolor="<%=color%>"> 
-    <td colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgNoMatch"/>. <%// =i%></td>
-    
-  </tr>
-  <%  }%>
-  
-  <%--
+     %>
+		<tr bgcolor="<%=color%>">
+			<td width="12%"><input type="checkbox" name="searchCodes"
+				value="<bean:write name='code' property='dxSearchCode'/>"
+				<bean:write name='code' property='exactMatch'/> /><bean:write
+				name='code' property='dxSearchCode' /></td>
+			<td width="88%"><bean:write name='code' property='description' /></td>
+		</tr>
+		<% intCount++; %>
+	</logic:iterate>
+	<%  if (intCount == 0 ) { %>
+	<tr bgcolor="<%=color%>">
+		<td colspan="2"><bean:message
+			key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgNoMatch" />.
+		<%// =i%>
+		</td>
+
+	</tr>
+	<%  }%>
+
+	<%--
   <% if (intCount == 1) { %>
   <logic:iterate id="code" name="allMatchedCodes" property="dxCodeSearchBeanVector">  
       <script LANGUAGE="JavaScript">
@@ -171,7 +156,10 @@ function CodesAttach() {
 <% } %>
 --%>
 </table>
-<input type="button" name="confirm" value="Confirm" onclick="javascript:CodesAttach();"><input type="button" name="<bean:message key="global.btnCancel"/>" value="Cancel" onclick="javascript:window.close()">
+<input type="button" name="confirm" value="Confirm"
+	onclick="javascript:CodesAttach();"><input type="button"
+	name="<bean:message key="global.btnCancel"/>" value="Cancel"
+	onclick="javascript:window.close()">
 
 <p></p>
 <p>&nbsp;</p>

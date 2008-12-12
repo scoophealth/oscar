@@ -22,11 +22,13 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page import="java.util.Date,org.caisi.model.*,org.oscarehr.casemgmt.model.*, org.oscarehr.common.model.*,
-org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ page
+	import="java.util.Date,org.caisi.model.*,org.oscarehr.casemgmt.model.*, org.oscarehr.common.model.*,
+org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
 
-<table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+<table width="100%" border="0" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0">
 	<tr class="title">
 		<th>Provider Name</th>
 		<th>Date</th>
@@ -35,7 +37,7 @@ org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.
 		<th>Status</th>
 		<th>Message</th>
 	</tr>
-	
+
 	<tr>
 		<%int index=0; 
 			String bgcolor;
@@ -89,17 +91,20 @@ org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.
 				    if ("a".equals(late_status)) {
 				    	style="color:red;";
 				    }
-				%>   
-				    <td style="<%=style%>"><%=provider_name %></td>
-					<td style="<%=style%>"><fmt:formatDate pattern="MM/dd/yy : hh:mm a" value="${tickler.service_date}"/></td>
-					<td style="<%=style%>"><c:out value="${tickler.priority}"/></td>
-					<td style="<%=style%>"><%=assignee_name %></td>
-					<td style="<%=style%>"><%=status %></td>
-					<td style="<%=style%>" align="left"><c:out escapeXml="false" value="${tickler.message}"/></td>
+				%>
+				<td style="<%=style%>"><%=provider_name %></td>
+				<td style="<%=style%>"><fmt:formatDate
+					pattern="MM/dd/yy : hh:mm a" value="${tickler.service_date}" /></td>
+				<td style="<%=style%>"><c:out value="${tickler.priority}" /></td>
+				<td style="<%=style%>"><%=assignee_name %></td>
+				<td style="<%=style%>"><%=status %></td>
+				<td style="<%=style%>" align="left"><c:out escapeXml="false"
+					value="${tickler.message}" /></td>
 			</tr>
 		</c:forEach>
 	</tr>
 	<tr>
-		<td colspan="9"><%=((java.util.List)request.getAttribute("ticklers")).size() %> ticklers found.</td>
+		<td colspan="9"><%=((java.util.List)request.getAttribute("ticklers")).size() %>
+		ticklers found.</td>
 	</tr>
 </table>

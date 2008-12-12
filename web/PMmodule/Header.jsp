@@ -27,22 +27,23 @@
 	<tr>
 		<td align="left" width="200px">
 		<%if (oscar.OscarProperties.getInstance().isTorontoRFQ() && !oscar.OscarProperties.getInstance().getBooleanProperty("USE_CAISI_LOGO", "true")){%>
- 	        <img src="<%=request.getContextPath()%>/images/QuatroShelterLogo.gif" alt="QuatroShelter" id="caisilogo"  border="0"/>
- 	    <%} else {%>
-	        <img src="<%=request.getContextPath()%>/images/caisi_1.jpg" alt="Caisi" id="caisilogo"  border="0"/>
-	    <%}%>
-        </td>
-        <td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out value="${sessionScope.provider.formattedName}" /></b>, current facility=<c:out value="${sessionScope.currentFacility.name}" />
-        </td>
-        <td align="right" width="60px"><html:link action="/PMmodule/ProviderInfo.do">Home</html:link></td>
-        <!--  
+		<img src="<%=request.getContextPath()%>/images/QuatroShelterLogo.gif"
+			alt="QuatroShelter" id="caisilogo" border="0" /> <%} else {%> <img
+			src="<%=request.getContextPath()%>/images/caisi_1.jpg" alt="Caisi"
+			id="caisilogo" border="0" /> <%}%>
+		</td>
+		<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome <b><c:out
+			value="${sessionScope.provider.formattedName}" /></b>, current facility=<c:out
+			value="${sessionScope.currentFacility.name}" /></td>
+		<td align="right" width="60px"><html:link
+			action="/PMmodule/ProviderInfo.do">Home</html:link></td>
+		<!--  
         <td width="60px" align="center">
                <a target="_blank" href='<%=request.getContextPath()%>/help/index.html'>Help</a>
         </td>
         -->
-        <td align="left" width="60px">
-               <a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a>
-        </td>
+		<td align="left" width="60px"><a
+			href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></td>
 	</tr>
 </table>
 </div>

@@ -5,6 +5,6 @@
 <hibernate-mapping>
 	<class name="com.quatro.model.ReportGroupValue" table="report_lk_reportgroup">
 		<id name="reportGroupId" column="id" />
-        <property name="reportGroupDesc"  column="description"/>
+		<property name="reportGroupDesc" column="description" />
 	</class>
 </hibernate-mapping>

@@ -24,29 +24,33 @@
  */
 -->
 
- <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 
 
 <html>
 <head>
-<link rel="stylesheet" href="billing.css" >
-<title>Billing 
-      Reconcilliation</title>
+<link rel="stylesheet" href="billing.css">
+<title>Billing Reconcilliation</title>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
-      Reconcilliation </font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Billing Reconcilliation </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 <% 
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
@@ -141,9 +145,9 @@ while ((nextline=input.readLine())!=null){
        apptTime = rslocal.getString("billing_time");
           
         }   
-%>  
+%>
 
- <%
+<%
    }
    
    if (headerCount.compareTo("5") == 0){
@@ -183,25 +187,25 @@ while ((nextline=input.readLine())!=null){
       if(checkAccount.compareTo(account) == 0){
       flag=0;       %>
 
- <%   
+<%   
       }
       else {
       flag = 1;
       checkAccount = account;
       %>
-      
-  <%
+
+<%
       }
 
    }
    
 
    }
-%>   
+%>
 
 
-      
-  
+
+
 <%
 
 
@@ -209,41 +213,38 @@ while ((nextline=input.readLine())!=null){
 }
 
 
-%>   
-   
+%>
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
-  <tr> 
-    <td width="12%" height="16">File Name: </td>
-    <td width="33%" height="16">
-        <input type="text" name="textfield2" value="<%=filename%>" style="width:100%">
-      </td>
-    <td width="16%" height="16">Payment Date:</td>
-    <td width="35%" height="16">
-        <input type="text" name="textfield" value="<%=paymentdate%>" style="width:100%">
-      </td>
-  </tr>
-  <tr> 
-    <td width="12%">Payable To: </td>
-    <td width="33%">
-        <input type="text" name="textfield3" value="<%=payable%>" style="width:100%">
-      </td>
-    <td width="16%">Total: </td>
-    <td width="35%">
-        <input type="text" name="textfield4" value="<%=total%>" style="width:100%">
-      </td>
-  </tr>
-    <tr> 
-    <td width="12%" height="16">Total Record: </td>
-    <td width="33%" height="16">
-        <input type="text" name="textfield5" value="<%=count%>" style="width:100%">
-      </td>
-    <td width="16%" height="16">Total Transaction:</td>
-    <td width="35%" height="16">
-        <input type="text" name="textfield6" value="<%=tCount%>" style="width:100%">
-      </td>
-  </tr></form>
+
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+		<td width="12%" height="16">File Name:</td>
+		<td width="33%" height="16"><input type="text" name="textfield2"
+			value="<%=filename%>" style="width: 100%"></td>
+		<td width="16%" height="16">Payment Date:</td>
+		<td width="35%" height="16"><input type="text" name="textfield"
+			value="<%=paymentdate%>" style="width: 100%"></td>
+	</tr>
+	<tr>
+		<td width="12%">Payable To:</td>
+		<td width="33%"><input type="text" name="textfield3"
+			value="<%=payable%>" style="width: 100%"></td>
+		<td width="16%">Total:</td>
+		<td width="35%"><input type="text" name="textfield4"
+			value="<%=total%>" style="width: 100%"></td>
+	</tr>
+	<tr>
+		<td width="12%" height="16">Total Record:</td>
+		<td width="33%" height="16"><input type="text" name="textfield5"
+			value="<%=count%>" style="width: 100%"></td>
+		<td width="16%" height="16">Total Transaction:</td>
+		<td width="35%" height="16"><input type="text" name="textfield6"
+			value="<%=tCount%>" style="width: 100%"></td>
+	</tr>
+	</form>
 </table>
 
 </body>

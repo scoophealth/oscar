@@ -6,13 +6,15 @@
 	output: opener.param.substring("&formdatebox=".length()) = year1 + "-" + month1 + "-" + day1
   */
 --%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <%
 String urlfrom = request.getParameter("urlfrom")==null?"":request.getParameter("urlfrom") ;
 String param = request.getParameter("param")==null?"":request.getParameter("param") ;
@@ -80,7 +82,7 @@ function typeInDate(year1,month1,day1) {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()"  leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" onLoad="setfocus()" leftmargin="0" rightmargin="0">
 <%
 ResourceBundle oscarRec = ResourceBundle.getBundle("oscarResources");
 String jan = oscarRec.getString("share.CalendarPopUp.msgJan");
@@ -106,50 +108,70 @@ int [][] dateGrid = aDate.getMonthDateGrid();
 %>
 
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-<tr BGCOLOR="#CCCCFF" >
-	<td width="5%" align="center" nowrap>
-	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-12">
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgNextYear"/>" vspace="2">
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgLastYear"/>" vspace="2">
-	</a></td>
-	<td align="center" nowrap>
-	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-1"> 
-	<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgViewLastMonth"/>" vspace="2"> <bean:message key="share.CalendarPopUp.msgLastMonth"/>
-	</a>
-	<b><span CLASS=title><%=year%>-<%=month%></span></b>
-	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=1"> 
-	<bean:message key="share.CalendarPopUp.msgNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="<bean:message key="share.CalendarPopUp.msgNextMonth"/>" vspace="2"></a></td>
-	<td align='right'>
-	<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=12">
-	<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Year" vspace="2">
-	<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Year" vspace="2"></a></td>
-</tr>
+	<tr BGCOLOR="#CCCCFF">
+		<td width="5%" align="center" nowrap><a
+			href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-12">
+		<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="<bean:message key="share.CalendarPopUp.msgNextYear"/>"
+			vspace="2"> <img src="../images/previous.gif" WIDTH="10"
+			HEIGHT="9" BORDER="0"
+			ALT="<bean:message key="share.CalendarPopUp.msgLastYear"/>"
+			vspace="2"> </a></td>
+		<td align="center" nowrap><a
+			href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=-1">
+		<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="<bean:message key="share.CalendarPopUp.msgViewLastMonth"/>"
+			vspace="2"> <bean:message
+			key="share.CalendarPopUp.msgLastMonth" /> </a> <b><span CLASS=title><%=year%>-<%=month%></span></b>
+		<a
+			href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=1">
+		<bean:message key="share.CalendarPopUp.msgNextMonth" /> <img
+			src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="<bean:message key="share.CalendarPopUp.msgNextMonth"/>"
+			vspace="2"></a></td>
+		<td align='right'><a
+			href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=month%>&param=<%=URLEncoder.encode(param)%>&delta=12">
+		<img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+			ALT="Next Year" vspace="2"> <img src="../images/next.gif"
+			WIDTH="10" HEIGHT="9" BORDER="0" ALT="Next Year" vspace="2"></a></td>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="2" >
-<tr align="center" bgcolor="#FFFFFF"> 
-	<th>
-<%
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+	<tr align="center" bgcolor="#FFFFFF">
+		<th>
+		<%
   for(int i=0; i<12; i++) {
-%>
-<a href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=i+1%>&param=<%=URLEncoder.encode(param)%>"><font SIZE="2" <%=(i+1)==month?"color='red'":"color='blue'"%>><%=arrayMonth[i]%></a>
-<% } %>
-	</th>
-</tr>
+%> <a
+			href="CalendarPopup.jsp?urlfrom=<%=urlfrom%>&year=<%=year%>&month=<%=i+1%>&param=<%=URLEncoder.encode(param)%>"><font
+			SIZE="2" <%=(i+1)==month?"color='red'":"color='blue'"%>><%=arrayMonth[i]%></a>
+		<% } %>
+		</th>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="1" cellpadding="2"  bgcolor="silver" >
-<tr bgcolor="#CCCCFF" align="center"> 
-	<th width="14%"><font color="red"><bean:message key="share.CalendarPopUp.msgSun"/></font></td>
-	<th width="14%"><bean:message key="share.CalendarPopUp.msgMon"/></font></td>
-	<th width="14%"><bean:message key="share.CalendarPopUp.msgTue"/></font></td>
-	<th width="14%"><bean:message key="share.CalendarPopUp.msgWed"/></font></td>
-	<th width="14%"><bean:message key="share.CalendarPopUp.msgThu"/></font></td>
-	<th width="14%"><bean:message key="share.CalendarPopUp.msgFri"/></td>
-	<th width="14%"><font color="green"><bean:message key="share.CalendarPopUp.msgSat"/></font></td>
-</tr>
-            
-<%
+<table width="100%" border="0" cellspacing="1" cellpadding="2"
+	bgcolor="silver">
+	<tr bgcolor="#CCCCFF" align="center">
+		<th width="14%"><font color="red"><bean:message
+			key="share.CalendarPopUp.msgSun" /></font>
+		</td>
+		<th width="14%"><bean:message key="share.CalendarPopUp.msgMon" /></font>
+		</td>
+		<th width="14%"><bean:message key="share.CalendarPopUp.msgTue" /></font>
+		</td>
+		<th width="14%"><bean:message key="share.CalendarPopUp.msgWed" /></font>
+		</td>
+		<th width="14%"><bean:message key="share.CalendarPopUp.msgThu" /></font>
+		</td>
+		<th width="14%"><bean:message key="share.CalendarPopUp.msgFri" />
+		</td>
+		<th width="14%"><font color="green"><bean:message
+			key="share.CalendarPopUp.msgSat" /></font>
+		</td>
+	</tr>
+
+	<%
 for (int i=0; i<dateGrid.length; i++) {
 	out.println("<tr>");
 	for (int j=0; j<7; j++) {
@@ -159,10 +181,11 @@ for (int i=0; i<dateGrid.length; i++) {
 			if(todayDate == now.get(Calendar.DATE)) bTodayDate = true;
 			else bTodayDate = false;
 %>
-<td align="center" bgcolor='<%=bTodayDate?"gold":"#EEEEFF"%>'>
-<a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">&nbsp;&nbsp; <%= dateGrid[i][j] %> &nbsp;&nbsp; </a>
-</td>
-<%
+	<td align="center" bgcolor='<%=bTodayDate?"gold":"#EEEEFF"%>'><a
+		href="#"
+		onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">&nbsp;&nbsp;
+	<%= dateGrid[i][j] %> &nbsp;&nbsp; </a></td>
+	<%
 		}  
 	}
 	out.println("</tr>");
@@ -172,11 +195,10 @@ for (int i=0; i<dateGrid.length; i++) {
 </table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr> 
-	<td bgcolor="#CCCCFF" align="center"> 
-	<input type="button" name="Cancel" value=" Exit " onClick="window.close()">
-	</td>
-</tr>
+	<tr>
+		<td bgcolor="#CCCCFF" align="center"><input type="button"
+			name="Cancel" value=" Exit " onClick="window.close()"></td>
+	</tr>
 </table>
 
 </body>

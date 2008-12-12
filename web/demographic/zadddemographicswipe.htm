@@ -40,27 +40,32 @@ function setfocus() {
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S DETAIL RECORD</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">PATIENT'S
+		DETAIL RECORD</font></th>
+	</tr>
 </table>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-	<form method="post" name="swipecard" action="addnewdemographicswipe.jsp">
-		<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Swipe Card 
-        </i></b></font></td>
-			
-    
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="card_no" SIZE="60"  MAXLENGTH="120">
-				
-			
-				<INPUT TYPE="SUBMIT" NAME="displaymode" VALUE="Validate" SIZE="17"></td>
-		</tr>
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<form method="post" name="swipecard"
+		action="addnewdemographicswipe.jsp">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Swipe Card </i></b></font></td>
+
+
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="card_no" SIZE="60" MAXLENGTH="120"> <INPUT
+			TYPE="SUBMIT" NAME="displaymode" VALUE="Validate" SIZE="17"></td>
+	</tr>
 	</form>
 </table>
 <br>
 <br>
-<form>
-  <input type="button" name="Button" value="Cancel" onclick=self.close();>
-</form>
+<form><input type="button" name="Button" value="Cancel"
+	onclick=self.close();></form>
 </body>
 </html>

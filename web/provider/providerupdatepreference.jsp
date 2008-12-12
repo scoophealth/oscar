@@ -24,12 +24,14 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
-<%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
 <head>
@@ -42,13 +44,14 @@
 </script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed">
+<body background="../images/gray_bg.jpg" bgproperties="fixed">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="provider.providerupdatepreference.description"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="provider.providerupdatepreference.description" /></font></th>
+	</tr>
+</table>
 <%
 String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
@@ -78,12 +81,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[6]);
     session.setAttribute("default_pmm", param[8]);
 }
-%>
-<script LANGUAGE="JavaScript">
+%> <script LANGUAGE="JavaScript">
      	self.opener.refresh1();
       self.close();
-</script>
-<%  
+</script> <%  
   } else {
   //now try to add the new preference record
 	param[0]=request.getParameter("provider_no");
@@ -108,25 +109,26 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[6]);
     session.setAttribute("default_pmm",param[8]);
 }
-%>
-<script LANGUAGE="JavaScript">
+%> <script LANGUAGE="JavaScript">
      	self.opener.refresh1();
       self.close();
-</script>
-<%  
+</script> <%  
   } else {
 %>
-  <p><h1><bean:message key="provider.providerupdatepreference.msgUpdateFailure"/></h1></p>
+<p>
+<h1><bean:message
+	key="provider.providerupdatepreference.msgUpdateFailure" /></h1>
+</p>
 <%  
   }
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-  <form>
-    <input type="button" value=<bean:message key="global.btnClose"/> onClick="self.close()">
-  </form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button"
+	value=<bean:message key="global.btnClose"/> onClick="self.close()">
+</form>
 </center>
 </body>
 </html:html>

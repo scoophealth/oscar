@@ -29,9 +29,10 @@
 
 
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*"%>
 <%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
 <%
 String user_no = (String) session.getAttribute("user");
@@ -110,11 +111,14 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
 }
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>
-<script src="../share/javascript/Oscar.js" type="text/javascript language="JavaScript"></script>
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>
+<script src="../share/javascript/Oscar.js"
+	type="text/javascript language="JavaScript"></script>
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" language="JavaScript">
 function onloadfunction() {
     if(!NiftyCheck())
@@ -201,81 +205,118 @@ function checkDefaultDate(object, defaultValue) {
    }
 }
 </script>
-                <div class="topplane">
-                    <div class="docHeading" style="background-color: #d1d5bd;">
-                        <a id="plusminusAddDocA" href="javascript: showhide('addDocDiv', 'plusminusAddDocA');">
-                         + Add Document
-                        </a>
-                        <a id="plusminusLinkA" href="javascript: showhide('addLinkDiv', 'plusminusLinkA')">
-                         + Add Link
-                        </a>
-                        <a href="javascript:;" onclick="popup(450, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">
-                         + Add HTML
-                        </a>
-                    </div>
-                        <div id="addDocDiv" class="addDocDiv" style="background-color: #f2f5e3; display: none;">
-                            <html:form action="/dms/addEditDocument" method="POST" enctype="multipart/form-data" styleClass="forms" onsubmit="return submitUpload(this)">
-                                <%-- Lists Errors --%>
-                                <% for (Enumeration errorkeys = docerrors.keys(); errorkeys.hasMoreElements();) {%>
-                                <font class="warning">Error: <bean:message key="<%=(String) docerrors.get(errorkeys.nextElement())%>"/></font><br/>
-                                <% } %>
-                                <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
-                                <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
-                                <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
-                                <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>" >
-                                <input type="hidden" name="curUser" value="<%=curUser%>" >
-                                <select name="docType" onchange="checkSel(this)"<% if (docerrors.containsKey("typemissing")) {%> class="warning"<%}%>>
-                                   <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
-                                   <%
+<div class="topplane">
+<div class="docHeading" style="background-color: #d1d5bd;"><a
+	id="plusminusAddDocA"
+	href="javascript: showhide('addDocDiv', 'plusminusAddDocA');"> +
+Add Document </a> <a id="plusminusLinkA"
+	href="javascript: showhide('addLinkDiv', 'plusminusLinkA')"> + Add
+Link </a> <a href="javascript:;"
+	onclick="popup(450, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">
++ Add HTML </a></div>
+<div id="addDocDiv" class="addDocDiv"
+	style="background-color: #f2f5e3; display: none;"><html:form
+	action="/dms/addEditDocument" method="POST"
+	enctype="multipart/form-data" styleClass="forms"
+	onsubmit="return submitUpload(this)">
+	<%-- Lists Errors --%>
+	<% for (Enumeration errorkeys = docerrors.keys(); errorkeys.hasMoreElements();) {%>
+	<font class="warning">Error: <bean:message
+		key="<%=(String) docerrors.get(errorkeys.nextElement())%>" /></font>
+	<br />
+	<% } %>
+	<input type="hidden" name="function"
+		value="<%=formdata.getFunction()%>" size="20">
+	<input type="hidden" name="functionId"
+		value="<%=formdata.getFunctionId()%>" size="20">
+	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
+	<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
+	<input type="hidden" name="curUser" value="<%=curUser%>">
+	<select name="docType" onchange="checkSel(this)"
+		<% if (docerrors.containsKey("typemissing")) {%> class="warning" <%}%>>
+		<option value=""><bean:message
+			key="dms.addDocument.formSelect" /></option>
+		<%
                                    for (int i=0; i<doctypes.size(); i++) {
                                       String doctype = (String) doctypes.get(i); %>
-                                  <option value="<%= doctype%>"<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
-                                 <%}%>
-                                </select>
-                                <% if (module.equals("provider")) {%>
-                                Public: <input type="checkbox" name="docPublic" <%=formdata.getDocPublic() + " "%>value="checked">
-                                <% } %>
-                                <input type="text" name="docDesc" size="30" value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"<% if (docerrors.containsKey("descmissing")) {%> class="warning"<%}%>>
-                                <input type="hidden" name="docCreator" value="<%=formdata.getDocCreator()%>" size="20">
-                                <span class="fieldlabel" title="Observation Date">Obs Date (yyyy/mm/dd): </span><input type="text" name="observationDate" id="observationDate" value="<%=formdata.getObservationDate()%>" onclick="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd")%>')" size="10" style="text-align: center;"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
-                                <input type="file" name="docFile" size="20"<% if (docerrors.containsKey("uploaderror")) {%> class="warning"<%}%>>
-                                <br/>
-                                <input type="hidden" name="mode" value="add">
-                                <input type="submit" name="Submit" value="Add">
-                                <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
-                           </html:form>
-                        </div>
-                        <div id="addLinkDiv" class="addDocDiv" style="background-color: #f2f5e3; display: none;">
-                            <html:form action="/dms/addLink" method="POST" styleClass="forms" onsubmit="return submitUploadLink(this)">
-                                <%-- Lists Errors --%>
-                                <% for (Enumeration errorkeys = linkhtmlerrors.keys(); errorkeys.hasMoreElements();) {%>
-                                <font class="warning">Error: <bean:message key="<%=(String) linkhtmlerrors.get(errorkeys.nextElement())%>"/></font><br/>
-                                <% } %>
-                                <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
-                                <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
-                                <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
-                                <input type="hidden" name="observationDate" value=<%=formdata.getObservationDate()%>">
-                                <select name="docType" onchange="checkSel(this)"<% if (linkhtmlerrors.containsKey("typemissing")) {%> class="warning"<%}%>>
-                                   <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
-                                   <%
+		<option value="<%= doctype%>"
+			<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
+		<%}%>
+	</select>
+	<% if (module.equals("provider")) {%>
+                                Public: <input type="checkbox"
+		name="docPublic" <%=formdata.getDocPublic() + " "%> value="checked">
+	<% } %>
+	<input type="text" name="docDesc" size="30"
+		value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"
+		<% if (docerrors.containsKey("descmissing")) {%> class="warning" <%}%>>
+	<input type="hidden" name="docCreator"
+		value="<%=formdata.getDocCreator()%>" size="20">
+	<span class="fieldlabel" title="Observation Date">Obs Date
+	(yyyy/mm/dd): </span>
+	<input type="text" name="observationDate" id="observationDate"
+		value="<%=formdata.getObservationDate()%>"
+		onclick="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd")%>')"
+		size="10" style="text-align: center;">
+	<a id="obsdate"><img title="Calendar" src="../images/cal.gif"
+		alt="Calendar" border="0" /></a>
+	<input type="file" name="docFile" size="20"
+		<% if (docerrors.containsKey("uploaderror")) {%> class="warning" <%}%>>
+	<br />
+	<input type="hidden" name="mode" value="add">
+	<input type="submit" name="Submit" value="Add">
+	<input type="button" name="Button"
+		value="<bean:message key="global.btnCancel"/>"
+		onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
+</html:form></div>
+<div id="addLinkDiv" class="addDocDiv"
+	style="background-color: #f2f5e3; display: none;"><html:form
+	action="/dms/addLink" method="POST" styleClass="forms"
+	onsubmit="return submitUploadLink(this)">
+	<%-- Lists Errors --%>
+	<% for (Enumeration errorkeys = linkhtmlerrors.keys(); errorkeys.hasMoreElements();) {%>
+	<font class="warning">Error: <bean:message
+		key="<%=(String) linkhtmlerrors.get(errorkeys.nextElement())%>" /></font>
+	<br />
+	<% } %>
+	<input type="hidden" name="function"
+		value="<%=formdata.getFunction()%>" size="20">
+	<input type="hidden" name="functionId"
+		value="<%=formdata.getFunctionId()%>" size="20">
+	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
+	<input type="hidden" name="observationDate"
+		value=<%=formdata.getObservationDate()%>">
+	<select name="docType" onchange="checkSel(this)"
+		<% if (linkhtmlerrors.containsKey("typemissing")) {%> class="warning"
+		<%}%>>
+		<option value=""><bean:message
+			key="dms.addDocument.formSelect" /></option>
+		<%
                                    for (int i=0; i<doctypes.size(); i++) {
                                       String doctype = (String) doctypes.get(i); %>
-                                  <option value="<%= doctype%>"<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
-                                 <%}%>
-                                </select>
-                                <% if (module.equals("provider")) {%>
-                                Public: <input type="checkbox" name="docPublic" <%=formdata.getDocPublic() + " "%>value="checked">
-                                <% } %>
-                                <input type="text" name="docDesc" size="30" value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"<% if (linkhtmlerrors.containsKey("descmissing")) {%> class="warning"<%}%>>
-                                <input type="text" name="html" size="30" value="<%=formdata.getHtml()%>" onfocus="checkDefaultValue(this)">
-                                <input type="hidden" name="docCreator" value="<%=formdata.getDocCreator()%>" size="20">
-                                <br/>
-                                <input type="hidden" name="mode" value="addLink">
-                                <input type="SUBMIT" name="Submit" value="Add">
-                                <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
-                           </html:form>
-                           <script type="text/javascript">
+		<option value="<%= doctype%>"
+			<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
+		<%}%>
+	</select>
+	<% if (module.equals("provider")) {%>
+                                Public: <input type="checkbox"
+		name="docPublic" <%=formdata.getDocPublic() + " "%> value="checked">
+	<% } %>
+	<input type="text" name="docDesc" size="30"
+		value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"
+		<% if (linkhtmlerrors.containsKey("descmissing")) {%> class="warning"
+		<%}%>>
+	<input type="text" name="html" size="30"
+		value="<%=formdata.getHtml()%>" onfocus="checkDefaultValue(this)">
+	<input type="hidden" name="docCreator"
+		value="<%=formdata.getDocCreator()%>" size="20">
+	<br />
+	<input type="hidden" name="mode" value="addLink">
+	<input type="SUBMIT" name="Submit" value="Add">
+	<input type="button" name="Button"
+		value="<bean:message key="global.btnCancel"/>"
+		onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
+</html:form> <script type="text/javascript">
                             Calendar.setup( { inputField : "observationDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "obsdate", singleClick : true, step : 1 } );
-                           </script>  
-                        </div>
-               </div>
+                           </script></div>
+</div>

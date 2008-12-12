@@ -24,12 +24,13 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ page import=" java.util.*, org.w3c.dom.*" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import=" java.util.*, org.w3c.dom.*"%>
+<%@ page
+	import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 
 
@@ -70,66 +71,7 @@ bean.setProviderNo(prov);
 <html>
 <head>
 
-<style type="text/css">
-    BODY
-    {
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        font-size: 10pt;
-        text-decoration: none;
-    }
-
-    SPAN.treeNode
-    {
-        font-size: 10pt;
-        font-weight: bold;
-        cursor: hand;
-    }
-
-    IMG.treeNode
-    {
-        vertical-align: middle;
-    }
-
-    IMG.collapse
-    {
-        cursor: hand;
-        margin-left: 15px;
-    }
-
-
-    TABLE.treeTable
-    {
-        margin-left: 15px;
-    }
-
-    TH.treeTable
-    {
-        font-weight: bold;
-    }
-
-    PRE
-    {
-        font-size: 9pt;
-        font-weight: normal;
-    }
-
-    .content
-    {
-        margin-left: 15px;
-        border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        padding: 3px;
-        background-color: #F5F5F5;
-    }
-
-    .borderTop
-    {
-        border-top-width: 1px;
-        border-top-color: #A9A9A9;
-        border-top-style: solid;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
     var browserName=navigator.appName; 
@@ -367,40 +309,31 @@ bean.setProviderNo(prov);
         }
     }
 %>
-<title>
-Document Transfer
-</title>
+<title>Document Transfer</title>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                oscarComm
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                        Document Transfer
-                        </td>
-                        <td  >
-
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-<%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">oscarComm</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Document Transfer</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<%
 //                <table width="100%" cellspacing=0 cellpadding=0>
 //                    <tr>
 //                        <td>
@@ -412,35 +345,27 @@ Document Transfer
 //                    </tr>
 //                </table>
 %>
-                <hr style="color:#A9A9A9;">
-                Please Select the eDocs you would like to transfer for this patient. Items without a check box will be sent
-                by default.
-                <div style="height:6px;"></div>
+		<hr style="color: #A9A9A9;">
+		Please Select the eDocs you would like to transfer for this patient.
+		Items without a check box will be sent by default.
+		<div style="height: 6px;"></div>
 
-                <form method="POST" action="PostItems.jsp">
-                    <input type=hidden name="xmlDoc" value="<%= MsgCommxml.encode64(MsgCommxml.toXML(root)) %>"/>
+		<form method="POST" action="PostItems.jsp"><input type=hidden
+			name="xmlDoc"
+			value="<%= MsgCommxml.encode64(MsgCommxml.toXML(root)) %>" /> <% DrawDoc(root, out); %>
+		<br>
+		<input type=submit value="Send These eDocs" /></form>
 
-                <% DrawDoc(root, out); %>
-                    <br>
-                    <input type=submit value="Send These eDocs" />
-                </form>
+		<div style="font-size: 8pt; margin-top: 15px;"><a
+			href="javascript:expandAll();">Expand All</a> &nbsp;|&nbsp; <a
+			href="javascript:collapseAll();">Collapse All</a></div>
 
-                <div style="font-size: 8pt; margin-top: 15px;">
-                    <a href="javascript:expandAll();">Expand All</a>
-                    &nbsp;|&nbsp;
-                    <a href="javascript:collapseAll();">Collapse All</a>
-                </div>
-
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html>

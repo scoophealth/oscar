@@ -20,11 +20,13 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.graphic.*, oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="oscar.form.graphic.*, oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "ONAR";
@@ -47,9 +49,9 @@
 <%
   boolean bView = false;
   if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
-  %> 
- 
-  <% 
+  %>
+
+<% 
     FrmARBloodWorkTest ar1BloodWorkTest = new FrmARBloodWorkTest(demoNo, formId); 
     java.util.Properties ar1Props = ar1BloodWorkTest.getAr1Props(); 
     int ar1BloodWorkTestListSize = ar1BloodWorkTest.getAr1BloodWorkTestListSize(); 
@@ -59,21 +61,24 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-    <title>Antenatal Record 2</title>
-    <html:base/>
-    <link rel="stylesheet" type="text/css" href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<title>Antenatal Record 2</title>
+<html:base />
+<link rel="stylesheet" type="text/css"
+	href="<%=bView?"arStyleView.css" : "arStyle.css"%>">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -564,18 +569,24 @@ function calToday(field) {
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <html:form action="/form/formname">
 
-<input type="hidden" name="commonField" value="ar2_" />
-<input type="hidden" name="c_lastVisited" value=<%=props.getProperty("c_lastVisited", "pg2")%> />
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>" />
-<input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
-<input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" />
-<input type="hidden" name="submit" value="exit"/>
-<%
+	<input type="hidden" name="commonField" value="ar2_" />
+	<input type="hidden" name="c_lastVisited"
+		value=<%=props.getProperty("c_lastVisited", "pg2")%> />
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="ID"
+		value="<%= props.getProperty("ID", "0") %>" />
+	<input type="hidden" name="provider_no"
+		value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="provNo"
+		value="<%= request.getParameter("provNo") %>" />
+	<input type="hidden" name="submit" value="exit" />
+	<%
 	String historyet = "";
 	if (request.getParameter("historyet") != null) {
 		out.println("<input type=\"hidden\" name=\"historyet\" value=\"" + request.getParameter("historyet") + "\">" );
@@ -583,63 +594,67 @@ function calToday(field) {
 	}
 %>
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
+  if (!bView) {
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
+  }
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print" onclick="javascript:return onPrint();" /></td>
+
+			<%
   if (!bView) {
 %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+			<td><a
+				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+			</td>
+
+			<td align="right"><b>View:</b> <a
+				href="javascript: popupPage('formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">
+			AR1</a> | <a
+				href="javascript: popupPage('formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">AR2
+			<font size=-2>(pg.2)</font></a></td>
+			<td align="right"><b>Edit:</b> <a
+				href="formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a>
+			| <a
+				href="formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2
+			<font size=-2>(pg.2)</font></a> | <a
+				href="formonarpg4.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2
+			<font size=-2>(pg.3)</font></a> &nbsp;|&nbsp; <!--a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%--=demoNo%>&formId=<%=formId%>&provNo=<%=provNo--%>');">AR Planner</a-->
+			<%if(((FrmONARRecord)rec).isSendToPing(""+demoNo)) {	%> <a
+				href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
+			<% }	%>
+			</td>
+			<%
   }
 %>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-        </td>
+		</tr>
+	</table>
 
-<%
-  if (!bView) {
-%> 
-        <td>
-           <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
-        </td>
-
-        <td align="right"><b>View:</b>
-            <a href="javascript: popupPage('formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');"> AR1</a> |
-            <a href="javascript: popupPage('formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo+historyet%>&view=1');">AR2 <font size=-2>(pg.2)</font></a>
-        </td>
-        <td align="right"><b>Edit:</b>
-            <a href="formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a> |
-            <a href="formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.2)</font></a> |
-            <a href="formonarpg4.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.3)</font></a>
-            &nbsp;|&nbsp;
-            <!--a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%--=demoNo%>&formId=<%=formId%>&provNo=<%=provNo--%>');">AR Planner</a-->
-<%if(((FrmONARRecord)rec).isSendToPing(""+demoNo)) {	%>
-			<a href="study/ar2ping.jsp?demographic_no=<%=demoNo%>">Send to PING</a>
-<% }	%>
-        </td>
-<%
-  }
-%>
-    </tr>
-</table>
-
-<table class="title" border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr>
-        <th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>ANTENATAL RECORD 2 (page 1)</th>
-    </tr>
-</table>
-<table width="50%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-        <td valign="top" width="50%">Patient's Last Name<br>
-            <input type="text" name="c_lastName" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_lastName", "") %>"/>
-        </td>
-        <td valign="top">Patient's First Name<br>
-            <input type="text" name="c_firstName" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_firstName", "") %>"/>
-        </td>
-    </tr>
-    <!--  tr>
+	<table class="title" border="0" cellspacing="0" cellpadding="0"
+		width="100%">
+		<tr>
+			<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>ANTENATAL
+			RECORD 2 (page 1)</th>
+		</tr>
+	</table>
+	<table width="50%" border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<td valign="top" width="50%">Patient's Last Name<br>
+			<input type="text" name="c_lastName" style="width: 100%" size="30"
+				maxlength="60" value="<%= props.getProperty("c_lastName", "") %>" />
+			</td>
+			<td valign="top">Patient's First Name<br>
+			<input type="text" name="c_firstName" style="width: 100%" size="30"
+				maxlength="60" value="<%= props.getProperty("c_firstName", "") %>" />
+			</td>
+		</tr>
+		<!--  tr>
         <td valign="top" colspan='2'>
             Name<input type="text" name="c_pName"  style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_pName", "") %>">
         </td>
@@ -649,431 +664,830 @@ function calToday(field) {
             Address<input type="text" name="c_address"  style="width:100%" size="60" maxlength="80" value="<%= UtilMisc.htmlEscape(props.getProperty("c_address", "")) %>">
         </td>
 	</tr>-->
-    <tr>
-        <td valign="top" width="50%">
-            Birth attendants<br><input type="text" name="c_ba" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("c_ba", "")) %>">
-        </td>
-        <td>
-            Newborn care<br><input type="text" name="c_nc" size="15" style="width:100%" maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("c_nc", "")) %>">
-        </td>
-    </tr>
-</table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
-    <tr>
-        <td width="25%" colspan="5">Family physician<br>
-            <input type="text" name="c_famPhys" size="30" maxlength="80" style="width:100%" value="<%= props.getProperty("c_famPhys", "") %>"/>
-        </td>
-        <td valign="top" rowspan="4" width="25%">
-            <b>Final EDB</b> (yyyy/mm/dd)<br>
-            <input type="text" name="c_finalEDB" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("c_finalEDB", "") %>">
-        </td>
-        <td valign="top" rowspan="4" width="25%">Allergies or Sensitivities</br>
-        <textarea name="c_allergies" style="width:100%" cols="30" rows="3"><%= props.getProperty("c_allergies", "") %></textarea></td>
-        <td valign="top" rowspan="4">Medications / Herbals</br>
-        <textarea name="c_meds" style="width:100%" cols="30" rows="3"><%= props.getProperty("c_meds", "") %></textarea></td>
-    </tr>
-    <tr>
-        <td bgcolor="#CCCCCC" width="5%">G</br>
-        <input type="text" name="c_gravida" size="2" style="width:100%" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("c_gravida", "")) %>"></td>
-        <td bgcolor="#CCCCCC" width="5%">T</br>
-        <input type="text" name="c_term" size="2" style="width:100%" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("c_term", "")) %>"></td>
-        <td bgcolor="#CCCCCC" width="5%">P</br>
-        <input type="text" name="c_prem" size="2" style="width:100%" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("c_prem", "")) %>"></td>
-        <td bgcolor="#CCCCCC" width="5%">A</br>
-        <input type="text" name="c_abort" size="2" style="width:100%" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("c_abort", "")) %>"></td>
-        <td bgcolor="#CCCCCC" width="5%">L</br>
-        <input type="text" name="c_living" size="2" style="width:100%" maxlength="3" value="<%= UtilMisc.htmlEscape(props.getProperty("c_living", "")) %>"></td>
-    </tr>
-</table>
+		<tr>
+			<td valign="top" width="50%">Birth attendants<br>
+			<input type="text" name="c_ba" size="15" style="width: 100%"
+				maxlength="25"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_ba", "")) %>">
+			</td>
+			<td>Newborn care<br>
+			<input type="text" name="c_nc" size="15" style="width: 100%"
+				maxlength="25"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_nc", "")) %>">
+			</td>
+		</tr>
+	</table>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="25%" colspan="5">Family physician<br>
+			<input type="text" name="c_famPhys" size="30" maxlength="80"
+				style="width: 100%"
+				value="<%= props.getProperty("c_famPhys", "") %>" /></td>
+			<td valign="top" rowspan="4" width="25%"><b>Final EDB</b>
+			(yyyy/mm/dd)<br>
+			<input type="text" name="c_finalEDB" style="width: 100%" size="10"
+				maxlength="10" value="<%= props.getProperty("c_finalEDB", "") %>">
+			</td>
+			<td valign="top" rowspan="4" width="25%">Allergies or
+			Sensitivities</br>
+			<textarea name="c_allergies" style="width: 100%" cols="30" rows="3"><%= props.getProperty("c_allergies", "") %></textarea></td>
+			<td valign="top" rowspan="4">Medications / Herbals</br>
+			<textarea name="c_meds" style="width: 100%" cols="30" rows="3"><%= props.getProperty("c_meds", "") %></textarea></td>
+		</tr>
+		<tr>
+			<td bgcolor="#CCCCCC" width="5%">G</br>
+			<input type="text" name="c_gravida" size="2" style="width: 100%"
+				maxlength="3"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_gravida", "")) %>"></td>
+			<td bgcolor="#CCCCCC" width="5%">T</br>
+			<input type="text" name="c_term" size="2" style="width: 100%"
+				maxlength="3"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_term", "")) %>"></td>
+			<td bgcolor="#CCCCCC" width="5%">P</br>
+			<input type="text" name="c_prem" size="2" style="width: 100%"
+				maxlength="3"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_prem", "")) %>"></td>
+			<td bgcolor="#CCCCCC" width="5%">A</br>
+			<input type="text" name="c_abort" size="2" style="width: 100%"
+				maxlength="3"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_abort", "")) %>"></td>
+			<td bgcolor="#CCCCCC" width="5%">L</br>
+			<input type="text" name="c_living" size="2" style="width: 100%"
+				maxlength="3"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("c_living", "")) %>"></td>
+		</tr>
+	</table>
 
 
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-        <th bgcolor="#CCCCCC" width="30%">
-            Identified Risk Factors
-        </th>
-        <th bgcolor="#CCCCCC">
-            Plan of Management
-        </th>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors1" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors1", "") %>"></td>
-        <td><input type="text" name="c_planManage1" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage1", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors2" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors2", "") %>"></td>
-        <td><input type="text" name="c_planManage2" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage2", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors3" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors3", "") %>"></td>
-        <td><input type="text" name="c_planManage3" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage3", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors4" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors4", "") %>"></td>
-        <td><input type="text" name="c_planManage4" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage4", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors5" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors5", "") %>"></td>
-        <td><input type="text" name="c_planManage5" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage5", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors6" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors6", "") %>"></td>
-        <td><input type="text" name="c_planManage6" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage6", "") %>"></td>
-    </tr>
-    <tr>
-        <td><input type="text" name="c_riskFactors7" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors7", "") %>"></td>
-        <td><input type="text" name="c_planManage7" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage7", "") %>"></td>
-    </tr>
-    <tr> 
- 	 <td colspan="2" style="background-color:green; color:#FFFFFF; font-weight:bold;"> 
- 	 <% 
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th bgcolor="#CCCCCC" width="30%">Identified Risk Factors</th>
+			<th bgcolor="#CCCCCC">Plan of Management</th>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors1" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors1", "") %>"></td>
+			<td><input type="text" name="c_planManage1" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage1", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors2" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors2", "") %>"></td>
+			<td><input type="text" name="c_planManage2" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage2", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors3" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors3", "") %>"></td>
+			<td><input type="text" name="c_planManage3" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage3", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors4" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors4", "") %>"></td>
+			<td><input type="text" name="c_planManage4" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage4", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors5" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors5", "") %>"></td>
+			<td><input type="text" name="c_planManage5" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage5", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors6" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors6", "") %>"></td>
+			<td><input type="text" name="c_planManage6" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage6", "") %>"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="c_riskFactors7" size="20"
+				maxlength="50" style="width: 100%"
+				value="<%= props.getProperty("c_riskFactors7", "") %>"></td>
+			<td><input type="text" name="c_planManage7" size="60"
+				maxlength="100" style="width: 100%"
+				value="<%= props.getProperty("c_planManage7", "") %>"></td>
+		</tr>
+		<tr>
+			<td colspan="2"
+				style="background-color: green; color: #FFFFFF; font-weight: bold;">
+			<% 
         	if(ar1BloodWorkTestListSize == 9){ 
- 	 %>         
- 	 <%=ar1CompleteSignal%> 
- 	 <% 
+ 	 %> <%=ar1CompleteSignal%> <% 
  	 } 
- 	 %>      
- 	</td> 
-    </tr> 
-        
-</table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
-    <tr>
-        <th bgcolor="#CCCCCC" colspan="3">
-            Recommended Immunoprophylaxis
-        </th>
-    </tr>
-    <tr>
-        <td width="30%"><b>Rh neg.</b>
-            <input type="checkbox" name="ar2_rhNeg" <%= props.getProperty("ar2_rhNeg", "") %>/>
-            &nbsp;&nbsp;&nbsp;<b>Rh IG Given:</b>
-			<input type="text" name="ar2_rhIG" size="7" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_rhIG", "")) %>">
-		</td>
-		<td width="30%" nowrap><b>Rubella booster postpartum</b>
-            <input type="checkbox" name="ar2_rubella" <%= props.getProperty("ar2_rubella", "") %>/>
-        </td>
-		<td><b>Newborn needs: Hep B IG</b>
-            <input type="checkbox" name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %>/>
-            &nbsp;&nbsp;&nbsp;<b>Hep B vaccine</b>
-            <input type="checkbox" name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %>/>
-        </td>
-    </tr>
-</table>
-<table width="100%" border="0">
-    <tr>
-        <td valign="top" bgcolor="#CCCCCC" align="center"><b>Subsequent Visits</b></td>
-    </tr>
-</table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
-    <tr align="center">
-        <td width="7%">Date<br>(yyyy/mm/dd)</td>
-        <td width="7%">GA<br>(weeks) </td>
-        <td width="7%"><!--  a href=# onclick="javascript:onWtSVG(); return false;"-->Weight<br>(Kg)</a></td>
-        <td width="7%">B.P.</td>
-        <td  width="6%" colspan="2">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td colspan="2" align="center">Urine</td>
-                </tr>
-                <tr align="center">
-                    <td>Pr</td>
-                    <td>Gl</td>
-                </tr>
-            </table>
-        </td>
-        <td width="7%">SFH</td>
-        <td width="7%">Pres.<br>Posn. </td>
-        <td width="7%">FHR/</br>Fm</td>
-        <td nowrap>Comments</td>
-        <!--  td nowrap width="4%">Cig./<br>day</td>-->
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date1" id="pg2_date1" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date1", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest1" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest1", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt1" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt1", "")) %>"></td>
-        <td><input type="text" name="pg2_BP1" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP1", "")) %>"></td>
-        <td width="4%"><input type="text" name="pg2_urinePr1" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr1", "")) %>"></td>
-        <td width="4%"><input type="text" name="pg2_urineGl1" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl1", "")) %>"></td>
-        <td><input type="text" name="pg2_ht1" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht1", "")) %>"></td>
-        <td><input type="text" name="pg2_presn1" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn1", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR1" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR1", "")) %>"></td>
-        <td><input type="text" name="pg2_comments1" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments1", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date2" id="pg2_date2" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date2", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest2" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest2", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt2" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt2", "")) %>"></td>
-        <td><input type="text" name="pg2_BP2" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP2", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr2" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr2", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl2" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl2", "")) %>"></td>
-        <td><input type="text" name="pg2_ht2" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht2", "")) %>"></td>
-        <td><input type="text" name="pg2_presn2" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn2", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR2" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR2", "")) %>"></td>
-        <td><input type="text" name="pg2_comments2" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments2", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date3" id="pg2_date3" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date3", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest3" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest3", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt3" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt3", "")) %>"></td>
-        <td><input type="text" name="pg2_BP3" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP3", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr3" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr3", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl3" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl3", "")) %>"></td>
-        <td><input type="text" name="pg2_ht3" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht3", "")) %>"></td>
-        <td><input type="text" name="pg2_presn3" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn3", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR3" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR3", "")) %>"></td>
-        <td><input type="text" name="pg2_comments3" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments3", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date4" id="pg2_date4" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date4", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest4" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest4", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt4" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt4", "")) %>"></td>
-        <td><input type="text" name="pg2_BP4" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP4", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr4" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr4", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl4" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl4", "")) %>"></td>
-        <td><input type="text" name="pg2_ht4" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht4", "")) %>"></td>
-        <td><input type="text" name="pg2_presn4" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn4", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR4" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR4", "")) %>"></td>
-        <td><input type="text" name="pg2_comments4" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments4", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date5" id="pg2_date5" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date5", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest5" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest5", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt5" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt5", "")) %>"></td>
-        <td><input type="text" name="pg2_BP5" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP5", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr5" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr5", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl5" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl5", "")) %>"></td>
-        <td><input type="text" name="pg2_ht5" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht5", "")) %>"></td>
-        <td><input type="text" name="pg2_presn5" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn5", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR5" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR5", "")) %>"></td>
-        <td><input type="text" name="pg2_comments5" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments5", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date6" id="pg2_date6" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date6", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest6" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest6", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt6" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt6", "")) %>"></td>
-        <td><input type="text" name="pg2_BP6" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP6", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr6" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr6", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl6" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl6", "")) %>"></td>
-        <td><input type="text" name="pg2_ht6" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht6", "")) %>"></td>
-        <td><input type="text" name="pg2_presn6" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn6", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR6" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR6", "")) %>"></td>
-        <td><input type="text" name="pg2_comments6" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments6", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date7" id="pg2_date7" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date7", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest7" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest7", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt7" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt7", "")) %>"></td>
-        <td><input type="text" name="pg2_BP7" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP7", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr7" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr7", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl7" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl7", "")) %>"></td>
-        <td><input type="text" name="pg2_ht7" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht7", "")) %>"></td>
-        <td><input type="text" name="pg2_presn7" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn7", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR7" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR7", "")) %>"></td>
-        <td><input type="text" name="pg2_comments7" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments7", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date8" id="pg2_date8" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date8", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest8" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest8", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt8" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt8", "")) %>"></td>
-        <td><input type="text" name="pg2_BP8" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP8", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr8" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr8", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl8" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl8", "")) %>"></td>
-        <td><input type="text" name="pg2_ht8" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht8", "")) %>"></td>
-        <td><input type="text" name="pg2_presn8" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn8", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR8" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR8", "")) %>"></td>
-        <td><input type="text" name="pg2_comments8" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments8", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date9" id="pg2_date9" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date9", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest9" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest9", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt9" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt9", "")) %>"></td>
-        <td><input type="text" name="pg2_BP9" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP9", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr9" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr9", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl9" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl9", "")) %>"></td>
-        <td><input type="text" name="pg2_ht9" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht9", "")) %>"></td>
-        <td><input type="text" name="pg2_presn9" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn9", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR9" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR9", "")) %>"></td>
-        <td><input type="text" name="pg2_comments9" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments9", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date10" id="pg2_date10" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date10", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest10" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest10", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt10" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt10", "")) %>"></td>
-        <td><input type="text" name="pg2_BP10" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP10", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr10" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr10", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl10" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl10", "")) %>"></td>
-        <td><input type="text" name="pg2_ht10" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht10", "")) %>"></td>
-        <td><input type="text" name="pg2_presn10" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn10", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR10" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR10", "")) %>"></td>
-        <td><input type="text" name="pg2_comments10" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments10", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date11" id="pg2_date11" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date11", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest11" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest11", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt11" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt11", "")) %>"></td>
-        <td><input type="text" name="pg2_BP11" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP11", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr11" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr11", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl11" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl11", "")) %>"></td>
-        <td><input type="text" name="pg2_ht11" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht11", "")) %>"></td>
-        <td><input type="text" name="pg2_presn11" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn11", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR11" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR11", "")) %>"></td>
-        <td><input type="text" name="pg2_comments11" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments11", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date12" id="pg2_date12" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date12", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest12" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest12", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt12" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt12", "")) %>"></td>
-        <td><input type="text" name="pg2_BP12" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP12", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr12" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr12", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl12" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl12", "")) %>"></td>
-        <td><input type="text" name="pg2_ht12" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht12", "")) %>"></td>
-        <td><input type="text" name="pg2_presn12" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn12", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR12" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR12", "")) %>"></td>
-        <td><input type="text" name="pg2_comments12" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments12", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date13" id="pg2_date13" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date13", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest13" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest13", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt13" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt13", "")) %>"></td>
-        <td><input type="text" name="pg2_BP13" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP13", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr13" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr13", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl13" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl13", "")) %>"></td>
-        <td><input type="text" name="pg2_ht13" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht13", "")) %>"></td>
-        <td><input type="text" name="pg2_presn13" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn13", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR13" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR13", "")) %>"></td>
-        <td><input type="text" name="pg2_comments13" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments13", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date14" id="pg2_date14" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date14", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest14" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest14", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt14" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt14", "")) %>"></td>
-        <td><input type="text" name="pg2_BP14" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP14", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr14" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr14", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl14" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl14", "")) %>"></td>
-        <td><input type="text" name="pg2_ht14" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht14", "")) %>"></td>
-        <td><input type="text" name="pg2_presn14" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn14", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR14" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR14", "")) %>"></td>
-        <td><input type="text" name="pg2_comments14" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments14", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date15" id="pg2_date15" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date15", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest15" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest15", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt15" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt15", "")) %>"></td>
-        <td><input type="text" name="pg2_BP15" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP15", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr15" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr15", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl15" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl15", "")) %>"></td>
-        <td><input type="text" name="pg2_ht15" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht15", "")) %>"></td>
-        <td><input type="text" name="pg2_presn15" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn15", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR15" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR15", "")) %>"></td>
-        <td><input type="text" name="pg2_comments15" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments15", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date16" id="pg2_date16" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date16", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest16" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest16", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt16" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt16", "")) %>"></td>
-        <td><input type="text" name="pg2_BP16" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP16", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr16" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr16", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl16" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl16", "")) %>"></td>
-        <td><input type="text" name="pg2_ht16" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht16", "")) %>"></td>
-        <td><input type="text" name="pg2_presn16" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn16", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR16" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR16", "")) %>"></td>
-        <td><input type="text" name="pg2_comments16" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments16", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date17" id="pg2_date17" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date17", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest17" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest17", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt17" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt17", "")) %>"></td>
-        <td><input type="text" name="pg2_BP17" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP17", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr17" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr17", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl17" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl17", "")) %>"></td>
-        <td><input type="text" name="pg2_ht17" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht17", "")) %>"></td>
-        <td><input type="text" name="pg2_presn17" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn17", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR17" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR17", "")) %>"></td>
-        <td><input type="text" name="pg2_comments17" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments17", "")) %>"></td>
-    </tr>
-    <tr align="center">
-        <td nowrap>
-        <input type="text" name="pg2_date18" id="pg2_date18" class="spe" size="9" maxlength="10" onDblClick="calToday(this)" value="<%= props.getProperty("pg2_date18", "") %>">
-        </td>
-        <td><input type="text" name="pg2_gest18" class="spe" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest18", "")) %>"  onDblClick="calcWeek(this)"></td>
-        <td><input type="text" name="pg2_wt18" size="6" maxlength="6" onDblClick="wtEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt18", "")) %>"></td>
-        <td><input type="text" name="pg2_BP18" size="6" maxlength="8" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP18", "")) %>"></td>
-        <td><input type="text" name="pg2_urinePr18" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr18", "")) %>"></td>
-        <td><input type="text" name="pg2_urineGl18" size="2" maxlength="3" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl18", "")) %>"></td>
-        <td><input type="text" name="pg2_ht18" size="6" maxlength="6" onDblClick="htEnglish2Metric(this);" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht18", "")) %>"></td>
-        <td><input type="text" name="pg2_presn18" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn18", "")) %>"></td>
-        <td><input type="text" name="pg2_FHR18" size="6" maxlength="6" style="width:90%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR18", "")) %>"></td>
-        <td><input type="text" name="pg2_comments18" size="20" maxlength="70" style="width:100%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments18", "")) %>"></td>
-    </tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-        <td width="20%">&nbsp; </td>
-        <td  width="80%"valign="top">
-            <table width="100%" border="1" cellspacing="0" cellpadding="0">
-                <tr>
-                    <th colspan="3" align="center" bgcolor="#CCCCCC">Ultrasound</th>
-                    <th colspan="2" align="center" bgcolor="#CCCCCC">Additional Lab Investigations</th>
-                </tr>
-                <tr>
-                    <td align="center" width="12%">Date</td>
-                    <td align="center" width="8%">GA</td>
-                    <td width="50%" align="center">Result</td>
-                    <td align="center" width="15%">Test</td>
-                    <td align="center">Result</td>
-                </tr>
-                <tr>
-                    <td nowrap><input type="text" name="ar2_uDate1" id="ar2_uDate1" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate1", "") %>">
-					<img src="../images/cal.gif" id="ar2_uDate1_cal"> 
-                    </td>
-                    <td><input type="text" name="ar2_uGA1" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA1", "")) %>"></td>
-                    <td><input type="text" name="ar2_uResults1" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults1", "")) %>"></td>
-                    <td>Hb</td>
-					<td><input type="text" name="ar2_hb" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_hb", "")) %>"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="ar2_uDate2" id="ar2_uDate2" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate2", "") %>">
-					<img src="../images/cal.gif" id="ar2_uDate2_cal"> 
-                    </td>
-                    <td><input type="text" name="ar2_uGA2" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA2", "")) %>"></td>
-                    <td><input type="text" name="ar2_uResults2" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults2", "")) %>"></td>
-                    <td>ABO/Rh</td>
-<%
+ 	 %>
+			</td>
+		</tr>
+
+	</table>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<th bgcolor="#CCCCCC" colspan="3">Recommended Immunoprophylaxis
+			</th>
+		</tr>
+		<tr>
+			<td width="30%"><b>Rh neg.</b> <input type="checkbox"
+				name="ar2_rhNeg" <%= props.getProperty("ar2_rhNeg", "") %> />
+			&nbsp;&nbsp;&nbsp;<b>Rh IG Given:</b> <input type="text"
+				name="ar2_rhIG" size="7" maxlength="10"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_rhIG", "")) %>">
+			</td>
+			<td width="30%" nowrap><b>Rubella booster postpartum</b> <input
+				type="checkbox" name="ar2_rubella"
+				<%= props.getProperty("ar2_rubella", "") %> /></td>
+			<td><b>Newborn needs: Hep B IG</b> <input type="checkbox"
+				name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %> />
+			&nbsp;&nbsp;&nbsp;<b>Hep B vaccine</b> <input type="checkbox"
+				name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %> /></td>
+		</tr>
+	</table>
+	<table width="100%" border="0">
+		<tr>
+			<td valign="top" bgcolor="#CCCCCC" align="center"><b>Subsequent
+			Visits</b></td>
+		</tr>
+	</table>
+	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+		<tr align="center">
+			<td width="7%">Date<br>
+			(yyyy/mm/dd)</td>
+			<td width="7%">GA<br>
+			(weeks)</td>
+			<td width="7%"><!--  a href=# onclick="javascript:onWtSVG(); return false;"-->Weight<br>
+			(Kg)</a></td>
+			<td width="7%">B.P.</td>
+			<td width="6%" colspan="2">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2" align="center">Urine</td>
+				</tr>
+				<tr align="center">
+					<td>Pr</td>
+					<td>Gl</td>
+				</tr>
+			</table>
+			</td>
+			<td width="7%">SFH</td>
+			<td width="7%">Pres.<br>
+			Posn.</td>
+			<td width="7%">FHR/</br>
+			Fm</td>
+			<td nowrap>Comments</td>
+			<!--  td nowrap width="4%">Cig./<br>day</td>-->
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date1" id="pg2_date1"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date1", "") %>"></td>
+			<td><input type="text" name="pg2_gest1" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest1", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt1" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt1", "")) %>"></td>
+			<td><input type="text" name="pg2_BP1" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP1", "")) %>"></td>
+			<td width="4%"><input type="text" name="pg2_urinePr1" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr1", "")) %>"></td>
+			<td width="4%"><input type="text" name="pg2_urineGl1" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl1", "")) %>"></td>
+			<td><input type="text" name="pg2_ht1" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht1", "")) %>"></td>
+			<td><input type="text" name="pg2_presn1" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn1", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR1" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR1", "")) %>"></td>
+			<td><input type="text" name="pg2_comments1" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments1", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date2" id="pg2_date2"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date2", "") %>"></td>
+			<td><input type="text" name="pg2_gest2" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest2", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt2" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt2", "")) %>"></td>
+			<td><input type="text" name="pg2_BP2" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP2", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr2" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr2", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl2" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl2", "")) %>"></td>
+			<td><input type="text" name="pg2_ht2" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht2", "")) %>"></td>
+			<td><input type="text" name="pg2_presn2" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn2", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR2" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR2", "")) %>"></td>
+			<td><input type="text" name="pg2_comments2" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments2", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date3" id="pg2_date3"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date3", "") %>"></td>
+			<td><input type="text" name="pg2_gest3" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest3", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt3" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt3", "")) %>"></td>
+			<td><input type="text" name="pg2_BP3" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP3", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr3" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr3", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl3" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl3", "")) %>"></td>
+			<td><input type="text" name="pg2_ht3" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht3", "")) %>"></td>
+			<td><input type="text" name="pg2_presn3" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn3", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR3" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR3", "")) %>"></td>
+			<td><input type="text" name="pg2_comments3" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments3", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date4" id="pg2_date4"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date4", "") %>"></td>
+			<td><input type="text" name="pg2_gest4" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest4", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt4" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt4", "")) %>"></td>
+			<td><input type="text" name="pg2_BP4" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP4", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr4" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr4", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl4" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl4", "")) %>"></td>
+			<td><input type="text" name="pg2_ht4" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht4", "")) %>"></td>
+			<td><input type="text" name="pg2_presn4" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn4", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR4" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR4", "")) %>"></td>
+			<td><input type="text" name="pg2_comments4" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments4", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date5" id="pg2_date5"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date5", "") %>"></td>
+			<td><input type="text" name="pg2_gest5" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest5", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt5" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt5", "")) %>"></td>
+			<td><input type="text" name="pg2_BP5" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP5", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr5" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr5", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl5" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl5", "")) %>"></td>
+			<td><input type="text" name="pg2_ht5" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht5", "")) %>"></td>
+			<td><input type="text" name="pg2_presn5" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn5", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR5" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR5", "")) %>"></td>
+			<td><input type="text" name="pg2_comments5" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments5", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date6" id="pg2_date6"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date6", "") %>"></td>
+			<td><input type="text" name="pg2_gest6" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest6", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt6" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt6", "")) %>"></td>
+			<td><input type="text" name="pg2_BP6" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP6", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr6" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr6", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl6" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl6", "")) %>"></td>
+			<td><input type="text" name="pg2_ht6" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht6", "")) %>"></td>
+			<td><input type="text" name="pg2_presn6" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn6", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR6" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR6", "")) %>"></td>
+			<td><input type="text" name="pg2_comments6" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments6", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date7" id="pg2_date7"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date7", "") %>"></td>
+			<td><input type="text" name="pg2_gest7" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest7", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt7" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt7", "")) %>"></td>
+			<td><input type="text" name="pg2_BP7" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP7", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr7" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr7", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl7" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl7", "")) %>"></td>
+			<td><input type="text" name="pg2_ht7" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht7", "")) %>"></td>
+			<td><input type="text" name="pg2_presn7" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn7", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR7" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR7", "")) %>"></td>
+			<td><input type="text" name="pg2_comments7" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments7", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date8" id="pg2_date8"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date8", "") %>"></td>
+			<td><input type="text" name="pg2_gest8" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest8", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt8" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt8", "")) %>"></td>
+			<td><input type="text" name="pg2_BP8" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP8", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr8" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr8", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl8" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl8", "")) %>"></td>
+			<td><input type="text" name="pg2_ht8" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht8", "")) %>"></td>
+			<td><input type="text" name="pg2_presn8" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn8", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR8" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR8", "")) %>"></td>
+			<td><input type="text" name="pg2_comments8" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments8", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date9" id="pg2_date9"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date9", "") %>"></td>
+			<td><input type="text" name="pg2_gest9" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest9", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt9" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt9", "")) %>"></td>
+			<td><input type="text" name="pg2_BP9" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP9", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr9" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr9", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl9" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl9", "")) %>"></td>
+			<td><input type="text" name="pg2_ht9" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht9", "")) %>"></td>
+			<td><input type="text" name="pg2_presn9" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn9", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR9" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR9", "")) %>"></td>
+			<td><input type="text" name="pg2_comments9" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments9", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date10" id="pg2_date10"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date10", "") %>"></td>
+			<td><input type="text" name="pg2_gest10" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest10", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt10" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt10", "")) %>"></td>
+			<td><input type="text" name="pg2_BP10" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP10", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr10" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr10", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl10" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl10", "")) %>"></td>
+			<td><input type="text" name="pg2_ht10" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht10", "")) %>"></td>
+			<td><input type="text" name="pg2_presn10" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn10", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR10" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR10", "")) %>"></td>
+			<td><input type="text" name="pg2_comments10" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments10", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date11" id="pg2_date11"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date11", "") %>"></td>
+			<td><input type="text" name="pg2_gest11" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest11", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt11" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt11", "")) %>"></td>
+			<td><input type="text" name="pg2_BP11" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP11", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr11" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr11", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl11" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl11", "")) %>"></td>
+			<td><input type="text" name="pg2_ht11" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht11", "")) %>"></td>
+			<td><input type="text" name="pg2_presn11" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn11", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR11" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR11", "")) %>"></td>
+			<td><input type="text" name="pg2_comments11" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments11", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date12" id="pg2_date12"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date12", "") %>"></td>
+			<td><input type="text" name="pg2_gest12" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest12", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt12" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt12", "")) %>"></td>
+			<td><input type="text" name="pg2_BP12" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP12", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr12" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr12", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl12" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl12", "")) %>"></td>
+			<td><input type="text" name="pg2_ht12" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht12", "")) %>"></td>
+			<td><input type="text" name="pg2_presn12" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn12", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR12" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR12", "")) %>"></td>
+			<td><input type="text" name="pg2_comments12" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments12", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date13" id="pg2_date13"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date13", "") %>"></td>
+			<td><input type="text" name="pg2_gest13" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest13", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt13" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt13", "")) %>"></td>
+			<td><input type="text" name="pg2_BP13" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP13", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr13" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr13", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl13" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl13", "")) %>"></td>
+			<td><input type="text" name="pg2_ht13" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht13", "")) %>"></td>
+			<td><input type="text" name="pg2_presn13" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn13", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR13" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR13", "")) %>"></td>
+			<td><input type="text" name="pg2_comments13" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments13", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date14" id="pg2_date14"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date14", "") %>"></td>
+			<td><input type="text" name="pg2_gest14" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest14", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt14" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt14", "")) %>"></td>
+			<td><input type="text" name="pg2_BP14" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP14", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr14" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr14", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl14" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl14", "")) %>"></td>
+			<td><input type="text" name="pg2_ht14" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht14", "")) %>"></td>
+			<td><input type="text" name="pg2_presn14" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn14", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR14" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR14", "")) %>"></td>
+			<td><input type="text" name="pg2_comments14" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments14", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date15" id="pg2_date15"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date15", "") %>"></td>
+			<td><input type="text" name="pg2_gest15" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest15", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt15" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt15", "")) %>"></td>
+			<td><input type="text" name="pg2_BP15" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP15", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr15" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr15", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl15" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl15", "")) %>"></td>
+			<td><input type="text" name="pg2_ht15" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht15", "")) %>"></td>
+			<td><input type="text" name="pg2_presn15" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn15", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR15" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR15", "")) %>"></td>
+			<td><input type="text" name="pg2_comments15" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments15", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date16" id="pg2_date16"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date16", "") %>"></td>
+			<td><input type="text" name="pg2_gest16" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest16", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt16" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt16", "")) %>"></td>
+			<td><input type="text" name="pg2_BP16" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP16", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr16" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr16", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl16" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl16", "")) %>"></td>
+			<td><input type="text" name="pg2_ht16" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht16", "")) %>"></td>
+			<td><input type="text" name="pg2_presn16" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn16", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR16" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR16", "")) %>"></td>
+			<td><input type="text" name="pg2_comments16" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments16", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date17" id="pg2_date17"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date17", "") %>"></td>
+			<td><input type="text" name="pg2_gest17" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest17", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt17" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt17", "")) %>"></td>
+			<td><input type="text" name="pg2_BP17" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP17", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr17" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr17", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl17" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl17", "")) %>"></td>
+			<td><input type="text" name="pg2_ht17" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht17", "")) %>"></td>
+			<td><input type="text" name="pg2_presn17" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn17", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR17" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR17", "")) %>"></td>
+			<td><input type="text" name="pg2_comments17" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments17", "")) %>"></td>
+		</tr>
+		<tr align="center">
+			<td nowrap><input type="text" name="pg2_date18" id="pg2_date18"
+				class="spe" size="9" maxlength="10" onDblClick="calToday(this)"
+				value="<%= props.getProperty("pg2_date18", "") %>"></td>
+			<td><input type="text" name="pg2_gest18" class="spe" size="6"
+				maxlength="6" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_gest18", "")) %>"
+				onDblClick="calcWeek(this)"></td>
+			<td><input type="text" name="pg2_wt18" size="6" maxlength="6"
+				onDblClick="wtEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_wt18", "")) %>"></td>
+			<td><input type="text" name="pg2_BP18" size="6" maxlength="8"
+				style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_BP18", "")) %>"></td>
+			<td><input type="text" name="pg2_urinePr18" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urinePr18", "")) %>"></td>
+			<td><input type="text" name="pg2_urineGl18" size="2"
+				maxlength="3" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_urineGl18", "")) %>"></td>
+			<td><input type="text" name="pg2_ht18" size="6" maxlength="6"
+				onDblClick="htEnglish2Metric(this);" style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_ht18", "")) %>"></td>
+			<td><input type="text" name="pg2_presn18" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_presn18", "")) %>"></td>
+			<td><input type="text" name="pg2_FHR18" size="6" maxlength="6"
+				style="width: 90%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_FHR18", "")) %>"></td>
+			<td><input type="text" name="pg2_comments18" size="20"
+				maxlength="70" style="width: 100%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_comments18", "")) %>"></td>
+		</tr>
+	</table>
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="20%">&nbsp;</td>
+			<td width="80%" valign="top">
+			<table width="100%" border="1" cellspacing="0" cellpadding="0">
+				<tr>
+					<th colspan="3" align="center" bgcolor="#CCCCCC">Ultrasound</th>
+					<th colspan="2" align="center" bgcolor="#CCCCCC">Additional
+					Lab Investigations</th>
+				</tr>
+				<tr>
+					<td align="center" width="12%">Date</td>
+					<td align="center" width="8%">GA</td>
+					<td width="50%" align="center">Result</td>
+					<td align="center" width="15%">Test</td>
+					<td align="center">Result</td>
+				</tr>
+				<tr>
+					<td nowrap><input type="text" name="ar2_uDate1"
+						id="ar2_uDate1" class="spe" onDblClick="calToday(this)" size="10"
+						maxlength="10" value="<%= props.getProperty("ar2_uDate1", "") %>">
+					<img src="../images/cal.gif" id="ar2_uDate1_cal"></td>
+					<td><input type="text" name="ar2_uGA1" class="spe"
+						onDblClick="calcWeek(this)" size="5" maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA1", "")) %>"></td>
+					<td><input type="text" name="ar2_uResults1" size="50"
+						maxlength="50"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults1", "")) %>"></td>
+					<td>Hb</td>
+					<td><input type="text" name="ar2_hb" size="10" maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_hb", "")) %>"></td>
+				</tr>
+				<tr>
+					<td><input type="text" name="ar2_uDate2" id="ar2_uDate2"
+						class="spe" onDblClick="calToday(this)" size="10" maxlength="10"
+						value="<%= props.getProperty("ar2_uDate2", "") %>"> <img
+						src="../images/cal.gif" id="ar2_uDate2_cal"></td>
+					<td><input type="text" name="ar2_uGA2" class="spe"
+						onDblClick="calcWeek(this)" size="5" maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA2", "")) %>"></td>
+					<td><input type="text" name="ar2_uResults2" size="50"
+						maxlength="50"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults2", "")) %>"></td>
+					<td>ABO/Rh</td>
+					<%
 	String abo = "";
 	String rh ="";
 	if(UtilMisc.htmlEscape(props.getProperty("ar2_bloodGroup", "")).equals("") ){
@@ -1087,139 +1501,201 @@ function calToday(field) {
 	}else{
 		rh = UtilMisc.htmlEscape(props.getProperty("ar2_rh", ""));
 	}
-%>                    
-			        <td>
-			        	<input type="text" name="ar2_bloodGroup" size="2" maxlength="6" value="<%=abo%>">
-			        	/<input type="text" name="ar2_rh" size="1" maxlength="6" value="<%=rh%>">
-			        </td>
- 	                    
-                            </tr>
-                <tr>
-                    <td><input type="text" name="ar2_uDate3" id="ar2_uDate3" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate3", "") %>">
-					<img src="../images/cal.gif" id="ar2_uDate3_cal"> 
-                    </td>
-                    <td><input type="text" name="ar2_uGA3" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA3", "")) %>"></td>
-                    <td><input type="text" name="ar2_uResults3" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults3", "")) %>"></td>
-                    <td>Repeat ABS</td>
-					<td><input type="text" name="ar2_labABS" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labABS", "")) %>"></td>
-                </tr>
-                <tr>
-                    <td><input type="text" name="ar2_uDate4" id="ar2_uDate4" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate4", "") %>">
-					<img src="../images/cal.gif" id="ar2_uDate4_cal"> 
-                    </td>
-                    <td><input type="text" name="ar2_uGA4" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA4", "")) %>"></td>
-                    <td><input type="text" name="ar2_uResults4" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults4", "")) %>"></td>
-                    <td>1 hr. GCT</td>
-					<td><input type="text" name="ar2_lab1GCT" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab1GCT", "")) %>"></td>
-                </tr>
-                <tr>
-                    <th colspan="3">Discussion Topics</th>
-                    <td>2 hr. GTT</td>
-					<td><input type="text" name="ar2_lab2GTT" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab2GTT", "")) %>"></td>
-                </tr>
-                <tr>
-                	<td colspan="3" rowspan="5">
-                	
-                	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-                		<tr>
-                		<td width="33%">
-                        <input type="checkbox" name="ar2_exercise" <%= props.getProperty("ar2_exercise", "") %>>Exercise<br>
-                        <input type="checkbox" name="ar2_workPlan" <%= props.getProperty("ar2_workPlan", "") %>>Work plan<br>
-                        <input type="checkbox" name="ar2_intercourse" <%= props.getProperty("ar2_intercourse", "") %>>Intercourse<br>
-                        <input type="checkbox" name="ar2_travel" <%= props.getProperty("ar2_travel", "") %>>Travel<br>
-                        <input type="checkbox" name="ar2_prenatal" <%= props.getProperty("ar2_prenatal", "") %>>Prenatal classes<br>
-                        <input type="checkbox" name="ar2_birth" <%= props.getProperty("ar2_birth", "") %>>Birth plan<br>
-                        <input type="checkbox" name="ar2_onCall" <%= props.getProperty("ar2_onCall", "") %>>On call providers
-						</td>
-						<td width="33%">
-                        <input type="checkbox" name="ar2_preterm" <%= props.getProperty("ar2_preterm", "") %>>Preterm labour<br>
-                        <input type="checkbox" name="ar2_prom" <%= props.getProperty("ar2_prom", "") %>>PROM<br>
-                        <input type="checkbox" name="ar2_aph" <%= props.getProperty("ar2_aph", "") %>>APH<br>
-                        <input type="checkbox" name="ar2_fetal" <%= props.getProperty("ar2_fetal", "") %>>Fetal movement<br>
-                        <input type="checkbox" name="ar2_admission" <%= props.getProperty("ar2_admission", "") %>>Admission timing<br>
-                        <input type="checkbox" name="ar2_pain" <%= props.getProperty("ar2_pain", "") %>>Pain management<br>
-                        <input type="checkbox" name="ar2_labour" <%= props.getProperty("ar2_labour", "") %>>Labour support<br>
-						</td>
-						<td width="33%">
-                        <input type="checkbox" name="ar2_breast" <%= props.getProperty("ar2_breast", "") %>>Breast feeding<br>
-                        <input type="checkbox" name="ar2_circumcision" <%= props.getProperty("ar2_circumcision", "") %>>Circumcision<br>
-                        <input type="checkbox" name="ar2_dischargePlan" <%= props.getProperty("ar2_dischargePlan", "") %>>Discharge planning<br>
-                        <input type="checkbox" name="ar2_car" <%= props.getProperty("ar2_car", "") %>>Car seat safety<br>
-                        <input type="checkbox" name="ar2_depression" <%= props.getProperty("ar2_depression", "") %>>Depression<br>
-                        <input type="checkbox" name="ar2_contraception" <%= props.getProperty("ar2_contraception", "") %>>Contraception<br>
-                        <input type="checkbox" name="ar2_postpartumCare" <%= props.getProperty("ar2_postpartumCare", "") %>>Postpartum care
-                        </td>
-                    </tr>
-                    </table>
+%>
+					<td><input type="text" name="ar2_bloodGroup" size="2"
+						maxlength="6" value="<%=abo%>"> /<input type="text"
+						name="ar2_rh" size="1" maxlength="6" value="<%=rh%>"></td>
 
-                	</td>
-                    <td>GBS</td>
-					<td><input type="text" name="ar2_strep" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_strep", "")) %>"></td>
-                </tr>
-                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>	
-                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>	
-                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>	
-                <tr><td>&nbsp;</td><td>&nbsp;</td></tr>	
+				</tr>
+				<tr>
+					<td><input type="text" name="ar2_uDate3" id="ar2_uDate3"
+						class="spe" onDblClick="calToday(this)" size="10" maxlength="10"
+						value="<%= props.getProperty("ar2_uDate3", "") %>"> <img
+						src="../images/cal.gif" id="ar2_uDate3_cal"></td>
+					<td><input type="text" name="ar2_uGA3" class="spe"
+						onDblClick="calcWeek(this)" size="5" maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA3", "")) %>"></td>
+					<td><input type="text" name="ar2_uResults3" size="50"
+						maxlength="50"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults3", "")) %>"></td>
+					<td>Repeat ABS</td>
+					<td><input type="text" name="ar2_labABS" size="10"
+						maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labABS", "")) %>"></td>
+				</tr>
+				<tr>
+					<td><input type="text" name="ar2_uDate4" id="ar2_uDate4"
+						class="spe" onDblClick="calToday(this)" size="10" maxlength="10"
+						value="<%= props.getProperty("ar2_uDate4", "") %>"> <img
+						src="../images/cal.gif" id="ar2_uDate4_cal"></td>
+					<td><input type="text" name="ar2_uGA4" class="spe"
+						onDblClick="calcWeek(this)" size="5" maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA4", "")) %>"></td>
+					<td><input type="text" name="ar2_uResults4" size="50"
+						maxlength="50"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults4", "")) %>"></td>
+					<td>1 hr. GCT</td>
+					<td><input type="text" name="ar2_lab1GCT" size="10"
+						maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab1GCT", "")) %>"></td>
+				</tr>
+				<tr>
+					<th colspan="3">Discussion Topics</th>
+					<td>2 hr. GTT</td>
+					<td><input type="text" name="ar2_lab2GTT" size="10"
+						maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab2GTT", "")) %>"></td>
+				</tr>
+				<tr>
+					<td colspan="3" rowspan="5">
+
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<tr>
+							<td width="33%"><input type="checkbox" name="ar2_exercise"
+								<%= props.getProperty("ar2_exercise", "") %>>Exercise<br>
+							<input type="checkbox" name="ar2_workPlan"
+								<%= props.getProperty("ar2_workPlan", "") %>>Work plan<br>
+							<input type="checkbox" name="ar2_intercourse"
+								<%= props.getProperty("ar2_intercourse", "") %>>Intercourse<br>
+							<input type="checkbox" name="ar2_travel"
+								<%= props.getProperty("ar2_travel", "") %>>Travel<br>
+							<input type="checkbox" name="ar2_prenatal"
+								<%= props.getProperty("ar2_prenatal", "") %>>Prenatal
+							classes<br>
+							<input type="checkbox" name="ar2_birth"
+								<%= props.getProperty("ar2_birth", "") %>>Birth plan<br>
+							<input type="checkbox" name="ar2_onCall"
+								<%= props.getProperty("ar2_onCall", "") %>>On call
+							providers</td>
+							<td width="33%"><input type="checkbox" name="ar2_preterm"
+								<%= props.getProperty("ar2_preterm", "") %>>Preterm
+							labour<br>
+							<input type="checkbox" name="ar2_prom"
+								<%= props.getProperty("ar2_prom", "") %>>PROM<br>
+							<input type="checkbox" name="ar2_aph"
+								<%= props.getProperty("ar2_aph", "") %>>APH<br>
+							<input type="checkbox" name="ar2_fetal"
+								<%= props.getProperty("ar2_fetal", "") %>>Fetal movement<br>
+							<input type="checkbox" name="ar2_admission"
+								<%= props.getProperty("ar2_admission", "") %>>Admission
+							timing<br>
+							<input type="checkbox" name="ar2_pain"
+								<%= props.getProperty("ar2_pain", "") %>>Pain management<br>
+							<input type="checkbox" name="ar2_labour"
+								<%= props.getProperty("ar2_labour", "") %>>Labour
+							support<br>
+							</td>
+							<td width="33%"><input type="checkbox" name="ar2_breast"
+								<%= props.getProperty("ar2_breast", "") %>>Breast
+							feeding<br>
+							<input type="checkbox" name="ar2_circumcision"
+								<%= props.getProperty("ar2_circumcision", "") %>>Circumcision<br>
+							<input type="checkbox" name="ar2_dischargePlan"
+								<%= props.getProperty("ar2_dischargePlan", "") %>>Discharge
+							planning<br>
+							<input type="checkbox" name="ar2_car"
+								<%= props.getProperty("ar2_car", "") %>>Car seat safety<br>
+							<input type="checkbox" name="ar2_depression"
+								<%= props.getProperty("ar2_depression", "") %>>Depression<br>
+							<input type="checkbox" name="ar2_contraception"
+								<%= props.getProperty("ar2_contraception", "") %>>Contraception<br>
+							<input type="checkbox" name="ar2_postpartumCare"
+								<%= props.getProperty("ar2_postpartumCare", "") %>>Postpartum
+							care</td>
+						</tr>
+					</table>
+
+					</td>
+					<td>GBS</td>
+					<td><input type="text" name="ar2_strep" size="10"
+						maxlength="10"
+						value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_strep", "")) %>"></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
 			</table>
 
-        </td>
-    </tr>
-</table>
-<table width="100%" border="0">
-    <tr>
-        <td width="30%">Signature<br>
-            <input type="text" name="pg2_signature" size="30" maxlength="50" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_signature", "")) %>">
-	    </td>
-        <td width="20%">Date (yyyy/mm/dd)<br>
-            <input type="text" name="pg2_formDate" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" style="width:80%" value="<%= props.getProperty("pg2_formDate", "") %>">
-	    </td>
-        <td width="30%">Signature<br>
-            <input type="text" name="pg2_signature2" size="30" maxlength="50" style="width:80%" value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_signature2", "")) %>">
-	    </td>
-        <td width="20%">Date (yyyy/mm/dd)<br>
-            <input type="text" name="pg2_formDate2" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" style="width:80%" value="<%= props.getProperty("pg2_formDate2", "") %>">
-	    </td>
-    </tr>
+			</td>
+		</tr>
+	</table>
+	<table width="100%" border="0">
+		<tr>
+			<td width="30%">Signature<br>
+			<input type="text" name="pg2_signature" size="30" maxlength="50"
+				style="width: 80%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_signature", "")) %>">
+			</td>
+			<td width="20%">Date (yyyy/mm/dd)<br>
+			<input type="text" name="pg2_formDate" class="spe"
+				onDblClick="calToday(this)" size="10" maxlength="10"
+				style="width: 80%"
+				value="<%= props.getProperty("pg2_formDate", "") %>"></td>
+			<td width="30%">Signature<br>
+			<input type="text" name="pg2_signature2" size="30" maxlength="50"
+				style="width: 80%"
+				value="<%= UtilMisc.htmlEscape(props.getProperty("pg2_signature2", "")) %>">
+			</td>
+			<td width="20%">Date (yyyy/mm/dd)<br>
+			<input type="text" name="pg2_formDate2" class="spe"
+				onDblClick="calToday(this)" size="10" maxlength="10"
+				style="width: 80%"
+				value="<%= props.getProperty("pg2_formDate2", "") %>"></td>
+		</tr>
 
-</table>
+	</table>
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
+  if (!bView) {
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
+  }
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print" onclick="javascript:return onPrint();" /></td>
+			<%
   if (!bView) {
 %>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
-  }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
-        </td>
-<%
-  if (!bView) {
-%>
-        <td>
-            <a href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
-        </td>
+			<td><a
+				href="javascript: popPage('formlabreq.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AR','LabReq');">LAB</a>
+			</td>
 
-        <td align="right"><font size="-1"><b>View:</b>
-            <a href="javascript: popupPage('formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');"> AR1</a> |
-            <a href="javascript: popupPage('formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2 </font><font size=-2>(pg.2)</font></a>
-        </td>
-        <td align="right"><b>Edit:</b>
-            <a href="formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a> 
-            | <a href="formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.2)</font></a>
-            | <a href="formonarpg4.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.3)</font></a>
-            &nbsp;|&nbsp;
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&query_name=search_formonarrisk');">AR Planner</a>
-        </td>
-<%
+			<td align="right"><font size="-1"><b>View:</b> <a
+				href="javascript: popupPage('formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">
+			AR1</a> | <a
+				href="javascript: popupPage('formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
+			</font><font size=-2>(pg.2)</font></a></td>
+			<td align="right"><b>Edit:</b> <a
+				href="formonarpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR1</a>
+			| <a
+				href="formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2
+			<font size=-2>(pg.2)</font></a> | <a
+				href="formonarpg4.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2
+			<font size=-2>(pg.3)</font></a> &nbsp;|&nbsp; <a
+				href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&query_name=search_formonarrisk');">AR
+			Planner</a></td>
+			<%
   }
 %>
-    </tr>
-</table>
+		</tr>
+	</table>
 
 </html:form>
 </body>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-   <%--This JSP is the 'view template XML' jsp from the report configuraiton screen--%>
+<%--This JSP is the 'view template XML' jsp from the report configuraiton screen--%>
 <!--  
 /*
  * 
@@ -30,25 +30,28 @@
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 
-<%@ page import="oscar.oscarReport.reportByTemplate.*, org.apache.commons.lang.StringEscapeUtils" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page
+	import="oscar.oscarReport.reportByTemplate.*, org.apache.commons.lang.StringEscapeUtils"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title>
-    Report by Template
-</title>
-<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css">
+<title>Report by Template</title>
+<link rel="stylesheet" type="text/css"
+	href="../../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" href="reportByTemplate.css">
 <style type="text/css" media="print">
-.MainTableTopRow, .MainTableLeftColumn, .noprint, .showhidequery, .sqlBorderDiv, .MainTableBottomRow {
-    display: none;
+.MainTableTopRow,.MainTableLeftColumn,.noprint,.showhidequery,.sqlBorderDiv,.MainTableBottomRow
+	{
+	display: none;
 }
+
 .xmlBorderDiv {
-    border: 0px;
+	border: 0px;
 }
+
 .MainTableRightColumn {
-    border: 0;
+	border: 0;
 }
 </style>
 </head>
@@ -56,52 +59,50 @@
 <body vlink="#0000FF" class="BodyStyle">
 
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" style="width: 100%;">               
-                    <tr>
-                        <td>Report by Template</td>                                               
-                        </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-        <%String templateid = request.getParameter("templateid");
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarReport.CDMReport.msgReport" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar" style="width: 100%;">
+			<tr>
+				<td>Report by Template</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<%String templateid = request.getParameter("templateid");
         if (templateid == null) templateid = (String) request.getAttribute("templateid");
         if (templateid == null) { %>
-            <jsp:forward page="homePage.jsp"/>
-        <%}
+		<jsp:forward page="homePage.jsp" />
+		<%}
         ReportObject curreport = (new ReportManager()).getReportTemplateNoParam(templateid);
         String xml = (new ReportManager()).getTemplateXml(templateid);%>
-            <td class="MainTableLeftColumn" valign="top" width="160px;"> 
-               <jsp:include page="listTemplates.jsp">
-                   <jsp:param name="templateviewid" value="<%=curreport.getTemplateId()%>"/>
-               </jsp:include>
-            </td>
-            <td class="MainTableRightColumn" valign="top">
-               <div class="reportTitle"><%=curreport.getTitle()%></div>
-               <div class="reportDescription"><%=curreport.getDescription()%></div>
-               <div class="xmlBorderDiv">
-                   <pre wrap="on" style="font-size: 11px;"><%=StringEscapeUtils.escapeHtml(xml)%></pre>
-               </div>
-               <a href="addEditTemplate.jsp?templateid=<%=templateid%>" class="link">Edit Template</a>
-               <div class="noprint" style="clear: left; float:left; margin-top: 15px;">
-                        <input type="button" value="<-- Back" onclick="javascript: history.go(-1);return false;">
-                        <input type="button" value="Print" onclick="javascript: window.print();">
-               </div>
-            </td>
-        </tr>
-        <tr class="MainTableBottomRow">
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
+		<td class="MainTableLeftColumn" valign="top" width="160px;"><jsp:include
+			page="listTemplates.jsp">
+			<jsp:param name="templateviewid"
+				value="<%=curreport.getTemplateId()%>" />
+		</jsp:include></td>
+		<td class="MainTableRightColumn" valign="top">
+		<div class="reportTitle"><%=curreport.getTitle()%></div>
+		<div class="reportDescription"><%=curreport.getDescription()%></div>
+		<div class="xmlBorderDiv"><pre wrap="on"
+			style="font-size: 11px;"><%=StringEscapeUtils.escapeHtml(xml)%></pre>
+		</div>
+		<a href="addEditTemplate.jsp?templateid=<%=templateid%>" class="link">Edit
+		Template</a>
+		<div class="noprint"
+			style="clear: left; float: left; margin-top: 15px;"><input
+			type="button" value="<-- Back"
+			onclick="javascript: history.go(-1);return false;"> <input
+			type="button" value="Print" onclick="javascript: window.print();">
+		</div>
+		</td>
+	</tr>
+	<tr class="MainTableBottomRow">
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
-            <td class="MainTableBottomRowRightColumn">
-                &nbsp;
-            </td>
-        </tr>
-   </table>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </html:html>

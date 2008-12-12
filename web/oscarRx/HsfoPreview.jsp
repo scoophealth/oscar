@@ -1,10 +1,10 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page import="oscar.oscarProvider.data.*"%>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.*,java.lang.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
@@ -38,16 +38,17 @@
 <html:html locale="true">
 <head>
 <title>Print Preview</title>
-<html:base/>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
@@ -88,93 +89,92 @@ OscarProperties props = OscarProperties.getInstance();
 %>
 <html:form action="/form/formname">
 
-<table width="400px" height="500px" cellspacing=0 cellpadding=8 border=0 style="border:2px ridge;">
-    <tr>
-        <td valign=top height="100px">
-        	<input type="image" src="img/rx.gif" border="0" value="submit" alt="[Submit]" name="submit"
- 			title="Print in a half letter size paper" onclick="javascript:return onPrint();">
-			<input type="hidden" name="printPageSize" value="PageSize.A6"/>
-			<% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
+	<table width="400px" height="500px" cellspacing=0 cellpadding=8
+		border=0 style="border: 2px ridge;">
+		<tr>
+			<td valign=top height="100px"><input type="image"
+				src="img/rx.gif" border="0" value="submit" alt="[Submit]"
+				name="submit" title="Print in a half letter size paper"
+				onclick="javascript:return onPrint();"> <input type="hidden"
+				name="printPageSize" value="PageSize.A6" /> <% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
 			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
-			%>
-			<input type="hidden" name="doctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
-
-			<c:choose>
+			%> <input type="hidden" name="doctorName"
+				value="<%= StringEscapeUtils.escapeHtml(doctorName) %>" /> <c:choose>
 				<c:when test="${empty infirmaryView_programAddress}">
-					<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>"/>
-					<input type="hidden" name="clinicPhone" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>"/>
-					<input type="hidden" name="clinicFax" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>"/>
+					<input type="hidden" name="clinicName"
+						value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>" />
+					<input type="hidden" name="clinicPhone"
+						value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>" />
+					<input type="hidden" name="clinicFax"
+						value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>" />
 				</c:when>
 				<c:otherwise>
-					<input type="hidden" name="clinicName" value="<c:out value="${infirmaryView_programAddress}"/>"/>
-					<input type="hidden" name="clinicPhone" value="<c:out value="${infirmaryView_programTel}"/>"/>
-					<input type="hidden" name="clinicFax" value="<c:out value="${infirmaryView_programFax}"/>"/>				
+					<input type="hidden" name="clinicName"
+						value="<c:out value="${infirmaryView_programAddress}"/>" />
+					<input type="hidden" name="clinicPhone"
+						value="<c:out value="${infirmaryView_programTel}"/>" />
+					<input type="hidden" name="clinicFax"
+						value="<c:out value="${infirmaryView_programFax}"/>" />
 				</c:otherwise>
-			</c:choose>
+			</c:choose> <input type="hidden" name="patientName"
+				value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>" />
+			<input type="hidden" name="patientAddress"
+				value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>" />
+			<input type="hidden" name="patientCityPostal"
+				value="<%= StringEscapeUtils.escapeHtml(patient.getCity())+ " " + StringEscapeUtils.escapeHtml(patient.getPostal())%>" />
+			<input type="hidden" name="patientPhone"
+				value="<%= "Tel: " + StringEscapeUtils.escapeHtml(patient.getPhone()) %>" />
 
-
-			<input type="hidden" name="patientName" value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>"/>
-			<input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>"/>
-			<input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patient.getCity())+ " " + StringEscapeUtils.escapeHtml(patient.getPostal())%>"/>
-			<input type="hidden" name="patientPhone" value="<%= "Tel: " + StringEscapeUtils.escapeHtml(patient.getPhone()) %>"/>
-
-			<input type="hidden" name="rxDate" value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")) %>"/>
-			<input type="hidden" name="sigDoctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
-            <!--img src="img/rx.gif" border="0"-->
-        </td>
-        <td valign=top height="100px" id="clinicAddress">
-            <span style="font:12pt;font-weight: bold;">HSFO</span>
-            <br >
-            <c:choose>
-            	<c:when test="${empty infirmaryView_programAddress}">
-		            <%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
-        		    <%= provider.getClinicAddress() %><br>
-		            <%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="hidden" name="rxDate"
+				value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")) %>" />
+			<input type="hidden" name="sigDoctorName"
+				value="<%= StringEscapeUtils.escapeHtml(doctorName) %>" /> <!--img src="img/rx.gif" border="0"-->
+			</td>
+			<td valign=top height="100px" id="clinicAddress"><span
+				style="font: 12pt; font-weight: bold;">HSFO</span> <br>
+			<c:choose>
+				<c:when test="${empty infirmaryView_programAddress}">
+					<%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
+					<%= provider.getClinicAddress() %><br>
+					<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         		    <%= provider.getClinicPostal() %><br>
 		            Tel: <%= provider.getClinicPhone() %><br>
         		    Fax: <%= provider.getClinicFax() %><br>
-        		</c:when>
-        		<c:otherwise>
-        			<c:out value="${infirmaryView_programAddress}" escapeXml="false"/>
-        			<br/>
-        			Tel: <c:out value="${infirmaryView_programTel}"/>
-        			<br/>
-        			Fax: <c:out value="${infirmaryView_programFax}"/>
-        		</c:otherwise>
-        	</c:choose>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2 valign=top height="75px">
-            <table width=100% cellspacing=0 cellpadding=0 >
-                <tr>
-                    <td align=left valign=top>
-                      	<br>
-                        <%= patient.getFirstName() %> <%= patient.getSurname() %><br>
-                        <%= patient.getAddress() %><br>
-                        <%= patient.getCity() %> <%= patient.getPostal() %><br>
-                        <%= patient.getPhone() %><br>
-                        <b>
-                            <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                            <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
-                            <% } %>
-                        </b>
-                    </td>
-                    <td align=right valign=top><b>
-                            <%= oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy") %>
-                    </b></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2 valign=top height="275px">
-            <table height=100% width=100%>
-                <tr valign=top>
-                    <td colspan=2 height=180px>
-                    
-                        <% 
+				</c:when>
+				<c:otherwise>
+					<c:out value="${infirmaryView_programAddress}" escapeXml="false" />
+					<br />
+        			Tel: <c:out value="${infirmaryView_programTel}" />
+					<br />
+        			Fax: <c:out value="${infirmaryView_programFax}" />
+				</c:otherwise>
+			</c:choose></td>
+		</tr>
+		<tr>
+			<td colspan=2 valign=top height="75px">
+			<table width=100% cellspacing=0 cellpadding=0>
+				<tr>
+					<td align=left valign=top><br>
+					<%= patient.getFirstName() %> <%= patient.getSurname() %><br>
+					<%= patient.getAddress() %><br>
+					<%= patient.getCity() %> <%= patient.getPostal() %><br>
+					<%= patient.getPhone() %><br>
+					<b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
+					<bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>
+					</b></td>
+					<td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy") %>
+					</b></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2 valign=top height="275px">
+			<table height=100% width=100%>
+				<tr valign=top>
+					<td colspan=2 height=180px>
+					<% 
                         int dx = Integer.parseInt(request.getParameter("dxCode"), 10);
                         // persist dx code to DB
                         oscar.form.study.HSFO.HSFODAO hsfoDAO = new oscar.form.study.HSFO.HSFODAO();
@@ -210,9 +210,8 @@ OscarProperties props = OscarProperties.getInstance();
                         rdh.getOutlines().add(new oscar.form.pdfservlet.HsfoRxDataHolder.ValueBean(rx.getFullOutLine().replaceAll(";","\n")));
                         
                         %>
-                        <hr>
-                        <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
-                        <%
+					<hr>
+					<%= rx.getFullOutLine().replaceAll(";","<br/>") %> <%
                         strRx += rx.getFullOutLine() + ";;";
                         strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
                         }
@@ -220,52 +219,56 @@ OscarProperties props = OscarProperties.getInstance();
                         // added by vic, hsfo
                         // set the data to session in case user wants to generate PDF
                         session.setAttribute(oscar.form.pdfservlet.FrmPDFServlet.HSFO_RX_DATA_KEY, rdh);
-                        %>
-                        
-                        <input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
-                        <input type="hidden" name="rx_no_newlines" value="<%= strRxNoNewLines.toString() %>"/>
-                        
-                        
-                    </td>
-                </tr>
-                
-                <tr valign=bottom>
-                    <td colspan=2 height=25px >
-                    	<table width="100%" border="0" cellspacing="0" style="border-bottom:1px gray solid; font:8pt Verdana, Arial, Helvetica, sans-serif">
-                          <tr><td colspan="3">
-                            <span style="font: bold 16pt;">D</span>x
-                          </td></tr>
-                          <tr >                          
-                            <td width="35%"><input type="checkbox" onclick="return false" <%= (dx&1)!=0?"checked":"" %> > Hypertension</td>
-                            <td width="31%"><input type="checkbox" onclick="return false" <%= (dx&2)!=0?"checked":"" %> > Diabetes</td>
-                            <td><input type="checkbox" onclick="return false" <%= (dx&4)!=0?"checked":"" %> > Dyslipidemia</td>
-                          </tr>
-                          <tr>
-                            <td colspan="3"><div align="center">Heart & Stroke Hypertension Management Initiative</div></td>
-                          </tr>
-                        </table>    
-                        <br>
-                    </td>
-                </tr>
-                
-                <% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
-                
-                <tr valign=bottom>
-                    <td height=25px width=25%>
-                        Signature:
-                    </td>
-                    <td height=25px width=75% style="border-width:0;border-bottom-width:1;border-style:solid;">
-                        &nbsp;
-                    </td>
-                </tr>
-                <tr valign=bottom>
-                    <td height=25px></td>
-                    <td height=25px>&nbsp; <%= doctorName%></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+                        %> <input type="hidden" name="rx"
+						value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>" />
+					<input type="hidden" name="rx_no_newlines"
+						value="<%= strRxNoNewLines.toString() %>" /></td>
+				</tr>
+
+				<tr valign=bottom>
+					<td colspan=2 height=25px>
+					<table width="100%" border="0" cellspacing="0"
+						style="border-bottom: 1px gray solid; font: 8pt Verdana, Arial, Helvetica, sans-serif">
+						<tr>
+							<td colspan="3"><span style="font: bold 16pt;">D</span>x</td>
+						</tr>
+						<tr>
+							<td width="35%"><input type="checkbox"
+								onclick="return false" <%= (dx&1)!=0?"checked":"" %>>
+							Hypertension</td>
+							<td width="31%"><input type="checkbox"
+								onclick="return false" <%= (dx&2)!=0?"checked":"" %>>
+							Diabetes</td>
+							<td><input type="checkbox" onclick="return false"
+								<%= (dx&4)!=0?"checked":"" %>> Dyslipidemia</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+							<div align="center">Heart & Stroke Hypertension Management
+							Initiative</div>
+							</td>
+						</tr>
+					</table>
+					<br>
+					</td>
+				</tr>
+
+				<% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
+
+				<tr valign=bottom>
+					<td height=25px width=25%>Signature:</td>
+					<td height=25px width=75%
+						style="border-width: 0; border-bottom-width: 1; border-style: solid;">
+					&nbsp;</td>
+				</tr>
+				<tr valign=bottom>
+					<td height=25px></td>
+					<td height=25px>&nbsp; <%= doctorName%></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

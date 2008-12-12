@@ -60,9 +60,9 @@
 
 <html>
 <head>
-	<title>Consent Form</title>
-	
-	<script>
+<title>Consent Form</title>
+
+<script>
 	
 		function getRadioValue(ctl) {
 			for(var x=0;x<ctl.length;x++) {
@@ -118,26 +118,28 @@
 <body topmargin="20" leftmargin="10">
 
 
-<br/>
+<br />
 <table border="2" width="700" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="100%">
 
-		<p><b><font color="blue">Please give the client a copy of this consent form.  Please read the following to the client:</font></b></p>
+		<p><b><font color="blue">Please give the client a copy
+		of this consent form. Please read the following to the client:</font></b></p>
 		</td>
-		</tr>
+	</tr>
 
 	<tr>
 		<td width="100%">
 		<p>&quot;CAISI is a community project.</p>
-		<p>The CAISI program was created to link many of the city's health and shelter 
-		service agencies together so that people who are homeless can get better and 
-		faster services from them.  The program wants people who are homeless to have 
-		control over their personal information and to have a better quality of life.  
-		Your personal information is now stored on computers at the different places you get care. 
-		 With your permission, this information will be sent to other agencies when you seek services 
-		 from them so that they can give you better care.  The types of agencies are: 
-		</p>
+		<p>The CAISI program was created to link many of the city's health
+		and shelter service agencies together so that people who are homeless
+		can get better and faster services from them. The program wants people
+		who are homeless to have control over their personal information and
+		to have a better quality of life. Your personal information is now
+		stored on computers at the different places you get care. With your
+		permission, this information will be sent to other agencies when you
+		seek services from them so that they can give you better care. The
+		types of agencies are:</p>
 		<li>Hospitals
 		<li>Ambulance services
 		<li>Public health
@@ -146,57 +148,68 @@
 		<li>Mental health teams
 		<li>Related agencies that are CAISI partners
 
-		<p>In the CAISI program, only those people who give you care will be able to see your information.  
-		CAISI is set up so that people with similar jobs and training can communicate with one another. 
-		 For example, only health care teams will be allowed to see detailed medical information.</p>
+		<p>In the CAISI program, only those people who give you care will
+		be able to see your information. CAISI is set up so that people with
+		similar jobs and training can communicate with one another. For
+		example, only health care teams will be allowed to see detailed
+		medical information.</p>
 
-		 
-		<p>Your information will be used by this agency and by other agencies to give you better care.  
-		Your information will be put together with the information from other people who are homeless 
-		to improve the services offered, to do research, and to compile statistics for advocacy.   </p>
-		
-		<p>Your care at <%=currentFacility.getName()%> will not change by allowing agencies to
-		send information and work together through CAISI.</p>
-		
-		<p>You may withdraw permission to send information to other agencies
-		at any time. To withdraw, contact <%=currentFacility.getName()%> staff or any other CAISI
-		partner.Your care at <%=currentFacility.getName()%> will not change if you withdraw permission.  </p>
-		
-		<p>Any questions can be directed to <%=currentFacility.getName()%> staff.&quot;</p>
-		
-		<p>You are allowed to ask for more information about CAISI and/or to talk to your worker or other people 
-		about CAISI.  You are allowed to make decisions based on this information.  </p>
-		
-		</i> 
-		
-		
-		<form name="consentForm" method="post" action="complex_integrator_consent_a_action.jsp">
 
-			<input type="hidden" name="demographicId" value="<%=currentDemographicId%>">
-			</td>
+		<p>Your information will be used by this agency and by other
+		agencies to give you better care. Your information will be put
+		together with the information from other people who are homeless to
+		improve the services offered, to do research, and to compile
+		statistics for advocacy.</p>
+
+		<p>Your care at <%=currentFacility.getName()%> will not change by
+		allowing agencies to send information and work together through CAISI.</p>
+
+		<p>You may withdraw permission to send information to other
+		agencies at any time. To withdraw, contact <%=currentFacility.getName()%>
+		staff or any other CAISI partner.Your care at <%=currentFacility.getName()%>
+		will not change if you withdraw permission.</p>
+
+		<p>Any questions can be directed to <%=currentFacility.getName()%>
+		staff.&quot;</p>
+
+		<p>You are allowed to ask for more information about CAISI and/or
+		to talk to your worker or other people about CAISI. You are allowed to
+		make decisions based on this information.</p>
+
+		</i>
+
+
+		<form name="consentForm" method="post"
+			action="complex_integrator_consent_a_action.jsp"><input
+			type="hidden" name="demographicId" value="<%=currentDemographicId%>">
+		</td>
 	</tr>
 	<tr>
-		<td width="100%"><p><b><font color="blue">Part 2: This is a test of comprehension. 
-		 Clients must correctly answer all 3 questions to give informed consent.  
-		 If one or more questions are answered incorrectly, do not proceed to part 3.  
-		 </font></b>
-
-		</p>
+		<td width="100%">
+		<p><b><font color="blue">Part 2: This is a test of
+		comprehension. Clients must correctly answer all 3 questions to give
+		informed consent. If one or more questions are answered incorrectly,
+		do not proceed to part 3. </font></b></p>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%">
 		<p>1.<i>What is the purpose of the CAISI project? </i><br>
-		<input type="radio" name="answer1" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct
-			<input type="radio" name="answer1" value="0">Incorrect</p>
+		<input type="radio" name="answer1" value="1"
+			<%=viewOnly?"checked=\"checked\"":""%>>Correct <input
+			type="radio" name="answer1" value="0">Incorrect</p>
 
-		<p>[Correct includes any one of: to send information to agencies when
-		they care for you; to provide better care for clients; to give clients
-		control over their information or any combination of these]</p>
-		<p>2.<i>When are you able to withdraw from CAISI?</i><input type="radio" name="answer2" value="1" <%=viewOnly?"checked=\"checked\"":""%> >Correct <input type="radio" name="answer2" value="0">Incorrect</p>
+		<p>[Correct includes any one of: to send information to agencies
+		when they care for you; to provide better care for clients; to give
+		clients control over their information or any combination of these]</p>
+		<p>2.<i>When are you able to withdraw from CAISI?</i><input
+			type="radio" name="answer2" value="1"
+			<%=viewOnly?"checked=\"checked\"":""%>>Correct <input
+			type="radio" name="answer2" value="0">Incorrect</p>
 		<p>[Correct includes: any time]</p>
-		<p>3.<i>Will your care at <%=currentFacility.getName()%> be affected by your participation
-		in CAISI? </i> <input type="radio" name="answer3" value="1" <%=viewOnly?"checked=\"checked\"":""%> >
+		<p>3.<i>Will your care at <%=currentFacility.getName()%> be
+		affected by your participation in CAISI? </i> <input type="radio"
+			name="answer3" value="1" <%=viewOnly?"checked=\"checked\"":""%>>
 
 		Correct <input type="radio" name="answer3" value="0">Incorrect</p>
 		<p>[Correct = no]</p>
@@ -205,106 +218,104 @@
 
 	<tr>
 		<td width="100%">
-		<p><b><font color="blue">Part 3: Read the following prompt and record if the client
-		agrees to consent to CAISI. Nothing needs to be recorded if the client
-		refuses to consent. Do not read prompt if less than three correct
-		answers were given for the questions in Part 2 (above). </font></b></p>
+		<p><b><font color="blue">Part 3: Read the following
+		prompt and record if the client agrees to consent to CAISI. Nothing
+		needs to be recorded if the client refuses to consent. Do not read
+		prompt if less than three correct answers were given for the questions
+		in Part 2 (above). </font></b></p>
 
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<p>
-		<input type="radio" name="consent" value="ALL" <%=integratorConsent.isConsentToAll()?"checked=\"checked\"":""%> >
+		<p><input type="radio" name="consent" value="ALL"
+			<%=integratorConsent.isConsentToAll()?"checked=\"checked\"":""%>>
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
-		permit <b><%=currentFacility.getName()%></b>
-
-		and any other CAISI partner agencies to record, send and use my
-		personal information for the purposes above.</p>
+		permit <b><%=currentFacility.getName()%></b> and any other CAISI
+		partner agencies to record, send and use my personal information for
+		the purposes above.</p>
 		</td>
 	</tr>
 	<tr>
 		<td>
-		<p>
-		<input type="radio" name="consent" value="HIC_ALL" <%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%> >
+		<p><input type="radio" name="consent" value="HIC_ALL"
+			<%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%>>
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
-		permit only health care providers to record, send and use my
-		personal information for the purposes above.</p>
+		permit only health care providers to record, send and use my personal
+		information for the purposes above.</p>
 
 		</td>
-	</tr>	
+	</tr>
 	<tr>
 		<td>
-		<p>
-		<input type="radio" name="consent" value="NONE" <%=integratorConsent.isConsentToNone()?"checked=\"checked\"":""%> >
+		<p><input type="radio" name="consent" value="NONE"
+			<%=integratorConsent.isConsentToNone()?"checked=\"checked\"":""%>>
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
-		do <b>not</b> permit <b><%=currentFacility.getName()%></b>
-
-		or any other CAISI partner agencies to record, send and use my
-		personal information for the purposes above.</p>
+		do <b>not</b> permit <b><%=currentFacility.getName()%></b> or any
+		other CAISI partner agencies to record, send and use my personal
+		information for the purposes above.</p>
 		</td>
 	</tr>
 
 	<tr>
-	<td>
-	<div align="left">
-	<!--  button which invokes the sign now call -->
+		<td>
+		<div align="left"><!--  button which invokes the sign now call -->
 		<!--  <input type="button" value="Sign This Form" name="B1" onClick="signNow()">-->
 
-		<br>Signature___________________________<br>
-		     Date_________________________<br>
-		
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<br>Signature___________________________<br>
-		     Date_________________________</td>
-	
-	</div>
+		<br>
+		Signature___________________________<br>
+		Date_________________________<br>
+
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+		Signature___________________________<br>
+		Date_________________________
+		</td>
+
+		</div>
 	</tr>
 
 	<tr>
-	<td>
-	<%
+		<td>
+		<%
 		String location="";
 		if (integratorConsent.getPrintedFormLocation()!=null) location=integratorConsent.getPrintedFormLocation();
-	%>
-	This form has been printed and  signed manually. It is kept in the location: <input type="text" name="location" size="40" value="<%=location%>">
-	</td>
+	%> This form has been printed and signed manually. It is kept in the
+		location: <input type="text" name="location" size="40"
+			value="<%=location%>"></td>
 	</tr>
 	<tr>
-		<td>
-			<input type="checkbox" name="signatureDeclaration" value="on" onclick="if (form.elements['signatureDeclaration'].checked) form.elements['refusedToSign'].checked=false" <%=viewOnly?"checked=\"checked\"":""%> >
+		<td><input type="checkbox" name="signatureDeclaration" value="on"
+			onclick="if (form.elements['signatureDeclaration'].checked) form.elements['refusedToSign'].checked=false"
+			<%=viewOnly?"checked=\"checked\"":""%>> I, <%=provider.getFormattedName()%>,
+		state that I have aquired the client's signature on a printed copy of
+		this form</td>
+	</tr>
 
-			I, <%=provider.getFormattedName()%>, state that I have aquired the client's signature on a printed copy of this form
-		</td>
+	<tr>
+		<td><input type="checkbox" name="refusedToSign" value="on"
+			onclick="if (form.elements['refusedToSign'].checked) form.elements['signatureDeclaration'].checked=false">
+		The Client has refused to sign the form.</td>
 	</tr>
-	
-	<tr>
-		<td>
-			<input type="checkbox" name="refusedToSign" value="on" onclick="if (form.elements['refusedToSign'].checked) form.elements['signatureDeclaration'].checked=false">
-			The Client has refused to sign the form.
-		</td>
-	</tr>	
-		
-	</table>
-	
-	</form>	
-	
-	<tr>
+
+</table>
+
+</form>
+
+<tr>
+	<td><br>
+	<input <%=viewOnly?"disabled=\"disabled\"":""%> type="button"
+		value="Save Consent" onclick="submitConsent(document.consentForm)" />
+	<input type="button" value="Cancel" onclick="window.close()" /> <input
+		type="button" value="Print to Sign" onClick="window.print()" /></td>
+
+</tr>
+
+<tr>
 	<td>
-	<br>
-	<input <%=viewOnly?"disabled=\"disabled\"":""%> type="button" value="Save Consent" onclick="submitConsent(document.consentForm)" />
-	<input type="button" value="Cancel"	onclick="window.close()" />
-	<input type="button" value="Print to Sign" onClick="window.print()" />
-	
+	<p align="center"><b>CAISI©&nbsp;&nbsp; <a
+		href="http://www.caisi.ca">www.caisi.ca</a></b>
 	</td>
-
-	</tr>
-
-	<tr>
-		<td>
-		<p align="center"><b>CAISI©&nbsp;&nbsp; <a href="http://www.caisi.ca">www.caisi.ca</a></b>
-		</td>
-	</tr>
+</tr>
 </table>
 
 </body>

@@ -24,24 +24,19 @@
  */
 -->
 
-<%@ page isErrorPage="true" %><!-- only true can access exception object -->
+<%@ page isErrorPage="true"%><!-- only true can access exception object -->
 <html>
 <body>
-<h1>
-Error Page
-</h1>
+<h1>Error Page</h1>
 <hr>
-<p><center>
-    Something is wrong with your input. <br>
-    <a href="index.html">Back to Home</a> &amp; Try it again 
-  </center>
+<p>
+<center>Something is wrong with your input. <br>
+<a href="index.html">Back to Home</a> &amp; Try it again</center>
 <p>
 <hr>
-Received the exception:<br>
-<font color=red>
-<%= exception.toString() %><br>
-<%= exception.getMessage() %>
-<% exception.printStackTrace(); %>
-</font>
+Received the exception:
+<br>
+<font color=red> <%= exception.toString() %><br>
+<%= exception.getMessage() %> <% exception.printStackTrace(); %> </font>
 </body>
 </html>

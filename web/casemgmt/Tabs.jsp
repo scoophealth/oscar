@@ -25,7 +25,8 @@
 <div class="tabs" id="tabs">
 <table cellpadding="0" cellspacing="0" border="0">
 	<tr>
-		<td style="background-color: #555"><span onclick="this.form.">Current Issues</span></td>
+		<td style="background-color: #555"><span onclick="this.form.">Current
+		Issues</span></td>
 		<td>Client History</td>
 		<td>Ongoing Concerns</td>
 		<td>Allergies</td>

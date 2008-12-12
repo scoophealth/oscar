@@ -29,12 +29,14 @@
     response.sendRedirect("../logout.jsp");
   String user_no="";
 user_no = (String) session.getAttribute("user");
-%> 
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -88,42 +90,50 @@ String monthCode = "";
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
- <div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
- <div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;"> 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-     <tr bgcolor="#DDDDEE"> 
-       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><strong>Last 
-         5 Years</strong></font></td>
-     </tr>
- <% for (int i=0; i<5;i++) { %>
-     <tr> 
-       <td align='CENTER'><font size="2" face="Tahoma, Geneva, Arial, Helvetica, san-serif"><a href="billingOHIPreport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
-     </tr>
-     <% } %>
-   </table>
- </div>
-<table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-      OHIP Group Report - <%=thisyear%></font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<div id="Layer1"
+	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
+<div id="Layer2"
+	style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr bgcolor="#DDDDEE">
+		<td align='CENTER'><font size="2"
+			face="Tahoma, Geneva, Arial, Helvetica, san-serif"><strong>Last
+		5 Years</strong></font></td>
+	</tr>
+	<% for (int i=0; i<5;i++) { %>
+	<tr>
+		<td align='CENTER'><font size="2"
+			face="Tahoma, Geneva, Arial, Helvetica, san-serif"><a
+			href="billingOHIPreport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
+	</tr>
+	<% } %>
+</table>
+</div>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF"> OHIP Group Report - <%=thisyear%></font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-  <form name="form1" method="post" action="genGroupReport.jsp">
-    <tr> 
-     <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="#" onClick="showHideLayers('Layer2','','show')">Show 
-        Archive</a> </font></b></td>
-      <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
-        provider </font></b></td>
-      <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
-        <select name="provider">
-          <option value="all">All Providers</option>
-          <% String proFirst="";
+	<form name="form1" method="post" action="genGroupReport.jsp">
+	<tr>
+		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><a href="#"
+			onClick="showHideLayers('Layer2','','show')">Show Archive</a> </font></b></td>
+		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Select provider </font></b></td>
+		<td width="254"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"> <select name="provider">
+			<option value="all">All Providers</option>
+			<% String proFirst="";
            String proLast="";
            String proOHIP="";
            String specialty_code; 
@@ -141,21 +151,20 @@ String billinggroup_no;
 
 
  %>
-          <option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>" ><%=proLast%>, 
-          <%=proFirst%></option>
-          <% 
+			<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>"><%=proLast%>,
+			<%=proFirst%></option>
+			<% 
 
  }
 // apptMainBean.closePstmtConn();
   %>
-        </select>
-        </font></b></td>
-      <td width="181"><b><font face="Arial, Helvetica, sans-serif" size="2">Select 
-        billing center</font></b></td>
-      <td width="254"><font face="Arial, Helvetica, sans-serif" size="2"> 
-        <select name="billcenter">
-        
-        <% String centerCode="";
+		</select> </font></b></td>
+		<td width="181"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Select billing center</font></b></td>
+		<td width="254"><font face="Arial, Helvetica, sans-serif"
+			size="2"> <select name="billcenter">
+
+			<% String centerCode="";
            String centerDesc="";
            
            int Count1 = 0;
@@ -167,44 +176,49 @@ String billinggroup_no;
  centerDesc = rsCenter.getString("billcenter_desc");
   
  %>
-            <option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
-<% } %>
- </select></td>
- <td width="277"> <font color="#003366"> 
-        <input type="submit" name="Submit" value="Create Report">
-        <input type="hidden" name="monthCode" value="<%=monthCode%>">
-        <input type="hidden" name="verCode" value="V03">
-        <input type="hidden" name="curUser" value="<%=user_no%>">
-        <input type="hidden" name="curDate" value="<%=nowDate%>">
-        </font></td>
-    </tr>
-    <tr> 
-      <td colspan="4"><font color="#003366"><b><font face="Arial, Helvetica, sans-serif" size="2"> 
-        </font></b><font face="Arial, Helvetica, sans-serif" size="2"> </font></font><font color="#003366"><b><font face="Arial, Helvetica, sans-serif" size="2"> 
-        </font></b><font face="Arial, Helvetica, sans-serif" size="2"> </font></font> 
-      </td>
-    </tr>
-  </form>
+			<option value="<%=centerCode%>"
+				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
+			<% } %>
+		</select></td>
+		<td width="277"><font color="#003366"> <input
+			type="submit" name="Submit" value="Create Report"> <input
+			type="hidden" name="monthCode" value="<%=monthCode%>"> <input
+			type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"> </font></td>
+	</tr>
+	<tr>
+		<td colspan="4"><font color="#003366"><b><font
+			face="Arial, Helvetica, sans-serif" size="2"> </font></b><font
+			face="Arial, Helvetica, sans-serif" size="2"> </font></font><font
+			color="#003366"><b><font
+			face="Arial, Helvetica, sans-serif" size="2"> </font></b><font
+			face="Arial, Helvetica, sans-serif" size="2"> </font></font></td>
+	</tr>
+	</form>
 </table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="<%=yearColor%>">
-  <tr> 
-    <td colspan="6"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
-      <b>Activity List </b></font></td>
-  </tr>
-  <tr> 
-    <td width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Provider</font></td>
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Group 
-      Number</font></td>
-    <td width="16%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Creation 
-      Date </font></td>
-    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Claims/Records</font></td>
-    <td width="19%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Ohip 
-      Filename</font></td>
-    <td width="24%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">HTML 
-      Filename</font></td>
-  </tr>
-  
-  <%
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="<%=yearColor%>">
+	<tr>
+		<td colspan="6"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"> <b>Activity List </b></font></td>
+	</tr>
+	<tr>
+		<td width="14%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Provider</font></td>
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Group Number</font></td>
+		<td width="16%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Creation Date </font></td>
+		<td width="15%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Claims/Records</font></td>
+		<td width="19%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Ohip Filename</font></td>
+		<td width="24%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">HTML Filename</font></td>
+	</tr>
+
+	<%
    String pro_ohip="", pro_group="", updatedate="", cr="", oFile="", hFile="";
    rslocal = null;
    
@@ -224,15 +238,26 @@ String billinggroup_no;
 
    %>
 
-  <tr> 
-    <td width="14%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_ohip%></font></td>
-    <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=pro_group%></font></td>
-    <td width="16%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=updatedate%></font></td>
-    <td width="15%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><%=cr%></font><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"></font></td>
-   <td width="19%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
-    <td width="24%"><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"><a href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
-  </tr>            
-  <%  }
+	<tr>
+		<td width="14%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><%=pro_ohip%></font></td>
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><%=pro_group%></font></td>
+		<td width="16%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><%=updatedate%></font></td>
+		<td width="15%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><%=cr%></font><font
+			face="Arial, Helvetica, sans-serif" size="2" color="#003366"></font></td>
+		<td width="19%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><a
+			href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
+			target="_blank"><%=oFile%></a></font></td>
+		<td width="24%"><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"><a
+			href="../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
+			target="_blank"><%=hFile%></a></font></td>
+	</tr>
+	<%  }
   
    
  apptMainBean.closePstmtConn();

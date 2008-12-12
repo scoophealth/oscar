@@ -32,9 +32,11 @@
 //  mygroupno = (String) session.getAttribute("groupno");  
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -50,14 +52,14 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A PRESCRIBE RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A PRESCRIBE RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
   String temp=null, content="";//default is not null
@@ -100,28 +102,30 @@
     rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_prescribe_no");
     while (rsdemo.next()) {    
 %>
-  <p><h1>Successful Addition of a Prescribe Record.</h1></p>
+<p>
+<h1>Successful Addition of a Prescribe Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
       self.opener.document.encounter.encounterattachment.value +="<prescribe>providercontrol.jsp?prescribe_no=<%=rsdemo.getString("prescribe_no")%>^displaymode=vary^displaymodevariable=providerprescribesingle.jsp^dboperation=search_prescribe^bNewForm=0</prescribe>";
       self.opener.document.encounter.attachmentdisplay.value +="Prescribe ";
      	//self.opener.refresh();
-</script>
-<%
+</script> <%
     break; //get only one prescribe_no
     }//end of while
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

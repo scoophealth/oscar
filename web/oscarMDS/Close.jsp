@@ -23,20 +23,21 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
-    <head>
-        <script language="javascript">
+<head>
+<script language="javascript">
         opener.location.reload();
         window.close();
         </script>
-    </head>
-    <body>
+</head>
+<body>
 <% /*
         <bean:message key="oscarEncounter.close.msgClick1"/><a href="javascript:window.close();"><bean:message key="oscarEncounter.close.btnHere"/></a>
 */ %>
-        <a href="javascript:window.close();"><bean:message key="oscarMDS.close.msgClose"/>.</a>
-    </body>
+<a href="javascript:window.close();"><bean:message
+	key="oscarMDS.close.msgClose" />.</a>
+</body>
 </html:html>

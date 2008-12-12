@@ -23,13 +23,15 @@
  -->
 <%@page import="java.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
-<%@page import="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" %>
-<%@page import="org.oscarehr.survey.model.oscar.OscarForm" %>
+<%@page
+	import="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate"%>
+<%@page import="org.oscarehr.survey.model.oscar.OscarForm"%>
 <script>
 	function getReport() {
 		var formId = document.ucfForm.formId.value;	 
@@ -52,56 +54,49 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-	<h1>User Created Form Report</h1>
-	
-	<form method="post" name="ucfForm" action="<%=request.getContextPath()%>/PMmodule/reports/UcfReport.jsp">
-		<table>
-			<tr>
-				<td>User Created Forms</td>
-				<td>StartDate</td>
-				<td>EndDate</td>
-			</tr>
-			
-			<tr>
-				<td>
-				
-				<select name="formId">
-					<% 
+<h1>User Created Form Report</h1>
+
+<form method="post" name="ucfForm"
+	action="<%=request.getContextPath()%>/PMmodule/reports/UcfReport.jsp">
+<table>
+	<tr>
+		<td>User Created Forms</td>
+		<td>StartDate</td>
+		<td>EndDate</td>
+	</tr>
+
+	<tr>
+		<td><select name="formId">
+			<% 
 					for(OscarForm form : forms) {
 						%>
-						<option value="<%=form.getFormId() %>"><%=form.getDescription() %></option>
-					<% 
+			<option value="<%=form.getFormId() %>"><%=form.getDescription() %></option>
+			<% 
 					}
 					%>
-					
-				</select>
-					
-					
-				</td>
-				
-				<td>
-					<input type="text" name="startDate" />
-				</td>
-				
-				<td>
-					<input type="text" name="endDate" />
-				</td>
-			</tr>	
-						
-			<tr>
-				<td></td>
-				<td>(YYYY-MM-DD)</td>
-				<td>(YYYY-MM-DD)</td>
-			</tr>
 
-			<tr>
-				<td></td>
-				<td><input type="submit" /></td>
-				<td><input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" /></td>
-			</tr>
-		</table>
-	</form>
-	
+		</select></td>
 
-	
+		<td><input type="text" name="startDate" /></td>
+
+		<td><input type="text" name="endDate" /></td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td>(YYYY-MM-DD)</td>
+		<td>(YYYY-MM-DD)</td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td><input type="submit" /></td>
+		<td><input type="button" value="Back"
+			onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" /></td>
+	</tr>
+</table>
+</form>
+
+
+
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

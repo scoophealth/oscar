@@ -27,9 +27,10 @@
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 %>
 
-<%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 
 <%
 

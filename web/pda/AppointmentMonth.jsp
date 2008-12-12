@@ -24,15 +24,17 @@
  */
 -->
 
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="bean.*" %>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.text.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="bean.*"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
 
 <HTML>
@@ -61,15 +63,23 @@
     theArrayB = beanFunctionGenerator.getAppointmentInMonth(provider_no, theArrayA);
     theArrayC = beanDBQuery.getAppointmentNo(theArrayB,provider_no);
 
-%> 
+%>
 
 <BODY>
 
 
-Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="PreviousMonth.jsp?start_date=<%=start_date%>"><<</b></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="NextMonth.jsp?start_date=<%=start_date%>">>></b></a>&nbsp;&nbsp;<a href="Search.jsp">Search</a>&nbsp;&nbsp;<a href="logout.jsp"<b>LogOut</b></a>
+Date
+:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="PreviousMonth.jsp?start_date=<%=start_date%>"><<</b></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="NextMonth.jsp?start_date=<%=start_date%>">>></b></a>
+&nbsp;&nbsp;
+<a href="Search.jsp">Search</a>
+&nbsp;&nbsp;
+<a href="logout.jsp" <b>LogOut</b></a>
 <table border="1">
- 
-<%
+
+	<%
    for (int i=0;i<theArrayA.length;i++){
           out.print("<tr><td>");
 //          out.print("<a href=\"AddAppointmentMonthForm.jsp?appointment_date="+theArrayA[i]+"&start_time=08:00:00\" >");
@@ -86,6 +96,6 @@ Date :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
  	    
 %>
 
-</table> 
+</table>
 </body>
 </HTML>

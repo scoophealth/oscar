@@ -25,11 +25,12 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*,oscar.oscarWorkflow.*"%>
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*,oscar.oscarWorkflow.*"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
     
@@ -38,52 +39,26 @@
     
 %>
 
-                         
+
 <html:html locale="true">
 
 <head>
-<title>
-WorkFlow 
-</title>
-<html:base/>
+<title>WorkFlow</title>
+<html:base />
 
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
-<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<script language="javascript" type="text/javascript"
+	src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
     var denominator_fields = new Array ();
@@ -111,71 +86,38 @@ WorkFlow
     
     }
 </script>
-	
+
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="100" >
-              workFlow
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            <%=  request.getAttribute("name") != null ?request.getAttribute("name"):""%>                       
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-               &nbsp;
-               
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-                   
-                  <style type="text/css">
-                      
-                      table.results{
-                           margin-top: 3px;
-                           margin-left: 3px;
-                           /*border-bottom: 1pt solid #888888;
-                           border-left: 1pt solid #888888;
-                           border-top: 1pt solid #888888;
-                           border-right: 1pt solid #888888;*/
-                           border: 1pt solid #888888;
-                           border-collapse:collapse;
-                      }
-                      
-                      table.results th{
-                          border:1px solid grey;
-                          padding:2px;    
-                          text-decoration: none;
-                      }
-                      table.results td{
-                         border:1px solid lightgrey;
-                         padding-left:2px;
-                         padding-right:2px;
-                      }
-                      
-                      tr.red td {
-                      background-color: red;
-                      padding-left:2px;
-                         padding-right:2px;
-                      }
-                  </style>
-                  
-                  <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="100">workFlow</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><%=  request.getAttribute("name") != null ?request.getAttribute("name"):""%>
+				</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td valign="top" class="MainTableRightColumn">
+
+		<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+		<%
                     
                      
                      
@@ -189,20 +131,20 @@ WorkFlow
                   if (workList != null && workList.size() > 0){
                         DemographicNameAgeString deName = DemographicNameAgeString.getInstance();
                   %>
-                  
-                  <table class="sortable tabular_list results" id="results_table">
-                      <thead>
-                      <tr>
-                         <th>Type</th>
-                         <th>Create Date</th>
-                         <th>Demographic</th>
-                         <th>EDD</th>
-                         <th>State</th> 
-                         <th>Weeks</th>
-                         <th>Next Appt</th>
-                      </tr>
-                      </thead>
-                <%      
+
+		<table class="sortable tabular_list results" id="results_table">
+			<thead>
+				<tr>
+					<th>Type</th>
+					<th>Create Date</th>
+					<th>Demographic</th>
+					<th>EDD</th>
+					<th>State</th>
+					<th>Weeks</th>
+					<th>Next Appt</th>
+				</tr>
+			</thead>
+			<%      
                           WorkFlowDS wfDS = flow.getWorkFlowDS();
           
                           for (int j = 0; j < workList.size(); j++){
@@ -217,45 +159,40 @@ WorkFlow
                              gestAge = ""+ UtilDateUtilities.calculateGestationAge( UtilDateUtilities.now(), (Date) h.get("completion_date"));
                           }catch(Exception e){}
                 %>
-                      <tr style="background-color: <%=colour%>" >
-                          <td>
-                              <a href="<%=flow.getLink(""+h.get("demographic_no"),""+h.get("ID"))%>" target="_blank">
-                                  <%=h.get("workflow_type")%>
-                              </a>
-                          </td>
-                          <td><%=h.get("create_date_time")%></td>
-                          <td>
-                              <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=(String) h.get("demographic_no")%>&displaymode=edit&dboperation=search_detail','master')" title="Master File">
-                                  <%=demoHash.get("lastName")%>, <%=demoHash.get("firstName")%>
-                              </a>
-                          </td>
-                          <td><%=h.get("completion_date")%> </td>
-                          <td><%=flow.getState(""+h.get("current_state"))%> </td>  
-                          <td><%=gestAge%></td>
-                          <td><oscar:nextAppt demographicNo="<%=(String) h.get("demographic_no")%>"/></td>
-                      </tr>    
-                    <%}%>
-                  </table>
-                <%}else{%>
-                  <div>None in List</div>
-                <%}%>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
- 
+			<tr style="background-color: <%=colour%>">
+				<td><a
+					href="<%=flow.getLink(""+h.get("demographic_no"),""+h.get("ID"))%>"
+					target="_blank"> <%=h.get("workflow_type")%> </a></td>
+				<td><%=h.get("create_date_time")%></td>
+				<td><a
+					href="javascript: function myFunction() {return false; }"
+					onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=(String) h.get("demographic_no")%>&displaymode=edit&dboperation=search_detail','master')"
+					title="Master File"> <%=demoHash.get("lastName")%>, <%=demoHash.get("firstName")%>
+				</a></td>
+				<td><%=h.get("completion_date")%></td>
+				<td><%=flow.getState(""+h.get("current_state"))%></td>
+				<td><%=gestAge%></td>
+				<td><oscar:nextAppt
+					demographicNo="<%=(String) h.get("demographic_no")%>" /></td>
+			</tr>
+			<%}%>
+		</table>
+		<%}else{%>
+		<div>None in List</div>
+		<%}%>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
 <script type="text/javascript">
 //Calendar.setup( { inputField : "asOfDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 
 
-</script>  
+</script>
 <script language="javascript" src="../commons/scripts/sort_table/css.js">
 <script language="javascript" src="../commons/scripts/sort_table/common.js">
 <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">

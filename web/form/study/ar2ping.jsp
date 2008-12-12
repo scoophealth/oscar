@@ -31,15 +31,16 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 <%--@ page contentType="text/xml" --%>
 <%@ page import="java.lang.reflect.*, java.sql.*"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>  
-<%@ page import="java.util.*,oscar.ping.xml.*" %>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
+<%@ page import="java.util.*,oscar.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.*"%>
 <%@ page import="org.chip.ping.xml.cddm.*"%>
 <%@ page import="oscar.OscarPingTalk"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
 
-<%@ include file="../../admin/dbconnection.jsp" %>
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 	//{"search_demographic", "select * from demographic where demographic_no=? "}, 

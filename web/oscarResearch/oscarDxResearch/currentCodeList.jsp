@@ -1,7 +1,9 @@
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*"  %>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
-<ul<%
+<ul
+	<%
    String demoNO = request.getParameter("demographicNo");
    String maxlen = request.getParameter("maxlen");
    int len = -1;
@@ -22,6 +24,8 @@
       if (len != -1){
          desc = org.apache.commons.lang.StringUtils.abbreviate(desc,len) ;
       }
-   %>><li>- <%=desc%>  </li<%
+   %>>
+	<li>- <%=desc%></li<%
    }%>
-></ul>     
+>
+</ul>

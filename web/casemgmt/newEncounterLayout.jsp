@@ -22,8 +22,8 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page errorPage="/casemgmt/error.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ page errorPage="/casemgmt/error.jsp"%>
 <%@ page language="java"%>
 
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
@@ -42,283 +42,68 @@
 <nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 --%>
 <html:html locale="true">
-  <head>      
-        
-  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
-	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
-        <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
-    <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
-    <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
-    <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>    
+<head>
 
-    <%-- for popup menu of forms --%>
-    <script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
-    <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js" type="text/javascript"></script>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css"
+	type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="<c:out value="${ctx}"/>/css/print.css" media="print">
+<script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"
+	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"
+	type="text/javascript"></script>
 
-    <!-- library for rounded elements -->
-    <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
-    <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
-    
-      <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+<%-- for popup menu of forms --%>
+<script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js"
+	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
+	type="text/javascript"></script>
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
+<!-- library for rounded elements -->
+<link rel="stylesheet" type="text/css"
+	href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="<c:out value="${ctx}"/>/share/calendar/calendar.css"
+	title="win2k-cold-1">
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- main calendar program -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
+
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
-  
-  <%--<!-- js implementation of markdown -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
+
+<%--<!-- js implementation of markdown -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>--%>
-  
-  <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
-  
-  <!-- scriptaculous based select box -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
-  
-  <!--js code for newCaseManagementView.jsp -->
-  <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
-  
-    <style type="text/css">
-        
-        /*CPP Format */
-        li.cpp {
-            color: #000000;         
-            font-family:arial,sans-serif;
-        }
-        
-        /*Note format */
-        div.newNote {
-            color: #000000;         
-            font-family:arial,sans-serif;
-            font-size:0.8em;
-            margin: 5px 0px 5px 5px;
-            float:left;  
-            width:98%;            
-        }
-        
-        div.newNote pre {
-            color: #000000;      
-            font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
-            clear:left;            
-        }
-        
-        div.note {
-            color: #000000;         
-            font-family:arial,sans-serif;
-            margin: 3px 0px 3px 5px;
-            float:left;  
-            width:98%;
-        }
-        
-        div.note pre {
-            color: #000000;      
-            font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
-            clear:left;
-        }
-       .sig {
-            background-color:#CCCCFF;
-            color: #000000;  
-            width:100%;
-            font-size:9px;
-        }                
-        
-        .txtArea {
-            font-family:arial,sans-serif; 
-            font-size:1.0em;             
-            width:99%; 
-            rows:10; 
-            overflow:hidden; 
-            border:none; 
-            font-family:arial,sans-serif;             
-            margin: 0px 3px 0px 3px;
-        }
-      
-        p.passwd {
-            margin:0px 3px; 0px 3px;        
-        }
-        
-        /* span formatting for measurements div found in ajax call */
-        span.measureCol1 {            
-            float: left;
-            width: 50px;            
-        }
-        
-        span.measureCol2 {
-            float: left;
-            width: 55px;
-        }
-        
-        span.measureCol3 {
-            float: left;                        
-        }
-        
-        .topLinks  {
-            color: black;
-            text-decoration:none;
-            font-size:9px;                
-        }
-        
-        .topLinkhover { 
-            color: blue;
-            text-decoration: underline;
-        }
-        
-        /* formatting for navbar */               
-        .links {
-            color: blue;
-            text-decoration:none;
-            font-size:9px;
-        }
-        
-        .linkhover { 
-            color: black;
-            text-decoration: underline;
-        }
-        
-    /* template styles*/
-          
-          .enTemplate_name_auto_complete {
-            width: 350px;
-            background: #fff;
-            font-size: 9px;
-            text-align:left;
-          }
-          .enTemplate_name_auto_complete ul {
-            border:1px solid #888;
-            margin:0;
-            padding:0;
-            width:100%;
-            list-style-type:square;
-            list-style-position:inside;
-          }
-          .enTemplate_name_auto_complete ul li {
-            margin:0;
-            padding:3px;            
-          }
-          .enTemplate_name_auto_complete ul li.selected { 
-            background-color: #ffb; 
-            text-decoration: underline;
-          }
-          .enTemplate_name_auto_complete ul strong.highlight { 
-            color: #800; 
-            margin:0;
-            padding:0;
-          }
 
+<!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
 
-        /* CPP textareas */
-        .rowOne {
-            height: <%--<nested:write name="rowOneSize"/>--%>10px;
-            width: 97%;
-            overflow:auto;
-        }
-        
-        .rowTwo {
-            height: <%--<nested:write name="rowTwoSize"/>--%>10px;
-            width:97%;
-            margin-left:4px;            
-            overflow:auto;
-        }
-        
-        /* Encounter type select box */
-        div.autocomplete {
-          position:absolute;
-          width:400px;
-          background-color:white;
-          border:1px solid #ccc;
-          margin:0px;
-          padding:0px;
-          font-size:9px;
-          text-align:left;
-          max-height:200px;
-          overflow:auto;
-        }
-        div.autocomplete ul {
-          list-style-type:none;
-          margin:0px;
-          padding:0px;
-        }
-        div.autocomplete ul li.selected { 
-          background-color: #EAF2FB;
-        }
-        div.autocomplete ul li {
-          list-style-type:none;
-          display:block;
-          margin:0;
-          padding:2px;
-          cursor:pointer;
-        }
-        
-        .encTypeCombo /* look&feel of scriptaculous select box*/
-        {
-          margin: 0px;/* 5px 10px 0px;*/
-          font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
-          font-size:9px;
-          width: 200px;          
-          text-align:left; 
-          vertical-align: middle;
-          background: #FFFFFF url('<c:out value="${ctx}"/>/images/downarrow_inv.gif') no-repeat right;
-          height:18px;
-          cursor: pointer;
-          border:1px solid #ccc;
-          color: #000000;
-          
-        }
-        
-        .printOps {                        
-            background-color:#CCCCFF;
-            font-size:9px;
-                        
-            position: absolute;
-            display:none;
-            z-index:1;
-            width:200px;
-            right:100px;
-            bottom:200px;                                                
-        }
-        
-        .showEdContainer {        
-            position: absolute;
-            display:none;
-            z-index:100;
-            right:100px;
-            bottom:200px;            
-            background-color:transparent;
-            font-size:8px;
-            /*border: thin ridge black;*/
-            text-align: center;
-        }
-        
-        .showEdPosition { 
-            display: table-cell;        
-            vertical-align: middle;            
-        }
-        
-        .showEdContent {            
-            /*border: thin ridge black;*/
-            background-color:#CCCCFF;
-            font-size:9px;
-                        
-            position: absolute;
-            display:none;
-            /*z-index:100;*/
-            right:100px;
-            bottom:200px;                                    
-            text-align: center;
-        }
-        
+<!-- scriptaculous based select box -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
 
-    </style>
+<!--js code for newCaseManagementView.jsp -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <!--[if IE]>
     <style type=text/css>
     
@@ -327,10 +112,11 @@
         }
      </style>
  <![endif]-->
-    <html:base />
-    <title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=(String) request.getAttribute(\"demographicNo\")%>"/></title>
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <script type="text/javascript">
+<html:base />
+<title><bean:message key="oscarEncounter.Index.title" /> - <oscar:nameage
+	demographicNo="<%=(String) request.getAttribute(\"demographicNo\")%>" /></title>
+<meta http-equiv="Cache-Control" content="no-cache">
+<script type="text/javascript">
         
 function init() {       
         
@@ -378,64 +164,88 @@ function init() {
 }
 
 </script>
-  </head> 
-  <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
-    
-      <div id="main">          
-          <div id="header">
-              <tiles:insert attribute="header" />
-          </div>
-          
-          <div id="leftNavBar" style="display:inline; float:left; width:20%;">
-              <tiles:insert attribute="leftNavigation" />
-          </div>  
-          
-          <div id="content" style="display:inline; float:left; width:60%; background-color:#CCCCFF;">
-              <tiles:insert attribute="body" />
-          </div>
-          
-          <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
-              <tiles:insert attribute="rightNavigation" />
-          </div>  
-          
-          <!-- hovering divs -->
-          <div id="showEditNote" class="showEdContent">
-              <form id="frmIssueNotes" action="" method="post" onsubmit="return updateCPPNote();">
-                  <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
-                  <input type="hidden" id="containerDiv" name="containerDiv" value="">
-                  <input type="hidden" id="issueChange" name="issueChange" value="">
-                  <div id="winTitle"></div>
-                  <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
-                  <span style="float:right; margin-right:10px;">                      
-                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
-                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
-                  </span>
-                  <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
-                  <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
-                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" name="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
-                  </div>
-                  Assign Issues&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
-                 
-                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
-                  
-              </form>
-          </div>
-          <div id="printOps" class="printOps">
-              <h3 style="margin-bottom:5px; text-align:center;">Print Dialog</h3>
-              <form id="frmPrintOps" action="" onsubmit="return false;">
-                   <input type="radio" id="printopSelected" name="printop" value="selected">Selected<br>
-                   <input type="radio" id="printopAll" name="printop" value="all">All<br>
-                   <input type="radio" id="printopDates" name="printop" value="dates">Dates&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);">Today</a><br>                   
-                   <div style="float:left; margin-left:5px; width:30px;">From:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
-                   <div style="float:left; margin-left:5px; width:30px;">To:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
-                   <div style="margin-top:5px; text-align:center">
-                       <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
-                       <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
-                       <input type="submit" id="clearprintOp" style="border: 1px solid #7682b1;" value="Clear" onclick="$('printOps').style.display='none'; return clearAll(event);">
-                   </div>
-              </form>              
-          </div>
-          
-      </div>
-  </body>
+</head>
+<body id="body" style="margin: 0px;" onload="init()"
+	onunload="onClosing()">
+
+<div id="main">
+<div id="header"><tiles:insert attribute="header" /></div>
+
+<div id="leftNavBar" style="display: inline; float: left; width: 20%;">
+<tiles:insert attribute="leftNavigation" /></div>
+
+<div id="content"
+	style="display: inline; float: left; width: 60%; background-color: #CCCCFF;">
+<tiles:insert attribute="body" /></div>
+
+<div id="rightNavBar"
+	style="display: inline; float: right; width: 20%; margin-left: -3px;">
+<tiles:insert attribute="rightNavigation" /></div>
+
+<!-- hovering divs -->
+<div id="showEditNote" class="showEdContent">
+<form id="frmIssueNotes" action="" method="post"
+	onsubmit="return updateCPPNote();"><input type="hidden"
+	id="reloadUrl" name="reloadUrl" value=""> <input type="hidden"
+	id="containerDiv" name="containerDiv" value=""> <input
+	type="hidden" id="issueChange" name="issueChange" value="">
+<div id="winTitle"></div>
+<textarea style="margin: 10px;" cols="50" rows="15" id="noteEditTxt"
+	name="value" wrap="soft"></textarea><br>
+<span style="float: right; margin-right: 10px;"> <input
+	style="padding-right: 10px;" type="image"
+	src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>"
+	title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
+<input type="image"
+	src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>"
+	onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;"
+	title='<bean:message key="global.btnExit"/>'> </span>
+<div id="issueNoteInfo" style="clear: both; text-align: left;"></div>
+<div id="issueListCPP"
+	style="background-color: #FFFFFF; height: 200px; width: 350px; position: absolute; z-index: 1; display: none; overflow: auto;">
+<div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP"
+	name="issueAutocompleteListCPP"
+	style="position: relative; left: 0px; display: none;"></div>
+</div>
+Assign Issues&nbsp;<input tabindex="100" type="text"
+	id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;"
+	size="25">&nbsp; <span id="busy2" style="display: none"><img
+	style="position: absolute;"
+	src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"
+	alt="Working..." /></span></form>
+</div>
+<div id="printOps" class="printOps">
+<h3 style="margin-bottom: 5px; text-align: center;">Print Dialog</h3>
+<form id="frmPrintOps" action="" onsubmit="return false;"><input
+	type="radio" id="printopSelected" name="printop" value="selected">Selected<br>
+<input type="radio" id="printopAll" name="printop" value="all">All<br>
+<input type="radio" id="printopDates" name="printop" value="dates">Dates&nbsp;<a
+	style="font-variant: small-caps;" href="#"
+	onclick="return printToday(event);">Today</a><br>
+<div style="float: left; margin-left: 5px; width: 30px;">From:</div>
+<img src="<c:out value="${ctx}/images/cal.gif" />"
+	id="printStartDate_cal" alt="calendar">&nbsp;<input type="text"
+	id="printStartDate" name="printStartDate" ondblclick="this.value='';"
+	style="font-style: italic; border: 1px solid #7682b1; width: 125px; background-color: #FFFFFF;"
+	readonly value=""><br>
+<div style="float: left; margin-left: 5px; width: 30px;">To:</div>
+<img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal"
+	alt="calendar">&nbsp;<input type="text" id="printEndDate"
+	name="printEndDate" ondblclick="this.value='';"
+	style="font-style: italic; border: 1px solid #7682b1; width: 125px; background-color: #FFFFFF;"
+	readonly value=""><br>
+<div style="margin-top: 5px; text-align: center"><input
+	type="submit" id="printOp" style="border: 1px solid #7682b1;"
+	value="Print" onclick="return printNotes();"> <input
+	type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;"
+	value="Cancel" onclick="$('printOps').style.display='none';"> <input
+	type="submit" id="clearprintOp" style="border: 1px solid #7682b1;"
+	value="Clear"
+	onclick="$('printOps').style.display='none'; return clearAll(event);">
+</div>
+</form>
+</div>
+
+</div>
+</body>
 </html:html>

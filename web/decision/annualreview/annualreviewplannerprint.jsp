@@ -31,12 +31,17 @@
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*,java.net.*" errorPage="../../appointment/errorpage.jsp" %>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../../appointment/errorpage.jsp"%>
+<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
-<jsp:useBean id="checklist" class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
-<%@ include file="../../admin/dbconnection.jsp" %>
+<jsp:useBean id="risks"
+	class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
+<jsp:useBean id="checklist"
+	class="oscar.decision.DesAnnualReviewPlannerChecklist" scope="page" />
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 {"search_demographic", "select last_name,first_name,sex,year_of_birth,month_of_birth,date_of_birth from demographic where demographic_no = ?" }, 
@@ -44,18 +49,13 @@ String [][] dbQueries=new String[][] {
 };
 plannerBean.doConfigure(dbParams,dbQueries);
 %>
- 
+
 <html>
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-    <title>Planner</title>
-	<STYLE type="text/css"> 
-	<!--
-	td {	font-size: 12px;	}
-	div {		font-size: 12px;	}
-	-->
-	</STYLE>
-	<script type="text/javascript" language="Javascript">
+<title>Planner</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script type="text/javascript" language="Javascript">
 
 </script>
 </head>
@@ -67,11 +67,11 @@ plannerBean.doConfigure(dbParams,dbQueries);
     String risk_content = rsdemo.getString("risk_content");
     String checklist_content = rsdemo.getString("checklist_content");
 %>
-  <xml id="xml_list">
-    <planner>
-      <%=checklist_content%>
-    </planner>
-  </xml> 
+<xml id="xml_list">
+<planner>
+<%=checklist_content%>
+</planner>
+</xml>
 <%
     //set the riskdata bean from xml file
     Properties savedar1risk1 = risks.getRiskName("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/annualreview/desannualreviewplannerrisk.xml"); 
@@ -103,19 +103,19 @@ plannerBean.doConfigure(dbParams,dbQueries);
   }
   plannerBean.closePstmtConn();
 %>
-<table bgcolor='silver' width='100%'  cellspacing=0 cellpadding=0 >
-  <tr>
-    <td><font color='blue'><%=patientName +" "+ sex +" "+ age%> </font></td>
-    <td align="right">
-    <input type="button" name="submit" value="Print" onclick="window.print();" />
-    <input type="button" value="  Exit  "  onclick="javascript:window.close();" />
-    </td>
-  </tr>
+<table bgcolor='silver' width='100%' cellspacing=0 cellpadding=0>
+	<tr>
+		<td><font color='blue'><%=patientName +" "+ sex +" "+ age%>
+		</font></td>
+		<td align="right"><input type="button" name="submit"
+			value="Print" onclick="window.print();" /> <input type="button"
+			value="  Exit  " onclick="javascript:window.close();" /></td>
+	</tr>
 </table>
 
 <%
   out.println(checklist.doStuff(new String("../webapps/"+oscarVariables.getProperty("project_home")+"/decision/annualreview/desannualreviewplannerriskchecklist.xml"), riskDataBean));
-%>    
+%>
 
 </body>
 </html>

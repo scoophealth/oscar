@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page  import="java.util.*"  errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*" errorPage="errorpage.jsp"%>
 <%
   if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("receptionist"))
     response.sendRedirect("../logout.jsp");
@@ -37,8 +37,9 @@
     return;
   }
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>  
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 
 <%
 String [][] dbOperation;

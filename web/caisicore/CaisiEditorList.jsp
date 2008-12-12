@@ -25,43 +25,45 @@
 <%@ include file="/taglibs.jsp"%>
 
 <title>Caisi Editor</title>
- <style type="text/css">
-        /* <![CDATA[ */
-        @import "<html:rewrite page="/css/core.css" />";
-        /*  ]]> */
- </style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <button onclick="location.href='CaisiEditor.do?method=edit'">Add</button>
-<table border="1"  cellpadding="1" cellspacing="1" bgcolor="#C0C0C0">
-<thead>
-<tr class="title">
-	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
-    <th>Category &nbsp;&nbsp;</th>
-    <th>Label &nbsp;&nbsp;</th>
-    <th>Type &nbsp; &nbsp;</th>
-    <th>Label Value &nbsp;&nbsp;</th>
-    <th>Label Code &nbsp;&nbsp;</th>    
-    <th>Horizontal &nbsp;&nbsp;</th>
-    <th>Active &nbsp;&nbsp;</th>
-</tr>
-</thead>
-<tbody>
-<c:forEach var="caisiEditor" items="${caisiEditors}" varStatus="status">
-<c:choose>
-    <c:when test="${status.count % 2 == 0}"><tr class="even"></c:when>
-    <c:otherwise><tr class="odd"></c:otherwise>
-</c:choose>
+<table border="1" cellpadding="1" cellspacing="1" bgcolor="#C0C0C0">
+	<thead>
+		<tr class="title">
+			<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+			<th>Category &nbsp;&nbsp;</th>
+			<th>Label &nbsp;&nbsp;</th>
+			<th>Type &nbsp; &nbsp;</th>
+			<th>Label Value &nbsp;&nbsp;</th>
+			<th>Label Code &nbsp;&nbsp;</th>
+			<th>Horizontal &nbsp;&nbsp;</th>
+			<th>Active &nbsp;&nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach var="caisiEditor" items="${caisiEditors}"
+			varStatus="status">
+			<c:choose>
+				<c:when test="${status.count % 2 == 0}">
+					<tr class="even">
+				</c:when>
+				<c:otherwise>
+					<tr class="odd">
+				</c:otherwise>
+			</c:choose>
 
-    <td><a href="CaisiEditor.do?method=edit&amp;id=<c:out value="${caisiEditor.id}"/>">Edit</a></td>
-   
-	<td><c:out value="${caisiEditor.category}"/></a></td>
-    <td><c:out value="${caisiEditor.label}"/></td>
-    <td><c:out value="${caisiEditor.type}"/></td>
-    <td><c:out value="${caisiEditor.labelValue}"/></td>
-    <td><c:out value="${caisiEditor.labelCode}"/></td>
-    <td><c:out value="${caisiEditor.horizontal}"/></td>
-    <td><c:out value="${caisiEditor.isActive}"/></td>
-</tr>
-</c:forEach>
-</tbody>
+			<td><a
+				href="CaisiEditor.do?method=edit&amp;id=<c:out value="${caisiEditor.id}"/>">Edit</a></td>
+
+			<td><c:out value="${caisiEditor.category}" /></a></td>
+			<td><c:out value="${caisiEditor.label}" /></td>
+			<td><c:out value="${caisiEditor.type}" /></td>
+			<td><c:out value="${caisiEditor.labelValue}" /></td>
+			<td><c:out value="${caisiEditor.labelCode}" /></td>
+			<td><c:out value="${caisiEditor.horizontal}" /></td>
+			<td><c:out value="${caisiEditor.isActive}" /></td>
+			</tr>
+		</c:forEach>
+	</tbody>
 </table>

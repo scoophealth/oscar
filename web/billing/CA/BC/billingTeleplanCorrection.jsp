@@ -1,3 +1,4 @@
+
 <%
 
   if(session.getValue("user") == null)
@@ -78,13 +79,16 @@
 
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
 
-<%@ include file="../../../admin/dbconnection.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <%
 
@@ -154,11 +158,11 @@
 
 <title>oscarBillingBC Correction</title>
 
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 
-      <meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
 
-        <script language="JavaScript">
+<script language="JavaScript">
 
 <!--
 
@@ -216,7 +220,8 @@
 
     </script>
 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
 
 
 
@@ -224,43 +229,53 @@
 
 
 
-<body bgcolor="#FFFFFF" text="#000000" topmargin="5"  leftmargin="0" rightmargin="0" onLoad="setfocus()">
+<body bgcolor="#FFFFFF" text="#000000" topmargin="5" leftmargin="0"
+	rightmargin="0" onLoad="setfocus()">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
-  <tr bgcolor="#000000">
+	<tr bgcolor="#000000">
 
-    <td height="40" width="10%"> </td>
+		<td height="40" width="10%"></td>
 
-    <td width="90%" align="left">
+		<td width="90%" align="left">
 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing - Correction</font></font></b></font>
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3">Billing - Correction</font></font></b></font></p>
 
-      </p>
+		</td>
 
-    </td>
+	</tr>
 
-  </tr>
+</table>
+<% int bFlag = 0;	String billNo = request.getParameter("billing_no");         if (billNo.compareTo("") == 0 || billNo == null) {         bFlag = 0;         } else {         bFlag =1;         %>
+<%@ include file="billingTeleplanDataRetrieve.jsp"%>
+<% } %>
 
-</table><% int bFlag = 0;	String billNo = request.getParameter("billing_no");         if (billNo.compareTo("") == 0 || billNo == null) {         bFlag = 0;         } else {         bFlag =1;         %>         <%@ include file="billingTeleplanDataRetrieve.jsp" %>         <% } %>
+<table width="100%" border="0" bgcolor="#FFFFFF">
 
-  <table width="100%" border="0" bgcolor="#FFFFFF">
+	<form name="form1" method="post" action="billingTeleplanCorrection.jsp">
+	<tr>
 
-  <form name="form1" method="post" action="billingTeleplanCorrection.jsp"><tr>
+		<td width="20%" align="left"><b><font
+			face="Arial, Helvetica, sans-serif" size="2" color="#000000">Enter
+		Office Claim No </font></b></td>
 
-      <td width="20%" align="left"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#000000">Enter Office Claim No
+		<td width="20%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="text" name="billing_no"
+			value="<%=billNo%>" maxsize="10"></td>
 
-              </font></b></td>
+		<td width="60%" align="left"><b><font
+			face="Arial, Helvetica, sans-serif" size="2" color="#000000"><b>Last
 
-      <td width="20%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="billing_no" value="<%=billNo%>" maxsize="10"> </td>
+		update: <%=UpdateDate%></font></b></td>
 
-      <td width="60%" align="left"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#000000"><b>Last
+	</tr>
+	</form>
 
-        update: <%=UpdateDate%>   </font></b></td>
-
-      </tr></form>
-
-      </table>
+</table>
 
 
 
@@ -290,150 +305,143 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
 
 
-  <br><form name="serviceform" method="post" action="billingCorrectionValid.jsp">
-
-<input type="hidden" name="xml_billing_no" value="<%=billNo%>"><input type="hidden" name="update_date" value="<%=UpdateDate%>">
+<br>
+<form name="serviceform" method="post"
+	action="billingCorrectionValid.jsp"><input type="hidden"
+	name="xml_billing_no" value="<%=billNo%>"><input type="hidden"
+	name="update_date" value="<%=UpdateDate%>">
 
 <table width="600" border="0">
 
-  <tr bgcolor="#CCCCFF">
+	<tr bgcolor="#CCCCFF">
 
-    <td height="21" colspan="2"><font size="2" face="Arial, Helvetica, sans-serif"><b><font size="3">Patient
+		<td height="21" colspan="2"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b><font size="3">Patient
 
-      Information</font></b></font></td>
+		Information</font></b></font></td>
 
-  </tr>
+	</tr>
 
-  <tr>
+	<tr>
 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Patient
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Patient Name: <%=DemoName%> <input type="hidden"
+			name="demo_name" value="<%=DemoName%>"> </font></b></td>
 
-      Name: <%=DemoName%>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Health# : <input type="text" style="font-size: 80%;"
+			name="hin" value="<%=hin%>"> <input type="hidden"
+			name="xml_hin" value="<%=hin%>"> </font></b></td>
 
-      <input type="hidden" name="demo_name" value="<%=DemoName%>">
+	</tr>
 
-      </font></b></td>
+	<tr bgcolor="#EEEEFF">
 
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Health#
+		<td><font size="2" face="Arial, Helvetica, sans-serif"><b>Sex:
+		<%=DemoSex%> <input type="hidden" name="demo_sex" value="<%=DemoSex%>">
 
-      :
+		<input type="hidden" name="hc_sex" value="<%=HCSex%>"> </b></font></td>
 
-      <input type="text" style="font-size:80%;"  name="hin" value="<%=hin%>">
+		<td><font size="2"><b><font
+			face="Arial, Helvetica, sans-serif">D.O.B. : <input
+			type="hidden" name="xml_dob" value="<%=DemoDOB%>"> <input
+			type="text" style="font-size: 80%;" name="dob" value="<%=DemoDOB%>">
 
-      <input type="hidden" name="xml_hin" value="<%=hin%>">
+		</font></b></font></td>
 
-      </font></b></td>
+	</tr>
 
-  </tr>
+	<tr>
 
-  <tr bgcolor="#EEEEFF">
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Address:
+		<%=DemoAddress%> <input type="hidden" name="demo_address"
+			value="<%=DemoAddress%>"> </font></b></td>
 
-    <td><font size="2" face="Arial, Helvetica, sans-serif"><b>Sex: <%=DemoSex%>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">City:
+		<%=DemoCity%> <input type="hidden" name="demo_city"
+			value="<%=DemoCity%>"> </font></b></td>
 
-      <input type="hidden" name="demo_sex" value="<%=DemoSex%>">
+	</tr>
 
-           <input type="hidden" name="hc_sex" value="<%=HCSex%>">
+	<tr bgcolor="#EEEEFF">
 
-      </b></font></td>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Province:
+		<%=DemoProvince%> <input type="hidden" name="demo_province"
+			value="<%=DemoProvince%>"> </font></b></td>
 
-    <td><font size="2"><b><font face="Arial, Helvetica, sans-serif">D.O.B. :
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Postal
+		Code: <%=DemoPostal%> <input type="hidden" name="demo_postal"
+			value="<%=DemoPostal%>"> </font></b></td>
 
-      <input type="hidden" name="xml_dob" value="<%=DemoDOB%>">
-
-      <input type="text"  style="font-size:80%;" name="dob" value="<%=DemoDOB%>">
-
-      </font></b></font></td>
-
-  </tr>
-
-  <tr>
-
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Address: <%=DemoAddress%>
-
-      <input type="hidden" name="demo_address" value="<%=DemoAddress%>">
-
-      </font></b></td>
-
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">City: <%=DemoCity%>
-
-      <input type="hidden" name="demo_city" value="<%=DemoCity%>">
-
-      </font></b></td>
-
-  </tr>
-
-  <tr bgcolor="#EEEEFF">
-
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Province: <%=DemoProvince%>
-
-      <input type="hidden" name="demo_province" value="<%=DemoProvince%>">
-
-      </font></b></td>
-
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Postal Code: <%=DemoPostal%>
-
-      <input type="hidden" name="demo_postal" value="<%=DemoPostal%>">
-
-      </font></b></td>
-
-  </tr>
+	</tr>
 
 </table>
 
 <table width="600" border="0">
 
-  <tr bgcolor="#CCCCFF">
+	<tr bgcolor="#CCCCFF">
 
-    <td colspan="2"><font size="2" face="Arial, Helvetica, sans-serif"><b><font size="3">Billing
+		<td colspan="2"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b><font size="3">Billing
 
-      Information</font></b></font></td>
+		Information</font></b></font></td>
 
-  </tr>
+	</tr>
 
-  <tr>
+	<tr>
 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Billing
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Billing Type: <input type="hidden" name="xml_status"
+			value="<%=BillType%>"> <select style="font-size: 80%;"
+			name="status">
 
-      Type: <input type="hidden" name="xml_status" value="<%=BillType%>">
+			<option value="">--- Select Bill Type ---</option>
 
-      <select style="font-size:80%;" name="status">
+			<option value="H" <%=BillType.equals("H")?"selected":""%>>H
+			| Capitated</option>
 
-                <option value="">--- Select Bill Type ---</option>
+			<option value="O" <%=BillType.equals("O")?"selected":""%>>O
+			| Bill MSP</option>
 
-      		<option value="H" <%=BillType.equals("H")?"selected":""%>>H | Capitated</option>
+			<option value="P" <%=BillType.equals("P")?"selected":""%>>P
+			| Bill Patient</option>
 
-                <option value="O" <%=BillType.equals("O")?"selected":""%>>O | Bill MSP</option>
+			<option value="N" <%=BillType.equals("N")?"selected":""%>>N
+			| Do Not Bill</option>
 
-                <option value="P" <%=BillType.equals("P")?"selected":""%>>P | Bill Patient</option>
+			<option value="W" <%=BillType.equals("W")?"selected":""%>>W
+			| Bill Worker's Compensation Board</option>
 
-                <option value="N" <%=BillType.equals("N")?"selected":""%>>N | Do Not Bill</option>
+			<option value="B" <%=BillType.equals("B")?"selected":""%>>B
+			| Summitted MSP</option>
 
-                <option value="W" <%=BillType.equals("W")?"selected":""%>>W | Bill Worker's Compensation
+			<option value="S" <%=BillType.equals("S")?"selected":""%>>S
+			| Settled/Paid by MSP</option>
 
-                Board</option>
+			<option value="X" <%=BillType.equals("X")?"selected":""%>>X
+			| Bad Debt</option>
 
-                <option value="B" <%=BillType.equals("B")?"selected":""%>>B | Summitted MSP</option>
+			<option value="D" <%=BillType.equals("D")?"selected":""%>>D
+			| Deleted Bill</option>
+		</select> </font></b></td>
 
-                <option value="S" <%=BillType.equals("S")?"selected":""%>>S | Settled/Paid by MSP</option>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2"><a href="#"
+			onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=serviceform&returnItem=xml_appointment_date","380","300","0")'>Billing
 
-            <option value="X" <%=BillType.equals("X")?"selected":""%>>X | Bad Debt</option>
+		Date: </a><input type="text" style="font-size: 80%;"
+			name="xml_appointment_date" value="<%=BillDate%>"> </font></b></td>
 
-            <option value="D" <%=BillType.equals("D")?"selected":""%>>D | Deleted Bill</option>
-                </select>
+	</tr>
 
-                </font></b></td>
+	<tr bgcolor="#EEEEFF">
 
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2"><a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=serviceform&returnItem=xml_appointment_date","380","300","0")'>Billing
-
-      Date: </a><input type="text" style="font-size:80%;"  name="xml_appointment_date" value="<%=BillDate%>">
-
-      </font></b></td>
-
-  </tr>
-
-  <tr bgcolor="#EEEEFF">
-
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Visit:  <input type="hidden" name="xml_clinic_ref_code" value="<%=location%>"><select style="font-size:80%;" name="clinic_ref_code"><option value="">--- Select Visit Location ---</option><%  rslocation = null;
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Visit: <input type="hidden"
+			name="xml_clinic_ref_code" value="<%=location%>"><select
+			style="font-size: 80%;" name="clinic_ref_code">
+			<option value="">--- Select Visit Location ---</option>
+			<%  rslocation = null;
 
  rslocation = apptMainBean.queryResults("1", "search_clinic_location");
 
@@ -445,15 +453,21 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
  %>
 
- <option value="<%=BillLocationNo%>" <%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%> | <%=BillLocation%></option>
+			<option value="<%=BillLocationNo%>"
+				<%=location.equals(BillLocationNo)?"selected":""%>><%=BillLocationNo%>
+			| <%=BillLocation%></option>
 
 
 
- <% } %></font></b></td>
+			<% } %>
+		</font></b></td>
 
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Billing Physician#: <select style="font-size:80%;" name="provider_no"><option value="">--- Select Provider ---</option>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Billing Physician#: <select style="font-size: 80%;"
+			name="provider_no">
+			<option value="">--- Select Provider ---</option>
 
-                <% ResultSet rslocal = null;
+			<% ResultSet rslocal = null;
 
 // Retrieving Provider
 
@@ -479,57 +493,70 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
 %>
 
-                <option value="<%=proOHIP%>" <%=Provider.equals(proOHIP)?"selected":""%>> <%=proOHIP%> | <%=proLast%>,
+			<option value="<%=proOHIP%>"
+				<%=Provider.equals(proOHIP)?"selected":""%>><%=proOHIP%> |
+			<%=proLast%>, <%=proFirst%></option>
 
-                <%=proFirst%></option>
-
-                <% }
-
-
+			<% }
 
 
 
-  %><input type="hidden" name="xml_provider_no" value="<%=Provider%>">
-
-      </font></b></td>
-
-  </tr>
-
-  <tr>
-
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Visit
-
-      Type: <input type="hidden" name="xml_visittype" value="<%=visittype%>">    <select style="font-size:80%;" name="visittype">
-
-      		<option value="">--- Select Visit Type ---</option>
-
-      		 <option value="O|Physician's office" <%=visittype.equals("O")?"selected":""%>>Physician's office</option>
-
-		 <option value="C|Continuing Care facility" <%=visittype.equals("C")?"selected":""%>>Continuing Care facility</option>
-
-		 <option value="H|Hospital" <%=visittype.equals("H")?"selected":""%>>Hospital</option>
-
-		 <option value="I|Hospital Inpatient" <%=visittype.equals("I")?"selected":""%>>Hospital Inpatient</option>
-
-		 <option value="E|Hospital Emergency Depart. or Diagnostic & Treatment Centre" <%=visittype.equals("E")?"selected":""%>>Hospital Emergency Depart. or Diagnostic & Treatment Centre</option>
-
-		 <option value="P|Outpatient" <%=visittype.equals("P")?"selected":""%>>Outpatient</option>
-
-		 <option value="D|Diagnostic Facility" <%=visittype.equals("D")?"selected":""%>>Diagnostic Facility</option>
-
-		 <option value="S|Future Use" <%=visittype.equals("S")?"selected":""%>>Future Use</option>
-
-		 <option value="Z|None of the above" <%=visittype.equals("Z")?"selected":""%>>None of the above</option>
 
 
+  %><input type="hidden" name="xml_provider_no" value="<%=Provider%>"></font></b></td>
 
-      	        </select></font></b></td>
+	</tr>
 
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_visitdate" value="<%=visitdate%>"><a href="#" onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=serviceform&returnItem=xml_vdate","380","300","0")'> Admission Date:</a>
+	<tr>
 
-              <input type="text" style="font-size:80%;" name="xml_vdate" value="<%=visitdate%>"></font></b></td>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Visit Type: <input type="hidden" name="xml_visittype"
+			value="<%=visittype%>"> <select style="font-size: 80%;"
+			name="visittype">
 
-  </tr>
+			<option value="">--- Select Visit Type ---</option>
+
+			<option value="O|Physician's office"
+				<%=visittype.equals("O")?"selected":""%>>Physician's office</option>
+
+			<option value="C|Continuing Care facility"
+				<%=visittype.equals("C")?"selected":""%>>Continuing Care
+			facility</option>
+
+			<option value="H|Hospital" <%=visittype.equals("H")?"selected":""%>>Hospital</option>
+
+			<option value="I|Hospital Inpatient"
+				<%=visittype.equals("I")?"selected":""%>>Hospital Inpatient</option>
+
+			<option
+				value="E|Hospital Emergency Depart. or Diagnostic & Treatment Centre"
+				<%=visittype.equals("E")?"selected":""%>>Hospital Emergency
+			Depart. or Diagnostic & Treatment Centre</option>
+
+			<option value="P|Outpatient" <%=visittype.equals("P")?"selected":""%>>Outpatient</option>
+
+			<option value="D|Diagnostic Facility"
+				<%=visittype.equals("D")?"selected":""%>>Diagnostic
+			Facility</option>
+
+			<option value="S|Future Use" <%=visittype.equals("S")?"selected":""%>>Future
+			Use</option>
+
+			<option value="Z|None of the above"
+				<%=visittype.equals("Z")?"selected":""%>>None of the above</option>
+
+
+
+		</select></font></b></td>
+
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden" name="xml_visitdate"
+			value="<%=visitdate%>"><a href="#"
+			onClick='rs("billingcalendar","billingCalendarPopup.jsp?year=<%=curYear%>&month=<%=curMonth%>&type=&returnForm=serviceform&returnItem=xml_vdate","380","300","0")'>
+		Admission Date:</a> <input type="text" style="font-size: 80%;"
+			name="xml_vdate" value="<%=visitdate%>"></font></b></td>
+
+	</tr>
 
 </table>
 
@@ -537,33 +564,33 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
 <table width="600">
 
-  <tr bgcolor="#CCCCFF">
+	<tr bgcolor="#CCCCFF">
 
-    <td width="25%"><b><font face="Arial, Helvetica, sans-serif" size="2">Service
-
-      Code</font></b></td>
-
-
-
-    <td width="50%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
+		<td width="25%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Service Code</font></b></td>
 
 
 
-    <td width="12%"><b><font face="Arial, Helvetica, sans-serif" size="2">Unit</font></b></td>
+		<td width="50%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Description</font></b></td>
 
 
 
-    <td width="13%">
+		<td width="12%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Unit</font></b></td>
 
-      <div align="right"><b><font face="Arial, Helvetica, sans-serif" size="2">$
 
-          Fee</font></b></div>
 
-      </td>
+		<td width="13%">
 
-    </tr>
+		<div align="right"><b><font
+			face="Arial, Helvetica, sans-serif" size="2">$ Fee</font></b></div>
 
-    <%
+		</td>
+
+	</tr>
+
+	<%
 
     String serviceCode = "";
 
@@ -601,53 +628,75 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
 
 
-    <tr>
+	<tr>
 
-      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_service_code<%=rowCount%>" value="<%=serviceCode%>"><input type="text" style="font-size:80%;" name="servicecode<%=rowCount-1%>" value="<%=serviceCode%>"></font></td>
+		<td width="25%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden"
+			name="xml_service_code<%=rowCount%>" value="<%=serviceCode%>"><input
+			type="text" style="font-size: 80%;" name="servicecode<%=rowCount-1%>"
+			value="<%=serviceCode%>"></font></td>
 
 
 
-      <td width="50%"><font face="Arial, Helvetica, sans-serif" size="1"><%=serviceDesc%></font></td>
+		<td width="50%"><font face="Arial, Helvetica, sans-serif"
+			size="1"><%=serviceDesc%></font></td>
 
-       <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_unit<%=rowCount%>" value="<%=billingunit%>"><input type="text" style="font-size:80%;" name="billingunit<%=rowCount-1%>" value="<%=billingunit%>" size="5" maxlength="5"></font></td>
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden"
+			name="xml_billing_unit<%=rowCount%>" value="<%=billingunit%>"><input
+			type="text" style="font-size: 80%;" name="billingunit<%=rowCount-1%>"
+			value="<%=billingunit%>" size="5" maxlength="5"></font></td>
 
-      <td width="13%">
+		<td width="13%">
 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"><input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"></font></div>
+		<div align="right"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden"
+			name="xml_billing_amount<%=rowCount%>"
+			value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"><input
+			type="text" style="font-size: 80%;" size="5" maxlength="5"
+			name="billingamount<%=rowCount-1%>"
+			value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"></font></div>
 
-      </td>
+		</td>
 
-    </tr>
+	</tr>
 
-<%
+	<%
 
 }
 
 %>
 
-<% if (rowCount < 5) { %>
+	<% if (rowCount < 5) { %>
 
-<% for (int i=rowCount; i<5; i++){ %>
+	<% for (int i=rowCount; i<5; i++){ %>
 
- <tr>
+	<tr>
 
-      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="servicecode<%=i%>" value=""></font></td>
+		<td width="25%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="text" style="font-size: 80%;"
+			name="servicecode<%=i%>" value=""></font></td>
 
 
 
-      <td width="50%"><font face="Arial, Helvetica, sans-serif" size="2">&nbsp;</font></td>
+		<td width="50%"><font face="Arial, Helvetica, sans-serif"
+			size="2">&nbsp;</font></td>
 
-        <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingunit<%=i%>" value="" size="5" maxlength="5"></font></td>
+		<td width="12%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="text" style="font-size: 80%;"
+			name="billingunit<%=i%>" value="" size="5" maxlength="5"></font></td>
 
-      <td width="13%">
+		<td width="13%">
 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingamount<%=i%>" value="" size="5" maxlength="5"></font></div>
+		<div align="right"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="text" style="font-size: 80%;"
+			name="billingamount<%=i%>" value="" size="5" maxlength="5"></font></div>
 
-      </td>
+		</td>
 
-    </tr>
+	</tr>
 
-<% }
+	<% }
 
 } %>
 
@@ -655,7 +704,7 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
 
 
-    <%
+	<%
 
 
 
@@ -681,38 +730,39 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 
 
 
-  <tr bgcolor="#CCCCFF">
+	<tr bgcolor="#CCCCFF">
 
-    <td colspan="4"><font face="Arial, Helvetica, sans-serif" size="2"><b>Diagnostic
-
-      Code</b></font></td>
-
-
-
-    </tr>
-
-    <tr>
-
-      <td colspan="4"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_diagnostic_code" value="<%=diagCode%>"><input type="text" style="font-size:80%;" name="xml_diagnostic_detail" value="<%=diagCode%>"size="50"><input type="hidden" name="xml_dig_search1" ><a href="javascript:ScriptAttach()">DX Search</a></font></td>
+		<td colspan="4"><font face="Arial, Helvetica, sans-serif"
+			size="2"><b>Diagnostic Code</b></font></td>
 
 
 
-    </tr>
+	</tr>
 
-       <tr>
+	<tr>
 
-          <td colspan="4"><font face="Arial, Helvetica, sans-serif" size="2"><input type="submit" name="submit" value="Submit"></font></td>
-
-       </tr>
-
-  </table>
-
-  <form>
-
-
+		<td colspan="4"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="hidden" name="xml_diagnostic_code"
+			value="<%=diagCode%>"><input type="text"
+			style="font-size: 80%;" name="xml_diagnostic_detail"
+			value="<%=diagCode%>" size="50"><input type="hidden"
+			name="xml_dig_search1"><a href="javascript:ScriptAttach()">DX
+		Search</a></font></td>
 
 
 
+	</tr>
+
+	<tr>
+
+		<td colspan="4"><font face="Arial, Helvetica, sans-serif"
+			size="2"><input type="submit" name="submit" value="Submit"></font></td>
+
+	</tr>
+
+</table>
+
+<form>
 </body>
 
 </html>

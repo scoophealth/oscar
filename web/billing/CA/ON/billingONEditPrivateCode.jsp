@@ -21,7 +21,8 @@
 			}
 
 			%>
-<%@ page errorPage="../appointment/errorpage.jsp" import="java.util.*,java.sql.*"%>
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*,java.sql.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%//
@@ -140,15 +141,18 @@
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <link rel="StyleSheet" type="text/css" href="../web.css" />
 <!-- calendar stylesheet -->
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
 <!-- main calendar program -->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
-<script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
+<script type="text/javascript"
+	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>">
               </script>
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-<script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
 <script language="JavaScript">
 
       <!--
@@ -245,7 +249,8 @@
 
       </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" >
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <center>
 <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr class="myDarkGreen">
@@ -254,10 +259,13 @@
 </table>
 </center>
 
-<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" class="myYellow">
-	<form method="post" name="baseur0" action="billingONEditPrivateCode.jsp">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"
+	class="myYellow">
+	<form method="post" name="baseur0"
+		action="billingONEditPrivateCode.jsp">
 	<tr>
-		<td align="right" width="70%"><select name="service_code" id="service_code">
+		<td align="right" width="70%"><select name="service_code"
+			id="service_code">
 			<option selected="selected" value="">- choose one -</option>
 			<%//
 				List sL = dbObj.getPrivateBillingCodeDesc();
@@ -271,7 +279,8 @@
 
 				%>
 		</select></td>
-		<td><input type="hidden" name="submit" value="Search"> <input type="submit" name="action" value=" Edit "></td>
+		<td><input type="hidden" name="submit" value="Search"> <input
+			type="submit" name="action" value=" Edit "></td>
 	</tr>
 	</form>
 </table>
@@ -280,24 +289,32 @@
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
 	<tr class="myGreen">
 		<td align="right"><b><font color="red">Private</font> Code</b></td>
-		<td>_<input type="text" name="service_code" value="<%=prop.getProperty("service_code", "?").substring(1)%>" size='8' maxlength='10'
-			onblur="upCaseCtrl(this)" /> (e.g. O001A) <input type="submit" name="submit" value="Search"
+		<td>_<input type="text" name="service_code"
+			value="<%=prop.getProperty("service_code", "?").substring(1)%>"
+			size='8' maxlength='10' onblur="upCaseCtrl(this)" /> (e.g. O001A) <input
+			type="submit" name="submit" value="Search"
 			onclick="javascript:return onSearch();"></td>
 	</tr>
 	<tr>
 		<td align="right"><b>Description</b></td>
-		<td><input type="text" name="description" value="<%=prop.getProperty("description", "")%>" size='50' maxlength='50'>
-		(50 letters)</td>
+		<td><input type="text" name="description"
+			value="<%=prop.getProperty("description", "")%>" size='50'
+			maxlength='50'> (50 letters)</td>
 	</tr>
 	<tr class="myGreen">
 		<td align="right"><b>Fee</b></td>
-		<td><input type="text" name="value" value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>Add GST<input type="checkbox" name="gstCheck" id="gstCheck" onclick="setFlag()"/> (format: xx.xx,
-		e.g. 18.20)</td><input type="hidden" value="" id="gstFlag" name="gstFlag"/>
+		<td><input type="text" name="value"
+			value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>Add
+		GST<input type="checkbox" name="gstCheck" id="gstCheck"
+			onclick="setFlag()" /> (format: xx.xx, e.g. 18.20)</td>
+		<input type="hidden" value="" id="gstFlag" name="gstFlag" />
 	</tr>
 	<tr>
 		<td align="right"><b>Issued Date</b></td>
-		<td><input type="text" name="billingservice_date" id="billingservice_date"
-			value="<%=prop.getProperty("billingservice_date", "")%>" size='10' maxlength='10' readonly> (effective date) <img
+		<td><input type="text" name="billingservice_date"
+			id="billingservice_date"
+			value="<%=prop.getProperty("billingservice_date", "")%>" size='10'
+			maxlength='10' readonly> (effective date) <img
 			src="../../../images/cal.gif" id="billingservice_date_cal"></td>
 	</tr>
 	<tr class="myGreen">
@@ -307,10 +324,13 @@
 	<tr>
 		<td><input type="submit" name="submit" value="Delete"
 			onclick="javascript:return onDelete();"></td>
-		<td align="center" ><input type="hidden" name="action" value='<%=action%>'> <input
-			type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
-			onclick="javascript:return onSave();"> <input type="button" name="Cancel"
-			value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()"></td>
+		<td align="center"><input type="hidden" name="action"
+			value='<%=action%>'> <input type="submit" name="submit"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
+			onclick="javascript:return onSave();"> <input type="button"
+			name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()"></td>
 	</tr>
 </table>
 </form>

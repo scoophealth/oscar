@@ -12,51 +12,55 @@
 	
 	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
 -->
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@ include file="/taglibs.jsp"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html:html locale="true">
-	<head>
-		<html:base />
-		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Bed Check Report</title>
-		<style type="text/css">
-			@import "<html:rewrite page="/css/displaytag.css" />";
-		</style>
-	</head>
-	<body>
-		<table width="100%">
-			<tr>
-				<td width="50%">
-					<input type="button" value="Print" onclick="window.print()">
-				</td>
-				<td width="50%" align="right">
-					<input type="button" value="Close" onclick="self.close()" />
-				</td>
-			</tr>
-		</table>
-		<br />
-		<display:table class="simple" name="reservedBeds" uid="reservedBed">
-			<display:column property="roomName" title="Room" style="text-align: center" />
-			<display:column property="name" title="Bed" style="text-align: center" />
-			<display:column property="demographicName" title="Client" style="text-align: center" />
-			<display:column property="familyId" title="Family Id" />
-			<display:column property="statusName" title="Status" style="text-align: center" />
-			<display:column title="Late Pass" style="text-align: center">
-				<c:choose>
-					<c:when test="${reservedBed.latePass}">
-						<input type="checkbox" checked="checked" />
-					</c:when>
-					<c:otherwise>
-						<input type="checkbox" />
-					</c:otherwise>
-				</c:choose>
-			</display:column>
-			<display:column property="reservationStart" title="Since" format="{0, date, yyyy-MM-dd}" style="text-align: center" />
-			<display:column property="reservationEnd" title="Until" format="{0, date, yyyy-MM-dd}" style="text-align: center" />
-			<display:column title="Not Present" style="text-align: center"><input type="checkbox" /></display:column>
-			<display:column title="Notes" style="width: 30%;text-align: center" />
-		</display:table>
+<head>
+<html:base />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Bed Check Report</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+<body>
+<table width="100%">
+	<tr>
+		<td width="50%"><input type="button" value="Print"
+			onclick="window.print()"></td>
+		<td width="50%" align="right"><input type="button" value="Close"
+			onclick="self.close()" /></td>
+	</tr>
+</table>
+<br />
+<display:table class="simple" name="reservedBeds" uid="reservedBed">
+	<display:column property="roomName" title="Room"
+		style="text-align: center" />
+	<display:column property="name" title="Bed" style="text-align: center" />
+	<display:column property="demographicName" title="Client"
+		style="text-align: center" />
+	<display:column property="familyId" title="Family Id" />
+	<display:column property="statusName" title="Status"
+		style="text-align: center" />
+	<display:column title="Late Pass" style="text-align: center">
+		<c:choose>
+			<c:when test="${reservedBed.latePass}">
+				<input type="checkbox" checked="checked" />
+			</c:when>
+			<c:otherwise>
+				<input type="checkbox" />
+			</c:otherwise>
+		</c:choose>
+	</display:column>
+	<display:column property="reservationStart" title="Since"
+		format="{0, date, yyyy-MM-dd}" style="text-align: center" />
+	<display:column property="reservationEnd" title="Until"
+		format="{0, date, yyyy-MM-dd}" style="text-align: center" />
+	<display:column title="Not Present" style="text-align: center">
+		<input type="checkbox" />
+	</display:column>
+	<display:column title="Notes" style="width: 30%;text-align: center" />
+</display:table>
 </body>
 </html:html>

@@ -1,3 +1,4 @@
+
 <%
 	if(session.getAttribute("user") == null || !session.getAttribute("userprofession").equals("doctor")){
     	response.sendRedirect("../../../logout.jsp");
@@ -33,16 +34,16 @@ function PopupLab(pid)
 </head>
 <body>
 <table width="100%" class="DarkBG">
-  <tr> 
-    <td height="40" width="25"></td>
-    <td width="90%" align="left"> 
-      <font color="#4D4D4D"><b><font size="4">oscar<font size="3">PathNET - View Lab Reports</font></font></b></font> 
-    </td>
-  </tr>
+	<tr>
+		<td height="40" width="25"></td>
+		<td width="90%" align="left"><font color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">PathNET - View Lab Reports</font></font></b></font>
+		</td>
+	</tr>
 </table>
 <form action="viewreports.jsp" method="post">
 <table width="100%">
-<%
+	<%
 	oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
 	java.sql.ResultSet rs = db.GetSQL(select_lab_reports.replaceAll("@demo_no", demo_no));
 	if(rs.isBeforeFirst()){

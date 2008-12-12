@@ -31,10 +31,10 @@
   String   curUser_no = (String)session.getAttribute("user");
   String[] ROLE       = new String[]{"doctor", "resident", "nurse", "social worker", "other"};
 %>
-  <%@ page errorPage="../errorpage.jsp" %>
-  <%@ page import="java.util.*" %>
-  <%@ page import="java.sql.*" %>
-  <%@ page import="oscar.oscarBilling.data.BillingONDataHelp" %>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="oscar.oscarBilling.data.BillingONDataHelp"%>
 <%
   DBPreparedHandler dbObj = new DBPreparedHandler();
 
@@ -75,14 +75,12 @@
     }
   }
 %>
-  <%@page import="oscar.oscarDB.DBPreparedHandler"%>
+<%@page import="oscar.oscarDB.DBPreparedHandler"%>
 <html>
-    <head>
-      <title>
-        PROVIDER
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <script language="JavaScript">
+<head>
+<title>PROVIDER</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<script language="JavaScript">
 
                 <!--
 function setfocus() {
@@ -96,22 +94,17 @@ function submit(form) {
 //-->
 
       </script>
-    </head>
-    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-              PROVIDER LIST
-            </font>
-          </th>
-          <td nowrap>
-            <font size="-1" color="#FFFFFF">
-              FP-doctor; MFP-resident; NP-nurse; SW-social worker; OT-other
-            </font>
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> PROVIDER LIST </font></th>
+		<td nowrap><font size="-1" color="#FFFFFF"> FP-doctor;
+		MFP-resident; NP-nurse; SW-social worker; OT-other </font></td>
+	</tr>
+</table>
 <%
       String     color       = "#ccCCFF";
       Properties prop        = new Properties();
@@ -151,27 +144,20 @@ function submit(form) {
         vec.add(prop);
       }
 %>
-      <form name="myform" action="reportonbilledvisitprovider.jsp" method="POST">
-        <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="mediumaquamarine">
-            <th colspan="7" align="left">
-              New Provider-Role List
-            </th>
-            <td align="right">
-              <input type="submit" name="submit" value="Add Role(s)">
-            </td>
-          </tr>
-          <tr bgcolor="silver">
-            <th width="30%" nowrap>
-              ID
-            </th>
-            <th width="30%" nowrap>
-              <b>First Name</b>
-            </th>
-            <th width="30%" nowrap>
-              <b>Last Name</b>
-            </th>
-            <!--th width="10%" nowrap>
+<form name="myform" action="reportonbilledvisitprovider.jsp"
+	method="POST">
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="mediumaquamarine">
+		<th colspan="7" align="left">New Provider-Role List</th>
+		<td align="right"><input type="submit" name="submit"
+			value="Add Role(s)"></td>
+	</tr>
+	<tr bgcolor="silver">
+		<th width="30%" nowrap>ID</th>
+		<th width="30%" nowrap><b>First Name</b></th>
+		<th width="30%" nowrap><b>Last Name</b></th>
+		<!--th width="10%" nowrap>
             <b>provider type</b>
           </th>
           <th width="10%" nowrap>
@@ -180,31 +166,17 @@ function submit(form) {
           <th width="10%" nowrap>
             <b>ohip_no</b>
           </th-->
-            <th width="5%" nowrap>
-              FP
-              <br>
-              doctor
-            </th>
-            <th width="5%" nowrap>
-              RFP
-              <br>
-              resident
-            </th>
-            <th width="5%" nowrap>
-              NP
-              <br>
-              nurse
-            </th>
-            <th width="5%" nowrap>
-              SW
-              <br>
-              social worker
-            </th>
-            <th width="5%" nowrap>
-              OT
-            </th>
-          </tr>
-<%
+		<th width="5%" nowrap>FP <br>
+		doctor</th>
+		<th width="5%" nowrap>RFP <br>
+		resident</th>
+		<th width="5%" nowrap>NP <br>
+		nurse</th>
+		<th width="5%" nowrap>SW <br>
+		social worker</th>
+		<th width="5%" nowrap>OT</th>
+	</tr>
+	<%
           for (int i = 0; i < vec.size(); i++) {
             boolean bDoc         = false;
             boolean bRes         = false;
@@ -223,17 +195,14 @@ function submit(form) {
               bOt = true;
             }
 %>
-            <tr bgcolor="<%=i%2==0?"white":color%>">
-              <td>
-                <%= ((Properties)vec.get(i)).getProperty("provider_no", "") %>
-              </td>
-              <td>
-                <%= ((Properties)vec.get(i)).getProperty("first_name", "") %>
-              </td>
-              <td>
-                <%= ((Properties)vec.get(i)).getProperty("last_name", "") %>
-              </td>
-              <!--td>
+	<tr bgcolor="<%=i%2==0?"white":color%>">
+		<td><%= ((Properties)vec.get(i)).getProperty("provider_no", "") %>
+		</td>
+		<td><%= ((Properties)vec.get(i)).getProperty("first_name", "") %>
+		</td>
+		<td><%= ((Properties)vec.get(i)).getProperty("last_name", "") %>
+		</td>
+		<!--td>
               <%= ((Properties)vec.get(i)).getProperty("provider_type", "") %>
             </td>
             <td>
@@ -242,98 +211,85 @@ function submit(form) {
             <td>
               <%= ((Properties)vec.get(i)).getProperty("ohip_no", "") %>
             </td-->
-              <td align="center" <%=bDoc?"bgcolor=\"silver\"":""%> title="Doctor">
-                <input type="radio" name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>" value="<%=ROLE[0]%>" <%=bDoc?"checked":""%>>
-              </td>
-              <td align="center" <%=bRes?"bgcolor=\"silver\"":""%> title="Resident">
-                <input type="radio" name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>" value="<%=ROLE[1]%>" <%=bRes?"checked":""%>>
-              </td>
-              <td align="center" <%=bNp?"bgcolor=\"silver\"":""%> title="Nurse">
-                <input type="radio" name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>" value="<%=ROLE[2]%>" <%=bNp?"checked":""%>>
-              </td>
-              <td align="center" <%=bSw?"bgcolor=\"silver\"":""%> title="Social Worker">
-                <input type="radio" name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>" value="<%=ROLE[3]%>" <%=bSw?"checked":""%>>
-              </td>
-              <td align="center" <%=bOt?"bgcolor=\"silver\"":""%> title="Other">
-                <input type="radio" name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>" value="<%=ROLE[4]%>" <%=bOt?"checked":""%>>
-              </td>
-            </tr>
-<%
+		<td align="center" <%=bDoc?"bgcolor=\"silver\"":""%> title="Doctor">
+		<input type="radio"
+			name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>"
+			value="<%=ROLE[0]%>" <%=bDoc?"checked":""%>></td>
+		<td align="center" <%=bRes?"bgcolor=\"silver\"":""%> title="Resident">
+		<input type="radio"
+			name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>"
+			value="<%=ROLE[1]%>" <%=bRes?"checked":""%>></td>
+		<td align="center" <%=bNp?"bgcolor=\"silver\"":""%> title="Nurse">
+		<input type="radio"
+			name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>"
+			value="<%=ROLE[2]%>" <%=bNp?"checked":""%>></td>
+		<td align="center" <%=bSw?"bgcolor=\"silver\"":""%>
+			title="Social Worker"><input type="radio"
+			name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>"
+			value="<%=ROLE[3]%>" <%=bSw?"checked":""%>></td>
+		<td align="center" <%=bOt?"bgcolor=\"silver\"":""%> title="Other">
+		<input type="radio"
+			name="type<%=((Properties)vec.get(i)).getProperty("provider_no", "")%>"
+			value="<%=ROLE[4]%>" <%=bOt?"checked":""%>></td>
+	</tr>
+	<%
           }
           if (vec.size() > 0) {
 %>
-            <tr bgcolor="A9A9A9">
-              <td colspan="8" align="right">
-                <input type="submit" name="submit" value="Add Role(s)">
-              </td>
-            </tr>
-<%
+	<tr bgcolor="A9A9A9">
+		<td colspan="8" align="right"><input type="submit" name="submit"
+			value="Add Role(s)"></td>
+	</tr>
+	<%
           }
 %>
-        </table>
-      </form>
-      <hr>
-      <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-        <tr bgcolor="mediumaquamarine">
-          <th colspan="5" align="left">
-            Confirmed Provider-Role List
-          </th>
-        </tr>
-        <tr bgcolor="silver">
-          <th width="10%" nowrap>
-            ID
-          </th>
-          <th width="30%" nowrap>
-            <b>First Name</b>
-          </th>
-          <th width="30%" nowrap>
-            <b>Last Name</b>
-          </th>
-          <th nowrap>
-            Role
-          </th>
-          <th nowrap>
-            Action
-          </th>
-<%
+</table>
+</form>
+<hr>
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="mediumaquamarine">
+		<th colspan="5" align="left">Confirmed Provider-Role List</th>
+	</tr>
+	<tr bgcolor="silver">
+		<th width="10%" nowrap>ID</th>
+		<th width="30%" nowrap><b>First Name</b></th>
+		<th width="30%" nowrap><b>Last Name</b></th>
+		<th nowrap>Role</th>
+		<th nowrap>Action</th>
+		<%
           int k = 0;
 
           for (int i = 0; i < oldRoleList.size(); i += 4) {
             k++;
 %>
-            <tr bgcolor="<%=k%2==0?"white":color%>">
-              <form name="mySecform<%=i%>" action="reportonbilledvisitprovider.jsp" method="POST">
-                <td>
-                  <%= oldRoleList.get(i+3) %>
-                </td>
-                <td>
-                  <%= oldRoleList.get(i) %>
-                </td>
-                <td>
-                  <%= oldRoleList.get(i + 1) %>
-                </td>
-                <td align="center">
-                  <select name="<%="name" + oldRoleList.get(i + 3)%>">
-<%
+	
+	<tr bgcolor="<%=k%2==0?"white":color%>">
+		<form name="mySecform<%=i%>" action="reportonbilledvisitprovider.jsp"
+			method="POST">
+		<td><%= oldRoleList.get(i+3) %></td>
+		<td><%= oldRoleList.get(i) %></td>
+		<td><%= oldRoleList.get(i + 1) %></td>
+		<td align="center"><select
+			name="<%="name" + oldRoleList.get(i + 3)%>">
+			<%
                     for (int j = 0; j < ROLE.length; j++) {
 %>
-                      <option value="<%=ROLE[j]%>" <%= ROLE[j].equals(oldRoleList.get(i + 2))?"selected":"" %>>
-                      <%= ROLE[j] %>
-                      </option>
-<%
+			<option value="<%=ROLE[j]%>"
+				<%= ROLE[j].equals(oldRoleList.get(i + 2))?"selected":"" %>>
+			<%= ROLE[j] %></option>
+			<%
                     }
 %>
-                  </select>
-                </td>
-                <td align="center">
-                  <input type="hidden" name="providerId" value="<%= oldRoleList.get(i + 3) %>">
-                  <input type="submit" name="buttonUpdate" value="Update">
-                </td>
-              </form>
-            </tr>
-<%
+		</select></td>
+		<td align="center"><input type="hidden" name="providerId"
+			value="<%= oldRoleList.get(i + 3) %>"> <input type="submit"
+			name="buttonUpdate" value="Update"></td>
+		</form>
+	</tr>
+	<%
           }
 %>
-        </table>
-      </body>
-    </html>
+</table>
+</body>
+</html>

@@ -26,19 +26,20 @@
 
 <html>
 <body>
-<h4>
-<font color="red">Your password will be expired soon, </font>please contact your administrator to change your password.
-If you are the administrator, then you can follow the following steps to change the password:
-</h4>
+<h4><font color="red">Your password will be expired soon, </font>please
+contact your administrator to change your password. If you are the
+administrator, then you can follow the following steps to change the
+password:</h4>
 <ol>
-<li>Click 'Admin' tab on the top of this page.</li>
-<li>Click 'Search/Edit/Delete Security Records'.</li>
-<li>Choose 'User Name' or 'Provider No.' by clicking the circle before them, input the value, then click 'Search'.</li>
-<li>Click the user name.</li>
-<li>Change your password if you want. </li>
-<li>Change the 'Expiry Date' by clicking the rectangle icon.</li>
-<li>Click the button 'Update Record'.</li>
-<li>You are done!</li>
+	<li>Click 'Admin' tab on the top of this page.</li>
+	<li>Click 'Search/Edit/Delete Security Records'.</li>
+	<li>Choose 'User Name' or 'Provider No.' by clicking the circle
+	before them, input the value, then click 'Search'.</li>
+	<li>Click the user name.</li>
+	<li>Change your password if you want.</li>
+	<li>Change the 'Expiry Date' by clicking the rectangle icon.</li>
+	<li>Click the button 'Update Record'.</li>
+	<li>You are done!</li>
 </ol>
 
 </body>

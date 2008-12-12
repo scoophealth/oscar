@@ -24,15 +24,17 @@
  */
 -->
 
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> ADD/DELETE A TEMPLATE</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<title>ADD/DELETE A TEMPLATE</title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
@@ -45,55 +47,59 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD/DELETE A TEMPLATE</font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD/DELETE
+		A TEMPLATE</font></th>
+	</tr>
 </table>
 
 <table width="100%" border="1" bgcolor="ivory">
-<form name="template" method="post" action="providercontrol.jsp">
-<tr>
-      <td valign="top" width="20%" align="right"> Template Name:</td> 
-      <td>  <input type="text" name="templatename" value=""  style="width:100%" maxlength="20"></td>
-</tr><tr>
-      <td valign="top" width="20%" align="right"> Template Text: </td>
-      <td>
-        <textarea name="templatetext" style="width:100%" rows="8" ></textarea>
-      </td>
-</tr><tr>
-      <td colspan="2"> 
-        <div align="center">
-          <INPUT TYPE="hidden" NAME="dboperation" VALUE='add_template'>
-          <INPUT TYPE="hidden" NAME="displaymode" VALUE='savetemplate'>
-          <input type="submit" value=" Save " name="submit">
-          <input type="button" name="Button" value="Cancel" onClick="window.close()">
-        </div>
-      </td></tr>
-</form>
+	<form name="template" method="post" action="providercontrol.jsp">
+	<tr>
+		<td valign="top" width="20%" align="right">Template Name:</td>
+		<td><input type="text" name="templatename" value=""
+			style="width: 100%" maxlength="20"></td>
+	</tr>
+	<tr>
+		<td valign="top" width="20%" align="right">Template Text:</td>
+		<td><textarea name="templatetext" style="width: 100%" rows="8"></textarea>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="center"><INPUT TYPE="hidden" NAME="dboperation"
+			VALUE='add_template'> <INPUT TYPE="hidden" NAME="displaymode"
+			VALUE='savetemplate'> <input type="submit" value=" Save "
+			name="submit"> <input type="button" name="Button"
+			value="Cancel" onClick="window.close()"></div>
+		</td>
+	</tr>
+	</form>
 </table>
 
 
 <table width="100%" border="1" bgcolor="navy">
-<form name="deletetemplate" method="post" action="providercontrol.jsp">
-<tr><td align="center"><font color="white">Template Name: </font>
-        <select name="encountertemplate_name" >
-	<%
+	<form name="deletetemplate" method="post" action="providercontrol.jsp">
+	<tr>
+		<td align="center"><font color="white">Template Name: </font> <select
+			name="encountertemplate_name">
+			<%
    ResultSet rsdemo = null;
    rsdemo = apptMainBean.queryResults("search_templatename");
    while (rsdemo.next()) { 
 	%>
-        <option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
-  <%
+			<option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
+			<%
      }
 	%>
-      </select>
-          <input type="submit" value="Delete" name="submit">
-          <INPUT TYPE="hidden" NAME="displaymode" VALUE='savetemplate'>
-      </td></tr>
-</form>
+		</select> <input type="submit" value="Delete" name="submit"> <INPUT
+			TYPE="hidden" NAME="displaymode" VALUE='savetemplate'></td>
+	</tr>
+	</form>
 </table>
 
 

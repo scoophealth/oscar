@@ -24,20 +24,22 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>EditAppointment</title>
+<head>
+<title>EditAppointment</title>
 </head>
 <body>
-  
+
 
 <%   
         int demographic_no = 0;
@@ -108,7 +110,11 @@ if (request.getParameter("submitButton")!=null &&
 //if action is failed,
   } else {
 %>
-<br><br>Sorry, update <br>has failed. 
+<br>
+<br>
+Sorry, update
+<br>
+has failed.
 <%  
   }
 
@@ -120,7 +126,9 @@ if (request.getParameter("submitButton")!=null &&
 
 
 %>
-<br><br><a href="AppointmentForm.jsp?appointment_no=<%=appointment_no%>">Return</a>
+<br>
+<br>
+<a href="AppointmentForm.jsp?appointment_no=<%=appointment_no%>">Return</a>
 
 <%
 //******************************************
@@ -139,6 +147,6 @@ if (request.getParameter("submitButton")!=null &&
 }
 
 
-%> 
+%>
 </body>
 </html>

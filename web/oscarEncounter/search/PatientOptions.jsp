@@ -24,10 +24,10 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%
     response.setHeader("Cache-Control","no-cache");
     //The oscarEncounter session manager, if the session bean is not in the context it looks for a
@@ -47,10 +47,8 @@
 
 <html>
 <head>
-<title>
-Patient Options
-</title>
-<html:base/>
+<title>Patient Options</title>
+<html:base />
 </head>
 <script language="javascript">
 function BackToOscar()
@@ -75,97 +73,93 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
-    <tr>
-        <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
-        <p class="HelpAboutLogout"><span class="FakeLink"><a href="Help.htm">Help</a></span> |
-        <span class="FakeLink"><a href="About.htm">About</a></span> | <span class="FakeLink">
-        <a href="Disclaimer.htm">Disclaimer</a></span></p>
-        </td>
-    </tr>
-    <tr>
-        <td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
-        <td width="100%" bgcolor="#000000" style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
-        <p class="ScreenTitle"><bean:message key="patientOptions.title"/></p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+<html:errors />
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<tr>
+		<td width="100%"
+			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
+			height="0%" colspan="2">
+		<p class="HelpAboutLogout"><span class="FakeLink"><a
+			href="Help.htm">Help</a></span> | <span class="FakeLink"><a
+			href="About.htm">About</a></span> | <span class="FakeLink"> <a
+			href="Disclaimer.htm">Disclaimer</a></span></p>
+		</td>
+	</tr>
+	<tr>
+		<td width="10%" height="37" bgcolor="#000000">&nbsp;</td>
+		<td width="100%" bgcolor="#000000"
+			style="border-left: 2px solid #A9A9A9; padding-left: 5" height="0%">
+		<p class="ScreenTitle"><bean:message key="patientOptions.title" /></p>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
+			valign="top">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-            <!----Start new rows here-->
-                <tr>
-                    <td>
- 		                <div class="DivContentTitle"><bean:message key="patientOptions.title"/></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="javascript:popupOscarRx(768,1024,'/oscarEncounter/PatientOption.do?avant=CR&demoNo=<%=demoNo%>')">
-                        Create a Consultation Request form for a patient
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-
-                        <a href="javascript:popupOscarRx(768,1024,'/oscarEncounter/PatientOption.do?avant=VA&demoNo=<%=demoNo%>')">
-                        View All Consultations for this patient in a new window
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="/oscarEncounter/PatientOption.do?avant=VA&demoNo=<%=demoNo%>">
-                        View All Consultations for this patient in this window
-                        </a>
-                    </td>
-                </tr>
-
-
-
-                <tr>
-                    <td>
-                        <a href="/oscarEncounter/IncomingEncounter.do?avant=VA&demoNo=<%=demoNo%>">
-                            View Chart
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a>
-                        View Imunization records for this patient
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
+			<!----Start new rows here-->
+			<tr>
+				<td>
+				<div class="DivContentTitle"><bean:message
+					key="patientOptions.title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td><a
+					href="javascript:popupOscarRx(768,1024,'/oscarEncounter/PatientOption.do?avant=CR&demoNo=<%=demoNo%>')">
+				Create a Consultation Request form for a patient </a></td>
+			</tr>
+			<tr>
+				<td><a
+					href="javascript:popupOscarRx(768,1024,'/oscarEncounter/PatientOption.do?avant=VA&demoNo=<%=demoNo%>')">
+				View All Consultations for this patient in a new window </a></td>
+			</tr>
+			<tr>
+				<td><a
+					href="/oscarEncounter/PatientOption.do?avant=VA&demoNo=<%=demoNo%>">
+				View All Consultations for this patient in this window </a></td>
+			</tr>
 
 
-                    </td>
-                </tr>
-            <!----End new rows here-->
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+			<tr>
+				<td><a
+					href="/oscarEncounter/IncomingEncounter.do?avant=VA&demoNo=<%=demoNo%>">
+				View Chart </a></td>
+			</tr>
+			<tr>
+				<td><a> View Imunization records for this patient </a></td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<!----End new rows here-->
+
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 
 	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
-  	</tr>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%"
+			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			colspan="2"></td>
+	</tr>
 </table>
 </body>
 </html:html>

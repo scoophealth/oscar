@@ -21,7 +21,8 @@
  * Ontario, Canada 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*"%>
 <%
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
 if ( bean == null ){
@@ -41,15 +42,16 @@ if ( bean == null ){
             +"\nAffecting ATC: "+ht.get("atc")
             +"\nAffected ATC: "+ht.get("atc2")
             +"\nComment: "+ht.get("body"));%>
-            
-            <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <%=ht.get("name")%>	<%=effect(""+ht.get("effect"))%> <%=ht.get("drug2")%> &nbsp;(<%=evidence(""+ht.get("evidence"))%>)<br/>
-            <%=ht.get("body")%>
-            </div>
 
-      <%}
+<div
+	style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
+<%=ht.get("name")%> <%=effect(""+ht.get("effect"))%> <%=ht.get("drug2")%>
+&nbsp;(<%=evidence(""+ht.get("evidence"))%>)<br />
+<%=ht.get("body")%></div>
+
+<%}
     }else if(interactions == null){ %>
-        <div>MyDrug to MyDrug Interaction Service not available</div>                          
+<div>MyDrug to MyDrug Interaction Service not available</div>
 <%  }   %>
 <%!
 

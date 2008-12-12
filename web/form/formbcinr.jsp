@@ -18,11 +18,13 @@
 -->
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*, oscar.form.data.*, java.util.*, oscar.util.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="oscar.form.*, oscar.form.data.*, java.util.*, oscar.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String formClass = "BCINR";
@@ -61,21 +63,23 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>INR</title>
-    <link rel="stylesheet" type="text/css" href="bcArStyle.css" >
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<title>INR</title>
+<link rel="stylesheet" type="text/css" href="bcArStyle.css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-    <html:base/>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<html:base />
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -382,7 +386,8 @@ function calToday(field) {
 }    
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"
+	onLoad="setfocus()">
 <!--
 @oscar.formDB Table="formBCINR" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -392,146 +397,180 @@ function calToday(field) {
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
-<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
+	<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
+	<input type="hidden" name="submit" value="exit" />
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();return false()"/>
-        </td>
-    </tr>
-</table>
-
-<table width="100%" border="0"  cellspacing="0" cellpadding="0">
-<tr><td width="50%" valign="top">
-
-  <table width="100%" border="0"  cellspacing="0" cellpadding="0">
-  <tr>
-    <th><font size="+2">INR RECORD</font></th>
-  </tr>
-  </table>
-  
-  <table width="100%" border="1"  cellspacing="0" cellpadding="1">
-  <tr>
-    <td>Given Name:
-      <input type="text" name="c_givenName" size="12" maxlength="30" value="<%= props.getProperty("c_givenName", "") %>" @oscar.formDB />
-		Surname:
-      <input type="text" name="c_surname" size="12" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" @oscar.formDB />
-      <br />
-      Phone #1:
-      <input type="text" name="c_phone1" size="20" maxlength="30" value="<%= props.getProperty("c_phone1", "") %>" @oscar.formDB />
-      <br />
-      Phone #2:
-      <input type="text" name="c_phone2" size="20" maxlength="30" value="<%= props.getProperty("c_phone2", "") %>" @oscar.formDB />
-      <br />
-      Phone #3:
-      <input type="text" name="c_phone3" size="20" maxlength="30" value="<%= props.getProperty("c_phone3", "") %>" @oscar.formDB />
-      <br />
-      <b><font size="+1">Indication:</font></b>
-      <input type="text" name="indication" size="20" maxlength="30" value="<%= props.getProperty("indication", "") %>" @oscar.formDB />
-      <br />
-      Target INR Range:<br>
-      <input type="checkbox" name="targetINR1" <%= props.getProperty("targetINR1", "") %>  @oscar.formDB dbType="tinyint(1)"/> 2.0-3.0 &nbsp;&nbsp;
-      <input type="checkbox" name="targetINR2" <%= props.getProperty("targetINR2", "") %>  @oscar.formDB dbType="tinyint(1)"/> 2.5-3.5 &nbsp;&nbsp;
-      <input type="checkbox" name="targetINR3" <%= props.getProperty("targetINR3", "") %>  @oscar.formDB dbType="tinyint(1)"/> Other
-      <input type="text" name="targetINROther" size="6" maxlength="30" value="<%= props.getProperty("targetINROther", "") %>" @oscar.formDB />
-      <br />
-      Duration:
-      <input type="checkbox" name="duration1" <%= props.getProperty("duration1", "") %>  @oscar.formDB dbType="tinyint(1)"/> 3 mos &nbsp;&nbsp;
-      <input type="checkbox" name="duration2" <%= props.getProperty("duration2", "") %>  @oscar.formDB dbType="tinyint(1)"/> lifelong &nbsp;&nbsp;
-      <input type="checkbox" name="duration3" <%= props.getProperty("duration3", "") %>  @oscar.formDB dbType="tinyint(1)"/> Other
-      <input type="text" name="durationOther" size="10" maxlength="30" value="<%= props.getProperty("durationOther", "") %>" @oscar.formDB />
-      <br />
-      Date Started:
-      <input type="text" name="dateStart" id="dateStart" size="10" maxlength="10" value="<%= props.getProperty("dateStart", "") %>" @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="dateStart_cal">
-      <br />
-      Coumadin Strength on Hand:
-      <input type="text" name="coumadin" size="20" maxlength="20" value="<%= props.getProperty("coumadin", "") %>" @oscar.formDB />
-      <br />
-      Other Anticoagulant:
-      <input type="text" name="anticoagulant" size="20" maxlength="20" value="<%= props.getProperty("anticoagulant", "") %>" @oscar.formDB />
-
-      <br />
-	  Tablet Strengths:
-      <br />
-		1-pink &nbsp; 2-lavender &nbsp; 2.5-green &nbsp; 3-tan &nbsp; 4-blue &nbsp; <br />
-		5-peach &nbsp; 6-teal &nbsp; 7-yellow &nbsp; 10-white 
-		  
-	</td>
-  </tr>
-  </table>
-  
-  </td><td valign="top">
-  
-  
-	<table width="100%" border="1"  cellspacing="0" cellpadding="2">
-    <tr>
-	  <th valign="top" colspan="2">Dosage Adjustments for Warfarin Maintenance  Target  INR 2.0-3.0
-	  </th>
-	</tr>
-	<tr><th width="20%">INR</th><th>Dosage Adjustment</th></tr>
-	<tr><td>&nbsp; &lt; 1.5</td>
-	<td>Increase weekly dose by 20% and give one time top-up additional amount equal to 20% of weekly dose</td>
-	</tr>
-	<tr><td>&nbsp; 1.5 - 1.9</td>
-	<td>Increase weekly dose by 10%</td>
-	</tr>
-	<tr><td>&nbsp; 2.0 - 3.0</td>
-	<td>No change</td>
-	</tr>
-	</tr>
-	<tr><td>&nbsp; 3.1 - 3.9</td>
-	<td>No change - recheck in one week.<br />
-	If persistent, decrease weekly dose by 10-20%</td>
-	</tr>
-	</tr>
-	<tr><td>&nbsp; 4.0 - 5.0</td>
-	<td>Omit 1 dose; decrease weekly dose by 10-20% and recheck in 2-5 days</td>
-	</tr>
-	</tr>
-	<tr><td>&nbsp; &gt; 5.0</td>
-	<td>See <br />
-	<a href=# onclick='popupPage("http://www.healthservices.gov.bc.ca/msp/protoguides/gps/overanticoag.pdf"); return false;' >
-	http://www.healthservices.gov.bc.ca/msp/<br />protoguides/gps/overanticoag.pdf</a></td>
-	</tr>
-	<tr><td colspan="2">Note: * Changes in warfarin dosage may take several days to affect INR. Hence, frequent dosage adjustment is not recommended.
-	</td></tr>
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="button"
+				value="Print" onclick="javascript:window.print();return false()" />
+			</td>
+		</tr>
 	</table>
-	
-  </td>
-  </tr>
-</table>
 
-<center>
-<table width="80%" border="1"  cellspacing="0" cellpadding="1">
-  <tr>
-	<th>Date</th>
-	<th>INR</th>
-	<th>Was On</th>
-	<th>Change To</th>
-	<th>Repeat</th>
-	<th>Notified</th>
-	<th>Bill</th>
-  </tr>
-  
-  <%
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="50%" valign="top">
+
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<th><font size="+2">INR RECORD</font></th>
+				</tr>
+			</table>
+
+			<table width="100%" border="1" cellspacing="0" cellpadding="1">
+				<tr>
+					<td>Given Name: <input type="text" name="c_givenName"
+						size="12" maxlength="30"
+						value="<%= props.getProperty("c_givenName", "") %>" @oscar.formDB />
+					Surname: <input type="text" name="c_surname" size="12"
+						maxlength="30" value="<%= props.getProperty("c_surname", "") %>"
+						@oscar.formDB /> <br />
+					Phone #1: <input type="text" name="c_phone1" size="20"
+						maxlength="30" value="<%= props.getProperty("c_phone1", "") %>"
+						@oscar.formDB /> <br />
+					Phone #2: <input type="text" name="c_phone2" size="20"
+						maxlength="30" value="<%= props.getProperty("c_phone2", "") %>"
+						@oscar.formDB /> <br />
+					Phone #3: <input type="text" name="c_phone3" size="20"
+						maxlength="30" value="<%= props.getProperty("c_phone3", "") %>"
+						@oscar.formDB /> <br />
+					<b><font size="+1">Indication:</font></b> <input type="text"
+						name="indication" size="20" maxlength="30"
+						value="<%= props.getProperty("indication", "") %>" @oscar.formDB />
+					<br />
+					Target INR Range:<br>
+					<input type="checkbox" name="targetINR1"
+						<%= props.getProperty("targetINR1", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> 2.0-3.0 &nbsp;&nbsp; <input type="checkbox"
+						name="targetINR2"
+						<%= props.getProperty("targetINR2", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> 2.5-3.5 &nbsp;&nbsp; <input type="checkbox"
+						name="targetINR3"
+						<%= props.getProperty("targetINR3", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> Other <input type="text"
+						name="targetINROther" size="6" maxlength="30"
+						value="<%= props.getProperty("targetINROther", "") %>"
+						@oscar.formDB /> <br />
+					Duration: <input type="checkbox" name="duration1"
+						<%= props.getProperty("duration1", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> 3 mos &nbsp;&nbsp; <input type="checkbox"
+						name="duration2"
+						<%= props.getProperty("duration2", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> lifelong &nbsp;&nbsp; <input
+						type="checkbox" name="duration3"
+						<%= props.getProperty("duration3", "") %>  @oscar.formDB
+						dbType="tinyint(1)" /> Other <input type="text"
+						name="durationOther" size="10" maxlength="30"
+						value="<%= props.getProperty("durationOther", "") %>"
+						@oscar.formDB /> <br />
+					Date Started: <input type="text" name="dateStart" id="dateStart"
+						size="10" maxlength="10"
+						value="<%= props.getProperty("dateStart", "") %>" @oscar.formDB
+						dbType="date" /> <img src="../images/cal.gif" id="dateStart_cal">
+					<br />
+					Coumadin Strength on Hand: <input type="text" name="coumadin"
+						size="20" maxlength="20"
+						value="<%= props.getProperty("coumadin", "") %>" @oscar.formDB />
+					<br />
+					Other Anticoagulant: <input type="text" name="anticoagulant"
+						size="20" maxlength="20"
+						value="<%= props.getProperty("anticoagulant", "") %>"
+						@oscar.formDB /> <br />
+					Tablet Strengths: <br />
+					1-pink &nbsp; 2-lavender &nbsp; 2.5-green &nbsp; 3-tan &nbsp;
+					4-blue &nbsp; <br />
+					5-peach &nbsp; 6-teal &nbsp; 7-yellow &nbsp; 10-white</td>
+				</tr>
+			</table>
+
+			</td>
+			<td valign="top">
+
+
+			<table width="100%" border="1" cellspacing="0" cellpadding="2">
+				<tr>
+					<th valign="top" colspan="2">Dosage Adjustments for Warfarin
+					Maintenance Target INR 2.0-3.0</th>
+				</tr>
+				<tr>
+					<th width="20%">INR</th>
+					<th>Dosage Adjustment</th>
+				</tr>
+				<tr>
+					<td>&nbsp; &lt; 1.5</td>
+					<td>Increase weekly dose by 20% and give one time top-up
+					additional amount equal to 20% of weekly dose</td>
+				</tr>
+				<tr>
+					<td>&nbsp; 1.5 - 1.9</td>
+					<td>Increase weekly dose by 10%</td>
+				</tr>
+				<tr>
+					<td>&nbsp; 2.0 - 3.0</td>
+					<td>No change</td>
+				</tr>
+				</tr>
+				<tr>
+					<td>&nbsp; 3.1 - 3.9</td>
+					<td>No change - recheck in one week.<br />
+					If persistent, decrease weekly dose by 10-20%</td>
+				</tr>
+				</tr>
+				<tr>
+					<td>&nbsp; 4.0 - 5.0</td>
+					<td>Omit 1 dose; decrease weekly dose by 10-20% and recheck in
+					2-5 days</td>
+				</tr>
+				</tr>
+				<tr>
+					<td>&nbsp; &gt; 5.0</td>
+					<td>See <br />
+					<a href=#
+						onclick='popupPage("http://www.healthservices.gov.bc.ca/msp/protoguides/gps/overanticoag.pdf"); return false;'>
+					http://www.healthservices.gov.bc.ca/msp/<br />
+					protoguides/gps/overanticoag.pdf</a></td>
+				</tr>
+				<tr>
+					<td colspan="2">Note: * Changes in warfarin dosage may take
+					several days to affect INR. Hence, frequent dosage adjustment is
+					not recommended.</td>
+				</tr>
+			</table>
+
+			</td>
+		</tr>
+	</table>
+
+	<center>
+	<table width="80%" border="1" cellspacing="0" cellpadding="1">
+		<tr>
+			<th>Date</th>
+			<th>INR</th>
+			<th>Was On</th>
+			<th>Change To</th>
+			<th>Repeat</th>
+			<th>Notified</th>
+			<th>Bill</th>
+		</tr>
+
+		<%
   Vector vecR = (new FrmBCINRRecord()).getINRLabData(demoNo);
   // get rid of the old lab data
   for(int i = 0; i < vecR.size(); i=i+2) {
@@ -564,55 +603,62 @@ function calToday(field) {
 		  }
 	  }
   %>
-  <tr align="center" <%=bgcolor %>>
-	<td><input type="text" name="date<%=i %>" id="date<%=i %>" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("date"+i, "") %>" readonly @oscar.formDB  dbType="date"/>
-		<img src="../images/cal.gif" id="date<%=i %>_cal">
-	</td>
-	<td>
-	<input type="text" name="inr<%=i %>" style="width:100%" size="6" maxlength="6" value="<%= props.getProperty("inr"+i, "") %>" @oscar.formDB />
-	</td>
-	<td>
-	<input type="text" name="wason<%=i %>" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("wason"+i, "") %>" @oscar.formDB />
-	</td>
-	<td>
-	<input type="text" name="changeto<%=i %>" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("changeto"+i, "") %>" @oscar.formDB />
-	</td>
-	<td>
-      <input type="text" name="repeat<%=i %>" id="repeat<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("repeat"+i, "") %>"  @oscar.formDB dbType="date"/>
-		<img src="../images/cal.gif" id="repeat<%=i %>_cal">
-	</td>
-	<td>
-	<input type="checkbox" name="notified<%=i %>" <%= props.getProperty("notified"+i, "") %>  @oscar.formDB dbType="tinyint(1)"/>
-	</td>
-	<td>
-	<input type="text" name="bill<%=i %>" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("bill"+i, "") %>" @oscar.formDB />
-	</td>
-  </tr>
-  <% } %>
-  
-</table>
-</center>
+		<tr align="center" <%=bgcolor %>>
+			<td><input type="text" name="date<%=i %>" id="date<%=i %>"
+				class="spe" onDblClick="calToday(this)" size="10" maxlength="10"
+				value="<%= props.getProperty("date"+i, "") %>"
+				readonly @oscar.formDB dbType="date" /> <img src="../images/cal.gif"
+				id="date<%=i %>_cal"></td>
+			<td><input type="text" name="inr<%=i %>" style="width: 100%"
+				size="6" maxlength="6" value="<%= props.getProperty("inr"+i, "") %>"
+				@oscar.formDB /></td>
+			<td><input type="text" name="wason<%=i %>" style="width: 100%"
+				size="10" maxlength="20"
+				value="<%= props.getProperty("wason"+i, "") %>" @oscar.formDB /></td>
+			<td><input type="text" name="changeto<%=i %>"
+				style="width: 100%" size="10" maxlength="20"
+				value="<%= props.getProperty("changeto"+i, "") %>" @oscar.formDB />
+			</td>
+			<td><input type="text" name="repeat<%=i %>" id="repeat<%=i %>"
+				size="10" maxlength="10"
+				value="<%= props.getProperty("repeat"+i, "") %>" @oscar.formDB
+				dbType="date" /> <img src="../images/cal.gif" id="repeat<%=i %>_cal">
+			</td>
+			<td><input type="checkbox" name="notified<%=i %>"
+				<%= props.getProperty("notified"+i, "") %>  @oscar.formDB
+				dbType="tinyint(1)" /></td>
+			<td><input type="text" name="bill<%=i %>" style="width: 100%"
+				size="10" maxlength="20"
+				value="<%= props.getProperty("bill"+i, "") %>" @oscar.formDB /></td>
+		</tr>
+		<% } %>
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	</table>
+	</center>
+
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <!-- input type="submit" value="Print" onclick="javascript:return onPrint();return false()"/ -->
-            <input type="button" value="Print" onclick="javascript:window.print();return false()"/>
-        </td>
-    </tr>
-</table>
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <!-- input type="submit" value="Print" onclick="javascript:return onPrint();return false()"/ -->
+			<input type="button" value="Print"
+				onclick="javascript:window.print();return false()" /></td>
+		</tr>
+	</table>
 
 </html:form>
-<br><br><br><br><br><br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <script type="text/javascript">
 Calendar.setup({ inputField : "dateStart", ifFormat : "%d/%m/%Y", showsTime :false, button : "dateStart_cal", singleClick : true, step : 1 });
 <%  for(int i=1; i<21; i++) { %>

@@ -21,23 +21,28 @@
 * Toronto, Ontario, Canada
 */
 -->
-<%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
+<%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el"%>
 
 <%@ include file="/taglibs.jsp"%>
 <c:choose>
-    <c:when test="${not empty requestScope.client.demographics }">
-        <display-el:table class="simple" name="requestScope.client.demographics" id="demographic">           
-            <display-el:column property="agency.name" sortable="true" title="Agency" />
-            <display-el:column sortable="true" title="Name">
-                <c:out value="${demographic.lastName}"/>, <c:out value="${demographic.firstName}"/>
-            </display-el:column>
+	<c:when test="${not empty requestScope.client.demographics }">
+		<display-el:table class="simple"
+			name="requestScope.client.demographics" id="demographic">
+			<display-el:column property="agency.name" sortable="true"
+				title="Agency" />
+			<display-el:column sortable="true" title="Name">
+				<c:out value="${demographic.lastName}" />, <c:out
+					value="${demographic.firstName}" />
+			</display-el:column>
 
-            <display-el:column sortable="true" title="Date of Birth">
-                <c:out value="${demographic.yearOfBirth}"/>-<c:out value="${demographic.monthOfBirth}"/>-<c:out value="${demographic.dateOfBirth}"/>
-            </display-el:column>
-        </display-el:table>
-    </c:when>
-    <c:otherwise>
+			<display-el:column sortable="true" title="Date of Birth">
+				<c:out value="${demographic.yearOfBirth}" />-<c:out
+					value="${demographic.monthOfBirth}" />-<c:out
+					value="${demographic.dateOfBirth}" />
+			</display-el:column>
+		</display-el:table>
+	</c:when>
+	<c:otherwise>
         Unable to complete request
     </c:otherwise>
 </c:choose>

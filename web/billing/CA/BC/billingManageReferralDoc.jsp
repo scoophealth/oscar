@@ -24,9 +24,10 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.util.*,oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 
 <html:html locale="true">
 
@@ -34,7 +35,8 @@
 
 <head>
 <title>Manage Referral Docs</title>
-<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css"
+	href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
 function isNumeric(strString){
@@ -64,142 +66,94 @@ function checkUnits(){
 
 </script>
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	table.ele {
-   
-   border-collapse:collapse;
-}
-
-table.ele td{
-    border:1px solid grey;
-    padding:2px;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                billing
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						Manage Referral Billing
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">&nbsp;
-            &nbsp;
-            <a href="billingAddReferralDoc.jsp">Add Doc</a>
-            </td>
-            <td class="MainTableRightColumn">    
-            <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">billing</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Manage Referral Billing</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; &nbsp; <a
+			href="billingAddReferralDoc.jsp">Add Doc</a></td>
+		<td class="MainTableRightColumn">
+		<%
               String limit = request.getParameter("limit");
               String lastname = request.getParameter("lastname");
             %>
-            <form action="billingManageReferralDoc.jsp">
-               Last Name: <input type="text" name="lastname" value="<%= (lastname == null)?"":lastname%>"/>
-                <select name="limit">
-                  <option value="10" <%=selected(limit,"10")%> >10</option>
-                  <option value="50" <%=selected(limit,"50")%> >50</option>
-                  <option value="100" <%=selected(limit,"100")%>>100</option>
-                </select>    
-       
-            <input type="submit" value="Search"/>
-            </form>
-            <table class="ele">
-               <tr>
-                  <!--th>id</th-->
-                  <th>Billing #</th>
-                  <th>Last Name</th>
-                  <th>First Name</th>
-                  <th>Specialty</th>
-                  <th>Address 1</th>
-                  <th>Address 2</th>
-                  <th>City</th>
-                  <th>Province</th>
-                  <th>Postal</th>
-                  <th>Phone</th>
-                  <th>Fax</th>                  
-               </tr>
-            <% ReferralBillingData rbd = new ReferralBillingData();
+		<form action="billingManageReferralDoc.jsp">Last Name: <input
+			type="text" name="lastname"
+			value="<%= (lastname == null)?"":lastname%>" /> <select name="limit">
+			<option value="10" <%=selected(limit,"10")%>>10</option>
+			<option value="50" <%=selected(limit,"50")%>>50</option>
+			<option value="100" <%=selected(limit,"100")%>>100</option>
+		</select> <input type="submit" value="Search" /></form>
+		<table class="ele">
+			<tr>
+				<!--th>id</th-->
+				<th>Billing #</th>
+				<th>Last Name</th>
+				<th>First Name</th>
+				<th>Specialty</th>
+				<th>Address 1</th>
+				<th>Address 2</th>
+				<th>City</th>
+				<th>Province</th>
+				<th>Postal</th>
+				<th>Phone</th>
+				<th>Fax</th>
+			</tr>
+			<% ReferralBillingData rbd = new ReferralBillingData();
                if (limit == null) limit = "10";
                if (lastname == null) lastname = "%";
                ArrayList alist = rbd.searchReferralDocByLastName(lastname,limit);
                for ( int i =0 ; i < alist.size() ; i++ ){
                    Hashtable h = (Hashtable) alist.get(i);
-            %>    
-               <tr>
-               <!--td><%=h.get("billingreferral_no")%></td-->
-               <td><a href="billingAddReferralDoc.jsp?id=<%=h.get("billingreferral_no")%>"><%=h.get("referral_no")%></a></td>
-               <td><%=h.get("last_name")%></td>
-               <td><%=h.get("first_name")%></td>
-               <td><%=h.get("specialty")%></td>
-               <td><%=h.get("address1")%></td>
-               <td><%=h.get("address2")%></td>
-               <td><%=h.get("city")%></td>
-               <td><%=h.get("province")%></td>
-               <td><%=h.get("postal")%></td>
-               <td><%=h.get("phone")%></td>
-               <td><%=h.get("fax")%></td>
-               </tr>
-               
-            
-            <%}%>
-            </table>
-              
-			   </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+            %>
+			<tr>
+				<!--td><%=h.get("billingreferral_no")%></td-->
+				<td><a
+					href="billingAddReferralDoc.jsp?id=<%=h.get("billingreferral_no")%>"><%=h.get("referral_no")%></a></td>
+				<td><%=h.get("last_name")%></td>
+				<td><%=h.get("first_name")%></td>
+				<td><%=h.get("specialty")%></td>
+				<td><%=h.get("address1")%></td>
+				<td><%=h.get("address2")%></td>
+				<td><%=h.get("city")%></td>
+				<td><%=h.get("province")%></td>
+				<td><%=h.get("postal")%></td>
+				<td><%=h.get("phone")%></td>
+				<td><%=h.get("fax")%></td>
+			</tr>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
 
-            </td>
-        </tr>
-    </table>
+			<%}%>
+		</table>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 <%! 

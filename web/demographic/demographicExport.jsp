@@ -23,10 +23,11 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <%
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -46,26 +47,19 @@
 
 <head>
 <!--I18n-->
-<title>
-oscarPrevention
-</title>
+<title>oscarPrevention</title>
 <script src="../share/javascript/Oscar.js"></script>
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
-     
-<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
-<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
-<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-<style type="text/css">
-  div.ImmSet { background-color: #ffffff; }
-  div.ImmSet h2 {  }
-  div.ImmSet ul {  }
-  div.ImmSet li {  }
-  div.ImmSet li a { text-decoration:none; color:blue;}
-  div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-</style>
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<script type="text/javascript"
+	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -115,167 +109,87 @@ function checkSelect(slct) {
 
 
 
-<style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
-	
-	
-label{
-float: left;
-width: 120px;
-font-weight: bold;
-}
-
-span.labelLook{
-font-weight:bold;
-
-}
-
-input, textarea,select{
-
-margin-bottom: 5px;
-}
-
-textarea{
-width: 250px;
-height: 150px;
-}
-
-.boxes{
-width: 1em;
-}
-
-#submitbutton{
-margin-left: 120px;
-margin-top: 5px;
-width: 90px;
-}
-
-br{
-clear: left;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
 <%
 if (!userRole.toLowerCase().contains("admin")) { %>
-    <p><h2>Sorry! Only administrators can export demographics.</h2></p>
+<p>
+<h2>Sorry! Only administrators can export demographics.</h2>
+</p>
 <%
 } else {
-%>  
+%>
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="100" >
-               demographicExport
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            Demographic Export
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-               &nbsp;
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-               <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
-               <div>
-		    <% if (demographic_no!= null) { %>
-		    <input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
-		    Exporting :
-		    
-		    <%} else {%>
-		   Patient Set:
-                  <html:select property="patientSet">
-                      <html:option value="-1" >--Select Set--</html:option>
-                      <%for (int i =0 ; i < queryArray.size(); i++){
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="100">
+		demographicExport</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Demographic Export</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td valign="top" class="MainTableRightColumn"><html:form
+			action="/demographic/DemographicExport" method="get"
+			onsubmit="return checkSelect(patientSet.value);">
+			<div>
+			<% if (demographic_no!= null) { %> <input type="hidden"
+				name="demographicNo" value="<%=demographic_no%>" /> Exporting : <%} else {%>
+			Patient Set: <html:select property="patientSet">
+				<html:option value="-1">--Select Set--</html:option>
+				<%for (int i =0 ; i < queryArray.size(); i++){
                         RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
                         String qId = sc.id;
                         String qName = sc.queryName;%>
-                        <html:option value="<%=qId%>"><%=qName%></html:option>
-                      <%}%>
-                  </html:select>          
-		    <%}%>
-		   
-                 
-<!--
+				<html:option value="<%=qId%>"><%=qName%></html:option>
+				<%}%>
+			</html:select> <%}%> <!--
                   <input type="submit" value="Export" />
-//-->
-               </div>               
-               
-               </html:form>
-               <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
-		    <% if (demographic_no!= null) { %>
-		    <input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
+//--></div>
+
+		</html:form> <html:form action="/demographic/DemographicExport2" method="get"
+			onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
+			<% if (demographic_no!= null) { %>
+			<input type="hidden" name="demographicNo" value="<%=demographic_no%>" />
 		    Exporting :
 		    
 		    <%} else {%>
-		   <html:hidden property="patientSet"/>
-		   <%}%>
+			<html:hidden property="patientSet" />
+			<%}%>
 		   Media Type:
 		   <html:select property="mediaType">
-		       <html:option value="Hard Disk">Hard Disk</html:option>
-		       <html:option value="CD/DVD">CD/DVD</html:option>
-		       <html:option value="Flash Disk">Flash Disk</html:option>
-		       <html:option value="Floppy Disk">Floppy Disk</html:option>
-		       <html:option value="Tape">Tape</html:option>
-		   </html:select>
+				<html:option value="Hard Disk">Hard Disk</html:option>
+				<html:option value="CD/DVD">CD/DVD</html:option>
+				<html:option value="Flash Disk">Flash Disk</html:option>
+				<html:option value="Floppy Disk">Floppy Disk</html:option>
+				<html:option value="Tape">Tape</html:option>
+			</html:select>
 		   &nbsp;
 		   Number of Media:
-		   <html:text property="noOfMedia" size="1" value="1"/>
-		   <p>
-		   <input type="submit" value="Export (CMS spec 2.0)" />               
-               </html:form>
-               
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+		   <html:text property="noOfMedia" size="1" value="1" />
+			<p><input type="submit" value="Export (CMS spec 2.0)" />
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
 <script type="text/javascript">
     //Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 </script>

@@ -33,8 +33,10 @@
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 %>
-<%@page import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/>
+<%@page
+	import="java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html>
 <head>
 <title>Billing Summary</title>
@@ -69,7 +71,8 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
     <%}%>
 
 -->
-</script></head>
+</script>
+</head>
 <body>
 <%
   if (request.getParameter("update").equals("Confirm")) {
@@ -95,7 +98,8 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
     if (Count == 0) {
 %>
 <p>No input selected</p>
-<input type="button" name="back" value="back" onClick="javascript:history.go(-1);return false;">
+<input type="button" name="back" value="back"
+	onClick="javascript:history.go(-1);return false;">
 <%
   } else {
     String[] diags = {"","",""};
@@ -113,7 +117,8 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
      CodeAttach('<%=param[0]%>','<%=param[1]%>', '<%=param[2]%>', '<%=diags[0]%>', '<%=diags[1]%>', '<%=diags[2]%>' );
     -->
 
-</script><%
+</script>
+<%
   }
   } else {
 %>
@@ -130,9 +135,11 @@ function CodeAttach(File0, File1, File2,dx1,dx2,dx3) {
 <%apptMainBean.closePstmtConn();%>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
-</p><script LANGUAGE="JavaScript">
+</p>
+<script LANGUAGE="JavaScript">
     history.go(-1);return false;
     self.opener.refresh();
-</script><%}%>
+</script>
+<%}%>
 </body>
 </html>

@@ -24,9 +24,9 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
@@ -45,43 +45,98 @@
 
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>EditAppointmentForm</title>
+<head>
+<title>EditAppointmentForm</title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">
 
 <body>
 
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="EditAppointment.jsp">
-<input type ="hidden" name="appointment_no" value="<%=appointment_no%>"> 
-<input type ="hidden" name="DayString" value="<%=RS.getString("appointment_date")%>"> 
+<input type="hidden" name="appointment_no" value="<%=appointment_no%>">
+<input type="hidden" name="DayString"
+	value="<%=RS.getString("appointment_date")%>">
 <table border="1" cellpadding="0" cellspacing="0" width="38%">
-        <tr><td></td>
-            <td><input type="submit" value="Update">
-                <a href="GoAppointmentMonth.jsp">Month</a>&nbsp;
-                <a href="AppointmentToday.jsp?todayString=<%=RS.getString("appointment_date")%>">Return</a>
-            </td></tr> 
-  	 
-        <tr><td>Date :</td><td><input type="text" name="appointment_date" value="<%=RS.getString("appointment_date")%>"></td></tr> 
-        <tr><td>Start Time :</td><td><input type="text"  name="start_time" value="<%=RS.getString("start_time")%>"></td></tr> 
-        <tr><td>End Time :</td><td><input type="text"   name="end_time" value="<%=RS.getString("end_time")%>"></td></tr> 
-        <tr><td>Name :</td><td><input type="text" name="name" value="<%=RS.getString("name")%>"></td></tr>
-        <tr><td colspan="2">Reason<textarea rows="2" cols="33" name="reason"><%=RS.getString("reason")%></textarea></td></tr>
-        <tr><td>Location :</td><td><input type="text" name="location" value="<%=RS.getString("location")%>"></td></tr> 
-        <tr><td>Last Creator :</td><td><input type="text" name="creator" value="<%=beanDBQuery.getProvider(new Integer(RS.getString("provider_no")).intValue())%>"></td></tr> 
-        <tr><td>Status :</td><td><input type="text" name="status" value="<%=RS.getString("status")%>"></td></tr> 
-        <tr><td>Type :</td><td><input type="text" name="type" value="<%=RS.getString("type")%>"></td></tr> 
-        <tr><td>Chart No. :</td><td><input type="text" name="chartno" value=""></td></tr> 
-        <tr><td><a href="">Search:</a></td><td><input type="text" name="search" value="<%=RS.getInt("demographic_no")%>"></td></tr> 
-        <tr><td colspan="2">Notes<textarea rows="2" cols="33" name="notes"><%=RS.getString("notes")%></textarea></td></tr>
-        <tr><td>Resources :</td><td><input type="text" name="resources" value="<%=RS.getString("resources")%>"></td></tr> 
-        <tr><td>Last Time :</td><td><input type="text" name="createdatetime" value="<%=RS.getString("createdatetime")%>"></td></tr> 
- 
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Update"> <a
+			href="GoAppointmentMonth.jsp">Month</a>&nbsp; <a
+			href="AppointmentToday.jsp?todayString=<%=RS.getString("appointment_date")%>">Return</a>
+		</td>
+	</tr>
 
-<%
+	<tr>
+		<td>Date :</td>
+		<td><input type="text" name="appointment_date"
+			value="<%=RS.getString("appointment_date")%>"></td>
+	</tr>
+	<tr>
+		<td>Start Time :</td>
+		<td><input type="text" name="start_time"
+			value="<%=RS.getString("start_time")%>"></td>
+	</tr>
+	<tr>
+		<td>End Time :</td>
+		<td><input type="text" name="end_time"
+			value="<%=RS.getString("end_time")%>"></td>
+	</tr>
+	<tr>
+		<td>Name :</td>
+		<td><input type="text" name="name"
+			value="<%=RS.getString("name")%>"></td>
+	</tr>
+	<tr>
+		<td colspan="2">Reason<textarea rows="2" cols="33" name="reason"><%=RS.getString("reason")%></textarea></td>
+	</tr>
+	<tr>
+		<td>Location :</td>
+		<td><input type="text" name="location"
+			value="<%=RS.getString("location")%>"></td>
+	</tr>
+	<tr>
+		<td>Last Creator :</td>
+		<td><input type="text" name="creator"
+			value="<%=beanDBQuery.getProvider(new Integer(RS.getString("provider_no")).intValue())%>"></td>
+	</tr>
+	<tr>
+		<td>Status :</td>
+		<td><input type="text" name="status"
+			value="<%=RS.getString("status")%>"></td>
+	</tr>
+	<tr>
+		<td>Type :</td>
+		<td><input type="text" name="type"
+			value="<%=RS.getString("type")%>"></td>
+	</tr>
+	<tr>
+		<td>Chart No. :</td>
+		<td><input type="text" name="chartno" value=""></td>
+	</tr>
+	<tr>
+		<td><a href="">Search:</a></td>
+		<td><input type="text" name="search"
+			value="<%=RS.getInt("demographic_no")%>"></td>
+	</tr>
+	<tr>
+		<td colspan="2">Notes<textarea rows="2" cols="33" name="notes"><%=RS.getString("notes")%></textarea></td>
+	</tr>
+	<tr>
+		<td>Resources :</td>
+		<td><input type="text" name="resources"
+			value="<%=RS.getString("resources")%>"></td>
+	</tr>
+	<tr>
+		<td>Last Time :</td>
+		<td><input type="text" name="createdatetime"
+			value="<%=RS.getString("createdatetime")%>"></td>
+	</tr>
+
+
+	<%
      RS.close();
-%> 
+%>
 
-    
+
 </TABLE>
 
 </FORM>

@@ -28,9 +28,10 @@
   if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="formHistBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>  
+<%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="formHistBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
     {"search_form", "select * from form where demographic_no = ? order by form_date desc, form_time desc, form_no desc"},
@@ -82,9 +83,9 @@
 <html>
 <head>
 <title>PATIENT'S FORM</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
@@ -94,41 +95,47 @@
 </head>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="silver"><th align=CENTER NOWRAP><font face="Helvetica" color="navy">FORM HISTORY</font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="silver">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="navy">FORM
+		HISTORY</font></th>
+	</tr>
 </table>
 
 <form name="encounterrep" method="post" action="formhistory.jsp">
 <table width="100%" border="0" bgcolor="ivory">
-  <tr > 
-    <td ><font size="-1"> </font></td>
-  </tr><tr>  
-    <td bgcolor="#FFFFFF" align="center"> 
-<%
+	<tr>
+		<td><font size="-1"> </font></td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFFFFF" align="center">
+		<%
    ResultSet rsdemo = null;
    rsdemo = formHistBean.queryResults(request.getParameter("demographic_no"), "search_form");
    int i=0;
    while (rsdemo.next()) { 
      i++;
-%>
-      &nbsp;<%=rsdemo.getString("form_date")%> <%=rsdemo.getString("form_time")%>
+%> &nbsp;<%=rsdemo.getString("form_date")%> <%=rsdemo.getString("form_time")%>
 
-        <input type="checkbox" name="<%="form_no"+i%>" value="<%=rsdemo.getString("form_no")%>" >
-      
-      <font color="blue"> 
-      <a href=# onClick ="popupPage(600,800,'../provider/providercontrol.jsp?form_no=<%=rsdemo.getString("form_no")%>&dboperation=search_form&displaymodevariable=form<%=rsdemo.getString("form_name")%>.jsp&displaymode=vary&bNewForm=0')"> 
-      <%=rsdemo.getString("form_name")%></a></font> by <%=rsdemo.getString("provider_no")%><br>
-<%
+		<input type="checkbox" name="<%="form_no"+i%>"
+			value="<%=rsdemo.getString("form_no")%>"> <font color="blue">
+		<a href=#
+			onClick="popupPage(600,800,'../provider/providercontrol.jsp?form_no=<%=rsdemo.getString("form_no")%>&dboperation=search_form&displaymodevariable=form<%=rsdemo.getString("form_name")%>.jsp&displaymode=vary&bNewForm=0')">
+		<%=rsdemo.getString("form_name")%></a></font> by <%=rsdemo.getString("provider_no")%><br>
+		<%
    }     
    formHistBean.closePstmtConn();
-%>      
-    </td>
-  </tr>
-  <tr bgcolor="#eeeeee"><td align="center">
-    <input type="hidden" name="formnum" value="<%=i%>">
-    <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-    <input type="submit" name="submit" value="Delete"><input type="button" name="button" value="Cancel" onClick="window.close()">
-  </td></tr>
+%>
+		</td>
+	</tr>
+	<tr bgcolor="#eeeeee">
+		<td align="center"><input type="hidden" name="formnum"
+			value="<%=i%>"> <input type="hidden" name="demographic_no"
+			value="<%=request.getParameter("demographic_no")%>"> <input
+			type="submit" name="submit" value="Delete"><input
+			type="button" name="button" value="Cancel" onClick="window.close()">
+		</td>
+	</tr>
 </table>
 </form>
 <center></center>

@@ -1,13 +1,15 @@
+
 <% 
 
 %>
 
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ page import="java.util.*,
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ page
+	import="java.util.*,
 java.io.*,
-oscar.oscarLab.ca.all.util.KeyPairGen" %>
+oscar.oscarLab.ca.all.util.KeyPairGen"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -87,11 +89,12 @@ if (message != null){
 }
 %>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Oscar - Key Pair Creation</title>
-        <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-        <script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Oscar - Key Pair Creation</title>
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+<script type="text/javascript">
             function selectOther(){                
                 if (document.getElementById('selection').value == "OTHER")
                     document.getElementById('OTHER').style.visibility = "visible";
@@ -112,74 +115,73 @@ if (message != null){
                 return true;
             }
         </script>
-    </head>
-    <body>
-        <form method='POST' action='keyGen.jsp'>
-            <table align="center" class="MainTable">
-                <tr class="MainTableTopRow">
-                    <td class="MainTableTopRowLeftColumn" width="175" >
-                        Key Pair Creation
-                    </td>
-                    <td class="MainTableTopRowRightColumn">
-                        <table class="TopStatusBar">
-                            <tr>
-                                <td>
-                                    <div id="success" style="display:none;">
-                                        Key pair created successfully
-                                    </div>
-                                    <div id="fail" style="display:<%= failDisplay %>;">
-                                        <%
+</head>
+<body>
+<form method='POST' action='keyGen.jsp'>
+<table align="center" class="MainTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn" width="175">Key Pair
+		Creation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>
+				<div id="success" style="display: none;">Key pair created
+				successfully</div>
+				<div id="fail" style="display:<%= failDisplay %>;">
+				<%
                                         if (message != null){
                                             if(error.equals("false")){
                                                 out.print(message);
                                             }else{
-                                                %><font color="red"><%= message %></font><%
+                                                %><font color="red"><%= message %></font>
+				<%
                                             }
                                         }
                                         // reset the message after it has been used
                                         message = null;
                                         %>
-                                    </div>
-                                </td>
-                                <td  >&nbsp;         
-                                </td>
-                                <td style="text-align:right">
-                                    <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="submit" value="Create Key Pair" onclick="return checkInput()">
-                    </td>
-                    <td>
-                        <table>
-                            <tr>    
-                                <td>Your service name:</td>
-                                <td><input type="text" id="name" name="name"></td>
-                            </tr>
-                            <tr>
-                                <td>Lab type:</td> 
-                                <td>
-                                    <select name="type" id="selection" onClick="selectOther()">
-                                        <option value="MDS">MDS</option>
-                                        <option value="CML">CML</option>
-                                        <option value="PATHL7">EXCELLERIS</option>
-                                        <option value="GDML">GDML -- TESTING DO NOT USE</option>                                        
-                                        <option value="OTHER">Other</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr id="OTHER" style="visibility:hidden;">
-                                <td>Please specify the other message type:</td>
-                                <td><input type="text" id="otherType" name="otherType"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </form>       
-    </body>
+				</div>
+				</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td><input type="submit" value="Create Key Pair"
+			onclick="return checkInput()"></td>
+		<td>
+		<table>
+			<tr>
+				<td>Your service name:</td>
+				<td><input type="text" id="name" name="name"></td>
+			</tr>
+			<tr>
+				<td>Lab type:</td>
+				<td><select name="type" id="selection" onClick="selectOther()">
+					<option value="MDS">MDS</option>
+					<option value="CML">CML</option>
+					<option value="PATHL7">EXCELLERIS</option>
+					<option value="GDML">GDML -- TESTING DO NOT USE</option>
+					<option value="OTHER">Other</option>
+				</select></td>
+			</tr>
+			<tr id="OTHER" style="visibility: hidden;">
+				<td>Please specify the other message type:</td>
+				<td><input type="text" id="otherType" name="otherType"></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</form>
+</body>
 </html>

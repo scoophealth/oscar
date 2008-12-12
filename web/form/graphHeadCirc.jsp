@@ -25,15 +25,17 @@
 -->
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*, oscar.form.data.*, oscar.util.*, java.util.Date" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page
+	import="oscar.form.*, oscar.form.data.*, oscar.util.*, java.util.Date"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <title>Head Circumference Graph</title>
-<html:base/>
-<link rel="stylesheet" type="text/css" media="screen" href="rourkeStyle.css" >
+<html:base />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="rourkeStyle.css">
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
 </head>
 
@@ -201,11 +203,14 @@
 
 
 <body class="graph">
-    <img name="chart" src="<%=chart%>" onLoad="javascript:graphChart();" border="0" style="position:absolute; width:943px; z-index:0; top:0; left:0;"/>
-    <a name="ctls" id="ctls"></a>
-    <span class="hidePrint" class="Header">
-        <input type="button" value="print" onclick="javascript:window.print();" style="position:relative; width:100px;" />
-        <input type="button" value="exit" onclick="javascript: window.close();" style="position:relative; width:100px;" />
-    </span>
+<img name="chart" src="<%=chart%>" onLoad="javascript:graphChart();"
+	border="0"
+	style="position: absolute; width: 943px; z-index: 0; top: 0; left: 0;" />
+<a name="ctls" id="ctls"></a>
+<span class="hidePrint" class="Header"> <input type="button"
+	value="print" onclick="javascript:window.print();"
+	style="position: relative; width: 100px;" /> <input type="button"
+	value="exit" onclick="javascript: window.close();"
+	style="position: relative; width: 100px;" /> </span>
 </body>
 </html:html>

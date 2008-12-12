@@ -13,7 +13,7 @@
 	
 	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
 -->
-     
+
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.Date"%>
@@ -32,33 +32,37 @@
 %>
 
 <html:html xhtml="true" locale="true">
-	<head>
-		<title>Street Health Mental Health Report</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" href="<html:rewrite page="/css/intakeC.css" />"/>
-		<script language="JavaScript" src="<html:rewrite page="/js/ClientSearch.js" />"></script>
-		<html:base />
-	</head>
-	<body>
-		<script type="text/javascript">
+<head>
+<title>Street Health Mental Health Report</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css"
+	href="<html:rewrite page="/css/intakeC.css" />" />
+<script language="JavaScript"
+	src="<html:rewrite page="/js/ClientSearch.js" />"></script>
+<html:base />
+</head>
+<body>
+<script type="text/javascript">
 			function download() {
 				location.href="<html:rewrite page="/PMmodule/do_download.jsp" />";
 			}
 		</script>
-		<table height="15" align="center">
-			<tr>
-				<td class="style76" align="center">
-					<input type="button" name="backToClientSearch" value="Back" onclick="javascript:history.back();" />
-					<input type="button" name="downLoadCSVFile" value="Download" onclick="javascript:download();" />
-				</td>
-			</tr>
-		</table>
-		<table border="1" cellpadding="1" cellspacing="1" width="95%" align="center">
-			<%
+<table height="15" align="center">
+	<tr>
+		<td class="style76" align="center"><input type="button"
+			name="backToClientSearch" value="Back"
+			onclick="javascript:history.back();" /> <input type="button"
+			name="downLoadCSVFile" value="Download"
+			onclick="javascript:download();" /></td>
+	</tr>
+</table>
+<table border="1" cellpadding="1" cellspacing="1" width="95%"
+	align="center">
+	<%
 			for (int i = 0; i < dataList.length; i++) {
 			%>
-			<tr>
-				<%
+	<tr>
+		<%
 					for (int j = 0; j < dataList[i].length; j++) {
 						if (i == 0 && dataList[i][j].startsWith("Cohort")) {
 							int idx = Integer.parseInt(dataList[i][j].substring(7));
@@ -72,26 +76,21 @@
 							} catch (Exception e) {
 							}
 				%>
-				<td class="style76" align="center"><%=showDate1%>
-					<br />
-					<%=showDate2%>
-					<br />
-					<%=dataList[i][j]%>
-				</td>
-				<%
+		<td class="style76" align="center"><%=showDate1%> <br />
+		<%=showDate2%> <br />
+		<%=dataList[i][j]%></td>
+		<%
 						} else {
 				%>
-				<td class="style76" align="center">
-					<%=dataList[i][j]%>
-				</td>
-				<%
+		<td class="style76" align="center"><%=dataList[i][j]%></td>
+		<%
 						}
 					}
 				%>
-			</tr>
-			<%
+	</tr>
+	<%
 			}
 			%>
-		</table>
-	</body>
+</table>
+</body>
 </html:html>

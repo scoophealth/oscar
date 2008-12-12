@@ -25,10 +25,11 @@
 -->
 
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.util.*" %>
-<%@ page import="bean.*" %>
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="bean.*"%>
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
 <jsp:useBean id="beanAboutDate" scope="session" class="bean.AboutDate" />
 <%
 // the only parameters are start_date 

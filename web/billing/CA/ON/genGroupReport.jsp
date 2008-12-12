@@ -24,11 +24,14 @@
  */
 --%>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, oscar.oscarBilling.ca.on.OHIP.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %> 
+<%@ include file="dbBilling.jsp"%>
 
 <% 
 boolean bHybridBilling = false;
@@ -216,6 +219,6 @@ apptMainBean.closePstmtConn();
 %>
 
 
-<jsp:forward page='billingOHIPreport.jsp' >
+<jsp:forward page='billingOHIPreport.jsp'>
 	<jsp:param name="year" value='' />
 </jsp:forward>

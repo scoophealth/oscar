@@ -29,11 +29,12 @@
  */
  
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*,org.safehaus.uuid.UUIDGenerator"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*,oscar.scratch.*,org.safehaus.uuid.UUIDGenerator"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
    //<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -61,22 +62,24 @@
   
 
       
-%>  
+%>
 
 
-      
+
 
 <html:html locale="true">
 
 <head>
-   <title>Scratch</title><!--I18n-->
-   
-   <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" >
-   
-   <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-   <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<title>Scratch</title>
+<!--I18n-->
 
-   <script type="text/javascript">
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css">
+
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+
+<script type="text/javascript">
     var dirty = 0; 
     var currentText = "";
 
@@ -179,55 +182,52 @@
 	}
     }
     </script>
-   
+
 </head>
 
-<body class="BodyStyle" >
-    <table  class="MainTable" id="scrollNumber1" >
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn"  >
-                scratch
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top" id="tablelle" style="height:100%">
-               <input type="button" onclick="checkScratch()" id="savebutton" value="save"/>
-            </td>
-            
-            <td valign="top" class="MainTableRightColumn">
-                <form id="scratch" action="">
-                   <input type="hidden" name="providerNo" value="<%=user_no%>" /> 
-                   <input type="hidden" name="id" id="curr_id" value="<%=id%>" />
-                   <input type="hidden" name="windowId" id="windowId" value="<%=uuid%>"/>
-                   <input type="hidden" name="dirty" value="0" id="dirty"/>
-                   
-                   <textarea name="scratchpad" id="thetext" style="width:100%" rows="50" cols="50" onkeypress="javascript: setDirty()" onkeydown="javascript: catchDel(event)"><%=text%></textarea>
-                   
-                   <textarea style="display: none;"  id="log" rows="100" cols="100"></textarea>
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
-  
+<body class="BodyStyle">
+<table class="MainTable" id="scrollNumber1">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">scratch</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top" id="tablelle"
+			style="height: 100%"><input type="button"
+			onclick="checkScratch()" id="savebutton" value="save" /></td>
+
+		<td valign="top" class="MainTableRightColumn">
+		<form id="scratch" action=""><input type="hidden"
+			name="providerNo" value="<%=user_no%>" /> <input type="hidden"
+			name="id" id="curr_id" value="<%=id%>" /> <input type="hidden"
+			name="windowId" id="windowId" value="<%=uuid%>" /> <input
+			type="hidden" name="dirty" value="0" id="dirty" /> <textarea
+			name="scratchpad" id="thetext" style="width: 100%" rows="50"
+			cols="50" onkeypress="javascript: setDirty()"
+			onkeydown="javascript: catchDel(event)"><%=text%></textarea> <textarea
+			style="display: none;" id="log" rows="100" cols="100"></textarea></form>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
+
 <script type="text/javascript">
 fixHeightOfTheText(); // fix it first time in.
 setClean();

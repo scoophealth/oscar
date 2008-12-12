@@ -21,22 +21,82 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
 <!--
+BODY {
+	font-size: 12pt;
+	font-weight: normal;
+	line-height: 15px;
+	font-style: normal;
+	color: black;
+	text-decoration: none;
+	font-family: "Times New Roman", Times, serif;
+	background-attachment: fixed
+}
 
-BODY  {	font-size : 12pt; font-weight : normal;	line-height: 15px;	font-style : normal; color : black; text-decoration : none; font-family: "Times New Roman", Times, serif; background-attachment: fixed}
+a:active {
+	text-decoration: none;
+}
 
-a:active {  text-decoration : none;}
-a:link {  text-decoration : none;; color: #CC6600}
-a:visited {  text-decoration : none;; color: #0080c0}
-a:hover {COLOR: red; font-weight : bolder; TEXT-DECORATION: underline;} 
+a:link {
+	text-decoration: none;;
+	color: #CC6600
+}
 
-.titleweb {  font-family: "Comic Sans MS"; font-size: medium; font-style: normal; color: #9900FF; text-align: center}
-.header1 {  font-weight: bolder; text-align: left}
-.logotxt1 { font-size : larger; font-weight : normal;	font-style : italic; color : blue; font-family: "Brush Script MT", "Times New Roman", Times}
-.logotxt2 { font-size : larger; font-weight : normal;	font-style : italic; color : red; text-decoration : none; font-family: "Brush Script MT", "Times New Roman", Times, serif}
-.lblyellow {  background-color: #FFFF00}
-.specialtxt {font-weight : bolder; font-style :  normal; color : blue;}
-.thheader {font-family: "Helvetica", "Brush Script MT"; font-style : normal; color : white; >}
+a:visited {
+	text-decoration: none;;
+	color: #0080c0
+}
 
+a:hover {
+	COLOR: red;
+	font-weight: bolder;
+	TEXT-DECORATION: underline;
+}
+
+.titleweb {
+	font-family: "Comic Sans MS";
+	font-size: medium;
+	font-style: normal;
+	color: #9900FF;
+	text-align: center
+}
+
+.header1 {
+	font-weight: bolder;
+	text-align: left
+}
+
+.logotxt1 {
+	font-size: larger;
+	font-weight: normal;
+	font-style: italic;
+	color: blue;
+	font-family: "Brush Script MT", "Times New Roman", Times
+}
+
+.logotxt2 {
+	font-size: larger;
+	font-weight: normal;
+	font-style: italic;
+	color: red;
+	text-decoration: none;
+	font-family: "Brush Script MT", "Times New Roman", Times, serif
+}
+
+.lblyellow {
+	background-color: #FFFF00
+}
+
+.specialtxt {
+	font-weight: bolder;
+	font-style: normal;
+	color: blue;
+}
+
+.thheader {
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	color: white;
+	>
+}
 -->

@@ -20,33 +20,31 @@
  * McMaster Unviersity 
  * Hamilton 
  * Ontario, Canada 
- */
-
-/*
+ */ /*
  * This file defines elements so that messenger pages can be formated in a 
  * print friendly form.
  */
-
 td {
-    display: none;
+	display: none;
 }
 
 input[type="submit"] {
-    display: none;
+	display: none;
 }
 
 /* should be displaying table-cell rather than block, but IE doesn't support "table-cell"*/
 td.Printable {
-    display: block;
+	display: block;
 }
+
 p.Printable {
-    display:  block;
-    
+	display: block;
 }
+
 body {
-   background: white;
-   font-size: 10pt;
-   color:  black;
-   padding-left: 4em;
-   padding-right: 1em;
+	background: white;
+	font-size: 10pt;
+	color: black;
+	padding-left: 4em;
+	padding-right: 1em;
 }

@@ -1,8 +1,11 @@
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ page  import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ page
+	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <%
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
@@ -35,7 +38,7 @@
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title><bean:message key="admin.providerupdateprovider.title"/></title>
+<title><bean:message key="admin.providerupdateprovider.title" /></title>
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
 <!--
@@ -47,14 +50,17 @@ function setfocus() {
 </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.providerupdateprovider.description"/></font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.providerupdateprovider.description" /></font></th>
+	</tr>
 </table>
 
-<form method="post" action="admincontrol.jsp" name="updatearecord" >
+<form method="post" action="admincontrol.jsp" name="updatearecord">
 <%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
   if(rs==null) {
@@ -63,140 +69,229 @@ function setfocus() {
     while (rs.next()) {
 %>
 
-<table cellspacing="0" cellpadding="2" width="100%" border="0" datasrc='#xml_list'>
+<table cellspacing="0" cellpadding="2" width="100%" border="0"
+	datasrc='#xml_list'>
 
-  <tr> 
-    <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
-    <td><% String provider_no = apptMainBean.getString(rs,"provider_no"); %><%= provider_no %>
-          <input type="hidden"  name="provider_no" value="<%= provider_no %>">
-          <input type="hidden"  name="dboperation" value="provider_update_record"></td>
-  </tr>
-  <tr> 
-    <td><div align="right"><bean:message key="admin.provider.formLastName"/>: </div></td>
-    <td><input type="text"  index="3" name="last_name" value="<%= apptMainBean.getString(rs,"last_name") %>" maxlength="30"></td>
-  </tr>
-  <tr>
-    <td><div align="right"><bean:message key="admin.provider.formFirstName"/>: </div></td>
-    <td><input type="text"  index="4" name="first_name" value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30" ></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formType"/>: </td>
-    <td>
-          <% if (vLocale.getCountry().equals("BR")) { %>  
-          <select name="provider_type">
-            <option value="receptionist"<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
-            <option value="doctor"<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
-            <option value="doctor"><bean:message key="admin.provider.formType.optionNurse"/></option>
-            <option value="doctor"><bean:message key="admin.provider.formType.optionResident"/></option>
-            <option value="admin"<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
-            <option value="admin_billing"<% if (apptMainBean.getString(rs,"provider_type").equals("admin_billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdminBilling"/></option>
-            <option value="billing"<% if (apptMainBean.getString(rs,"provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
-          </select>
-		  <% } else { %>
-		    <select name="provider_type">
-            <option value="receptionist" <% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionReceptionist"/></option>
-            <option value="doctor" <% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionDoctor"/></option>
-            <option value="nurse" <% if (apptMainBean.getString(rs,"provider_type").equals("nurse")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionNurse"/></option>
-            <option value="resident" <% if (apptMainBean.getString(rs,"provider_type").equals("resident")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionResident"/></option>
-            <option value="midwife" <% if (apptMainBean.getString(rs,"provider_type").equals("midwife")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionMidwife"/></option>
-            <option value="admin" <% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionAdmin"/></option>
-		<caisi:isModuleLoad moduleName="survey">
-			<option value="er_clerk" <% if (apptMainBean.getString(rs,"provider_type").equals("er_clerk")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionErClerk"/></option>
-        </caisi:isModuleLoad>
-		  	</select>
-            <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,"provider_type") %>" maxlength="15" -->
-          <% } %>
-     </td>
-  </tr> 
-<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
-    <td><input type="text" name="specialty" value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="20"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
-    <td><input type="text" name="team" value="<%= apptMainBean.getString(rs,"team") %>" maxlength="20"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formSex"/>: </td>
-    <td><input type="text" name="sex" value="<%= apptMainBean.getString(rs,"sex") %>" maxlength="1"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
-    <td><input type="text" name="dob" value="<%= oscar.MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"dob")) %>" maxlength="11"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
-    <td><input type="text" name="address" value="<%= apptMainBean.getString(rs,"address") %>" size="40" maxlength="40"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
-    <td><input type="text" name="phone" value="<%= apptMainBean.getString(rs,"phone") %>"></td></tr>
-  <tr>
-	<td align="right"><bean:message key="admin.provider.formWorkPhone"/>: </td>
-	<td><input type="text" name="workphone" value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>" maxlength="50"></td></tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
-    <td>
-          <input type="text" name="xml_p_pager" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager") %>" datafld='xml_p_pager'>
-        </td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formCell"/>: </td>
-    <td>
-          <input type="text" name="xml_p_cell" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")%>" datafld='xml_p_cell'>
-        </td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td> 
-    <td>
-          <input type="text" name="xml_p_phone2" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2") %>" datafld='xml_p_phone2'>
-        </td> 
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formFax"/>: </td>
-    <td>
-          <input type="text" name="xml_p_fax" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")%>" datafld='xml_p_fax'>
-        </td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
-    <td><input type="text" name="ohip_no" value="<%= apptMainBean.getString(rs,"ohip_no") %>" maxlength="20"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
-    <td><input type="text" name="rma_no" value="<%= apptMainBean.getString(rs,"rma_no") %>" maxlength="20"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
-    <td><input type="text" name="billing_no" value="<%= apptMainBean.getString(rs,"billing_no") %>" maxlength="20"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
-    <td><input type="text" name="hso_no" value="<%= apptMainBean.getString(rs,"hso_no") %>" maxlength="10"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
-    <td><input type="text" name="status" value="<%= apptMainBean.getString(rs,"status") %>" maxlength="1"></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
-    <td><input type="text" name="xml_p_specialty_code" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code") %>" datafld='xml_p_specialty_code'></td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
-    <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
-  </tr>
-  <tr>
-    <td align="right"><bean:message key="admin.provider.formCPSID"/>: </td>
-    <td><input type="text" name="practitionerNo" value="<%= apptMainBean.getString(rs,"practitionerNo") %>" maxlength="10"></td>
-  </tr>
-  <tr>
-      <td align="right">Bill Center:</td>
-      <td>
-          <select name="billcenter">
-              <option value=""  ></option>
-              <% 
+	<tr>
+		<td width="50%" align="right"><bean:message
+			key="admin.provider.formProviderNo" />:</td>
+		<td>
+		<% String provider_no = apptMainBean.getString(rs,"provider_no"); %><%= provider_no %>
+		<input type="hidden" name="provider_no" value="<%= provider_no %>">
+		<input type="hidden" name="dboperation" value="provider_update_record"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right"><bean:message
+			key="admin.provider.formLastName" />:</div>
+		</td>
+		<td><input type="text" index="3" name="last_name"
+			value="<%= apptMainBean.getString(rs,"last_name") %>" maxlength="30"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right"><bean:message
+			key="admin.provider.formFirstName" />:</div>
+		</td>
+		<td><input type="text" index="4" name="first_name"
+			value="<%= apptMainBean.getString(rs,"first_name") %>" maxlength="30"></td>
+	</tr>
+	<tr>
+		<td align="right"><bean:message key="admin.provider.formType" />:
+		</td>
+		<td>
+		<% if (vLocale.getCountry().equals("BR")) { %> <select
+			name="provider_type">
+			<option value="receptionist"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionReceptionist" /></option>
+			<option value="doctor"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionDoctor" /></option>
+			<option value="doctor"><bean:message
+				key="admin.provider.formType.optionNurse" /></option>
+			<option value="doctor"><bean:message
+				key="admin.provider.formType.optionResident" /></option>
+			<option value="admin"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionAdmin" /></option>
+			<option value="admin_billing"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("admin_billing")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionAdminBilling" /></option>
+			<option value="billing"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("billing")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionBilling" /></option>
+		</select> <% } else { %> <select name="provider_type">
+			<option value="receptionist"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("receptionist")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionReceptionist" /></option>
+			<option value="doctor"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("doctor")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionDoctor" /></option>
+			<option value="nurse"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("nurse")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionNurse" /></option>
+			<option value="resident"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("resident")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionResident" /></option>
+			<option value="midwife"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("midwife")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionMidwife" /></option>
+			<option value="admin"
+				<% if (apptMainBean.getString(rs,"provider_type").equals("admin")) { %>
+				SELECTED <%}%>><bean:message
+				key="admin.provider.formType.optionAdmin" /></option>
+			<caisi:isModuleLoad moduleName="survey">
+				<option value="er_clerk"
+					<% if (apptMainBean.getString(rs,"provider_type").equals("er_clerk")) { %>
+					SELECTED <%}%>><bean:message
+					key="admin.provider.formType.optionErClerk" /></option>
+			</caisi:isModuleLoad>
+		</select> <!--input type="text" name="provider_type" value="<%= apptMainBean.getString(rs,"provider_type") %>" maxlength="15" -->
+		<% } %>
+		</td>
+	</tr>
+	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formSpecialty" />:</td>
+			<td><input type="text" name="specialty"
+				value="<%= apptMainBean.getString(rs,"specialty") %>" maxlength="20"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formTeam" />:
+			</td>
+			<td><input type="text" name="team"
+				value="<%= apptMainBean.getString(rs,"team") %>" maxlength="20"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formSex" />:
+			</td>
+			<td><input type="text" name="sex"
+				value="<%= apptMainBean.getString(rs,"sex") %>" maxlength="1"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formDOB" />:
+			</td>
+			<td><input type="text" name="dob"
+				value="<%= oscar.MyDateFormat.getMyStandardDate(apptMainBean.getString(rs,"dob")) %>"
+				maxlength="11"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formAddress" />:
+			</td>
+			<td><input type="text" name="address"
+				value="<%= apptMainBean.getString(rs,"address") %>" size="40"
+				maxlength="40"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formHomePhone" />:</td>
+			<td><input type="text" name="phone"
+				value="<%= apptMainBean.getString(rs,"phone") %>"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formWorkPhone" />:</td>
+			<td><input type="text" name="workphone"
+				value="<%= apptMainBean.getString(rs,"work_phone") == null?"":(apptMainBean.getString(rs,"work_phone")) %>"
+				maxlength="50"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formPager" />:
+			</td>
+			<td><input type="text" name="xml_p_pager"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_pager") %>"
+				datafld='xml_p_pager'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formCell" />:
+			</td>
+			<td><input type="text" name="xml_p_cell"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_cell")%>"
+				datafld='xml_p_cell'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formOtherPhone" />:</td>
+			<td><input type="text" name="xml_p_phone2"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_phone2") %>"
+				datafld='xml_p_phone2'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formFax" />:
+			</td>
+			<td><input type="text" name="xml_p_fax"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_fax")%>"
+				datafld='xml_p_fax'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formOhipNo" />:
+			</td>
+			<td><input type="text" name="ohip_no"
+				value="<%= apptMainBean.getString(rs,"ohip_no") %>" maxlength="20"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formRmaNo" />:
+			</td>
+			<td><input type="text" name="rma_no"
+				value="<%= apptMainBean.getString(rs,"rma_no") %>" maxlength="20"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formBillingNo" />:</td>
+			<td><input type="text" name="billing_no"
+				value="<%= apptMainBean.getString(rs,"billing_no") %>"
+				maxlength="20"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formHsoNo" />:
+			</td>
+			<td><input type="text" name="hso_no"
+				value="<%= apptMainBean.getString(rs,"hso_no") %>" maxlength="10"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formStatus" />:
+			</td>
+			<td><input type="text" name="status"
+				value="<%= apptMainBean.getString(rs,"status") %>" maxlength="1"></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formSpecialtyCode" />:</td>
+			<td><input type="text" name="xml_p_specialty_code"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_specialty_code") %>"
+				datafld='xml_p_specialty_code'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formBillingGroupNo" />:</td>
+			<td><input type="text" name="xml_p_billinggroup_no"
+				value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_billinggroup_no") %>"
+				datafld='xml_p_billinggroup_no'></td>
+		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formCPSID" />:
+			</td>
+			<td><input type="text" name="practitionerNo"
+				value="<%= apptMainBean.getString(rs,"practitionerNo") %>"
+				maxlength="10"></td>
+		</tr>
+		<tr>
+			<td align="right">Bill Center:</td>
+			<td><select name="billcenter">
+				<option value=""></option>
+				<% 
               ProviderBillCenter billCenter = new ProviderBillCenter();
               String billCode = "";
               String codeDesc = "";
@@ -206,55 +301,58 @@ function setfocus() {
                   billCode=(String)keys.nextElement();
                   codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);
               %>
-              <option value=<%= billCode %> <%=currentBillCode.compareTo(billCode)==0?"selected":""%> ><%= codeDesc%></option>
-              <%
+				<option value=<%= billCode %>
+					<%=currentBillCode.compareTo(billCode)==0?"selected":""%>><%= codeDesc%></option>
+				<%
               }
               %>
-          </select>
-      </td>    
-  </tr>
-  <% if (vLocale.getCountry().equals("BR")) { %>  
-  <tr>
-    <td align="right"><bean:message key="admin.provider.formProviderActivity"/>: </td>
-    <td>
-      <input type="text" name="provider_activity" value="<%= apptMainBean.getString(rs,"provider_activity") %>" size="5" maxlength="3">
-    </td>
-  </tr>
-  <% } else { %>
-     <input type="hidden" name="provider_activity" value="">
-  <% }  %>
+			</select></td>
+		</tr>
+		<% if (vLocale.getCountry().equals("BR")) { %>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.formProviderActivity" />:</td>
+			<td><input type="text" name="provider_activity"
+				value="<%= apptMainBean.getString(rs,"provider_activity") %>"
+				size="5" maxlength="3"></td>
+		</tr>
+		<% } else { %>
+		<input type="hidden" name="provider_activity" value="">
+		<% }  %>
 
 
-</caisi:isModuleLoad>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
-    <td>
-          <input type="text" name="xml_p_slpusername" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername") %>" datafld='xml_p_slpusername'>
-        </td>
-  </tr>
-  <tr> 
-    <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
-    <td>
-          <input type="text" name="xml_p_slppassword" value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")%>" datafld='xml_p_slppassword'>
-        </td>
-  </tr>
-  <tr> 
-      <td colspan="2">
-          <div align="center"> 
-	     <input type="hidden" name="displaymode" value="Provider_Update_Record">
-             <input type="submit" name="subbutton" value="<bean:message key="admin.providerupdateprovider.btnSubmit"/>">
-          </div>
-      </td>
-  </tr>
-  </table>
+	</caisi:isModuleLoad>
+	<tr>
+		<td align="right"><bean:message
+			key="admin.provider.formSlpUsername" />:</td>
+		<td><input type="text" name="xml_p_slpusername"
+			value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername")==null?"":SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slpusername") %>"
+			datafld='xml_p_slpusername'></td>
+	</tr>
+	<tr>
+		<td align="right"><bean:message
+			key="admin.provider.formSlpPassword" />:</td>
+		<td><input type="text" name="xml_p_slppassword"
+			value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")%>"
+			datafld='xml_p_slppassword'></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="center"><input type="hidden" name="displaymode"
+			value="Provider_Update_Record"> <input type="submit"
+			name="subbutton"
+			value="<bean:message key="admin.providerupdateprovider.btnSubmit"/>">
+		</div>
+		</td>
+	</tr>
+</table>
 <%
   }}
   apptMainBean.closePstmtConn();
 %>
-  </form>
-  
-  <p></p>
-<%@ include file="footerhtm.jsp" %>
-</center>
+</form>
+
+<p></p>
+<%@ include file="footerhtm.jsp"%></center>
 </body>
 </html:html>

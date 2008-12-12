@@ -33,38 +33,37 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-	
+
 <h1>Provider Service Report Form</h1>
-	
+
 <h2>Export to csv</h2>
-(This will provide a break down of all unique encounters of a demographic to a provider, broken down by month and for the entire interval as well. This only does the numbers for a program of type bed or service)
+(This will provide a break down of all unique encounters of a
+demographic to a provider, broken down by month and for the entire
+interval as well. This only does the numbers for a program of type bed
+or service)
 
-<form method="post" action="provider_service_report_export.jsp" >
-	<table>
-		<tr>
-			<td>Start Date</td>
-			<td>EndDate (inclusive)</td>
-		</tr>
-		<tr>
-			<td>
-				<input type="text" name="startDate" />
-			</td>
-			
-			<td>
-				<input type="text" name="endDate" />
-			</td>
-		</tr>	
-					
-		<tr>
-			<td>(YYYY-MM)</td>
-			<td>(YYYY-MM)</td>
-		</tr>
+<form method="post" action="provider_service_report_export.jsp">
+<table>
+	<tr>
+		<td>Start Date</td>
+		<td>EndDate (inclusive)</td>
+	</tr>
+	<tr>
+		<td><input type="text" name="startDate" /></td>
 
-		<tr>
-			<td></td>
-			<td><input type="submit" value="export" /></td>
-		</tr>
-	</table>
+		<td><input type="text" name="endDate" /></td>
+	</tr>
+
+	<tr>
+		<td>(YYYY-MM)</td>
+		<td>(YYYY-MM)</td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td><input type="submit" value="export" /></td>
+	</tr>
+</table>
 </form>
-	
+
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

@@ -21,42 +21,41 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
-BODY
-{
-    FONT-SIZE: 10pt;
-    FONT-FAMILY: Arial, Verdana, Tahoma, sans-serif;
-    background-color: #EEE9E9; //#FFCC99;
+BODY {
+	FONT-SIZE: 10pt;
+	FONT-FAMILY: Arial, Verdana, Tahoma, sans-serif;
+	background-color: #EEE9E9;
+	//#
+	FFCC99;
 }
 
-TABLE
-{
+TABLE {
 	FONT-SIZE: 10pt;
-    border-color:#999999;
+	border-color: #999999;
 }
 
 TABLE TD {
-    vertical-align: top;
+	vertical-align: top;
 }
 
 TEXTAREA {
-    overflow: auto;
+	overflow: auto;
 }
 
 .Head {
-    background-color:#BBBBBB;
-    padding-top:3px;
-    padding-bottom:3px;
-    width:940px;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 940px;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 .title {
@@ -71,14 +70,14 @@ TEXTAREA {
 
 .history TEXTAREA {
 	width: 100%;
-    overflow: auto;
+	overflow: auto;
 }
 
 .flowchart TEXTAREA {
-    width: 100%;
-    overflow: auto;
+	width: 100%;
+	overflow: auto;
 }
 
 .flowchart INPUT {
-    width:100%;
+	width: 100%;
 }

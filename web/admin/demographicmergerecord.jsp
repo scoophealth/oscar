@@ -1,4 +1,4 @@
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <!--  
 /*
  * 
@@ -43,41 +43,43 @@ if(request.getParameter("dboperation")!=null && request.getParameter("dboperatio
 if( outcome !=null){
     if (outcome.equals("success")){
     %>
-        <script language="JavaScript">
+<script language="JavaScript">
             alert("Records merged successfully");
-        </script>    
-    <%
+        </script>
+<%
     }else if (outcome.equals("failure")){
     %>
-        <script language="JavaScript">
+<script language="JavaScript">
             alert("Failed to merge records");
-        </script> 
-    <%
+        </script>
+<%
     }else if (outcome.equals("successUnMerge")){
     %>
-        <script language="JavaScript">
+<script language="JavaScript">
             alert("Record(s) unmerged successfully");
-        </script>    
-    <%
+        </script>
+<%
     }else if (outcome.equals("failureUnMerge")){
     %>
-        <script language="JavaScript">
+<script language="JavaScript">
             alert("Failed to unmerge records");
-        </script> 
-    <%
+        </script>
+<%
     }
 }
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.DemographicMerged"  %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.DemographicMerged"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-    <title> DEMOGRAPHIC - MERGE RECORDS </title>
-    <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <script language="JavaScript">
+<title>DEMOGRAPHIC - MERGE RECORDS</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<script language="JavaScript">
 
         function setfocus() {
             document.titlesearch.keyword.focus();
@@ -121,77 +123,96 @@ if( outcome !=null){
         
 
     </SCRIPT>
-    <!--base target="pt_srch_main"-->
-    <link rel="stylesheet" href="../web.css">
+<!--base target="pt_srch_main"-->
+<link rel="stylesheet" href="../web.css">
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MERGE CLIENT RECORDS</font></th></tr>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MERGE
+		CLIENT RECORDS</font></th>
+	</tr>
 </table>
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-    <form method="post" name="titlesearch" action="admincontrol.jsp" onSubmit="return checkTypeIn()">
-        <tr valign="top"><td rowspan="2" ALIGN="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-            </i></b></font></td>
-            
-            <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio"  checked name="search_mode" value="search_name">
-            Name </font></td>
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio"  name="search_mode" value="search_phone">
-            Phone</font></td> 
-            <td nowrap><font size="1" face="Verdana" color="#0000FF">
-                    <input type="radio"  name="search_mode" value="search_dob">
-            DOB</font></td> 
-            <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-                <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-                <INPUT TYPE="hidden" NAME="dboperation" VALUE="demographic_search_titlename" >
-                <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-                <INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-                <INPUT TYPE="hidden" NAME="displaymode" VALUE="Demographic_Merge" >
-            <INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17">
-            <input type="submit" name="mergebutton" value="Search Merged Records" onclick="searchMerged()"></td>
-        </tr><tr>
-            
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio" name="search_mode" value="search_address">
-            Address </font></td>
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-                    <input type="radio" name="search_mode" value="search_hin">
-            HIN</font></td>
-            <td></td>
-        </tr>
-    </form>
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<form method="post" name="titlesearch" action="admincontrol.jsp"
+		onSubmit="return checkTypeIn()">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
+
+		<td width="10%" nowrap><font size="1" face="Verdana"
+			color="#0000FF"> <input type="radio" checked
+			name="search_mode" value="search_name"> Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_phone">
+		Phone</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_dob"> DOB</font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			TYPE="hidden" NAME="orderby" VALUE="last_name"> <INPUT
+			TYPE="hidden" NAME="dboperation" VALUE="demographic_search_titlename">
+		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
+			NAME="displaymode" VALUE="Demographic_Merge"> <INPUT
+			TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"> <input
+			type="submit" name="mergebutton" value="Search Merged Records"
+			onclick="searchMerged()"></td>
+	</tr>
+	<tr>
+
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_address">
+		Address </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_hin"> HIN</font></td>
+		<td></td>
+	</tr>
+	</form>
 </table>
 <br />
 <CENTER>
-
 <% if (request.getParameter("keyword") != null) {%>
 <table width="95%" border="0">
-    <tr>
-        <td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
-    </tr>
+	<tr>
+		<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")%></td>
+	</tr>
 </table>
 <hr>
 <CENTER>
-<form method="post" name="mergeform" action="MergeRecords.do" onSubmit="return checkTypeIn()">    
-<input type="hidden" name="mergeAction" value="merge" />
-<input type="hidden" name="provider_no" value="<%= session.getAttribute("user") %>" />
-<table width="100%" border="2" bgcolor="#ffffff"> 
-<tr bgcolor="silver">
-<TH align="CENTER" width="5%"></th>
-<% if (!mergedSearch){%>
-<th align="center" width="5%">Main Record</th>
-<%}%>
-<TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">DEMOGP' NO</a></b></font></TH>
-<TH align="center" width="20%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">LAST NAME</a> </b></font></TH>
-<TH align="center" width="20%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>">FIRST NAME</a> </b></font></TH>
-<TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">AGE</a></b></font></TH>
-<TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit2%>">ROSTER STATUS</a></b></font></TH>
-<TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit2%>">SEX</a></B></font></TH>
-<TH align="center" width="10%"><b><a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">DOB(yy/mm/dd)</a></B></Font></TH>
-</tr>
-<%
+<form method="post" name="mergeform" action="MergeRecords.do"
+	onSubmit="return checkTypeIn()"><input type="hidden"
+	name="mergeAction" value="merge" /> <input type="hidden"
+	name="provider_no" value="<%= session.getAttribute("user") %>" />
+<table width="100%" border="2" bgcolor="#ffffff">
+	<tr bgcolor="silver">
+		<TH align="CENTER" width="5%"></th>
+		<% if (!mergedSearch){%>
+		<th align="center" width="5%">Main Record</th>
+		<%}%>
+		<TH align="center" width="10%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>">DEMOGP'
+		NO</a></b></font></TH>
+		<TH align="center" width="20%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">LAST
+		NAME</a> </b></font></TH>
+		<TH align="center" width="20%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>">FIRST
+		NAME</a> </b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">AGE</a></b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=roster_status&limit1=0&limit2=<%=strLimit2%>">ROSTER
+		STATUS</a></b></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=sex&limit1=0&limit2=<%=strLimit2%>">SEX</a></B></font></TH>
+		<TH align="center" width="10%"><b><a
+			href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=year_of_birth,month_of_birth,date_of_birth&limit1=0&limit2=<%=strLimit2%>">DOB(yy/mm/dd)</a></B></Font></TH>
+	</tr>
+	<%
 GregorianCalendar now=new GregorianCalendar();
 int curYear = now.get(Calendar.YEAR);
 int curMonth = (now.get(Calendar.MONTH)+1);
@@ -253,8 +274,8 @@ if(rs==null) {
         }	
 
 %>
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-    <%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<%
         DemographicMerged dmDAO = new DemographicMerged();
         String dbop = "demographic_search_detail";
         String head = dmDAO.getHead(apptMainBean.getString(rs,"demographic_no"));
@@ -264,59 +285,60 @@ if(rs==null) {
         if (vLocale.getCountry().equals("BR"))
             dbop = "demographic_search_detail_ptbr";
     if(mergedSearch || headRecord  ){%>
-    <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
-    <%}else{%>
-    <td align="center" width="5%" height="25">&nbsp;</td>
-    <%}%>
-    <% if (!mergedSearch ){
+		<td align="center" width="5%" height="25"><input type="checkbox"
+			name="records"
+			value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
+		<%}else{%>
+		<td align="center" width="5%" height="25">&nbsp;</td>
+		<%}%>
+		<% if (!mergedSearch ){
        if(headRecord){%>
-        <td align="center" width="5%" height="25"><input type="radio" name="head" value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
-       <%}else{%>
-        <td align="center" width="5%" height="25">&nbsp;</td>
-       <%}%>
-  
-    <%}%>    
-    <td width="15%" align="center" height="25">
-        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-        <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=apptMainBean.getString(rs,"demographic_no")%></a>
-        </caisi:isModuleLoad>
-    </td>
-    <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
-    <td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
-    <td align="center" width="10%" height="25"><%=age%></td>
-    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"roster_status")%></td>
-    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"sex")%></td>
-    <td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
-</tr>
-<%
+		<td align="center" width="5%" height="25"><input type="radio"
+			name="head"
+			value="<%= apptMainBean.getString(rs,"demographic_no") %>"></td>
+		<%}else{%>
+		<td align="center" width="5%" height="25">&nbsp;</td>
+		<%}%>
+
+		<%}%>
+		<td width="15%" align="center" height="25"><caisi:isModuleLoad
+			moduleName="TORONTO_RFQ" reverse="true">
+			<a
+				href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=apptMainBean.getString(rs,"demographic_no")%></a>
+		</caisi:isModuleLoad></td>
+		<td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"last_name")%></td>
+		<td align="center" width="20%" height="25"><%=apptMainBean.getString(rs,"first_name")%></td>
+		<td align="center" width="10%" height="25"><%=age%></td>
+		<td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"roster_status")%></td>
+		<td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"sex")%></td>
+		<td align="center" width="10%" height="25"><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
+	</tr>
+	<%
     }
 }
 apptMainBean.closePstmtConn();
-%> 
+%>
 
 </table>
 
 <br>
-<% if (mergedSearch){%>
-    <input type="submit" value="UnMerge Selected Records" onclick="UnMerge()"/>
-<%}else{%>
-    <input type="submit" value="Merge Selected Records"/>
-<%}%>    
-<br />
+<% if (mergedSearch){%> <input type="submit"
+	value="UnMerge Selected Records" onclick="UnMerge()" /> <%}else{%> <input
+	type="submit" value="Merge Selected Records" /> <%}%> <br />
 </form>
 <%
 int nLastPage=0,nNextPage=0;
 nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
 nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
 if(nLastPage>=0) {
-%>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
 }
 if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="admincontrol.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
 }
 }else {// end if (request.getParameter("keyword") != null)
 %>

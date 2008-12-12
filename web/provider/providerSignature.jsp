@@ -24,12 +24,12 @@
  */
 -->
 
-<%@ page language="java" %>
+<%@ page language="java"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import ="oscar.oscarProvider.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="oscar.oscarProvider.data.*"%>
 
 <%
 if(session.getValue("user") == null)
@@ -40,67 +40,63 @@ if(session.getValue("user") == null)
 ProSignatureData sig = new ProSignatureData();
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
 
-<html:base/>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<html:base />
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 
-<title>
-<bean:message key="provider.providerSignature.title"/>
-</title>
+<title><bean:message key="provider.providerSignature.title" /></title>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.providerSignature.msgPrefs"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                          <bean:message key="provider.providerSignature.msgTitle"/>
-                        </td>
-                        <td  >
-                          &nbsp;
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-            <% boolean hasSig = sig.hasSignature(curUser_no);
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.providerSignature.msgPrefs" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message key="provider.providerSignature.msgTitle" />
+				</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<% boolean hasSig = sig.hasSignature(curUser_no);
                if (hasSig){
-            %>
-               <bean:message key="provider.providerSignature.msgCurrentSignature"/> <u><%=sig.getSignature(curUser_no)%></u> <br>
-               <a href="editSignature.jsp"><bean:message key="provider.providerSignature.btnClickHere"/></a> <bean:message key="provider.providerSignature.msgChangeIt"/>
-            <% }else{%>
-               <bean:message key="provider.providerSignature.msgSigNotSet"/><br>
-               <a href="editSignature.jsp"><bean:message key="provider.providerSignature.btnClickHere"/></a> <bean:message key="provider.providerSignature.msgCreate"/>
-            <%}%> 
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+            %> <bean:message
+			key="provider.providerSignature.msgCurrentSignature" /> <u><%=sig.getSignature(curUser_no)%></u>
+		<br>
+		<a href="editSignature.jsp"><bean:message
+			key="provider.providerSignature.btnClickHere" /></a> <bean:message
+			key="provider.providerSignature.msgChangeIt" /> <% }else{%> <bean:message
+			key="provider.providerSignature.msgSigNotSet" /><br>
+		<a href="editSignature.jsp"><bean:message
+			key="provider.providerSignature.btnClickHere" /></a> <bean:message
+			key="provider.providerSignature.msgCreate" /> <%}%>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

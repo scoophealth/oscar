@@ -27,8 +27,11 @@
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="session" />
 <% //save or delete the settings
   int rowsAffected = 0;
@@ -73,80 +76,83 @@ function checkInput() {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
 
-  <table border="0" width="100%">
-    <tr> 
-      <td width="50" bgcolor="#009966">&nbsp;</td>
-      <td align="center">
-	  
-        <table width="100%" border="0" cellspacing="0" cellpadding="5">
-          <tr bgcolor="#CCFFCC"> 
-            <td> 
-              <p align="right">Provider: </p>
-            </td>
-            <td>
-<input type="text" name="templatename" value="Delete">
-      <select name="delcode" >
-	<%
+<table border="0" width="100%">
+	<tr>
+		<td width="50" bgcolor="#009966">&nbsp;</td>
+		<td align="center">
+
+		<table width="100%" border="0" cellspacing="0" cellpadding="5">
+			<tr bgcolor="#CCFFCC">
+				<td>
+				<p align="right">Provider:</p>
+				</td>
+				<td><input type="text" name="templatename" value="Delete">
+				<select name="delcode">
+					<%
    ResultSet rsdemo = null;
    rsdemo = scheduleMainBean.queryResults("search_scheduletemplatecode");
    while (rsdemo.next()) { 
 	%>
-        <option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
-  <%
+					<option value="<%=rsdemo.getString("code")%>"><%=rsdemo.getString("code")+" |"+rsdemo.getString("description")%></option>
+					<%
      }
 	%>
-      </select>
-            <td></td>
-          </tr>
-</form>
-        </table>
-
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
-  			<tr>
-        	  <td width="50%" align="center" >&nbsp; </td>
-  			</TR>
+				</select>
+				<td></td>
+			</tr>
+			</form>
 		</table>
 
-          <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-<form name="addtemplatecode" method="post" action="scheduletemplatecodesetting.jsp">
-            <tr bgcolor="#FOFOFO" align="center"> 
-              <td colspan=2><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Appt Template Code</font></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td><font color="red">Code:</font></td>
-             <td><input type="text" name="code" size="1" maxlength="1"></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td><font color="red">Description:</font></td>
-             <td><input type="text" name="description"  size="25"></td>
-            </tr>
-            <tr bgcolor='ivory'>
-             <td><font color="red">Duration:</font></td>
-             <td><input type="text" name="duration"  size="3" maxlength="3"> mins.</td>
-            </tr>
-          </table>
-            
-            
-          <table width="95%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-          <tr bgcolor="#FOFOFO">
-            <td></td>
-			<td align="right"> 
-                <input type="submit" name="dboperation" value=" Save ">
-                <input type="button" name="Button" value=" Exit " onClick="window.close()">
-            </td>
-          </tr>
-</form>
-        </table>
-        <p align='left'>
-      &nbsp;  Code: only one char.<br>
-      &nbsp;  Description: less than 40 chars.<br>
-      &nbsp;  Duration: unit is minute.</p>
-        
-      </td>
-    </tr>
-  </table>
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
+			<tr>
+				<td width="50%" align="center">&nbsp;</td>
+			</TR>
+		</table>
+
+		<table width="95%" border="1" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<form name="addtemplatecode" method="post"
+				action="scheduletemplatecodesetting.jsp">
+			<tr bgcolor="#FOFOFO" align="center">
+				<td colspan=2><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+					color="red">Appt Template Code</font></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td><font color="red">Code:</font></td>
+				<td><input type="text" name="code" size="1" maxlength="1"></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td><font color="red">Description:</font></td>
+				<td><input type="text" name="description" size="25"></td>
+			</tr>
+			<tr bgcolor='ivory'>
+				<td><font color="red">Duration:</font></td>
+				<td><input type="text" name="duration" size="3" maxlength="3">
+				mins.</td>
+			</tr>
+		</table>
+
+
+		<table width="95%" border="0" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<tr bgcolor="#FOFOFO">
+				<td></td>
+				<td align="right"><input type="submit" name="dboperation"
+					value=" Save "> <input type="button" name="Button"
+					value=" Exit " onClick="window.close()"></td>
+			</tr>
+			</form>
+		</table>
+		<p align='left'>&nbsp; Code: only one char.<br>
+		&nbsp; Description: less than 40 chars.<br>
+		&nbsp; Duration: unit is minute.</p>
+
+		</td>
+	</tr>
+</table>
 
 </form>
 </body>

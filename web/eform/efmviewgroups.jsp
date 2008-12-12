@@ -24,8 +24,8 @@
  * Ontario, Canada 
  */
 --%>
-<%@ page import = "java.util.*, oscar.eform.*"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ page import="java.util.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%   
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -53,27 +53,30 @@ if (patientGroups.equals("1")) {
     groups = EFormUtil.getEFormGroups();
 }
 %>
-<form action="<%=url%>" name="groupselect" method="get">
-      <input type="hidden" id="group_view" name="group_view" value="">
-      <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-      <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
-      <div class="grouplist">
-          <div class="grouplistHeader">
-            View Group: 
-          </div>
-          <ul class="grouplist">
-               <li><a href="#" onclick="document.forms['groupselect'].submit()"><b>Show All</b></a></li>
-            <%for (int i=0; i<groups.size(); i++) {        
+<form action="<%=url%>" name="groupselect" method="get"><input
+	type="hidden" id="group_view" name="group_view" value=""> <input
+	type="hidden" name="demographic_no" value="<%=demographic_no%>">
+<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
+<div class="grouplist">
+<div class="grouplistHeader">View Group:</div>
+<ul class="grouplist">
+	<li><a href="#" onclick="document.forms['groupselect'].submit()"><b>Show
+	All</b></a></li>
+	<%for (int i=0; i<groups.size(); i++) {        
                 String selected = "";
                 Hashtable curhash = (Hashtable) groups.get(i);
                 String group = (String) curhash.get("groupName");
                 String size = (String) curhash.get("count");
                 if (group.equals(groupView)) selected = "selected";%>
-               <li class="<%=selected%>"><a href="#" onclick="document.getElementById('group_view').value='<%=group%>'; document.forms['groupselect'].submit();"><%=group%> (<%=size%>)</a></li>
-           <% } %>
-          </ul>
-          <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
-              <a href="#" onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')" style="color: #835921;">Edit Groups</a>
-          </security:oscarSec>
-      </div>
-</form>    
+	<li class="<%=selected%>"><a href="#"
+		onclick="document.getElementById('group_view').value='<%=group%>'; document.forms['groupselect'].submit();"><%=group%>
+	(<%=size%>)</a></li>
+	<% } %>
+</ul>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
+	<a href="#"
+		onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')"
+		style="color: #835921;">Edit Groups</a>
+</security:oscarSec></div>
+</form>

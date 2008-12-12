@@ -33,11 +33,11 @@ table.simple {
 	width: 100%;
 }
 
-table.simple td, table.simple th {
+table.simple td,table.simple th {
 	border: 1px solid #ccc;
 }
 
-table.nocol tbody td, table.nocol tbody th {
+table.nocol tbody td,table.nocol tbody th {
 	border-left: none;
 	border-right: none;
 }

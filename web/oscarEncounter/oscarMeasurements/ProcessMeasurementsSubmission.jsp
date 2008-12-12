@@ -23,14 +23,15 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -41,10 +42,9 @@
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.Measurements.msgProcessMeasurementsSubmission"/>
-</title>
-<html:base/>
+<title><bean:message
+	key="oscarEncounter.Measurements.msgProcessMeasurementsSubmission" /></title>
+<html:base />
 </head>
 
 <script language="javascript">
@@ -73,14 +73,14 @@ function write2Parent(text){
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
+<html:errors />
 <table>
-    <tr>
-        <td> Processing... </td>
-        <script>
+	<tr>
+		<td>Processing...</td>
+		<script>
             write2Parent("<bean:write name="textOnEncounter"/>");
-        </script>        
-    </tr>
+        </script>
+	</tr>
 </table>
 
 

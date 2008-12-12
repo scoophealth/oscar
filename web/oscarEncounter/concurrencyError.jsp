@@ -23,19 +23,19 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
 bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 %>
 <html:html locale="true">
-    <head>
-        <title><bean:message key="oscarEncounter.concurrencyError.title" /></title>
-    </head>
-    <body>
-        <h1><bean:message key="oscarEncounter.concurrencyError.errorMsg" /></h1>
-        <textarea name='encounterTextarea' wrap="hard" cols="99" rows="20"><%=bean.encounter%></textarea>
-    </body>
+<head>
+<title><bean:message key="oscarEncounter.concurrencyError.title" /></title>
+</head>
+<body>
+<h1><bean:message key="oscarEncounter.concurrencyError.errorMsg" /></h1>
+<textarea name='encounterTextarea' wrap="hard" cols="99" rows="20"><%=bean.encounter%></textarea>
+</body>
 </html:html>

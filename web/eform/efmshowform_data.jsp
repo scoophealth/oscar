@@ -28,7 +28,7 @@
 //to the patient.
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
-<%@ page import = "java.sql.*, oscar.eform.data.*"%> 
+<%@ page import="java.sql.*, oscar.eform.data.*"%>
 <% 
   String id = request.getParameter("fid");  
   if (id == null) {  //if form exists in patient

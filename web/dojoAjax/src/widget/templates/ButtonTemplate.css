@@ -9,7 +9,8 @@
 
 .dojoButton .dojoButtonContents {
 	padding: 2px 2px 2px 2px;
-	text-align: center;		/* if icon and label are split across two lines, center icon */
+	text-align: center;
+	/* if icon and label are split across two lines, center icon */
 	color: white;
 }
 
@@ -21,14 +22,14 @@
 	cursor: url("images/no.gif"), default;
 }
 
-
 .dojoButtonContents img {
-	vertical-align: middle;	/* if icon and label are on same line, center them */
+	vertical-align: middle;
+	/* if icon and label are on same line, center them */
 }
 
 /* -------- colors ------------ */
-
 .dojoButtonHover .dojoButtonContents {
+	
 }
 
 .dojoButtonDepressed .dojoButtonContents {
@@ -39,10 +40,8 @@
 	color: #aaa;
 }
 
-
 /* ---------- drop down button specific ---------- */
-
-/* border between label and arrow (for drop down buttons */
+	/* border between label and arrow (for drop down buttons */
 .dojoButton .border {
 	width: 1px;
 	background: gray;
@@ -55,5 +54,5 @@
 }
 
 .dojoButton.disabled .downArrow {
-	cursor : default;
+	cursor: default;
 }

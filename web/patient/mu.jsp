@@ -31,25 +31,28 @@
 <html>
 <head>
 <title>PATIENT</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MAIL US</font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">MAIL
+		US</font></th>
+	</tr>
 </table>
 
-<P><center>
-    <p>Your Message: </p>
-    <p> 
-      <textarea name="textfield" cols="70" rows="8"></textarea>
-    </p>
-    <p> 
-      <input type="submit" name="Submit" value="Submit" onClick="window.location='patient_screen.jsp'">
-      <input type="button" name="button" value="Cancel" onClick="window.location='patient_screen.jsp'">
-    </p>
-  </center>
+<P>
+<center>
+<p>Your Message:</p>
+<p><textarea name="textfield" cols="70" rows="8"></textarea></p>
+<p><input type="submit" name="Submit" value="Submit"
+	onClick="window.location='patient_screen.jsp'"> <input
+	type="button" name="button" value="Cancel"
+	onClick="window.location='patient_screen.jsp'"></p>
+</center>
 </body>
 </html>

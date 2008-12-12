@@ -1,3 +1,4 @@
+
 <% 
     
     String curProvider_no = request.getParameter("provider_no");
@@ -6,13 +7,17 @@
 	boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
 
-<%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page
+	import="java.util.*, java.sql.*,java.net.*, oscar.*, oscar.util.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<jsp:useBean id="groupApptBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="groupApptBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"}, 
@@ -136,7 +141,8 @@
 <%   
     if (bSucc) {
 %>
-<h1><bean:message key="appointment.appointmentgrouprecords.msgAddSuccess"/></h1>
+<h1><bean:message
+	key="appointment.appointmentgrouprecords.msgAddSuccess" /></h1>
 <script LANGUAGE="JavaScript">
 self.close();
 self.opener.refresh();
@@ -144,7 +150,10 @@ self.opener.refresh();
 <%
         }  else {
 %>
-  <p><h1><bean:message key="appointment.appointmentgrouprecords.msgAddFailure"/></h1></p>
+<p>
+<h1><bean:message
+	key="appointment.appointmentgrouprecords.msgAddFailure" /></h1>
+</p>
 <%  
     }
     groupApptBean.closePstmtConn();
@@ -178,7 +187,8 @@ self.opener.refresh();
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="appointment.appointmentgrouprecords.title"/></title>
+<title><bean:message
+	key="appointment.appointmentgrouprecords.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
@@ -246,25 +256,42 @@ function onSub() {
 </SCRIPT>
 </head>
 
-<body  bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<form name="groupappt" method="POST" action="appointmentgrouprecords.jsp" onSubmit="return ( onSub());">
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<form name="groupappt" method="POST"
+	action="appointmentgrouprecords.jsp" onSubmit="return ( onSub());">
 <INPUT TYPE="hidden" NAME="groupappt" value="">
 <table width="100%" BGCOLOR="silver">
-  <tr><TD>
-<%    if (bEdit) {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>" onClick="onButDelete()">
-<%    } else {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>" >
-<%    }    %>
-  </TD>
-      <TD align="right"><INPUT TYPE = "button" VALUE = " <bean:message key="global.btnBack"/> " onClick="window.history.go(-1);return false;"> <INPUT TYPE = "button" VALUE = " <bean:message key="global.btnExit"/> " onClick="onExit()"></TD>
-  </tr>
+	<tr>
+		<TD>
+		<%    if (bEdit) {    %> <INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>"
+			onClick="onButDelete()"> <%    } else {    %> <INPUT
+			TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>">
+		<%    }    %>
+		</TD>
+		<TD align="right"><INPUT TYPE="button"
+			VALUE=" <bean:message key="global.btnBack"/> "
+			onClick="window.history.go(-1);return false;"> <INPUT
+			TYPE="button" VALUE=" <bean:message key="global.btnExit"/> "
+			onClick="onExit()"></TD>
+	</tr>
 </table>
 
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="appointment.appointmentgrouprecords.msgLabel"/></font></th></tr>
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica"><bean:message
+			key="appointment.appointmentgrouprecords.msgLabel" /></font></th>
+	</tr>
 </table>
 
 <%
@@ -343,21 +370,28 @@ function onSub() {
 		if(temp.equals("dboperation") ||temp.equals("displaymode") ||temp.equals("search_mode") ||temp.equals("chart_no")) continue;
   	    out.println("<input type='hidden' name='"+temp+"' value=\"" + UtilMisc.htmlEscape(request.getParameter(temp)) + "\">");
     }
-%> 
-<table border=0 cellspacing=0 cellpadding=0 width="100%" >
-<tr><td nowrap><font color='black'><%=request.getParameter("appointment_date")%> |
-        <%=request.getParameter("start_time")%> - <%=request.getParameter("end_time")%> |
-		<%=UtilMisc.toUpperLowerCase(request.getParameter("keyword"))%></font></td>
-  <td align='right' nowrap>Group : <%=mygroupno%> </td></tr>
+%>
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr>
+		<td nowrap><font color='black'><%=request.getParameter("appointment_date")%>
+		| <%=request.getParameter("start_time")%> - <%=request.getParameter("end_time")%>
+		| <%=UtilMisc.toUpperLowerCase(request.getParameter("keyword"))%></font></td>
+		<td align='right' nowrap>Group : <%=mygroupno%></td>
+	</tr>
 </table>
-<table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%" BGCOLOR="white">
-  <tr BGCOLOR="<%=tableTitle%>">
-  <th width=30% nowrap><bean:message key="appointment.appointmentgrouprecords.msgProviderName"/></th>
-  <th width=11% nowrap><bean:message key="appointment.appointmentgrouprecords.msgFirstAppointment"/></th>
-  <th width=11% nowrap><bean:message key="appointment.appointmentgrouprecords.msgSecondAppointment"/></th>
-  <th width=48% nowrap><bean:message key="appointment.appointmentgrouprecords.msgExistedAppointment"/></th>
-  </tr>
-<%
+<table BORDER="0" CELLPADDING="2" CELLSPACING="2" WIDTH="100%"
+	BGCOLOR="white">
+	<tr BGCOLOR="<%=tableTitle%>">
+		<th width=30% nowrap><bean:message
+			key="appointment.appointmentgrouprecords.msgProviderName" /></th>
+		<th width=11% nowrap><bean:message
+			key="appointment.appointmentgrouprecords.msgFirstAppointment" /></th>
+		<th width=11% nowrap><bean:message
+			key="appointment.appointmentgrouprecords.msgSecondAppointment" /></th>
+		<th width=48% nowrap><bean:message
+			key="appointment.appointmentgrouprecords.msgExistedAppointment" /></th>
+	</tr>
+	<%
     String [] param1 = new String[2];
     param1[0] = request.getParameter("appointment_date");
 
@@ -378,33 +412,37 @@ function onSub() {
 		if(bAvailProvider == bLooperCon) continue;
 
         bDefProvider = curProvider_no.equals(rsdemo.getString("p.provider_no")) ? true : false;
-%>      
-  <tr BGCOLOR="<%=bDefProvider?deepcolor:(bAvailProvider?weakcolor:"#e0e0e0")%>">
-  <td align='right'>  &nbsp;<%=rsdemo.getString("p.last_name")%>, <%=rsdemo.getString("p.first_name")%></td>
-  <td align='center'>   &nbsp;
-    <input type="checkbox" name="one<%=i%>" value="<%=i%>" <%=bEdit ? (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"one")
-		!= null ? otherAppt.getProperty(rsdemo.getString("p.provider_no")+"one") : "") : (bDefProvider? "checked":"")%> onclick="onCheck(this)" >
-    <input type="hidden" name="provider_no<%=i%>" value="<%=rsdemo.getString("p.provider_no")%>">
-    <INPUT TYPE="hidden" NAME="last_name<%=i%>" VALUE='<%=rsdemo.getString("p.last_name")%>'>
-    <INPUT TYPE="hidden" NAME="first_name<%=i%>" VALUE='<%=rsdemo.getString("p.first_name")%>'>
-<%    if (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"apptno") != null) {%>
-    <input type="hidden" name="appointment_no<%=i%>" value="<%=otherAppt.getProperty(rsdemo.getString("p.provider_no")+"apptno")%>">
-<%    }    %>
-    </td>
-  <td align='center'>   &nbsp;
-    <input type="checkbox" name="two<%=i%>" value="<%=i%>"  <%=bEdit ? (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"two")
-		!= null ? otherAppt.getProperty(rsdemo.getString("p.provider_no")+"two") : "") : ""%> onclick="onCheck(this)">
-  </td>
-  <td nowrap>
-    <%=otherAppt.getProperty(rsdemo.getString("p.provider_no")+"appt")
+%>
+	<tr
+		BGCOLOR="<%=bDefProvider?deepcolor:(bAvailProvider?weakcolor:"#e0e0e0")%>">
+		<td align='right'>&nbsp;<%=rsdemo.getString("p.last_name")%>, <%=rsdemo.getString("p.first_name")%></td>
+		<td align='center'>&nbsp; <input type="checkbox" name="one<%=i%>"
+			value="<%=i%>"
+			<%=bEdit ? (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"one")
+		!= null ? otherAppt.getProperty(rsdemo.getString("p.provider_no")+"one") : "") : (bDefProvider? "checked":"")%>
+			onclick="onCheck(this)"> <input type="hidden"
+			name="provider_no<%=i%>"
+			value="<%=rsdemo.getString("p.provider_no")%>"> <INPUT
+			TYPE="hidden" NAME="last_name<%=i%>"
+			VALUE='<%=rsdemo.getString("p.last_name")%>'> <INPUT
+			TYPE="hidden" NAME="first_name<%=i%>"
+			VALUE='<%=rsdemo.getString("p.first_name")%>'> <%    if (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"apptno") != null) {%>
+		<input type="hidden" name="appointment_no<%=i%>"
+			value="<%=otherAppt.getProperty(rsdemo.getString("p.provider_no")+"apptno")%>">
+		<%    }    %>
+		</td>
+		<td align='center'>&nbsp; <input type="checkbox" name="two<%=i%>"
+			value="<%=i%>"
+			<%=bEdit ? (otherAppt.getProperty(rsdemo.getString("p.provider_no")+"two")
+		!= null ? otherAppt.getProperty(rsdemo.getString("p.provider_no")+"two") : "") : ""%>
+			onclick="onCheck(this)"></td>
+		<td nowrap><%=otherAppt.getProperty(rsdemo.getString("p.provider_no")+"appt")
 		!= null ? otherAppt.getProperty(rsdemo.getString("p.provider_no")+"appt") : ""%>
-<%--  
+		<%--  
     // <input type="text" name="orig<%=i%>" value="<%=bDefProvider? request.getParameter("reason"):""%>" style="width:100%">
---%>
-  &nbsp;
-  </td>
-  </tr>
-<%
+--%> &nbsp;</td>
+	</tr>
+	<%
       }
       bLooperCon = true; 
 	  i = 0;
@@ -412,27 +450,43 @@ function onSub() {
     }
     groupApptBean.closePstmtConn();
 %>
-    </tr>
-    <tr bgcolor='silver'>
-	<td align='right' colspan=2><a href=# onClick='checkAll("one", "true", "two"); return false;'>Check All</a>
-	|<a href=# onClick='checkAll("one", "false", "two"); return false;'>Clear All</a></td>
-	<td colspan=2><a href=# onClick='checkAll("two", "true", "one"); return false;'>Check All</a>
-	|<a href=# onClick='checkAll("two", "false", "one"); return false;'>Clear All</a></td>
-    </tr>
-    </table>
+	</tr>
+	<tr bgcolor='silver'>
+		<td align='right' colspan=2><a href=#
+			onClick='checkAll("one", "true", "two"); return false;'>Check All</a>
+		|<a href=# onClick='checkAll("one", "false", "two"); return false;'>Clear
+		All</a></td>
+		<td colspan=2><a href=#
+			onClick='checkAll("two", "true", "one"); return false;'>Check All</a>
+		|<a href=# onClick='checkAll("two", "false", "one"); return false;'>Clear
+		All</a></td>
+	</tr>
+</table>
 
 <table width="100%" BGCOLOR="silver">
-  <tr><TD>
-<%    if (bEdit) {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>" >
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>" onClick="onButDelete()">
-<%    } else {    %>
-  <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>" >
-<%    }    %>
-  </TD>
-      <TD align="right"><INPUT TYPE = "button" VALUE = " <bean:message key="global.btnBack"/> " onClick="window.history.go(-1);return false;"> <INPUT TYPE = "button" VALUE = " <bean:message key="global.btnExit"/> " onClick="onExit()"></TD>
-  </tr>
+	<tr>
+		<TD>
+		<%    if (bEdit) {    %> <INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Update'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupUpdate"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Cancel'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupCancel"/>">
+		<INPUT TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Group Delete'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnGroupDelete"/>"
+			onClick="onButDelete()"> <%    } else {    %> <INPUT
+			TYPE="button"
+			onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();"
+			VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>">
+		<%    }    %>
+		</TD>
+		<TD align="right"><INPUT TYPE="button"
+			VALUE=" <bean:message key="global.btnBack"/> "
+			onClick="window.history.go(-1);return false;"> <INPUT
+			TYPE="button" VALUE=" <bean:message key="global.btnExit"/> "
+			onClick="onExit()"></TD>
+	</tr>
 </table>
 
 </form>

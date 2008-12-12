@@ -28,20 +28,22 @@
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
 %>
 
-<%@ page import="oscar.form.*, java.util.*" %>
-<%@ page import="java.io.FileInputStream" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.form.*, java.util.*"%>
+<%@ page import="java.io.FileInputStream"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <title>Print Mental Health Referral</title>
-<html:base/>
+<html:base />
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
-<link rel="stylesheet" type="text/css" media="screen" href="mhStyles.css" >
+<link rel="stylesheet" type="text/css" media="screen"
+	href="mhStyles.css">
 
 <%
     Properties props = new Properties();
@@ -72,119 +74,111 @@
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="button" value="Exit" onclick="javascript:onCancel();"/>
-            <input type="button" value="Print" onclick="javascript:onPrint();"/>
-        </td>
-    </tr>
+	<tr>
+		<td align="left"><input type="button" value="Exit"
+			onclick="javascript:onCancel();" /> <input type="button"
+			value="Print" onclick="javascript:onPrint();" /></td>
+	</tr>
 </table>
 
 <table cellpadding="5" cellspacing="0">
-    <tr>
-        <th align="left">
-            <big>MENTAL HEALTH REFERRAL</big><br><br>
-        </th>
-    </tr>
-    <tr>
-        <td>
-            <table border="0" cellpadding="5" cellspacing="0" class="tableWithBorder">
-                <tr>
-                    <td>Name:</td>
-                    <td align="left"><%= props.getProperty("c_pName", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Sex:</td>
-                    <td align="left"><%= props.getProperty("c_sex", "") %>&nbsp;</td>
-                </tr>
-                </tr>
-                    <td>Address:</td>
-                    <td align="left"><%= props.getProperty("c_address", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Home Phone:</td>
-                    <td align="left"><%= props.getProperty("c_homePhone", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Birth Date <small>(yyyy/mm/dd)</small>: </td>
-                    <td align="left"><%= props.getProperty("c_birthDate", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Referral Date<small>(yyyy/mm/dd)</small>: </td>
-                    <td align="left"><%= props.getProperty("c_referralDate", "") %>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>Referred By: </td>
-                    <td align="left"><%= props.getProperty("c_referredBy", "") %>&nbsp;</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <table>
-                <tr>
-                    <td class="mhSelect">
-                        Psychiatric Symptoms:<br>
-                        <%String[] rps = list.loadData("mhReferral/PsychiatricSymptoms.txt", projecthome, path );%>
-                        1. <b><%=props.getProperty("r_rps1", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("r_rps2", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("r_rps3", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Psychosocial Issues:<br>
-                        <% String[] rpi = list.loadData("mhReferral/PsychosocialIssues.txt", projecthome, path );%>
-                        1. <b><%=props.getProperty("r_rpi1", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("r_rpi2", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("r_rpi3", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Med/Phy Issues:<br>
-                         <% String[] rmpi = list.loadData("mhReferral/MedPhyIssues.txt", projecthome, path );%>
-                        1. <b><%=props.getProperty("r_rmpi1", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("r_rmpi2", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("r_rmpi3", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi3", "---"))-1] %></b>
-                   </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Interventions Requested:<br>
-                         <% String[] ir = list.loadData("mhReferral/InterventionsRequested.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("r_ir1", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("r_ir2", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("r_ir3", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Advice Regarding Management:<br>
-                        <% String[] arm = list.loadData("mhReferral/AdviceRegardingManagement.txt", projecthome, path ); %>
-                        1. <b><%=props.getProperty("r_arm1", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm1", "---"))-1] %></b><br>
-                        2. <b><%=props.getProperty("r_arm2", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm2", "---"))-1] %></b><br>
-                        3. <b><%=props.getProperty("r_arm3", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm3", "---"))-1] %></b>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="mhSelect">
-                        Comments:<br>
-                        <%= props.getProperty("r_refComments", "")%>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+	<tr>
+		<th align="left"><big>MENTAL HEALTH REFERRAL</big><br>
+		<br>
+		</th>
+	</tr>
+	<tr>
+		<td>
+		<table border="0" cellpadding="5" cellspacing="0"
+			class="tableWithBorder">
+			<tr>
+				<td>Name:</td>
+				<td align="left"><%= props.getProperty("c_pName", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Sex:</td>
+				<td align="left"><%= props.getProperty("c_sex", "") %>&nbsp;</td>
+			</tr>
+			</tr>
+			<td>Address:</td>
+			<td align="left"><%= props.getProperty("c_address", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Home Phone:</td>
+				<td align="left"><%= props.getProperty("c_homePhone", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Birth Date <small>(yyyy/mm/dd)</small>:</td>
+				<td align="left"><%= props.getProperty("c_birthDate", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Referral Date<small>(yyyy/mm/dd)</small>:</td>
+				<td align="left"><%= props.getProperty("c_referralDate", "") %>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>Referred By:</td>
+				<td align="left"><%= props.getProperty("c_referredBy", "") %>&nbsp;</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table>
+			<tr>
+				<td class="mhSelect">Psychiatric Symptoms:<br>
+				<%String[] rps = list.loadData("mhReferral/PsychiatricSymptoms.txt", projecthome, path );%>
+				1. <b><%=props.getProperty("r_rps1", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("r_rps2", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("r_rps3", "---").equals("")?"":rps[Integer.parseInt(props.getProperty("r_rps3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Psychosocial Issues:<br>
+				<% String[] rpi = list.loadData("mhReferral/PsychosocialIssues.txt", projecthome, path );%>
+				1. <b><%=props.getProperty("r_rpi1", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("r_rpi2", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("r_rpi3", "---").equals("")?"":rpi[Integer.parseInt(props.getProperty("r_rpi3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Med/Phy Issues:<br>
+				<% String[] rmpi = list.loadData("mhReferral/MedPhyIssues.txt", projecthome, path );%>
+				1. <b><%=props.getProperty("r_rmpi1", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("r_rmpi2", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("r_rmpi3", "---").equals("")?"":rmpi[Integer.parseInt(props.getProperty("r_rmpi3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Interventions Requested:<br>
+				<% String[] ir = list.loadData("mhReferral/InterventionsRequested.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("r_ir1", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("r_ir2", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("r_ir3", "---").equals("")?"":ir[Integer.parseInt(props.getProperty("r_ir3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Advice Regarding Management:<br>
+				<% String[] arm = list.loadData("mhReferral/AdviceRegardingManagement.txt", projecthome, path ); %>
+				1. <b><%=props.getProperty("r_arm1", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm1", "---"))-1] %></b><br>
+				2. <b><%=props.getProperty("r_arm2", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm2", "---"))-1] %></b><br>
+				3. <b><%=props.getProperty("r_arm3", "---").equals("")?"":arm[Integer.parseInt(props.getProperty("r_arm3", "---"))-1] %></b>
+				</td>
+			</tr>
+			<tr>
+				<td class="mhSelect">Comments:<br>
+				<%= props.getProperty("r_refComments", "")%></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 </table>
 <table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-            <input type="button" value="Exit" onclick="javascript:onCancel();"/>
-            <input type="button" value="Print" onclick="javascript:onPrint();"/>
-        </td>
-    </tr>
+	<tr>
+		<td align="left"><input type="button" value="Exit"
+			onclick="javascript:onCancel();" /> <input type="button"
+			value="Print" onclick="javascript:onPrint();" /></td>
+	</tr>
 </table>
 
 </body>

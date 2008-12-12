@@ -1,5 +1,8 @@
-<%@ page import="java.util.*, oscar.oscarReport.data.*, java.sql.*, oscar.login.*, java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="java.util.*, oscar.oscarReport.data.*, java.sql.*, oscar.login.*, java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Report in CSV")) {
@@ -471,24 +474,24 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 }
 %>
 
-  <html lang="en">
-    <head>
-      <title>
-         Report List
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <!-- calendar stylesheet -->
-      <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-      <!-- main calendar program -->
-      <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-      <!-- language for the calendar -->
-      <script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
-      <!-- the following script defines the Calendar.setup helper function, which makes
+<html lang="en">
+<head>
+<title>Report List</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/calendar-en.js"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-      <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-      <script language="JavaScript">
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script language="JavaScript">
 
 		<!--
 		function setfocus() {
@@ -510,61 +513,62 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 		//-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr>
-          <td align="left">
-            &nbsp;
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td align="left">&nbsp;</td>
+	</tr>
+</table>
 
-      <center>
+<center>
 
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="90%">
-        <tr>
-          <th BGCOLOR="#CCFFFF">Client Database Report</th>
-          <th width="10%" nowrap><a href=# onclick="history.back();">Back to Report</a></th>
-        </tr>
-      </table>
-      
-      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%" class="sortable tabular_list">
-        <thead>  
-         <tr BGCOLOR="#66CCCC">
-          <th width="6%">No.</th>
-<% for(int i=0; i<vecFieldCaption.size(); i++) { %>
-          <th><%=(String) vecFieldCaption.get(i)%></th>
-<% } %>
-<% if(bSpecSelect) {
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="90%">
+	<tr>
+		<th BGCOLOR="#CCFFFF">Client Database Report</th>
+		<th width="10%" nowrap><a href=# onclick="history.back();">Back
+		to Report</a></th>
+	</tr>
+</table>
+
+<table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%"
+	class="sortable tabular_list">
+	<thead>
+		<tr BGCOLOR="#66CCCC">
+			<th width="6%">No.</th>
+			<% for(int i=0; i<vecFieldCaption.size(); i++) { %>
+			<th><%=(String) vecFieldCaption.get(i)%></th>
+			<% } %>
+			<% if(bSpecSelect) {
        for(int i=0; i<vecSpecCaption.size(); i++) {
 %>
-          <th><%=(String) vecSpecCaption.get(i)%></th>
-<% } }%>
-         </tr>
-        </thead>
-<% 
+			<th><%=(String) vecSpecCaption.get(i)%></th>
+			<% } }%>
+		</tr>
+	</thead>
+	<% 
 for(int i=0; i<vecFieldValue.size(); i++) {
 	String color = i%2==0? "#EEEEFF" : "#DDDDFF";
 	Properties prop = (Properties) vecFieldValue.get(i);
 %>
-        <tr BGCOLOR="<%=color%>">
-          <td align="center"><%=i + 1 %></td>
-	<% for(int j=0; j<vecFieldName.size(); j++) { %>
-          <td><%=prop.getProperty((String) vecFieldName.get(j), "")%>&nbsp;</td>
-	<% } %>
-<%  if(bSpecSelect) {
+	<tr BGCOLOR="<%=color%>">
+		<td align="center"><%=i + 1 %></td>
+		<% for(int j=0; j<vecFieldName.size(); j++) { %>
+		<td><%=prop.getProperty((String) vecFieldName.get(j), "")%>&nbsp;</td>
+		<% } %>
+		<%  if(bSpecSelect) {
 		String demoNo = prop.getProperty("demographic_no");
        for(int j=0; j<vecSpecCaption.size(); j++) {
 %>
-          <td><%=propSpecValue.getProperty(demoNo+((String) vecSpecCaption.get(j)).replaceAll(" ","_"), "")%>&nbsp;</td>
-<%	} } %>
-        </tr>
-<%} %>
-      </table>
-      
-      </center>
-      <script language="javascript" src="../commons/scripts/sort_table/css.js">
+		<td><%=propSpecValue.getProperty(demoNo+((String) vecSpecCaption.get(j)).replaceAll(" ","_"), "")%>&nbsp;</td>
+		<%	} } %>
+	</tr>
+	<%} %>
+</table>
+
+</center>
+<script language="javascript" src="../commons/scripts/sort_table/css.js">
       <script language="javascript" src="../commons/scripts/sort_table/common.js">
       <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">
     </body>

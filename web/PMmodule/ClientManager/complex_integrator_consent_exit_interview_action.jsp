@@ -1,7 +1,9 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
+<%@page
+	import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.common.model.IntegratorConsentComplexExitInterview"%>
+<%@page
+	import="org.oscarehr.common.model.IntegratorConsentComplexExitInterview"%>
 <%@page import="org.oscarehr.common.model.FacilityDemographicPrimaryKey"%>
 <%@page import="org.apache.commons.lang.StringUtils"%><br />
 <%

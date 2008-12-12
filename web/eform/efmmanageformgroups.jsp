@@ -1,10 +1,11 @@
+
 <%
   
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
-%>  
-<%@ page import = "oscar.eform.data.*, oscar.eform.*, java.util.*"%> 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+%>
+<%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--  
 /*
  * 
@@ -58,7 +59,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title><bean:message key="eform.uploadhtml.title"/></title>
+<title><bean:message key="eform.uploadhtml.title" /></title>
 <link rel="stylesheet" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" href="../share/css/eforms.css">
 </head>
@@ -93,106 +94,161 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 </script>
 <body topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="98%" >
-  <tr bgcolor="#CCCCFF"><th><font face="Helvetica"><bean:message key="eform.uploadhtml.msgUploadEForm"/></font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="98%">
+	<tr bgcolor="#CCCCFF">
+		<th><font face="Helvetica"><bean:message
+			key="eform.uploadhtml.msgUploadEForm" /></font></th>
+	</tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="5" width="98%">
-    <tr><td>
-            <center>
-            <table cellspacing="2" cellpadding="2" width="90%" border="0" style="margin-top:10px" BGCOLOR="#EEEEFF">
-               
+	<tr>
+		<td>
+		<center>
+		<table cellspacing="2" cellpadding="2" width="90%" border="0"
+			style="margin-top: 10px" BGCOLOR="#EEEEFF">
 
-               <html:form action="/eform/addGroup" method="get" onsubmit="return checkFormAndDisable()">
-                   <tr><td width="35%" align='right' nowrap><strong><bean:message key="eform.groups.addNewGroup"/></strong></td>
-                       <td nowrap><input type="text" name="groupName" size="30"></td>
-                       <td nowrap width="35%"><input type="submit" name="subm" value="<bean:message key="eform.groups.addGroup"/>"></td>
-                   </tr>
-               </html:form>
-               
-               <form action="../eform/efmmanageformgroups.jsp" name="groupSelect" method="get">
-                   <tr><td nowrap align='right' nowrap><strong><bean:message key="eform.groups.selectViewGroup"/></strong></td>
-                       <td nowrap><select name="group_view" onchange="this.form.submit()">
-<%                              for (int i=0; i<groups.size(); i++) { 
+
+			<html:form action="/eform/addGroup" method="get"
+				onsubmit="return checkFormAndDisable()">
+				<tr>
+					<td width="35%" align='right' nowrap><strong><bean:message
+						key="eform.groups.addNewGroup" /></strong></td>
+					<td nowrap><input type="text" name="groupName" size="30"></td>
+					<td nowrap width="35%"><input type="submit" name="subm"
+						value="<bean:message key="eform.groups.addGroup"/>"></td>
+				</tr>
+			</html:form>
+
+			<form action="../eform/efmmanageformgroups.jsp" name="groupSelect"
+				method="get">
+			<tr>
+				<td nowrap align='right' nowrap><strong><bean:message
+					key="eform.groups.selectViewGroup" /></strong></td>
+				<td nowrap><select name="group_view"
+					onchange="this.form.submit()">
+					<%                              for (int i=0; i<groups.size(); i++) { 
                                    Hashtable curhash = (Hashtable) groups.get(i);
                                    String selected = "";
                                       if (((String) curhash.get("groupName")).equals(groupView)) {
                                           selected = " selected";
                                 }
 %>
-                           <option value="<%= (String) curhash.get("groupName")%>"<%= selected%>><%= (String) curhash.get("groupName")%> (<%= (String) curhash.get("count") %>)</option>
-                             <% } %>
-                           </select></td>
-                        <td nowrap>
-                            <input type="button" name="del" value="<bean:message key="eform.groups.delGroup"/>" onclick="delGroup()"></td>
-                   </tr>
-               </form>
-               
-               
-<%            if (!groupView.equals("")) {                      %>
-               <html:form action="/eform/addToGroup" method="get" onsubmit="submitAdd()">
-                   <tr><td align="right" nowrap><strong><bean:message key="eform.groups.addToGroup"/></strong></td>
-                       <td nowrap><html:select property="fid">
-<%                             for (int i=0; i<forms.size(); i++) {
+					<option value="<%= (String) curhash.get("groupName")%>"
+						<%= selected%>><%= (String) curhash.get("groupName")%> (<%= (String) curhash.get("count") %>)</option>
+					<% } %>
+				</select></td>
+				<td nowrap><input type="button" name="del"
+					value="<bean:message key="eform.groups.delGroup"/>"
+					onclick="delGroup()"></td>
+			</tr>
+			</form>
+
+
+			<%            if (!groupView.equals("")) {                      %>
+			<html:form action="/eform/addToGroup" method="get"
+				onsubmit="submitAdd()">
+				<tr>
+					<td align="right" nowrap><strong><bean:message
+						key="eform.groups.addToGroup" /></strong></td>
+					<td nowrap><html:select property="fid">
+						<%                             for (int i=0; i<forms.size(); i++) {
                                    Hashtable curhash = (Hashtable) forms.get(i);
-%>                         <html:option value="<%= (String) curhash.get("fid")%>"><%= (String) curhash.get("formName")%> | <%= (String) curhash.get("formDate")%></html:option>
-                            <% } %>
-                           </html:select>
-                  <td nowrap><input type="hidden" name="groupName" value="<%= groupView%>">
-                      <input type="submit" name="subm" value="<bean:message key="eform.groups.addToGroup"/>"></td>
-                  </tr>
-              </html:form>
-<%            }     %>
+%>
+						<html:option value="<%= (String) curhash.get("fid")%>"><%= (String) curhash.get("formName")%> | <%= (String) curhash.get("formDate")%></html:option>
+						<% } %>
+					</html:select>
+					<td nowrap><input type="hidden" name="groupName"
+						value="<%= groupView%>"> <input type="submit" name="subm"
+						value="<bean:message key="eform.groups.addToGroup"/>"></td>
+				</tr>
+			</html:form>
+			<%            }     %>
 
 
-            </table>
-            </center>
-    </td>
-    <td style="border-left: 2px solid #A6A6A6">
-        <table border="0" cellspacing="2" cellpadding="2" style="margin-left: 10px" width="100%" >
-          <tr><td align='left'><a href=# onclick="javascript:BackHtml()"><bean:message key="eform.uploadhtml.btnBack"/></a></td></tr>
-          <tr><td align='left'><a href="../eform/efmformmanager.jsp"><bean:message key="admin.admin.btnUploadForm"/> </a></td></tr>
-          <tr><td align='left'><a href="../eform/efmformmanagerdeleted.jsp"><bean:message key="eform.uploadhtml.btnDeleted"/> </a></td></tr>
-          <tr><td align='left'><a href="../eform/efmimagemanager.jsp"><bean:message key="admin.admin.btnUploadImage"/> </a></td></tr>
-          <tr><td align='left'><a href="../eform/efmmanageformgroups.jsp" class="current"><bean:message key="eform.groups.name"/> </a></td></tr>
-        </table>
-    </td>
+		</table>
+		</center>
+		</td>
+		<td style="border-left: 2px solid #A6A6A6">
+		<table border="0" cellspacing="2" cellpadding="2"
+			style="margin-left: 10px" width="100%">
+			<tr>
+				<td align='left'><a href=# onclick="javascript:BackHtml()"><bean:message
+					key="eform.uploadhtml.btnBack" /></a></td>
+			</tr>
+			<tr>
+				<td align='left'><a href="../eform/efmformmanager.jsp"><bean:message
+					key="admin.admin.btnUploadForm" /> </a></td>
+			</tr>
+			<tr>
+				<td align='left'><a href="../eform/efmformmanagerdeleted.jsp"><bean:message
+					key="eform.uploadhtml.btnDeleted" /> </a></td>
+			</tr>
+			<tr>
+				<td align='left'><a href="../eform/efmimagemanager.jsp"><bean:message
+					key="admin.admin.btnUploadImage" /> </a></td>
+			</tr>
+			<tr>
+				<td align='left'><a href="../eform/efmmanageformgroups.jsp"
+					class="current"><bean:message key="eform.groups.name" /> </a></td>
+			</tr>
+		</table>
+		</td>
 </table>
 
 <table border="0" cellspacing="0" cellpadding="0" width="98%">
-  <tr><td><bean:message key="eform.groups.contents"/> '<%=groupView%>' </td></tr>
+	<tr>
+		<td><bean:message key="eform.groups.contents" /> '<%=groupView%>'
+		</td>
+	</tr>
 </table>
 
-   <table class="elements" width="98%">
-      <tr bgcolor="#CCCCFF" >
-      <th width="25%"><a href="../eform/efmmanageformgroups.jsp?orderby=form_name&group_view=<%=groupView%>"><bean:message key="eform.uploadhtml.btnFormName"/></a></th>
-      <th width="30%"><a href="../eform/efmmanageformgroups.jsp?orderby=form_subject&group_view=<%=groupView%>"><bean:message key="eform.uploadhtml.btnSubject"/></a></th>
-      <th width="25%"><a href="../eform/efmmanageformgroups.jsp?orderby=file_name&group_view=<%=groupView%>"><bean:message key="eform.uploadhtml.btnFile"/></a></th>
-      <th width="10%"><a href="../eform/efmmanageformgroups.jsp?group_view=<%=groupView%>"><bean:message key="eform.uploadhtml.btnDate"/></a></th>
-      <th width="10%"><bean:message key="eform.uploadhtml.msgAction"/> </th>
-      </tr> 
-<%
+<table class="elements" width="98%">
+	<tr bgcolor="#CCCCFF">
+		<th width="25%"><a
+			href="../eform/efmmanageformgroups.jsp?orderby=form_name&group_view=<%=groupView%>"><bean:message
+			key="eform.uploadhtml.btnFormName" /></a></th>
+		<th width="30%"><a
+			href="../eform/efmmanageformgroups.jsp?orderby=form_subject&group_view=<%=groupView%>"><bean:message
+			key="eform.uploadhtml.btnSubject" /></a></th>
+		<th width="25%"><a
+			href="../eform/efmmanageformgroups.jsp?orderby=file_name&group_view=<%=groupView%>"><bean:message
+			key="eform.uploadhtml.btnFile" /></a></th>
+		<th width="10%"><a
+			href="../eform/efmmanageformgroups.jsp?group_view=<%=groupView%>"><bean:message
+			key="eform.uploadhtml.btnDate" /></a></th>
+		<th width="10%"><bean:message key="eform.uploadhtml.msgAction" />
+		</th>
+	</tr>
+	<%
   if (!groupView.equals("")) {
       ArrayList eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);
       if (eForms.size() > 0) {
         for (int i=0; i<eForms.size(); i++) {
           Hashtable curForm = (Hashtable) eForms.get(i);
 %>
-      <tr style="background-color: <%= ((i%2) == 1)?"#F2F2F2":"white"%>;">
-	    <td style="padding-left: 4px;">
-        <a href="#" onclick="newWindow('efmshowform_data.jsp?fid=<%=curForm.get("fid")%>', '<%="FormG" + i%>'); return false;"><%=curForm.get("formName")%></a></td>
+	<tr style="background-color: <%= ((i%2) == 1)?"#F2F2F2":"white"%>;">
+		<td style="padding-left: 4px;"><a href="#"
+			onclick="newWindow('efmshowform_data.jsp?fid=<%=curForm.get("fid")%>', '<%="FormG" + i%>'); return false;"><%=curForm.get("formName")%></a></td>
 		<td style="padding-left: 4px"><%=curForm.get("formSubject")%>&nbsp;</td>
 		<td style="padding-left: 4px"><%=curForm.get("formFileName")%></td>
 		<td nowrap align='center'><%=curForm.get("formDate")%></td>
-		<td nowrap align="center"><a href="../eforms/removeFromGroup.do?fid=<%=curForm.get("fid")%>&groupName=<%=groupView%>"><bean:message key="eform.groups.removeFromGroup"/></a></td>
-      </tr>
-<%          } 
+		<td nowrap align="center"><a
+			href="../eforms/removeFromGroup.do?fid=<%=curForm.get("fid")%>&groupName=<%=groupView%>"><bean:message
+			key="eform.groups.removeFromGroup" /></a></td>
+	</tr>
+	<%          } 
         } else { %>
-           <tr align="center"><td colspan="5"><bean:message key="eform.groups.noFormsInGroup"/></td></tr>
-<%      }
+	<tr align="center">
+		<td colspan="5"><bean:message key="eform.groups.noFormsInGroup" /></td>
+	</tr>
+	<%      }
   } else {%>
-<tr align="center"><td colspan="5"><font color="red"><bean:message key="eform.groups.noGroupMsg"/></font></td></tr>
-<% } %>
-   </table>
+	<tr align="center">
+		<td colspan="5"><font color="red"><bean:message
+			key="eform.groups.noGroupMsg" /></font></td>
+	</tr>
+	<% } %>
+</table>
 </center>
 
 </body>

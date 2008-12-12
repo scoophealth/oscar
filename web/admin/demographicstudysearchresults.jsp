@@ -1,5 +1,8 @@
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 
 <%
     //this is a quick independent page to let you add studying patient.
@@ -30,7 +33,7 @@
 	}
 %>
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
     String [][] dbQueries=new String[][] { 
         {"search_demo", "select d.*, s.study_no from demographic d LEFT JOIN demographicstudy s ON d.demographic_no = s.demographic_no where " + nameValue + " group by d.demographic_no order by last_name limit ? offset ?" }, 
@@ -64,8 +67,8 @@
 -->
 <html>
 <head>
-<title>PATIENT STUDY SEARCH RESULTS </title>
-<link rel="stylesheet" href="../web.css" >
+<title>PATIENT STUDY SEARCH RESULTS</title>
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -100,59 +103,73 @@ function refreshstudy() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepColor%>"><th>SEARCH FOR PATIENT STUDY RECORDS</th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepColor%>">
+		<th>SEARCH FOR PATIENT STUDY RECORDS</th>
+	</tr>
 </table>
 
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="<%=weakColor%>">
-	<form method="post" name="titlesearch" action="demographicstudysearchresults.jsp?form=1" onSubmit="checkTypeIn()">
-	<tr valign="top"><td rowspan="2" ALIGN="right" valign="middle">
-	  <font face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
-			
-      <td width="10%" nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  checked name="search_mode" value="name"> Name </font></td>
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio"  name="search_mode" value="phone"> Phone</font></td> 
-      <td nowrap><font size="1" face="Verdana" color="#0000FF">
-        <input type="radio"  name="search_mode" value="search_dob"> DOB(yyyymmdd)</font></td> 
-      <td valign="middle" rowspan="2" ALIGN="left">
-	    <input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-		<input type="submit" name="submit" value=" GO "></td>
-		<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename" >
-		<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-		<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-	</tr><tr>
-			
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="address"> Address </font></td>
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="hin"> HIN</font></td>
-      <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-        <input type="radio" name="search_mode" value="chart_no"> Chart No</font></td>
-    </tr>
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="<%=weakColor%>">
+	<form method="post" name="titlesearch"
+		action="demographicstudysearchresults.jsp?form=1"
+		onSubmit="checkTypeIn()">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search </i></b></font></td>
+
+		<td width="10%" nowrap><font size="1" face="Verdana"
+			color="#0000FF"> <input type="radio" checked
+			name="search_mode" value="name"> Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="phone"> Phone</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_dob">
+		DOB(yyyymmdd)</font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <input
+			type="submit" name="submit" value=" GO "></td>
+		<INPUT TYPE="hidden" NAME="dboperation" VALUE="search_titlename">
+		<INPUT TYPE="hidden" NAME="limit1" VALUE="0">
+		<INPUT TYPE="hidden" NAME="limit2" VALUE="10">
+	</tr>
+	<tr>
+
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="address">
+		Address </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="hin"> HIN</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="chart_no"> Chart
+		No</font></td>
+	</tr>
 	</form>
 </table>
 
 <table width="100%" border="0">
-<tr><td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")!=null?request.getParameter("keyword"):""%></td></tr>
+	<tr>
+		<td align="left"><i>Results based on keyword(s)</i> : <%=request.getParameter("keyword")!=null?request.getParameter("keyword"):""%></td>
+	</tr>
 </table>
 
 <CENTER>
-<table width="100%" border="0" bgcolor="#ffffff" > 
-  <tr bgcolor="<%=deepColor%>">
-  <TH width="10%">Demo' No</TH>
-  <TH width="10%">Last Name</TH>
-  <TH width="10%">First Name</TH>
-  <TH width="3%">Sex</TH>
-  <TH width="10%">DOB</TH>
-  <TH width="10%">Chart No</TH>
-  <TH width="5%">Ros' Sta</TH>
-  <TH width="5%">Pat' Sta</TH>
-  <TH width="5%">Action</TH>
-  </tr>
-<%
+<table width="100%" border="0" bgcolor="#ffffff">
+	<tr bgcolor="<%=deepColor%>">
+		<TH width="10%">Demo' No</TH>
+		<TH width="10%">Last Name</TH>
+		<TH width="10%">First Name</TH>
+		<TH width="3%">Sex</TH>
+		<TH width="10%">DOB</TH>
+		<TH width="10%">Chart No</TH>
+		<TH width="5%">Ros' Sta</TH>
+		<TH width="5%">Pat' Sta</TH>
+		<TH width="5%">Action</TH>
+	</tr>
+	<%
     ResultSet rsdemo = null ;
     int nItems=0;
     int ectsize=0;
@@ -168,22 +185,24 @@ function refreshstudy() {
     	nItems++;
 	    bgcolor = nItems%2==0?"#EEEEFF":"white";
         bgcolor = rsdemo.getString("s.study_no")!=null ? rightColor: bgcolor;
-%>  
-  <tr bgcolor="<%=bgcolor%>">
-    <td align="center"><a href=# onclick="popupPage1('../demographic/demographiccontrol.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>&displaymode=edit&dboperation=search_detail');return false;"><%=rsdemo.getString("d.demographic_no")%></a></td>
-    <td><%=rsdemo.getString("d.last_name")%></td>
-    <td><%=rsdemo.getString("d.first_name")%></td>
-    <td align="center"><%=rsdemo.getString("d.sex")%></td>
-    <td align="center"><%=rsdemo.getString("d.year_of_birth") +"-"+ rsdemo.getString("d.month_of_birth") +"-"+ rsdemo.getString("d.date_of_birth")%></td>
-    <td align="center"><%=rsdemo.getString("d.chart_no")%></td>
-    <td align="center"><%=rsdemo.getString("d.roster_status")%></td>
-    <td align="center"><%=rsdemo.getString("d.patient_status")%></td>
-    <td align="center"><a href=# onClick="popupPage(380, 500, 'demographicstudyselect.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>&name=<%= URLEncoder.encode(rsdemo.getString("d.last_name")+", "+rsdemo.getString("d.first_name"))%> ')"><%=bgcolor.equals(rightColor) ? "Edit": "Join In"%></td>
-  </tr>
-<%
+%>
+	<tr bgcolor="<%=bgcolor%>">
+		<td align="center"><a href=#
+			onclick="popupPage1('../demographic/demographiccontrol.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>&displaymode=edit&dboperation=search_detail');return false;"><%=rsdemo.getString("d.demographic_no")%></a></td>
+		<td><%=rsdemo.getString("d.last_name")%></td>
+		<td><%=rsdemo.getString("d.first_name")%></td>
+		<td align="center"><%=rsdemo.getString("d.sex")%></td>
+		<td align="center"><%=rsdemo.getString("d.year_of_birth") +"-"+ rsdemo.getString("d.month_of_birth") +"-"+ rsdemo.getString("d.date_of_birth")%></td>
+		<td align="center"><%=rsdemo.getString("d.chart_no")%></td>
+		<td align="center"><%=rsdemo.getString("d.roster_status")%></td>
+		<td align="center"><%=rsdemo.getString("d.patient_status")%></td>
+		<td align="center"><a href=#
+			onClick="popupPage(380, 500, 'demographicstudyselect.jsp?demographic_no=<%=rsdemo.getString("d.demographic_no")%>&name=<%= URLEncoder.encode(rsdemo.getString("d.last_name")+", "+rsdemo.getString("d.first_name"))%> ')"><%=bgcolor.equals(rightColor) ? "Edit": "Join In"%></td>
+	</tr>
+	<%
   }
   studyBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>
@@ -193,14 +212,14 @@ function refreshstudy() {
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="demographicstudysearchresults.jsp?search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="demographicstudysearchresults.jsp?search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="demographicstudysearchresults.jsp?search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="demographicstudysearchresults.jsp?search_mode=<%=request.getParameter("search_mode")%>&keyword=<%=request.getParameter("keyword")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
   }
 %>
 </CENTER>

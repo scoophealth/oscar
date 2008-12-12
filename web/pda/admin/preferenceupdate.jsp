@@ -24,20 +24,24 @@
  */
 -->
 
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
-<head><title>Preference: the following records</title></head>
+<head>
+<title>Preference: the following records</title>
+</head>
 <link rel="stylesheet" href="../web.css" />
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            PREFERENCE</font></th>
-      </tr>
-    </table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		PREFERENCE</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
   String[] param=null;
@@ -58,20 +62,19 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,nparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h2> Update a Preference Record Successfully ! 
-  <%=request.getParameter("provider_no")%>
-  </h2>
+<p>
+<h2>Update a Preference Record Successfully ! <%=request.getParameter("provider_no")%>
+</h2>
 <%  
   } else {
 %>
-  <h1>Sorry, fail to update !!! <%= request.getParameter("provider_no") %>.
+<h1>Sorry, fail to update !!! <%= request.getParameter("provider_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn(); 
 %>
-  <p></p>
-<%@ include file="footer2.htm" %>
-
-  </center>
+<p></p>
+<%@ include file="footer2.htm"%>
+</center>
 </body>
 </html>

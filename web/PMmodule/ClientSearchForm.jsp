@@ -1,13 +1,13 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ include file="/common/messages.jsp"%>
-<%@page import="oscar.OscarProperties" %>
+<%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
-<%@page import="java.util.*" %>
-<%@page import="org.oscarehr.common.model.Demographic" %>
-<%@page import="org.oscarehr.PMmodule.model.Program" %>
+<%@page import="java.util.*"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
 
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -37,54 +37,58 @@
 </script>
 <html:form action="/PMmodule/ClientSearch2">
 	<input type="hidden" name="method" value="search" />
-	
+
 	<div id="projecthome" class="app">
-		<div class="h4">
-			<h4>Search client by entering search criteria below</h4>
-		</div>
-		<div class="axial">
-			<table border="0" cellspacing="2" cellpadding="3">
-				<tr>
-					<th>Client No</th>
-					<td><html:text property="criteria.demographicNo" size="15" /></td>
-				</tr>
-				<tr>
-					<th>Client First Name</th>
-					<td><html:text property="criteria.firstName" size="15" /></td>
-				</tr>
-		
-				<tr>
-					<th>Client Last Name</th>
-					<td><html:text property="criteria.lastName" size="15" /></td>
-				</tr>
-				
-				<tr>
-					<th>Date of Birth <br>
-					(yyyy/mm/dd)</th>
-					<td><html:text property="criteria.dob" size="15" /></td>
-				</tr>
-				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">			
-				<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
+	<div class="h4">
+	<h4>Search client by entering search criteria below</h4>
+	</div>
+	<div class="axial">
+	<table border="0" cellspacing="2" cellpadding="3">
+		<tr>
+			<th>Client No</th>
+			<td><html:text property="criteria.demographicNo" size="15" /></td>
+		</tr>
+		<tr>
+			<th>Client First Name</th>
+			<td><html:text property="criteria.firstName" size="15" /></td>
+		</tr>
+
+		<tr>
+			<th>Client Last Name</th>
+			<td><html:text property="criteria.lastName" size="15" /></td>
+		</tr>
+
+		<tr>
+			<th>Date of Birth <br>
+			(yyyy/mm/dd)</th>
+			<td><html:text property="criteria.dob" size="15" /></td>
+		</tr>
+		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
 				<tr>
 					<th>Health Card Number</th>
-					<td><html:text property="criteria.healthCardNumber" size="15" /> <html:text property="criteria.healthCardVersion" size="2" /></td>
+					<td><html:text property="criteria.healthCardNumber" size="15" />
+					<html:text property="criteria.healthCardVersion" size="2" /></td>
 				</tr>
-				</caisi:isModuleLoad>
+			</caisi:isModuleLoad>
 
-				<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
-				-->			
-				<tr>
-					<caisi:isModuleLoad moduleName="pmm.client.search.outside.of.domain.enabled" >
-					<th>Search all clients <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
-						<td><html:checkbox property="criteria.searchOutsideDomain" /></td>
-					</caisi:isModuleLoad>					
-				</tr>
-				
-				<tr>
-					<th>Soundex on names <a href="javascript:void(0)" onclick="popupHelp('soundex')">?</a></th>
-					<td><html:checkbox property="criteria.searchUsingSoundex" /></td>
-				</tr>
-				<%--
+			<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
+				-->
+			<tr>
+				<caisi:isModuleLoad
+					moduleName="pmm.client.search.outside.of.domain.enabled">
+					<th>Search all clients <a href="javascript:void(0)"
+						onclick="popupHelp('domain')">?</a></th>
+					<td><html:checkbox property="criteria.searchOutsideDomain" /></td>
+				</caisi:isModuleLoad>
+			</tr>
+
+			<tr>
+				<th>Soundex on names <a href="javascript:void(0)"
+					onclick="popupHelp('soundex')">?</a></th>
+				<td><html:checkbox property="criteria.searchUsingSoundex" /></td>
+			</tr>
+			<%--
 				<tr>
 					<th>Bed Program</th>
 			          <td>
@@ -96,116 +100,126 @@
 			          </td>
 				</tr>
 				 --%>
-				<tr>
-					<th>Admission Date From<br>
-						(yyyy/mm/dd)</th>
-					<td><html:text property="criteria.dateFrom" size="12" /></td>
-				</tr>
-				<tr>
-					<th>Admission Date To<br>
-						(yyyy/mm/dd)</th>
-					<td><html:text property="criteria.dateTo" size="12" /></td>
-				</tr>
-				</caisi:isModuleLoad>
-				<tr>
-					<th> Active?</th>
-					<td> <html:select property="criteria.active">
-							<html:option value="">Any</html:option>
-							<html:option value="1">Yes</html:option>
-							<html:option value="0">No</html:option>
-						</html:select>
-					</td>
-				</tr>
-				<tr>
-					<th> Gender</th>
-					<td>
-						<html-el:select property="criteria.gender">
-							<html-el:option value="">Any</html-el:option>
-							<c:forEach var="gen" items="${genders}">
-								<html-el:option value="${gen.code}"><c:out value="${gen.description}"/></html-el:option>
-							</c:forEach>
-						</html-el:select>
-					</td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<td align="center"><html:submit value="search" /></td>
-					<td align="center"><input type="button" name="reset" value="reset" onclick="resetClientFields()"/></td>
-				</tr>
-			</table>
-		</div>
-	</div>     
+			<tr>
+				<th>Admission Date From<br>
+				(yyyy/mm/dd)</th>
+				<td><html:text property="criteria.dateFrom" size="12" /></td>
+			</tr>
+			<tr>
+				<th>Admission Date To<br>
+				(yyyy/mm/dd)</th>
+				<td><html:text property="criteria.dateTo" size="12" /></td>
+			</tr>
+		</caisi:isModuleLoad>
+		<tr>
+			<th>Active?</th>
+			<td><html:select property="criteria.active">
+				<html:option value="">Any</html:option>
+				<html:option value="1">Yes</html:option>
+				<html:option value="0">No</html:option>
+			</html:select></td>
+		</tr>
+		<tr>
+			<th>Gender</th>
+			<td><html-el:select property="criteria.gender">
+				<html-el:option value="">Any</html-el:option>
+				<c:forEach var="gen" items="${genders}">
+					<html-el:option value="${gen.code}">
+						<c:out value="${gen.description}" />
+					</html-el:option>
+				</c:forEach>
+			</html-el:select></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td align="center"><html:submit value="search" /></td>
+			<td align="center"><input type="button" name="reset"
+				value="reset" onclick="resetClientFields()" /></td>
+		</tr>
+	</table>
+	</div>
+	</div>
 </html:form>
-	<br />
-	<c:if test="${requestScope.clients != null}">
-            <form method="post" name="mergeform" action="../admin/MergeRecords.do" > 
-            	<display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/ClientSearch2.do">
-			<display:setProperty name="paging.banner.placement" value="bottom" />
-			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
-			<display:column sortable="true" title="Client No">
-                 <a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out value="${client.demographicNo}" /></a>
-            </display:column>
-			<display:column sortable="true" title="Name">
-                 <a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out value="${client.formattedName}" /></a>
-			</display:column>
-			<display:column sortable="true" title="Date of Birth">
-				<c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" />
-			</display:column>
-			<display:column sortable="true" title="Gender">
-				<c:out value="${client.sexDesc}" />
-			</display:column>                        
-			<display:column sortable="true" title="Active">
-				<logic:equal value="0" property="activeCount" name="client">No</logic:equal>
-				<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
-			</display:column>                        
-			<display:column sortable="true" title="H&S Alert">
-				<logic:equal value="0" property="hsAlertCount" name="client">No</logic:equal>
-				<logic:notEqual value="0" property="hsAlertCount" name="client">Yes</logic:notEqual>
-			</display:column>                        
-                        
-                        <security:oscarSec roleName="<%=roleName$%>" objectName="_merge" rights="r"  >
-                        
-                        <display:column sortable="true" title="Head Record">   
-                            <c:choose>
-                                
-                                <c:when test="${client.headRecord == null}">
-                                    <input type="radio" name="head" value="<c:out value="${client.demographicNo}" />">    
-                                </c:when>
-                                <c:otherwise>
+<br />
+<c:if test="${requestScope.clients != null}">
+	<form method="post" name="mergeform" action="../admin/MergeRecords.do">
+	<display:table class="simple" cellspacing="2" cellpadding="3"
+		id="client" name="clients" export="false" pagesize="10"
+		requestURI="/PMmodule/ClientSearch2.do">
+		<display:setProperty name="paging.banner.placement" value="bottom" />
+		<display:setProperty name="basic.msg.empty_list"
+			value="No clients found." />
+		<display:column sortable="true" title="Client No">
+			<a
+				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out
+				value="${client.demographicNo}" /></a>
+		</display:column>
+		<display:column sortable="true" title="Name">
+			<a
+				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out
+				value="${client.formattedName}" /></a>
+		</display:column>
+		<display:column sortable="true" title="Date of Birth">
+			<c:out value="${client.yearOfBirth}" />/<c:out
+				value="${client.monthOfBirth}" />/<c:out
+				value="${client.dateOfBirth}" />
+		</display:column>
+		<display:column sortable="true" title="Gender">
+			<c:out value="${client.sexDesc}" />
+		</display:column>
+		<display:column sortable="true" title="Active">
+			<logic:equal value="0" property="activeCount" name="client">No</logic:equal>
+			<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
+		</display:column>
+		<display:column sortable="true" title="H&S Alert">
+			<logic:equal value="0" property="hsAlertCount" name="client">No</logic:equal>
+			<logic:notEqual value="0" property="hsAlertCount" name="client">Yes</logic:notEqual>
+		</display:column>
+
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_merge"
+			rights="r">
+
+			<display:column sortable="true" title="Head Record">
+				<c:choose>
+
+					<c:when test="${client.headRecord == null}">
+						<input type="radio" name="head"
+							value="<c:out value="${client.demographicNo}" />">
+					</c:when>
+					<c:otherwise>
                                     &nbsp;
                                 </c:otherwise>
-                            </c:choose>   
+				</c:choose>
 			</display:column>
-                        
-                        <display:column sortable="true" title="Include">
-                            <c:choose>
-                                <c:when test="${client.headRecord == null}">
-                                    	<input type="checkbox" name="records" value="<c:out value="${client.demographicNo}" />">
-                                </c:when>
-                                <c:otherwise>
-                                    &nbsp;
-                                </c:otherwise> 
-                                </c:choose>
-			</display:column>
-                        </security:oscarSec>
-                        
-                    
-		</display:table>
-               <security:oscarSec roleName="<%=roleName$%>" objectName="_merge" rights="r"  >
-                        
-                <input type="hidden" name="mergeAction" value="merge" />
-                <input type="hidden" name="provider_no" value="<%= session.getAttribute("user") %>" />
-                <input type="hidden" name="caisiSearch" value="yes"/>
-            <input type="submit" value="Merge Selected Records"/>
-            </security:oscarSec>
-	
-            <br />
-            </form>
-            </c:if>
-        
-           
-        
 
-   
-            
+			<display:column sortable="true" title="Include">
+				<c:choose>
+					<c:when test="${client.headRecord == null}">
+						<input type="checkbox" name="records"
+							value="<c:out value="${client.demographicNo}" />">
+					</c:when>
+					<c:otherwise>
+                                    &nbsp;
+                                </c:otherwise>
+				</c:choose>
+			</display:column>
+		</security:oscarSec>
+
+
+	</display:table> <security:oscarSec roleName="<%=roleName$%>" objectName="_merge"
+		rights="r">
+
+		<input type="hidden" name="mergeAction" value="merge" />
+		<input type="hidden" name="provider_no"
+			value="<%= session.getAttribute("user") %>" />
+		<input type="hidden" name="caisiSearch" value="yes" />
+		<input type="submit" value="Merge Selected Records" />
+	</security:oscarSec> <br />
+	</form>
+</c:if>
+
+
+
+
+

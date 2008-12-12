@@ -1,6 +1,6 @@
 <%@page contentType="text/html"%>
-<%@ page import="java.util.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ page import="java.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <!--  
 /*
  * 
@@ -28,8 +28,9 @@
 -->
 <%@ page import="java.net.URLEncoder"%>
 <html>
-<head><title>E-Chart</title>
-  
+<head>
+<title>E-Chart</title>
+
 <script language="javascript">
 <% 
 
@@ -61,7 +62,9 @@ popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=req
 </head>
 <body>
 
-<a href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');window.close();">Please click here to go to the patient's E-Chart.</a>
+<a
+	href="javascript:popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&encType=<%=URLEncoder.encode("Lab Results","UTF-8")%>&status=');window.close();">Please
+click here to go to the patient's E-Chart.</a>
 
 </body>
 </html>

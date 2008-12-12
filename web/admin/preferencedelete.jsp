@@ -24,46 +24,53 @@
  */
 -->
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html:html locale="true">
 <head></head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.preferencedelete.description"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.preferencedelete.description" /></font></th>
+	</tr>
+</table>
 <%
   //if action is good, then congratulations
   int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("keyword"), request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h2><bean:message key="admin.preferencedelete.msgDeletionSuccess"/>: <%= request.getParameter("keyword") %>.
-  </h2>
+<p>
+<h2><bean:message key="admin.preferencedelete.msgDeletionSuccess" />:
+<%= request.getParameter("keyword") %>.</h2>
 <%  
   } else {
 %>
-  <h1><bean:message key="admin.preferencedelete.msgDeletionFailure"/>: <%= request.getParameter("keyword") %>.
-<%  
+<h1><bean:message key="admin.preferencedelete.msgDeletionFailure" />:
+<%= request.getParameter("keyword") %>. <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
+<p></p>
 
-  <!-- footer -->
-  <hr width="100%" color="navy">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"><bean:message key="global.btnBack"/></a></td>
-      <td align="right"><a href="../logout.jsp"><bean:message key="global.btnLogout"/><img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
-
+<!-- footer -->
+<hr width="100%" color="navy">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"><bean:message
+			key="global.btnBack" /></a></td>
+		<td align="right"><a href="../logout.jsp"><bean:message
+			key="global.btnLogout" /><img src="../images/rightarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"></a></td>
+	</tr>
+</table>
 </center>
 </body>
 </html:html>

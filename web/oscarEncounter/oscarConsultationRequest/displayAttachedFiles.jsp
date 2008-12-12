@@ -26,17 +26,19 @@
 
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils"%>
+<%@page
+	import="java.util.ArrayList, oscar.dms.*, oscar.oscarLab.ca.on.*, oscar.util.StringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%
   String demo = request.getParameter("demo") ;
   String requestId = request.getParameter("requestId");
 %>
-<ul id="attachedList" style="background-color:white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
-        <%
+<ul id="attachedList"
+	style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
+	<%
       		Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             ArrayList privatedocs = new ArrayList();
             privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED, currentFacilityId);
@@ -45,8 +47,8 @@
             {                    
                 curDoc = (EDoc)privatedocs.get(idx);                                            
         %>
-                <li class="doc"><%=StringUtils.maxLenString(curDoc.getDescription(),19,16,"...")%></li>
-        <%                                           
+	<li class="doc"><%=StringUtils.maxLenString(curDoc.getDescription(),19,16,"...")%></li>
+	<%                                           
             }
 
                 CommonLabResultData labData = new CommonLabResultData();
@@ -56,15 +58,17 @@
                 {
                     resData = (LabResultData)labs.get(idx);
         %>
-                    <li class="lab"><%=resData.getDiscipline()+" "+resData.getDateTime()%></li>
-        <%
+	<li class="lab"><%=resData.getDiscipline()+" "+resData.getDateTime()%></li>
+	<%
                 }
         %>
-    </ul>
-        <%
+</ul>
+<%
            if( privatedocs.size() == 0 && labs.size() == 0 ) {
         %>
-                <p id="attachDefault" style="background-color:white; text-align: center;"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/></p>
-         <%
+<p id="attachDefault"
+	style="background-color: white; text-align: center;"><bean:message
+	key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty" /></p>
+<%
            }
          %>

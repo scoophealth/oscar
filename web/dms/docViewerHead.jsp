@@ -23,16 +23,18 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <html:html locale="true">
 <head>
-<title><bean:message key="dms.docViewerHead.title"/></title>
+<title><bean:message key="dms.docViewerHead.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 </head>
 
 <body bgcolor="#486ebd" text="#000000" topmargin="0">
-<div align="center"><font face="Arial, Helvetica, sans-serif" size="3"><b><font color="#FFFFFF"><bean:message key="dms.docViewerHead.msgDocumentViewer"/></font></b></font></div>
+<div align="center"><font face="Arial, Helvetica, sans-serif"
+	size="3"><b><font color="#FFFFFF"><bean:message
+	key="dms.docViewerHead.msgDocumentViewer" /></font></b></font></div>
 </body>
 </html:html>

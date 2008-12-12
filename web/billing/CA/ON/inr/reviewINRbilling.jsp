@@ -25,12 +25,14 @@
 --%>
 <% 
 if(session.getAttribute("user") == null)    response.sendRedirect("../../../../logout.jsp");
-%> 
+%>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
-<%@ include file="../../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbINR.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"%>
+<%@ include file="../../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbINR.jsp"%>
 <%
 
 GregorianCalendar now=new GregorianCalendar();
@@ -155,101 +157,106 @@ function OtherScriptAttach() {
 <link rel="stylesheet" href="../../web.css" />
 </head>
 
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">REVIEW INR 
-      BILLING</font></th>
-  </tr>
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">REVIEW
+		INR BILLING</font></th>
+	</tr>
 </table>
 <%
 if (errorCode.compareTo("") != 0) {
 %>
 
-<form>
-<%=errorCode%>
-<input type=button name=back onClick="javascript:history.go(-1);return false;">
-</form>
+<form><%=errorCode%> <input type=button name=back
+	onClick="javascript:history.go(-1);return false;"></form>
 <%} else {%>
-<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7"  >
-  <FORM NAME="serviceform" ACTION="dbINRbilling.jsp" METHOD="POST">
-    <tr valign="top"> 
-      <td rowspan="2" ALIGN="right" valign="middle"> 
-        <div align="center"> 
-          <p>&nbsp;</p>
-          <table width="80%" border="1" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td colspan="3"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Arial, Helvetica, sans-serif" color="#000000" size="1">Demographic 
-                Name </font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="hidden" name="demoid" value="<%=demoid%> " size="20">
-                <input type="text" name="demo_name" value="<%=demo_name%> " size="20" readonly>
-                </font></td>
-              <td rowspan="9" width="21%" valign="middle"> 
-                <p><br>
-                </p>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Demographic 
-                HIN</font></td>
-              <td width="50%"> 
-                <input type="text" name="demo_hin" value="<%=demo_hin%> " size="20" readonly>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Demographic 
-                DOB</font></td>
-              <td width="50%"> 
-                <input type="text" name="demo_dob" value="<%=demo_dob%> " size="20" readonly>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Arial, Helvetica, sans-serif" color="#000000" size="1">Service 
-                Code </font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="text" name="service_code"  size="10" value="<%=service_code%>" readonly>
-                <input type="text" name="service_amount"  size="10" value="<%=service_amount%>" readonly>
-                <input type="hidden" name="service_unit" value="1">
-                </font></td>
-            </tr>
-            <tr> 
-              <td width="29%"><font size="1" face="Arial, Helvetica, sans-serif">Diagnostic 
-                Code</font></td>
-              <td width="50%"> 
-                <input type="text" name="diag_code" size="20" value="<%=diag_code%>" readonly>
-              </td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Arial, Helvetica, sans-serif" color="#000000" size="1">Create 
-                Date</font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="text" name="docdate" readonly value="<%=nowDate%>" size="20" >
-                </font></td>
-            </tr>
-            <tr> 
-              <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF" size="1"><b><i> 
-                <input type="SUBMIT" value="Submit" name="SUBMIT">
-                </i></b></font></td>
-              <td width="50%"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"> 
-                <input type="hidden" name="doccreator" value="<%=request.getParameter("doccreator")%>" size="20">
-                <input type="hidden" name="orderby" value="updatedatetime desc" size="20">
-                <input type="hidden" name="provider_no" value="<%=provider_no%>">
-                <input type="hidden" name="provider_ohip_no" value="<%=provider_ohip_no%>">
-                <input type="hidden" name="provider_rma_no" value="<%=provider_rma_no%>">
-                <input type="hidden" name="service_desc" value="<%=service_desc%>">
-                </font></td>
-            </tr>
-          </table>
-          <p><font face="Verdana" color="#0000FF"><b><i> </i></b></font> <br>
-          </p>
-        </div>
-      </td>
-    </tr>
-  </form>
+<table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%"
+	BGCOLOR="#C4D9E7">
+	<FORM NAME="serviceform" ACTION="dbINRbilling.jsp" METHOD="POST">
+	<tr valign="top">
+		<td rowspan="2" ALIGN="right" valign="middle">
+		<div align="center">
+		<p>&nbsp;</p>
+		<table width="80%" border="1" cellspacing="0" cellpadding="0">
+			<tr>
+				<td colspan="3"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"></font></td>
+			</tr>
+			<tr>
+				<td width="29%"><font face="Arial, Helvetica, sans-serif"
+					color="#000000" size="1">Demographic Name </font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="hidden" name="demoid" value="<%=demoid%> " size="20">
+				<input type="text" name="demo_name" value="<%=demo_name%> "
+					size="20" readonly> </font></td>
+				<td rowspan="9" width="21%" valign="middle">
+				<p><br>
+				</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Demographic HIN</font></td>
+				<td width="50%"><input type="text" name="demo_hin"
+					value="<%=demo_hin%> " size="20" readonly></td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Demographic DOB</font></td>
+				<td width="50%"><input type="text" name="demo_dob"
+					value="<%=demo_dob%> " size="20" readonly></td>
+			</tr>
+			<tr>
+				<td width="29%"><font face="Arial, Helvetica, sans-serif"
+					color="#000000" size="1">Service Code </font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="text" name="service_code" size="10" value="<%=service_code%>"
+					readonly> <input type="text" name="service_amount"
+					size="10" value="<%=service_amount%>" readonly> <input
+					type="hidden" name="service_unit" value="1"> </font></td>
+			</tr>
+			<tr>
+				<td width="29%"><font size="1"
+					face="Arial, Helvetica, sans-serif">Diagnostic Code</font></td>
+				<td width="50%"><input type="text" name="diag_code" size="20"
+					value="<%=diag_code%>" readonly></td>
+			</tr>
+			<tr>
+				<td width="29%"><font face="Arial, Helvetica, sans-serif"
+					color="#000000" size="1">Create Date</font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="text" name="docdate" readonly value="<%=nowDate%>" size="20">
+				</font></td>
+			</tr>
+			<tr>
+				<td width="29%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" color="#0000FF"
+					size="1"><b><i> <input type="SUBMIT" value="Submit"
+					name="SUBMIT"> </i></b></font></td>
+				<td width="50%"><font
+					face="Verdana, Arial, Helvetica, sans-serif" size="1"> <input
+					type="hidden" name="doccreator"
+					value="<%=request.getParameter("doccreator")%>" size="20">
+				<input type="hidden" name="orderby" value="updatedatetime desc"
+					size="20"> <input type="hidden" name="provider_no"
+					value="<%=provider_no%>"> <input type="hidden"
+					name="provider_ohip_no" value="<%=provider_ohip_no%>"> <input
+					type="hidden" name="provider_rma_no" value="<%=provider_rma_no%>">
+				<input type="hidden" name="service_desc" value="<%=service_desc%>">
+				</font></td>
+			</tr>
+		</table>
+		<p><font face="Verdana" color="#0000FF"><b><i> </i></b></font> <br>
+		</p>
+		</div>
+		</td>
+	</tr>
+	</form>
 </table>
 <% 
 } 

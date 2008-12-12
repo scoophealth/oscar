@@ -1,50 +1,51 @@
 <?xml version="1.0"?>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */
+	-->
 <riskFactors>
-  <section>
-    <section_title>Other Risk Factors</section_title>
-    <section_title>(check if present)</section_title>
-    <subsection>
-      <subsection_title>Past OB History</subsection_title>
-      <risk name="risk101" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/stillbirth">Stillbirth</risk>
-      <risk name="risk102" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/sga">SGA</risk>
-      <risk name="risk103" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Peterm labour or PROM</risk>
-      <risk name="risk104" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/gbs">Infant with invasive GBStrep</risk>
-      <risk name="risk105" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/abruption">Abruption</risk>
-      <risk name="risk106" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/htn">HTN disease of pregnancy</risk>
-      <risk name="risk107" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/csection">Previous C/S</risk>
-    </subsection>
-    <subsection>
-      <subsection_title>Other Medical Problems</subsection_title>
-      <risk name="risk128" href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/seizure">Seizure Disorder</risk>
-    </subsection>
-  </section>
-  <section>
-    <section_title>Research</section_title>
-      <risk name="audit01">Chart Audit</risk>
-  </section>
+	<section>
+		<section_title>Other Risk Factors</section_title>
+		<section_title>(check if present)</section_title>
+		<subsection>
+			<subsection_title>Past OB History</subsection_title>
+			<risk name="risk101"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/stillbirth">Stillbirth</risk>
+			<risk name="risk102"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/sga">SGA</risk>
+			<risk name="risk103"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Peterm labour or PROM</risk>
+			<risk name="risk104"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/gbs">Infant with invasive GBStrep</risk>
+			<risk name="risk105"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/abruption">Abruption</risk>
+			<risk name="risk106"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/htn">HTN disease of pregnancy</risk>
+			<risk name="risk107"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/csection">Previous C/S</risk>
+		</subsection>
+		<subsection>
+			<subsection_title>Other Medical Problems</subsection_title>
+			<risk name="risk128"
+				href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/seizure">Seizure Disorder</risk>
+		</subsection>
+	</section>
+	<section>
+		<section_title>Research</section_title>
+		<risk name="audit01">Chart Audit</risk>
+	</section>
 </riskFactors>

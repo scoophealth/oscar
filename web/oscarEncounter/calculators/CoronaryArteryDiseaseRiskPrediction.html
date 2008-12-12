@@ -28,9 +28,7 @@
 
 
 <head>
-<title>
-Coronary Artery Disease Risk Prediction
-</title>
+<title>Coronary Artery Disease Risk Prediction</title>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <script type="text/javascript">
 
@@ -547,237 +545,220 @@ function setValues(){
 </script>
 
 <style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-	}
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-	}	
+table.outline {
+	margin-top: 50px;
+	border-bottom: 1pt solid #888888;
+	border-left: 1pt solid #888888;
+	border-top: 1pt solid #888888;
+	border-right: 1pt solid #888888;
+}
+
+table.grid {
+	border-bottom: 1pt solid #888888;
+	border-left: 1pt solid #888888;
+	border-top: 1pt solid #888888;
+	border-right: 1pt solid #888888;
+}
+
+td.gridTitles {
+	border-bottom: 2pt solid #888888;
+	font-weight: bold;
+}
+
+td.middleGrid {
+	border-left: 1pt solid #888888;
+	border-right: 1pt solid #888888;
+}
 </style>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                calculators
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-						Coronary Artery Disease Risk Prediction
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">&nbsp;
-            
-            </td>
-            <td class="MainTableRightColumn">
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">calculators</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Coronary Artery Disease Risk Prediction</td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
+			<tr>
+				<td>
+				<form name="calCorArDi">
 				<table>
 					<tr>
-						<td>
-							<form name="calCorArDi">
-							<table>
-								<tr>
-									<td>Female:</td>
-									<td><input type="radio" name="sex" value="F" checked /></td>
-								</tr>
-								<tr>
-									<td>Male:</td>
-									<td><input type="radio" name="sex" value="M"/></td>
-								</tr>
-								<tr>
-									<td>Age:</td>
-									<td><input type="text" name="age" size="4"/></td>
-								</tr>
-								<tr>
-									<td>HDL-Cholesterol:</td>										
-	                                <td> <select name="HDL">
-										  <option value="1">.65-.69</option>
-										  <option value="2">.70-.77</option>
-										  <option value="3">.78-.84</option>
-										  <option value="4">.85-.92</option>
-										  <option value="5">.93-1.00</option>
-										  <option value="6">1.01-1.10</option>
-										  <option value="7">1.11-1.21</option>
-										  <option value="8">1.22-1.31</option>
-										  <option value="9">1.32-1.44</option>
-										  <option value="10">1.45-1.57</option>
-										  <option value="11">1.58-1.72</option>
-										  <option value="12">1.73-1.90</option>
-										  <option value="13">1.91-2.08</option>
-										  <option value="14">2.09-2.27</option>
-										  <option value="15">2.28-2.48</option>
-										 </select>
-									</td>
-								</tr>
-								<tr>
-										<td>Total-Cholesterol:</td>
-										<td>
-											<select name="TCh">
-												<option value="1">3.59-3.92</option>
-												<option value="2">3.93-4.31</option>
-												<option value="3">4.32-4.72</option>
-												<option value="4">4.73-5.16</option>															
-												<option value="5">5.17-5.68</option>
-												<option value="6">5.69-6.20</option>										
-												<option value="7">6.21-6.79</option>
-												<option value="8">6.80-7.46</option>
-												<option value="9">7.47-8.16</option>
-												<option value="10">8.17-8.53</option>
-											</select>
-										</td>
-								</tr>
-								<tr>
-										<td>Systolic BP:</td>
-										<td>
-											<select name="BP">
-												<option value="1">98-104</option>
-												<option value="2">105-112</option>
-												<option value="3">113-120</option>
-												<option value="4">121-129</option>															
-												<option value="5">130-139</option>
-												<option value="6">140-149</option>										
-												<option value="7">150-160</option>
-												<option value="8">161-172</option>
-												<option value="9">173-185</option>
-											</select>
-										</td>
-								</tr>
-								<tr>
-										<td>Smoker:</td>
-										<td><input type="checkbox" name="cigs"/></td>
-								</tr>
-								<tr>
-										<td>Diabetic:</td>
-										<td><input type="checkbox" name="diabetic"/></td>
-								</tr>
-								<tr>
-										<td>ECG-LVH:</td>
-										<td><input type="checkbox" name="ECG"/></td>
-								</tr>
-								<tr >
-										<td colspan="2"><input type="button" value="Calculate" onClick="calculate();"/> </td>
-								</tr>
-									<!--<tr>
+						<td>Female:</td>
+						<td><input type="radio" name="sex" value="F" checked /></td>
+					</tr>
+					<tr>
+						<td>Male:</td>
+						<td><input type="radio" name="sex" value="M" /></td>
+					</tr>
+					<tr>
+						<td>Age:</td>
+						<td><input type="text" name="age" size="4" /></td>
+					</tr>
+					<tr>
+						<td>HDL-Cholesterol:</td>
+						<td><select name="HDL">
+							<option value="1">.65-.69</option>
+							<option value="2">.70-.77</option>
+							<option value="3">.78-.84</option>
+							<option value="4">.85-.92</option>
+							<option value="5">.93-1.00</option>
+							<option value="6">1.01-1.10</option>
+							<option value="7">1.11-1.21</option>
+							<option value="8">1.22-1.31</option>
+							<option value="9">1.32-1.44</option>
+							<option value="10">1.45-1.57</option>
+							<option value="11">1.58-1.72</option>
+							<option value="12">1.73-1.90</option>
+							<option value="13">1.91-2.08</option>
+							<option value="14">2.09-2.27</option>
+							<option value="15">2.28-2.48</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Total-Cholesterol:</td>
+						<td><select name="TCh">
+							<option value="1">3.59-3.92</option>
+							<option value="2">3.93-4.31</option>
+							<option value="3">4.32-4.72</option>
+							<option value="4">4.73-5.16</option>
+							<option value="5">5.17-5.68</option>
+							<option value="6">5.69-6.20</option>
+							<option value="7">6.21-6.79</option>
+							<option value="8">6.80-7.46</option>
+							<option value="9">7.47-8.16</option>
+							<option value="10">8.17-8.53</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Systolic BP:</td>
+						<td><select name="BP">
+							<option value="1">98-104</option>
+							<option value="2">105-112</option>
+							<option value="3">113-120</option>
+							<option value="4">121-129</option>
+							<option value="5">130-139</option>
+							<option value="6">140-149</option>
+							<option value="7">150-160</option>
+							<option value="8">161-172</option>
+							<option value="9">173-185</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Smoker:</td>
+						<td><input type="checkbox" name="cigs" /></td>
+					</tr>
+					<tr>
+						<td>Diabetic:</td>
+						<td><input type="checkbox" name="diabetic" /></td>
+					</tr>
+					<tr>
+						<td>ECG-LVH:</td>
+						<td><input type="checkbox" name="ECG" /></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="button" value="Calculate"
+							onClick="calculate();" /></td>
+					</tr>
+					<!--<tr>
 										<td><input type="text" name="totalVal" visible="false"/></td>
 									</tr>-->
-							</table>
-							</form>
-			
-							<form name="second">
-								<textarea name="prediction" rows="10" cols="42" style="overflow:hidden"></textarea>
-							</form>				
-            			</td>
-						<td>&nbsp;</td>
-						<td align="center" valign="top">
-							<table class="outline">
-								<tr>
-									<td>
-										Compare To Average 10 Year Risk 
-									</td>
-								</tr>
-								<tr>
-									<td align="center">
-										Probability %
-									</td>
-								</tr>
-								<tr>
-									<td  >
-										<table class="grid" width="100%"  align="center" cellspacing="0">
-											<tr>
-												<td  align="center" class="gridTitles">Age</td>
-												<td  align="center" class="gridTitles">Female</td>
-												<td  align="center" class="gridTitles">Male</td>
-											</tr>
-											<tr>
-												<td id="cellL1" align="center">30-34</td>
-												<td id="cellC1" align="center" class="middleGrid">&lt; 1</td>
-												<td id="cellR1" align="center">3</td>
-											</tr>
-											<tr>
-												<td id="cellL2" align="center">35-39</td>
-												<td id="cellC2" align="center" class="middleGrid">&lt; 1</td>
-												<td id="cellR2" align="center">5</td>
-											</tr>
-											<tr>
-												<td id="cellL3" align="center">40-44</td>
-												<td id="cellC3" align="center" class="middleGrid">2</td>
-												<td id="cellR3" align="center">6</td>
-											</tr>
-											<tr>
-												<td id="cellL4" align="center">45-49</td>
-												<td id="cellC4" align="center" class="middleGrid">5</td>
-												<td id="cellR4" align="center">10</td>
-											</tr>
-											<tr>
-												<td id="cellL5" align="center">50-54</td>
-												<td id="cellC5" align="center" class="middleGrid">8</td>
-												<td id="cellR5" align="center">14</td>
-											</tr>
-											<tr>
-												<td id="cellL6" align="center">55-59</td>
-												<td id="cellC6" align="center" class="middleGrid">12</td>
-												<td id="cellR6" align="center">16</td>
-											</tr>
-											<tr>
-												<td id="cellL7" align="center">60-64</td>
-												<td id="cellC7" align="center" class="middleGrid">13</td>
-												<td id="cellR7" align="center">21</td>
-											</tr>
-											<tr>
-												<td id="cellL8" align="center">65-69</td>
-												<td id="cellC8" align="center" class="middleGrid">9</td>
-												<td id="cellR8" align="center">30</td>
-											</tr>
-											<tr >
-												<td id="cellL9" align="center">70-74</td>
-												<td id="cellC9" align="center" class="middleGrid">12</td>
-												<td id="cellR9" align="center">24</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
+				</table>
+				</form>
+
+				<form name="second"><textarea name="prediction" rows="10"
+					cols="42" style="overflow: hidden"></textarea></form>
+				</td>
+				<td>&nbsp;</td>
+				<td align="center" valign="top">
+				<table class="outline">
+					<tr>
+						<td>Compare To Average 10 Year Risk</td>
+					</tr>
+					<tr>
+						<td align="center">Probability %</td>
+					</tr>
+					<tr>
+						<td>
+						<table class="grid" width="100%" align="center" cellspacing="0">
+							<tr>
+								<td align="center" class="gridTitles">Age</td>
+								<td align="center" class="gridTitles">Female</td>
+								<td align="center" class="gridTitles">Male</td>
+							</tr>
+							<tr>
+								<td id="cellL1" align="center">30-34</td>
+								<td id="cellC1" align="center" class="middleGrid">&lt; 1</td>
+								<td id="cellR1" align="center">3</td>
+							</tr>
+							<tr>
+								<td id="cellL2" align="center">35-39</td>
+								<td id="cellC2" align="center" class="middleGrid">&lt; 1</td>
+								<td id="cellR2" align="center">5</td>
+							</tr>
+							<tr>
+								<td id="cellL3" align="center">40-44</td>
+								<td id="cellC3" align="center" class="middleGrid">2</td>
+								<td id="cellR3" align="center">6</td>
+							</tr>
+							<tr>
+								<td id="cellL4" align="center">45-49</td>
+								<td id="cellC4" align="center" class="middleGrid">5</td>
+								<td id="cellR4" align="center">10</td>
+							</tr>
+							<tr>
+								<td id="cellL5" align="center">50-54</td>
+								<td id="cellC5" align="center" class="middleGrid">8</td>
+								<td id="cellR5" align="center">14</td>
+							</tr>
+							<tr>
+								<td id="cellL6" align="center">55-59</td>
+								<td id="cellC6" align="center" class="middleGrid">12</td>
+								<td id="cellR6" align="center">16</td>
+							</tr>
+							<tr>
+								<td id="cellL7" align="center">60-64</td>
+								<td id="cellC7" align="center" class="middleGrid">13</td>
+								<td id="cellR7" align="center">21</td>
+							</tr>
+							<tr>
+								<td id="cellL8" align="center">65-69</td>
+								<td id="cellC8" align="center" class="middleGrid">9</td>
+								<td id="cellR8" align="center">30</td>
+							</tr>
+							<tr>
+								<td id="cellL9" align="center">70-74</td>
+								<td id="cellC9" align="center" class="middleGrid">12</td>
+								<td id="cellR9" align="center">24</td>
+							</tr>
+						</table>
 						</td>
 					</tr>
 				</table>
-			</td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html>

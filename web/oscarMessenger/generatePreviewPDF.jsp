@@ -25,14 +25,17 @@
 --%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, 
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, 
                 oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean, oscar.oscarRx.pageUtil.RxSessionBean,
-                oscar.oscarRx.data.RxPatientData, oscar.oscarMessenger.pageUtil.MsgSessionBean, oscar.oscarDemographic.data.*" %>
-<%@  page import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+                oscar.oscarRx.data.RxPatientData, oscar.oscarMessenger.pageUtil.MsgSessionBean, oscar.oscarDemographic.data.*"%>
+<%@  page
+	import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.util.*"%>
 
 
@@ -51,8 +54,9 @@ if ( demo != null ) {
 int indexCount = 0;
 %>
 
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 
 <% 
   String [][] dbQueries=new String[][] { 
@@ -76,115 +80,12 @@ request.getSession().setAttribute("EctSessionBean",bean);
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarMessenger.CreateMessage.title"/>
+<title><bean:message key="oscarMessenger.CreateMessage.title" />
 </title>
 
-<style type="text/css">
-td.messengerButtonsA{
-    /*background-color: #6666ff;*/
-    /*background-color: #6699cc;*/
-    background-color: #003399;
-}
-td.messengerButtonsD{
-    /*background-color: #84c0f4;*/
-    background-color: #555599;
-}
-a.messengerButtons{
-    color: #ffffff;
-    font-size: 9pt;
-    text-decoration: none;
-}
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-
-</style>
-
-<style type="text/css">
-    BODY
-    {
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        font-size: 10pt;
-        text-decoration: none;
-    }
-
-    SPAN.treeNode
-    {
-        font-size: 10pt;
-        font-weight: bold;
-        cursor: hand;
-    }
-
-    IMG.treeNode
-    {
-        vertical-align: middle;
-    }
-
-    IMG.collapse
-    {
-        cursor: hand;
-        margin-left: 10px;
-    }
-
-
-    TABLE.treeTable
-    {
-        margin-left: 15px;
-    }
-
-    TH.treeTable
-    {
-        font-weight: bold;
-    }
-
-    PRE
-    {
-        font-size: 9pt;
-        font-weight: normal;
-    }
-
-    .content
-    {
-        margin-left: 15px;
-        border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        //padding: 3px;
-        background-color: #F5F5F5;
-        font-size: 9pt;
-    }
-
-    .groupIndent
-    {
-        margin-left: 19px;
-        /*border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        padding: 3px;
-        background-color: #F5F5F5;*/
-        font-size: 9pt;
-    }
-
-    .borderTop
-    {
-        border-top-width: 1px;
-        border-top-color: #A9A9A9;
-        border-top-style: solid;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
 <script type="text/javascript">   
@@ -301,101 +202,87 @@ border-right: 2px solid #cfcfcf;
 
 
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarMessenger.CreateMessage.msgMessenger"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                            Attach document for: <%=demoName%>
-                        </td>
-                        <td  >
-                            &nbsp;
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-                <table >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarMessenger.CreateMessage.msgMessenger" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Attach document for: <%=demoName%></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table>
 
-                    <tr>
-                        <td>
-                            <table cellspacing=3 >
-                                <tr >
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3>
-                                            <tr>
-                                                <td class="messengerButtonsA">
-                                                <a href="#" onclick="javascript:top.window.close()" class="messengerButtons">
-                                                Close Attachment
-                                                </a>
-                                            </td></tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+			<tr>
+				<td>
+				<table cellspacing=3>
+					<tr>
+						<td>
+						<table class=messButtonsA cellspacing=0 cellpadding=3>
+							<tr>
+								<td class="messengerButtonsA"><a href="#"
+									onclick="javascript:top.window.close()"
+									class="messengerButtons"> Close Attachment </a></td>
+							</tr>
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
 
 
-		    <tr>
-		    
-                    <td bgcolor="#EEEEFF" >
-		    
-		    
-		            <html:form action="/oscarMessenger/Doc2PDF">
-        
+			<tr>
+
+				<td bgcolor="#EEEEFF"><html:form
+					action="/oscarMessenger/Doc2PDF">
 
 
-                                    <table border="0" cellpadding="0" cellspacing="1" width="400">
-                                            <tr>
-                                    <th align="left" bgcolor="#DDDDFF" colspan="3">
-                                                Demographic information
-                                    </th>
-                                    </tr>       
-                                    <tr>
-                                        <td>
 
-                                            <% String currentURI = "../demographic/demographiccontrol.jsp?demographic_no=" + demographic_no +"&displaymode=pdflabel&dboperation=search_detail";  %>
-                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                                            <input type=checkbox name="titleArray" value="<%=demoName%> information" style="display:none" />
-
-                                        </td>
-                                        <td>       
-                                            <%=demoName%> Information
-                                        </td>
-                                        <td>       
-                                            <% if ( request.getParameter("isAttaching") == null ) { %>
-                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                                            <% } %>
-                                            &nbsp;
-                                        </td>
-                                    </tr>        
+					<table border="0" cellpadding="0" cellspacing="1" width="400">
+						<tr>
+							<th align="left" bgcolor="#DDDDFF" colspan="3">Demographic
+							information</th>
+						</tr>
+						<tr>
+							<td>
+							<% String currentURI = "../demographic/demographiccontrol.jsp?demographic_no=" + demographic_no +"&displaymode=pdflabel&dboperation=search_detail";  %>
+							<html:checkbox property="uriArray" value="<%=currentURI%>"
+								style="display:none" /> <html:multibox property="indexArray"
+								value="<%= Integer.toString(indexCount++) %>" /> <input
+								type=checkbox name="titleArray"
+								value="<%=demoName%> information" style="display: none" /></td>
+							<td><%=demoName%> Information</td>
+							<td>
+							<% if ( request.getParameter("isAttaching") == null ) { %> <input
+								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+							<% } %> &nbsp;</td>
+						</tr>
 
 
-                                    <tr>
+						<tr>
 
-                                        <th align="left" bgcolor="#DDDDFF" colspan="3">
-                                                    Encounters:
-                                        </th>
+							<th align="left" bgcolor="#DDDDFF" colspan="3">Encounters:</th>
 
-                                    </tr>       
-                                    <%
+						</tr>
+						<%
                                       ResultSet rsdemo = null ;
 
                                       String[] param =new String[1];
@@ -406,41 +293,37 @@ border-right: 2px solid #cfcfcf;
                                       while (rsdemo.next()) {
 
                                     %>
-                                    <tr>
-                                        <td>
-                                            <% currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
-                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                                            <input type=checkbox name="titleArray" value='Encounter: <%=rsdemo.getString("timeStamp")%>' style="display:none" />
+						<tr>
+							<td>
+							<% currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
+							<html:checkbox property="uriArray" value="<%=currentURI%>"
+								style="display:none" /> <html:multibox property="indexArray"
+								value="<%= Integer.toString(indexCount++) %>" /> <input
+								type=checkbox name="titleArray"
+								value='Encounter: <%=rsdemo.getString("timeStamp")%>'
+								style="display: none" /></td>
+							<td><%=rsdemo.getString("timeStamp")%></td>
+							<td>
+							<% if ( request.getParameter("isAttaching") == null ) { %> <input
+								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+							<% } %> &nbsp;</td>
+						</tr>
 
-                                        </td>
-                                        <td>       
-                                           <%=rsdemo.getString("timeStamp")%>
-                                        </td>
-                                        <td> 
-                                            <% if ( request.getParameter("isAttaching") == null ) { %>
-                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                                            <% } %>
-                                            &nbsp;
-                                        </td>
-                                    </tr>
-
-                                    <%
+						<%
                                       }
                                       daySheetBean.closePstmtConn();
-                                    %>  
+                                    %>
 
-                                    <tr>
+						<tr>
 
-                                        <th align="left" bgcolor="#DDDDFF" colspan="3">
-                                                                    Prescriptions
-                                        </th>
+							<th align="left" bgcolor="#DDDDFF" colspan="3">
+							Prescriptions</th>
 
 
-                                    </tr>       
-                                    <tr>
-                                        <td>
-                                        <%
+						</tr>
+						<tr>
+							<td>
+							<%
                                             // Setup bean
                                             RxSessionBean Rxbean;
 
@@ -470,28 +353,22 @@ border-right: 2px solid #cfcfcf;
                                             Rxbean.setProviderNo((String) request.getSession().getAttribute("user"));              
                                             Rxbean.setDemographicNo(Integer.parseInt(demographic_no));
 
-                                        %>
+                                        %> <% currentURI = "../oscarRx/PrintDrugProfile.jsp?demographic_no=" + demographic_no;  %>
 
-                                            <% currentURI = "../oscarRx/PrintDrugProfile.jsp?demographic_no=" + demographic_no;  %>
-
-                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                                            <input type=checkbox name="titleArray" value='Current prescriptions' style="display:none" />
-
-                                        </td>
-                                        <td>       
-                                            Current prescriptions
-                                        </td>
-                                        <td>       
-                                            <% if ( request.getParameter("isAttaching") == null ) { %>
-                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                                            <% } %>
-                                            &nbsp;
-                                        </td>
-                                    </tr>
+							<html:checkbox property="uriArray" value="<%=currentURI%>"
+								style="display:none" /> <html:multibox property="indexArray"
+								value="<%= Integer.toString(indexCount++) %>" /> <input
+								type=checkbox name="titleArray" value='Current prescriptions'
+								style="display: none" /></td>
+							<td>Current prescriptions</td>
+							<td>
+							<% if ( request.getParameter("isAttaching") == null ) { %> <input
+								type=button value=Preview onclick=PreviewPDF( '<%=currentURI%>') />
+							<% } %> &nbsp;</td>
+						</tr>
 
 
-                                    <!--
+						<!--
                                     <tr>
                                     <td colspan="2">       
                                         <input type="text" name="url" id="url" size="30" value="http://localhost:8084/oscar_mcmaster/form/forwardshortcutname.jsp?formname=Vascular%20Tracker&demographic_no=39" />
@@ -503,49 +380,33 @@ border-right: 2px solid #cfcfcf;
                                         <input type="button" name="setURL" value="setURL" onclick="SetBottomURL( document.forms[0].url.value);" />
                                     </td>
                                     </tr>
-                                    -->   
+                                    -->
 
-                                    <tr>
-                                        <td colspan="3" align="center">
+						<tr>
+							<td colspan="3" align="center">
+							<% if ( request.getParameter("isAttaching") != null ) { %> <input
+								type=text name=status value='' /> <% } else { %> <input
+								type="button" name="Attach" value="Attach Document"
+								onclick="AttachingPDF(-1)" /> <% } %> <br />
+							</td>
+						</tr>
 
+						<tr>
+							<td colspan="3"><html:hidden property="srcText" value='' />
 
-                                            <% if ( request.getParameter("isAttaching") != null ) { %>
-                                                <input type=text name=status value='' />
-                                            <% } else { %>     
-                                                <input type="button" name="Attach" value="Attach Document" onclick="AttachingPDF(-1)" />
-                                             <% } %> 
-                                            <br />            
-                                        </td>
-                                    </tr>
+							<html:hidden property="attachmentCount"
+								value='<%=request.getParameter("attachmentCount")%>' /> <html:hidden
+								property="demographic_no" value='<%=demographic_no%>' /> <html:hidden
+								property="isPreview"
+								value='<%=request.getParameter("isPreview")%>' /> <html:hidden
+								property="isAttaching"
+								value='<%=request.getParameter("isAttaching")%>' /> <html:hidden
+								property="isNew" value='true' /> <html:hidden
+								property="attachmentTitle" value='' /></td>
+						</tr>
 
-                                    <tr>
-                                        <td colspan="3">          
-
-
-                                            <html:hidden property="srcText" value='' />
-
-                                            <html:hidden property="attachmentCount" value='<%=request.getParameter("attachmentCount")%>'/>
-
-                                            <html:hidden property="demographic_no" value='<%=demographic_no%>'/>
-
-                                            <html:hidden property="isPreview" value='<%=request.getParameter("isPreview")%>'/>
-
-                                            <html:hidden property="isAttaching" value='<%=request.getParameter("isAttaching")%>'/>                
-
-                                            <html:hidden property="isNew" value='true' />                                
-
-                                            <html:hidden property="attachmentTitle" value='' />                                
-
-
-
-                                        </td>
-                                    </tr>
-
-                                     </table>
-                                    </html:form>
-
-
-                                    <script>
+					</table>
+				</html:form> <script>
                                         if ( document.forms[0].isAttaching.value == "true") {
 
                                             j = 0;
@@ -562,29 +423,19 @@ border-right: 2px solid #cfcfcf;
                                         }
 
 
-                                    </script>
+                                    </script></td>
 
 
 
-
-
-                            </td>		    
-		    
-	    
-		    
-		    </tr>                    
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html:html>
 

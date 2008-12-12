@@ -56,7 +56,9 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Client Participation:</td>
-		<td><c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" />&nbsp;(<c:out value="${program.queueSize}" /> waiting)</td>
+		<td><c:out value="${program.numOfMembers}" />/<c:out
+			value="${program.maxAllowed}" />&nbsp;(<c:out
+			value="${program.queueSize}" /> waiting)</td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Holding Tank:</td>

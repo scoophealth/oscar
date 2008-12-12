@@ -1,3 +1,4 @@
+
 <%       
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -10,12 +11,15 @@
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
 %>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbReport.jsp" %>
+<%@ include file="dbReport.jsp"%>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -60,27 +64,13 @@ GregorianCalendar now=new GregorianCalendar();
 -->
 <html>
 <head>
-<title><bean:message key="oscarReport.oscarReportVisitControl.title"/></title>
-<link rel="stylesheet" href="oscarReport.css" >
-<style type="text/css">
-<!--
-.bodytext
-{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-  font-style: bold;
-  line-height: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  color: #FFFFFF;
-  text-decoration: none;
-}
--->
-</style>
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
-      <script language="JavaScript">
+<title><bean:message
+	key="oscarReport.oscarReportVisitControl.title" /></title>
+<link rel="stylesheet" href="oscarReport.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
+<script language="JavaScript">
 <!-- 
 
 function selectprovider(s) {
@@ -106,37 +96,52 @@ function refresh() {
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="5">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="5">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#FFFFFF"> 
-    <div align="right"><a href="manageProvider.jsp?action=visitreport" target="_blank"><font face="Arial, Helvetica, sans-serif" size="1"><bean:message key="oscarReport.oscarReportVisitControl.btnManageProviderList"/></font></a></div>
-  </tr>
+	<tr bgcolor="#FFFFFF">
+		<div align="right"><a
+			href="manageProvider.jsp?action=visitreport" target="_blank"><font
+			face="Arial, Helvetica, sans-serif" size="1"><bean:message
+			key="oscarReport.oscarReportVisitControl.btnManageProviderList" /></font></a></div>
+	</tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%">
-      <input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'>
-    </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">&nbsp;<bean:message key="oscarReport.oscarReportVisitControl.msgTitle"/></font></font></b></font></p>
-    </td>
-  </tr>
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"><input type='button' name='print'
+			value='<bean:message key="global.btnPrint"/>'
+			onClick='window.print()'></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3">&nbsp;<bean:message
+			key="oscarReport.oscarReportVisitControl.msgTitle" /></font></font></b></font></p>
+		</td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#EEEEFF">
-  <form name="serviceform" method="get" action="oscarReportVisitControl.jsp">
-    <tr>
-      <td width="30%" align="left"> <font size="1" color="#333333" face="Verdana, Arial, Helvetica, sans-serif"> 
-         <input type="radio" name="reportAction" onClick="document.serviceform.providerview.disabled=true" value="lk"  <%=reportAction.equals("lk")?"checked":""%>>
-         <bean:message key="oscarReport.oscarReportVisitControl.msgLarryKainReport"/>
-         <input type="radio" name="reportAction" onClick="document.serviceform.providerview.disabled=false" value="vr"  <%=reportAction.equals("vr")?"checked":""%>>
-         <bean:message key="oscarReport.oscarReportVisitControl.msgVisitReport"/></font>
-      </td>
-      <td width="60%" align="left">
-       <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message key="oscarReport.oscarReportVisitControl.msgSelectProvider"/> </b></font> 
-          <select name="providerview" <%=reportAction.equals("lk")?"disabled":""%>>
-            <option value="%"><bean:message key="oscarReport.oscarReportVisitControl.msgSelectProviderAll"/></option>
-            <% String proFirst="";
+	<form name="serviceform" method="get"
+		action="oscarReportVisitControl.jsp">
+	<tr>
+		<td width="30%" align="left"><font size="1" color="#333333"
+			face="Verdana, Arial, Helvetica, sans-serif"> <input
+			type="radio" name="reportAction"
+			onClick="document.serviceform.providerview.disabled=true" value="lk"
+			<%=reportAction.equals("lk")?"checked":""%>> <bean:message
+			key="oscarReport.oscarReportVisitControl.msgLarryKainReport" /> <input
+			type="radio" name="reportAction"
+			onClick="document.serviceform.providerview.disabled=false" value="vr"
+			<%=reportAction.equals("vr")?"checked":""%>> <bean:message
+			key="oscarReport.oscarReportVisitControl.msgVisitReport" /></font></td>
+		<td width="60%" align="left"><font
+			face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#333333"><b><bean:message
+			key="oscarReport.oscarReportVisitControl.msgSelectProvider" /> </b></font> <select
+			name="providerview" <%=reportAction.equals("lk")?"disabled":""%>>
+			<option value="%"><bean:message
+				key="oscarReport.oscarReportVisitControl.msgSelectProviderAll" /></option>
+			<% String proFirst="";
             String proLast="";
             String proOHIP="";            
             ResultSet rslocal = apptMainBean.queryResults("visitreport", "search_reportprovider");
@@ -144,34 +149,43 @@ function refresh() {
                 proFirst = rslocal.getString("first_name");
                 proLast = rslocal.getString("last_name");
                 proOHIP = rslocal.getString("provider_no"); %>
-                <option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
-            <% } %>
-          </select>           
-      </td>
-      <td width="10%"> <font color="#333333" size="1" face="Verdana, Arial, Helvetica, sans-serif"> 
-        <input type="submit" name="Submit" value="<bean:message key="oscarReport.oscarReportVisitControl.btnCreateReport"/>">
-        </font></td>
-    </tr>
-    <tr> 
-      <td colspan="2"> 
-        <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>           
-          <font color="#333333">
-            <bean:message key="oscarReport.oscarReportVisitControl.msgServiceDateRange"/></font></b></font></font> &nbsp; &nbsp;  <font size="1" face="Arial, Helvetica, sans-serif">
-            <a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportVisitControl.msgBeginDate"/>:</a></font> <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-            <font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="oscarReport.oscarReportVisitControl.msgEndDate"/>:</a></font> <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-        </div>
-      </td>
-       </tr>
-  </form>
+			<option value="<%=proOHIP%>"><%=proLast%>, <%=proFirst%></option>
+			<% } %>
+		</select></td>
+		<td width="10%"><font color="#333333" size="1"
+			face="Verdana, Arial, Helvetica, sans-serif"> <input
+			type="submit" name="Submit"
+			value="<bean:message key="oscarReport.oscarReportVisitControl.btnCreateReport"/>">
+		</font></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="left"><font color="#003366"><font
+			face="Verdana, Arial, Helvetica, sans-serif" size="1"><b>
+		<font color="#333333"> <bean:message
+			key="oscarReport.oscarReportVisitControl.msgServiceDateRange" /></font></b></font></font>
+		&nbsp; &nbsp; <font size="1" face="Arial, Helvetica, sans-serif">
+		<a href="#"
+			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=admission&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
+			key="oscarReport.oscarReportVisitControl.msgBeginDate" />:</a></font> <input
+			type="text" name="xml_vdate" value="<%=xml_vdate%>"> <font
+			size="1" face="Arial, Helvetica, sans-serif"><a href="#"
+			onClick="MM_openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
+			key="oscarReport.oscarReportVisitControl.msgEndDate" />:</a></font> <input
+			type="text" name="xml_appointment_date"
+			value="<%=xml_appointment_date%>"></div>
+		</td>
+	</tr>
+	</form>
 </table>
 <% if (reportAction.compareTo("") == 0 || reportAction == null) { %>
-  <p>&nbsp; </p>
+<p>&nbsp;</p>
 <% } else {  
-       if (reportAction.compareTo("lk") == 0) { %> 
-           <%@ include file="oscarReportVisit_lk.jsp" %> 
+       if (reportAction.compareTo("lk") == 0) { %>
+<%@ include file="oscarReportVisit_lk.jsp"%>
 <%     } else {
            if (reportAction.compareTo("vr") == 0) { %>
-               <%@ include file="oscarReportVisit_vr.jsp" %> 
+<%@ include file="oscarReportVisit_vr.jsp"%>
 <%         }
        }
    }
@@ -179,7 +193,7 @@ function refresh() {
 apptMainBean.closePstmtConn();
 %>
 
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+<%@ include file="../demographic/zfooterbackclose.jsp"%>
 
 </body>
 </html>

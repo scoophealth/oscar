@@ -1,13 +1,16 @@
+
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"  %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.util.*,oscar.oscarProvider.data.ProviderData,oscar.oscarBilling.ca.bc.data.*,oscar.entities.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el"
+	prefix="html-el"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
 
 <%
@@ -70,57 +73,10 @@ pageContext.setAttribute("billActivityList",billList);
 -->
 <html>
 <head>
-    <title>Billing Report</title>
-    <meta http-equiv="Content-Type" content="text/html; ">
-    <style type="text/css">
-        html { font-size:100.01%; }
-        body { font-size:1em; }    
-        
-        html, body, form, fieldset {
-        margin: 0;
-        padding: 0;
-        
-        }
-        
-        /* Neutralize styling: 
-        Elements with a vertical margin: */
-        h1, h2, h3, h4, h5, h6, p, pre,
-        blockquote, ul, ol, dl, address {
-        margin: 1em 0;
-        padding: 0;
-        }
-        
-        /* Apply left margin:
-        Only to the few elements that need it: */
-        li, dd, blockquote {
-        margin-left: 1em;
-        }
-        
-        /* Miscellaneous conveniences: */
-        form label {
-        cursor: pointer;
-        }
-        fieldset {
-        border: none;
-        }
-        input, select, textarea {
-        font-size: 100%;
-        font-family: inherit;
-        }
-      
-        body {
-        font-family: Arial, Helvetica, sans-serif;
-        margin: 0;
-        padding: 0;
-        
-        }
-        
-        table.acttable {
-        font-size: 0.8em;
-        }
-        
-    </style>
-    <script language="JavaScript">
+<title>Billing Report</title>
+<meta http-equiv="Content-Type" content="text/html; ">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script language="JavaScript">
 
 
 
@@ -160,126 +116,128 @@ function showHideLayers() { //v3.0
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
-<div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
-<div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr bgcolor="#DDDDEE">
-            <td align='CENTER'>Last5 Years</td>
-        </tr>
-        <% for (String year:yearArray) { %>
-        <tr>
-            <td align='CENTER'><a href="TeleplanSubmission.jsp?year=<%=year%>">YEAR <%=year%></a></td>
-        </tr>
-        <% } %>
-        
-        <c:forEach var="year" items="${yearArray}">
-           <tr>
-              <td align='CENTER'><a href="TeleplanSubmission.jsp?year=<c:out value="${year}"/>" >YEAR <c:out value="${year}"/></a></td>
-           </tr>
-        </c:forEach>
-        
-        
-    </table>
+<div id="Layer1"
+	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
+<div id="Layer2"
+	style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr bgcolor="#DDDDEE">
+		<td align='CENTER'>Last5 Years</td>
+	</tr>
+	<% for (String year:yearArray) { %>
+	<tr>
+		<td align='CENTER'><a
+			href="TeleplanSubmission.jsp?year=<%=year%>">YEAR <%=year%></a></td>
+	</tr>
+	<% } %>
+
+	<c:forEach var="year" items="${yearArray}">
+		<tr>
+			<td align='CENTER'><a
+				href="TeleplanSubmission.jsp?year=<c:out value="${year}"/>">YEAR
+			<c:out value="${year}" /></a></td>
+		</tr>
+	</c:forEach>
+
+
+</table>
 </div>
-<table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
-    <tr bgcolor="#486ebd">
-        <td align="LEFT"><input type='button' name='print' value='Print' onClick='window.print()'> </td>
-        <th align="CENTER" style="color: #FFFFFF" >Teleplan Group Report - <%=thisyear%></th>
-        <td align="RIGHT"><input type='button' name='close' value='Close' onClick='window.close()'></td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <c:if test="${!empty error}">
-                <c:out value="${error}" />
-            </c:if> 
-        </td>
-    </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
+	<tr bgcolor="#486ebd">
+		<td align="LEFT"><input type='button' name='print' value='Print'
+			onClick='window.print()'></td>
+		<th align="CENTER" style="color: #FFFFFF">Teleplan Group Report
+		- <%=thisyear%></th>
+		<td align="RIGHT"><input type='button' name='close' value='Close'
+			onClick='window.close()'></td>
+	</tr>
+	<tr>
+		<td colspan="2"><c:if test="${!empty error}">
+			<c:out value="${error}" />
+		</c:if></td>
+	</tr>
 </table>
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-    <html:form   action="/billing/CA/BC/GenerateTeleplanFile.do" onsubmit="return checkSubmit();">
-        <tr>
-            <td width="220"><a href="#" onClick="showHideLayers('Layer2','','show');">Show Archive</a></td>
-            <td width="220">Select provider </td>
-            <td width="254">
-                <select name="provider">
-                    <option value="all">All Providers</option>
-                    <%ProviderData pd = new ProviderData();
+	<html:form action="/billing/CA/BC/GenerateTeleplanFile.do"
+		onsubmit="return checkSubmit();">
+		<tr>
+			<td width="220"><a href="#"
+				onClick="showHideLayers('Layer2','','show');">Show Archive</a></td>
+			<td width="220">Select provider</td>
+			<td width="254"><select name="provider">
+				<option value="all">All Providers</option>
+				<%ProviderData pd = new ProviderData();
                     List<String> list = pd.getProviderListWithInsuranceNo();
                     for(String provNo: list){
                        ProviderData provider = new ProviderData(provNo);%>
-                       <option value="<%=provider.getOhip_no()%>" ><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
-                    <%}%>
-                </select>
-            </td>
-            <td width="181">&nbsp;</td>
-            <td width="254">&nbsp;</td>
-            <td width="277"><input type="submit" name="Submit" value="Create Report"></td>
-        </tr>
-        <tr>
-            <td colspan="4">&nbsp;</td>
-        </tr>
-    </html:form>
+				<option value="<%=provider.getOhip_no()%>"><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
+				<%}%>
+			</select></td>
+			<td width="181">&nbsp;</td>
+			<td width="254">&nbsp;</td>
+			<td width="277"><input type="submit" name="Submit"
+				value="Create Report"></td>
+		</tr>
+		<tr>
+			<td colspan="4">&nbsp;</td>
+		</tr>
+	</html:form>
 </table>
-<table width="100%" border="1" cellspacing="0" cellpadding="0" class="acttable">
-<tr bgcolor="<%=yearColor%>">
-    <td colspan="7">Activity List </td>
-</tr>
-<tr bgcolor="<%=yearColor%>">
-    <th width="12%">Provider</th>
-    <th width="14%">Group Number</th>
-    <th width="20%">Creation Date </th>
-    <th width="15%">Claims/Records</th>
-    <th >Teleplan</th>
-    <th width="15%">MSP Filename</th>
-    <th>HTML Filename</th>
-</tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	class="acttable">
+	<tr bgcolor="<%=yearColor%>">
+		<td colspan="7">Activity List</td>
+	</tr>
+	<tr bgcolor="<%=yearColor%>">
+		<th width="12%">Provider</th>
+		<th width="14%">Group Number</th>
+		<th width="20%">Creation Date</th>
+		<th width="15%">Claims/Records</th>
+		<th>Teleplan</th>
+		<th width="15%">MSP Filename</th>
+		<th>HTML Filename</th>
+	</tr>
 
 
 
-<c:forEach var="billAct" items="${billActivityList}">
-    <c:choose>
-        <c:when test="${billAct.updatedatetime > yesterday}">
-            <tr bgcolor="#E6F0F7" align="center">
-        </c:when>
-        <c:otherwise>
-            <tr bgcolor="<%=yearColor%>" align="center">
-        </c:otherwise>
-    </c:choose>    
-    
-    <td><c:out value="${billAct.providerohipno}"/>&nbsp;</td>
-    <td><c:out value="${billAct.groupno}"/>&nbsp;</td>
-    <td><c:out value="${billAct.updatedatetime}"/>&nbsp;</td> 
-    <td><c:out value="${billAct.claimrecord}"/>&nbsp;</td> 
-    <td>
-    
-      <c:choose>
-        <c:when test="${billAct.status == 'A'}">
-            <html-el:link action="/billing/CA/BC/ManageTeleplan?id=${billAct.id}&method=sendFile"  >
+	<c:forEach var="billAct" items="${billActivityList}">
+		<c:choose>
+			<c:when test="${billAct.updatedatetime > yesterday}">
+				<tr bgcolor="#E6F0F7" align="center">
+			</c:when>
+			<c:otherwise>
+				<tr bgcolor="<%=yearColor%>" align="center">
+			</c:otherwise>
+		</c:choose>
+
+		<td><c:out value="${billAct.providerohipno}" />&nbsp;</td>
+		<td><c:out value="${billAct.groupno}" />&nbsp;</td>
+		<td><c:out value="${billAct.updatedatetime}" />&nbsp;</td>
+		<td><c:out value="${billAct.claimrecord}" />&nbsp;</td>
+		<td><c:choose>
+			<c:when test="${billAct.status == 'A'}">
+				<html-el:link
+					action="/billing/CA/BC/ManageTeleplan?id=${billAct.id}&method=sendFile">
             Send
             </html-el:link>
-        </c:when>
-        <c:otherwise>
+			</c:when>
+			<c:otherwise>
             Sent
         </c:otherwise>
-      </c:choose>    
-    
-        
-        
-    </td>
-    
-    <td>
-        <html-el:link action="/billing/CA/BC/DownloadBilling?filename=${billAct.ohipfilename}"  >
-            <c:out value="${billAct.ohipfilename}"/>
-        </html-el:link>
-    </td>
-    <td>
-        <html-el:link action="/billing/CA/BC/DownloadBilling?filename=${billAct.htmlfilename}" >
-            <c:out value="${billAct.htmlfilename}"/>
-        </html-el:link>
-    </td>
-    </tr>
-</c:forEach> 
+		</c:choose></td>
+
+		<td><html-el:link
+			action="/billing/CA/BC/DownloadBilling?filename=${billAct.ohipfilename}">
+			<c:out value="${billAct.ohipfilename}" />
+		</html-el:link></td>
+		<td><html-el:link
+			action="/billing/CA/BC/DownloadBilling?filename=${billAct.htmlfilename}">
+			<c:out value="${billAct.htmlfilename}" />
+		</html-el:link></td>
+		</tr>
+	</c:forEach>
 </table>
 </body>
 </html>

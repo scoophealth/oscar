@@ -30,13 +30,15 @@
   if(request.getParameter("oox")!=null) oox = Integer.parseInt(request.getParameter("oox"));
   if(request.getParameter("ooy")!=null) ooy = Integer.parseInt(request.getParameter("ooy"));
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<title> ANTENATAL RECORD </title>
-<link rel="stylesheet" href="antenatalrecord.css" >
+<title>ANTENATAL RECORD</title>
+<link rel="stylesheet" href="antenatalrecord.css">
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
@@ -55,11 +57,12 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 //-->
 </SCRIPT>
 </head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1" background="../images/formar1_99_08.gif">
+<body onLoad="setfocus()" topmargin="0" leftmargin="1" rightmargin="1"
+	background="../images/formar1_99_08.gif">
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=50+oox%>px; top:<%=96+ooy%>px; width:400px; height:20px;"> 
-<%=request.getParameter("xml_name")%>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=50+oox%>px; top:<%=96+ooy%>px; width:400px; height:20px;">
+<%=request.getParameter("xml_name")%></div>
 
 <script language="JavaScript">
 ff(50,120,500,20,"<%=request.getParameter("xml_address")%>" );
@@ -309,24 +312,25 @@ ff(20,955,200,20,"<%=request.getParameter("xml_soa")%>" );
 ff(500,955,100,20,"<%=request.getParameter("xml_date")%>" );
 
 </script>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=480+oox%>px; top:<%=ooy+197%>px; width:230px; height:30px;"> 
-<pre><%=request.getParameter("xml_ebmf")%></pre>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=480+oox%>px; top:<%=ooy+197%>px; width:230px; height:30px;">
+<pre><%=request.getParameter("xml_ebmf")%></pre></div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=140+oox%>px; top:<%=ooy+240%>px; width:280px; height:50px;"> 
-<pre><%=request.getParameter("xml_Alert_demographicaccessory")%></pre>
-</div>
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=460+oox%>px; top:<%=ooy+240%>px; width:280px; height:50px;"> 
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=140+oox%>px; top:<%=ooy+240%>px; width:280px; height:50px;">
+<pre><%=request.getParameter("xml_Alert_demographicaccessory")%></pre></div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=460+oox%>px; top:<%=ooy+240%>px; width:280px; height:50px;">
 <pre><%=request.getParameter("xml_Medication_demographicaccessory")%></pre>
 </div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=440+oox%>px; top:<%=ooy+770%>px; width:280px; height:60px;"> 
-<pre><%=request.getParameter("xml_rfi")%></pre>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=440+oox%>px; top:<%=ooy+770%>px; width:280px; height:60px;">
+<pre><%=request.getParameter("xml_rfi")%></pre></div>
 
-<div ID="bdiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=12+oox%>px; top:<%=ooy+850%>px; width:300px; height:60px;"> 
-<pre><%=request.getParameter("xml_comments")%></pre>
-</div>
+<div ID="bdiv1"
+	STYLE="position:absolute; visibility:visible; z-index:2; left:<%=12+oox%>px; top:<%=ooy+850%>px; width:300px; height:60px;">
+<pre><%=request.getParameter("xml_comments")%></pre></div>
 
 </body>
 </html>

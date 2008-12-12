@@ -91,71 +91,21 @@
 	  }
 	}
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp"import="java.util.*,
-                                                           java.sql.*, java.net.*" %>
-  <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-  <%@ page import="org.apache.commons.lang.WordUtils" %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        Add/Edit Service Code
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <style type="text/css">
-          BODY{
-              FONT-SIZE: Normal;
-              FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
-          }
-          TABLE{
-              font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-          }
-          TD{
-              font-size:11pt;
-          }
-          TH{
-              font-size:11pt;
-          }
-          .blueText{
-              font-size:9pt;
-              vertical-align: top;
-          }
-          .mbttn {
-              background: #D7DBF2;
-              border-bottom: 1px solid #104A7B;
-              border-right: 1px solid #104A7B;
-              border-left: 1px solid #AFC4D5;
-              border-top:1px solid #AFC4D5;
-              color:#000066;height:19px;
-              text-decoration:none;
-              cursor: hand
-          }
-          .subject {
-              background-color: #003399;
-              color: #FFFFFF;
-              font-size: 14pt;
-              font-weight: bold;
-              text-align: centre;
-          }
-          .searchTitle {
-              background-color: #6699CC;
-              color: #000000;
-              font-weight: bold;
-              text-align: left;
-              height="20px"
-          }
-          .title {
-              background-color: #6699CC;
-              color: #000000;
-              font-weight: bold;
-              text-align: center;
-              height="20px"
-          }
-      </style>
-      <script language="JavaScript">
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*,
+                                                           java.sql.*, java.net.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="org.apache.commons.lang.WordUtils"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title>Add/Edit Service Code</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script language="JavaScript">
 
 <!--
 		function setfocus() {
@@ -193,69 +143,63 @@
 -->
 
       </script>
-    </head>
-    <body bgcolor="white" bgproperties="fixed" onload="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#CCCCFF">
-        <form method="post" name="titlesearch" action="searchRefDoc.jsp" onSubmit="return check();">
-          <tr>
-            <td class="searchTitle" colspan="4">
-              Search Referral Doctor
-            </td>
-          </tr>
-          <tr>
-            <td class="blueText" width="10%" nowrap>
-              <input type="radio" name="search_mode" value="search_name" checked>
-              Name
-            </td>
-            <td class="blueText" nowrap>
-              <input type="radio" name="search_mode" value="specialty">
-              Specialty
-            </td>
-            <td class="blueText" nowrap>
-              <input type="radio" name="search_mode" value="referral_no">
-              Ref. no.
-            </td>
-            <td valign="middle" rowspan="2" align="left">
-              <input type="text" name="keyword" value="" size="17" maxlength="100">
-              <input type="hidden" name="orderby" value="last_name, first_name">
-              <input type="hidden" name="limit1" value="0">
-              <input type="hidden" name="limit2" value="10">
-              <input type="hidden" name="submit" value='Search'>
-              <input type="submit" value='Search'>
-            </td>
-          </tr>
-          <input type='hidden' name='param' value="<%=StringEscapeUtils.escapeHtml(param)%>">
-          <input type='hidden' name='param2' value="<%=StringEscapeUtils.escapeHtml(param2)%>">
-          <input type='hidden' name='toname' value="<%=StringEscapeUtils.escapeHtml(toname)%>"> 
-          <input type='hidden' name='toaddress1' value="<%=StringEscapeUtils.escapeHtml(toaddress1)%>"> 
-          <input type='hidden' name='toaddress2' value="<%=StringEscapeUtils.escapeHtml(toaddress2)%>"> 
-          <input type='hidden' name='tophone' value="<%=StringEscapeUtils.escapeHtml(tophone)%>">
-          <input type='hidden' name='tofax' value="<%=StringEscapeUtils.escapeHtml(tofax)%>"> 
-      </table>
-		<table width="95%" border="0">
-		<tr>
+</head>
+<body bgcolor="white" bgproperties="fixed" onload="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellpadding="1" cellspacing="0" width="100%"
+	bgcolor="#CCCCFF">
+	<form method="post" name="titlesearch" action="searchRefDoc.jsp"
+		onSubmit="return check();">
+	<tr>
+		<td class="searchTitle" colspan="4">Search Referral Doctor</td>
+	</tr>
+	<tr>
+		<td class="blueText" width="10%" nowrap><input type="radio"
+			name="search_mode" value="search_name" checked> Name</td>
+		<td class="blueText" nowrap><input type="radio"
+			name="search_mode" value="specialty"> Specialty</td>
+		<td class="blueText" nowrap><input type="radio"
+			name="search_mode" value="referral_no"> Ref. no.</td>
+		<td valign="middle" rowspan="2" align="left"><input type="text"
+			name="keyword" value="" size="17" maxlength="100"> <input
+			type="hidden" name="orderby" value="last_name, first_name"> <input
+			type="hidden" name="limit1" value="0"> <input type="hidden"
+			name="limit2" value="10"> <input type="hidden" name="submit"
+			value='Search'> <input type="submit" value='Search'>
+		</td>
+	</tr>
+	<input type='hidden' name='param'
+		value="<%=StringEscapeUtils.escapeHtml(param)%>">
+	<input type='hidden' name='param2'
+		value="<%=StringEscapeUtils.escapeHtml(param2)%>">
+	<input type='hidden' name='toname'
+		value="<%=StringEscapeUtils.escapeHtml(toname)%>">
+	<input type='hidden' name='toaddress1'
+		value="<%=StringEscapeUtils.escapeHtml(toaddress1)%>">
+	<input type='hidden' name='toaddress2'
+		value="<%=StringEscapeUtils.escapeHtml(toaddress2)%>">
+	<input type='hidden' name='tophone'
+		value="<%=StringEscapeUtils.escapeHtml(tophone)%>">
+	<input type='hidden' name='tofax'
+		value="<%=StringEscapeUtils.escapeHtml(tofax)%>">
+</table>
+<table width="95%" border="0">
+	<tr>
 		<td align="left">Results based on keyword(s): <%=keyword==null?"":keyword%></td>
-		</tr>
-		</form>
-		</table>
-      <center>
-      <table width="100%" border="0" cellpadding="0" cellspacing="2" bgcolor="#C0C0C0">
-        <tr class="title"><th width="10%"><b>Ref. No.</b>
-          </th>
-          <th width="25%">
-            Last Name</b>
-          </th>
-          <th width="20%">
-            First Name</b>
-          </th>
-          <th width="20%">
-            Specialty</b>
-          </th>
-          <th width="20%">
-            Phone</b>
-          </th>
-        </tr>
-        <%for(int i=0; i<vec.size(); i++) {
+	</tr>
+	</form>
+</table>
+<center>
+<table width="100%" border="0" cellpadding="0" cellspacing="2"
+	bgcolor="#C0C0C0">
+	<tr class="title">
+		<th width="10%"><b>Ref. No.</b></th>
+		<th width="25%">Last Name</b></th>
+		<th width="20%">First Name</b></th>
+		<th width="20%">Specialty</b></th>
+		<th width="20%">Phone</b></th>
+	</tr>
+	<%for(int i=0; i<vec.size(); i++) {
         	prop = (Properties) vec.get(i);
 			String bgColor = i%2==0?"#EEEEFF":"ivory";
 			String strOnClick; 
@@ -266,34 +210,29 @@
 				: "typeInData1('" + prop.getProperty("referral_no", "") + "')";
                                 }
         %>
-		<tr align="center"  bgcolor="<%=bgColor%>" align="center"
-onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';"
-onClick="<%=strOnClick%>" >
-		  <td><%=prop.getProperty("referral_no", "")%></td>
-		  <td><%=WordUtils.capitalize(prop.getProperty("last_name", "").toLowerCase())%></td>
-		  <td><%=WordUtils.capitalize(prop.getProperty("first_name", "").toLowerCase())%></td>
-		  <td><%=prop.getProperty("specialty", "")%></td>
-		  <td><%=prop.getProperty("phone", "")%></td>
-		</tr>
-		<% } %>
-      </table>
+	<tr align="center" bgcolor="<%=bgColor%>" align="center"
+		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
+		onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+		onClick="<%=strOnClick%>">
+		<td><%=prop.getProperty("referral_no", "")%></td>
+		<td><%=WordUtils.capitalize(prop.getProperty("last_name", "").toLowerCase())%></td>
+		<td><%=WordUtils.capitalize(prop.getProperty("first_name", "").toLowerCase())%></td>
+		<td><%=prop.getProperty("specialty", "")%></td>
+		<td><%=prop.getProperty("phone", "")%></td>
+	</tr>
+	<% } %>
+</table>
 
 <%
   nItems=vec.size();
   int nLastPage=0,nNextPage=0;
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
-%>
-
-
-<%
+%> <%
   if(nItems==0 && nLastPage<=0) {
-%>
-  <bean:message key="demographic.search.noResultsWereFound"/>
-<%
+%> <bean:message key="demographic.search.noResultsWereFound" /> <%
   }
-%>
-<script language="JavaScript">
+%> <script language="JavaScript">
 <!--
 function last() {
   document.nextform.action="searchRefDoc.jsp?param=<%=URLEncoder.encode(param,"UTF-8")%>&param2=<%=URLEncoder.encode(param2,"UTF-8")%>&toname=<%=URLEncoder.encode(toname,"UTF-8")%>&toaddress1=<%=URLEncoder.encode(toaddress1,"UTF-8")%>&toaddress2=<%=URLEncoder.encode(toaddress2,"UTF-8")%>&tophone=<%=URLEncoder.encode(tophone,"UTF-8")%>&tofax=<%=URLEncoder.encode(tofax,"UTF-8")%>&keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ; 
@@ -306,21 +245,21 @@ function next() {
 //-->
 </SCRIPT>
 
-<form method="post" name="nextform" action="searchRefDoc.jsp" >
+<form method="post" name="nextform" action="searchRefDoc.jsp">
 <%
   if(nLastPage>=0) {
-%>
-<input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"  onClick="last()">
-<%
+%> <input type="submit" class="mbttn" name="submit"
+	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
+	onClick="last()"> <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"  onClick="next()">
-<%
+%> <input type="submit" class="mbttn" name="submit"
+	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
+	onClick="next()"> <%
 }
 %>
 </form>
 <br>
-  <a href="addEditRefDoc.jsp">Add/Edit Referral Doctor</a>
-      </center></body>
-  </html:html>
+<a href="addEditRefDoc.jsp">Add/Edit Referral Doctor</a></center>
+</body>
+</html:html>

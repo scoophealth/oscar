@@ -1,165 +1,181 @@
 <?xml version="1.0"?>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */
+	-->
 <checklist>
-  <section number="1">
-   <section_title>Problem List</section_title>
-  </section>
-  <section number="2">
-   <section_title>Risk Assessment</section_title>
-   <risk riskname="999" protocol="AGE 65-85">
-    <item clname="0299901"><i><b>Falls/Injury: Multidisciplinary post-fall assessment</b></i></item>
-    <item clname="0299902"><font color="red"><a href="info.html">Safety aids, stairs, bathtubs</a></font></item>
-    <item clname="0299903"><i>Non-flammable fabrics, self-extinguishing cigarettes</i></item>
-    <item clname="0299904"><b>Elder Abuse (questionnaire/specific subgroups)</b></item>
-    <item clname="0299905"><font color="red">Other noted risk factors</font></item> 
-   </risk>
-   <risk riskname="007" protocol="93">
-    <item clname="0200701">OA: Assess Pain and Function</item>
-   </risk>
-   <risk riskname="008" protocol="94">
-    <item clname="0200801">CHD:Assess and treat CHD risk factors</item>
-   </risk>   
-  </section>
-  <section  number="3">
-   <section_title>Physical Examination</section_title>
-   <risk riskname="999" protocol="AGE 65-85">
-    <item clname="0399901">Height:                Weight:     </item>
-    <item clname="0399902">BP sitting:   /standing (high risk group):</item>
-    <item clname="0399903">Heart sound and rhythm</item>
-    <item clname="0399904">Lung auscultation</item>
-    <item clname="0399905">Visual Acuity (Snellen sight card)</item>
-    <item clname="0399906">Hearing (Enquiry, whispered voice test or audioscope)</item>
-    <item clname="0399907">Macular Degeneration (Fundoscopy)</item>
-    <item clname="0399908">Glaucoma(Fundoscopy, tonometry or automated perimetry)</item>
-    <item clname="0399909">Cognitive Impairment (Mental Status Screening)</item>
-    <item clname="0399910">Depression screen</item>
-    <item clname="0399911">Rectal examination</item>
-    <item clname="0399912">Foot care</item>
-    <item clname="0399913" >Other important physical findings:</item>
-   </risk>
-   <risk riskname="998" protocol="AGE 65-85 SEX F">
-     <item clname="0399801">Breast examination</item> 
-     <item clname="0399802">Pap smear</item>
-   </risk>
-   <risk riskname="997" protocol="AGE 65-85 SEX M">
-     <item clname="0399701">Prostate Cancer (Digital rectal examination)</item> 
-     <item clname="0399702">Testicular Cancer</item>
-   </risk>
-   <risk riskname="001" protocol="4">
-     <item clname="0300101">Peripheral vascular examination</item> 
-   </risk>
-   <risk riskname="003" protocol="6">
-     <item clname="0300301">Pain (if not cognitively impaired)</item> 
-   </risk>
-   <risk riskname="006" protocol="92">
-     <item clname="0300601">Hypertension:BP ( / ) monthly</item> 
-   </risk> 
-   <risk riskname="009" protocol="95">
-     <item clname="0300901">CHF:Weekly weight</item> 
-   </risk>
-  </section>
-  <section number="4">
-    <section_title>Immunization</section_title>
-    <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0499901">Single dose of 23-valent pneumococcal vaccine</item> 
-     <item clname="0499902">Flu Shot (+high risk)/(yearly FOR high risk)</item>  
-    </risk>
-  </section>
-  <section number="5">
-    <section_title>Nutrition</section_title>
-    <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0599901">Vitamin D and Calcium</item>  
-    </risk>
-     <risk riskname="996" protocol="AGE 65-69 SEX M">
-     <item clname="0599601">General dietary advice on fat and cholesterol(Males up to 69 years)</item>  
-    </risk>
-  </section>
-  <section number="6">
-  <section_title>Investigation</section_title>
-  <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0699901">Fasting BS</item> 
-     <item clname="0699902">EKG</item>  
-     <item clname="0699903">Bone densitometry</item> 
-     <item clname="0699904">Mammography</item>
-     <item clname="0699905">Urine dipstick or cytology (High-risk males >60 years)</item> 
-     <item clname="0699906">Faecal occult blood</item>  
-     <item clname="0699907">Lipids Profile if Hx of angina or MI every 5 years</item> 
-     <item clname="0699908">Urine dipstick or culture for Asymptomatic UTI</item> 
-     <item clname="0699909">Tumor markers for Testicular Cancer</item>    
-     <item clname="0699910">PSA/ Transrectal ultrasound for Prostate Cancer</item> 
-     <item clname="0699911">Other investigations</item>
-    </risk>
-    <risk riskname="004" protocol="12">
-     <item clname="0600401">Lipids Profile every 5 years</item> 
-    </risk>
-    <risk riskname="005" protocol="91">
-     <item clname="0600501">DM:HbA1C every 3 months</item> 
-    </risk>
-   </section>
-   <section number="7">
-    <section_title>Other</section_title>
-    <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0799901">Advanced Directive</item>  
-     <item clname="0799902">Medication Review</item>  
-    </risk>
-    <risk riskname="010" protocol="96">
-     <item clname="0701001">COPD:Chest Physio</item>  
-    </risk>
-    <risk riskname="011" protocol="97">
-     <item clname="0701101">Dementia:Assess cognitive function monthly</item>  
-    </risk>
-    <risk riskname="012" protocol="98">
-     <item clname="0701201">U.Incont:Incontinence Program</item>  
-    </risk>
-   </section>
-   <section number="8">
-    <section_title>Management Plan</section_title>
-    <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0899901">Family Conference</item>
-    </risk>
-    <risk riskname="998" protocol="AGE 65-85 SEX F">
-     <item clname="0899801">HRT</item> 
-    </risk>
-    <risk riskname="002" protocol="5">
-     <item clname="0800201">Prescribe ASA</item> 
-    </risk>
-   </section>
-   <section number="9">
-   <section_title>Medication list</section_title>
-   <risk riskname="999" protocol="AGE 65-85">
-     <item clname="0999901">Medication Review:</item> 
-    </risk>
-   </section>
-   <section number="10">
-    <section_title>Social history</section_title>
-   </section>
-   <section number="11">
-    <section_title>Allergies</section_title>
-   </section>
+	<section number="1">
+		<section_title>Problem List</section_title>
+	</section>
+	<section number="2">
+		<section_title>Risk Assessment</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0299901">
+				<i>
+					<b>Falls/Injury: Multidisciplinary post-fall
+						assessment</b>
+				</i>
+			</item>
+			<item clname="0299902">
+				<font color="red">
+					<a href="info.html">Safety aids, stairs, bathtubs</a>
+				</font>
+			</item>
+			<item clname="0299903">
+				<i>Non-flammable fabrics, self-extinguishing cigarettes</i>
+			</item>
+			<item clname="0299904">
+				<b>Elder Abuse (questionnaire/specific subgroups)</b>
+			</item>
+			<item clname="0299905">
+				<font color="red">Other noted risk factors</font>
+			</item>
+		</risk>
+		<risk riskname="007" protocol="93">
+			<item clname="0200701">OA: Assess Pain and Function</item>
+		</risk>
+		<risk riskname="008" protocol="94">
+			<item clname="0200801">CHD:Assess and treat CHD risk factors</item>
+		</risk>
+	</section>
+	<section number="3">
+		<section_title>Physical Examination</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0399901">Height: Weight:     </item>
+			<item clname="0399902">BP sitting: /standing (high risk group):</item>
+			<item clname="0399903">Heart sound and rhythm</item>
+			<item clname="0399904">Lung auscultation</item>
+			<item clname="0399905">Visual Acuity (Snellen sight card)</item>
+			<item clname="0399906">Hearing (Enquiry, whispered voice test or
+				audioscope)</item>
+			<item clname="0399907">Macular Degeneration (Fundoscopy)</item>
+			<item clname="0399908">Glaucoma(Fundoscopy, tonometry
+				or automated perimetry)</item>
+			<item clname="0399909">Cognitive Impairment (Mental Status
+				Screening)</item>
+			<item clname="0399910">Depression screen</item>
+			<item clname="0399911">Rectal examination</item>
+			<item clname="0399912">Foot care</item>
+			<item clname="0399913">Other important physical findings:</item>
+		</risk>
+		<risk riskname="998" protocol="AGE 65-85 SEX F">
+			<item clname="0399801">Breast examination</item>
+			<item clname="0399802">Pap smear</item>
+		</risk>
+		<risk riskname="997" protocol="AGE 65-85 SEX M">
+			<item clname="0399701">Prostate Cancer (Digital rectal
+				examination)</item>
+			<item clname="0399702">Testicular Cancer</item>
+		</risk>
+		<risk riskname="001" protocol="4">
+			<item clname="0300101">Peripheral vascular examination</item>
+		</risk>
+		<risk riskname="003" protocol="6">
+			<item clname="0300301">Pain (if not cognitively impaired)</item>
+		</risk>
+		<risk riskname="006" protocol="92">
+			<item clname="0300601">Hypertension:BP ( / ) monthly</item>
+		</risk>
+		<risk riskname="009" protocol="95">
+			<item clname="0300901">CHF:Weekly weight</item>
+		</risk>
+	</section>
+	<section number="4">
+		<section_title>Immunization</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0499901">Single dose of 23-valent pneumococcal vaccine</item>
+			<item clname="0499902">Flu Shot (+high risk)/(yearly FOR high risk)</item>
+		</risk>
+	</section>
+	<section number="5">
+		<section_title>Nutrition</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0599901">Vitamin D and Calcium</item>
+		</risk>
+		<risk riskname="996" protocol="AGE 65-69 SEX M">
+			<item clname="0599601">General dietary advice on fat and
+				cholesterol(Males up to 69 years)</item>
+		</risk>
+	</section>
+	<section number="6">
+		<section_title>Investigation</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0699901">Fasting BS</item>
+			<item clname="0699902">EKG</item>
+			<item clname="0699903">Bone densitometry</item>
+			<item clname="0699904">Mammography</item>
+			<item clname="0699905">Urine dipstick or cytology (High-risk males
+				>60 years)</item>
+			<item clname="0699906">Faecal occult blood</item>
+			<item clname="0699907">Lipids Profile if Hx of angina or MI every 5
+				years</item>
+			<item clname="0699908">Urine dipstick or culture for Asymptomatic UTI</item>
+			<item clname="0699909">Tumor markers for Testicular Cancer</item>
+			<item clname="0699910">PSA/ Transrectal ultrasound for Prostate Cancer</item>
+			<item clname="0699911">Other investigations</item>
+		</risk>
+		<risk riskname="004" protocol="12">
+			<item clname="0600401">Lipids Profile every 5 years</item>
+		</risk>
+		<risk riskname="005" protocol="91">
+			<item clname="0600501">DM:HbA1C every 3 months</item>
+		</risk>
+	</section>
+	<section number="7">
+		<section_title>Other</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0799901">Advanced Directive</item>
+			<item clname="0799902">Medication Review</item>
+		</risk>
+		<risk riskname="010" protocol="96">
+			<item clname="0701001">COPD:Chest Physio</item>
+		</risk>
+		<risk riskname="011" protocol="97">
+			<item clname="0701101">Dementia:Assess cognitive function
+				monthly</item>
+		</risk>
+		<risk riskname="012" protocol="98">
+			<item clname="0701201">U.Incont:Incontinence Program</item>
+		</risk>
+	</section>
+	<section number="8">
+		<section_title>Management Plan</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0899901">Family Conference</item>
+		</risk>
+		<risk riskname="998" protocol="AGE 65-85 SEX F">
+			<item clname="0899801">HRT</item>
+		</risk>
+		<risk riskname="002" protocol="5">
+			<item clname="0800201">Prescribe ASA</item>
+		</risk>
+	</section>
+	<section number="9">
+		<section_title>Medication list</section_title>
+		<risk riskname="999" protocol="AGE 65-85">
+			<item clname="0999901">Medication Review:</item>
+		</risk>
+	</section>
+	<section number="10">
+		<section_title>Social history</section_title>
+	</section>
+	<section number="11">
+		<section_title>Allergies</section_title>
+	</section>
 </checklist>
 
 

@@ -1,49 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster Unviersity
- * Hamilton
- * Ontario, Canada
- */
- 
-    private Date referalDate;//	date	YES			
-    private long serviceId;//	int(10)	YES			
-    private long specId;//	int(10)	YES			
-    private Date appointmentDate;//	date	YES			
-    private Date appointmentTime;//	time	YES			
-    private String reason;//	text	YES	MUL		
-    private String clinicalInfo;//	text	YES			
-    private String currentMeds;//	text	YES			
-    private String allergies;//	text	YES			
-    private String providerNo;//	varchar(6)	YES			
-    private long demographicNo;//	int(10)	YES	MUL		
-    private String status;//	char(2)	YES			
-    private String statusText;//	text	YES			
-    private String sendTo;//	varchar(20)	YES			
-    private long requestId;	//int(10)		PRI		auto_increment
-    private String concurrentProblems;//	text	YES			
-    private String urgency;//	char(2)	YES			
-    private int patientWillBook;//	tinyi
- 
- -->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */ private Date referalDate;// date YES private long
+		serviceId;// int(10) YES private long specId;// int(10) YES private
+		Date appointmentDate;// date YES private Date appointmentTime;// time
+		YES private String reason;// text YES MUL private String
+		clinicalInfo;// text YES private String currentMeds;// text YES
+		private String allergies;// text YES private String providerNo;//
+		varchar(6) YES private long demographicNo;// int(10) YES MUL private
+		String status;// char(2) YES private String statusText;// text YES
+		private String sendTo;// varchar(20) YES private long requestId;
+		//int(10) PRI auto_increment private String concurrentProblems;// text
+		YES private String urgency;// char(2) YES private int
+		patientWillBook;// tinyi
+	-->
 
 
 
@@ -52,26 +36,27 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-    <class name="org.oscarehr.consultationRequest.model.ConsultationRequest" table="consultationRequests">
-        <id name="id" column="requestId" unsaved-value="0">
-            <generator class="native" />
-        </id>
-        <property  name="referalDate" 	not-null="false" type="timestamp" />
-        <property  name="serviceId" not-null="false" type="long" />
-        <property  name="specId" not-null="false" type="long" />
-        <property  name="appointmentDate" not-null="false" type="timestamp" />
-        <property  name="appointmentTime" not-null="false" type="time" />
-        <property  name="reason" not-null="false" type="string" />
-        <property  name="clinicalInfo" not-null="false" type="string" />
-        <property  name="currentMeds" not-null="false" type="string" />
-        <property  name="allergies" not-null="false" type="string" />
-        <property  name="providerNo" not-null="false" type="string" />
-        <property  name="demographicNo" not-null="false" type="long" />
-        <property  name="status" not-null="false" type="string" />
-        <property  name="statusText" not-null="false" type="string" />
-        <property  name="sendTo" not-null="false" type="string" />
-        <property  name="concurrentProblems" not-null="false" type="string" />
-        <property  name="urgency" not-null="false" type="string" />
-        <property  name="patientWillBook" not-null="false" type="long" />       
-    </class>
+	<class name="org.oscarehr.consultationRequest.model.ConsultationRequest"
+		table="consultationRequests">
+		<id name="id" column="requestId" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="referalDate" not-null="false" type="timestamp" />
+		<property name="serviceId" not-null="false" type="long" />
+		<property name="specId" not-null="false" type="long" />
+		<property name="appointmentDate" not-null="false" type="timestamp" />
+		<property name="appointmentTime" not-null="false" type="time" />
+		<property name="reason" not-null="false" type="string" />
+		<property name="clinicalInfo" not-null="false" type="string" />
+		<property name="currentMeds" not-null="false" type="string" />
+		<property name="allergies" not-null="false" type="string" />
+		<property name="providerNo" not-null="false" type="string" />
+		<property name="demographicNo" not-null="false" type="long" />
+		<property name="status" not-null="false" type="string" />
+		<property name="statusText" not-null="false" type="string" />
+		<property name="sendTo" not-null="false" type="string" />
+		<property name="concurrentProblems" not-null="false" type="string" />
+		<property name="urgency" not-null="false" type="string" />
+		<property name="patientWillBook" not-null="false" type="long" />
+	</class>
 </hibernate-mapping>

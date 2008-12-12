@@ -7,12 +7,11 @@ BODY {
 	font-style: normal;
 	color: black;
 	text-decoration: none;
- 	font-family: "Times New Roman", Times, serif;
-        //font-family: verdana, sans-serif;
-
+	font-family: "Times New Roman", Times, serif; //
+	font-family: verdana, sans-serif;
 	background-attachment: fixed;
-        margin:0;
-        padding:0;
+	margin: 0;
+	padding: 0;
 }
 
 TD,TH {
@@ -80,25 +79,32 @@ a:hover {
 .myIvory {
 	background-color: ivory;
 }
+
 .myPink {
 	background-color: pink;
 }
+
 .myError {
 	background-color: #FF0000;
 }
+
 .myErrorText {
 	color: red;
 }
+
 .smallFont {
 	font-size: 10pt;
 }
+
 .myPurple {
-        background-color: #CCCCFF;
+	background-color: #CCCCFF;
 }
+
 .myLightPurple {
-        background-color: #EEEEFF;
+	background-color: #EEEEFF;
 }
+
 .myWhite {
-        background-color: #FFFFFF;
+	background-color: #FFFFFF;
 }
 -->

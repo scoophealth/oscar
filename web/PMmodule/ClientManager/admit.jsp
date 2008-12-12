@@ -50,12 +50,18 @@
 </table>
 </div>
 <html:hidden property="program.id" />
-<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissions" export="false" pagesize="0" requestURI="/PMmodule/ClientManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="admission" name="admissions" export="false" pagesize="0"
+	requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
-	<display:column property="programName" sortable="true" title="Program Name" />
-	<display:column property="admissionDate" sortable="true" title="Admission Date" />
-	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
+	<display:setProperty name="basic.msg.empty_list"
+		value="This client is not currently admitted to any programs." />
+	<display:column property="programName" sortable="true"
+		title="Program Name" />
+	<display:column property="admissionDate" sortable="true"
+		title="Admission Date" />
+	<display:column property="admissionNotes" sortable="true"
+		title="Admission Notes" />
 </display:table>
 <br />
 <br />
@@ -69,7 +75,7 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Agency</td>
-		<td><span style="color:red"><i>Not yet implemented</i></span></td>
+		<td><span style="color: red"><i>Not yet implemented</i></span></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Program Name</td>
@@ -78,8 +84,10 @@
 </table>
 <table>
 	<tr>
-		<td align="center"><input type="button" value="search" onclick="search_programs()" /></td>
-		<td align="center"><input type="button" name="reset" value="reset" onclick="javascript:resetClientFields();" /></td>
+		<td align="center"><input type="button" value="search"
+			onclick="search_programs()" /></td>
+		<td align="center"><input type="button" name="reset"
+			value="reset" onclick="javascript:resetClientFields();" /></td>
 	</tr>
 </table>
 <br />
@@ -88,21 +96,26 @@
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<c:if test="${requestScope.current_admission != null}">
 			<tr>
-				<td colspan="2"><b style="color:red">Warning:<br />
-				This client is currently admitted to a bed program (<c:out value="${current_program.name}" />).<br />
-				By completing this admission, you will be discharging them from this current program.</b></td>
+				<td colspan="2"><b style="color: red">Warning:<br />
+				This client is currently admitted to a bed program (<c:out
+					value="${current_program.name}" />).<br />
+				By completing this admission, you will be discharging them from this
+				current program.</b></td>
 			</tr>
 			<tr class="b">
 				<td width="20%">Discharge Notes:</td>
-				<td><html:textarea cols="50" rows="7" property="admission.dischargeNotes" /></td>
+				<td><html:textarea cols="50" rows="7"
+					property="admission.dischargeNotes" /></td>
 			</tr>
 		</c:if>
 		<tr class="b">
 			<td width="20%">Admission Notes:</td>
-			<td><html:textarea cols="50" rows="7" property="admission.admissionNotes" /></td>
+			<td><html:textarea cols="50" rows="7"
+				property="admission.admissionNotes" /></td>
 		</tr>
 		<tr class="b">
-			<td colspan="2"><input type="button" value="Process Admission" onclick="do_admission()" /> <input type="button" value="Cancel" /></td>
+			<td colspan="2"><input type="button" value="Process Admission"
+				onclick="do_admission()" /> <input type="button" value="Cancel" /></td>
 		</tr>
 	</table>
 </c:if>

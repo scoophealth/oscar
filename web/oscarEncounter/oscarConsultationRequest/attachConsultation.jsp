@@ -31,15 +31,17 @@ String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="page" />
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs"%>
 <%@ page import="oscar.oscarLab.ca.on.*"%>
 <%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@ page contentType="text/html; charset=UTF-8" %> 
+<%@ page contentType="text/html; charset=UTF-8"%>
 <%
 
 //preliminary JSP code
@@ -67,38 +69,13 @@ String[] docType = {"D","L"};
    "http://www.w3.org/TR/html4/strict.dtd">
 <html:html locale="true">
 <head>
-<meta  content="text/html;  charset=UTF-8"  http-equiv="Content-Type">
-<title><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title"/></title>
+<meta content="text/html;  charset=UTF-8" http-equiv="Content-Type">
+<title><bean:message
+	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
-<style type="text/css">
- input.btn{
-   color:black;
-   font-family:'trebuchet ms',helvetica,sans-serif;
-   font-size:84%;
-   font-weight:bold;
-   background-color:#B8B8FF;
-   border:1px solid;
-   border-top-color:#696;
-   border-left-color:#696;
-   border-right-color:#363;
-   border-bottom-color:#363;
-}
-
-.doc {
-    color:blue;    
-}
-
-.lab {
-    color:#CC0099;    
-}
-
-.legend {
-    font-family:'trebuchet ms',helvetica,sans-serif;
-    font-size:84%;
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
 //<!--   
@@ -248,23 +225,28 @@ function save() {
 //-->
 </script>
 </head>
-<body onload="init()" style="font-family: Verdana, Tahoma, Arial, sans-serif; background-color:#ddddff">
-   
-  <h3 style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header"/> <%=patientName%></h3>
-  <html:form action="/oscarConsultationRequest/attachDoc">
-  <table width="100%">
-      <tr>
-         <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.available"/></th>
-         <th>&nbsp;</th>
-         <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.attached"/></th>
-      </tr>
-      <tr>
-         <td style="width:45%; text-align:left" valign="top">                                 
-           <html:hidden property="requestId" value="<%=requestId%>"/>
-           <html:hidden property="demoNo" value="<%=demoNo%>"/>
-           <html:hidden property="providerNo" value="<%=providerNo%>"/>
-           <html:select style="width: 100%;" property="documents" multiple="1" size="10">                           
-             <%                
+<body onload="init()"
+	style="font-family: Verdana, Tahoma, Arial, sans-serif; background-color: #ddddff">
+
+<h3 style="text-align: center"><bean:message
+	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header" />
+<%=patientName%></h3>
+<html:form action="/oscarConsultationRequest/attachDoc">
+	<table width="100%">
+		<tr>
+			<th style="text-align: center"><bean:message
+				key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.available" /></th>
+			<th>&nbsp;</th>
+			<th style="text-align: center"><bean:message
+				key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.attached" /></th>
+		</tr>
+		<tr>
+			<td style="width: 45%; text-align: left" valign="top"><html:hidden
+				property="requestId" value="<%=requestId%>" /> <html:hidden
+				property="demoNo" value="<%=demoNo%>" /> <html:hidden
+				property="providerNo" value="<%=providerNo%>" /> <html:select
+				style="width: 100%;" property="documents" multiple="1" size="10">
+				<%                
                 ArrayList privatedocs = new ArrayList();
              	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
                 privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED, currentFacilityId);
@@ -274,8 +256,9 @@ function save() {
                     
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
-                    <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
-             <%
+				<html:option styleClass="doc"
+					value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
+				<%
                 }
                 CommonLabResultData labData = new CommonLabResultData();
                 
@@ -293,14 +276,18 @@ function save() {
                     
                     if(displayFlag){
                  %>
-                        <html:option styleClass="lab" value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
-                 <%
+				<html:option styleClass="lab"
+					value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
+				<%
                     }
                 }
              %>
-               </html:select>
-         </td>
-         <td style="width:10%; text-align:center"><input type="button" class="btn" onclick="swap('documents','attachedDocs')" value=">>"/><br/><input type="button" class="btn" onclick="swap('attachedDocs','documents')" value="<<"/></td>
+			</html:select></td>
+			<td style="width: 10%; text-align: center"><input type="button"
+				class="btn" onclick="swap('documents','attachedDocs')" value=">>" /><br />
+			<input type="button" class="btn"
+				onclick="swap('attachedDocs','documents')"
+				value="<<"/></td>
          <td style="width:45%; text-align:right">
            <html:select style="width: 100%;" property="attachedDocs" multiple="1" size="10">
                <%                

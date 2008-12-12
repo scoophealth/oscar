@@ -24,12 +24,13 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <%
 if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
@@ -73,26 +74,9 @@ ArrayList proList = fluData.providerList();
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarReport.oscarReportFluBilling.title"/> <%= years %>
-</title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
+<title><bean:message
+	key="oscarReport.oscarReportFluBilling.title" /> <%= years %></title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
    var remote=null;
@@ -121,68 +105,79 @@ ArrayList proList = fluData.providerList();
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.oscarReportFluBilling.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >
-                 <form action="oscarReportFluBilling.jsp">
-                    <tr>
-                        <td ><bean:message key="oscarReport.oscarReportFluBilling.msgFluReport"/></td>
-                        <td>
-                           <select name="numMonth">
-<%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarReport.oscarReportFluBilling.msgReport" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<form action="oscarReportFluBilling.jsp">
+			<tr>
+				<td><bean:message
+					key="oscarReport.oscarReportFluBilling.msgFluReport" /></td>
+				<td><select name="numMonth">
+					<%
 							for (int i = curYear-2; i <= curYear+2 ; i++) {
 %>
-								<option value="<%=i%>" <%=selled((""+i),years)%> ><%=i%></option>
-<%							}
+					<option value="<%=i%>" <%=selled((""+i),years)%>><%=i%></option>
+					<%							}
 %>
 
-                           </select>
-                           <select name="proNo">
-                                 <option value="-1" <%=selled("-1",pros)%> ><bean:message key="oscarReport.oscarReportFluBilling.msgAllProviders"/></option>
-                              <%
+				</select> <select name="proNo">
+					<option value="-1" <%=selled("-1",pros)%>><bean:message
+						key="oscarReport.oscarReportFluBilling.msgAllProviders" /></option>
+					<%
                                   for( int i = 0; i < proList.size(); i++){
                                      ArrayList w = (ArrayList) proList.get(i);
                                      String proNum  = (String) w.get(0);
                                      String proName = (String) w.get(1);
                               %>
-                                  <option value="<%=proNum%>" <%=selled(proNum,pros)%>  ><%=proName%></option>
-                              <% 
+					<option value="<%=proNum%>" <%=selled(proNum,pros)%>><%=proName%></option>
+					<% 
                                   }
                               %>
-                           </select>
-                           <input type=submit value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>"/>
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                  </form>
-                </table>
-            </td>
-        </tr>
-        </table>
-        
-                 <table border=0 cellspacing=3 >
-                 <tr>
-	                  <td colspan=7 class=nameBox><bean:message key="oscarReport.oscarReportFluBilling.msgTitle"/></td>
-	         </tr>
-	         <tr>
-	                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgName"/></th>
-	                     <th width=120 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgDOB"/></th>
-	                     <th width=80 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgAge"/></th>
-	                      <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgRoster"/></th>
-	                           <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgPatientStatus"/></th>
-	                  <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgPhone"/></th>
-	                     
-	                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.oscarReportFluBilling.msgBillingDate"/></th>
-	                  </tr>
-	                  <%
+				</select> <input type=submit
+					value="<bean:message key="oscarReport.oscarReportFluBilling.btnUpdate"/>" />
+				</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+			</form>
+		</table>
+		</td>
+	</tr>
+</table>
+
+<table border=0 cellspacing=3>
+	<tr>
+		<td colspan=7 class=nameBox><bean:message
+			key="oscarReport.oscarReportFluBilling.msgTitle" /></td>
+	</tr>
+	<tr>
+		<th width=100 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgName" /></th>
+		<th width=120 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgDOB" /></th>
+		<th width=80 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgAge" /></th>
+		<th width=100 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgRoster" /></th>
+		<th width=100 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgPatientStatus" /></th>
+		<th width=100 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgPhone" /></th>
+
+		<th width=100 class="subTitles" align=left><bean:message
+			key="oscarReport.oscarReportFluBilling.msgBillingDate" /></th>
+	</tr>
+	<%
 	                  RptFluReportData.DemoFluDataStruct demoData;
 	             for (int i = 0; i < fluData.demoList.size(); i++ ){
 demoData = (RptFluReportData.DemoFluDataStruct)  fluData.demoList.get(i);
@@ -193,24 +188,27 @@ bgcolor = "#ddddff";
 }
   count = count + 1;
 	                  %>
-	                  <tr>
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoName%></td></a>
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoDOB()%></td>
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoAge()%></td>
-	                     	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoRosterStatus %></td>
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoPatientStatus %></td>
-	          
-	                     <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoPhone() %></td>
-						 <td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getBillingDate(fluData.years) %></td>
-	                  </tr>
-	                  <%
+	<tr>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoName%></td>
+		</a>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoDOB()%></td>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoAge()%></td>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoRosterStatus %></td>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.demoPatientStatus %></td>
+
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getDemoPhone() %></td>
+		<td class="fieldBox" bgcolor="<%=bgcolor%>"><%=demoData.getBillingDate(fluData.years) %></td>
+	</tr>
+	<%
 	                  }
   if (count == 0){
 
      %>
-         <tr>
-     	                  <td colspan=7 class=nameBox><bean:message key="oscarReport.oscarReportFluBilling.msgNoMatch"/></td>
-	         </tr>
-	         <% } %>
+	<tr>
+		<td colspan=7 class=nameBox><bean:message
+			key="oscarReport.oscarReportFluBilling.msgNoMatch" /></td>
+	</tr>
+	<% } %>
+
 </body>
 </html:html>

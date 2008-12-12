@@ -1,5 +1,6 @@
-<%@page import="java.util.*" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@page import="java.util.*"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%
 String demographic_no = request.getParameter("demo");
 oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
@@ -36,13 +37,12 @@ Hashtable h2 = new Hashtable();
     h2.put("13","Other");
 
 %>
-<li>
-    Area:       <b><%=getArea(h2,apptMainBean.getString(demoExt.get("area")))%></b>
-    Status #:   <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
-    Ethinicity: <b><%=getEth(h,apptMainBean.getString(demoExt.get("ethnicity")) )%></b>    
+<li>Area: <b><%=getArea(h2,apptMainBean.getString(demoExt.get("area")))%></b>
+Status #: <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
+Ethinicity: <b><%=getEth(h,apptMainBean.getString(demoExt.get("ethnicity")) )%></b>
 </li>
- 
- <%!
+
+<%!
 
 String getEth(Hashtable h,String s){
     if (s != null && h.get(s) != null ){

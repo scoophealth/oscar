@@ -1,3 +1,4 @@
+
 <%      
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -31,16 +32,17 @@
 
 
 
- 
 
 
-<%@ page language="java" contentType="text/html" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<%@ page import="java.util.*, oscar.oscarDemographic.data.*" %>
-<%@ page import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*" %>
+<%@ page language="java" contentType="text/html"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+
+<%@ page import="java.util.*, oscar.oscarDemographic.data.*"%>
+<%@ page
+	import="oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <%
 
 String color = "", colorflag ="";
@@ -57,13 +59,8 @@ BillingFormData billform = new BillingFormData();
 
 <html>
 <head>
-<title><bean:message key="billing.bc.title"/></title>
-<style type="text/css">
-	<!--
-	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
-	
-	-->
-</style>  
+<title><bean:message key="billing.bc.title" /></title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
 <!--
 
@@ -180,199 +177,208 @@ function gotoPrintReceipt(){
 </head>
 
 
-<html:base/>
+<html:base />
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0"
+	topmargin="10" marginwidth="0" marginheight="0"
+	onLoad="setfocus();showHideLayers('Layer1','','hide')">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000"> 
-    <td height="40" width="10%"> </td>
-    <td width="90%" align="left"> 
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.bc.title"/></font></font></b></font> 
-      </p>
-    </td>
-  </tr>
+	<tr bgcolor="#000000">
+		<td height="40" width="10%"></td>
+		<td width="90%" align="left">
+		<p><font face="Verdana, Arial, Helvetica, sans-serif"
+			color="#FFFFFF"><b><font
+			face="Arial, Helvetica, sans-serif" size="4">oscar<font
+			size="3"><bean:message key="billing.bc.title" /></font></font></b></font></p>
+		</td>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-    <tr> 
-      <td valign="top" height="221"> 
-        <table width="107%" border="0" cellspacing="2" cellpadding="2">
-        <tr bgcolor="#EAEAFF"> 
-          <td colspan="6">Patient Information</td>
-        </tr>
-        <tr> 
-          <td width="12%" height="16">Patient Name:</td>
-          <td width="12%"><%=bean.getPatientLastName()%>, <%=bean.getPatientFirstName()%>&nbsp;</td>
-          <td width="16%">Patient PHN:</td>
-          <td width="17%"><%=bean.getPatientPHN()%></td>
-          <td width="19%">Health Card Type:</td>
-          <td width="24%"><%=bean.getPatientHCType()%></td>
-        </tr>
-        <tr>
-          <td height="16">Patient DoB:</td>
-          <td><%=bean.getPatientDoB()%></td>
-          <td>Patient Age:</td>
-          <td><%=bean.getPatientAge()%></td>
-          <td>Patient Sex:</td>
-          <td><%=bean.getPatientSex()%></td>
-        </tr>
-        <tr>
-          <td height="16">Patient Address:</td>
-          <td><%=bean.getPatientAddress1()%></td>
-          <td>City:</td>
-          <td><%=bean.getPatientAddress2()%></td>
-          <td>Postal:</td>
-          <td><%=bean.getPatientPostal()%></td>
-        </tr>
-        <tr>
-          <td height="16">&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-        </tr>
-      </table>
-        
-      <table width="107%" border="0" cellspacing="2" cellpadding="2">
-        <tr bgcolor="#EAEAFF"> 
-          <td colspan="6">Billing Information</td>
-        </tr>
-        <tr> 
-          <td width="12%" height="16">Billing Type:</td>
-          <td width="12%"><%=bean.getBillingType()%></td>
-          <td width="16%">Visit Type:</td>
-          <td width="17%"><%=bean.getVisitType()%></td>
-          <td width="19%">Visit Location:</td>
-          <td width="24%"><%=bean.getVisitLocation()%></td>
-        </tr>
-        <tr> 
-          <td height="16">Service Date:</td>
-          <td><%=bean.getServiceDate()%></td>
-          <td>StartTime: <%=bean.getStartTime()%></td>
-          <td>EndTime: <%=bean.getEndTime()%></td>
-          <td>Admission Date:</td>
-          <td><%=bean.getAdmissionDate()%></td>
-        </tr>
-        <tr> 
-          <td height="16">Billing Provider:</td>
-          <td><%=billform.getProviderName(bean.getBillingProvider())%></td>
-          <td>Appointment Provider:</td>
-          <td><%=billform.getProviderName(bean.getApptProviderNo())%></td>
-          <td>Creator:</td>
-          <td><%=billform.getProviderName(bean.getCreator())%></td>
-        </tr>
-        <tr> 
-          <td height="16">Referral Doctor1:</td>
-          <td><%=bean.getReferral1()%></td>
-          <td>Referral Type1: <%=bean.getReferType1()%></td>
-          <td>Referral Doctor 2:</td>
-          <td><%=bean.getReferral2()%></td>
-          <td>Referral Type2:<%=bean.getReferType2()%></td>
-        </tr>
-      </table>
-      <div align="left"></div>
-        
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
-        <tr> 
-          <td valign="top"> <table width="100%" border="0" cellspacing="1" cellpadding="1">
-              <tr bgcolor="#EAEAFF"> 
-                <td><bean:message key="billing.service.code"/></td>
-                <td><bean:message key="billing.service.desc"/></td>
-                <td><bean:message key="billing.service.unit"/></td>
-                <td><bean:message key="billing.service.fee"/></td>
-                <td><bean:message key="billing.service.total"/></td>
-              </tr>
-              <% for (int i=0; i < billItem.size(); i++){ %>
-              <tr> 
-                <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%></td>
-                <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%></td>
-                <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%></td>
-                <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispPrice()%></td>
-                <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal()%></td>
-              </tr>
-              <% } %>
-              <tr> 
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td><%=bean.getGrandtotal()%></td>
-              </tr>
-              <tr> 
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-            </table>
-            <table width="100%" border="0" cellspacing="1" cellpadding="1">
-              <tr bgcolor="#EAEAFF"> 
-                <td width="10%" height="14"><bean:message key="billing.diagnostic.code"/></td>
-                <td width="39%"><bean:message key="billing.diagnostic.desc"/></td>
-                <td width="37%">&nbsp;</td>
-                <td width="14%">&nbsp;</td>
-              </tr>
-              <tr> 
-                <td><%=bean.getDx1()%></td>
-                <td><%=billform.getDiagDesc(bean.getDx1(), bean.getBillRegion())%></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td><%=bean.getDx2()%></td>
-                <td><%=billform.getDiagDesc(bean.getDx2(), bean.getBillRegion())%></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-			   <tr>
-                <td><%=bean.getDx3()%></td>
-                <td><%=billform.getDiagDesc(bean.getDx3(), bean.getBillRegion())%></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-              </tr>
-              <tr bgcolor="#EAEAFF"> 
-                <td height="14" colspan="4">Correspondence Note</td>                
-              </tr>
-              <tr > 
-                <td height="14" colspan="4"><%=bean.getMSPBillingNote()%></td>                
-              </tr>
-              
-              <tr bgcolor="#EAEAFF"> 
-                <td height="14" colspan="4">Messages</td>                
-              </tr>
-              <tr > 
-                <td height="14" colspan="4"><%=bean.getMessageNotes()%></td>                
-              </tr>
-            </table>
-            <table width="100%" border="0">
-              <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td align="right">
-                   <html:form action="/billing/CA/BC/SaveBilling" >  
-                      <input type="button" name="Submit3" value="Print Receipt" onclick="javascript:gotoPrintReceipt();"/>
-                      <input type="button" name="Submit" value="Print Bill" onClick="javascript:window.print()">
-                      <input type="button" name="Submit2" value="Cancel" onClick="javascript:window.close()">                      
-                   </html:form>
-                </td>
-              </tr>
-            </table>
-            
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-              <tr> 
-                <td align="right"> 
-                </td>
-              </tr>
-            </table></td>
-        </tr>
-      </table>
-      </td>
-    </tr>
-  </table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top" height="221">
+		<table width="107%" border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#EAEAFF">
+				<td colspan="6">Patient Information</td>
+			</tr>
+			<tr>
+				<td width="12%" height="16">Patient Name:</td>
+				<td width="12%"><%=bean.getPatientLastName()%>, <%=bean.getPatientFirstName()%>&nbsp;</td>
+				<td width="16%">Patient PHN:</td>
+				<td width="17%"><%=bean.getPatientPHN()%></td>
+				<td width="19%">Health Card Type:</td>
+				<td width="24%"><%=bean.getPatientHCType()%></td>
+			</tr>
+			<tr>
+				<td height="16">Patient DoB:</td>
+				<td><%=bean.getPatientDoB()%></td>
+				<td>Patient Age:</td>
+				<td><%=bean.getPatientAge()%></td>
+				<td>Patient Sex:</td>
+				<td><%=bean.getPatientSex()%></td>
+			</tr>
+			<tr>
+				<td height="16">Patient Address:</td>
+				<td><%=bean.getPatientAddress1()%></td>
+				<td>City:</td>
+				<td><%=bean.getPatientAddress2()%></td>
+				<td>Postal:</td>
+				<td><%=bean.getPatientPostal()%></td>
+			</tr>
+			<tr>
+				<td height="16">&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
 
-<p>&nbsp; </p>
+		<table width="107%" border="0" cellspacing="2" cellpadding="2">
+			<tr bgcolor="#EAEAFF">
+				<td colspan="6">Billing Information</td>
+			</tr>
+			<tr>
+				<td width="12%" height="16">Billing Type:</td>
+				<td width="12%"><%=bean.getBillingType()%></td>
+				<td width="16%">Visit Type:</td>
+				<td width="17%"><%=bean.getVisitType()%></td>
+				<td width="19%">Visit Location:</td>
+				<td width="24%"><%=bean.getVisitLocation()%></td>
+			</tr>
+			<tr>
+				<td height="16">Service Date:</td>
+				<td><%=bean.getServiceDate()%></td>
+				<td>StartTime: <%=bean.getStartTime()%></td>
+				<td>EndTime: <%=bean.getEndTime()%></td>
+				<td>Admission Date:</td>
+				<td><%=bean.getAdmissionDate()%></td>
+			</tr>
+			<tr>
+				<td height="16">Billing Provider:</td>
+				<td><%=billform.getProviderName(bean.getBillingProvider())%></td>
+				<td>Appointment Provider:</td>
+				<td><%=billform.getProviderName(bean.getApptProviderNo())%></td>
+				<td>Creator:</td>
+				<td><%=billform.getProviderName(bean.getCreator())%></td>
+			</tr>
+			<tr>
+				<td height="16">Referral Doctor1:</td>
+				<td><%=bean.getReferral1()%></td>
+				<td>Referral Type1: <%=bean.getReferType1()%></td>
+				<td>Referral Doctor 2:</td>
+				<td><%=bean.getReferral2()%></td>
+				<td>Referral Type2:<%=bean.getReferType2()%></td>
+			</tr>
+		</table>
+		<div align="left"></div>
+
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			height="137">
+			<tr>
+				<td valign="top">
+				<table width="100%" border="0" cellspacing="1" cellpadding="1">
+					<tr bgcolor="#EAEAFF">
+						<td><bean:message key="billing.service.code" /></td>
+						<td><bean:message key="billing.service.desc" /></td>
+						<td><bean:message key="billing.service.unit" /></td>
+						<td><bean:message key="billing.service.fee" /></td>
+						<td><bean:message key="billing.service.total" /></td>
+					</tr>
+					<% for (int i=0; i < billItem.size(); i++){ %>
+					<tr>
+						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%></td>
+						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%></td>
+						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getUnit()%></td>
+						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispPrice()%></td>
+						<td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal()%></td>
+					</tr>
+					<% } %>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td><%=bean.getGrandtotal()%></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+				<table width="100%" border="0" cellspacing="1" cellpadding="1">
+					<tr bgcolor="#EAEAFF">
+						<td width="10%" height="14"><bean:message
+							key="billing.diagnostic.code" /></td>
+						<td width="39%"><bean:message key="billing.diagnostic.desc" /></td>
+						<td width="37%">&nbsp;</td>
+						<td width="14%">&nbsp;</td>
+					</tr>
+					<tr>
+						<td><%=bean.getDx1()%></td>
+						<td><%=billform.getDiagDesc(bean.getDx1(), bean.getBillRegion())%></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td><%=bean.getDx2()%></td>
+						<td><%=billform.getDiagDesc(bean.getDx2(), bean.getBillRegion())%></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td><%=bean.getDx3()%></td>
+						<td><%=billform.getDiagDesc(bean.getDx3(), bean.getBillRegion())%></td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr bgcolor="#EAEAFF">
+						<td height="14" colspan="4">Correspondence Note</td>
+					</tr>
+					<tr>
+						<td height="14" colspan="4"><%=bean.getMSPBillingNote()%></td>
+					</tr>
+
+					<tr bgcolor="#EAEAFF">
+						<td height="14" colspan="4">Messages</td>
+					</tr>
+					<tr>
+						<td height="14" colspan="4"><%=bean.getMessageNotes()%></td>
+					</tr>
+				</table>
+				<table width="100%" border="0">
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td align="right"><html:form
+							action="/billing/CA/BC/SaveBilling">
+							<input type="button" name="Submit3" value="Print Receipt"
+								onclick="javascript:gotoPrintReceipt();" />
+							<input type="button" name="Submit" value="Print Bill"
+								onClick="javascript:window.print()">
+							<input type="button" name="Submit2" value="Cancel"
+								onClick="javascript:window.close()">
+						</html:form></td>
+					</tr>
+				</table>
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td align="right"></td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+
+<p>&nbsp;</p>
 </body>
 </html>

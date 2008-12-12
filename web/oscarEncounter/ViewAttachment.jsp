@@ -1,9 +1,11 @@
-<%@ page language="java" %>
-<%@ page import="oscar.oscarEncounter.immunization.data.*,oscar.util.UtilXML" %>
-<%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.data.*,oscar.util.UtilXML"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <%
     String remoteName = (String) request.getAttribute("remoteName");
@@ -52,57 +54,7 @@
 -->
 <html:html locale="true">
 <head>
-<style type="text/css">
-    BODY{
-        font-family: Verdana, Tahoma, Arial, sans-serif;
-        font-size: 10pt;
-        text-decoration: none;
-    }
-
-    SPAN.treeNode{
-        font-size: 10pt;
-        font-weight: bold;
-        cursor: hand;
-    }
-
-    IMG.treeNode{
-        vertical-align: middle;
-    }
-
-    IMG.collapse{
-        cursor: hand;
-        margin-left: 15px;
-    }
-
-
-    TABLE.treeTable{
-        margin-left: 15px;
-    }
-
-    TH.treeTable{
-        font-weight: bold;
-    }
-
-    PRE{
-        font-size: 9pt;
-        font-weight: normal;
-    }
-
-    .content{
-        margin-left: 15px;
-        border-width: 1px;
-        border-color: #A9A9A9;
-        border-style: solid;
-        padding: 3px;
-        background-color: #F5F5F5;
-    }
-
-    .borderTop{
-        border-top-width: 1px;
-        border-top-color: #A9A9A9;
-        border-top-style: solid;
-    }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="javascript">
     var browserName=navigator.appName; 
@@ -204,99 +156,84 @@
     }
 </script>
 
-<title>
-<bean:message key="oscarEncounter.ViewAttachment.title"/>
+<title><bean:message key="oscarEncounter.ViewAttachment.title" />
 </title>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.ViewAttachment.msgEncounterTable"/>">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="global.oscarComm"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                        <bean:message key="oscarEncounter.ViewAttachment.msgViewAtt"/>
-                        </td>
-                        <td  >
+<table class="MainTable" id="scrollNumber1"
+	name="<bean:message key="oscarEncounter.ViewAttachment.msgEncounterTable"/>">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="global.oscarComm" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message
+					key="oscarEncounter.ViewAttachment.msgViewAtt" /></td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
+		<table cellspacing="1" valign="top">
+			<tr>
+				<td bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.ViewAttachment.msgFrom" />:</td>
+				<td bgcolor="#CCCCFF"><%= sentBy%> <bean:message
+					key="oscarEncounter.ViewAttachment.msgAt" /> <%=remoteName%></td>
+			</tr>
+			<tr>
+				<td bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.ViewAttachment.msgSubject" />:</td>
+				<td bgcolor="#BBBBFF"><%= thesubject%></td>
+			</tr>
 
-                <table  cellspacing="1" valign="top">
-                                <tr>
-                                    <td bgcolor="#DDDDFF">
-                                    <bean:message key="oscarEncounter.ViewAttachment.msgFrom"/>:
-                                    </td>
-                                    <td bgcolor="#CCCCFF">
-                                    <%= sentBy%> <bean:message key="oscarEncounter.ViewAttachment.msgAt"/> <%=remoteName%>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td bgcolor="#DDDDFF">
-                                        <bean:message key="oscarEncounter.ViewAttachment.msgSubject"/>:
-                                    </td>
-                                    <td bgcolor="#BBBBFF">
-                                        <%= thesubject%>
-                                    </td>
-                                </tr>
+			<tr>
+				<td bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.ViewAttachment.msgDate" />:</td>
+				<td bgcolor="#B8B8FF"><%= thedate %>&nbsp;&nbsp; <%= theime %>
+				</td>
+			</tr>
 
-                                <tr>
-                                  <td bgcolor="#DDDDFF">
-                                      <bean:message key="oscarEncounter.ViewAttachment.msgDate"/>:
-                                  </td>
-                                  <td bgcolor="#B8B8FF">
-                                      <%= thedate %>&nbsp;&nbsp;
-                                      <%= theime %>
-                                  </td>
-                                </tr>
-
-                                <tr>
-                                    <td bgcolor="#EEEEFF" ></td>
-                                    <td bgcolor="#EEEEFF" >
-                                        <textarea name="Message" wrap="hard" readonly="true" rows="18" cols="60"><%=themessage%></textarea>
-                                    </td>
-                                </tr>
+			<tr>
+				<td bgcolor="#EEEEFF"></td>
+				<td bgcolor="#EEEEFF"><textarea name="Message" wrap="hard"
+					readonly="true" rows="18" cols="60"><%=themessage%></textarea></td>
+			</tr>
 
 
 
-                        </table>
+		</table>
 
-                <hr style="color:#A9A9A9;">
-                <div style="height:6px;"></div>
-                <% DrawDoc(root, out); %>
-                <div style="font-size: 8pt; margin-top: 15px;">
-                    <a href="javascript:expandAll();"><bean:message key="oscarEncounter.ViewAttachment.msgExpandAll"/></a>
-                    &nbsp;|&nbsp;
-                    <a href="javascript:collapseAll();"><bean:message key="oscarEncounter.ViewAttachment.msgColapseAll"/></a>
-                </div>
+		<hr style="color: #A9A9A9;">
+		<div style="height: 6px;"></div>
+		<% DrawDoc(root, out); %>
+		<div style="font-size: 8pt; margin-top: 15px;"><a
+			href="javascript:expandAll();"><bean:message
+			key="oscarEncounter.ViewAttachment.msgExpandAll" /></a> &nbsp;|&nbsp; <a
+			href="javascript:collapseAll();"><bean:message
+			key="oscarEncounter.ViewAttachment.msgColapseAll" /></a></div>
 
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 <%!

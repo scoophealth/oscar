@@ -1,4 +1,3 @@
-
 .dojoTree {
 	font: caption;
 	font-size: 11px;
@@ -6,15 +5,14 @@
 	overflow: auto;
 }
 
-
 .dojoTreeNodeLabelTitle {
 	padding-left: 2px;
 	color: WindowText;
 }
 
 .dojoTreeNodeLabel {
-	cursor:hand;
-	cursor:pointer;
+	cursor: hand;
+	cursor: pointer;
 }
 
 .dojoTreeNodeLabelTitle:hover {
@@ -30,7 +28,6 @@
 	white-space: nowrap;
 }
 
-.dojoTree img, .dojoTreeNodeLabel img {
+.dojoTree img,.dojoTreeNodeLabel img {
 	vertical-align: middle;
 }
-

@@ -1,118 +1,109 @@
- /* styles.css -- Style sheet for the UI prototype.
+/* styles.css -- Style sheet for the UI prototype.
 */
-
-BODY
-{
-    FONT-SIZE: Normal;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif; 
+BODY {
+	FONT-SIZE: Normal;
+	FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
 }
 
-TABLE
-{
+TABLE {
 	FONT-SIZE: x-small;
 }
 
-.Header
-{
-        font-weight:bold;
-        background-color:#6699cc;
+.Header {
+	font-weight: bold;
+	background-color: #6699cc;
 }
-
 
 TH {
-    font-size: small;
-    font-weight: bold;
+	font-size: small;
+	font-weight: bold;
 }
 
-
-.BodyStyle
-{
-    margin-left:0;
-    margin-right:0;
-    margin-top:0;
+.BodyStyle {
+	margin-left: 0;
+	margin-right: 0;
+	margin-top: 0;
 }
 
-.MainTable
-{
-    border-collapse: collapse;
-    border-color:#111111;
-    border-width:0;
-    padding-bottom:0;
-    padding-top:0;
-    padding-left:0;
-    padding-right:0;
-    width:100%;
-    font-size:80%;
-}
-.MainTableTopRowLeftColumn
-{
-    background-color:#003399;   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    height:34px;
-    max-width:130px;
-    font-size: 110%;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-.MainTableBottomRowLeftColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    border-bottom: 2px solid #A9A9A9;
-    height:4px;
-    max-width:130px;
-
-}
-.MainTableLeftColumn
-{   
-    border-right: 2px solid #A9A9A9;
-    border-left: 2px solid #A9A9A9;
-    max-width:130px;
-    vertical-align:top;
+.MainTable {
+	border-collapse: collapse;
+	border-color: #111111;
+	border-width: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	font-size: 80%;
 }
 
-.MainTableTopRowRightColumn
-{
-    border-right: 2px solid #A9A9A9;
-    border-top: 2px solid #A9A9A9;
-    background-color:#003399;   
-    height:34px;
+.MainTableTopRowLeftColumn {
+	background-color: #003399;
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	height: 34px;
+	max-width: 130px;
+	font-size: 110%;
+	font-weight: bold;
+	color: #FFFFFF;
 }
-.MainTableBottomRowRightColumn
-{
-    border-bottom: 2px solid #A9A9A9;
-    border-right: 2px solid #A9A9A9;
-    height:4px;
+
+.MainTableBottomRowLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	border-bottom: 2px solid #A9A9A9;
+	height: 4px;
+	max-width: 130px;
 }
-.MainTableRightColumn
-{    
-    border-right: 2px solid #A9A9A9;
-    height:34px;
+
+.MainTableLeftColumn {
+	border-right: 2px solid #A9A9A9;
+	border-left: 2px solid #A9A9A9;
+	max-width: 130px;
+	vertical-align: top;
 }
-.TopStatusBar
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:900;
+
+.MainTableTopRowRightColumn {
+	border-right: 2px solid #A9A9A9;
+	border-top: 2px solid #A9A9A9;
+	background-color: #003399;
+	height: 34px;
 }
-.TopStatusBarShort
-{
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:750;
+
+.MainTableBottomRowRightColumn {
+	border-bottom: 2px solid #A9A9A9;
+	border-right: 2px solid #A9A9A9;
+	height: 4px;
 }
+
+.MainTableRightColumn {
+	border-right: 2px solid #A9A9A9;
+	height: 34px;
+}
+
+.TopStatusBar {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 900;
+}
+
+.TopStatusBarShort {
+	font-weight: bold;
+	background-color: #6699cc;
+	color: black;
+	height: 23px;
+	width: 750;
+}
+
 .data {
-    background-color:#F7F7F7;
-}
-.note {
-    font-size:80%; 
-    background-color:#CCCCFF;
-    color:#555555;
+	background-color: #F7F7F7;
 }
 
+.note {
+	font-size: 80%;
+	background-color: #CCCCFF;
+	color: #555555;
+}

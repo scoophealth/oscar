@@ -23,18 +23,16 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <head>
-<title>
-
-</title>
+<title></title>
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
@@ -44,17 +42,17 @@
 %>
 
 
-<html:base/>
+<html:base />
 </head>
 
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
+<html:errors />
 <table>
-    <tr>
-        <td> Update waiting list </td>              
-    </tr>
+	<tr>
+		<td>Update waiting list</td>
+	</tr>
 </table>
 
 

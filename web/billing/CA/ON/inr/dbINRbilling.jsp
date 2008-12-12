@@ -31,11 +31,13 @@ curUser_no = (String) session.getAttribute("user");
 //  mygroupno = (String) session.getAttribute("groupno");  
 userfirstname = (String) session.getAttribute("userfirstname");
 userlastname = (String) session.getAttribute("userlastname");
-%>    
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="../../errorpage.jsp"%>
-<%@ include file="../../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbINR.jsp" %>
+%>
+<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
+	errorPage="../../errorpage.jsp"%>
+<%@ include file="../../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbINR.jsp"%>
 
 <html>
 <head>
@@ -51,14 +53,14 @@ userlastname = (String) session.getAttribute("userlastname");
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A BILLING RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A BILLING RECORD</font></th>
+	</tr>
+</table>
 <%
 //System.out.println(subject+content); 
 String[] param =new String[15]; 
@@ -84,24 +86,26 @@ int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_inrbilling");
 
 if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Addition of a billing Record.</h1></p>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
-</script>
-<%
+</script> <%
 }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
 }
 apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

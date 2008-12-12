@@ -27,8 +27,8 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
 <%
 String Total="0", mNum="", fNum="";
@@ -71,114 +71,123 @@ Total = apptMainBean.getString(rs,"n");
    BigDecimal LineTotal= new BigDecimal(0).setScale(0, BigDecimal.ROUND_HALF_UP);    
    BigDecimal LinePerc= new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);    
    %>
-<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message key="oscarReport.oscarReportAgeSex.msgDate"/>: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message key="oscarReport.oscarReportAgeSex.msgUnit"/>: <%=clinic%>                                              : <%=providerview%></font></pre>
+<pre><font face="Arial, Helvetica, sans-serif" size="2"> <bean:message
+	key="oscarReport.oscarReportAgeSex.msgDate" />: <%=curYear%>-<%=curMonth%>-<%=curDay%>                          <bean:message
+	key="oscarReport.oscarReportAgeSex.msgUnit" />: <%=clinic%>                                              : <%=providerview%></font></pre>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-   <tr  bgcolor="#CCCCFF"> 
-     <td> 
-       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgAge"/></div>
-     </td>
-   <td colspan='12'> 
-       <div align="center">---------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgFemale"/> ---------------------------------</div>
-     </td>
-     <td> 
-       <div align="center"> </div>
-     </td>
-     <td colspan='12'> 
-       <div align="center">----------------------------<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgMale"/> ----------------------------------</div>
-     </td>
-     <td colspan='2'> 
-       <div align="center">---<bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/> ---</div>
-    
-     </td>
-  </tr>
- <tr  bgcolor="#CCCCFF"> 
-    <td width="10%"> 
-      <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgGroup"/></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">+</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">9</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">8</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">7</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">6</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">5</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">4</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">3</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">2</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">1</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">0</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">1</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">2</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">3</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">4</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">5</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">6</div>
-    </td>
-    <td   width="2%"> 
-      <div align="center">7</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">8</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">9</div>
-    </td>
-    <td  width="2%"> 
-      <div align="center">+</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">####</div>
-    </td>
-    <td  width="8%"> 
-      <div align="right">%%%%</div>
-    </td>
-  </tr>
-   
-  <% String[][] AgeMatrix = new String[20][2];
+	<tr bgcolor="#CCCCFF">
+		<td>
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgAge" /></div>
+		</td>
+		<td colspan='12'>
+		<div align="center">---------------------------<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgFemale" />
+		---------------------------------</div>
+		</td>
+		<td>
+		<div align="center"></div>
+		</td>
+		<td colspan='12'>
+		<div align="center">----------------------------<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgMale" />
+		----------------------------------</div>
+		</td>
+		<td colspan='2'>
+		<div align="center">---<bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgTotal" /> ---</div>
+
+		</td>
+	</tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="10%">
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgGroup" /></div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+		<td width="2%">
+		<div align="center">+</div>
+		</td>
+		<td width="2%">
+		<div align="center">9</div>
+		</td>
+		<td width="2%">
+		<div align="center">8</div>
+		</td>
+		<td width="2%">
+		<div align="center">7</div>
+		</td>
+		<td width="2%">
+		<div align="center">6</div>
+		</td>
+		<td width="2%">
+		<div align="center">5</div>
+		</td>
+		<td width="2%">
+		<div align="center">4</div>
+		</td>
+		<td width="2%">
+		<div align="center">3</div>
+		</td>
+		<td width="2%">
+		<div align="center">2</div>
+		</td>
+		<td width="2%">
+		<div align="center">1</div>
+		</td>
+		<td width="2%">
+		<div align="center">0</div>
+		</td>
+		<td width="2%">
+		<div align="center">1</div>
+		</td>
+		<td width="2%">
+		<div align="center">2</div>
+		</td>
+		<td width="2%">
+		<div align="center">3</div>
+		</td>
+		<td width="2%">
+		<div align="center">4</div>
+		</td>
+		<td width="2%">
+		<div align="center">5</div>
+		</td>
+		<td width="2%">
+		<div align="center">6</div>
+		</td>
+		<td width="2%">
+		<div align="center">7</div>
+		</td>
+		<td width="2%">
+		<div align="center">8</div>
+		</td>
+		<td width="2%">
+		<div align="center">9</div>
+		</td>
+		<td width="2%">
+		<div align="center">+</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">####</div>
+		</td>
+		<td width="8%">
+		<div align="right">%%%%</div>
+		</td>
+	</tr>
+
+	<% String[][] AgeMatrix = new String[20][2];
      AgeMatrix[0][0] = "0";
      AgeMatrix[0][1] = "4";
      AgeMatrix[1][0] = "5";
@@ -265,37 +274,37 @@ param2[6] = dateEnd ;
    LineTotal = fdNum.add(mdNum).setScale(0, BigDecimal.ROUND_HALF_UP);
    LinePerc = fPerc.add(mPerc);
   %>
-  
-  <tr> 
-    <td  width="10%"> 
-      <div align="center"><%=AgeMatrix[i][0]%>-<%=AgeMatrix[i][1]%></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right"><%=mNum%></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right"><%=mPerc%></div>
-    </td>
-    <%=WriteMaleBar(Integer.parseInt(mPercId.toString()))%>
-    <td bgcolor="#000000"   width="2%"> 
-      <div align="center"><font color="#CCCCCC">|</font></div>
-    </td>
-    <%=WriteFemaleBar(Integer.parseInt(fPercId.toString()))%>
-    
-    <td   width="8%"> 
-      <div align="right"><%=fPerc%></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right"><%=fNum%></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right"><%=LineTotal%></div>
-    </td>
-    <td  width="8%"> 
-      <div align="right"><%=LinePerc%></div>
-    </td>
-  </tr>
-  <% 
+
+	<tr>
+		<td width="10%">
+		<div align="center"><%=AgeMatrix[i][0]%>-<%=AgeMatrix[i][1]%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mNum%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mPerc%></div>
+		</td>
+		<%=WriteMaleBar(Integer.parseInt(mPercId.toString()))%>
+		<td bgcolor="#000000" width="2%">
+		<div align="center"><font color="#CCCCCC">|</font></div>
+		</td>
+		<%=WriteFemaleBar(Integer.parseInt(fPercId.toString()))%>
+
+		<td width="8%">
+		<div align="right"><%=fPerc%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=fNum%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=LineTotal%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=LinePerc%></div>
+		</td>
+	</tr>
+	<% 
   
   mPercTotal = mPercTotal.add(mPerc);
   fPercTotal = fPercTotal.add(fPerc);
@@ -303,91 +312,92 @@ param2[6] = dateEnd ;
   fTotal = fTotal.add(fdNum);
   BigTotalPerc = BigTotalPerc.add(LinePerc);
   } %>
-  <tr  bgcolor="#CCCCFF"> 
-     <td   width="10%"> 
-       <div align="center"><bean:message key="oscarReport.oscarReportAgeSex_noroster.msgTotal"/></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=fTotal.toString().substring(0, fTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=fPercTotal%></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td  width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td   width="2%"> 
-       <div align="center"></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=mPercTotal%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=mTotal.toString().substring(0, mTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=BigTotal.toString().substring(0, BigTotal.toString().indexOf("."))%></div>
-     </td>
-     <td   width="8%"> 
-       <div align="right"><%=BigTotalPerc%></div>
-     </td>
-  </tr>
+	<tr bgcolor="#CCCCFF">
+		<td width="10%">
+		<div align="center"><bean:message
+			key="oscarReport.oscarReportAgeSex_noroster.msgTotal" /></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=fTotal.toString().substring(0, fTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=fPercTotal%></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="2%">
+		<div align="center"></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mPercTotal%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=mTotal.toString().substring(0, mTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=BigTotal.toString().substring(0, BigTotal.toString().indexOf("."))%></div>
+		</td>
+		<td width="8%">
+		<div align="right"><%=BigTotalPerc%></div>
+		</td>
+	</tr>
 </table>
 

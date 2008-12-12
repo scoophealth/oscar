@@ -23,14 +23,15 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page
+	import="java.lang.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -42,10 +43,10 @@
 <html:html locale="true">
 
 <head>
-<title>
-<bean:message key="oscarEncounter.Measurements.msgProcessEditMeasurementGroupAction"/>
+<title><bean:message
+	key="oscarEncounter.Measurements.msgProcessEditMeasurementGroupAction" />
 </title>
-<html:base/>
+<html:base />
 </head>
 
 <script language="javascript">
@@ -61,17 +62,18 @@ function submitForm(){
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<html:errors/>
+<html:errors />
 <table>
-    <form action="SetupEditMeasurementGroup.do">
-        <tr>
-            <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
-            <td> Processing... </td>
-            <script>
+	<form action="SetupEditMeasurementGroup.do">
+	<tr>
+		<input type="hidden" name="value(groupName)"
+			value="<bean:write name="groupName"/>" />
+		<td>Processing...</td>
+		<script>
                 submitForm();
             </script>
-        </tr>
-    </form>
+	</tr>
+	</form>
 </table>
 
 

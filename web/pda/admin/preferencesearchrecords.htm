@@ -57,54 +57,64 @@
     </script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> SEARCH PREFERENCE 
-        RECORDS</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
 
-<table cellspacing="0" cellpadding="2" width="100%" border="0" BGCOLOR="#C4D9E7">
-
-  <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
-	<tr valign="top">
-      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-          Criteria</i></b></font></td>
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-              <input type="radio"  name="search_mode" value="search_preferenceno">
-          Preference No. </font></td>
-            
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" checked name="search_mode" value="search_providerno">
-          Provider No.</font></td>
-      <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
-				<INPUT TYPE="hidden" NAME="orderby" VALUE="provider_no" >
-				<INPUT TYPE="hidden" NAME="dboperation" VALUE="preference_search_titlename" >
-				<INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
-				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Preference_Search" >
-				<INPUT TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
-
-   </tr><tr> 
-        <td nowrap><font size="1" face="Verdana" color="#0000FF">Reserved </font></td>
-        <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
-
-    </tr>
-   </form>
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		SEARCH PREFERENCE RECORDS</font></th>
+	</tr>
 </table>
-  
-  <p>Instructions will be provided later.</p>
-  <hr width="100%" color="orange">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+
+<table cellspacing="0" cellpadding="2" width="100%" border="0"
+	BGCOLOR="#C4D9E7">
+
+	<form method="post" action="admincontrol.jsp" name="searchprovider"
+		onsubmit="return onsub()">
+	<tr valign="top">
+		<td rowspan="2" align="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search Criteria</i></b></font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="search_mode" value="search_preferenceno">
+		Preference No. </font></td>
+
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" checked name="search_mode"
+			value="search_providerno"> Provider No.</font></td>
+		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
+			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			TYPE="hidden" NAME="orderby" VALUE="provider_no"> <INPUT
+			TYPE="hidden" NAME="dboperation" VALUE="preference_search_titlename">
+		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
+			TYPE="hidden" NAME="limit2" VALUE="10"> <INPUT TYPE="hidden"
+			NAME="displaymode" VALUE="Preference_Search"> <INPUT
+			TYPE="SUBMIT" NAME="button" VALUE="Search" SIZE="17"></td>
+
+	</tr>
+	<tr>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">Reserved
+		</font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		</font></td>
+
+	</tr>
+	</form>
+</table>
+
+<p>Instructions will be provided later.</p>
+<hr width="100%" color="orange">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"> Back to
+		Admin Page.</a></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

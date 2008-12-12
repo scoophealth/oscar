@@ -16,7 +16,8 @@
 --%>
 <%@page import="java.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.common.dao.*"%>
@@ -29,28 +30,33 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-	<table class="genericTable">
-		<thead>
-			<tr>
-				<td class="genericTableHeader">Tracked Url</td>
-				<td class="genericTableHeader">&nbsp;</td>
-				<td class="genericTableHeader">&nbsp;</td>
-			</tr>
-		</thead>
-		<tbody>
+<table class="genericTable">
+	<thead>
+		<tr>
+			<td class="genericTableHeader">Tracked Url</td>
+			<td class="genericTableHeader">&nbsp;</td>
+			<td class="genericTableHeader">&nbsp;</td>
+		</tr>
+	</thead>
+	<tbody>
 		<%
 			for (RedirectLink redirectLink : links)
 			{
 				%>
-					<tr class="genericTableRow">
-						<td class="genericTableData"><a href="<%=redirectLink.getUrl()%>"><%=redirectLink.getUrl()%></a></td>
-						<td class="genericTableData"><a href="LinkTrackingDetailedReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Detailed Report</a></td>
-						<td class="genericTableData"><a href="LinkTrackingSummaryReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Summary Report</a></td>
-					</tr>
-				<%
+		<tr class="genericTableRow">
+			<td class="genericTableData"><a
+				href="<%=redirectLink.getUrl()%>"><%=redirectLink.getUrl()%></a></td>
+			<td class="genericTableData"><a
+				href="LinkTrackingDetailedReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Detailed
+			Report</a></td>
+			<td class="genericTableData"><a
+				href="LinkTrackingSummaryReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Summary
+			Report</a></td>
+		</tr>
+		<%
 			}
 		%>
-		</tbody>
-	</table>
-	
+	</tbody>
+</table>
+
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

@@ -38,13 +38,17 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 <% } %>
 %>
 
-<%@ page import="java.io.*, java.sql.*,oscar.*, oscar.util.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page
+	import="java.io.*, java.sql.*,oscar.*, oscar.util.*, java.util.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean"
+	scope="request" />
+<%@ include file="dbBilling.jsp"%>
 
 <%
 JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
@@ -305,14 +309,14 @@ param3[5]=filename;
 // only one? for paymentdate, filename
 int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
  
-%>   
-   
+%>
+
 
 <html>
 <head>
-<link rel="stylesheet" href="billing.css" >
+<link rel="stylesheet" href="billing.css">
 <title>Billing Reconcilliation</title>
-       
+
 <script language="JavaScript">
 <!--
 var remote=null;
@@ -345,31 +349,33 @@ function checkReconcile(url){
 </SCRIPT>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
-	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
-	Reconcilliation </font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print(); return false;'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Billing Reconcilliation </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
- 
+
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
-<form>
-<tr bgcolor="#CCCCFF">  
-	<th width="10%">Read Date</th>
-	<th width="10%">Payment Date </th>
-	<th width="25%">Payable </th>
-	<th width="10%">Records/Claims</th>
-	<th width="8%">Total </th>
-	<th width="22%">Action</th>
-	<th>Status</th>
-</tr>
-   
-<%
+	<form>
+	<tr bgcolor="#CCCCFF">
+		<th width="10%">Read Date</th>
+		<th width="10%">Payment Date</th>
+		<th width="25%">Payable</th>
+		<th width="10%">Records/Claims</th>
+		<th width="8%">Total</th>
+		<th width="22%">Action</th>
+		<th>Status</th>
+	</tr>
+
+	<%
 int n = 0;
 ResultSet rsdemo = null;
 String[] param5 =new String[1];
@@ -384,21 +390,24 @@ while (rsdemo.next()) {
 	strcount= rsdemo.getString("claims");
 	strtCount = rsdemo.getString("records");
 	total = rsdemo.getString("totalamount");
-%> 
-		     
-<tr bgcolor="<%=n%2==0?"#EFEFEF":"white"%>"> 
-    <td><%=nowDate%>  </td>
-    <td align="center"><%=paymentdate%> </td>
-    <td><%=payable%></td>
-    <td align="center"><%=strcount%>/<%=strtCount%></td>
-    <td align="right"><%=total%></td>
-    <td align="center">
-	<a href="../billing/CA/ON/genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | 
-	<a href="../billing/CA/ON/genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| 
-	<a href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-    <td><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
-</tr>
-<%
+%>
+
+	<tr bgcolor="<%=n%2==0?"#EFEFEF":"white"%>">
+		<td><%=nowDate%></td>
+		<td align="center"><%=paymentdate%></td>
+		<td><%=payable%></td>
+		<td align="center"><%=strcount%>/<%=strtCount%></td>
+		<td align="right"><%=total%></td>
+		<td align="center"><a
+			href="../billing/CA/ON/genRAError.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Error</a> | <a
+			href="../billing/CA/ON/genRASummary.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Summary</a>| <a
+			href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report
+		</a></td>
+		<td><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/CA/ON/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+	</tr>
+	<%
 }
 apptMainBean.closePstmtConn();
 

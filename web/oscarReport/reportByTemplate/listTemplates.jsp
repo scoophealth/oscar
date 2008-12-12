@@ -26,29 +26,28 @@ This JSP is included in all reportByTemplate pages; it lists all available templ
  * Ontario, Canada 
  */
 --%>
-<%@ page import = "java.util.*, oscar.oscarReport.reportByTemplate.*"%>
+<%@ page import="java.util.*, oscar.oscarReport.reportByTemplate.*"%>
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
 String templateViewId = request.getParameter("templateviewid");
 if (templateViewId == null) templateViewId = "";
 %>
-      <div class="templatelist">
-          <div class="templatelistHeader">
-            Select a template:
-          </div>
-          <ul class="templatelist">
-              <li><a href="homePage.jsp"><b>Main Page</b></a>
-            <%for (int i=0; i<templates.size(); i++) {
+<div class="templatelist">
+<div class="templatelistHeader">Select a template:</div>
+<ul class="templatelist">
+	<li><a href="homePage.jsp"><b>Main Page</b></a> <%for (int i=0; i<templates.size(); i++) {
                 String selected = "";
                 ReportObject curReport = (ReportObject) templates.get(i);
                 String templateId = curReport.getTemplateId();
                 String templateTitle = curReport.getTitle();
                 String selectedTemplate = "";
                 if (templateId.equals(templateViewId)) selectedTemplate = "selectedTemplate";%>
-               <li class="<%=selectedTemplate%>"><%=String.valueOf(i+1)%>. <a href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
-           <% } %>
-          </ul>
-          <a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add Template</a>
-      </div>
-</form>     
+	
+	<li class="<%=selectedTemplate%>"><%=String.valueOf(i+1)%>. <a
+		href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
+	<% } %>
+</ul>
+<a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add
+Template</a></div>
+</form>

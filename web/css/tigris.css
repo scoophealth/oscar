@@ -1,15 +1,14 @@
-/* $Id: tigris.css,v 1.4 2008-12-07 16:54:51 hexbinary Exp $
+/* $Id: tigris.css,v 1.5 2008-12-12 22:56:11 singhj Exp $
 	
 	This file defines basic default formatting for HTML conforming to Tigris application style. To extend or override these rules for your instance, edit inst.css instead of this file. */
-
-/* colors, backgrounds, borders, link indication */
+	/* colors, backgrounds, borders, link indication */
 body {
 	background: #fff;
 	color: #000;
 }
 
-dd { 
-	margin-top: .12em; 
+dd {
+	margin-top: .12em;
 }
 
 #banner {
@@ -20,16 +19,16 @@ dd {
 	border-bottom: 1px solid #369;
 }
 
-.app h3, .app h4, .tabs td, .tabs th, .functnbar {
+.app h3,.app h4,.tabs td,.tabs th,.functnbar {
 	background-image: url(../images/nw_maj_rond.gif);
 	background-repeat: no-repeat;
 }
 
-.functnbar, .functnbar2 {
+.functnbar,.functnbar2 {
 	background-color: #aaa;
 }
 
-.functnbar2, .functnbar3 {
+.functnbar2,.functnbar3 {
 	background-color: #aaa;
 	background-image: url(../images/sw_maj_rond.gif);
 	background-repeat: no-repeat;
@@ -41,43 +40,43 @@ dd {
 	background-image: url(../images/sw_med_rond.gif);
 }
 
-.functnbar, .functnbar2, .functnbar3 {
+.functnbar,.functnbar2,.functnbar3 {
 	color: #000;
 }
 
-.functnbar a, .functnbar2 a, .functnbar3 a {
+.functnbar a,.functnbar2 a,.functnbar3 a {
 	color: #000;
 	text-decoration: underline;
 }
 
-#navcolumn .body div, body.docs #toc li li {
+#navcolumn .body div,body.docs #toc li li {
 	background-image: url(../images/strich.gif);
 	background-repeat: no-repeat;
 	background-position: .5em .5em;
 }
 
-#searchbox .body div, #navcolumn .body .heading {
+#searchbox .body div,#navcolumn .body .heading {
 	background-image: none;
 }
 
-a:link, #navcolumn a:visited, .app a:visited, .tasknav a:visited {
+a:link,#navcolumn a:visited,.app a:visited,.tasknav a:visited {
 	color: blue;
 }
 
-a:link.selfref, a:visited.selfref {
+a:link .selfref,a:visited .selfref {
 	color: #555 !important;
 	text-decoration: none;
 }
 
-a:active, a:hover, #leftcol a:active, #leftcol a:hover {
+a:active,a:hover,#leftcol a:active,#leftcol a:hover {
 	color: #f30 !important;
 }
 
-#leftcol a, #breadcrumbs a {
+#leftcol a,#breadcrumbs a {
 	text-decoration: none;
 }
 
-.app h3, .app h4 {
+.app h3,.app h4 {
 	color: #fff;
 }
 
@@ -85,7 +84,7 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 	background-color: #333;
 }
 
-.app h3 a:link, .app h3 a:visited, .app h4 a:link, .app h4 a:visited {
+.app h3 a:link,.app h3 a:visited,.app h4 a:link,.app h4 a:visited {
 	color: #fff !important;
 	text-decoration: underline;
 }
@@ -103,10 +102,10 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 }
 
 .b th {
-	color:black;
+	color: black;
 }
 
-table, th, td {
+table,th,td {
 	border: none;
 }
 
@@ -142,7 +141,7 @@ div.colbar {
 	border-top: 1px solid #999;
 }
 
-#rightcol div.www, #rightcol div.help {
+#rightcol div.www,#rightcol div.help {
 	border: 1px solid #ddd;
 }
 
@@ -159,10 +158,11 @@ body.docs div.docs {
 }
 
 body.docs {
-	background: #eee url(../images/help_logo.gif) top right no-repeat !important;
+	background: #eee url(../images/help_logo.gif) top right no-repeat
+		!important;
 }
 
-.docs h3, .docs h4 {
+.docs h3,.docs h4 {
 	border-top: solid 1px #000;
 }
 
@@ -177,7 +177,6 @@ body.docs {
 #apphead h4 em {
 	color: #777;
 }
-
 
 .app th {
 	background-color: #bbb;
@@ -201,11 +200,11 @@ body.docs {
 	border-bottom: 6px #ddd solid;
 }
 
-.tabs th, .tabs th a:link, .tabs th a:visited {
+.tabs th,.tabs th a:link,.tabs th a:visited {
 	color: #555;
 }
 
-.tabs td, .tabs td a:link, .tabs td a:visited {
+.tabs td,.tabs td a:link,.tabs td a:visited {
 	color: #fff;
 }
 
@@ -235,22 +234,22 @@ body.docs {
 	background: url(../images/icon_arrowwaste1_sml.gif) no-repeat;
 }
 
-.filebrowse .expanded, .filebrowse-alt .expanded {
+.filebrowse .expanded,.filebrowse-alt .expanded {
 	background-image: url(../images/icon_arrowfolderopen2_sml.gif);
 	background-repeat: no-repeat;
 }
 
-.filebrowse .collapsed, .filebrowse-alt .collapsed {
+.filebrowse .collapsed,.filebrowse-alt .collapsed {
 	background-image: url(../images/icon_arrowfolderclosed1_sml.gif);
 	background-repeat: no-repeat;
 }
 
-.filebrowse .leafnode, .filebrowse-alt .leafnode {
+.filebrowse .leafnode,.filebrowse-alt .leafnode {
 	background-image: url(../images/icon_folder_sml.gif);
 	background-repeat: no-repeat;
 }
 
-.filebrowse .leaf, .filebrowse-alt .leaf {
+.filebrowse .leaf,.filebrowse-alt .leaf {
 	background-image: url(../images/icon_doc_sml.gif);
 	background-repeat: no-repeat;
 }
@@ -281,7 +280,7 @@ body .grid td {
 	color: #069;
 }
 
-.errormessage, .warningmessage, .donemessage, .infomessage {
+.errormessage,.warningmessage,.donemessage,.infomessage {
 	border-top: 5px solid #900;
 	border-left: 1px solid #900;
 	background-image: url(../images/icon_error_lrg.gif);
@@ -320,7 +319,7 @@ body .grid td {
 	background: url(../images/icon_usergroups_lrg.gif) no-repeat;
 }
 
-.errormark, .warningmark, .donemark, .infomark {
+.errormark,.warningmark,.donemark,.infomark {
 	background: url(../images/icon_error_sml.gif) no-repeat;
 }
 
@@ -336,7 +335,7 @@ body .grid td {
 	background-image: url(../images/icon_info_sml.gif);
 }
 
-.cvsdiff, .cvsblame {
+.cvsdiff,.cvsblame {
 	background-color: #ccc;
 }
 
@@ -432,38 +431,39 @@ li.selection ul a {
 	background-color: #FCC;
 }
 
-.app .helplink, #helptext .helplink {
+.app .helplink,#helptext .helplink {
 	cursor: help;
 }
 
-.legend th, .bars th {
+.legend th,.bars th {
 	background-color: #fff;
 }
 
 /* font and text properties, exclusive of link indication, alignment, text-indent */
-body, th, td, input, select {
+body,th,td,input,select {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 }
 
-code, pre {
+code,pre {
 	font-family: 'Andale Mono', Courier, monospace;
 }
 
-body, .app h3, .app h4, #rightcol h3, pre, code, #apphead h2 small, h4, th, td {
+body,.app h3,.app h4,#rightcol h3,pre,code,#apphead h2 small,h4,th,td {
 	font-size: x-small;
 	voice-family: "\"}\"";
 	voice-family: inherit;
 	font-size: small;
 }
 
-small, div#footer, div#login, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, #breadcrumbs, .courtesylinks, #rightcol div.help, .colbar, .tasknav, body.docs div#toc, #leftcol, .legend, .bars {
+small,div#footer,div#login,div.tabs th,div.tabs td,input,select,.paginate,.functnbar,.functnbar2,.functnbar3,#breadcrumbs,.courtesylinks,#rightcol div.help,.colbar,.tasknav,body.docs div#toc,#leftcol,.legend,.bars
+	{
 	font-size: xx-small;
 	voice-family: "\"}\"";
 	voice-family: inherit;
 	font-size: x-small;
 }
 
-.tabs td, .tabs th, dt, .tasknav .selfref, #login .username, .selection {
+.tabs td,.tabs th,dt,.tasknav .selfref,#login .username,.selection {
 	font-weight: bold;
 }
 
@@ -489,12 +489,12 @@ li.selection ul {
 	margin-bottom: .5em;
 }
 
-p, ul, ol, dl, .bars table {
+p,ul,ol,dl,.bars table {
 	margin-top: .67em;
 	margin-bottom: .67em;
 }
 
-h3, h4 {
+h3,h4 {
 	margin-bottom: 0;
 }
 
@@ -527,17 +527,17 @@ ol ol ol {
 	list-style-type: lower-roman;
 }
 
-.app h3, .app h4 {
+.app h3,.app h4 {
 	padding: 5px;
 	margin-right: 2px;
 	margin-left: 2px;
 }
 
-.app td, .app th {
+.app td,.app th {
 	padding: 2px 3px;
 }
 
-.h3 p, .h4 p, .h3 dt, .h4 dt {
+.h3 p,.h4 p,.h3 dt,.h4 dt {
 	margin-right: 7px;
 	margin-left: 7px;
 }
@@ -558,11 +558,11 @@ div.colbar {
 	padding-left: 8px;
 }
 
-.tabs td, .tabs th {
+.tabs td,.tabs th {
 	padding: 3px 9px;
 }
 
-#rightcol div.www, #rightcol div.help {
+#rightcol div.www,#rightcol div.help {
 	padding: 0 .5em;
 }
 
@@ -574,7 +574,7 @@ body.docs #toc {
 	padding: 0 20px 0 0;
 }
 
-body.docs #toc ul, #toc ol {
+body.docs #toc ul,#toc ol {
 	margin-left: 0;
 	padding-left: 0;
 }
@@ -595,12 +595,12 @@ body.docs div.docs {
 	margin-top: -.67em;
 }
 
-.docs h3, .docs h4 {
+.docs h3,.docs h4 {
 	margin-bottom: .1em;
 	padding-top: .3em;
 }
 
-.functnbar, .functnbar2, .functnbar3 {
+.functnbar,.functnbar2,.functnbar3 {
 	padding: 5px;
 	margin: .67em 2px;
 }
@@ -613,12 +613,12 @@ body {
 	padding: 1em;
 }
 
-body.composite, body.docs {
+body.composite,body.docs {
 	margin: 0;
 	padding: 0;
 }
 
-th, td {
+th,td {
 	text-align: left;
 	vertical-align: top;
 }
@@ -631,7 +631,7 @@ th, td {
 	text-align: center !important;
 }
 
-.axial th, .axial th .strut {
+.axial th,.axial th .strut {
 	text-align: right;
 }
 
@@ -720,11 +720,11 @@ dd {
 	margin-left: 13.5em;
 }
 
-.filebrowse .expanded, .filebrowse .collapsed {
+.filebrowse .expanded,.filebrowse .collapsed {
 	padding-left: 34px;
 }
 
-.filebrowse .leafnode, .filebrowse .leaf {
+.filebrowse .leafnode,.filebrowse .leaf {
 	padding-left: 20px;
 }
 
@@ -732,8 +732,8 @@ dd {
 	padding-left: 34px;
 }
 
-.filebrowse-alt .expanded, .filebrowse-alt .collapsed, .filebrowse-alt .leaf, .filebrowse-alt .leafnode, .expandedwaste, .collapsedwaste, .sortup, .sortdown {
-	/* hide from macie5\*/
+.filebrowse-alt .expanded,.filebrowse-alt .collapsed,.filebrowse-alt .leaf,.filebrowse-alt .leafnode,.expandedwaste,.collapsedwaste,.sortup,.sortdown
+	{ /* hide from macie5\*/
 	float: left;
 	/* resume */
 	display: inline-block;
@@ -742,23 +742,23 @@ dd {
 	padding-left: 0 !important;
 }
 
-.filebrowse-alt .leaf, .filebrowse-alt .leafnode, .sortup, .sortdown {
+.filebrowse-alt .leaf,.filebrowse-alt .leafnode,.sortup,.sortdown {
 	width: 20px;
 }
 
-.filebrowse ul, .filebrowse-alt ul {
+.filebrowse ul,.filebrowse-alt ul {
 	list-style-type: none;
 	padding-left: 0;
 	margin-left: 0;
 }
 
-.filebrowse ul ul, .filebrowse-alt ul ul {
+.filebrowse ul ul,.filebrowse-alt ul ul {
 	margin-left: 1.5em;
 	margin-top: 0;
 	padding-top: .67em;
 }
 
-.filebrowse li, .filebrowse-alt li {
+.filebrowse li,.filebrowse-alt li {
 	margin-bottom: .67em;
 }
 
@@ -766,13 +766,14 @@ td.filebrowse h3 {
 	margin-top: 0;
 }
 
-.errormessage, .warningmessage, .donemessage, .infomessage, .docinfo, .dirinfo, .memberinfo, .usergroupinfo {
+.errormessage,.warningmessage,.donemessage,.infomessage,.docinfo,.dirinfo,.memberinfo,.usergroupinfo
+	{
 	margin: .67em 0;
 	padding: .33em 0 .67em 42px;
 	min-height: 32px;
 }
 
-.errormark, .warningmark, .donemark, .infomark {
+.errormark,.warningmark,.donemark,.infomark {
 	padding-left: 20px;
 	min-height: 15px;
 }
@@ -789,7 +790,7 @@ td.filebrowse h3 {
 	width: 14em;
 }
 
-.axial th, .axial th .strut, #leftcol .strut {
+.axial th,.axial th .strut,#leftcol .strut {
 	width: 12em;
 }
 
@@ -797,7 +798,7 @@ td.filebrowse h3 {
 	padding: 2px 8px;
 }
 
-.app h3, .app h4, .bars {
+.app h3,.app h4,.bars {
 	clear: both;
 }
 
@@ -805,7 +806,7 @@ td.filebrowse h3 {
 	float: right;
 }
 
-.legend th, .bars th {
+.legend th,.bars th {
 	text-align: right;
 	padding-left: 1em;
 }
@@ -823,33 +824,28 @@ td.filebrowse h3 {
 }
 
 .header {
-	color:black;
-	background:white;
+	color: black;
+	background: white;
 }
 
 /* ----- generic table ----- */
+.genericTable {
+	border-collapse: collapse;
+	border: 1px solid black;
+}
 
-	.genericTable
-	{
-		border-collapse:collapse; 
-		border:1px solid black;
-	}
-	
-	.genericTableHeader
-	{
-		border: 1px solid black;
-		background-color: #ccccff;
-		font-weight: bold;
-		padding: 0px 2px 0px 2px;
-	}
-	
-	.genericTableRow
-	{
-		border: 1px solid black;
-	}
-	
-	.genericTableData
-	{
-		border: 1px solid black;
-		padding: 4px 4px 4px 4px;
-	}
+.genericTableHeader {
+	border: 1px solid black;
+	background-color: #ccccff;
+	font-weight: bold;
+	padding: 0px 2px 0px 2px;
+}
+
+.genericTableRow {
+	border: 1px solid black;
+}
+
+.genericTableData {
+	border: 1px solid black;
+	padding: 4px 4px 4px 4px;
+}

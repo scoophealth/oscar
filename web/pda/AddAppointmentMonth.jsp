@@ -24,21 +24,24 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="bean.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<head><title>AddAppointmentMonth</title>
+<head>
+<title>AddAppointmentMonth</title>
 </head>
 <body>
-  
+
 
 <%  
  
@@ -76,11 +79,19 @@ if (request.getParameter("submitButton")!=null &&
    if (beanDBConnect.executeUpdate(queryString)) {
 
 %>
-<br><br>Successful insert<br> an appointment Record.
+<br>
+<br>
+Successful insert
+<br>
+an appointment Record.
 <%  
   } else {
 %>
-<br><br>Sorry, insert <br>has failed. 
+<br>
+<br>
+Sorry, insert
+<br>
+has failed.
 <%  
   }
 
@@ -89,7 +100,9 @@ if (request.getParameter("submitButton")!=null &&
  
 
 %>
-<br><br><a href="AppointmentToday.jsp?todayString=<%=appointment_date%>">Return</a>
+<br>
+<br>
+<a href="AppointmentToday.jsp?todayString=<%=appointment_date%>">Return</a>
 <%
 
 
@@ -104,6 +117,6 @@ if (request.getParameter("submitButton")!=null &&
  
     response.sendRedirect(gotoJsp);   
 }
-%> 
+%>
 </body>
 </html>

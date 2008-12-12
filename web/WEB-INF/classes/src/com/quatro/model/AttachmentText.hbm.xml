@@ -3,9 +3,10 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-	<class name="com.quatro.model.AttachmentText" table="attachment_text" mutable="true">
+	<class name="com.quatro.model.AttachmentText" table="attachment_text"
+		mutable="true">
 		<id name="docId" />
-        <property name="revDate" column="revdatetime"/> 
+		<property name="revDate" column="revdatetime" />
 		<property name="attDataBlob" type="blob" column="docdata" />
 	</class>
 </hibernate-mapping>

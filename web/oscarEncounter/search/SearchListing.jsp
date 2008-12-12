@@ -27,14 +27,10 @@
 
 <html>
 <head>
-<title>
-SearchListing
-</title>
+<title>SearchListing</title>
 </head>
 <body>
-<h1>
-Search Listing
-</h1>
+<h1>Search Listing</h1>
 
 
 </body>

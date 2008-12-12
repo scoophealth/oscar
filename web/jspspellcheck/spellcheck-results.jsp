@@ -1,3 +1,4 @@
+
 <%/*
 
     spellcheck-results.jsp - Performs the actual spell check and displays the 
@@ -24,7 +25,8 @@
 
 */%>
 
-<%@ page import="com.swabunga.spell.engine.*
+<%@ page
+	import="com.swabunga.spell.engine.*
     ,com.swabunga.spell.event.SpellCheckListener
     ,com.swabunga.spell.event.SpellCheckEvent
     ,com.swabunga.spell.event.SpellChecker
@@ -69,14 +71,14 @@ ResourceBundle spellcheckBundle = ResourceBundle.getBundle( "spellcheckBundle", 
 
 <html>
 <head>
-    <title><%=spellcheckBundle.getString("WindowTitle")%></title>
-    <link rel="stylesheet" href="spellcheck.css" type="text/css"/>
+<title><%=spellcheckBundle.getString("WindowTitle")%></title>
+<link rel="stylesheet" href="spellcheck.css" type="text/css" />
 </head>
 <body onload="processNextMistake();" onkeypress="miscKeyPress();">
 
-<%@ include file="spellcheck-form.jsp" %>
-<%@ include file="spellcheck-functions.jsp" %>
-<%@ include file="spellcheck-dictionary.jsp" %>
+<%@ include file="spellcheck-form.jsp"%>
+<%@ include file="spellcheck-functions.jsp"%>
+<%@ include file="spellcheck-dictionary.jsp"%>
 
 <script>
 <!--

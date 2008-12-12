@@ -22,6 +22,8 @@
 */
  -->
 
-<head><title>Doh!</title></head>
+<head>
+<title>Doh!</title>
+</head>
 
-No client selected. Please select client first.  
+No client selected. Please select client first.

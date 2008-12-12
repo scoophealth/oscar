@@ -24,11 +24,13 @@
  */
 -->
 
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
-<head><title>DEMOGRAPHIC: the following records</title>
+<head>
+<title>DEMOGRAPHIC: the following records</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -37,35 +39,34 @@
 //-->
 </SCRIPT>
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed">
-  <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE DEMOGRAPHIC RECORD</font></th>
-      </tr>
-    </table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed">
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		DELETE DEMOGRAPHIC RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then give me the result
   int []intparam=new int[]{Integer.parseInt(request.getParameter("demographic_no"))};
   int rowsAffected = apptMainBean.queryExecuteUpdate(intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <h2> Delete a DEMOGRAPHIC Record Successfully ! 
-  <p><%= request.getParameter("demographic_no") %>
-  </h2>
-  <!--a href="../appointment/appointmentcontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=delrelativecpp&dboperation=del_relative_cpp">Delete the relative appointment records as well. </a-->
+<h2>Delete a DEMOGRAPHIC Record Successfully !
+<p><%= request.getParameter("demographic_no") %>
+</h2>
+<!--a href="../appointment/appointmentcontrol.jsp?demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=delrelativecpp&dboperation=del_relative_cpp">Delete the relative appointment records as well. </a-->
 <%  
   } else {
 %>
-  <h1>Sorry, fail to delete !!! <%= request.getParameter("demographic_no") %>.
+<h1>Sorry, fail to delete !!! <%= request.getParameter("demographic_no") %>.
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-<%@ include file="footer.jsp" %>
-  
-  </center>
+<p></p>
+<%@ include file="footer.jsp"%>
+</center>
 </body>
 </html>

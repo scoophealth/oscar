@@ -22,9 +22,10 @@
  * Ontario, Canada   Creates a new instance of PreventionData
  */
 --%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <ul>
-<c:forEach var="l" items="${list}">
-    <li id="<c:out value="${l.demographicNo}"/>"><c:out value="${l.formattedName}"/></li>
-</c:forEach>
+	<c:forEach var="l" items="${list}">
+		<li id="<c:out value="${l.demographicNo}"/>"><c:out
+			value="${l.formattedName}" /></li>
+	</c:forEach>
 </ul>

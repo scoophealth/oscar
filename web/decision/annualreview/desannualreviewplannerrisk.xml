@@ -1,57 +1,63 @@
 <?xml version="1.0"?>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */
+	-->
 <riskFactors>
-  <section>
-    <section_title>Risk Factors (check if present)</section_title>
-    <risk name="PVD" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Peripheral vascular disease</risk>
-    <risk name="TIA" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Hx of previous stroke or TIA</risk>
-    <risk name="Cog_intact" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Cognitively intact</risk>
-    <risk name="CAD" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Hx of angina or MI</risk>
-    <risk name="DM2" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Diabetes</risk>
-    <risk name="HTN" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Hypertension</risk>
-    <risk name="OA" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Osteoarthritis</risk>
-    <risk name="94" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         CHD</risk>
-    <risk name="CHF" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         CHF</risk>
-    <risk name="COPD" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         COPD</risk>
-    <risk name="Dementia" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Dementia</risk>
-    <risk name="UI" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Urinary Incontinence</risk>
-    <risk name="Fall" href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
-         Risk of Fall</risk>
-  </section>
+	<section>
+		<section_title>Risk Factors (check if present)</section_title>
+		<risk name="PVD"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Peripheral vascular disease</risk>
+		<risk name="TIA"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Hx of previous stroke or TIA</risk>
+		<risk name="Cog_intact"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Cognitively intact</risk>
+		<risk name="CAD"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Hx of angina or MI</risk>
+		<risk name="DM2"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Diabetes</risk>
+		<risk name="HTN"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Hypertension</risk>
+		<risk name="OA"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Osteoarthritis</risk>
+		<risk name="94"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			CHD</risk>
+		<risk name="CHF"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			CHF</risk>
+		<risk name="COPD"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			COPD</risk>
+		<risk name="Dementia"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Dementia</risk>
+		<risk name="UI"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Urinary Incontinence</risk>
+		<risk name="Fall"
+			href="http://resource.oscarmcmaster.org/oscarResource/decision/annualreview/info.html">
+			Risk of Fall</risk>
+	</section>
 </riskFactors>

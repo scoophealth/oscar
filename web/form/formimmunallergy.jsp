@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
 	String formClass = "ImmunAllergy";
@@ -61,9 +62,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Immunizations/Allergies </title>
-    <link rel="stylesheet" type="text/css" href="arStyle.css" >
-    <html:base/>
+<title>Immunizations/Allergies</title>
+<link rel="stylesheet" type="text/css" href="arStyle.css">
+<html:base />
 </head>
 
 <script type="text/javascript" language="Javascript">
@@ -304,7 +305,8 @@ var maxYear=9900;
     }
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"
+	onLoad="setfocus()">
 <!--
 @oscar.formDB Table="formImmunAllergy" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -314,124 +316,141 @@ var maxYear=9900;
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
-<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> /-->
+	<!--input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
+	<input type="hidden" name="submit" value="exit" />
 
-<table class="Head" class="hidePrint">
-    <tr>
-        <td align="left">
-<%
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td align="left">
+			<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
+%> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
   }
-%>
-            <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:window.print();"/>
-        </td>
-    </tr>
-</table>
+%> <input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print" onclick="javascript:window.print();" /></td>
+		</tr>
+	</table>
 
-<table width="100%" border="0"  cellspacing="3" cellpadding="0">
-<tr>
-	<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
-	Immunizations / Allergies  (Patient: <%= props.getProperty("c_surname", "") %>, <%= props.getProperty("c_givenName", "") %> )</th>
-    <input type="hidden" name="c_surname" size="30" value="<%= props.getProperty("c_surname", "") %>" maxlength="30" @oscar.formDB /> 
-    <input type="hidden" name="c_givenName" size="30" value="<%= props.getProperty("c_givenName", "") %>" maxlength="30" @oscar.formDB /> 
-</tr>
-</table>
+	<table width="100%" border="0" cellspacing="3" cellpadding="0">
+		<tr>
+			<th><%=bView?"<font color='yellow'>VIEW PAGE: </font>" : ""%>
+			Immunizations / Allergies (Patient: <%= props.getProperty("c_surname", "") %>,
+			<%= props.getProperty("c_givenName", "") %> )</th>
+			<input type="hidden" name="c_surname" size="30"
+				value="<%= props.getProperty("c_surname", "") %>" maxlength="30"
+				@oscar.formDB />
+			<input type="hidden" name="c_givenName" size="30"
+				value="<%= props.getProperty("c_givenName", "") %>" maxlength="30"
+				@oscar.formDB />
+		</tr>
+	</table>
 
 
 
-<center>
+	<center>
 
 
-  <table width="80%" border="1"  cellspacing="0" cellpadding="0">
-    <tr>
-	  <td align="right" width="50%">*Date of Administration :</td>
-      <td>
-	  <input type="text" name="dateAdmin" size="10" maxlength="10" value="<%= props.getProperty("dateAdmin", "") %>" @oscar.formDB dbType="date"/> 
-      </td>
-	</tr><tr>
-	  <td align="right">Trade name :</td>
-      <td>
-	  <input type="text" name="tradeName" size="30" maxlength="50" value="<%= props.getProperty("tradeName", "") %>" @oscar.formDB /> 
-      </td>
-	</tr><tr>
-	  <td align="right">Manufacturer :</td>
-      <td>
-	  <input type="text" name="manufacturer" size="30" maxlength="50" value="<%= props.getProperty("manufacturer", "") %>" @oscar.formDB /> 
-      </td>
-	</tr><tr>
-	  <td align="right">Lot # :</td>
-      <td>
-	  <input type="text" name="lot" size="30" maxlength="50" value="<%= props.getProperty("lot", "") %>" @oscar.formDB /> 
-      </td>
-	</tr><tr>
-	  <td align="right">Exip. date :</td>
-      <td>
-	  <input type="text" name="expiDate" size="10" maxlength="10" value="<%= props.getProperty("expiDate", "") %>" @oscar.formDB dbType="date"/> 
-      </td>
-	</tr>
-  </table>
-	
-  <table width="80%" border="1"  cellspacing="0" cellpadding="2">
-	
-	<tr>
-	  <td align="right" valign="top" width="50%">Dose /administration : </td>
-	  <td>
-      <input type="checkbox" name="doseAdminSC" <%= props.getProperty("doseAdminSC", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      SC<br>
-      <input type="checkbox" name="doseAdminIM" <%= props.getProperty("doseAdminIM", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      IM<br>
-      <input type="checkbox" name="doseAdminml" <%= props.getProperty("doseAdminml", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      ml
-	  <input type="text" name="doseAdminTxtml" size="10" maxlength="10" value="<%= props.getProperty("doseAdminTxtml", "") %>" @oscar.formDB/> 
+	<table width="80%" border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<td align="right" width="50%">*Date of Administration :</td>
+			<td><input type="text" name="dateAdmin" size="10" maxlength="10"
+				value="<%= props.getProperty("dateAdmin", "") %>" @oscar.formDB
+				dbType="date" /></td>
+		</tr>
+		<tr>
+			<td align="right">Trade name :</td>
+			<td><input type="text" name="tradeName" size="30" maxlength="50"
+				value="<%= props.getProperty("tradeName", "") %>" @oscar.formDB />
+			</td>
+		</tr>
+		<tr>
+			<td align="right">Manufacturer :</td>
+			<td><input type="text" name="manufacturer" size="30"
+				maxlength="50" value="<%= props.getProperty("manufacturer", "") %>"
+				@oscar.formDB /></td>
+		</tr>
+		<tr>
+			<td align="right">Lot # :</td>
+			<td><input type="text" name="lot" size="30" maxlength="50"
+				value="<%= props.getProperty("lot", "") %>" @oscar.formDB /></td>
+		</tr>
+		<tr>
+			<td align="right">Exip. date :</td>
+			<td><input type="text" name="expiDate" size="10" maxlength="10"
+				value="<%= props.getProperty("expiDate", "") %>" @oscar.formDB
+				dbType="date" /></td>
+		</tr>
+	</table>
 
-      </td>
-	</tr><tr>
-	  <td align="right" valign="top">Location : </td>
-	  <td>
-      <input type="checkbox" name="locLtDel" <%= props.getProperty("locLtDel", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      Lt. deltoid<br>
-      <input type="checkbox" name="locRtDel" <%= props.getProperty("locRtDel", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      Rt. deltoid<br>
-      <input type="checkbox" name="locLtDelOUQ" <%= props.getProperty("locLtDelOUQ", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      Lt gluteal (OUQ)<br>
-      <input type="checkbox" name="locRtDelOUQ" <%= props.getProperty("locRtDelOUQ", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      Rt.gluteal  (OUQ)<br>
-      <input type="checkbox" name="locOther" <%= props.getProperty("locOther", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      other ( anterolateral thigh)
-      </td>
-	</tr><tr>
-	  <td align="right" valign="top">Instructions : </td>
-	  <td>
-      <input type="checkbox" name="InstrStay20" <%= props.getProperty("InstrStay20", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      stay in waiting area for 20 minutes<br>
-      <input type="checkbox" name="InstrExpectLoc" <%= props.getProperty("InstrExpectLoc", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      expect local tenderness/small lump <br>
-      <input type="checkbox" name="InstrFU" <%= props.getProperty("InstrFU", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      f/u if rash, fever, Sz, leth or new Sxs
-      </td>
-	</tr><tr>
-	  <td align="right" valign="top">At discharge : </td>
-	  <td>
-      <input type="checkbox" name="disChNoComp" <%= props.getProperty("disChNoComp", "") %> @oscar.formDB  dbType="tinyint(1)"  />
-      no complications
-      </td>
-	</tr>
-  </table>
-  
-  * Date format: yyyy/mm/dd
-</center>
+	<table width="80%" border="1" cellspacing="0" cellpadding="2">
+
+		<tr>
+			<td align="right" valign="top" width="50%">Dose /administration
+			:</td>
+			<td><input type="checkbox" name="doseAdminSC"
+				<%= props.getProperty("doseAdminSC", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> SC<br>
+			<input type="checkbox" name="doseAdminIM"
+				<%= props.getProperty("doseAdminIM", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> IM<br>
+			<input type="checkbox" name="doseAdminml"
+				<%= props.getProperty("doseAdminml", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> ml <input type="text" name="doseAdminTxtml"
+				size="10" maxlength="10"
+				value="<%= props.getProperty("doseAdminTxtml", "") %>" @oscar.formDB />
+
+			</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">Location :</td>
+			<td><input type="checkbox" name="locLtDel"
+				<%= props.getProperty("locLtDel", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> Lt. deltoid<br>
+			<input type="checkbox" name="locRtDel"
+				<%= props.getProperty("locRtDel", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> Rt. deltoid<br>
+			<input type="checkbox" name="locLtDelOUQ"
+				<%= props.getProperty("locLtDelOUQ", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> Lt gluteal (OUQ)<br>
+			<input type="checkbox" name="locRtDelOUQ"
+				<%= props.getProperty("locRtDelOUQ", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> Rt.gluteal (OUQ)<br>
+			<input type="checkbox" name="locOther"
+				<%= props.getProperty("locOther", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> other ( anterolateral thigh)</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">Instructions :</td>
+			<td><input type="checkbox" name="InstrStay20"
+				<%= props.getProperty("InstrStay20", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> stay in waiting area for 20 minutes<br>
+			<input type="checkbox" name="InstrExpectLoc"
+				<%= props.getProperty("InstrExpectLoc", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> expect local tenderness/small lump <br>
+			<input type="checkbox" name="InstrFU"
+				<%= props.getProperty("InstrFU", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> f/u if rash, fever, Sz, leth or new Sxs</td>
+		</tr>
+		<tr>
+			<td align="right" valign="top">At discharge :</td>
+			<td><input type="checkbox" name="disChNoComp"
+				<%= props.getProperty("disChNoComp", "") %> @oscar.formDB
+				dbType="tinyint(1)" /> no complications</td>
+		</tr>
+	</table>
+
+	* Date format: yyyy/mm/dd</center>
 
 </html:form>
 </body>

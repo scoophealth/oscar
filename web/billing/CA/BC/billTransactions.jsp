@@ -14,49 +14,44 @@
     billingTransactions = dao.getBillHistory(billMasterNo);
   }
 %>
-<link href="../../../share/css/oscar.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-.ColHead{
-	font-weight:bold;
-	text-decoration: underline;
-	text-align: center;
-}
-</style>
+<link href="../../../share/css/oscar.css" rel="stylesheet"
+	type="text/css" />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <table width="100%">
-  <tr class="SectionHead">
-    <td colspan="8" class="bCellData">Bill Transaction History</td>
-  </tr>
-  <tr  class="ColHead">
-    <td>STAT</td>
-    <td>SEQ # </td>
-    <td>INS</td>
-    <td>PRACT</td>
-    <td>BILL AMT</td>
-    <td>TYPE</td>
-    <td>AMT ADJ.</td>
-    <td>UPDATED</td>
-  </tr>
-<%
+	<tr class="SectionHead">
+		<td colspan="8" class="bCellData">Bill Transaction History</td>
+	</tr>
+	<tr class="ColHead">
+		<td>STAT</td>
+		<td>SEQ #</td>
+		<td>INS</td>
+		<td>PRACT</td>
+		<td>BILL AMT</td>
+		<td>TYPE</td>
+		<td>AMT ADJ.</td>
+		<td>UPDATED</td>
+	</tr>
+	<%
   for (Iterator iter = billingTransactions.iterator(); iter.hasNext(); ) {
     oscar.entities.BillHistory item = (oscar.entities.BillHistory) iter.next();
     oscar.entities.Provider provider= rec.getProvider(item.getPractitioner_no(), 0);
 %>
-  <tr align="center">
-    <td><%=rec.getStatusDesc(item.getBillingStatus())%>    </td>
-    <td><%=item.getSeqNum()%></td>
-    <td><%=item.getBillingtype()%></td>
-    <td><%=provider.getInitials()%></td>
-    <%
+	<tr align="center">
+		<td><%=rec.getStatusDesc(item.getBillingStatus())%></td>
+		<td><%=item.getSeqNum()%></td>
+		<td><%=item.getBillingtype()%></td>
+		<td><%=provider.getInitials()%></td>
+		<%
     //for display purposes need to negate value so that
     //a postive internal adjustment appears as a "debit"
     if("10".equals(item.getPaymentTypeId())){
       item.setAmountReceived(item.getAmountReceived()*-1);
     }
     %>
-    <td><%=nf.format(item.getAmount())%></td>
-    <td><%=item.getPaymentTypeDesc()%></td>
-    <td><%=nf.format(item.getAmountReceived())%></td>
-    <td><%=item.getArchiveDate()%>    </td>
-  </tr>
-<%}%>
+		<td><%=nf.format(item.getAmount())%></td>
+		<td><%=item.getPaymentTypeDesc()%></td>
+		<td><%=nf.format(item.getAmountReceived())%></td>
+		<td><%=item.getArchiveDate()%></td>
+	</tr>
+	<%}%>
 </table>

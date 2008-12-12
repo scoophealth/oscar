@@ -30,7 +30,7 @@
 
 <html>
 <head>
-<title> PRINT SETTING </title>
+<title>PRINT SETTING</title>
 <script language="JavaScript">
 <!--		
 function setfocus() {
@@ -46,22 +46,19 @@ function onSetting() {
 //-->
 </SCRIPT>
 </head>
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" bgcolor="gold">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd"><th align=CENTER  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
-	PRINT SETTING</font></th>
+<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0"
+	bgcolor="gold">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF"> PRINT SETTING</font></th>
 </table>
 <center>
 <form name="printsetting" method="post" action="">
-  <p>X :
-      <input type="text" name="x" size="10" value="0">
-    <br>
-    Y : 
-      <input type="text" name="y" size="10" value="0">
-  </p>
-  <p>
-    <input type="button" name="Submit" value=" Exit " onClick="onSetting()">
-  </p>
+<p>X : <input type="text" name="x" size="10" value="0"> <br>
+Y : <input type="text" name="y" size="10" value="0"></p>
+<p><input type="button" name="Submit" value=" Exit "
+	onClick="onSetting()"></p>
 </form>
 </center>
 

@@ -24,9 +24,10 @@
  */
 -->
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 <%
   //information for connecting to databases
   String [] dbParams=new String[] { oscarVariables.getProperty("db_driver"),oscarVariables.getProperty("db_uri")+oscarVariables.getProperty("db_name")+"?user="+oscarVariables.getProperty("db_username")+"&password="+oscarVariables.getProperty("db_password"),oscarVariables.getProperty("db_username"),oscarVariables.getProperty("db_password")};
   //    "org.gjt.mm.mysql.Driver",    "jdbc:mysql:///oscar?user=root&password=liyi", "root",    "liyi"  };
-%> 
+%>

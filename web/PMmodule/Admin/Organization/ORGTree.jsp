@@ -5,10 +5,9 @@
 <%@page import="com.quatro.common.KeyConstants;"%>
 
 
-<script type="text/javascript" src='<c:out value="${ctx}"/>/js/menuExpandable.js'></script>
-<style type="text/css">
-    @import "<html:rewrite page="/css/menuExpandable.css" />";
-</style>
+<script type="text/javascript"
+	src='<c:out value="${ctx}"/>/js/menuExpandable.js'></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
 
@@ -35,8 +34,8 @@
 	<tr>
 		<td height="100%">
 		<div
-			style="color: Black; background-color: White; border-width: 1px; border-style: Ridge;
-                    height: 100%; width: 100%; overflow: auto;" id="scrollBar">
+			style="color: Black; background-color: White; border-width: 1px; border-style: Ridge; height: 100%; width: 100%; overflow: auto;"
+			id="scrollBar">
 
 		<table width="100%" cellpadding="0" cellspacing="0">
 			<tr>
@@ -49,16 +48,15 @@
 
 		<table width="100%" border="0">
 			<tr>
-				<td colspan="2">
-					<security:oscarSec objectName="<%=KeyConstants.FUN_ADMIN_ORG %>" rights="<%=KeyConstants.ACCESS_READ%>">
-						<menu:useMenuDisplayer name="ListMenu"
-							repository="tree">
-							<c:forEach var="menu" items="${tree.topMenus}">
-								<menu-el:displayMenu name="${menu.name}" />
-							</c:forEach>
-						</menu:useMenuDisplayer>
-					</security:oscarSec>
-				</td>
+				<td colspan="2"><security:oscarSec
+					objectName="<%=KeyConstants.FUN_ADMIN_ORG %>"
+					rights="<%=KeyConstants.ACCESS_READ%>">
+					<menu:useMenuDisplayer name="ListMenu" repository="tree">
+						<c:forEach var="menu" items="${tree.topMenus}">
+							<menu-el:displayMenu name="${menu.name}" />
+						</c:forEach>
+					</menu:useMenuDisplayer>
+				</security:oscarSec></td>
 			</tr>
 		</table>
 		</div>

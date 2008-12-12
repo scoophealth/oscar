@@ -55,24 +55,28 @@ function add_status(form) {
 </table>
 </div>
 <!--  show current staff -->
-<display:table class="simple" cellspacing="2" cellpadding="3" id="status" name="client_statuses" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="status" name="client_statuses" export="false" pagesize="0"
+	requestURI="/PMmodule/ProgramManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="No statuses are currently defined for this program." />
+	<display:setProperty name="basic.msg.empty_list"
+		value="No statuses are currently defined for this program." />
 	<display:column sortable="false" title="">
-		<a onclick="deleteStatus('<c:out value="${status.id}"/>');" href="javascript:void(0);"> Delete </a>
+		<a onclick="deleteStatus('<c:out value="${status.id}"/>');"
+			href="javascript:void(0);"> Delete </a>
 	</display:column>
-	<display:column property="name" sortable="true" title="Name" />	
+	<display:column property="name" sortable="true" title="Name" />
 </display:table>
 <br />
 <html:hidden property="client_status.id" />
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Name:</td>
-		<td><html:text property="client_status.name" size="50" maxlength="255"/></td>
+		<td><html:text property="client_status.name" size="50"
+			maxlength="255" /></td>
 	</tr>
 	<tr>
-		<td colspan="2">
-			<input type="button" value="Save" onclick="add_status(this.form)" /> <html:cancel />
-		</td>
+		<td colspan="2"><input type="button" value="Save"
+			onclick="add_status(this.form)" /> <html:cancel /></td>
 	</tr>
 </table>

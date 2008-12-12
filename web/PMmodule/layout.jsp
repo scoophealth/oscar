@@ -13,64 +13,69 @@
 	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
 -->
 <%@ include file="/taglibs.jsp"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
-	<head>
-		<title>Program Management Module</title>
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/tigris.css" />' />
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/displaytag.css" />' />
-	    <link rel="stylesheet" type="text/css" href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
+<head>
+<title>Program Management Module</title>
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/tigris.css" />' />
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/displaytag.css" />' />
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
 
-		<!--   style type="text/css">
+<!--   style type="text/css">
 			@import "<html:rewrite page="/css/tigris.css" />";
 			@import "<html:rewrite page="/css/displaytag.css" />";
 			@import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
 		</style -->
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
-				
-		<script type="text/javascript">
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
+<script type="text/javascript"
+	src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
+
+<script type="text/javascript">
 			var djConfig = {
 				isDebug: false,
 				parseWidgets: false,
 				searchIds: ["addPopupTimePicker"]
 			};
 		</script>
-	    
-		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />">
+
+<script type="text/javascript"
+	src="<html:rewrite page="/dojoAjax/dojo.js" />">
 		</script>
-		
-		<script type="text/javascript" language="JavaScript">
+
+<script type="text/javascript" language="JavaScript">
             dojo.require("dojo.date.format");
 			dojo.require("dojo.widget.*");
 			dojo.require("dojo.validate.*");
 		</script>
-		
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
-		
-		<html:base />
-	</head>
-	<body>
-		<div class="composite">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
-				<tr>
-				<td colspan="2" width="100%">
-					<tiles:insert name="Header.jsp">
-					</tiles:insert>
-				</td></tr>
-				<tr valign="top">
-					<td id="leftcol" width="20%">
-						<tiles:insert attribute="navigation" />
-					</td>
-					<td width="80%">
-						<div class="body">
-							<tiles:insert attribute="body" />
-						</div>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</body>
+
+<script type="text/javascript"
+	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+
+<html:base />
+</head>
+<body>
+<div class="composite">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td colspan="2" width="100%"><tiles:insert name="Header.jsp">
+		</tiles:insert></td>
+	</tr>
+	<tr valign="top">
+		<td id="leftcol" width="20%"><tiles:insert attribute="navigation" />
+		</td>
+		<td width="80%">
+		<div class="body"><tiles:insert attribute="body" /></div>
+		</td>
+	</tr>
+</table>
+</div>
+</body>
 </html:html>

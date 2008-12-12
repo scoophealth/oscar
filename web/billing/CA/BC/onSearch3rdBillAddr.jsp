@@ -129,25 +129,36 @@ function fillForm(attention,company_name,address,city,province,telephone,fax,pos
     }
      </script>
 </head>
-<body bgcolor="white" bgproperties="fixed" onload="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellpadding="1" cellspacing="0" width="100%" class="myDarkGreen">
-	<form method="post" name="titlesearch" action="onSearch3rdBillAddr.jsp" onSubmit="return check();">
+<body bgcolor="white" bgproperties="fixed" onload="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellpadding="1" cellspacing="0" width="100%"
+	class="myDarkGreen">
+	<form method="post" name="titlesearch" action="onSearch3rdBillAddr.jsp"
+		onSubmit="return check();">
 	<tr>
-		<td class="searchTitle" colspan="4"><font color="white">Search Address</font></td>
+		<td class="searchTitle" colspan="4"><font color="white">Search
+		Address</font></td>
 	</tr>
 	<tr class="myYellow">
-		<td class="blueText" width="10%" nowrap><input type="radio" name="search_mode" value="search_name" checked> Name</td>
-		<td class="blueText" nowrap><input type="radio" name="search_mode" value="postcode"> Postcode</td>
-		<td class="blueText" nowrap><input type="radio" name="search_mode" value="telephone"> Tel.</td>
-		<td valign="middle" rowspan="2" align="left"><input type="text" name="keyword" value="" size="17" maxlength="100"> <input
-			type="hidden" name="orderby" value="company_name"> <input type="hidden" name="limit1" value="0"> <input
-			type="hidden" name="limit2" value="20"> <input type="hidden" name="submit" value='Search'> <input type="submit"
-			value='Search'>
+		<td class="blueText" width="10%" nowrap><input type="radio"
+			name="search_mode" value="search_name" checked> Name</td>
+		<td class="blueText" nowrap><input type="radio"
+			name="search_mode" value="postcode"> Postcode</td>
+		<td class="blueText" nowrap><input type="radio"
+			name="search_mode" value="telephone"> Tel.</td>
+		<td valign="middle" rowspan="2" align="left"><input type="text"
+			name="keyword" value="" size="17" maxlength="100"> <input
+			type="hidden" name="orderby" value="company_name"> <input
+			type="hidden" name="limit1" value="0"> <input type="hidden"
+			name="limit2" value="20"> <input type="hidden" name="submit"
+			value='Search'> <input type="submit" value='Search'>
 		</td>
 	</tr>
 </table>
-	<input type='hidden' name='param' value="<%=StringEscapeUtils.escapeHtml(param)%>">
-	<input type='hidden' name='param2' value="<%=StringEscapeUtils.escapeHtml(param2)%>">
+<input type='hidden' name='param'
+	value="<%=StringEscapeUtils.escapeHtml(param)%>">
+<input type='hidden' name='param2'
+	value="<%=StringEscapeUtils.escapeHtml(param2)%>">
 <table width="95%" border="0">
 	<tr>
 		<td align="left">Results based on keyword(s): <%=keyword == null ? "" : keyword%></td>
@@ -155,7 +166,8 @@ function fillForm(attention,company_name,address,city,province,telephone,fax,pos
 	</form>
 </table>
 <center>
-<table width="100%" border="0" cellpadding="0" cellspacing="2"  class="myYellow">
+<table width="100%" border="0" cellpadding="0" cellspacing="2"
+	class="myYellow">
 	<tr class="title">
 		<th width="20%">Attention</b></th>
 		<th width="20%">Company name</b></th>
@@ -182,9 +194,9 @@ function fillForm(attention,company_name,address,city,province,telephone,fax,pos
 					%>
 	<tr align="center" bgcolor="<%=bgColor%>" align="center"
 		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
-		onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
-                onClick="fillForm('<%= str(prop.getProperty("attention", ""))%>','<%= str(prop.getProperty("company_name", ""))%>','<%= str(prop.getProperty("address", ""))%>','<%=  str(prop.getProperty("city", ""))%>','<%=  str(prop.getProperty("province", ""))%>','<%=  str(prop.getProperty("telephone", ""))%>','<%=  str(prop.getProperty("fax", ""))%>','<%=  str(prop.getProperty("postcode", ""))%>');">
-                <td><%=prop.getProperty("attention", "")%></td>
+		onMouseout="this.style.backgroundColor='<%=bgColor%>';"
+		onClick="fillForm('<%= str(prop.getProperty("attention", ""))%>','<%= str(prop.getProperty("company_name", ""))%>','<%= str(prop.getProperty("address", ""))%>','<%=  str(prop.getProperty("city", ""))%>','<%=  str(prop.getProperty("province", ""))%>','<%=  str(prop.getProperty("telephone", ""))%>','<%=  str(prop.getProperty("fax", ""))%>','<%=  str(prop.getProperty("postcode", ""))%>');">
+		<td><%=prop.getProperty("attention", "")%></td>
 		<td><%=WordUtils.capitalize(prop.getProperty("company_name", "").toLowerCase())%></td>
 		<td><%=WordUtils.capitalize(prop.getProperty("address", "").toLowerCase())%></td>
 		<td><%=prop.getProperty("city", "")%></td>
@@ -218,15 +230,19 @@ function next() {
 //-->
 </SCRIPT>
 
-<form method="post" name="nextform" action="onSearch3rdBillAddr.jsp"><%if (nLastPage >= 0) {
+<form method="post" name="nextform" action="onSearch3rdBillAddr.jsp">
+<%if (nLastPage >= 0) {
 
 				%> <input type="submit" class="mbttn" name="submit"
-	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>" onClick="last()"> <%}
+	value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"
+	onClick="last()"> <%}
 				if (nItems == Integer.parseInt(strLimit2)) {
 
 				%> <input type="submit" class="mbttn" name="submit"
-	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>" onClick="next()"> <%}
-%></form>
+	value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"
+	onClick="next()"> <%}
+%>
+</form>
 <br>
 <a href="onAddEdit3rdAddr.jsp">Add/Edit Address</a></center>
 </body>

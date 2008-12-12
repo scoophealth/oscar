@@ -22,8 +22,8 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ page errorPage="/casemgmt/error.jsp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ page errorPage="/casemgmt/error.jsp"%>
 <%@ page language="java"%>
 
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
@@ -31,231 +31,79 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
-<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
-<nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
+<nested:define id="rowOneSize" name="caseManagementViewForm"
+	property="ectWin.rowOneSize" />
+<nested:define id="rowTwoSize" name="caseManagementViewForm"
+	property="ectWin.rowTwoSize" />
 <html:html locale="true">
-  <head>
-      <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-      <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-      <META HTTP-EQUIV="EXPIRES" CONTENT="Wed, 26 Feb 2004 08:21:57 GMT">      
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="EXPIRES" CONTENT="Wed, 26 Feb 2004 08:21:57 GMT">
 
-  	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
-	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
-        <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
-    <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print">
-    <script src="<c:out value="${ctx}"/>/share/javascript/prototype.js" type="text/javascript"></script>
-    <script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js" type="text/javascript"></script>    
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css"
+	type="text/css">
+<link rel="stylesheet"
+	href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css"
+	type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="<c:out value="${ctx}"/>/css/print.css" media="print">
+<script src="<c:out value="${ctx}"/>/share/javascript/prototype.js"
+	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/scriptaculous.js"
+	type="text/javascript"></script>
 
-    <%-- for popup menu of forms --%>
-    <script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
-    <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js" type="text/javascript"></script>
+<%-- for popup menu of forms --%>
+<script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js"
+	type="text/javascript"></script>
+<script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
+	type="text/javascript"></script>
 
-    <!-- library for rounded elements -->
-    <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
-    <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
-    
-      <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
+<!-- library for rounded elements -->
+<link rel="stylesheet" type="text/css"
+	href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
 
-  <!-- main calendar program -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="<c:out value="${ctx}"/>/share/calendar/calendar.css"
+	title="win2k-cold-1">
 
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+<!-- main calendar program -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/calendar.js"></script>
 
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
-  
-  <!-- js implementation of markdown -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>
-  
-  <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
-  
-  <!-- scriptaculous based select box -->
-  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
-    
-    <style type="text/css">
-        
-        /*Note format */
-        div.newNote {
-            color: #000000;         
-            font-family:arial,sans-serif;
-            font-size:0.8em;
-            margin: 5px 0px 5px 5px;
-            float:left;  
-            width:98%;            
-        }
-        
-        div.newNote pre {
-            color: #000000;      
-            font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
-            clear:left;            
-        }
-        
-        div.note {
-            color: #000000;         
-            font-family:arial,sans-serif;
-            margin: 5px 0px 5px 5px;
-            float:left;  
-            width:98%;
-        }
-        
-        div.note pre {
-            color: #000000;      
-            font-family:arial,sans-serif;
-            margin: 0px 3px 0px 3px;          
-            width:100%; 
-            clear:left;
-        }
-       .sig {
-            background-color:#CCCCFF;
-            color: #000000;  
-            width:100%;
-            font-size:9px;
-        }                
-        
-        .txtArea {
-            font-family:arial,sans-serif; 
-            font-size:1.0em;             
-            width:99%; 
-            rows:10; 
-            overflow:hidden; 
-            border:none; 
-            font-family:arial,sans-serif;             
-            margin: 0px 3px 0px 3px;
-        }
-      
-        p.passwd {
-            margin:0px 3px; 0px 3px;        
-        }
-        
-        /* span formatting for measurements div found in ajax call */
-        span.measureCol1 {            
-            float: left;
-            width: 50px;            
-        }
-        
-        span.measureCol2 {
-            float: left;
-            width: 55px;
-        }
-        
-        span.measureCol3 {
-            float: left;                        
-        }
-        /* formatting for navbar */
-        .links {
-            color: blue;
-            text-decoration: underline;
-            font-size:8px;
-        }
-        
-        .linkhover { 
-            color: black;
-            text-decoration: underline;
-        }
-        
-    /* template styles*/
-          
-          .enTemplate_name_auto_complete {
-            width: 350px;
-            background: #fff;
-            font-size: 9px;
-            text-align:left;
-          }
-          .enTemplate_name_auto_complete ul {
-            border:1px solid #888;
-            margin:0;
-            padding:0;
-            width:100%;
-            list-style-type:square;
-            list-style-position:inside;
-          }
-          .enTemplate_name_auto_complete ul li {
-            margin:0;
-            padding:3px;            
-          }
-          .enTemplate_name_auto_complete ul li.selected { 
-            background-color: #ffb; 
-            text-decoration: underline;
-          }
-          .enTemplate_name_auto_complete ul strong.highlight { 
-            color: #800; 
-            margin:0;
-            padding:0;
-          }
+<script type="text/javascript"
+	src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
 
+<!-- js implementation of markdown -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>
 
-        /* CPP textareas */
-        .rowOne {
-            height: <nested:write name="rowOneSize"/>px;
-            width: 97%;
-            overflow:auto;
-        }
-        
-        .rowTwo {
-            height: <nested:write name="rowTwoSize"/>px;
-            width:97%;
-            margin-left:4px;            
-            overflow:auto;
-        }
-        
-        /* Encounter type select box */
-        div.autocomplete {
-          position:absolute;
-          width:400px;
-          background-color:white;
-          border:1px solid #ccc;
-          margin:0px;
-          padding:0px;
-          font-size:9px;
-          text-align:left;
-          max-height:200px;
-          overflow:auto;
-        }
-        div.autocomplete ul {
-          list-style-type:none;
-          margin:0px;
-          padding:0px;
-        }
-        div.autocomplete ul li.selected { 
-          background-color: #EAF2FB;
-        }
-        div.autocomplete ul li {
-          list-style-type:none;
-          display:block;
-          margin:0;
-          padding:2px;
-          cursor:pointer;
-        }
-        
-        .encTypeCombo /* look&feel of scriptaculous select box*/
-        {
-          margin: 0px;/* 5px 10px 0px;*/
-          font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
-          font-size:9px;
-          width: 200px;          
-          text-align:left; 
-          vertical-align: middle;
-          background: #FFFFFF url('<c:out value="${ctx}"/>/images/downarrow_inv.gif') no-repeat right;
-          height:18px;
-          cursor: pointer;
-          border:1px solid #ccc;
-          color: #000000;
-          
-        }
+<!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
 
-    </style>
+<!-- scriptaculous based select box -->
+<script type="text/javascript"
+	src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
 
-    <html:base />
-    <title>Case Management</title>
-    <meta http-equiv="Cache-Control" content="no-cache">
-    <script type="text/javascript">
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<html:base />
+<title>Case Management</title>
+<meta http-equiv="Cache-Control" content="no-cache">
+<script type="text/javascript">
         var itemColours = new Object();
         var autoCompleted = new Object();
         var autoCompList = new Array();
@@ -664,20 +512,19 @@ function navBarLoader() {
 }
 
 </script>
-  </head> 
-  <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
-      <div id="main">
-          <div id="header" style="background-color:#CCCCFF;">
-              <tiles:insert attribute="header" />
-          </div>
-          
-          <div id="leftNavBarColumn" style="position:absolute; z-index:10; top:30px; left:10px; width:20%; background-color:transparent;">
-              <tiles:insert attribute="navigation" />
-          </div>
-          
-          <div id="content" style="float:left; background-color:#CCCCFF;">
-              <tiles:insert attribute="body" />
-          </div>
-      </div>
-  </body>
+</head>
+<body id="body" style="margin: 0px;" onload="init()"
+	onunload="onClosing()">
+<div id="main">
+<div id="header" style="background-color: #CCCCFF;"><tiles:insert
+	attribute="header" /></div>
+
+<div id="leftNavBarColumn"
+	style="position: absolute; z-index: 10; top: 30px; left: 10px; width: 20%; background-color: transparent;">
+<tiles:insert attribute="navigation" /></div>
+
+<div id="content" style="float: left; background-color: #CCCCFF;">
+<tiles:insert attribute="body" /></div>
+</div>
+</body>
 </html:html>

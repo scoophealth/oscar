@@ -1,18 +1,19 @@
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 <%@ page import="oscar.oscarRx.data.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
@@ -61,11 +62,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 <html:base />
 
-<style type="text/css">
-@media print{
-span { display:none; }
-}
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 </head>
 
@@ -77,54 +74,56 @@ span { display:none; }
             showall = true;
 %>
 
-<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient"/>
+<bean:define id="patient"
+	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">    
-   <tr>    
-      <td width="100%"  height="100%" valign="top"><!--Column Two Row Two-->
-         <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">            
-<!----Start new rows here-->            
-            <tr>
- 		<td align="right" >
-                    <span><input type="button" onclick="window.print();" value="Print" class="printCell"></span>
-               </td>
-            </tr>
-            <tr>
- 	       <td>
-                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section1Title"/></div>
-               </td>
-            </tr>
-            <tr>
-                            <td><b><bean:message key="SearchDrug.nameText"/></b>
-                                <jsp:getProperty name="patient" property="surname"/>                   
-                            
-                            </td>
-            </tr>
-            <tr>
-                            <td>
-                                <b><bean:message key="SearchDrug.ageText"/></b>
-                                <jsp:getProperty name="patient" property="age"/>
-                            </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title"/></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table>
-                       <tr>
-                       <td width="100%">
-                            <!--<div class="Step1Text" style="width:100%">-->
-                            <table width="100%" cellpadding="3">
-                                <tr>
-                                    <th align=left width=20%><b>Rx Date</b></th>
-                                    <th align=left width=100%><b>Prescription</b></th>                                    
-                                </tr>
+<table border="0" cellpadding="0" cellspacing="0"
+	style="border-collapse: collapse" bordercolor="#111111" width="100%"
+	id="AutoNumber1" height="100%">
+	<tr>
+		<td width="100%" height="100%" valign="top"><!--Column Two Row Two-->
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
+			<!----Start new rows here-->
+			<tr>
+				<td align="right"><span><input type="button"
+					onclick="window.print();" value="Print" class="printCell"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="SearchDrug.section1Title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty
+					name="patient" property="surname" /></td>
+			</tr>
+			<tr>
+				<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty
+					name="patient" property="age" /></td>
+			</tr>
+			<tr>
+				<td>
+				<div class="DivContentSectionHead"><bean:message
+					key="SearchDrug.section2Title" /></div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<table>
+					<tr>
+						<td width="100%"><!--<div class="Step1Text" style="width:100%">-->
+						<table width="100%" cellpadding="3">
+							<tr>
+								<th align=left width=20%><b>Rx Date</b></th>
+								<th align=left width=100%><b>Prescription</b></th>
+							</tr>
 
-                                <%
+							<%
                                 oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
 
                                 if(showall)
@@ -143,73 +142,62 @@ span { display:none; }
                                         styleColor="style=\"text-decoration: line-through;\"";
 				                        }
                                     %>
-                                <tr>
-                                   <td width=20% valign="top">
-                                      <a <%= styleColor%>
-                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+							<tr>
+								<td width=20% valign="top"><a <%= styleColor%>
+									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                <%= drug.getRxDate() %>
-                                      </a>
-                                   </td>
-                                   <td width=100%>
-                                      <a <%= styleColor%> 
-                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+								<%= drug.getRxDate() %> </a></td>
+								<td width=100%><a <%= styleColor%>
+									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-                                                <%= drug.getFullOutLine().replaceAll(";"," ") %>
-                                      </a>
-                                   </td>                                        
-                                </tr>
-                                    <%
+								<%= drug.getFullOutLine().replaceAll(";"," ") %> </a></td>
+							</tr>
+							<%
                                 }
                                 %>
-                            </table>
+						</table>
 
-                            </div>
-                            <div style="margin-top:10px; margin-left:20px; width:100%">
-                            <table width="100%" cellspacing=0 cellpadding=0>
-                                <tr>
-                                    <td align=left>
-                                        <% if(showall) { %>
-                                            <a href="PrintDrugProfile.jsp">Show Current</a>
-                                        <% } else { %>
-                                            <a href="PrintDrugProfile.jsp?show=all">Show All</a>
-                                        <% } %>
-                                    </td>
-                                    
-                                </tr>
-                            </table>
-                            <!--</div>-->
+						</div>
+						<div style="margin-top: 10px; margin-left: 20px; width: 100%">
+						<table width="100%" cellspacing=0 cellpadding=0>
+							<tr>
+								<td align=left>
+								<% if(showall) { %> <a href="PrintDrugProfile.jsp">Show
+								Current</a> <% } else { %> <a href="PrintDrugProfile.jsp?show=all">Show
+								All</a> <% } %>
+								</td>
 
-                            
-                        </td>
-                    </tr>
-                    </table>
-                </td>
-            </tr>
-                
-
-            
+							</tr>
+						</table>
+						<!--</div>-->
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
 
 
-                        <!----End new rows here-->
-                <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
 
-    
 
-    
+
+			<!----End new rows here-->
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+
+
+
+
 
 </table>
 
 
-                                                         
-                                                                
-                                                    
+
+
+
 </body>
 </html:html>
 

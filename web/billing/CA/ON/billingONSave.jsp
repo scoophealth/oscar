@@ -19,11 +19,13 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page errorPage="errorpage.jsp" import="java.util.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
+<%@ page
+	import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 
 <%//
 
@@ -37,7 +39,7 @@
 			String apptNo = request.getParameter("appointment_no");
 
 			if (request.getParameter("submit") != null && "Back to Edit".equals(request.getParameter("button"))) { %>
-			    <jsp:forward page="billingON.jsp" />
+<jsp:forward page="billingON.jsp" />
 <%			}
 
 			// save the billing if needed
@@ -65,21 +67,22 @@
 						bObj.updateApptStatus(apptNo, billStatus);
 					}
 				%>
-				<p>
-				<h1>Successful Addition of a billing Record.</h1>
-				<% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
-				    <script LANGUAGE="JavaScript">
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+<% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
+<script LANGUAGE="JavaScript">
 					self.opener.refresh();  
 					self.location.href="<%=request.getParameter("url_back")%>";
 				    </script>
-				<% }
+<% }
 				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option a");%>
-					<a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print invoice</a>
-				<% } %>
-				</p>
-				
-				<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option b");%>
-					<script LANGUAGE="JavaScript">
+<a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print
+invoice</a>
+<% } %>
+</p>
+
+<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { System.out.println("option b");%>
+<script LANGUAGE="JavaScript">
                                             
                                         <% 
                                             //GET WORKLOAD MANAGEMENT SCREEN IF THERE IS ANY
@@ -102,8 +105,8 @@
                                             self.opener.refresh();
                                         <% }%>
 					</script>
-				<% } else { %>
-					<script LANGUAGE="JavaScript">
+<% } else { %>
+<script LANGUAGE="JavaScript">
 						function popupPage(vheight,vwidth,varpage) {
 						  var page = "" + varpage;
 						  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
@@ -119,13 +122,13 @@
 						self.close();
 						self.opener.refresh();
 					</script>
-				<% } %>
-				<%} else {
+<% } %>
+<%} else {
 				%>
-				<p>
-				<h1>Sorry, billing has failed. Please do it again!</h1>
-				</p>
-				<%}
+<p>
+<h1>Sorry, billing has failed. Please do it again!</h1>
+</p>
+<%}
 			}
 			%>
 <p>

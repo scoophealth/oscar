@@ -22,10 +22,11 @@
     response.sendRedirect("../logout.jsp");
   }
 %>
-  <%@ page errorPage="../appointment/errorpage.jsp"import="java.util.*,
-                                                           java.sql.*" %>
-  <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page errorPage="../appointment/errorpage.jsp"
+	import="java.util.*,
+                                                           java.sql.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
   int referralNoLen = 6;
   String msg = "Type in a doctor's ref. # and search first to see if it is available.";
@@ -157,16 +158,14 @@ System.out.println(sql);
 	}
   }
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <html:html locale="true">
-    <head>
-      <title>
-        Add/Edit Service Code
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <script language="JavaScript">
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<html:html locale="true">
+<head>
+<title>Add/Edit Service Code</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<script language="JavaScript">
 
       <!--
 		function setfocus() {
@@ -235,154 +234,131 @@ System.out.println(sql);
 //-->
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        <tr>
-          <td align="left">
-            &nbsp;
-          </td>
-        </tr>
-      </table>
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td align="left">&nbsp;</td>
+	</tr>
+</table>
 
-      <center>
-      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
-        <tr BGCOLOR="#CCFFFF">
-          <th>
-            <%=msg%>
-          </th>
-        </tr>
-      </table>
-      </center>
-      <table width="100%" border="0" cellspacing="2" cellpadding="2">
-        <form method="post" name="baseurl" action="addEditRefDoc.jsp">
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Referral Doc. Code</b>
-            </td>
-            <td>
-              <input type="text" name="referral_no" value="<%=prop.getProperty("referral_no", "")%>" size='5' maxlength='6'>
-              (6 digits, e.g. 123456)
-              <input type="submit" name="submit" value="Search" onclick="javascript:return onSearch();">
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Last Name</b>
-            </td>
-            <td>
-              <input type="text" name="last_name" value="<%=prop.getProperty("last_name", "")%>" size='30' maxlength='30'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>First Name</b>
-            </td>
-            <td>
-              <input type="text" name="first_name" value="<%=prop.getProperty("first_name", "")%>" size='30' maxlength='30'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Specialty</b>
-            </td>
-            <td>
-              <input type="text" name="specialty" value="<%=prop.getProperty("specialty", "")%>" size='30' maxlength='30'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Address1</b>
-            </td>
-            <td>
-              <input type="text" name="address1" value="<%=prop.getProperty("address1", "")%>" size='50' maxlength='50'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Address2</b>
-            </td>
-            <td>
-              <input type="text" name="address2" value="<%=prop.getProperty("address2", "")%>" size='50' maxlength='50'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>City</b>
-            </td>
-            <td>
-              <input type="text" name="city" value="<%=prop.getProperty("city", "")%>" size='30' maxlength='30'>
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b>Province</b>
-            </td>
-            <td>
-              <% String region = prop.getProperty("province", "");
+<center>
+<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+	<tr BGCOLOR="#CCFFFF">
+		<th><%=msg%></th>
+	</tr>
+</table>
+</center>
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+	<form method="post" name="baseurl" action="addEditRefDoc.jsp">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Referral Doc. Code</b></td>
+		<td><input type="text" name="referral_no"
+			value="<%=prop.getProperty("referral_no", "")%>" size='5'
+			maxlength='6'> (6 digits, e.g. 123456) <input type="submit"
+			name="submit" value="Search" onclick="javascript:return onSearch();">
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><b>Last Name</b></td>
+		<td><input type="text" name="last_name"
+			value="<%=prop.getProperty("last_name", "")%>" size='30'
+			maxlength='30'></td>
+	</tr>
+	<tr>
+		<td align="right"><b>First Name</b></td>
+		<td><input type="text" name="first_name"
+			value="<%=prop.getProperty("first_name", "")%>" size='30'
+			maxlength='30'></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Specialty</b></td>
+		<td><input type="text" name="specialty"
+			value="<%=prop.getProperty("specialty", "")%>" size='30'
+			maxlength='30'></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Address1</b></td>
+		<td><input type="text" name="address1"
+			value="<%=prop.getProperty("address1", "")%>" size='50'
+			maxlength='50'></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Address2</b></td>
+		<td><input type="text" name="address2"
+			value="<%=prop.getProperty("address2", "")%>" size='50'
+			maxlength='50'></td>
+	</tr>
+	<tr>
+		<td align="right"><b>City</b></td>
+		<td><input type="text" name="city"
+			value="<%=prop.getProperty("city", "")%>" size='30' maxlength='30'>
+		</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td align="right"><b>Province</b></td>
+		<td>
+		<% String region = prop.getProperty("province", "");
               	 region = "".equals(region) ? "ON" : region;
-              %>
-            <select name="province">
-              <option value="AB"<%=region.equals("AB")?" selected":""%>>AB-Alberta</option>
-              <option value="BC"<%=region.equals("BC")?" selected":""%>>BC-British Columbia</option>
-              <option value="MB"<%=region.equals("MB")?" selected":""%>>MB-Manitoba</option>
-              <option value="NB"<%=region.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-              <option value="NL"<%=region.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-              <option value="NT"<%=region.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
-              <option value="NS"<%=region.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-              <option value="NU"<%=region.equals("NU")?" selected":""%>>NU-Nunavut</option>
-              <option value="ON"<%=region.equals("ON")?" selected":""%>>ON-Ontario</option>
-              <option value="PE"<%=region.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-              <option value="QC"<%=region.equals("QC")?" selected":""%>>QC-Quebec</option>
-              <option value="SK"<%=region.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-              <option value="YT"<%=region.equals("YT")?" selected":""%>>YT-Yukon</option>
-              <option value="US"<%=region.equals("US")?" selected":""%>>US resident</option>
-            </select>
-              Country
-              <input type="text" name="country" value="<%=prop.getProperty("country", "CA")%>" size='2' maxlength='2'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>Postal</b>
-            </td>
-            <td>
-              <input type="text" name="postal" value="<%=prop.getProperty("postal", "")%>" size='30' maxlength='30'>
-            </td>
-          </tr>
-          <tr>
-            <td align="right">
-              <b>phone</b>
-            </td>
-            <td>
-              <input type="text" name="phone" value="<%=prop.getProperty("phone", "")%>" size='10' maxlength='12'>
-              Fax
-              <input type="text" name="fax" value="<%=prop.getProperty("fax", "")%>" size='10' maxlength='12'>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-            <td>
-              &nbsp;
-            </td>
-          </tr>
-          <tr>
-            <td align="center" bgcolor="#CCCCFF" colspan="2">
-              <input type="hidden" name="action" value='<%=action%>'>
-              <% if(!"search".equals(action)) {%>
-              <input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();">
-              <% }%>
-              <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
-            </td>
-          </tr>
-        </form>
-      </table>
-    </body>
-  </html:html>
+              %> <select name="province">
+			<option value="AB" <%=region.equals("AB")?" selected":""%>>AB-Alberta</option>
+			<option value="BC" <%=region.equals("BC")?" selected":""%>>BC-British
+			Columbia</option>
+			<option value="MB" <%=region.equals("MB")?" selected":""%>>MB-Manitoba</option>
+			<option value="NB" <%=region.equals("NB")?" selected":""%>>NB-New
+			Brunswick</option>
+			<option value="NL" <%=region.equals("NL")?" selected":""%>>NL-Newfoundland
+			& Labrador</option>
+			<option value="NT" <%=region.equals("NT")?" selected":""%>>NT-Northwest
+			Territory</option>
+			<option value="NS" <%=region.equals("NS")?" selected":""%>>NS-Nova
+			Scotia</option>
+			<option value="NU" <%=region.equals("NU")?" selected":""%>>NU-Nunavut</option>
+			<option value="ON" <%=region.equals("ON")?" selected":""%>>ON-Ontario</option>
+			<option value="PE" <%=region.equals("PE")?" selected":""%>>PE-Prince
+			Edward Island</option>
+			<option value="QC" <%=region.equals("QC")?" selected":""%>>QC-Quebec</option>
+			<option value="SK" <%=region.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+			<option value="YT" <%=region.equals("YT")?" selected":""%>>YT-Yukon</option>
+			<option value="US" <%=region.equals("US")?" selected":""%>>US
+			resident</option>
+		</select> Country <input type="text" name="country"
+			value="<%=prop.getProperty("country", "CA")%>" size='2' maxlength='2'>
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><b>Postal</b></td>
+		<td><input type="text" name="postal"
+			value="<%=prop.getProperty("postal", "")%>" size='30' maxlength='30'>
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><b>phone</b></td>
+		<td><input type="text" name="phone"
+			value="<%=prop.getProperty("phone", "")%>" size='10' maxlength='12'>
+		Fax <input type="text" name="fax"
+			value="<%=prop.getProperty("fax", "")%>" size='10' maxlength='12'>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center" bgcolor="#CCCCFF" colspan="2"><input
+			type="hidden" name="action" value='<%=action%>'> <% if(!"search".equals(action)) {%>
+		<input type="submit" name="submit"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
+			onclick="javascript:return onSave();"> <% }%> <input
+			type="button" name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()"></td>
+	</tr>
+	</form>
+</table>
+</body>
+</html:html>

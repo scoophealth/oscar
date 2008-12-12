@@ -34,13 +34,15 @@ String service_form="", service_name="";
 %>
 
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %>            
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 
 <%
 String clinicview = request.getParameter("billingform")==null?oscarVariables.getProperty("default_view"):request.getParameter("billingform");
@@ -58,8 +60,8 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 
 <html:html locale="true">
 <head>
-<title><bean:message key="billing.manageBillingLocation.title"/></title>
-<link rel="stylesheet" href="billingON.css" >
+<title><bean:message key="billing.manageBillingLocation.title" /></title>
+<link rel="stylesheet" href="billingON.css">
 <script language="JavaScript">
 <!--
 
@@ -116,53 +118,52 @@ function confirmthis(lno) {
 
 <body leftmargin="0" topmargin="5" rightmargin="0">
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" cellspacing="2" cellpadding="2">
-<tr  class="myDarkGreen"> 
-	<td height="40" width="10%"> </td>
-	<td width="90%" align="left"> 
-	<font color="#FFFFFF" size="+2">Billing Location</font>
-	</td>
-</tr>
-</table> 
-
-<table width="100%" border="0" bgcolor="ivory" >
-<tr>
-	<td width="3%"></td>
-	<td width="30%" align="left" valign="top">
-	<form name="serviceform" method="post" action="dbManageBillingLocation.jsp">
-	<B><bean:message key="billing.manageBillingLocation.msgCodeDescription"/></B>
-	<br>
-	<input type="text" name="location1" size="4">
-	<input type="text" name="location1desc" size="30">
-	<br>
-	<input type="text" name="location2" size="4">
-	<input type="text" name="location2desc" size="30">
-	<br>
-	<input type="text" name="location3" size="4">
-	<input type="text" name="location3desc" size="30">
-	<br>
-	<input type="text" name="location4" size="4">
-	<input type="text" name="location4desc" size="30">
-	<br>
-	<input type="text" name="location5" size="4">
-	<input type="text" name="location5desc" size="30">
-	<br><br>
-	<input type="submit" name="action"  style="width: 100px;" value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
-	<br>
-	</p>
-	</form>
-	</td>
-      
-    <td width="37%" valign="top">
-
-	<table width="100%" border="0" cellspacing="2" cellpadding="2">
-	<tr class="myYellow">
-		<th width="6%"><bean:message key="billing.manageBillingLocation.msgClinicLocation"/></th>
-		<th><bean:message key="billing.manageBillingLocation.msgDescription"/></th>
-		<th>Action</th>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+	cellspacing="2" cellpadding="2">
+	<tr class="myDarkGreen">
+		<td height="40" width="10%"></td>
+		<td width="90%" align="left"><font color="#FFFFFF" size="+2">Billing
+		Location</font></td>
 	</tr>
-        
-<% 
+</table>
+
+<table width="100%" border="0" bgcolor="ivory">
+	<tr>
+		<td width="3%"></td>
+		<td width="30%" align="left" valign="top">
+		<form name="serviceform" method="post"
+			action="dbManageBillingLocation.jsp"><B><bean:message
+			key="billing.manageBillingLocation.msgCodeDescription" /></B> <br>
+		<input type="text" name="location1" size="4"> <input
+			type="text" name="location1desc" size="30"> <br>
+		<input type="text" name="location2" size="4"> <input
+			type="text" name="location2desc" size="30"> <br>
+		<input type="text" name="location3" size="4"> <input
+			type="text" name="location3desc" size="30"> <br>
+		<input type="text" name="location4" size="4"> <input
+			type="text" name="location4desc" size="30"> <br>
+		<input type="text" name="location5" size="4"> <input
+			type="text" name="location5desc" size="30"> <br>
+		<br>
+		<input type="submit" name="action" style="width: 100px;"
+			value="<bean:message key="billing.manageBillingLocation.btnAdd"/>">
+		<br>
+		</p>
+		</form>
+		</td>
+
+		<td width="37%" valign="top">
+
+		<table width="100%" border="0" cellspacing="2" cellpadding="2">
+			<tr class="myYellow">
+				<th width="6%"><bean:message
+					key="billing.manageBillingLocation.msgClinicLocation" /></th>
+				<th><bean:message
+					key="billing.manageBillingLocation.msgDescription" /></th>
+				<th>Action</th>
+			</tr>
+
+			<% 
 ResultSet rs=null ;
 ResultSet rs2=null ;
 String[] param =new String[1];
@@ -179,32 +180,34 @@ if(rs==null) {
 	out.println("failed!!!"); 
 } else {
 %>
-<% 
+			<% 
 	while (rs.next()) {
 		bodd=bodd?false:true; //for the color of rows
 %>
 
-	<tr <%=bodd? "class=\"myGreen\"":"bgcolor='ivory'"%>>
-	<form name="serviceform" method="post" action="manageBillingLocation.jsp" onsubmit="return confirmthis(<%=rs.getString("clinic_location_no")%>);">
-		<td align="center"><%=rs.getString("clinic_location_no")%></td>
-		<td><%=rs.getString("clinic_location_name")%></td>
-		<td align="center"><input type="submit" name="submit" value="Delete" />
-		<input type="hidden" name="location_no" value="<%=rs.getString("clinic_location_no")%>" />
-		</td>
-	</form>
-	</tr>
-<%
+			<tr <%=bodd? "class=\"myGreen\"":"bgcolor='ivory'"%>>
+				<form name="serviceform" method="post"
+					action="manageBillingLocation.jsp"
+					onsubmit="return confirmthis(<%=rs.getString("clinic_location_no")%>);">
+				<td align="center"><%=rs.getString("clinic_location_no")%></td>
+				<td><%=rs.getString("clinic_location_name")%></td>
+				<td align="center"><input type="submit" name="submit"
+					value="Delete" /> <input type="hidden" name="location_no"
+					value="<%=rs.getString("clinic_location_no")%>" /></td>
+				</form>
+			</tr>
+			<%
 	}
 }     
 
 apptMainBean.closePstmtConn();
-%> 
+%>
 
-	</table>
+		</table>
 
-	</td>
-	<td width="20%">&nbsp;</td>
-	</tr>  
+		</td>
+		<td width="20%">&nbsp;</td>
+	</tr>
 
 </table>
 </body>

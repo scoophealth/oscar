@@ -26,23 +26,26 @@
 
 <%
   
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*"  errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page
+	import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
 <head>
 </head>
 <body>
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            <bean:message key="appointment.addappointment.msgMainLabel"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		<bean:message key="appointment.addappointment.msgMainLabel" /></font></th>
+	</tr>
+</table>
 <%
     int[] intparam=new int [1];
     if(!(request.getParameter("demographic_no").equals(""))){
@@ -88,38 +91,43 @@
           String param1 = request.getParameter("demographic_no");
           ResultSet rs = apptMainBean.queryResults(param1, "search_waitinglist");
           if(rs.next()){                    
-          %>        
-            <form name="updateWLFrm" action="../oscarWaitingList/RemoveFromWaitingList.jsp">
-                <input type="hidden" name="listId" value="<%=apptMainBean.getString(rs,"listID")%>"/>
-                <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographic_no")%>"/>        
-                <script LANGUAGE="JavaScript">
+          %>
+<form name="updateWLFrm"
+	action="../oscarWaitingList/RemoveFromWaitingList.jsp"><input
+	type="hidden" name="listId"
+	value="<%=apptMainBean.getString(rs,"listID")%>" /> <input
+	type="hidden" name="demographicNo"
+	value="<%=request.getParameter("demographic_no")%>" /> <script
+	LANGUAGE="JavaScript">
                 var removeList = confirm("Click OK to remove patient from the waiting list: <%=apptMainBean.getString(rs,"name")%>");                
                 if(removeList){                       
                     document.forms[0].action = "../oscarWaitingList/RemoveFromWaitingList.jsp?demographicNo=<%=request.getParameter("demographic_no")%>&listID=<%=apptMainBean.getString(rs,"listID")%>";
                     document.forms[0].submit();                      
                 }
-                </script>
-            </form>
-          <%}
+                </script></form>
+<%}
         }
 %>
-  <p><h1><bean:message key="appointment.addappointment.msgAddSuccess"/></h1></p>
+<p>
+<h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
      	self.opener.refresh();
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1><bean:message key="appointment.addappointment.msgAddFailure"/></h1></p>
+<p>
+<h1><bean:message key="appointment.addappointment.msgAddFailure" /></h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button"
+	value="<bean:message key="global.btnClose"/>" onClick="closeit()">
 </form>
 </center>
 </body>

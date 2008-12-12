@@ -24,21 +24,24 @@
  */
 --%>
 
-<%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*, oscar.util.*" %>
-<%@ page import="java.util.*, org.w3c.dom.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarMessenger.docxfer.send.*, oscar.oscarMessenger.docxfer.util.*, oscar.util.*"%>
+<%@ page import="java.util.*, org.w3c.dom.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 <logic:notPresent name="msgSessionBean" scope="session">
-    <logic:redirect href="index.jsp" />
+	<logic:redirect href="index.jsp" />
 </logic:notPresent>
 <logic:present name="msgSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarMessenger.pageUtil.MsgSessionBean" name="msgSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="index.jsp" />
-    </logic:equal>
+	<bean:define id="bean"
+		type="oscar.oscarMessenger.pageUtil.MsgSessionBean"
+		name="msgSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="index.jsp" />
+	</logic:equal>
 </logic:present>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
@@ -51,109 +54,70 @@
     session.setAttribute("PDFAttachment", pdfAttch);
 %>
 
-<title>
-Document Transfer
-</title>
+<title>Document Transfer</title>
 </head>
 
 
-<style type="text/css">
-td.messengerButtonsA{
-    /*background-color: #6666ff;*/
-    /*background-color: #6699cc;*/
-    background-color: #003399;
-}
-td.messengerButtonsD{
-    /*background-color: #84c0f4;*/
-    background-color: #555599;
-}
-a.messengerButtons{
-    color: #ffffff;
-    font-size: 9pt;
-    text-decoration: none;
-}
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-
-</style>
-
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
 
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Oscar Messenger
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                        OSCAR Messenger Attachment
-                        </td>
-                        <td  >
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Oscar Messenger</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>OSCAR Messenger Attachment</td>
+				<td></td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
 
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        
-     
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-                
-            </td>
-            
-            <html:form action="/oscarMessenger/ViewPDFFile">
-                <td class="MainTableBottomRowRightColumn">
-                    <table cellspacing=3 >
-                                <tr >
-                                    <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3>
-                                            <tr>
-                                                <td class="messengerButtonsA">
-                                                <a href="#" onclick="javascript:top.window.close()" class="messengerButtons">
-                                                Close Attachment
-                                                </a>
-                                            </td></tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                    <table>
-                    
-                    <% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %>
-                    <% for ( int i = 0 ; i < attVector.size(); i++) { %>
-                    <tr>
-                        <td bgcolor="#DDDDFF">                            <%=(String) attVector.get(i)%> </td>
-                        <td bgcolor="#DDDDFF"> <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="Download" /></td>
-                    </tr>                            
-                    <% }  %>
-                    <html:hidden property="file_id"/> 
-                    <html:hidden property="attachment" value="<%=pdfAttch%>" />
-                    
-                    <table>
-                </td>
-            </html:form>
-        </tr>
-    </table>
+
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+
+		<html:form action="/oscarMessenger/ViewPDFFile">
+			<td class="MainTableBottomRowRightColumn">
+			<table cellspacing=3>
+				<tr>
+					<td>
+					<table class=messButtonsA cellspacing=0 cellpadding=3>
+						<tr>
+							<td class="messengerButtonsA"><a href="#"
+								onclick="javascript:top.window.close()" class="messengerButtons">
+							Close Attachment </a></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			<table>
+
+				<% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %>
+				<% for ( int i = 0 ; i < attVector.size(); i++) { %>
+				<tr>
+					<td bgcolor="#DDDDFF"><%=(String) attVector.get(i)%></td>
+					<td bgcolor="#DDDDFF"><input type=submit
+						onclick=" document.forms[0].file_id.value = <%=i%>"
+						value="Download" /></td>
+				</tr>
+				<% }  %>
+				<html:hidden property="file_id" />
+				<html:hidden property="attachment" value="<%=pdfAttch%>" />
+
+				<table>
+					</td>
+					</html:form>
+					</tr>
+				</table>
 </body>
 </html>
 

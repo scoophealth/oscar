@@ -23,7 +23,8 @@
  -->
 <%@page import="java.util.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
@@ -31,8 +32,9 @@
 <%@page import="org.oscarehr.PMmodule.web.*"%>
 <%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
-<%@page import="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" %>
-<%@page import="org.oscarehr.survey.model.oscar.OscarForm" %>
+<%@page
+	import="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate"%>
+<%@page import="org.oscarehr.survey.model.oscar.OscarForm"%>
 <%
 	Long formId=Long.parseLong(request.getParameter("formId"));
 	String startDateString=request.getParameter("startDate");
@@ -70,14 +72,16 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-<h1>User Created Report : <%=form.getDescription()%> from <%=startDateString%> to <%=endDateString%></h1>
+<h1>User Created Report : <%=form.getDescription()%> from <%=startDateString%>
+to <%=endDateString%></h1>
 
-<input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
+<input type="button" value="Back"
+	onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
 
 <table class="genericTable">
 	<tr class="genericTableRow">
 		<td class="genericTableHeader">Questions</td>
-		<td class="genericTableHeader">Answer</td>		
+		<td class="genericTableHeader">Answer</td>
 		<td class="genericTableHeader">Total</td>
 	</tr>
 	<% 
@@ -101,17 +105,18 @@
 	<tr class="genericTableRow">
 		<td class="genericTableHeader"><%=question%></td>
 		<td class="genericTableData"><%=answer%></td>
-		
+
 		<td class="genericTableData"><%=count%></td>
-		
+
 	</tr>
 	<%
 	}
 	%>
-	
+
 </table>
 
-<input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
+<input type="button" value="Back"
+	onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
 
 
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

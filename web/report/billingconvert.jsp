@@ -1,12 +1,16 @@
+
 <%
 //  
 //  String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*,java.io.*, oscar.*, oscar.login.*, org.apache.commons.lang.StringEscapeUtils" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*,java.io.*, oscar.*, oscar.login.*, org.apache.commons.lang.StringEscapeUtils"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 <html>
 <head>
-<title>Billing </title>
+<title>Billing</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 </head>
@@ -151,7 +155,7 @@ busy ...
 	}
 	rs.close();
 	
-%> 
+%>
 
 <%!	private static String[] getHinVer(String name) {
 	String ret[] = new String[] { "", "" };

@@ -1,3 +1,4 @@
+
 <%
   //reportbilledvisit3.jsp?sdate=2002-04-15&edate=2003-03-31
   
@@ -5,7 +6,9 @@
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <!--  
 /*
  * 
@@ -33,7 +36,7 @@
 -->
 <html>
 <head>
-<title>PATIENT NO SHOW LIST </title>
+<title>PATIENT NO SHOW LIST</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <!--link rel="stylesheet" href="../web.css" -->
@@ -49,7 +52,8 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 <%
 //busy ... busy ... busy ..................................................<br>
 //display splash-msg first
@@ -205,55 +209,60 @@ db.closeConn();
 
 %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica">PATIENT VISIT LIST </font></th>
-    <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value=" Exit " onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor=<%=deepcolor%>>
+		<th><font face="Helvetica">PATIENT VISIT LIST </font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="Print" onClick="window.print()"><input type="button"
+			name="Button" value=" Exit " onClick="window.close()"></th>
+	</tr>
 </table>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr><td>Period: (<%=sdate%> ~ <%=edate%>) </td>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td>Period: (<%=sdate%> ~ <%=edate%>)</td>
+	</tr>
 </table>
 
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
-<tr bgcolor=<%=deepcolor%> align="center">
-<TH width="5%">DxCode</TH>
-<TH width="10%">Desc</TH>
-<TH width="6%">Pat_Total</TH>
-<TH width="6%">Vis_Total</TH>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor=<%=deepcolor%> align="center">
+		<TH width="5%">DxCode</TH>
+		<TH width="10%">Desc</TH>
+		<TH width="6%">Pat_Total</TH>
+		<TH width="6%">Vis_Total</TH>
 
-<TH width="6%">Pat_Phys</TH>
-<TH width="6%">Vis_Phys</TH>
+		<TH width="6%">Pat_Phys</TH>
+		<TH width="6%">Vis_Phys</TH>
 
-<TH width="6%">Pat_Res</TH>
-<TH width="6%">Vis_Res</TH>
+		<TH width="6%">Pat_Res</TH>
+		<TH width="6%">Vis_Res</TH>
 
-<% for (int i = 0; i < vNurseNo.size(); i++) { %>
-	<TH width="6%"><%="pat_"+vNurse.get(i)%></TH>
-	<TH width="6%"><%="vis_"+vNurse.get(i)%></TH>
-<% } %>
-</tr>
+		<% for (int i = 0; i < vNurseNo.size(); i++) { %>
+		<TH width="6%"><%="pat_"+vNurse.get(i)%></TH>
+		<TH width="6%"><%="vis_"+vNurse.get(i)%></TH>
+		<% } %>
+	</tr>
 
-<% for (int i = 0; i < vServiceCode.size(); i++) { %>
-<tr bgcolor="<%= i%2==0?weakcolor:"white"%>">
-      <td align="center"><%=vServiceCode.get(i)%></td>
-      <td><%=vServiceDesc.get(i)%></td>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i))%></td>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i))%></td>
+	<% for (int i = 0; i < vServiceCode.size(); i++) { %>
+	<tr bgcolor="<%= i%2==0?weakcolor:"white"%>">
+		<td align="center"><%=vServiceCode.get(i)%></td>
+		<td><%=vServiceDesc.get(i)%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "pat" + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "vis" + vServiceDesc.get(i))%></td>
 
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "patPhy" + vServiceDesc.get(i))%></td>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "visPhy" + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "patPhy" + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "visPhy" + vServiceDesc.get(i))%></td>
 
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "patRes" + vServiceDesc.get(i))%></td>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "visRes" + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "patRes" + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "visRes" + vServiceDesc.get(i))%></td>
 
-	<% for (int j = 0; j < vNurseNo.size(); j++) { %>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "patNurse" + j  + vServiceDesc.get(i))%></td>
-      <td align="center"><%=props.getProperty(vServiceCode.get(i) + "visNurse" + j  + vServiceDesc.get(i))%></td>
+		<% for (int j = 0; j < vNurseNo.size(); j++) { %>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "patNurse" + j  + vServiceDesc.get(i))%></td>
+		<td align="center"><%=props.getProperty(vServiceCode.get(i) + "visNurse" + j  + vServiceDesc.get(i))%></td>
+		<% } %>
+	</tr>
 	<% } %>
-</tr>
-<% } %>
 
 
 </table>

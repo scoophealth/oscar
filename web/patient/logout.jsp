@@ -24,7 +24,8 @@
  */
 -->
 
-<%@ page language="java" import="java.util.HashMap"  errorPage="provider/errorpage.jsp"%>
+<%@ page language="java" import="java.util.HashMap"
+	errorPage="provider/errorpage.jsp"%>
 <%
   if(session != null) {
     Object user = session.getValue("patient");

@@ -25,9 +25,9 @@
 -->
 
 
-<%@ page import="java.util.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="bean.*" %>
+<%@ page import="java.util.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="bean.*"%>
 
 <jsp:useBean id="beanAboutDate" scope="session" class="bean.AboutDate" />
 
@@ -65,5 +65,5 @@ System.out.print("start_date = new Integer---"+start_date);
    response.sendRedirect("AppointmentMonth.jsp?start_date="+start_date+"&end_date="+end_date); 
 
 %>
-  
+
 </HTML>

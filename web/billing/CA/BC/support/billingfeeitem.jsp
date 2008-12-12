@@ -1,3 +1,4 @@
+
 <%
 
   	if (session.getAttribute("user") == null){
@@ -60,7 +61,7 @@
 
 <head>
 
-<html:base/>
+<html:base />
 
 <title>OSCAR Billing Fee Item</title>
 
@@ -120,25 +121,24 @@ function updateFeeCodeValues(code,description,fee){
 }
 %>
 
-</script
+</script>
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 
-><body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+	bgcolor="#D3D3D3">
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D3D3D3">
+	<tr>
 
-  <tr>
+		<td height="40" width="25"></td>
 
-    <td height="40" width="25"></td>
+		<td width="90%" align="left">
 
-    <td width="90%" align="left">
+		<p><font face="Verdana" color="#4D4D4D"><b><font
+			size="4">oscar<font size="3">Billing Fee Items</font></font></b></font></p>
 
-      <p><font face="Verdana" color="#4D4D4D"><b><font size="4">oscar<font size="3">Billing Fee Items</font></font></b></font>
+		</td>
 
-      </p>
-
-    </td>
-
-  </tr>
+	</tr>
 
 </table>
 
@@ -148,21 +148,13 @@ function updateFeeCodeValues(code,description,fee){
 
 	<tr bgcolor="#D4D4D4">
 
-		<td>
+		<td>Link</td>
 
-			Link
-
-		</td>
-
-		<td>
-
-			Description
-
-		</td>
+		<td>Description</td>
 
 	</tr>
 
-<%
+	<%
 
 	boolean color = false;
 
@@ -175,32 +167,28 @@ function updateFeeCodeValues(code,description,fee){
 
 %>
 
-	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
+	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
+		valign="top">
 
 		<td class="SmallerText">
-			<%
+		<%
 				if(request.getParameter("corrections") == null){
-			%>
-			<a href=# onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
-			<%}
+			%> <a href=#
+			onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
+		<%}
 			  else{
-			%>
-			<a href=# onClick="updateFeeCodeValues('<%=db.getString(rs,"service_code")%>',' ','<%=db.getString(rs,"value")%>');"><%=db.getString(rs,"service_code")%></a>
-			<%
+			%> <a href=#
+			onClick="updateFeeCodeValues('<%=db.getString(rs,"service_code")%>',' ','<%=db.getString(rs,"value")%>');"><%=db.getString(rs,"service_code")%></a>
+		<%
 			}
 			%>
-
 		</td>
 
-		<td class="SmallerText">
-
-			<%=db.getString(rs,"description")%>
-
-		</td>
+		<td class="SmallerText"><%=db.getString(rs,"description")%></td>
 
 	</tr>
 
-<%
+	<%
 
 		color = !(color);
 
@@ -208,13 +196,9 @@ function updateFeeCodeValues(code,description,fee){
 
 %>
 
-<tr bgcolor="#D4D4D4">
+	<tr bgcolor="#D4D4D4">
 
-		<td colspan="5">
-
-			&nbsp
-
-		</td>
+		<td colspan="5">&nbsp</td>
 
 	</tr>
 
@@ -223,4 +207,3 @@ function updateFeeCodeValues(code,description,fee){
 </body>
 
 </html>
-

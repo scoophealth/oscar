@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 --%>
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   //operation available to the client -- dboperation
   String [][] dbQueries=new String[][] {

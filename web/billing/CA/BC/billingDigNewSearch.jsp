@@ -25,7 +25,8 @@
 -->
 <%@page import="java.util.*, java.sql.*, oscar.*, java.net.*"%>
 <%@include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session"/><%@include file="dbBilling.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" /><%@include file="dbBilling.jsp"%>
 <%
 
 System.err.print("THIS IS IN DIG NEW\n");
@@ -99,21 +100,28 @@ function CodeAttach(File0) {
 -->
 </script>
 </head>
-<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP bgcolor="#CCCCFF"> <font face="Helvetica" color="#000000">Diagnostic Code Search ICD9</font> <font face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3 selections)</font> </th>
-  </tr>
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica"
+			color="#000000">Diagnostic Code Search ICD9</font> <font
+			face="Arial, Helvetica, sans-serif" color="#FF0000">(Maximum 3
+		selections)</font></th>
+	</tr>
 </table>
-<form name="servicecode" id="servicecode" method="post" action="billingDigNewUpdate.jsp">
-  <input type="hidden" name="formName" value="<%=formName%>"/>
-  <input type="hidden" name="formElement" value="<%=formElement%>"/>
-  <table width="800" border="1">
-    <tr bgcolor="#CCCCFF">
-      <td><b> <font face="Arial, Helvetica, sans-serif" size="2">Code</font> </b> </td>
-      <td><b> <font face="Arial, Helvetica, sans-serif" size="2">Description</font> </b> </td>
-    </tr>
-    <%
+<form name="servicecode" id="servicecode" method="post"
+	action="billingDigNewUpdate.jsp"><input type="hidden"
+	name="formName" value="<%=formName%>" /> <input type="hidden"
+	name="formElement" value="<%=formElement%>" />
+<table width="800" border="1">
+	<tr bgcolor="#CCCCFF">
+		<td><b> <font face="Arial, Helvetica, sans-serif" size="2">Code</font>
+		</b></td>
+		<td><b> <font face="Arial, Helvetica, sans-serif" size="2">Description</font>
+		</b></td>
+	</tr>
+	<%
   ResultSet rslocal = null;
   ResultSet rslocal2 = null;
   String color = "";
@@ -139,40 +147,36 @@ function CodeAttach(File0) {
       color = "#EEEEFF";
     }
 %>
-    <tr bgcolor="<%=color%>">
-      <td><font face="Arial, Helvetica, sans-serif" size="2">
-        <%if (Dcode.compareTo(xcodeName) == 0 || Dcode.compareTo(xcodeName1) == 0 || Dcode.compareTo(xcodeName2) == 0) {      %>
-        <input type="checkbox" name="code_<%=Dcode%>" checked>
-        <%} else {      %>
-        <input type="checkbox" name="code_<%=Dcode%>">
-        <%}      %>
-        <%=Dcode%> </font> </td>
-      <td><font face="Arial, Helvetica, sans-serif" size="2">
-        <input type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>">
-        <input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="80">
-        <input type="submit" name="update" value="update <%=Dcode%>">
-        </font> </td>
-    </tr>
-    <%}%>
-    <%if (intCount == 0) {%>
-    <tr bgcolor="<%=color%>">
-      <td colspan="2"><font face="Arial, Helvetica, sans-serif" size="2"> No match found.
-        <%// =i      %>
-        </font> </td>
-    </tr>
-    <%}%>
-    <%if (intCount == 1) {%>
-    <script LANGUAGE="JavaScript">
+	<tr bgcolor="<%=color%>">
+		<td><font face="Arial, Helvetica, sans-serif" size="2"> <%if (Dcode.compareTo(xcodeName) == 0 || Dcode.compareTo(xcodeName1) == 0 || Dcode.compareTo(xcodeName2) == 0) {      %>
+		<input type="checkbox" name="code_<%=Dcode%>" checked> <%} else {      %>
+		<input type="checkbox" name="code_<%=Dcode%>"> <%}      %> <%=Dcode%>
+		</font></td>
+		<td><font face="Arial, Helvetica, sans-serif" size="2"> <input
+			type="hidden" name="codedesc_<%=Dcode%>" value="<%=DcodeDesc%>">
+		<input type="text" name="<%=Dcode%>" value="<%=DcodeDesc%>" size="80">
+		<input type="submit" name="update" value="update <%=Dcode%>">
+		</font></td>
+	</tr>
+	<%}%>
+	<%if (intCount == 0) {%>
+	<tr bgcolor="<%=color%>">
+		<td colspan="2"><font face="Arial, Helvetica, sans-serif"
+			size="2"> No match found. <%// =i      %> </font></td>
+	</tr>
+	<%}%>
+	<%if (intCount == 1) {%>
+	<script LANGUAGE="JavaScript">
 <!--
 
  CodeAttach('<%=Dcode%>');
 -->
 
 </script>
-    <%}%>
-  </table>
-  <input type="submit" name="update" value="Confirm">
-  <input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
-</form>
+	<%}%>
+</table>
+<input type="submit" name="update" value="Confirm"> <input
+	type="button" name="cancel" value="Cancel"
+	onclick="javascript:window.close()"></form>
 </body>
 </html>

@@ -30,13 +30,16 @@
 %>
 
 
-<%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.security.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="pwdMainBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.security.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="pwdMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <%
   String curUser_no = (String) session.getAttribute("user");
   MessageDigest md = MessageDigest.getInstance("SHA");
 %>
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   //operation available to the client -- dboperation
   String [][] dbQueries=new String[][] {

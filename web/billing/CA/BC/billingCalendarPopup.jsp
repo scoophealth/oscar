@@ -25,15 +25,16 @@
 
 Use returnForm and returnItem request params and this page will fill in that input item on that page
 -->
-<%@ page language="java" contentType="text/html" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java" contentType="text/html"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"  %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"%>
 <%
   //to prepare calendar display  
   String type = request.getParameter("type");
@@ -59,7 +60,7 @@ Use returnForm and returnItem request params and this page will fill in that inp
 <html>
 
 <head>
-<html:base/>
+<html:base />
 <title>CALENDAR</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
@@ -90,27 +91,35 @@ function typeMultiDate(year1,month1,day1){
   DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-  			<tr>
-        	  <td BGCOLOR="#FFD7C4" width="50%" align="center" >
-			  <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;<img src="../../../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last month&nbsp;&nbsp; 
-              </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>"> &nbsp;&nbsp;next month <img src="../../../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
-  			</TR>
-		</table>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr>
+		<td BGCOLOR="#FFD7C4" width="50%" align="center"><a
+			href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=-1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>">
+		&nbsp;&nbsp;<img src="../../../images/previous.gif" WIDTH="10"
+			HEIGHT="9" BORDER="0" ALT="View Last Month" vspace="2"> last
+		month&nbsp;&nbsp; </a> <b><span CLASS=title><%=year%>-<%=month%></span></b>
+		<a
+			href="billingCalendarPopup.jsp?year=<%=year%>&month=<%=month%>&delta=1&type=<%=type%>&returnForm=<%=returnForm%>&returnItem=<%=returnItem%>">
+		&nbsp;&nbsp;next month <img src="../../../images/next.gif" WIDTH="10"
+			HEIGHT="9" BORDER="0" ALT="View Next Month" vspace="2">&nbsp;&nbsp;</a></td>
+	</TR>
+</table>
 <p>
-          <table width="100%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-            <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red">Sun</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green">Sat</font></td>
-            </tr>
-            
-            <%
+<table width="100%" border="1" cellspacing="0" cellpadding="2"
+	bgcolor="silver">
+	<tr bgcolor="#FOFOFO" align="center">
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="red">Sun</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Mon</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Tue</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Wed</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Thu</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">Fri</font></td>
+		<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+			color="green">Sat</font></td>
+	</tr>
+
+	<%
             for (int i=0; i<dateGrid.length; i++) {
                 out.println("<tr>");
                 for (int j=0; j<7; j++) {
@@ -120,38 +129,37 @@ function typeMultiDate(year1,month1,day1){
                        now.add(now.DATE, 1);
                        if (type.compareTo("admission") == 0) {
             %>
-                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-                       <%= dateGrid[i][j] %> </a>
-                       </td>
-            <%         }else if (type.equals("service")){%>
-                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-		       <%= dateGrid[i][j] %> </a>
-                       </td>
-            <%         }else{ %>
-                       <td align="center" bgcolor='#FBECF3'><a href="#" onClick="typeMultiDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
-		       <%= dateGrid[i][j] %> </a>
-                       </td>
-            <%         }
+	<td align="center" bgcolor='#FBECF3'><a href="#"
+		onClick="typeInDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%         }else if (type.equals("service")){%>
+	<td align="center" bgcolor='#FBECF3'><a href="#"
+		onClick="typeSrvDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%         }else{ %>
+	<td align="center" bgcolor='#FBECF3'><a href="#"
+		onClick="typeMultiDate(<%=year%>,<%=month%>,<%= dateGrid[i][j] %>)">
+	<%= dateGrid[i][j] %> </a></td>
+	<%         }
                     }
                  
                 }
                 out.println("</tr>");
             }
            %>
-            
-          </table>
-          <table width="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr> 
-              <td>&nbsp;</td>
-            </tr>
-            <tr> 
-              <td bgcolor="#FFD7C4"> 
-                <div align="center"> 
-                  <input type="button" name="Cancel" value=" Exit " onClick="window.close()">
-                </div>
-              </td>
-            </tr>
-          </table>
+
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td bgcolor="#FFD7C4">
+		<div align="center"><input type="button" name="Cancel"
+			value=" Exit " onClick="window.close()"></div>
+		</td>
+	</tr>
+</table>
 
 </body>
 </html>

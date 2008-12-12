@@ -24,12 +24,13 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.ResourceBundle" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import="java.util.ResourceBundle"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 
 <%
@@ -44,27 +45,9 @@
 %>
 
 <head>
-<title>
-<%=transactionType%>
-</title>
-<html:base/>
-<style type="text/css">
-
-.ChooseRecipientsBox1{
-	font-size: 80%;
-	height: 340px;
-	/*width: 800px;*/
-	overflow: auto;
-        margin-left: 4px;
-	border: 1px solid #dcdcdc;
-}
-.currGroup{
-        color: #6666ff;
-        FONT-FAMILY: tahoma;
-        font-size: 14pt;
-}
-
-</style>
+<title><%=transactionType%></title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <script language="javascript">
 function BackToOscar() {
@@ -73,50 +56,48 @@ function BackToOscar() {
 </script>
 
 <link rel="stylesheet" type="text/css" href="../../encounterStyles.css">
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 
-<html:errors/>
+<html:errors />
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Consultation
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td class="Header">
-                            <%=transactionType%>
-                        </td>                                            
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style="vertical-align:top">
-            <td class="MainTableLeftColumn">
-                <%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Consultation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td class="Header"><%=transactionType%></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr style="vertical-align: top">
+		<td class="MainTableLeftColumn">
+		<%oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar titlebar = new oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConTitlebar(request);
                   out.print(titlebar.estBar(request));
                   %>
-            </td>
-            <td class="MainTableRightColumn">  
-                <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+		</td>
+		<td class="MainTableRightColumn">
+		<table cellpadding="0" cellspacing="2"
+			style="border-collapse: collapse" bordercolor="#111111" width="100%"
+			height="100%">
 
-            <!----Start new rows here-->               
-               <%
+			<!----Start new rows here-->
+			<%
                    String added = (String) request.getAttribute("Added");
                    if (added != null){  %>
-                    <tr>
-                       <td>
-                            <font color="red"> <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.msgSpecialistAdded" arg0="<%=added%>"/> </font>
-                       </td>
-                    </tr>
-               <%}%>               
-               <tr>
-                  <td>
+			<tr>
+				<td><font color="red"> <bean:message
+					key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.msgSpecialistAdded"
+					arg0="<%=added%>" /> </font></td>
+			</tr>
+			<%}%>
+			<tr>
+				<td>
 
-                     <table>
-                        <html:form  action="/oscarEncounter/AddSpecialist">
-                        <%
+				<table>
+					<html:form action="/oscarEncounter/AddSpecialist">
+						<%
                            if (request.getAttribute("specId") != null ){
                            oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm thisForm;
                            thisForm = (oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
@@ -133,100 +114,86 @@ function BackToOscar() {
 
                            }
                         %>
-                        <html:hidden name="EctConAddSpecialistForm" property="specId"/>
-                        <tr>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName"/>
-                              </td>
-                              <td>
-                                 <html:text name="EctConAddSpecialistForm" property="firstName"/>
-                           </td>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.lastName"/>
-                              </td>
-                              <td>
-                                 <html:text name="EctConAddSpecialistForm" property="lastName"/>
-                           </td>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.professionalLetters"/>
-                              </td>
-                              <td>
-                                 <html:text name="EctConAddSpecialistForm" property="proLetters"/>
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address"/>
-                              </td>
-                              <td colspan="5">
-                                 <html:textarea name="EctConAddSpecialistForm" property="address" cols="30" rows="3" />
-                                 <%=oscarVariables.getProperty("consultation_comments","") %>
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.phone"/>
-                              </td>
-                              <td>
-                                 <html:text name="EctConAddSpecialistForm" property="phone"/>
-                              </td>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.fax"/>
-                              </td>
-                              <td colspan="4">
-                                 <html:text name="EctConAddSpecialistForm" property="fax"/>
-                           </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.website"/>
-                             </td>
-                              <td>
-                                 <html:text name="EctConAddSpecialistForm" property="website"/>
-                           </td>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.email"/>
-                              </td>
-                              <td colspan="4">
-                                 <html:text name="EctConAddSpecialistForm" property="email"/>
-                              </td>
-                        </tr>
-                        <tr>
-                           <td>
-                                 <bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType"/>
-                              </td>
-                              <td colspan="5">
-                                 <html:text name="EctConAddSpecialistForm" property="specType"/>
-                           </td>
-                        </tr>
-                        <tr>
-                           <td colspan="6">
-                                    <input type="hidden" name="whichType" value="<%=whichType%>"/>
-                                    <input type="submit" name="transType" value="<%=transactionType%>"/>
-                           </td>
-                        </tr>
-                        </html:form>
-                     </table>
-                  </td>
-               </tr>
-            <!----End new rows here-->
+						<html:hidden name="EctConAddSpecialistForm" property="specId" />
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName" />
+							</td>
+							<td><html:text name="EctConAddSpecialistForm"
+								property="firstName" /></td>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.lastName" />
+							</td>
+							<td><html:text name="EctConAddSpecialistForm"
+								property="lastName" /></td>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.professionalLetters" />
+							</td>
+							<td><html:text name="EctConAddSpecialistForm"
+								property="proLetters" /></td>
+						</tr>
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.address" />
+							</td>
+							<td colspan="5"><html:textarea
+								name="EctConAddSpecialistForm" property="address" cols="30"
+								rows="3" /> <%=oscarVariables.getProperty("consultation_comments","") %>
+							</td>
+						</tr>
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.phone" />
+							</td>
+							<td><html:text name="EctConAddSpecialistForm"
+								property="phone" /></td>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.fax" />
+							</td>
+							<td colspan="4"><html:text name="EctConAddSpecialistForm"
+								property="fax" /></td>
+						</tr>
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.website" />
+							</td>
+							<td><html:text name="EctConAddSpecialistForm"
+								property="website" /></td>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.email" />
+							</td>
+							<td colspan="4"><html:text name="EctConAddSpecialistForm"
+								property="email" /></td>
+						</tr>
+						<tr>
+							<td><bean:message
+								key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.specialistType" />
+							</td>
+							<td colspan="5"><html:text name="EctConAddSpecialistForm"
+								property="specType" /></td>
+						</tr>
+						<tr>
+							<td colspan="6"><input type="hidden" name="whichType"
+								value="<%=whichType%>" /> <input type="submit" name="transType"
+								value="<%=transactionType%>" /></td>
+						</tr>
+					</html:form>
+				</table>
+				</td>
+			</tr>
+			<!----End new rows here-->
 
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
+			<tr height="100%">
+				<td></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>
 

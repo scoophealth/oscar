@@ -27,9 +27,12 @@
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="baseurlBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
     {"delete_baseurl", "delete from property where name = ?"}, 
@@ -54,11 +57,11 @@
     baseurlBean.closePstmtConn();  
   }
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title><bean:message key="admin.resourcebaseurl.title"/></title>
+<title><bean:message key="admin.resourcebaseurl.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
@@ -72,36 +75,39 @@ function setfocus() {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-  <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-		<tr BGCOLOR="#CCCCFF">
-   	  <th><bean:message key="admin.resourcebaseurl.msgTitle"/></th>
-		</tr>
-  </table>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr BGCOLOR="#CCCCFF">
+		<th><bean:message key="admin.resourcebaseurl.msgTitle" /></th>
+	</tr>
+</table>
 
-  <table width="100%" border="0" cellspacing="0" cellpadding="2" >
-  <form method="post" name="baseurl" action="resourcebaseurl.jsp">
-    <tr> 
-      <td>&nbsp;</td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-    <td><p>
-      &nbsp;<bean:message key="admin.resourcebaseurl.formBaseUrl"/></a><br>
-      &nbsp;<input type="text" name="resource_baseurl" value="" size='30'>
-    </td>
-    </tr>
-    <tr> 
-      <td>&nbsp;</td>
-    </tr>
-    <tr> 
-      <td align="center" bgcolor="#CCCCFF"> 
-      <input type="hidden" name="submit_form" value=' Save '>
-      <input type="submit" name="confirmButton" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" >
-<input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
-      </td>
-    </tr>
-  </form>
-  </table>
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+	<form method="post" name="baseurl" action="resourcebaseurl.jsp">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr bgcolor="#EEEEFF">
+		<td>
+		<p>&nbsp;<bean:message key="admin.resourcebaseurl.formBaseUrl" /></a><br>
+		&nbsp;<input type="text" name="resource_baseurl" value="" size='30'>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="center" bgcolor="#CCCCFF"><input type="hidden"
+			name="submit_form" value=' Save '> <input type="submit"
+			name="confirmButton"
+			value="<bean:message key="admin.resourcebaseurl.btnSave"/>">
+		<input type="button" name="Cancel"
+			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
+			onClick="window.close()"></td>
+	</tr>
+	</form>
+</table>
 
 </body>
 </html:html>

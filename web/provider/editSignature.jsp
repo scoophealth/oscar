@@ -24,16 +24,16 @@
  */
 -->
 
-<%@ page language="java" %>
+<%@ page language="java"%>
 <!-- add by caisi -->
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import ="oscar.oscarProvider.data.*"%>
-<%@ page import ="oscar.oscarProvider.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page import="oscar.oscarProvider.data.*"%>
+<%@ page import="oscar.oscarProvider.pageUtil.*"%>
 
 
 <%
@@ -47,21 +47,20 @@ ProSignatureData sig = new ProSignatureData();
 <html:html locale="true">
 <head>
 
-<html:base/>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<html:base />
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 
-<title>
-<bean:message key="provider.editSignature.title"/>
-</title>
+<title><bean:message key="provider.editSignature.title" /></title>
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!-- add by caisi -->
 <caisi:isModuleLoad moduleName="caisi">
 
-<iframe id="hiddenFrame" src="javascript:void(0)" style="display:none"></iframe>
-<script>
+	<iframe id="hiddenFrame" src="javascript:void(0)" style="display: none"></iframe>
+	<script>
 function toggleSig(n) {
 	var fr=document.getElementById("hiddenFrame");
 	var baseURL="/"+"<%=application.getServletContextName()%>";
@@ -72,72 +71,75 @@ function toggleSig(n) {
 </caisi:isModuleLoad>
 <!-- add by caisi end-->
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="provider.editSignature.msgPrefs"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                          <bean:message key="provider.editSignature.msgProviderSignature"/>
-                        </td>
-                        <td  >
-                          &nbsp;
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-               &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-            <html:form action = "/EnterSignature.do" >
-            <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="provider.editSignature.msgPrefs" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><bean:message
+					key="provider.editSignature.msgProviderSignature" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn"><html:form
+			action="/EnterSignature.do">
+			<%
                ProEditSignatureForm thisForm = ( ProEditSignatureForm ) request.getAttribute("ProEditSignatureForm");
                thisForm.setSignature(sig.getSignature(curUser_no));
                if (sig.hasSignature(curUser_no)) {
             %>
-               <bean:message key="provider.editSignature.msgEdit"/> <br>
-               <html:text property="signature" size="40"/><br>
-               
-               <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="caisi">
-               <c:import url="/infirm.do?action=getSig" />
-               
-               <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
-               </caisi:isModuleLoad>
-               <!-- add by caisi end-->
-               
-               <input type="submit" value="<bean:message key="provider.editSignature.btnUpdate"/>" />               
-            <% }else{%>
-               <bean:message key="provider.editSignature.msgNew"/><br>
-               <html:text property="signature" size="40"/><br>
-               <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="caisi">
-               <c:import url="/infirm.do?action=getSig" />
-               <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
-               </caisi:isModuleLoad>
-               <!-- add by caisi end-->
-               <input type="submit" value="<bean:message key="provider.editSignature.btnSubmit"/>" />
-            <%}%>
-            </html:form> 
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+			<bean:message key="provider.editSignature.msgEdit" />
+			<br>
+			<html:text property="signature" size="40" />
+			<br>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-             
-            </td>
-        </tr>
-    </table>
+			<!-- add by caisi -->
+			<caisi:isModuleLoad moduleName="caisi">
+				<c:import url="/infirm.do?action=getSig" />
+
+				<INPUT TYPE="checkbox"
+					<%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%>
+					onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
+               </caisi:isModuleLoad>
+			<!-- add by caisi end-->
+
+			<input type="submit"
+				value="<bean:message key="provider.editSignature.btnUpdate"/>" />
+			<% }else{%>
+			<bean:message key="provider.editSignature.msgNew" />
+			<br>
+			<html:text property="signature" size="40" />
+			<br>
+			<!-- add by caisi -->
+			<caisi:isModuleLoad moduleName="caisi">
+				<c:import url="/infirm.do?action=getSig" />
+				<INPUT TYPE="checkbox"
+					<%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%>
+					onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
+               </caisi:isModuleLoad>
+			<!-- add by caisi end-->
+			<input type="submit"
+				value="<bean:message key="provider.editSignature.btnSubmit"/>" />
+			<%}%>
+		</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html:html>

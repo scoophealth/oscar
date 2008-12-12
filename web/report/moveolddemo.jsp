@@ -1,10 +1,13 @@
+
 <%
   //moveolddemo.jsp?provider_no=&filename=
   //
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, oscar.oscarDB.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
 <!--  
 /*
  * 
@@ -32,7 +35,7 @@
 -->
 <html>
 <head>
-<title>PATIENT DEMO LIST </title>
+<title>PATIENT DEMO LIST</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 <!--link rel="stylesheet" href="../web.css" -->
@@ -48,8 +51,11 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-busy ... busy ... busy ..................................................<br>
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+busy ... busy ... busy
+..................................................
+<br>
 <%
 //display splash-msg first
 out.flush();

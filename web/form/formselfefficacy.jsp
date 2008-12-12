@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "SelfEfficacy";
@@ -54,116 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>Self Efficacy</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;
-            height:10px;
-        }
-
-        .checkbox{
-            height: 25px;
-            width: 25px;     
-            background-color: #FFFFFF;              
-        }
-
-        .checkboxError{
-            height: 25px;
-            width: 25px;     
-            background-color: red;                   
-        }
-        
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: Center;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            font-style: italic;
-            text-align: Left;             
-        }
-        .question{
-            text-align: left;
-        }
-        .scoreHeavy{
-            border-top: 2px solid #A9A9A9;
-            text-align: center;
-        }
-        .scoreLight{
-            border-top: 1px solid #A9A9A9;
-            text-align: center;
-        }
-        .score{
-            font-size=80%;
-        }
-        .textbox{
-            border: 1px solid #A9A9A9;
-        }
-
-    </style>
+<title>Self Efficacy</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -429,7 +323,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -439,1243 +334,1280 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
-    <tr>
-        <th class="subject">Self Efficacy</th>
-    </tr>    
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Perform Self-Management Behaviours</th>
-                </tr>  
-                <tr class="subTitle">
-                    <th colspan="12">SE Exercise Regularly</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Do gentle exercises for muscle strength and flexibility three to four times per week
-                                    (range of motion, using weights, etc.)?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex1" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox" value="<%= props.getProperty("ex1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Do an aerobic exercise such as walking, swimming or bicycling three to four times each week?
-                                </td>
-                            </tr>
-                        </table>                     
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex2" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox"  value="<%= props.getProperty("ex2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Exercise without making your symptoms worse?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="ex3" size="5" onchange="javascript:calExerScore()" maxLength="2" class="textbox" value="<%= props.getProperty("ex3", "") %>"/>
-                    </td>
-                </tr>                
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="exerScore" readonly="true" value="<%= props.getProperty("exerScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>   
-                <tr class="subTitle">
-                    <th colspan="12">SE Get Information About Disease</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Get Information about your disease from community resources?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="disease1" size="5" onchange="javascript:calDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("disease1", "") %>"/>
-                    </td>
-                </tr>                            
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: This is a single-item scale; scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="diseaseScore" readonly="true" value="<%= props.getProperty("diseaseScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                    <table height="2"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>            
-        </td>
-    </tr>
-    <tr class="subject">
-        <td></td>
-        <td align="right">
-            <a href="javascript: goToPage2();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="95%">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px"
+				height="10%">
+				<tr>
+					<th class="subject">Self Efficacy</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="85%"
+				width="740px" id="page1">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Perform Self-Management
+							Behaviours</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Exercise Regularly</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Do gentle exercises for
+									muscle strength and flexibility three to four times per week
+									(range of motion, using weights, etc.)?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="ex1" size="5"
+								onchange="javascript:calExerScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("ex1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Do an aerobic exercise such
+									as walking, swimming or bicycling three to four times each
+									week?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="ex2" size="5"
+								onchange="javascript:calExerScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("ex2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Exercise without making your
+									symptoms worse?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="ex3" size="5"
+								onchange="javascript:calExerScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("ex3", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the three items. If more than one item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text" name="exerScore"
+								readonly="true"
+								value="<%= props.getProperty("exerScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Get Information About Disease</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Get Information about your
+									disease from community resources?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="disease1"
+								size="5" onchange="javascript:calDiseaseScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("disease1", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: This is a
+							single-item scale; scores range from 1 to 10, with a higher score
+							indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="diseaseScore" readonly="true"
+								value="<%= props.getProperty("diseaseScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="2">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td></td>
+					<td align="right"><a href="javascript: goToPage2();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page2" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Perform Self-Management Behaviours</th>
-                </tr>  
-                <tr class="subTitle">
-                    <th colspan="12">SE Obtain Help From Communit, Family and Friends</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Get Family and friends to help you with the things you need (such as household chores
-                                    like shopping, cooking or transport)?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="help1" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Get emotional support from friends and family (such as listening or talking over your problems)?
-                                </td>
-                            </tr>
-                        </table>                     
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="help2" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Get emotional support from resources other than friends and family, if needed?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="help3" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help3", "") %>"/>
-                    </td>
-                </tr>  
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">4.</td>
-                                <td valign="top" width="95%">
-                                    Get help with your daily tasks (such as housecleaning, yard work, meals or personal hygiene)
-                                    from other resources other than friends and family, if needed?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="help4" size="5" onchange="javascript:calHelpScore()" maxLength="2" class="textbox" value="<%= props.getProperty("help4", "") %>"/>
-                    </td>
-                </tr>  
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the four items. If more than one item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="helpScore" readonly="true" value="<%= props.getProperty("helpScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>                  
-                <tr>
-                    <td colspan="12">
-                    <table height="120"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>       
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage1();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage3();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page2">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Perform Self-Management
+							Behaviours</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Obtain Help From Communit, Family and
+							Friends</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Get Family and friends to
+									help you with the things you need (such as household chores
+									like shopping, cooking or transport)?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="help1" size="5"
+								onchange="javascript:calHelpScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("help1", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Get emotional support from
+									friends and family (such as listening or talking over your
+									problems)?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="help2" size="5"
+								onchange="javascript:calHelpScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("help2", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Get emotional support from
+									resources other than friends and family, if needed?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="help3" size="5"
+								onchange="javascript:calHelpScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("help3", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">4.</td>
+									<td valign="top" width="95%">Get help with your daily
+									tasks (such as housecleaning, yard work, meals or personal
+									hygiene) from other resources other than friends and family, if
+									needed?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="help4" size="5"
+								onchange="javascript:calHelpScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("help4", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the four items. If more than one item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text" name="helpScore"
+								readonly="true"
+								value="<%= props.getProperty("helpScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="120">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage1();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage3();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page3" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Perform Self-Management Behaviours</th>
-                </tr>    
-                <tr class="subTitle">
-                    <th colspan="12">SE Communicate with Physician</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Ask your doctor things about your illness that concern you?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicateWithPhy1" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy1", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Discuss openly with your doctor any personal problems that maybe related to your illness?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicateWithPhy2" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy2", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Work out differences with your doctor when they arise?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="communicateWithPhy3" size="5" onchange="javascript: calCommScore()" maxLength="2" class="textbox" value="<%= props.getProperty("communicateWithPhy3", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="commScore" readonly="true" value="<%= props.getProperty("commScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                    <table height="180"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>       
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage2();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage4();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page3">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Perform Self-Management
+							Behaviours</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Communicate with Physician</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Ask your doctor things about
+									your illness that concern you?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text"
+								name="communicateWithPhy1" size="5"
+								onchange="javascript: calCommScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("communicateWithPhy1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Discuss openly with your
+									doctor any personal problems that maybe related to your
+									illness?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text"
+								name="communicateWithPhy2" size="5"
+								onchange="javascript: calCommScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("communicateWithPhy2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Work out differences with
+									your doctor when they arise?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text"
+								name="communicateWithPhy3" size="5"
+								onchange="javascript: calCommScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("communicateWithPhy3", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the three items. If more than one item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text" name="commScore"
+								readonly="true"
+								value="<%= props.getProperty("commScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="180">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage2();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage4();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page4" >    
-    <tr>        
-        <td colspan="2">
-                        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Manage Disease in General</th>
-                </tr>  
-                <tr class="subTitle">
-                    <th colspan="12">SE to Manage Disease in General</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Having an illness often means doing different tasks and activities to manage your condition. 
-                                    How confident are you that you can do all the things necessary to manage your condition on a 
-                                    regular basis?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageDisease1" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Judge when the changes in you illness mean you should visit a doctor?
-                                </td>
-                            </tr>
-                        </table>                     
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageDisease2" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Do the different tasks and activities needed to manage your health condition so as to reduce your 
-                                    need to see a doctor?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageDisease3" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease3", "") %>"/>
-                    </td>
-                </tr>  
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">4.</td>
-                                <td valign="top" width="95%">
-                                    Reduce the emotional distress caused by your health condition so that it does not affect your everyday life?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageDisease4" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease4", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">5.</td>
-                                <td valign="top" width="95%">
-                                    Do things other than just taking medication to reduce how much your illness affects your everyday life?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageDisease5" size="5" onchange="javascript: calManDiseaseScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageDisease5", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the five items. If more than two item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="manDiseaseScore" readonly="true" value="<%= props.getProperty("manDiseaseScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>                  
-                <tr>
-                    <td colspan="12">
-                    <table height="80"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>  
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage3();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage5();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page4">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Manage Disease in General</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE to Manage Disease in General</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Having an illness often means
+									doing different tasks and activities to manage your condition.
+									How confident are you that you can do all the things necessary
+									to manage your condition on a regular basis?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageDisease1"
+								size="5" onchange="javascript: calManDiseaseScore()"
+								maxLength="2" class="textbox"
+								value="<%= props.getProperty("manageDisease1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Judge when the changes in you
+									illness mean you should visit a doctor?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageDisease2"
+								size="5" onchange="javascript: calManDiseaseScore()"
+								maxLength="2" class="textbox"
+								value="<%= props.getProperty("manageDisease2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Do the different tasks and
+									activities needed to manage your health condition so as to
+									reduce your need to see a doctor?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageDisease3"
+								size="5" onchange="javascript: calManDiseaseScore()"
+								maxLength="2" class="textbox"
+								value="<%= props.getProperty("manageDisease3", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">4.</td>
+									<td valign="top" width="95%">Reduce the emotional distress
+									caused by your health condition so that it does not affect your
+									everyday life?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageDisease4"
+								size="5" onchange="javascript: calManDiseaseScore()"
+								maxLength="2" class="textbox"
+								value="<%= props.getProperty("manageDisease4", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">5.</td>
+									<td valign="top" width="95%">Do things other than just
+									taking medication to reduce how much your illness affects your
+									everyday life?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageDisease5"
+								size="5" onchange="javascript: calManDiseaseScore()"
+								maxLength="2" class="textbox"
+								value="<%= props.getProperty("manageDisease5", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the five items. If more than two item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="manDiseaseScore" readonly="true"
+								value="<%= props.getProperty("manDiseaseScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="80">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage3();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage5();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page5" >    
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Achieve Outcomes</th>
-                </tr>    
-                <tr class="subTitle">
-                    <th colspan="12">SE Do Chores</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Complete your household chores, such as vacuuming and yard work, despite your health problems?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="doChore1" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore1", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Get your errands done despite your health problems?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="doChore2" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore2", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Get your shopping done despite your health problems?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="doChore3" size="5" onchange="javascript:calChoresScore()" maxLength="2" class="textbox" value="<%= props.getProperty("doChore3", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the three items. If more than one item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="choresScore" readonly="true" value="<%= props.getProperty("choresScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                    <table height="180"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>              
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage4();"><< Previous Page</a>
-        </td>    
-        <td align="right">
-            <a href="javascript: goToPage6();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page5">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Achieve Outcomes</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Do Chores</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Complete your household
+									chores, such as vacuuming and yard work, despite your health
+									problems?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="doChore1"
+								size="5" onchange="javascript:calChoresScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("doChore1", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Get your errands done despite
+									your health problems?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="doChore2"
+								size="5" onchange="javascript:calChoresScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("doChore2", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Get your shopping done
+									despite your health problems?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="doChore3"
+								size="5" onchange="javascript:calChoresScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("doChore3", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the three items. If more than one item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="choresScore" readonly="true"
+								value="<%= props.getProperty("choresScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="180">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage4();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage6();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page6" >    
-    <tr>        
-        <td valign="top" colspan="2">
-        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Achieve Outcomes</th>
-                </tr>    
-                <tr class="subTitle">
-                    <th colspan="12">SE Social/Recreational Activities</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Continue to do your hobbies and recreation?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="social1" size="5" onchange="javascript:calSocialScore()" maxLength="2" class="textbox" value="<%= props.getProperty("social1", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Continue to do the things you like to do with friends and family (such as social visits and recreation)?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="social2" size="5" onchange="javascript:calSocialScore()" maxLength="2" class="textbox" value="<%= props.getProperty("social2", "") %>"/>
-                    </td>
-                </tr>                 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the two items. If more than one item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="socialScore" readonly="true" value="<%= props.getProperty("socialScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr class="subTitle">
-                    <th colspan="12">SE Manage Shortness of Breath</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Keep your shortness of breath from interfering with what you want to do?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="shortBreath1" size="5" onchange="javascript:calBreathScore()" maxLength="2" class="textbox" value="<%= props.getProperty("shortBreath1", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: This is a single-item scale; scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>  
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="breathScore" readonly="true" value="<%= props.getProperty("breathScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                    <table height="20"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>           
-        </td>
-    </tr>    
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage5();"><< Previous Page</a>
-        </td>    
-        <td align="right">
-            <a href="javascript: goToPage7();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page6">
+				<tr>
+					<td valign="top" colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Achieve Outcomes</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Social/Recreational Activities</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Continue to do your hobbies
+									and recreation?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="social1"
+								size="5" onchange="javascript:calSocialScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("social1", "") %>" />
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Continue to do the things you
+									like to do with friends and family (such as social visits and
+									recreation)?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="social2"
+								size="5" onchange="javascript:calSocialScore()" maxLength="2"
+								class="textbox" value="<%= props.getProperty("social2", "") %>" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the two items. If more than one item is missing, set the value
+							of the score for this scale to missing. Scores range from 1 to
+							10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="socialScore" readonly="true"
+								value="<%= props.getProperty("socialScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Manage Shortness of Breath</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Keep your shortness of breath
+									from interfering with what you want to do?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="shortBreath1"
+								size="5" onchange="javascript:calBreathScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("shortBreath1", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: This is a
+							single-item scale; scores range from 1 to 10, with a higher score
+							indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="breathScore" readonly="true"
+								value="<%= props.getProperty("breathScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="20">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage5();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage7();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page7" >    
-    <tr>        
-        <td colspan="2">
-                        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Achieve Outcomes</th>
-                </tr>  
-                <tr class="subTitle">
-                    <th colspan="12">SE Manage Symptoms</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Reduce your physical discomfort or pain?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageSymptoms1" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Keep the fatigue casued by your disease from interfering with the things you want to do?
-                                </td>
-                            </tr>
-                        </table>                     
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageSymptoms2" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Keep the physical discomfort or pain of your disease from interfering with the things you want to do?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageSymptoms3" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms3", "") %>"/>
-                    </td>
-                </tr>  
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">4.</td>
-                                <td valign="top" width="95%">
-                                    Keep any other symptoms or health problems you have from interfering with the things you want to do?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageSymptoms4" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms4", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">5.</td>
-                                <td valign="top" width="95%">
-                                    Control any symptoms or health problems you have so that they don't interfere with the things you want to do?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="manageSymptoms5" size="5" onchange="javascript: calManSymScore()" maxLength="2" class="textbox" value="<%= props.getProperty("manageSymptoms5", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the five items. If more than two item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="manSymScore" readonly="true" value="<%= props.getProperty("manSymScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>                  
-                <tr>
-                    <td colspan="12">
-                    <table height="80"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>  
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage6();"><< Previous Page</a>
-        </td>
-        <td align="right">
-            <a href="javascript: goToPage8();">Next Page >></a>
-        </td>
-    </tr>
-</table>
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page7">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Achieve Outcomes</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Manage Symptoms</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Reduce your physical
+									discomfort or pain?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageSymptoms1"
+								size="5" onchange="javascript: calManSymScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("manageSymptoms1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Keep the fatigue casued by
+									your disease from interfering with the things you want to do?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageSymptoms2"
+								size="5" onchange="javascript: calManSymScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("manageSymptoms2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Keep the physical discomfort
+									or pain of your disease from interfering with the things you
+									want to do?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageSymptoms3"
+								size="5" onchange="javascript: calManSymScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("manageSymptoms3", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">4.</td>
+									<td valign="top" width="95%">Keep any other symptoms or
+									health problems you have from interfering with the things you
+									want to do?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageSymptoms4"
+								size="5" onchange="javascript: calManSymScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("manageSymptoms4", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">5.</td>
+									<td valign="top" width="95%">Control any symptoms or
+									health problems you have so that they don't interfere with the
+									things you want to do?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="manageSymptoms5"
+								size="5" onchange="javascript: calManSymScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("manageSymptoms5", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the five items. If more than two item is missing, set the
+							value of the score for this scale to missing. Scores range from 1
+							to 10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="manSymScore" readonly="true"
+								value="<%= props.getProperty("manSymScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="80">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage6();"><<
+					Previous Page</a></td>
+					<td align="right"><a href="javascript: goToPage8();">Next
+					Page >></a></td>
+				</tr>
+			</table>
 
-<table border="0" cellspacing="0" cellpadding="0" style="display:none" width="740px" height="85%" id="page8" >    
-    <tr>        
-        <td colspan="2">
-                        <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >    
-                <tr class="title" >
-                    <th colspan="12">Self Efficacy to Achieve Outcomes</th>
-                </tr>  
-                <tr class="subTitle">
-                    <th colspan="12">SE Control/Manage Depression</th>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        We would like to know <font style="font-weight:bold">how confident</font> you are in doing certain activities. 
-                        For each of the following questions, please enter the number that corresponds to your confidence that you can
-                        do the tasks regularly at the present time.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">    
-                        How confident are you that you can...
-                    </td>
-                </tr>                            
-                <tr>                    
-                    <td width="15%" class="scoreHeavy">Not at all confident</td>
-                    <td width="7%" class="scoreHeavy">1</td>
-                    <td width="7%" class="scoreHeavy">2</td>
-                    <td width="7%" class="scoreHeavy">3</td>
-                    <td width="7%" class="scoreHeavy">4</td>                    
-                    <td width="7%" class="scoreHeavy">5</td>
-                    <td width="7%" class="scoreHeavy">6</td>
-                    <td width="7%" class="scoreHeavy">7</td>
-                    <td width="7%" class="scoreHeavy">8</td>  
-                    <td width="7%" class="scoreHeavy">9</td>
-                    <td width="7%" class="scoreHeavy">10</td> 
-                    <td width="15%" class="scoreHeavy">Totally Confident</td>
-                </tr>
-                <tr class="scoreLight">                    
-                    <td colspan="12"  class="scoreLight">&nbsp;</td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">1.</td>
-                                <td valign="top" width="95%">
-                                    Keep from getting discouraged when nothing you do seems to make any difference?
-                                </td>
-                            </tr>
-                        </table>
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress1" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress1", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">2.</td>
-                                <td valign="top" width="95%">
-                                    Keep from feeling said or down in the dumps?
-                                </td>
-                            </tr>
-                        </table>                     
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress2" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress2", "") %>"/>
-                    </td>
-                </tr>
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">3.</td>
-                                <td valign="top" width="95%">
-                                    Keep yourself from feeling lonely?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress3" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress3", "") %>"/>
-                    </td>
-                </tr>  
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">4.</td>
-                                <td valign="top" width="95%">
-                                    Do something to make yourself feel better when you are feeling lonely?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress4" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress4", "") %>"/>
-                    </td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">5.</td>
-                                <td valign="top" width="95%">
-                                    Do something to make yourself feel beeter when you are feeling discouraged?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress5" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress5", "") %>"/>
-                    </td>
-                </tr> 
-                 <tr bgcolor="white">
-                    <td colspan="11">
-                        <table width="100%">
-                            <tr>
-                                <td valign="top" width="5%">6.</td>
-                                <td valign="top" width="95%">
-                                    Do something to make yourself feel beeter when you feel sad or down in the dumps?
-                                </td>
-                            </tr>
-                        </table>                         
-                    </td>                                     
-                    <td align="center">
-                        <input type="text" name="controlDepress6" size="5" onchange="javascript:calManDprScore()" maxLength="2" class="textbox" value="<%= props.getProperty("controlDepress6", "") %>"/>
-                    </td>
-                </tr> 
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td colspan="12" class="score" >
-                    Scoring: Score is the mean of the six items. If more than two item is missing, set the value of the score for this
-                    scale to missing. Scores range from 1 to 10, with a higher score indicating greater self-efficacy.
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">
-                        Score: <input type="text" name="manDprScore" readonly="true" value="<%= props.getProperty("manDprScore", "") %>"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="12">&nbsp;</td>
-                </tr>                  
-                <tr>
-                    <td colspan="12">
-                    <table height="80"><tr><td></td></tr></table>
-                    </td>
-                </tr>
-            </table>  
-        </td>
-    </tr>
-    <tr class="subject">
-        <td align="left">
-            <a href="javascript: backToPage7();"><< Previous Page</a>
-        </td>
-        <td align="right">            
-        </td>
-    </tr>
-</table>
-</td></tr>
-<tr><td valign="top">
-<table class="Head" class="hidePrint" height="5%">
-    <tr>
-        <td align="left">
-<%
+			<table border="0" cellspacing="0" cellpadding="0"
+				style="display: none" width="740px" height="85%" id="page8">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="12">Self Efficacy to Achieve Outcomes</th>
+						</tr>
+						<tr class="subTitle">
+							<th colspan="12">SE Control/Manage Depression</th>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">We would like to know <font
+								style="font-weight: bold">how confident</font> you are in doing
+							certain activities. For each of the following questions, please
+							enter the number that corresponds to your confidence that you can
+							do the tasks regularly at the present time.</td>
+						</tr>
+						<tr>
+							<td colspan="12">How confident are you that you can...</td>
+						</tr>
+						<tr>
+							<td width="15%" class="scoreHeavy">Not at all confident</td>
+							<td width="7%" class="scoreHeavy">1</td>
+							<td width="7%" class="scoreHeavy">2</td>
+							<td width="7%" class="scoreHeavy">3</td>
+							<td width="7%" class="scoreHeavy">4</td>
+							<td width="7%" class="scoreHeavy">5</td>
+							<td width="7%" class="scoreHeavy">6</td>
+							<td width="7%" class="scoreHeavy">7</td>
+							<td width="7%" class="scoreHeavy">8</td>
+							<td width="7%" class="scoreHeavy">9</td>
+							<td width="7%" class="scoreHeavy">10</td>
+							<td width="15%" class="scoreHeavy">Totally Confident</td>
+						</tr>
+						<tr class="scoreLight">
+							<td colspan="12" class="scoreLight">&nbsp;</td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">1.</td>
+									<td valign="top" width="95%">Keep from getting discouraged
+									when nothing you do seems to make any difference?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress1"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress1", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">2.</td>
+									<td valign="top" width="95%">Keep from feeling said or
+									down in the dumps?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress2"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress2", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">3.</td>
+									<td valign="top" width="95%">Keep yourself from feeling
+									lonely?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress3"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress3", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">4.</td>
+									<td valign="top" width="95%">Do something to make yourself
+									feel better when you are feeling lonely?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress4"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress4", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">5.</td>
+									<td valign="top" width="95%">Do something to make yourself
+									feel beeter when you are feeling discouraged?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress5"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress5", "") %>" /></td>
+						</tr>
+						<tr bgcolor="white">
+							<td colspan="11">
+							<table width="100%">
+								<tr>
+									<td valign="top" width="5%">6.</td>
+									<td valign="top" width="95%">Do something to make yourself
+									feel beeter when you feel sad or down in the dumps?</td>
+								</tr>
+							</table>
+							</td>
+							<td align="center"><input type="text" name="controlDepress6"
+								size="5" onchange="javascript:calManDprScore()" maxLength="2"
+								class="textbox"
+								value="<%= props.getProperty("controlDepress6", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12" class="score">Scoring: Score is the mean
+							of the six items. If more than two item is missing, set the value
+							of the score for this scale to missing. Scores range from 1 to
+							10, with a higher score indicating greater self-efficacy.</td>
+						</tr>
+						<tr>
+							<td colspan="12">Score: <input type="text"
+								name="manDprScore" readonly="true"
+								value="<%= props.getProperty("manDprScore", "") %>" /></td>
+						</tr>
+						<tr>
+							<td colspan="12">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="12">
+							<table height="80">
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr class="subject">
+					<td align="left"><a href="javascript: backToPage7();"><<
+					Previous Page</a></td>
+					<td align="right"></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint" height="5%">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript: return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript: return onSave();" /> <input type="submit"
+						value="Save and Exit"
+						onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

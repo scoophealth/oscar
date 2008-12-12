@@ -37,21 +37,21 @@
   }
   
   
-%>  
+%>
 
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@page import="oscar.oscarDemographic.data.*,java.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
 
 <head>
-<title>
-Demographic Extention 
-</title><!--I18n-->
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css"/>
+<title>Demographic Extention</title>
+<!--I18n-->
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css" />
 
 
 <script type="text/javascript">
@@ -65,205 +65,155 @@ function newWindow(file,window) {
 </script>
 
 
-<style type="text/css">
-	
-	div.tableListing table {
-               margin-top:0px;
-               border-width: 1px 1px 1px 1px;
-	       border-spacing: 0px;
-	       border-style: outset outset outset outset;
-	       border-color: gray gray gray gray;
-	       border-collapse: collapse;
-            }
-            
-            div.tableListing table tr td{
-               font-size: x-small;
-               text-align: center;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-            
-            div.tableListing table tr th{
-               font-size: small;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-	
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 <body class="BodyStyle">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" >
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn"  >
-      Add Relation
-            </td>            
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-					<oscar:nameage demographicNo="<%=creatorDemo%>"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-            &nbsp;
-            <a href="<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=creatorDemo%>" >Back to PMM </a>
-            
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-               
-               <form id="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
-               <div>
-                Name: <input type="text" name="keyword" size="25" value=""/>
-                
-                <input type="submit" name="Submit" value="Search"/>
-                <input type="hidden" name="orderby" value="last_name" />
-				    <input type="hidden" name="search_mode" value="search_name" />
-				    <input type="hidden" name="originalpage" value="../demographic/AddAlternateContact.jsp" />
-				    <input type="hidden" name="limit1" value="0" />
-				    <input type="hidden" name="limit2" value="5" />
-                <input type="hidden" name="displaymode" value="Search "/> 
-                
-                <input type="hidden" name="appointment_date" value="2002-10-01" />
-                <input type="hidden" name="status" value="t"  />
-                <input type="hidden" name="start_time" value="10:45"   onchange="checkTimeTypeIn(this)"/>
-                <input type="hidden" name="type" value="" />
-                <input type="hidden" name="duration" value="15"  />
-                <input type="hidden" name="end_time" value="10:59"   onchange="checkTimeTypeIn(this)" />       
-                <input type="hidden" name="demographic_no"   value=""  />              
-                <input type="hidden" name="location"  tabindex="4" value="" />
-                <input type="hidden" name="resources"  tabindex="5" value="" />
-                <input type="hidden" name="user_id"  value="oscardoc, doctor" />
-     	        <input type="hidden" name="dboperation" value="add_apptrecord"/>
-                <input type="hidden" name="createdatetime"  value="2002-10-1 17:53:50" />
-                <input type="hidden" name="provider_no" value="115"/>
-                <input type="hidden" name="creator" value="oscardoc, doctor"/>
-                <input type="hidden" name="remarks" value="<%=creatorDemo%>"/>
-            </div>    
-            </form>
-            
-               <%String demoNo = request.getParameter("demographic_no");               
+<table class="MainTable" id="scrollNumber1">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Add Relation</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><oscar:nameage demographicNo="<%=creatorDemo%>" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top">&nbsp; <a
+			href="<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=creatorDemo%>">Back
+		to PMM </a></td>
+		<td valign="top" class="MainTableRightColumn">
+
+		<form id="ADDAPPT" method="post"
+			action="../appointment/appointmentcontrol.jsp">
+		<div>Name: <input type="text" name="keyword" size="25" value="" />
+
+		<input type="submit" name="Submit" value="Search" /> <input
+			type="hidden" name="orderby" value="last_name" /> <input
+			type="hidden" name="search_mode" value="search_name" /> <input
+			type="hidden" name="originalpage"
+			value="../demographic/AddAlternateContact.jsp" /> <input
+			type="hidden" name="limit1" value="0" /> <input type="hidden"
+			name="limit2" value="5" /> <input type="hidden" name="displaymode"
+			value="Search " /> <input type="hidden" name="appointment_date"
+			value="2002-10-01" /> <input type="hidden" name="status" value="t" />
+		<input type="hidden" name="start_time" value="10:45"
+			onchange="checkTimeTypeIn(this)" /> <input type="hidden" name="type"
+			value="" /> <input type="hidden" name="duration" value="15" /> <input
+			type="hidden" name="end_time" value="10:59"
+			onchange="checkTimeTypeIn(this)" /> <input type="hidden"
+			name="demographic_no" value="" /> <input type="hidden"
+			name="location" tabindex="4" value="" /> <input type="hidden"
+			name="resources" tabindex="5" value="" /> <input type="hidden"
+			name="user_id" value="oscardoc, doctor" /> <input type="hidden"
+			name="dboperation" value="add_apptrecord" /> <input type="hidden"
+			name="createdatetime" value="2002-10-1 17:53:50" /> <input
+			type="hidden" name="provider_no" value="115" /> <input type="hidden"
+			name="creator" value="oscardoc, doctor" /> <input type="hidden"
+			name="remarks" value="<%=creatorDemo%>" /></div>
+		</form>
+
+		<%String demoNo = request.getParameter("demographic_no");               
                  String name = request.getParameter("name");
                  String origDemo = request.getParameter("remarks");
-               if ( demoNo != null ) {%>
-               <html:form action="/demographic/AddRelation">
-               <input type="hidden" name="origDemo" value="<%=origDemo%>"/>
-               <input type="hidden" name="linkingDemo" value="<%=demoNo%>"/>
-               
-               
-               <div class="prevention">                                                         
-                   <fieldset >
-                      <legend >Relation</legend>
-                         <label for="name">Name:<%=name%> <br/>
-                         
-                         <label for="relation">Relationship:</label>
-                                <select name="relation">              
-                                  <option value="Mother">Mother</option>
-                                  <option value="Father">Father</option>
-                                  <option value="Father">Parent</option>
-                                  <option value="Wife">Wife</option>
-                                  <option value="Husband">Husband</option>
-                                  <option value="Partner">Partner</option>
-                                  <option value="Brother">Brother</option>
-                                  <option value="Sister">Sister</option>
-                                  <option value="Son">Son</option>
-                                  <option value="Daughter">Daughter</option>
-                                  <option value="Aunt">Aunt</option>
-                                  <option value="Uncle">Uncle</option>
-                                  <option value="GrandFather">GrandFather</option>
-                                  <option value="GrandMother">GrandMother</option>
-                                  <option value="Guardian">Guardian</option>
-				  <option value="Administrative Staff">Administrative Staff</option>
-				  <option value="Care Giver">Care Giver</option>
-				  <option value="Power of Attorney">Power of Attorney</option>
-				  <option value="Insurance">Insurance</option>
-				  <option value="Guarantor">Guarantor</option>
-                                  <option value="Other">Other</option>
-                               </select>
-                               <input type="checkbox" name="sdm" value="yes"> Substitute Decision Maker</input>
-                               <input type="checkbox" name="emergContact" value="yes"> Emergency Contact</input>
-                               <br/>
-                         <label for="notes">Notes:</label><br>
-                                <textarea cols="20" rows="3" name="notes" ></textarea>
-                               <input type="submit" value="Add Relationship"/>
-                               
-                               
-                   </fieldset>                   
-               </div>                                                                                               
-               </html:form>            
-               <%}%>
-            
-               <div class="tablelisting">
-                  <table>
-               <% DemographicRelationship demoRelation = new DemographicRelationship(); 
+               if ( demoNo != null ) {%> <html:form
+			action="/demographic/AddRelation">
+			<input type="hidden" name="origDemo" value="<%=origDemo%>" />
+			<input type="hidden" name="linkingDemo" value="<%=demoNo%>" />
+
+
+			<div class="prevention">
+			<fieldset><legend>Relation</legend> <label for="name">Name:<%=name%>
+			<br />
+
+			<label for="relation">Relationship:</label> <select name="relation">
+				<option value="Mother">Mother</option>
+				<option value="Father">Father</option>
+				<option value="Father">Parent</option>
+				<option value="Wife">Wife</option>
+				<option value="Husband">Husband</option>
+				<option value="Partner">Partner</option>
+				<option value="Brother">Brother</option>
+				<option value="Sister">Sister</option>
+				<option value="Son">Son</option>
+				<option value="Daughter">Daughter</option>
+				<option value="Aunt">Aunt</option>
+				<option value="Uncle">Uncle</option>
+				<option value="GrandFather">GrandFather</option>
+				<option value="GrandMother">GrandMother</option>
+				<option value="Guardian">Guardian</option>
+				<option value="Administrative Staff">Administrative Staff</option>
+				<option value="Care Giver">Care Giver</option>
+				<option value="Power of Attorney">Power of Attorney</option>
+				<option value="Insurance">Insurance</option>
+				<option value="Guarantor">Guarantor</option>
+				<option value="Other">Other</option>
+			</select> <input type="checkbox" name="sdm" value="yes"> Substitute
+			Decision Maker</input> <input type="checkbox" name="emergContact" value="yes">
+			Emergency Contact</input> <br />
+			<label for="notes">Notes:</label><br>
+			<textarea cols="20" rows="3" name="notes"></textarea> <input
+				type="submit" value="Add Relationship" /></fieldset>
+			</div>
+		</html:form> <%}%>
+
+		<div class="tablelisting">
+		<table>
+			<% DemographicRelationship demoRelation = new DemographicRelationship(); 
                   ArrayList list = demoRelation.getDemographicRelationships(creatorDemo);   
                   if (list.size() > 0){
                %>
-                     <tr>
-                        <th>Name</th>
-                        <th>Relation</th>
-                        <th>SDM</th>
-                        <th>Notes</th>
-                        <th>&nbsp;</th>
-                     </tr>
-                  
-               <% }
+			<tr>
+				<th>Name</th>
+				<th>Relation</th>
+				<th>SDM</th>
+				<th>Notes</th>
+				<th>&nbsp;</th>
+			</tr>
+
+			<% }
                   for ( int i = 0; i < list.size(); i++ ){ 
                      Hashtable h = (Hashtable) list.get(i);
                      String relatedDemo = (String) h.get("demographic_no");              
                      DemographicData dd = new DemographicData();
                      DemographicData.Demographic demographic = dd.getDemographic(relatedDemo);    %>
-                     <tr>
-                        <td><%=demographic.getLastName() +", "+demographic.getFirstName()%></td>
-                        <td><%=h.get("relation")%></td>
-                        <td><%=returnYesIf1(h.get("sub_decision_maker"))%></td>
-                        <td><%=h.get("notes")%></td>
-                        <td><a href="DeleteRelation.do?id=<%=h.get("id")%>&amp;origDemo=<%=creatorDemo%>">del</a></td>
-                     </tr>
-                <%}%>
-                  </table>
-               </div>
-               
-               
-               <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="yes">
-                   <br/>
-                  <html:form action="/demographic/AddRelation">
-                     <input type="hidden" name="origDemo" value="<%=creatorDemo%>"/>
-                     <input type="submit" name="pmmClient" value="Finished"/>
-                   </html:form>
-               </oscar:oscarPropertiesCheck>
+			<tr>
+				<td><%=demographic.getLastName() +", "+demographic.getFirstName()%></td>
+				<td><%=h.get("relation")%></td>
+				<td><%=returnYesIf1(h.get("sub_decision_maker"))%></td>
+				<td><%=h.get("notes")%></td>
+				<td><a
+					href="DeleteRelation.do?id=<%=h.get("id")%>&amp;origDemo=<%=creatorDemo%>">del</a></td>
+			</tr>
+			<%}%>
+		</table>
+		</div>
 
-               
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+
+		<oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="yes">
+			<br />
+			<html:form action="/demographic/AddRelation">
+				<input type="hidden" name="origDemo" value="<%=creatorDemo%>" />
+				<input type="submit" name="pmmClient" value="Finished" />
+			</html:form>
+		</oscar:oscarPropertiesCheck></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html:html>
 <%!

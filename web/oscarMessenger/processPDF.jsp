@@ -1,11 +1,14 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page language="java" %>
-<%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean "%>
-<%@  page import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page
+	import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean "%>
+<%@  page
+	import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.util.*"%>
 
 
@@ -16,13 +19,15 @@ String pdfTitle = (String) request.getParameter("pdfTitle");
 
 %>
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 
 
 
 <html>
-    <head><title>Generate Preview Page</title></head>
-    <script type="text/javascript">   
+<head>
+<title>Generate Preview Page</title>
+</head>
+<script type="text/javascript">   
     function SetBottomURL(url) {
         f = parent.attFrame;
         
@@ -42,23 +47,24 @@ String pdfTitle = (String) request.getParameter("pdfTitle");
 
 
     </script>
-    <body>
-        <%-- <jsp:useBean id="beanInstanceName" scope="session" class="beanPackage.BeanClassName" /> --%>
-        <%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
-            
-        
-        <html:form action="/oscarMessenger/ProcessDoc2PDF">
+<body>
+<%-- <jsp:useBean id="beanInstanceName" scope="session" class="beanPackage.BeanClassName" /> --%>
+<%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
 
-        Attaching <%=demographic_no%> <%=pdfTitle%>
 
-            <textarea name="srcText" rows="5" cols="80"></textarea>
-            <html:hidden property="isPreview" value="false" />
-            <html:submit property="ok"/>
-            <html:hidden property="pdfTitle" value="<%=pdfTitle%>" />
+<html:form action="/oscarMessenger/ProcessDoc2PDF">
 
-        </html:form>
-        
-        <script>
+        Attaching <%=demographic_no%>
+	<%=pdfTitle%>
+
+	<textarea name="srcText" rows="5" cols="80"></textarea>
+	<html:hidden property="isPreview" value="false" />
+	<html:submit property="ok" />
+	<html:hidden property="pdfTitle" value="<%=pdfTitle%>" />
+
+</html:form>
+
+<script>
             SetBottomURL('<%=uri%>' + "&demographic_no=" + '<%=demographic_no%> ' );
             setTimeout("GetBottomSRC()", 5000); 
             setTimeout("document.forms[0].submit()", 5000);     
@@ -67,6 +73,6 @@ String pdfTitle = (String) request.getParameter("pdfTitle");
             
         </script>
 
-    </body>
+</body>
 </html>
 

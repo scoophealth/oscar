@@ -23,13 +23,14 @@
  * Ontario, Canada
  */
 -->
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.backup" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -38,8 +39,10 @@
   boolean bodd = false;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <html>
 <head>
@@ -53,21 +56,28 @@
 </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-  <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <tr><th align="CENTER" bgcolor="<%=deepcolor%>">BACKUP DOWNLOAD PAGE</th></tr>
-  </table>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td></td>
-      <td align="right"><a href="#" onClick='window.close()'> Close </a></td>
-  </tr>
-  </table>
+<table cellspacing="0" cellpadding="2" width="100%" border="0">
+	<tr>
+		<th align="CENTER" bgcolor="<%=deepcolor%>">BACKUP DOWNLOAD PAGE</th>
+	</tr>
+</table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr>
+		<td></td>
+		<td align="right"><a href="#" onClick='window.close()'> Close
+		</a></td>
+	</tr>
+</table>
 
-    <table cellspacing="1" cellpadding="2" width="90%" border="0">
-    <tr bgcolor='<%=deepcolor%>'><th>File Name</th><th>Size</th></tr>
-<%
+<table cellspacing="1" cellpadding="2" width="90%" border="0">
+	<tr bgcolor='<%=deepcolor%>'>
+		<th>File Name</th>
+		<th>Size</th>
+	</tr>
+	<%
     String backuppath = oscarVariables.getProperty("backup_path") ; //"c:\\root";
     if ( backuppath == null || backuppath.equals("") ) {
         Exception e = new Exception("Unable to find the key backup_path in the properties file.  Please check the value of this key or add it if it is missing.");
@@ -90,6 +100,6 @@
       out.println("<td align='right'>"+contents[i].length()+"</td></tr>"); //+System.getProperty("file.separator")
     }
 %>
-    </table>
+</table>
 </body>
 </html>

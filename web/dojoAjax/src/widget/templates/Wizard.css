@@ -19,7 +19,8 @@
 	font-weight: normal;
 	font-size: xx-small;
 	font-family: Verdana, Arial, Helvetica;
-	padding: 2 50; text-align: justify;
+	padding: 2 50;
+	text-align: justify;
 }
 
 .WizardLightText {
@@ -47,7 +48,8 @@
 	border-top: #666666 1px solid;
 	padding-right: 4px;
 	padding-left: 4px;
-	text-decoration: none; height: 18px;
+	text-decoration: none;
+	height: 18px;
 }
 
 .WizardButton:hover {
@@ -68,5 +70,3 @@
 	text-decoration: none;
 	height: 18px;
 }
-
-

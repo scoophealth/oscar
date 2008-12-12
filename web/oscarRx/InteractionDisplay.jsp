@@ -21,7 +21,8 @@
  * Ontario, Canada 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*"%>
 <%
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
 if ( bean == null ){
@@ -32,13 +33,15 @@ if ( bean == null ){
      if (interactions != null && interactions.length > 0){ 
         System.out.println("interactions.length "+interactions.length);
         for (int i = 0 ; i < interactions.length; i++){  %>
-         <div style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-         <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%><br/>
-         <%=interactions[i].comment%>
-         </div>
+<div
+	style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+<%=interactions[i].affectingdrug%> <%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%>
+&nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%>
+&nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%><br />
+<%=interactions[i].comment%></div>
 <%      }
     }else if(interactions == null && bean.getStashSize() > 1){ %>
-        <div>Drug to Drug Interaction Service not available</div>                          
+<div>Drug to Drug Interaction Service not available</div>
 <%  }   %>
 <%!
 

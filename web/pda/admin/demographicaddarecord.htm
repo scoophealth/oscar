@@ -26,7 +26,7 @@
 
 <html>
 <head>
-<title> ADD PATIENT INFO</title>
+<title>ADD PATIENT INFO</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -44,62 +44,75 @@ function upCaseCtrl(ctrl) {
 </script>
 </head>
 <!--base target="pt_srch_main"-->
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-	  <tr bgcolor="#486ebd"> 
-      <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD A DEMOGRAPHIC RECORD</font></th>
-	  </tr>
-	</table>
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">ADD
+		A DEMOGRAPHIC RECORD</font></th>
+	</tr>
+</table>
 <p>
 <table border="0" cellpadding="1" cellspacing="0" width="100%">
 	<form method="post" name="updatedelete" action="admincontrol.jsp">
-  <tr> 
-      <td align="right"> <b>Last Name<font color="red">:</font> </b></td>
-      <td align="left">  <input type="text" name="last_name" onBlur="upCaseCtrl(this)">      </td>
-      <td align="right"><b>First Name<font color="red">:</font> </b> </td>
-      <td align="left"> <input type="text" name="first_name" onBlur="upCaseCtrl(this)">  </td>
-  </tr><tr valign="top"> 
-      <td  align="right"> <b>Address: </b></td>
-      <td align="left" > <input type="text" name="address" onBlur="upCaseCtrl(this)"> </td>
-      <td align="right"><b>City: </b></td>
-      <td align="left"> <input type="text" name="city" onBlur="upCaseCtrl(this)"> </td>
-  </tr><tr valign="top"> 
-      <td align="right"><b>Province: </b> </td>
-      <td  align="left"> <input type="text" name="province" onBlur="upCaseCtrl(this)"> </td>
-      <td  align="right"><b>Postal: </b> </td>
-      <td  align="left"> <input type="text" name="postal" onBlur="upCaseCtrl(this)"></td>
-  </tr><tr valign="top"> 
-      <td  align="right"><b>Phone(H): </b> </td>
-      <td align="left" > <input type="text" name="phone" value=""></td>
-      <td  align="right"><b>Phone(O):</b> </td>
-      <td  align="left"> <input type="text" name="phone2" value=""></td>
-  </tr><tr valign="top"> 
-      <td  align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b><font color="red">:</font></b></td>
-      <td  align="left" > 
-        <table border="0" cellpadding="0" cellspacing="0">
-          <tr> 
-            <td>
-              <input type="text" name="year_of_birth" size="4" maxlength="4">
-            </td>
-            <td>-</td>
-            <td>
-              <input type="text" name="month_of_birth" size="2" maxlength="2">
-            </td>
-            <td>-</td>
-            <td>
-              <input type="text" name="date_of_birth" size="2" maxlength="2">
-               </td>
-          </tr>
-        </table>
-      </td>
-      <td  align="right"><b>Age: </b></td>
-      <td align="left"><input type="text" name="age"> </td>
-  </tr><tr valign="top"> 
-      <td align="right"><b>HIN: </b></td>
-      <td align="left" ><input type="text" name="hin"></td>
-      <td align="right"><b>Ver:</b> </td>
-      <td align="left"><input type="text" name="ver" value=""> </td>
-  </tr><!--tr valign="top"> 
+	<tr>
+		<td align="right"><b>Last Name<font color="red">:</font> </b></td>
+		<td align="left"><input type="text" name="last_name"
+			onBlur="upCaseCtrl(this)"></td>
+		<td align="right"><b>First Name<font color="red">:</font> </b></td>
+		<td align="left"><input type="text" name="first_name"
+			onBlur="upCaseCtrl(this)"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Address: </b></td>
+		<td align="left"><input type="text" name="address"
+			onBlur="upCaseCtrl(this)"></td>
+		<td align="right"><b>City: </b></td>
+		<td align="left"><input type="text" name="city"
+			onBlur="upCaseCtrl(this)"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Province: </b></td>
+		<td align="left"><input type="text" name="province"
+			onBlur="upCaseCtrl(this)"></td>
+		<td align="right"><b>Postal: </b></td>
+		<td align="left"><input type="text" name="postal"
+			onBlur="upCaseCtrl(this)"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Phone(H): </b></td>
+		<td align="left"><input type="text" name="phone" value=""></td>
+		<td align="right"><b>Phone(O):</b></td>
+		<td align="left"><input type="text" name="phone2" value=""></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>DOB</b><font size="-2">(yyyy-mm-dd)</font><b><font
+			color="red">:</font></b></td>
+		<td align="left">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td><input type="text" name="year_of_birth" size="4"
+					maxlength="4"></td>
+				<td>-</td>
+				<td><input type="text" name="month_of_birth" size="2"
+					maxlength="2"></td>
+				<td>-</td>
+				<td><input type="text" name="date_of_birth" size="2"
+					maxlength="2"></td>
+			</tr>
+		</table>
+		</td>
+		<td align="right"><b>Age: </b></td>
+		<td align="left"><input type="text" name="age"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>HIN: </b></td>
+		<td align="left"><input type="text" name="hin"></td>
+		<td align="right"><b>Ver:</b></td>
+		<td align="left"><input type="text" name="ver" value="">
+		</td>
+	</tr>
+	<!--tr valign="top"> 
       <td align="right"><b>Roster Status: </b> </td>
       <td align="left" > 
         <input type="text" name="roster_status" onBlur="upCaseCtrl(this)">
@@ -109,90 +122,80 @@ function upCaseCtrl(ctrl) {
         <input type="text" name="patient_status" onBlur="upCaseCtrl(this)">
       </td>
     </tr-->
-    <tr valign="top"> 
-      <td align="right"><b>Date Joined: </b></td>
-      <td align="left" > 
-        <input type="text" name="date_joined" value="0000-01-01">
-      </td>
-      <td align="right"><b>HC Type: </b></td>
-      <td align="left">
-        <select name="hc_type">
-          <option value="ON" selected>Ontario</option>
-          <option value="AB">Alberta</option>
-          <option value="BC">British Columbia</option>
-          <option value="MB">Manitoba</option>
-          <option value="NF">Newfoundland</option>
-          <option value="NB">New Brunswick</option>
-          <option value="YT">Yukon</option>
-          <option value="NS">Nova Scotia</option>
-          <option value="PE">Prince Edward Island</option>
-          <option value="SK">Saskatchewan</option>
-        </select>
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>Staff: </b></td>
-      <td align="left" > 
-        <input type="text" name="staff">
-      </td>
-      <td align="right"><b>Sex </b><font size="-2">(F/M)</font><b><font color="red">:</font> </b></td>
-      <td align="left"> 
-        <input type="text" name="sex" maxlength="1" onBlur="upCaseCtrl(this)">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>End Date: </b></td>
-      <td align="left" > 
-        <input type="text" name="end_date" value="0000-01-01">
-      </td>
-      <td align="right"> <b>EFF Date: </b></td>
-      <td align="left"> 
-        <input type="text" name="eff_date" value="0000-01-01">
-      </td>
-    </tr>
-    <tr valign="top"> 
-      <td align="right"><b>PCN Indicator: </b></td>
-      <td align="left" > 
-        <input type="text" name="pcn_indicator" onBlur="upCaseCtrl(this)">
-      </td>
-      <td align="right"><b>Chart No.:</b> </td>
-      <td align="left">
-        <input type="text" name="chart_no" value="">
-      </td>
-    <tr valign="top"> 
-      <td align="right"><b>HC Renew Date: </b></td>
-      <td align="left" > 
-        <input type="text" name="hc_renew_date" value="0000-01-01">
-      </td>
-      <td align="right"><b>Family Doctor: </b></td>
-      <td align="left">
-        <input type="text" name="family_doctor">
-      </td>
-    
-    <tr> 
-      <td colspan="4">&nbsp;</td>
-    </tr>
-    <tr bgcolor="#486ebd"> 
-      <td colspan="4"> 
-        <div align="center"> 
-          <input type="hidden" name="dboperation" value="demographic_add_record">
-          <input type="hidden" name="displaymode" value="Demographic_Add_Record">
-          <input type="submit" name="subbutton" value="Add Record">
-          <input type="reset" name="Reset" value="Cancel" >
-        </div>
-      </td>
-    </tr>
-</form>
-  </table>
- 
-  <hr width="100%" color="navy">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+	<tr valign="top">
+		<td align="right"><b>Date Joined: </b></td>
+		<td align="left"><input type="text" name="date_joined"
+			value="0000-01-01"></td>
+		<td align="right"><b>HC Type: </b></td>
+		<td align="left"><select name="hc_type">
+			<option value="ON" selected>Ontario</option>
+			<option value="AB">Alberta</option>
+			<option value="BC">British Columbia</option>
+			<option value="MB">Manitoba</option>
+			<option value="NF">Newfoundland</option>
+			<option value="NB">New Brunswick</option>
+			<option value="YT">Yukon</option>
+			<option value="NS">Nova Scotia</option>
+			<option value="PE">Prince Edward Island</option>
+			<option value="SK">Saskatchewan</option>
+		</select></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>Staff: </b></td>
+		<td align="left"><input type="text" name="staff"></td>
+		<td align="right"><b>Sex </b><font size="-2">(F/M)</font><b><font
+			color="red">:</font> </b></td>
+		<td align="left"><input type="text" name="sex" maxlength="1"
+			onBlur="upCaseCtrl(this)"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>End Date: </b></td>
+		<td align="left"><input type="text" name="end_date"
+			value="0000-01-01"></td>
+		<td align="right"><b>EFF Date: </b></td>
+		<td align="left"><input type="text" name="eff_date"
+			value="0000-01-01"></td>
+	</tr>
+	<tr valign="top">
+		<td align="right"><b>PCN Indicator: </b></td>
+		<td align="left"><input type="text" name="pcn_indicator"
+			onBlur="upCaseCtrl(this)"></td>
+		<td align="right"><b>Chart No.:</b></td>
+		<td align="left"><input type="text" name="chart_no" value="">
+		</td>
+	<tr valign="top">
+		<td align="right"><b>HC Renew Date: </b></td>
+		<td align="left"><input type="text" name="hc_renew_date"
+			value="0000-01-01"></td>
+		<td align="right"><b>Family Doctor: </b></td>
+		<td align="left"><input type="text" name="family_doctor">
+		</td>
+	<tr>
+		<td colspan="4">&nbsp;</td>
+	</tr>
+	<tr bgcolor="#486ebd">
+		<td colspan="4">
+		<div align="center"><input type="hidden" name="dboperation"
+			value="demographic_add_record"> <input type="hidden"
+			name="displaymode" value="Demographic_Add_Record"> <input
+			type="submit" name="subbutton" value="Add Record"> <input
+			type="reset" name="Reset" value="Cancel"></div>
+		</td>
+	</tr>
+	</form>
+</table>
+
+<hr width="100%" color="navy">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"> Back to
+		Admin Page.</a></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </body>
 </html>

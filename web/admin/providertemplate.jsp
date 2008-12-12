@@ -1,10 +1,11 @@
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.schedule" rights="r" reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
 <%
@@ -13,9 +14,11 @@
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*,oscar.util.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <%
   String [][] dbQueries=new String[][] {
 {"search_templatename", "select encountertemplate_name from encountertemplate where encountertemplate_name like ? order by encountertemplate_name" },
@@ -43,8 +46,8 @@
       rowsAffected = apptMainBean.queryExecuteUpdate(param,"add_template");
   }
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--
 /*
  *
@@ -72,10 +75,10 @@
 -->
 <html:html locale="true">
 <head>
-<title><bean:message key="admin.providertemplate.title"/></title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<title><bean:message key="admin.providertemplate.title" /></title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -85,32 +88,39 @@ function setfocus() {
 //-->
 </SCRIPT>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor=<%=deepcolor%>><th><font face="Helvetica"><bean:message key="admin.providertemplate.msgTitle"/></font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor=<%=deepcolor%>>
+		<th><font face="Helvetica"><bean:message
+			key="admin.providertemplate.msgTitle" /></font></th>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-<form name="edittemplate" method="post" action="providertemplate.jsp">
-  <tr bgcolor=<%=weakcolor%>><td width="95%" align='right'><bean:message key="admin.providertemplate.formEdit"/>:
-    <select name="name" >
-<%
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<form name="edittemplate" method="post" action="providertemplate.jsp">
+	<tr bgcolor=<%=weakcolor%>>
+		<td width="95%" align='right'><bean:message
+			key="admin.providertemplate.formEdit" />: <select name="name">
+			<%
   ResultSet rsdemo = null;
   rsdemo = apptMainBean.queryResults("%", "search_templatename");
   while (rsdemo.next()) {
 %>
-    <option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
-<%
+			<option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
+			<%
   }
 %>
-    </select>
-    <input type="hidden" value=" Edit " name="dboperation">
-    <input type="button" value="<bean:message key="admin.providertemplate.btnEdit"/>" name="dboperation" onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
-  </td>
-  <td>&nbsp;</td></tr>
-</form>
+		</select> <input type="hidden" value=" Edit " name="dboperation"> <input
+			type="button"
+			value="<bean:message key="admin.providertemplate.btnEdit"/>"
+			name="dboperation"
+			onclick="document.forms['edittemplate'].dboperation.value=' Edit '; document.forms['edittemplate'].submit();">
+		</td>
+		<td>&nbsp;</td>
+	</tr>
+	</form>
 </table>
 
 <%
@@ -127,28 +137,39 @@ function setfocus() {
   apptMainBean.closePstmtConn();
 %>
 <center>
-<table width="90%" border="0"  cellspacing="2" cellpadding="2">
-<form name="template" method="post" action="providertemplate.jsp">
-  <input type="hidden" name="dboperation" value="">
-  <tr>
-    <td valign="top" width="20%" align="right" title='no symbol "'><bean:message key="admin.providertemplate.formTemplateName"/>:</td>
-    <td>  <input type="text" name="name" value="<%=bEdit?tName:""%>" style="width:100%" maxlength="20"></td>
-  </tr><tr>
-    <td valign="top" width="20%" align="right"><bean:message key="admin.providertemplate.formTemplateText"/>: </td>
-    <td> <textarea name="value" style="width:100%" rows="20" ><%=bEdit?tValue:""%></textarea> </td>
-  </tr>
+<table width="90%" border="0" cellspacing="2" cellpadding="2">
+	<form name="template" method="post" action="providertemplate.jsp">
+	<input type="hidden" name="dboperation" value="">
+	<tr>
+		<td valign="top" width="20%" align="right" title='no symbol "'><bean:message
+			key="admin.providertemplate.formTemplateName" />:</td>
+		<td><input type="text" name="name" value="<%=bEdit?tName:""%>"
+			style="width: 100%" maxlength="20"></td>
+	</tr>
+	<tr>
+		<td valign="top" width="20%" align="right"><bean:message
+			key="admin.providertemplate.formTemplateText" />:</td>
+		<td><textarea name="value" style="width: 100%" rows="20"><%=bEdit?tValue:""%></textarea>
+		</td>
+	</tr>
 </table>
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" >
-  <tr bgcolor=<%=weakcolor%>>
-    <td width="23%" align='right'><input type="button" value="<bean:message key="admin.providertemplate.btnDelete"/>" onClick="document.forms['template'].dboperation.value='Delete'; document.forms['template'].submit();"> </td>
-    <td width="72%" align='right'>
-          <INPUT TYPE="hidden" NAME="creator" VALUE="<%=curUser_no%>">
-          <input type="button" value="<bean:message key="admin.providertemplate.btnSave"/>" onClick="document.forms['template'].dboperation.value=' Save '; document.forms['template'].submit();">
-          <input type="button" name="Button" value="<bean:message key="admin.providertemplate.btnExit"/>" onClick="window.close();">
-	</td>
-	<td>&nbsp;</td></tr>
-</form>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr bgcolor=<%=weakcolor%>>
+		<td width="23%" align='right'><input type="button"
+			value="<bean:message key="admin.providertemplate.btnDelete"/>"
+			onClick="document.forms['template'].dboperation.value='Delete'; document.forms['template'].submit();">
+		</td>
+		<td width="72%" align='right'><INPUT TYPE="hidden" NAME="creator"
+			VALUE="<%=curUser_no%>"> <input type="button"
+			value="<bean:message key="admin.providertemplate.btnSave"/>"
+			onClick="document.forms['template'].dboperation.value=' Save '; document.forms['template'].submit();">
+		<input type="button" name="Button"
+			value="<bean:message key="admin.providertemplate.btnExit"/>"
+			onClick="window.close();"></td>
+		<td>&nbsp;</td>
+	</tr>
+	</form>
 </table>
 </center>
 </body>

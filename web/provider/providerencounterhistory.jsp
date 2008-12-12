@@ -27,15 +27,17 @@
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 
@@ -49,18 +51,18 @@
     //-->
 </script>
 </head>
-<body  onload="start()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="start()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ENCOUNTER HISTORY</font></th>
-      </tr>
-    </table>
-<table width="90%" border="0" >
-  <tr > 
-    <td width="95%">
-<%
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ENCOUNTER HISTORY</font></th>
+	</tr>
+</table>
+<table width="90%" border="0">
+	<tr>
+		<td width="95%">
+		<%
    ResultSet rsdemo = null;
    rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
    //int i=0;
@@ -70,9 +72,8 @@
      //  out.println("<a href=# onClick=\"popupPage(400,600,'providercontrol.jsp?demographic_no=" +request.getParameter("demographic_no")+ "&dboperation=search_encounter&displaymode=encounterhistory')\">... more</a>");
      //  break;
      //}
-%>   
-     &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font color="yellow"> 
-<%
+%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
+			color="yellow"> <%
      String historysubject = rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
      //System.out.println(" history = " + historysubject);
@@ -84,24 +85,23 @@
 
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim().toLowerCase()+".jsp";
-%>     
-     <a href=# onClick ="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
-     </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      } else if(strForm.compareTo("")!=0) {
-%>     
-     <a href=# onClick ="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
-     </a></font><br>
-<%
+%> <a href=#
+			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
+		</a></font><br>
+		<%
      }
    }     
-%>      
-    </td>
-  </tr>
+%>
+		</td>
+	</tr>
 </table>
-<form>
-<input type="button" value="Close this window" onClick="closeit()">
-</form>
+<form><input type="button" value="Close this window"
+	onClick="closeit()"></form>
 </center>
 </body>
 </html>

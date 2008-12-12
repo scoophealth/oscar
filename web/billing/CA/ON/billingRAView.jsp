@@ -25,7 +25,8 @@
 -->
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*" %>
+<%@ page
+	import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*"%>
 
 <%
 String billingNo = request.getParameter("billing_no");
@@ -38,80 +39,43 @@ ArrayList aList = raData.getRAData(billingNo);
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <style type="text/css">
-           body {
-              margin:0;
-              padding:0;
-              font-family: verdana,arial,helvetica,sans-serif;
-           }
-           
-           div.tableListing table {
-               width: 100%;
-               margin-top:0px;
-               border-width: 1px 1px 1px 1px;
-	       border-spacing: 0px;
-	       border-style: outset outset outset outset;
-	       border-color: gray gray gray gray;
-	       border-collapse: collapse;        
-            }
-            
-            div.tableListing table tr td{
-               font-size: x-small;
-               text-align: center;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-            
-            div.tableListing table tr th{
-               font-size: small;
-               border-width: 1px 1px 1px 1px;
-               padding: 1px 1px 1px 1px;
-               border-style: inset inset inset inset;
-               border-color: gray gray gray gray;
-               background-color: white;
-               -moz-border-radius: 0px 0px 0px 0px;
-            }
-        </style>
-    </head>
-    <body>
-    <div class="tableListing">
-       <table >
-          <tr > 
-             <th>RA HEADER #</th>
-             <th>OHIP #</th>
-             <th>SERVICE CODE</th>
-             <th>SERVICE COUNT</th>
-             <th>HIN</th>
-             <th>AMOUNT CLAIMED</th>
-             <th>AMOUNT PAYED</th>
-             <th>SERVICE DATE</th>
-             <th>ERROR CODE</th>
-             <th>BILL TYPE</th>           
-          </tr>
-       <% for (int i = 0 ; i < aList.size(); i++) { 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JSP Page</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
+<body>
+<div class="tableListing">
+<table>
+	<tr>
+		<th>RA HEADER #</th>
+		<th>OHIP #</th>
+		<th>SERVICE CODE</th>
+		<th>SERVICE COUNT</th>
+		<th>HIN</th>
+		<th>AMOUNT CLAIMED</th>
+		<th>AMOUNT PAYED</th>
+		<th>SERVICE DATE</th>
+		<th>ERROR CODE</th>
+		<th>BILL TYPE</th>
+	</tr>
+	<% for (int i = 0 ; i < aList.size(); i++) { 
        Hashtable h = (Hashtable) aList.get(i);           
        %>
-          <tr> 
-             <td><%=h.get("raheader_no")%></td>  
-             <td><%=h.get("providerohip_no")%></a></td> 
-             <td><%=h.get("service_code")%></td> 
-             <td><%=h.get("service_count")%></td>
-             <td><%=h.get("hin")%></td>
-             <td><%=h.get("amountclaim")%></td>
-             <td><%=h.get("amountpay")%></td>
-             <td><%=h.get("service_date")%></td>
-             <td><%=h.get("error_code")%></td>
-             <td><%=h.get("billtype")%></td>            
-          </tr>
-       <% } %> 
-       <table>
-    </div>
-    </body>
+	<tr>
+		<td><%=h.get("raheader_no")%></td>
+		<td><%=h.get("providerohip_no")%></a></td>
+		<td><%=h.get("service_code")%></td>
+		<td><%=h.get("service_count")%></td>
+		<td><%=h.get("hin")%></td>
+		<td><%=h.get("amountclaim")%></td>
+		<td><%=h.get("amountpay")%></td>
+		<td><%=h.get("service_date")%></td>
+		<td><%=h.get("error_code")%></td>
+		<td><%=h.get("billtype")%></td>
+	</tr>
+	<% } %>
+	<table>
+		</div>
+</body>
 </html>

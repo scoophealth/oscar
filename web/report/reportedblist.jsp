@@ -37,17 +37,19 @@
   if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");  
   if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="../errorpage.jsp" %>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="../errorpage.jsp"%>
+<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jsp" %>  
+<%@ include file="reportMainBeanConn.jsp"%>
 <% } %>
- 
+
 <html>
 <head>
-<title> REPORT EDB </title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
+<title>REPORT EDB</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -58,32 +60,36 @@ function setfocus() {
 </SCRIPT>
 <!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd">
-         <th align=CENTER><font face="Helvetica" color="#FFFFFF">EDB LIST</font></th>
-         <th align="right" width="10%" NOWRAP><input type="button" name="Button" value="Print" onClick="window.print()">
-            <input type="button" name="Button" value="Cancel" onClick="window.close()">
-         </th>
-      </tr>
-   </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER><font face="Helvetica" color="#FFFFFF">EDB
+		LIST</font></th>
+		<th align="right" width="10%" NOWRAP><input type="button"
+			name="Button" value="Print" onClick="window.print()"> <input
+			type="button" name="Button" value="Cancel" onClick="window.close()">
+		</th>
+	</tr>
+</table>
 
-   <CENTER>
-      <table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="1"> 
-         <tr bgcolor="silver"> 
-            <TH >&nbsp;</TH>
-            <TH align="center" ><b>#</b></TH>
-            <TH align="center" width="10%" nowrap><b>EDB</b></TH>
-            <TH align="center" width="30%"><b>Patient's Name </b></TH>
-            <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-            <TH align="center" width="5%"><b>Age</b></TH>
-            <TH align="center" width="5%"><b>Gravida</b></TH>
-            <TH align="center" width="10%"><b>Term</b></TH>
-            <TH align="center" width="30%"><b>Phone</b></TH>
-            <TH align="center"><b>Provider</b></TH>
-         </tr>
-<%
+<CENTER>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"
+	cellpadding="1">
+	<tr bgcolor="silver">
+		<TH>&nbsp;</TH>
+		<TH align="center"><b>#</b></TH>
+		<TH align="center" width="10%" nowrap><b>EDB</b></TH>
+		<TH align="center" width="30%"><b>Patient's Name </b></TH>
+		<!--TH align="center" width="20%"><b>Demog' No </b></TH-->
+		<TH align="center" width="5%"><b>Age</b></TH>
+		<TH align="center" width="5%"><b>Gravida</b></TH>
+		<TH align="center" width="10%"><b>Term</b></TH>
+		<TH align="center" width="30%"><b>Phone</b></TH>
+		<TH align="center"><b>Provider</b></TH>
+	</tr>
+	<%
    GregorianCalendar now=new GregorianCalendar();
    int curYear = now.get(Calendar.YEAR);
    int curMonth = (now.get(Calendar.MONTH)+1);
@@ -133,39 +139,39 @@ function setfocus() {
       bodd=bodd?false:true; //for the color of rows
       nItems++; 
 %>
-            <tr bgcolor="<%=bodd?"ivory":"white"%>">
-                <td align="center"><%=nItems%></td>
-                <td align="center" nowrap><%=reportMainBean.getString(rs,"edb").replace('-','/')%></td>
-                <td><%=reportMainBean.getString(rs,"demo_name")%></td>
-                <!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
-                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"age")%></td>
-                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"gravida")%></td>
-                <td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"term")%></td>
-                <td nowrap><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"phone")%></td>
-                <td><%=providerNameBean.getShortDef(reportMainBean.getString(rs,"provider_no"), "", 11)%></td>
-            </tr>
-<%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td align="center"><%=nItems%></td>
+		<td align="center" nowrap><%=reportMainBean.getString(rs,"edb").replace('-','/')%></td>
+		<td><%=reportMainBean.getString(rs,"demo_name")%></td>
+		<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
+		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"age")%></td>
+		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"gravida")%></td>
+		<td><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"term")%></td>
+		<td nowrap><%=SxmlMisc.getXmlContent(reportMainBean.getString(rs,"address"),"phone")%></td>
+		<td><%=providerNameBean.getShortDef(reportMainBean.getString(rs,"provider_no"), "", 11)%></td>
+	</tr>
+	<%
   }
 
   if(reportMainBean.getBDoConfigure()) reportMainBean.setBDoConfigure();
      reportMainBean.closePstmtConn();
-%> 
+%>
 
-        </table>
-    <CENTER>
-<br>
+</table>
+<CENTER><br>
 <%
     int nLastPage=0,nNextPage=0;
     nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
     nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
     if(nLastPage>=0) {
-%>
-<a href="reportedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="reportedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="reportedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%}%>
+%> <a
+	href="reportedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%}%>
+
 </body>
 </html>

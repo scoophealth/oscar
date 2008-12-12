@@ -22,20 +22,16 @@
 */
  -->
 
-<%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*" %>
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="org.caisi.model.*"%>
 <html>
 <head>
-	<title>Caisi Roles</title>
+<title>Caisi Roles</title>
 
-	<style type="text/css">
-	/* <![CDATA[ */
-	@import "<html:rewrite page="/css/core.css" />";
-	/*  ]]> */
-	</style>
-	
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-	<script>
+
+<script>
 		function openBrWindow(theURL,winName,features) { 
 		  window.open(theURL,winName,features);
 		}
@@ -69,41 +65,46 @@
 			    }
 			}
 		}
-	</script>	
+	</script>
 </head>
 <body>
-<table border="0" cellspacing="0" cellpadding="1" width="100%" bgcolor="#CCCCFF">
-	  <tr class="subject"><th colspan="4">Caisi Roles</th></tr>
-
-<br/>
-<%@ include file="messages.jsp" %>
-<br/>
-
-<form name="caisiRoleListForm" action="CaisiRoleAssigner.do" method="post">
-<input type="hidden" name="change_provider" value="0"/>
-<input type="hidden" name="method" value="assign"/>
-<table width="50%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-	<tr class="title">
-		<th>Provider Name</th>
-		<th>Role</th>
+<table border="0" cellspacing="0" cellpadding="1" width="100%"
+	bgcolor="#CCCCFF">
+	<tr class="subject">
+		<th colspan="4">Caisi Roles</th>
 	</tr>
-	
-	<tr>
-		<%int index=0; 
+
+	<br />
+	<%@ include file="messages.jsp"%>
+	<br />
+
+	<form name="caisiRoleListForm" action="CaisiRoleAssigner.do"
+		method="post"><input type="hidden" name="change_provider"
+		value="0" /> <input type="hidden" name="method" value="assign" />
+	<table width="50%" border="0" cellpadding="0" cellspacing="1"
+		bgcolor="#C0C0C0">
+		<tr class="title">
+			<th>Provider Name</th>
+			<th>Role</th>
+		</tr>
+
+		<tr>
+			<%int index=0; 
 			String bgcolor;
 		%>
-		<c:forEach var="provider" items="${providers}">
-			<%
+			<c:forEach var="provider" items="${providers}">
+				<%
 				if(index++%2!=0) {
 					bgcolor="white";
 				} else {
 					bgcolor="#EEEEFF";
 				}
 			%>
-			<tr bgcolor="<%=bgcolor %>" align="center">
-				<td><c:out value="${provider.formattedName}"/></td>
-				<td>
-					<select name="select_<c:out value="${provider.provider_no}"/>" onchange="this.form.change_provider.value='<c:out value="${provider.provider_no}"/>';this.form.submit();">
+				<tr bgcolor="<%=bgcolor %>" align="center">
+					<td><c:out value="${provider.formattedName}" /></td>
+					<td><select
+						name="select_<c:out value="${provider.provider_no}"/>"
+						onchange="this.form.change_provider.value='<c:out value="${provider.provider_no}"/>';this.form.submit();">
 						<option value="0"></option>
 						<c:forEach var="role" items="${roles}">
 							<%String selected="";
@@ -116,17 +117,18 @@
 								}
 							%>
 
-								<option value="<c:out value="${role.id}"/>" <%=selected %> ><c:out value="${role.name}" /></option>
+							<option value="<c:out value="${role.id}"/>" <%=selected %>><c:out
+								value="${role.name}" /></option>
 
 						</c:forEach>
-					</select>
-				</td>
-			</tr>
-		</c:forEach>
-	</tr>
-</table>
-</form>
-<br/>
-<input type="button" value="Add new Role" onclick="location.href='CaisiRole.do'"/>
+					</select></td>
+				</tr>
+			</c:forEach>
+		</tr>
+	</table>
+	</form>
+	<br />
+	<input type="button" value="Add new Role"
+		onclick="location.href='CaisiRole.do'" />
 </body>
 </html>

@@ -6,7 +6,7 @@
     rec.settleBGBills();
 %>
 <jsp:forward page="settleBG.jsp">
-  <jsp:param name="settled" value="true"/>
+	<jsp:param name="settled" value="true" />
 </jsp:forward>
 <%}%>
 <html>
@@ -18,16 +18,16 @@
 <%
   if ("true".equals(request.getParameter("settled"))) {
 %>
-<h4>All claims with an explanation of type 'BG' have been adjusted and settled</h4>
+<h4>All claims with an explanation of type 'BG' have been adjusted
+and settled</h4>
 <input type="button" value="Close" onClick="javascript:window.close()">
 <%} else {%>
 <h4>Automatically settle claims that have been over/under paid(BG)</h4>
-<form method="post" action="settleBG.jsp">
-<input type="hidden" name="settled" value="false"/>
+<form method="post" action="settleBG.jsp"><input type="hidden"
+	name="settled" value="false" /> <br>
 <br>
-<br>
-<input type="submit" name="Continue" value="Submit">
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+<input type="submit" name="Continue" value="Submit"> <input
+	type="button" value="Cancel" onClick="javascript:window.close()">
 </form>
 <%}%>
 </div>

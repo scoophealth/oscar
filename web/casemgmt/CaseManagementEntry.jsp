@@ -22,16 +22,19 @@
 */
  -->
 
-<%@ include file="/casemgmt/taglibs.jsp" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp"%>
 
 <html>
 <head>
 <title>Case Management</title>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
-<script language="JavaScript" src="<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js"></script>
+<c:set var="ctx" value="${pageContext.request.contextPath}"
+	scope="request" />
+<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css"
+	type="text/css">
+<script language="JavaScript"
+	src="<c:out value="${ctx}"/>/jspspellcheck/spellcheck-caller.js"></script>
 <script type="text/javascript">
 	var flag=<%=request.getAttribute("change_flag")%>;                
  
@@ -244,53 +247,44 @@ String pId=(String)session.getAttribute("case_program_id");
 if (pId==null) pId="";
 %>
 <nested:form action="/CaseManagementEntry">
-	<html:hidden property="chain"/>
-	<html:hidden property="demographicNo"/>
+	<html:hidden property="chain" />
+	<html:hidden property="demographicNo" />
 	<c:if test="${param.providerNo==null}">
-	<input type="hidden" name="providerNo" value="<%=session.getAttribute("user")%>">
+		<input type="hidden" name="providerNo"
+			value="<%=session.getAttribute("user")%>">
 	</c:if>
 	<c:if test="${param.providerNo!=null}">
-	<html:hidden property="providerNo"/>
+		<html:hidden property="providerNo" />
 	</c:if>
-	<input type="hidden" name="caseNote.program_no" value="<%=pId%>"/>
+	<input type="hidden" name="caseNote.program_no" value="<%=pId%>" />
 	<input type="hidden" name="method" value="save" />
 	<c:if test="${param.from=='casemgmt'||requestScope.from=='casemgmt'}">
-	<input type="hidden" name="from" value="casemgmt" />
+		<input type="hidden" name="from" value="casemgmt" />
 	</c:if>
 	<input type="hidden" name="lineId" value="0" />
 	<input type="hidden" name="addIssue" value="null" />
 	<input type="hidden" name="deleteId" value="0" />
 
-<b>Client name: 
-<I>
-<logic:notEmpty name="demoName" scope="request">
-<c:out value="${requestScope.demoName}" />
-</logic:notEmpty>
-<logic:empty name="demoName" scope="request">
-<c:out value="${param.demoName}" />
-</logic:empty>
-</I>
-<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Age: 
-<I>
-<logic:notEmpty name="demoName" scope="request">
-<c:out value="${requestScope.demoAge}" />
-</logic:notEmpty>
-<logic:empty name="demoName" scope="request">
-<c:out value="${param.demoAge}" />
-</logic:empty>
-</I>
-<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DOB: 
-<I>
-<logic:notEmpty name="demoName" scope="request">
-<c:out value="${requestScope.demoDOB}" />
-</logic:notEmpty>
-<logic:empty name="demoName" scope="request">
-<c:out value="${param.demoDOB}" />
-</logic:empty>
-</I></b>
-<br><br>
+	<b>Client name: <I> <logic:notEmpty name="demoName"
+		scope="request">
+		<c:out value="${requestScope.demoName}" />
+	</logic:notEmpty> <logic:empty name="demoName" scope="request">
+		<c:out value="${param.demoName}" />
+	</logic:empty> </I> <br>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Age: <I> <logic:notEmpty
+		name="demoName" scope="request">
+		<c:out value="${requestScope.demoAge}" />
+	</logic:notEmpty> <logic:empty name="demoName" scope="request">
+		<c:out value="${param.demoAge}" />
+	</logic:empty> </I> <br>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; DOB: <I> <logic:notEmpty
+		name="demoName" scope="request">
+		<c:out value="${requestScope.demoDOB}" />
+	</logic:notEmpty> <logic:empty name="demoName" scope="request">
+		<c:out value="${param.demoDOB}" />
+	</logic:empty> </I></b>
+	<br>
+	<br>
 
 
 
@@ -311,7 +305,8 @@ if (pId==null) pId="";
 		</tr>
 
 		<nested:iterate indexId="ind" id="issueCheckList"
-			property="issueCheckList" type="org.oscarehr.casemgmt.web.CheckBoxBean">
+			property="issueCheckList"
+			type="org.oscarehr.casemgmt.web.CheckBoxBean">
 			<tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>"
 				align="center">
 				<%String submitString = "this.form.method.value='issueChange';";
@@ -323,48 +318,43 @@ if (pId==null) pId="";
 				boolean writeAccess = cbb.getIssue().isWriteAccess();
 				boolean disabled = !writeAccess;
 				%>
-				<td>
-					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=disabled%>"></nested:checkbox>
-				</td>
-								
-					<logic:equal name="issueCheckList" property="issue.issue.priority" value="allergy">
-						<td bgcolor="yellow">
-							<nested:write name="issueCheckList"	property="issue.issue.description" />
-						</td>
-					</logic:equal>
-					<logic:notEqual name="issueCheckList" property="issue.issue.priority" value="allergy">
-						<td>
-							<nested:write name="issueCheckList"	property="issue.issue.description" />
-						</td>
-					</logic:notEqual>
-				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.acute" disabled="<%=disabled%>">
-						<html:option value="true">acute</html:option>
-						<html:option value="false">chronic</html:option>
-					</nested:select>	
-				</td>
-				<td>
-					<nested:select indexed="true" name="issueCheckList" property="issue.certain"  disabled="<%=disabled%>">
-						<html:option value="true">certain</html:option>
-						<html:option value="false">uncertain</html:option>
-					</nested:select>
-				</td>
-				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.major" disabled="<%=disabled%>">
-						<html:option value="true">major</html:option>
-						<html:option value="false">not major</html:option>
-					</nested:select>
-				</td>				
-				<td>
-					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
-					 <nested:select indexed="true" name="issueCheckList" property="issue.resolved"  disabled="<%=disabled%>">										 	
-						<html:option value="true">resolved</html:option>
-						<html:option value="false">unresolved</html:option>
-					</nested:select>
-				</td>
-				<td>
-					<nested:text indexed="true" name="issueCheckList" property="issue.type" disabled="<%=disabled%>"/>
-				</td>
+				<td><nested:checkbox indexed="true" name="issueCheckList"
+					property="checked" onchange="setChangeFlag(true);"
+					disabled="<%=disabled%>"></nested:checkbox></td>
+
+				<logic:equal name="issueCheckList" property="issue.issue.priority"
+					value="allergy">
+					<td bgcolor="yellow"><nested:write name="issueCheckList"
+						property="issue.issue.description" /></td>
+				</logic:equal>
+				<logic:notEqual name="issueCheckList"
+					property="issue.issue.priority" value="allergy">
+					<td><nested:write name="issueCheckList"
+						property="issue.issue.description" /></td>
+				</logic:notEqual>
+				<td><nested:select indexed="true" name="issueCheckList"
+					property="issue.acute" disabled="<%=disabled%>">
+					<html:option value="true">acute</html:option>
+					<html:option value="false">chronic</html:option>
+				</nested:select></td>
+				<td><nested:select indexed="true" name="issueCheckList"
+					property="issue.certain" disabled="<%=disabled%>">
+					<html:option value="true">certain</html:option>
+					<html:option value="false">uncertain</html:option>
+				</nested:select></td>
+				<td><nested:select indexed="true" name="issueCheckList"
+					property="issue.major" disabled="<%=disabled%>">
+					<html:option value="true">major</html:option>
+					<html:option value="false">not major</html:option>
+				</nested:select></td>
+				<td><!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
+				<nested:select indexed="true" name="issueCheckList"
+					property="issue.resolved" disabled="<%=disabled%>">
+					<html:option value="true">resolved</html:option>
+					<html:option value="false">unresolved</html:option>
+				</nested:select></td>
+				<td><nested:text indexed="true" name="issueCheckList"
+					property="issue.type" disabled="<%=disabled%>" /></td>
 				<td><nested:equal name="issueCheckList" property="used"
 					value="false">
 					<%submitString = "this.form.method.value='issueDelete';";
@@ -372,15 +362,11 @@ if (pId==null) pId="";
 					+ ind.intValue() + "';";
 			%>
 					<input type="submit" value="delete" onclick="<%=submitString%>">
-				</nested:equal>
-				
-					<!--  change diagnosis button -->
-					<%submitString = "this.form.method.value='changeDiagnosis';";
+				</nested:equal> <!--  change diagnosis button --> <%submitString = "this.form.method.value='changeDiagnosis';";
 			submitString = submitString + "this.form.deleteId.value=" + "'"
 					+ ind.intValue() + "';";
-			%>					
-					<input type="submit" value="Change Issue" onclick="<%=submitString%>">
-				</td>
+			%> <input type="submit" value="Change Issue"
+					onclick="<%=submitString%>"></td>
 			</tr>
 		</nested:iterate>
 	</table>
@@ -392,37 +378,39 @@ if (pId==null) pId="";
 
 	<p><b>Progress Note Entry View </b></p>
 	<%if ("true".equalsIgnoreCase((String)request.getAttribute("change_flag"))) {%>
-	<span style="color:red">this note has not been saved yet!</span>
+	<span style="color: red">this note has not been saved yet!</span>
 	<%}else{%>
-	<span id="spanMsg" style="color:blue">
-	
-	<logic:messagesPresent message="true">
+	<span id="spanMsg" style="color: blue"> <logic:messagesPresent
+		message="true">
 		<html:messages id="message" message="true" bundle="casemgmt">
 			<I><c:out value="${message}" /></I>
 		</html:messages>
-	</logic:messagesPresent>
-	</span>
+	</logic:messagesPresent> </span>
 	<%} %>
-	
-	<br>  <button type="button" onclick="javascript:spellCheck();">Spell Check</button>
-	
+
+	<br>
+	<button type="button" onclick="javascript:spellCheck();">Spell
+	Check</button>
+
 	<p>
 	<table width="90%" border="1">
 		<tr>
-			<td class="fieldValue" colspan="1">
-				<textarea name="caseNote_note" id="caseNote_note" cols="60" rows="20" wrap="hard" onchange="setChangeFlag(true);"><nested:write property="caseNote.note"/></textarea>
-			</td>
+			<td class="fieldValue" colspan="1"><textarea
+				name="caseNote_note" id="caseNote_note" cols="60" rows="20"
+				wrap="hard" onchange="setChangeFlag(true);"><nested:write
+				property="caseNote.note" /></textarea></td>
 			<td class="fieldTitle"></td>
- 
+
 		</tr>
 
-		<tr>    
+		<tr>
 			<td class="fieldTitle">Encounter Type:</td>
 			<td class="fieldValue"><html:select
 				property="caseNote.encounter_type" onchange="setChangeFlag(true);">
 				<html:option value=""></html:option>>
 				<html:option value="face to face encounter with client">face to face encounter with client</html:option>>
-				<oscarProp:oscarPropertiesCheck property="oncall" value="yes" reverse="true">
+				<oscarProp:oscarPropertiesCheck property="oncall" value="yes"
+					reverse="true">
 					<html:option value="telephone encounter with client">telephone encounter with client</html:option>
 				</oscarProp:oscarPropertiesCheck>
 				<oscarProp:oscarPropertiesCheck property="oncall" value="yes">
@@ -440,45 +428,52 @@ if (pId==null) pId="";
 
 		<tr>
 			<td class="fieldTitle">Sign</td>
-			<td class="fieldValue"><html:checkbox property="sign" onchange="setChangeFlag(true);" /></td>
+			<td class="fieldValue"><html:checkbox property="sign"
+				onchange="setChangeFlag(true);" /></td>
 		</tr>
 
 		<tr>
 			<td class="fieldTitle">include checked issues in note</td>
-			<td class="fieldValue"><html:checkbox property="includeIssue" onchange="setChangeFlag(true);" /></td>
+			<td class="fieldValue"><html:checkbox property="includeIssue"
+				onchange="setChangeFlag(true);" /></td>
 		</tr>
 
-      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<c:if test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}" >
-		<c:url value="${sessionScope.billing_url}" var="url"/>
-		<caisirole:SecurityAccess accessName="billing" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
-			<tr>
-				<td class="fieldTitle">Billing:</td>
-				
-				<td class="fieldValue"><nested:text property="caseNote.billing_code" />
-				<input type="button" value="add billing"
-					onclick="self.open('<%=(String)session.getAttribute("billing_url")%>','','scrollbars=yes,menubars=no,toolbars=no,resizable=yes');return false;"></td>
-			</tr>
-		</caisirole:SecurityAccess>
-		</c:if>		
-	 </caisi:isModuleLoad>
-		
+		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+			<c:if
+				test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}">
+				<c:url value="${sessionScope.billing_url}" var="url" />
+				<caisirole:SecurityAccess accessName="billing" accessType="access"
+					providerNo='<%=request.getParameter("providerNo")%>'
+					demoNo='<%=request.getParameter("demographicNo")%>'
+					programId="<%=pId%>">
+					<tr>
+						<td class="fieldTitle">Billing:</td>
+
+						<td class="fieldValue"><nested:text
+							property="caseNote.billing_code" /> <input type="button"
+							value="add billing"
+							onclick="self.open('<%=(String)session.getAttribute("billing_url")%>','','scrollbars=yes,menubars=no,toolbars=no,resizable=yes');return false;"></td>
+					</tr>
+				</caisirole:SecurityAccess>
+			</c:if>
+		</caisi:isModuleLoad>
+
 		<caisi:isModuleLoad moduleName="casemgmt.note.password.enabled">
-		<tr>
-			<td class="fieldTitle">Password:</td>
-			<td class="fieldValue"><html:password property="caseNote.password"/></td>
-		</tr>
+			<tr>
+				<td class="fieldTitle">Password:</td>
+				<td class="fieldValue"><html:password
+					property="caseNote.password" /></td>
+			</tr>
 		</caisi:isModuleLoad>
 		<tr>
-			<td class="fieldValue" colspan="2">
-			<input type="submit" value="Save"
-				onclick="this.form.method.value='save';return validateSave();"> 
-			<input type="submit"
-				value="Save and Exit" onclick="this.form.method.value='saveAndExit';if (validateSave()) {return true;}else return false;">
-			<input type="submit" 
-			    value="cancel" onclick = "this.form.method.value='cancel';return true;">
-			</td>
-			
+			<td class="fieldValue" colspan="2"><input type="submit"
+				value="Save"
+				onclick="this.form.method.value='save';return validateSave();">
+			<input type="submit" value="Save and Exit"
+				onclick="this.form.method.value='saveAndExit';if (validateSave()) {return true;}else return false;">
+			<input type="submit" value="cancel"
+				onclick="this.form.method.value='cancel';return true;"></td>
+
 		</tr>
 
 	</table>

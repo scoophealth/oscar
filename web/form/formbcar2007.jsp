@@ -25,7 +25,7 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*" %>
+<%@ page import="oscar.form.*"%>
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));

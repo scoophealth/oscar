@@ -24,11 +24,12 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
 <%
   if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -48,17 +49,19 @@
     </script>
 </head>
 
-<body   background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> UPDATE A SECURITY RECORD</font></th>
-      </tr>
-    </table>
-  <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <form method="post" action="admincontrol.jsp" name="updatearecord" >
-      <%
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		UPDATE A SECURITY RECORD</font></th>
+	</tr>
+</table>
+<table cellspacing="0" cellpadding="2" width="100%" border="0">
+	<form method="post" action="admincontrol.jsp" name="updatearecord">
+	<%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
   if(rs==null) {
     out.println("<tr><td>failed</td></tr></form>");
@@ -66,51 +69,47 @@
     while (rs.next()) {
     // the cursor of ResultSet only goes through once from top
 %>
-      <tr> 
-        <td width="50%" align="right">User Name: </td>
-        <td> 
-          <input type="text"  name="user_name" value="<%= rs.getString("user_name") %>">
-        </td>
-      </tr>
-      <tr> 
-        <td  align="right" nowrap>Password: 
-        </td>
-        <td> 
-          <input type="text" name="password" value="<%= rs.getString("password") %>">
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">Provider No: </div>
-        </td>
-        <td> 
-          <% String provider_no = rs.getString("provider_no"); %>
-          <%= provider_no %> 
-          <input type="hidden"  index="4" name="provider_no" value="<%= rs.getString("provider_no") %>">
-        </td>
-      </tr>
-      <tr> 
-        <td colspan="2"> 
-          <div align="center"> 
-            <input type="hidden"  name="security_no" value="<%= rs.getString("security_no")%>">
-            <input type="hidden"  name="dboperation" value="security_update_record">
-            <input type="hidden" name="displaymode" value="Security_Update_Record">
-            <input type="submit" name="subbutton" value="Update Record">
-            <a href='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'> 
-            <img src="../images/buttondelete.gif" width="73" height="28" border="0" align="absmiddle" alt="Delete the Record"></a> 
-            <!--input type="button" name="Button" value="Cancel" onClick="onCancel()"-->
-          </div>
-        </td>
-      </tr>
-      <%
+	
+	<tr>
+		<td width="50%" align="right">User Name:</td>
+		<td><input type="text" name="user_name"
+			value="<%= rs.getString("user_name") %>"></td>
+	</tr>
+	<tr>
+		<td align="right" nowrap>Password:</td>
+		<td><input type="text" name="password"
+			value="<%= rs.getString("password") %>"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">Provider No:</div>
+		</td>
+		<td>
+		<% String provider_no = rs.getString("provider_no"); %> <%= provider_no %>
+		<input type="hidden" index="4" name="provider_no"
+			value="<%= rs.getString("provider_no") %>"></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="center"><input type="hidden" name="security_no"
+			value="<%= rs.getString("security_no")%>"> <input
+			type="hidden" name="dboperation" value="security_update_record">
+		<input type="hidden" name="displaymode" value="Security_Update_Record">
+		<input type="submit" name="subbutton" value="Update Record"> <a
+			href='admincontrol.jsp?keyword=<%=rs.getString("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'>
+		<img src="../images/buttondelete.gif" width="73" height="28"
+			border="0" align="absmiddle" alt="Delete the Record"></a> <!--input type="button" name="Button" value="Cancel" onClick="onCancel()"-->
+		</div>
+		</td>
+	</tr>
+	<%
   }}
   apptMainBean.closePstmtConn();
 %>
-    </form>
-  </table>
-  
-  <p></p>
-<%@ include file="footer.htm" %>
-</center>
+	</form>
+</table>
+
+<p></p>
+<%@ include file="footer.htm"%></center>
 </body>
 </html>

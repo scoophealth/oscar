@@ -29,12 +29,16 @@
   String curUser_no = (String) session.getAttribute("user");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.appointment_date, a.start_time") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_apptsheetall", "select a.appointment_no, a.appointment_date,a.name, a.provider_no, a.start_time, a.end_time, p.last_name, p.first_name from appointment a, provider p where (a.start_time='00:00:00' or a.start_time>='23:59:59' or a.end_time='00:00:00' or a.end_time>='23:59:59' or a.start_time > a.end_time) and a.appointment_date>=? and a.provider_no=p.provider_no and a.status != 'C' order by p.last_name, p.first_name, "+orderby }, 
@@ -46,10 +50,10 @@
 %>
 <html>
 <head>
-<title><bean:message key="report.reportapptsheet.title"/></title>
+<title><bean:message key="report.reportapptsheet.title" /></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -85,12 +89,18 @@ function setfocus() {
     }
   }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportapptsheet.title"/></font></th>
-    <th width="10%" nowrap><%=createtime%> 
-      <input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#CCCCFF">
+		<th align=CENTER NOWRAP><font face="Helvetica"><bean:message
+			key="report.reportapptsheet.title" /></font></th>
+		<th width="10%" nowrap><%=createtime%> <input type="button"
+			name="Button" value="<bean:message key="global.btnPrint"/>"
+			onClick="window.print()"><input type="button" name="Button"
+			value="<bean:message key="global.btnExit"/>" onClick="window.close()"></th>
+	</tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -130,33 +140,47 @@ function setfocus() {
 	  bFistL = false;
     bodd = false ;
 %>
-<table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
-<td><%=providerBean.getProperty(rsdemo.getString("provider_no"))+" - " +sdate %>  </td>
-<td align="right"></td>
-</tr></table>
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
-<tr bgcolor="#CCCCFF" align="center">
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date"><bean:message key="report.reportapptsheet.msgApptDate"/></a></b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time"><bean:message key="report.reportapptsheet.msgStartTime"/></a> </b></TH>
-<TH width="20%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time"><bean:message key="report.reportapptsheet.msgEndTime"/></a> </b></TH>
-<TH width="10%"><b><a href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name"><bean:message key="report.reportapptsheet.msgName"/></a></b></TH>
-<TH width="30%"><b><bean:message key="report.reportapptsheet.msgComments"/></b></TH>
-</tr>
-<%
+<table width="480" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td><%=providerBean.getProperty(rsdemo.getString("provider_no"))+" - " +sdate %>
+		</td>
+		<td align="right"></td>
+	</tr>
+</table>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor="#CCCCFF" align="center">
+		<TH width="20%"><b><a
+			href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.appointment_date"><bean:message
+			key="report.reportapptsheet.msgApptDate" /></a></b></TH>
+		<TH width="20%"><b><a
+			href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.start_time"><bean:message
+			key="report.reportapptsheet.msgStartTime" /></a> </b></TH>
+		<TH width="20%"><b><a
+			href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.end_time"><bean:message
+			key="report.reportapptsheet.msgEndTime" /></a> </b></TH>
+		<TH width="10%"><b><a
+			href="reportapptsheet.jsp?provider_no=<%=provider_no%>&sdate=<%=sdate%>&orderby=a.name"><bean:message
+			key="report.reportapptsheet.msgName" /></a></b></TH>
+		<TH width="30%"><b><bean:message
+			key="report.reportapptsheet.msgComments" /></b></TH>
+	</tr>
+	<%
     }
-%> 
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td align="center"><a href=# onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;" >
-      <%=rsdemo.getString("appointment_date")%></a></td>
-      <td align="center"><%=rsdemo.getString("start_time")%></td>
-      <td align="center"><%=rsdemo.getString("end_time")%></td>
-      <td align="center"><%=rsdemo.getString("name")%></td>
-      <td>&nbsp;</td>
-</tr>
-<%
+%>
+	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<td align="center"><a href=#
+			onClick="popupPage(300,700,'../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&appointment_no=<%=rsdemo.getString("appointment_no")%>&provider_no=<%=curUser_no%>&year=<%=MyDateFormat.getYearFromStandardDate(rsdemo.getString("appointment_date"))%>&month=<%=MyDateFormat.getMonthFromStandardDate(rsdemo.getString("appointment_date"))%>&day=<%=MyDateFormat.getDayFromStandardDate(rsdemo.getString("appointment_date"))%>&start_time=<%=rsdemo.getString("start_time")%>&demographic_no=');return false;">
+		<%=rsdemo.getString("appointment_date")%></a></td>
+		<td align="center"><%=rsdemo.getString("start_time")%></td>
+		<td align="center"><%=rsdemo.getString("end_time")%></td>
+		<td align="center"><%=rsdemo.getString("name")%></td>
+		<td>&nbsp;</td>
+	</tr>
+	<%
   }
   daySheetBean.closePstmtConn();
-%> 
+%>
 
 </table>
 </body>

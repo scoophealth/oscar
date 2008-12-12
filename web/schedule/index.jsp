@@ -24,9 +24,9 @@
  */
 -->
 
-<%@ page %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ page%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
 <title>Untitled Document</title>
@@ -34,6 +34,6 @@
 </head>
 
 <body bgcolor="#FFFFFF">
-<bean:message key="global.msgSomethingWrong"/> 
+<bean:message key="global.msgSomethingWrong" />
 </body>
 </html:html>

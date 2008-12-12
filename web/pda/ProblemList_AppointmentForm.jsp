@@ -24,17 +24,19 @@
  */
 -->
 
-<%@ page  import="java.io.InputStream" %>
-<%@ page  import="java.io.OutputStream" %>
-<%@ page  import="java.lang.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page errorPage="ErrorPage.jsp" %>
+<%@ page import="java.io.InputStream"%>
+<%@ page import="java.io.OutputStream"%>
+<%@ page import="java.lang.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page errorPage="ErrorPage.jsp"%>
 
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
-<jsp:useBean id="beanFunctionGenerator" scope="session" class="bean.FunctionGenerator" />
-<jsp:useBean id="beanCoercionTest" scope="session" class="bean.CoercionTest" />
+<jsp:useBean id="beanFunctionGenerator" scope="session"
+	class="bean.FunctionGenerator" />
+<jsp:useBean id="beanCoercionTest" scope="session"
+	class="bean.CoercionTest" />
 <jsp:useBean id="beanUtility" scope="session" class="bean.Utility" />
 
 <% 
@@ -62,7 +64,7 @@
 <xml_Alert>
 */
 %>
- 
+
 
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
@@ -72,8 +74,8 @@
 
 </head>
 <body>
-<table  border="1">
-<%
+<table border="1">
+	<%
          out.print("<tr><td><a href=\"Demographic.jsp?demographic_no="+demographic_no+"&keyword="+keyword+"&button="+button+"\">Return</a></td></tr>");   
 
 
@@ -100,8 +102,8 @@
 
  
 RS.close();   
-%> 
- 
+%>
+
 </table>
 </body>
 </html>

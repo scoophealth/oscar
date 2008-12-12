@@ -21,7 +21,8 @@
  * Ontario, Canada 
 --%><%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils" %>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,java.io.*,org.apache.xmlrpc.*, oscar.util.StringUtils"%>
 <%
 String thisistheperson = "mybrain"; 
 RxSessionBean bean = (RxSessionBean) session.getAttribute("RxSessionBean");
@@ -40,16 +41,18 @@ if ( bean == null ){
             +"\nATC: "+ht.get("atc")
             +"\nReference: "+ht.get("reference")
             +"\nWarning: "+ht.get("body"));%>
-            
-            <div style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
-                <b><%=ht.get("name")%></b><br/>
-            <%=ht.get("body")%><br/> <% String ref = (String)ht.get("reference");%>
-                (<%=ht.get("evidence")%>) &nbsp;Reference: <a href="<%=ht.get("reference")%>"target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
-            </div>
 
-      <%}
+<div
+	style="background-color:<%=sigColor(""+ht.get("significance"))%>;margin-right:3px;margin-left:3px;margin-top:2px;padding-left:3px;padding-top:3px;padding-bottom:3px;">
+<b><%=ht.get("name")%></b><br />
+<%=ht.get("body")%><br />
+<% String ref = (String)ht.get("reference");%> (<%=ht.get("evidence")%>)
+&nbsp;Reference: <a href="<%=ht.get("reference")%>" target="_blank"><%= StringUtils.maxLenString(ref, 51, 50, "...") %></a>
+</div>
+
+<%}
     }else if(warnings == null){ %>
-        <div>MyDrug to MyDrug Warning Service not available</div>                          
+<div>MyDrug to MyDrug Warning Service not available</div>
 <%  }   %>
 <%!
     

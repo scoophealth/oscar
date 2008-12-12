@@ -32,13 +32,16 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 %>
 <jsp:forward page="billingONMRI.jsp" />
 <% } %>
-%> 
+%>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 
 <%
 GregorianCalendar now=new GregorianCalendar();
@@ -84,7 +87,8 @@ session.setAttribute("ohipdownload", ohipdownload);
 <html>
 <head>
 <title>Billing Report</title>
-<meta http-equiv="Content-Type" content="text/html; charset=charset=iso-8859-1">
+<meta http-equiv="Content-Type"
+	content="text/html; charset=charset=iso-8859-1">
 <script language="JavaScript" type="text/JavaScript">
 <!--
 
@@ -123,46 +127,50 @@ obj.visibility=v; }
 </script>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000"  onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" >
-<div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
-<div id="Layer2" style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;"> 
+<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<div id="Layer1"
+	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
+<div id="Layer2"
+	style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr bgcolor="#DDDDEE"> 
-	<td align='CENTER'><font size="2">
-	<strong>Last 5 Years</strong></font></td>
-</tr>
-<% for (int i=0; i<5;i++) { %>
-<tr> 
-	<td align='CENTER'><font size="2">
-	<a href="billingOHIPreport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
-</tr>
-<% } %>
+	<tr bgcolor="#DDDDEE">
+		<td align='CENTER'><font size="2"> <strong>Last 5
+		Years</strong></font></td>
+	</tr>
+	<% for (int i=0; i<5;i++) { %>
+	<tr>
+		<td align='CENTER'><font size="2"> <a
+			href="billingOHIPreport.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
+	</tr>
+	<% } %>
 </table>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-	<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-	OHIP Report - <%=thisyear%></font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">
+		OHIP Report - <%=thisyear%></font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 
 <table width="100%" border="0" bgcolor="#E6F0F7">
-<form name="form1" method="post" action="<%=oscarVariables.getProperty("group_billing", "").trim().equals("on")?"genGroupReport.jsp" : "genreport.jsp"%>"  onsubmit="return checkSubmit();">
-<tr> 
-	<td width="220">
-	<a href="#" onClick="showHideLayers('Layer2','','show')">Show Archive</a>
-	</td><td width="220">
-	Select provider</td>
-	<td width="254">
-	<select name="provider">
-		<option value="all">All Providers</option>
+	<form name="form1" method="post"
+		action="<%=oscarVariables.getProperty("group_billing", "").trim().equals("on")?"genGroupReport.jsp" : "genreport.jsp"%>"
+		onsubmit="return checkSubmit();">
+	<tr>
+		<td width="220"><a href="#"
+			onClick="showHideLayers('Layer2','','show')">Show Archive</a></td>
+		<td width="220">Select provider</td>
+		<td width="254"><select name="provider">
+			<option value="all">All Providers</option>
 
-<%
+			<%
 String proFirst="";
 String proLast="";
 String proOHIP="";
@@ -177,17 +185,16 @@ while(rslocal.next()){
 	specialty_code = SxmlMisc.getXmlContent(rslocal.getString("comments"),"<xml_p_specialty_code>","</xml_p_specialty_code>");
 %>
 
-		<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>" ><%=proLast%>, <%=proFirst%></option>
-<% 
+			<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>"><%=proLast%>,
+			<%=proFirst%></option>
+			<% 
 }
 %>
-	</select>
-	</td><td width="200">
-	Billing center
-	</td><td width="254">
-	<select name="billcenter">
+		</select></td>
+		<td width="200">Billing center</td>
+		<td width="254"><select name="billcenter">
 
-<% 
+			<% 
 String centerCode="";
 String centerDesc="";
 
@@ -197,32 +204,32 @@ while(rsCenter.next()){
 	centerDesc = rsCenter.getString("billcenter_desc");
 %>
 
-		<option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
-<% } %>
+			<option value="<%=centerCode%>"
+				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=centerDesc%></option>
+			<% } %>
 
-	</select>
-	</td><td>
-	<input type="submit" name="Submit" value="Create Report">
-	<input type="hidden" name="monthCode" value="<%=monthCode%>">
-	<input type="hidden" name="verCode" value="V03">
-	<input type="hidden" name="curUser" value="<%=user_no%>">
-	<input type="hidden" name="curDate" value="<%=nowDate%>">
-	</td>
-</tr>
-</form>
+		</select></td>
+		<td><input type="submit" name="Submit" value="Create Report">
+		<input type="hidden" name="monthCode" value="<%=monthCode%>">
+		<input type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"></td>
+	</tr>
+	</form>
 </table>
 
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
-<tr bgcolor="<%=yearColor%>"> 
-	<th width="25%">Provider</th>
-	<th width="20%">Creation Date</th>
-	<th width="10%">Clm/Rec</th>
-	<th width="10%">Total</td>
-	<th width="15%">Ohip Filename</th>
-	<th width="20%">HTML Filename</th>
-</tr>
+	<tr bgcolor="<%=yearColor%>">
+		<th width="25%">Provider</th>
+		<th width="20%">Creation Date</th>
+		<th width="10%">Clm/Rec</th>
+		<th width="10%">Total
+		</td>
+		<th width="15%">Ohip Filename</th>
+		<th width="20%">HTML Filename</th>
+	</tr>
 
-<%
+	<%
 Properties proName = new Properties();
 ResultSet rspro = null;
 rspro = apptMainBean.queryResults("%", "search_provider_ohip_dt");
@@ -249,19 +256,21 @@ while(rslocal.next()){
 	pro_name = proName.getProperty(pro_ohip);
 %>
 
-<tr bgcolor="<%=count%2==0?yearColor:"white"%>"> 
-	<td><font size="2"><%=pro_name%></font></td>
-	<td align="center"><font size="2"><%=updatedate%></font></td>
-	<td align="center"><font size="2"><%=cr%></td>
-	<td align="right"><font size="2"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font></td>
+	<tr bgcolor="<%=count%2==0?yearColor:"white"%>">
+		<td><font size="2"><%=pro_name%></font></td>
+		<td align="center"><font size="2"><%=updatedate%></font></td>
+		<td align="center"><font size="2"><%=cr%></td>
+		<td align="right"><font size="2"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font></td>
 
-	<td width="15%"><font size="2">
-	<a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
-	<td width="20%"><font size="2">
-	<a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
-</tr>
+		<td width="15%"><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
+			target="_blank"><%=oFile%></a></font></td>
+		<td width="20%"><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
+			target="_blank"><%=hFile%></a></font></td>
+	</tr>
 
-<%
+	<%
 }
 apptMainBean.closePstmtConn();
 %>

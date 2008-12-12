@@ -1,594 +1,300 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
-  This software is published under the GPL GNU General Public License.
-  This program is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public License
-  as published by the Free Software Foundation; either version 2
-  of the License, or (at your option) any later version. 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
- 
-    Document   : hivFlowsheet.xml
-    Created on : December 14, 2006, 11:00 AM
-    Author     : Jay Gallagher
-    Description:
-        Define hiv flowsheet  icd code is 406 but i could not find a reference for that
--->
-<flowsheet name="hiv" 
-           display_name="HIV Flowsheet" 
-           ds_rules="hiv.drl" 
-           dxcode_triggers="icd9:042" 
-           warning_colour="#E00000"
-           recommendation_colour="yellow">
-    
-    <indicator key="LOW" colour="#9999FF"/>
-    <indicator key="HIGH" colour="orange"/>
-    <indicator key="HIGH 1" colour="#E00000"/>
-    
-    <item
-        measurement_type="CD4"
-        display_name="CD4"
-        guideline=""
-        graphable="yes"
-        value_name="CD4"/>
-    
-    <item
-        measurement_type="VLOA"
-        display_name="Viral Load"
-        guideline=""
-        graphable="yes"
-        value_name="Viral Load"
-    />    
-    
-    <item
-        measurement_type="Hb"
-        display_name="Hb"
-        guideline=""
-        graphable="yes"
-        value_name="Hb"/>    
-    
-    <item
-        measurement_type="ALT"
-        display_name="ALT"
-        guideline=""
-        graphable="yes"
-        value_name="ALT"
-    />    
-    
-    <item
-        measurement_type="FBS"
-        display_name="FBS"
-        guideline=""
-        graphable="yes"
-        value_name="FBS"/>    
-    
-    <item
-        measurement_type="TCHL"
-        display_name="Total Cholesterol"
-        guideline="Range:2.0-12.0"
-        graphable="yes"
-        value_name="Total Chol"
-        ds_rules="diab-TCHDL.drl"/>    
-    
-    <item
-        measurement_type="LDL"
-        display_name="LDL"
-        guideline="LDL &lt; 2.5"
-        graphable="yes"
-        value_name="LDL"
-        ds_rules="diab-LDL.drl"/>
-    
-    <item
-        measurement_type="HDL"
-        display_name="HDL"
-        guideline="HDL "
-        graphable="yes"
-        value_name="HDL"
-    />
-    
-    <item
-        measurement_type="WT"
-        display_name="Weight"
-        guideline=""
-        graphable="no"
-        value_name="Kg"/>  
-    
-    
-    <item
-        measurement_type="TG"
-        display_name="Triglycerides"
-        guideline="Target: &lt; 2.0 mmol/L"
-        graphable="yes"
-        value_name="TG"
-        ds_rules="diab-TG.drl"/>
-    <item
-        measurement_type="VB12"
-        display_name="Vit B12"
-        guideline=""
-        graphable="yes"
-        value_name="Vit B12"/>    
-    <item
-        measurement_type="FTST"
-        display_name="Free Testost"
-        guideline=""
-        graphable="yes"
-        value_name="Free Testost"
-    />
-    <item
-        measurement_type="VDRL"
-        display_name="VDRL"
-        guideline=""
-        graphable="yes"
-        value_name="Positive"
-    />
-    <item
-        measurement_type="TOXP"
-        display_name="Toxoplasma IgG"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />
-    <item
-        measurement_type="HpAI"
-        display_name="Hep A IgG"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />
-    <item
-        measurement_type="HpBS"
-        display_name="Hep BS Ag"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />     
-    <item
-        measurement_type="HpBA"
-        display_name="Hep BS Ab"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />
-    <item
-        measurement_type="HpCA"
-        display_name="Hep C Ab"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />    
-    
-    <item
-        measurement_type="CMVI"
-        display_name="CMV IgG"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />    
-    
-    <item
-        measurement_type="G6PD"
-        display_name="G6PD"
-        guideline=""
-        graphable="no"
-        value_name="Positive"
-    />    
-    
-    
-    <item        
-        prevention_type="PAP"
-        display_name="PAP"
-        guideline=""
-        graphable="no"/> 
-    
-    <item 
-        prevention_type="Flu"
-        display_name="Flu Vaccine"
-        guideline="Annually"
-        graphable="no"/>
-    
-    <item 
-        prevention_type="Pneumovax"
-        display_name="Pneumococcal vaccine"
-        guideline=""
-        graphable="no"/>
-    
-    <item        
-        prevention_type="Td"
-        display_name="Td"
-        guideline=""
-        graphable="no"/>
-    
-    <item        
-        prevention_type="HepA"
-        display_name="Hep A"
-        guideline=""
-        graphable="no"/>
-    
-    <item        
-        prevention_type="HepB"
-        display_name="Hep B"
-        guideline=""
-        graphable="no"/>
-    
-    <item        
-        prevention_type="MMR"
-        display_name="MMR"
-        guideline=""
-        graphable="no"/>
-    
-    
-    <!-- item        
-        prevention_type="?New Tuberculin Skin Test"
-        display_name="Tuberculin Skin Test"
-        guideline=""
-        graphable="no"/ -->
-    
-    
-    
-    
-    
-    
-    <item
-        measurement_type="URBH"
-        display_name="Update Risk Behaviours"
-        guideline=""
-        graphable="no"
-        value_name="Changed"
-    />
-    <item
-        measurement_type="USSH"
-        display_name="Update Sexual Identity in Social History"
-        guideline=""
-        graphable="no"
-        value_name="Changed"
-    />
-    
-    <item
-        measurement_type="UDUS"
-        display_name="Update Drug Use"
-        guideline="Annually"
-        graphable="no"
-        value_name="Changed"
-    />
-    <item
-        measurement_type="UAIP"
-        display_name="Update AIDS defining illness in PMH"
-        guideline=""
-        graphable="no"
-        value_name="Changed"
-    />
-    <item
-        measurement_type="UHTP"
-        display_name="Update HIV Test History in PMH"
-        guideline=""
-        graphable="no"
-        value_name="Changed"
-    /> 
-    
+	<!--
+		Copyright (c) 2001-2002. Department of Family Medicine, McMaster
+		University. All Rights Reserved. This software is published under the
+		GPL GNU General Public License. This program is free software; you can
+		redistribute it and/or modify it under the terms of the GNU General
+		Public License as published by the Free Software Foundation; either
+		version 2 of the License, or (at your option) any later version. This
+		program is distributed in the hope that it will be useful, but WITHOUT
+		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+		FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+		for more details. * * You should have received a copy of the GNU
+		General Public License along with this program; if not, write to the
+		Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+		MA 02111-1307, USA. Document : hivFlowsheet.xml Created on : December
+		14, 2006, 11:00 AM Author : Jay Gallagher Description: Define hiv
+		flowsheet icd code is 406 but i could not find a reference for that
+	-->
+<flowsheet name="hiv" display_name="HIV Flowsheet" ds_rules="hiv.drl"
+	dxcode_triggers="icd9:042" warning_colour="#E00000"
+	recommendation_colour="yellow">
 
-    
-    
-    <!--
-      
-      Need to make sure these measurements are below
-        -measurement_type="CD4"
-        -measurement_type="VLOA"
-        ?measurement_type="Hb"
-        -measurement_type="ALT"
-        +measurement_type="FBS"*
-        +measurement_type="TCHL"*
-        +measurement_type="LDL"
-        +measurement_type="HDL"
-        +measurement_type="TG"
-        -measurement_type="VB12"
-        -measurement_type="FTST"
-        -measurement_type="VDRL"
-        -measurement_type="TOXP"
-        -measurement_type="HpAI"
-        -measurement_type="HpBS"
-        -measurement_type="HpBA"
-        -measurement_type="HpCA"
-        -measurement_type="CMVI"
-        -measurement_type="G6PD"
-        -measurement_type="URBH"
-        -measurement_type="USSH"
-        -measurement_type="UDUS"
-        -measurement_type="UAIP"
-        -measurement_type="UHTP"
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
 
-      -->
-      <measurement 
-        type="CD4" 
-        typeDesc="CD4" 
-        typeDisplayName="CD4" 
-        measuringInstrc="">
-        <validationRule 
-            name="Numeric Value: 0 to 2500" 
-            maxValue="2500" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement> 
-    
-    <measurement 
-        type="WT" 
-        typeDesc="Weight" 
-        typeDisplayName="Wt" 
-        measuringInstrc="in kg (nnn.n) Range:0-300 Interval:3mo.">
-        <validationRule 
-            name="Numeric Value: 0 to 300" 
-            maxValue="300" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement>
-    
-    
-    
-    <measurement 
-        type="VLOA" 
-        typeDesc="Viral Load" 
-        typeDisplayName="Viral Load" 
-        measuringInstrc="">
-        <validationRule 
-            name="Numeric Value: 0 to 500000" 
-            maxValue="500000" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement> 
-    
-   <measurement 
-   type="Hb" 
-   typeDesc="Hb" 
-   typeDisplayName="Hb" 
-   measuringInstrc="">
-        <validationRule 
-        name="Numeric Value: 30 to 200" 
-        maxValue="200" 
-        minValue="30" 
-        isNumeric="1"/>
-</measurement>
-    
-    
-    <measurement 
-    type="ALT" 
-    typeDesc="ALT" 
-    typeDisplayName="ALT" 
-    measuringInstrc="">
-        <validationRule 
-        name="Numeric Value: 0 to 300" 
-        maxValue="300" 
-        minValue="0" 
-        isNumeric="1"/>
-</measurement>
-      
-    <measurement 
-        type="TCHL" 
-        typeDesc="Total Cholestorol" 
-        typeDisplayName="Total Cholestorol" 
-        measuringInstrc="in mmol/L (nn.n) Range:2.0-12.0">
-        <validationRule 
-            name="Numeric Value: 2.0 to 12.0" 
-            maxValue="12" 
-            minValue="2" 
-            isNumeric="1"/>
-    </measurement> 
-    <measurement 
-        type="FBS" 
-        typeDesc="FBS" 
-        typeDisplayName="Fasting Blood Sugar" 
-        measuringInstrc="FBS value">
-        <validationRule 
-            name="Numeric Value: 0 to 100" 
-            maxValue="100" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement>
-    <measurement 
-        type="HDL" 
-        typeDesc="High Density Lipid" 
-        typeDisplayName="HDL" 
-        measuringInstrc="in mmol/L (n.n) Range:0.4-4.0">
-        <validationRule 
-            name="Numeric Value: 0.4 to 4.0" 
-            maxValue="4" 
-            minValue="0.4" 
-            isNumeric="1"/>
-    </measurement>
-    <measurement 
-        type="TG" 
-        typeDesc="Triglycerides" 
-        typeDisplayName="TG" 
-        measuringInstrc="">
-        <validationRule 
-            name="Numeric Value: 0 to 10" 
-            maxValue="10" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement>
-    <measurement 
-        type="LDL" 
-        typeDesc="Low Density Lipid" 
-        typeDisplayName="LDL" 
-        measuringInstrc="in mmol/L (nn.n) Range:0.5-10  Target:lt;2.5 Interval:6-12mo.">
-        <validationRule 
-            name="Numeric Value: 0.5 to 10" 
-            maxValue="10" 
-            minValue="0.5" 
-            isNumeric="1"/>
-    </measurement>
-    
-    
-    
-    <measurement 
-        type="VB12" 
-        typeDesc="Vitamin B12" 
-        typeDisplayName="Vit B12" 
-        measuringInstrc="">
-        <validationRule 
-            name="Numeric Value: 0 to 2500" 
-            maxValue="2500" 
-            minValue="0" 
-            isNumeric="1"/>
-    </measurement> 
-    
-   
-    
-     <measurement 
-        type="FTST"      
-        typeDesc="Free Testost"      
-        typeDisplayName="Free Testost" 
-        measuringInstrc="">  
-        <validationRule 
-            name="Numeric Value: 0 to 2500" 
-            maxValue="2500" 
-            minValue="0" 
-            isNumeric="1"/>  
-    </measurement>  
-    
-   
-    
-    
-    
-    <!-- pos neg lab -->
-    
-    
-   
-    
-    <measurement 
-        type="VDRL"      
-        typeDesc="VDRL"      
-        typeDisplayName="VDRL" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    
-    <measurement 
-        type="TOXP"      
-        typeDesc="Toxoplasma IgG"      
-        typeDisplayName="Toxoplasma IgG" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    
-    <measurement 
-        type="HpAI"      
-        typeDesc="Hep A IgG"      
-        typeDisplayName="Hep A IgG" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement> 
-    
-    <measurement 
-        type="HpBS"      
-        typeDesc="Hep BS Ag"      
-        typeDisplayName="Hep BS Ag" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement> 
-    <measurement 
-        type="HpBA"      
-        typeDesc="Hep BS Ab"      
-        typeDisplayName="Hep BS Ab" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement> 
-     <measurement 
-        type="HpCA"      
-        typeDesc="Hep C Ab"      
-        typeDisplayName="Hep C Ab" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement> 
-    <measurement 
-        type="CMVI"      
-        typeDesc="CMV IgG"      
-        typeDisplayName="CMV IgG" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>   
-    <measurement 
-        type="G6PD"      
-        typeDesc="G6PD"      
-        typeDisplayName="G6PD" 
-        measuringInstrc="Positive">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-       
-        
-    
-    <!-- pos neg lab end -->
-    
-    
-    <!-- update values -->
-    <measurement 
-        type="URBH"      
-        typeDesc="Update Risk Behaviours"      
-        typeDisplayName="Update Risk Behaviours" 
-        measuringInstrc="Changed">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    <measurement 
-        type="USSH"      
-        typeDesc="Update Sexual Identity in Social History"      
-        typeDisplayName="Update Sexual Identity in Social History" 
-        measuringInstrc="Changed">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    <measurement 
-        type="UDUS"      
-        typeDesc="Update Drug Use"      
-        typeDisplayName="Update Drug Use" 
-        measuringInstrc="Changed">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    <measurement 
-        type="UAIP"      
-        typeDesc="Update AIDS defining illness in PMH"      
-        typeDisplayName="Update AIDS defining illness in PMH" 
-        measuringInstrc="Changed">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    <measurement 
-        type="UHTP"      
-        typeDesc="Update HIV Test History in PMH"      
-        typeDisplayName="Update HIV Test History in PMH" 
-        measuringInstrc="Changed">  
-        <validationRule
-            name="Yes/No"
-            regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>  
-    
-   
-    
-    <!-- update values end -->
-    
-    
+	<item measurement_type="CD4" display_name="CD4" guideline=""
+		graphable="yes" value_name="CD4" />
+
+	<item measurement_type="VLOA" display_name="Viral Load" guideline=""
+		graphable="yes" value_name="Viral Load" />
+
+	<item measurement_type="Hb" display_name="Hb" guideline=""
+		graphable="yes" value_name="Hb" />
+
+	<item measurement_type="ALT" display_name="ALT" guideline=""
+		graphable="yes" value_name="ALT" />
+
+	<item measurement_type="FBS" display_name="FBS" guideline=""
+		graphable="yes" value_name="FBS" />
+
+	<item measurement_type="TCHL" display_name="Total Cholesterol"
+		guideline="Range:2.0-12.0" graphable="yes" value_name="Total Chol"
+		ds_rules="diab-TCHDL.drl" />
+
+	<item measurement_type="LDL" display_name="LDL" guideline="LDL &lt; 2.5"
+		graphable="yes" value_name="LDL" ds_rules="diab-LDL.drl" />
+
+	<item measurement_type="HDL" display_name="HDL" guideline="HDL "
+		graphable="yes" value_name="HDL" />
+
+	<item measurement_type="WT" display_name="Weight" guideline=""
+		graphable="no" value_name="Kg" />
+
+
+	<item measurement_type="TG" display_name="Triglycerides"
+		guideline="Target: &lt; 2.0 mmol/L" graphable="yes" value_name="TG"
+		ds_rules="diab-TG.drl" />
+	<item measurement_type="VB12" display_name="Vit B12" guideline=""
+		graphable="yes" value_name="Vit B12" />
+	<item measurement_type="FTST" display_name="Free Testost"
+		guideline="" graphable="yes" value_name="Free Testost" />
+	<item measurement_type="VDRL" display_name="VDRL" guideline=""
+		graphable="yes" value_name="Positive" />
+	<item measurement_type="TOXP" display_name="Toxoplasma IgG"
+		guideline="" graphable="no" value_name="Positive" />
+	<item measurement_type="HpAI" display_name="Hep A IgG" guideline=""
+		graphable="no" value_name="Positive" />
+	<item measurement_type="HpBS" display_name="Hep BS Ag" guideline=""
+		graphable="no" value_name="Positive" />
+	<item measurement_type="HpBA" display_name="Hep BS Ab" guideline=""
+		graphable="no" value_name="Positive" />
+	<item measurement_type="HpCA" display_name="Hep C Ab" guideline=""
+		graphable="no" value_name="Positive" />
+
+	<item measurement_type="CMVI" display_name="CMV IgG" guideline=""
+		graphable="no" value_name="Positive" />
+
+	<item measurement_type="G6PD" display_name="G6PD" guideline=""
+		graphable="no" value_name="Positive" />
+
+
+	<item prevention_type="PAP" display_name="PAP" guideline=""
+		graphable="no" />
+
+	<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually"
+		graphable="no" />
+
+	<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine"
+		guideline="" graphable="no" />
+
+	<item prevention_type="Td" display_name="Td" guideline=""
+		graphable="no" />
+
+	<item prevention_type="HepA" display_name="Hep A" guideline=""
+		graphable="no" />
+
+	<item prevention_type="HepB" display_name="Hep B" guideline=""
+		graphable="no" />
+
+	<item prevention_type="MMR" display_name="MMR" guideline=""
+		graphable="no" />
+
+
+	<!--
+		item prevention_type="?New Tuberculin Skin Test"
+		display_name="Tuberculin Skin Test" guideline="" graphable="no"/
+	-->
+
+
+
+
+
+
+	<item measurement_type="URBH" display_name="Update Risk Behaviours"
+		guideline="" graphable="no" value_name="Changed" />
+	<item measurement_type="USSH" display_name="Update Sexual Identity in Social History"
+		guideline="" graphable="no" value_name="Changed" />
+
+	<item measurement_type="UDUS" display_name="Update Drug Use"
+		guideline="Annually" graphable="no" value_name="Changed" />
+	<item measurement_type="UAIP" display_name="Update AIDS defining illness in PMH"
+		guideline="" graphable="no" value_name="Changed" />
+	<item measurement_type="UHTP" display_name="Update HIV Test History in PMH"
+		guideline="" graphable="no" value_name="Changed" />
+
+
+
+
+	<!--
+
+		Need to make sure these measurements are below -measurement_type="CD4"
+		-measurement_type="VLOA" ?measurement_type="Hb"
+		-measurement_type="ALT" +measurement_type="FBS"*
+		+measurement_type="TCHL"* +measurement_type="LDL"
+		+measurement_type="HDL" +measurement_type="TG"
+		-measurement_type="VB12" -measurement_type="FTST"
+		-measurement_type="VDRL" -measurement_type="TOXP"
+		-measurement_type="HpAI" -measurement_type="HpBS"
+		-measurement_type="HpBA" -measurement_type="HpCA"
+		-measurement_type="CMVI" -measurement_type="G6PD"
+		-measurement_type="URBH" -measurement_type="USSH"
+		-measurement_type="UDUS" -measurement_type="UAIP"
+		-measurement_type="UHTP"
+	-->
+	<measurement type="CD4" typeDesc="CD4" typeDisplayName="CD4"
+		measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 2500"
+			maxValue="2500" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<measurement type="WT" typeDesc="Weight" typeDisplayName="Wt"
+		measuringInstrc="in kg (nnn.n) Range:0-300 Interval:3mo.">
+		<validationRule name="Numeric Value: 0 to 300"
+			maxValue="300" minValue="0" isNumeric="1" />
+	</measurement>
+
+
+
+	<measurement type="VLOA" typeDesc="Viral Load"
+		typeDisplayName="Viral Load" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 500000"
+			maxValue="500000" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<measurement type="Hb" typeDesc="Hb" typeDisplayName="Hb"
+		measuringInstrc="">
+		<validationRule name="Numeric Value: 30 to 200"
+			maxValue="200" minValue="30" isNumeric="1" />
+	</measurement>
+
+
+	<measurement type="ALT" typeDesc="ALT" typeDisplayName="ALT"
+		measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 300"
+			maxValue="300" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<measurement type="TCHL" typeDesc="Total Cholestorol"
+		typeDisplayName="Total Cholestorol" measuringInstrc="in mmol/L (nn.n) Range:2.0-12.0">
+		<validationRule name="Numeric Value: 2.0 to 12.0"
+			maxValue="12" minValue="2" isNumeric="1" />
+	</measurement>
+	<measurement type="FBS" typeDesc="FBS" typeDisplayName="Fasting Blood Sugar"
+		measuringInstrc="FBS value">
+		<validationRule name="Numeric Value: 0 to 100"
+			maxValue="100" minValue="0" isNumeric="1" />
+	</measurement>
+	<measurement type="HDL" typeDesc="High Density Lipid"
+		typeDisplayName="HDL" measuringInstrc="in mmol/L (n.n) Range:0.4-4.0">
+		<validationRule name="Numeric Value: 0.4 to 4.0"
+			maxValue="4" minValue="0.4" isNumeric="1" />
+	</measurement>
+	<measurement type="TG" typeDesc="Triglycerides"
+		typeDisplayName="TG" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 10" maxValue="10"
+			minValue="0" isNumeric="1" />
+	</measurement>
+	<measurement type="LDL" typeDesc="Low Density Lipid"
+		typeDisplayName="LDL"
+		measuringInstrc="in mmol/L (nn.n) Range:0.5-10  Target:lt;2.5 Interval:6-12mo.">
+		<validationRule name="Numeric Value: 0.5 to 10"
+			maxValue="10" minValue="0.5" isNumeric="1" />
+	</measurement>
+
+
+
+	<measurement type="VB12" typeDesc="Vitamin B12"
+		typeDisplayName="Vit B12" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 2500"
+			maxValue="2500" minValue="0" isNumeric="1" />
+	</measurement>
+
+
+
+	<measurement type="FTST" typeDesc="Free Testost"
+		typeDisplayName="Free Testost" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 2500"
+			maxValue="2500" minValue="0" isNumeric="1" />
+	</measurement>
+
+
+
+
+
+	<!-- pos neg lab -->
+
+
+
+
+	<measurement type="VDRL" typeDesc="VDRL" typeDisplayName="VDRL"
+		measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="TOXP" typeDesc="Toxoplasma IgG"
+		typeDisplayName="Toxoplasma IgG" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="HpAI" typeDesc="Hep A IgG"
+		typeDisplayName="Hep A IgG" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+	<measurement type="HpBS" typeDesc="Hep BS Ag"
+		typeDisplayName="Hep BS Ag" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="HpBA" typeDesc="Hep BS Ab"
+		typeDisplayName="Hep BS Ab" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="HpCA" typeDesc="Hep C Ab"
+		typeDisplayName="Hep C Ab" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="CMVI" typeDesc="CMV IgG"
+		typeDisplayName="CMV IgG" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="G6PD" typeDesc="G6PD" typeDisplayName="G6PD"
+		measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+
+	<!-- pos neg lab end -->
+
+
+	<!-- update values -->
+	<measurement type="URBH" typeDesc="Update Risk Behaviours"
+		typeDisplayName="Update Risk Behaviours" measuringInstrc="Changed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="USSH"
+		typeDesc="Update Sexual Identity in Social History" typeDisplayName="Update Sexual Identity in Social History"
+		measuringInstrc="Changed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="UDUS" typeDesc="Update Drug Use"
+		typeDisplayName="Update Drug Use" measuringInstrc="Changed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="UAIP" typeDesc="Update AIDS defining illness in PMH"
+		typeDisplayName="Update AIDS defining illness in PMH" measuringInstrc="Changed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<measurement type="UHTP" typeDesc="Update HIV Test History in PMH"
+		typeDisplayName="Update HIV Test History in PMH" measuringInstrc="Changed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+
+	<!-- update values end -->
+
+
 </flowsheet>

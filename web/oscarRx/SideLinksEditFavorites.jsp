@@ -1,3 +1,4 @@
+
 <%  
 /*
  * 
@@ -29,43 +30,38 @@
         String alle = "";
         if (allergies.length > 0 ){ alle = "Red"; }
         %>
-    <td width="10%" height="100%" valign="top">
-        <div class="PropSheetMenu">
-        <p class="PropSheetLevel1CurrentItem">Special</p>
-        <p class="PropSheetMenuItemLevel1">
-        <a href="SelectPharmacy.jsp">Edit Pharmacy</a></p>
-        <p class="PropSheetMenuItemLevel1">
-        <a href="EditFavorites.jsp">Edit Favorites</a></p>
-        <p class="PropSheetLevel1CurrentItem<%=alle%>">Allergies</p>
-        <p class="PropSheetMenuItemLevel1">                
-        <%
+<td width="10%" height="100%" valign="top">
+<div class="PropSheetMenu">
+<p class="PropSheetLevel1CurrentItem">Special</p>
+<p class="PropSheetMenuItemLevel1"><a href="SelectPharmacy.jsp">Edit
+Pharmacy</a></p>
+<p class="PropSheetMenuItemLevel1"><a href="EditFavorites.jsp">Edit
+Favorites</a></p>
+<p class="PropSheetLevel1CurrentItem<%=alle%>">Allergies</p>
+<p class="PropSheetMenuItemLevel1">
+<%
                 
         for (int j=0; j<allergies.length; j++){%>
-            <p class="PropSheetMenuItemLevel1">
-            <a title="<%= allergies[j].getAllergy().getDESCRIPTION() %> - <%= allergies[j].getAllergy().getReaction() %>">
-                <%=allergies[j].getAllergy().getShortDesc(13,8,"...")%>                                      
-            </a>
-            </p>
-        <%}%>
-        </p>    
-        <p class="PropSheetLevel1CurrentItem">Favorites</p>
-        <p class="PropSheetMenuItemLevel1">
-        
-        <%
+
+<p class="PropSheetMenuItemLevel1"><a
+	title="<%= allergies[j].getAllergy().getDESCRIPTION() %> - <%= allergies[j].getAllergy().getReaction() %>">
+<%=allergies[j].getAllergy().getShortDesc(13,8,"...")%> </a></p>
+<%}%>
+</p>
+<p class="PropSheetLevel1CurrentItem">Favorites</p>
+<p class="PropSheetMenuItemLevel1">
+<%
         oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites
             = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());
         
         for (int j=0; j<favorites.length; j++){%>
-            <p class="PropSheetMenuItemLevel1">
-            <a href="useFavorite.do?favoriteId=<%= favorites[j].getFavoriteId() %>" title="<%= favorites[j].getFavoriteName() %>">
-                <%if(favorites[j].getFavoriteName().length()>13){%>
-                        <%= favorites[j].getFavoriteName().substring(0, 10) + "..." %>
-                <%}else{%>
-                        <%= favorites[j].getFavoriteName() %>
-                <%}%>
-            </a>
-            </p>
-        <%}%>
-        </p>
-        </div>
-    </td>
+
+<p class="PropSheetMenuItemLevel1"><a
+	href="useFavorite.do?favoriteId=<%= favorites[j].getFavoriteId() %>"
+	title="<%= favorites[j].getFavoriteName() %>"> <%if(favorites[j].getFavoriteName().length()>13){%>
+<%= favorites[j].getFavoriteName().substring(0, 10) + "..." %> <%}else{%>
+<%= favorites[j].getFavoriteName() %> <%}%> </a></p>
+<%}%>
+</p>
+</div>
+</td>

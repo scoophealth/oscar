@@ -26,12 +26,13 @@
 --%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@page import="org.oscarehr.casemgmt.model.*" %>
-<%@page import="java.util.ArrayList" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@page import="org.oscarehr.casemgmt.model.*"%>
+<%@page import="java.util.ArrayList"%>
 
 <ul>
-    <c:forEach var="issue" items="${issueList}">
-        <li id="<c:out value="${issue.id}"/>"><c:out value="${issue.description}" /></li>
-    </c:forEach>       
+	<c:forEach var="issue" items="${issueList}">
+		<li id="<c:out value="${issue.id}"/>"><c:out
+			value="${issue.description}" /></li>
+	</c:forEach>
 </ul>

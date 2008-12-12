@@ -26,12 +26,15 @@
 
 <%
   
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
-<head><title></title>
+<head>
+<title></title>
 <script LANGUAGE="JavaScript">
     <!--
     function start(){
@@ -40,7 +43,7 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <%
   if(request.getParameter("submit").equals("Delete")) {
     String[] param =new String[1];
@@ -51,12 +54,12 @@
   } else {
 %>
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A FORM RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A FORM RECORD</font></th>
+	</tr>
+</table>
 <%
   String[] param =new String[2];
   param[0]=request.getParameter("formname");
@@ -65,23 +68,25 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h1>Successful Addition of a encounter-form Record.</h1></p>
+<p>
+<h1>Successful Addition of a encounter-form Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 <%
 }

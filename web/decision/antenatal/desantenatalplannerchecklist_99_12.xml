@@ -1,43 +1,54 @@
 <?xml version='1.0' ?>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
+	<!--
+		/* * * Copyright (c) 2001-2002. Department of Family Medicine,
+		McMaster University. All Rights Reserved. * * This software is
+		published under the GPL GNU General Public License. * This program is
+		free software; you can redistribute it and/or * modify it under the
+		terms of the GNU General Public License * as published by the Free
+		Software Foundation; either version 2 * of the License, or (at your
+		option) any later version. * * This program is distributed in the hope
+		that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+		implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the * GNU General Public License for more details. * *
+		You should have received a copy of the GNU General Public License *
+		along with this program; if not, write to the Free Software *
+		Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+		USA. * * * <OSCAR TEAM> * * This software was written for the *
+		Department of Family Medicine * McMaster Unviersity * Hamilton *
+		Ontario, Canada */
+	-->
 <checklist>
-  <recommendations>
-    <item>Visits every 4 weeks until 32 weeks - weight, blood pressure, urine for protein/glucose,<BR/>
-symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</FONT> items are for residents,<BR/>
-<FONT COLOR="red">RED</FONT> are chart audit items</item>
-  </recommendations>
+	<recommendations>
+		<item>
+			Visits every 4 weeks until 32 weeks - weight, blood pressure, urine
+			for protein/glucose,
+			<BR />
+			symphysis fundal height, fetal heart beyond 12 weeks.
+			<FONT COLOR="blue">BLUE</FONT>
+			items are for residents,
+			<BR />
+			<FONT COLOR="red">RED</FONT>
+			are chart audit items
+		</item>
+	</recommendations>
 
-  <week number="0">
-    <item><B>History</B></item>
-    <item name="cl0h1" checkbox="yes" risk="audit01"><FONT COLOR="red">Antenatal 1 started once EDC is established and SIGN</FONT></item>
+	<week number="0">
+		<item>
+			<B>History</B>
+		</item>
+		<item name="cl0h1" checkbox="yes" risk="audit01">
+			<FONT COLOR="red">Antenatal 1 started once EDC is established
+				and SIGN</FONT>
+		</item>
 
-    <item><B>Physical Examination</B></item>
-    <item name="cl0p1" checkbox="yes"><I>Complete physical exam including breast exam</I></item>
-    <item name="cl0p2" checkbox="yes">Pap - may defer if patients low risk and recent PAP &lt; 12 months</item>
+		<item>
+			<B>Physical Examination</B>
+		</item>
+		<item name="cl0p1" checkbox="yes">
+			<I>Complete physical exam including breast exam</I>
+		</item>
+		<item name="cl0p2" checkbox="yes">Pap - may defer if patients low
+			risk and recent PAP &lt; 12 months</item>
     <item name="cl0p3" checkbox="yes">Record uterine size in wks under uterus on antenatal 1 - physical exam</item>
 
     <item><B>Laboratory Tests/Investigations</B></item>

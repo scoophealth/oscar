@@ -27,7 +27,7 @@
 
 <table width="100%" border="2" cellpadding="0" cellspacing="0">
 
-  <% 
+	<% 
  String dateBegin = request.getParameter("xml_vdate");
    String dateEnd = request.getParameter("xml_appointment_date");
    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
@@ -53,16 +53,22 @@ int rCount = 0;
     out.println("failed!!!"); 
   } else {
   %>
-  <tr bgcolor="#CCCCFF"> 
-    <TH align="center" width="5%"><b><font size="2" face="Arial, Helvetica, sans-serif">INVOICE</font></b></TH>
-    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
-    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">DATE</font></b></TH>
-    <TH align="center" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif">BILLING CODE</font></b></TH>
-    <TH align="center" width="10%"><b><font size="2" face="Arial, Helvetica, sans-serif">BILLED</font></b></TH>
-    <TH align="center" width="5%"><b><font size="2" face="Arial, Helvetica, sans-serif">STATUS</font></b></TH>
-    
-  </tr>
-  <%
+	<tr bgcolor="#CCCCFF">
+		<TH align="center" width="5%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">INVOICE</font></b></TH>
+		<TH align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">PATIENT</font></b></TH>
+		<TH align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">DATE</font></b></TH>
+		<TH align="center" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">BILLING CODE</font></b></TH>
+		<TH align="center" width="10%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">BILLED</font></b></TH>
+		<TH align="center" width="5%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">STATUS</font></b></TH>
+
+	</tr>
+	<%
     while (rs.next()) {
      
       bodd=bodd?false:true; //for the color of rows
@@ -91,37 +97,44 @@ int rCount = 0;
    
 
 %>
-  <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">  
-    <TD align="left" width="5%" ><b><font size="2" face="Arial, Helvetica, sans-serif"><a href=# onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")' title="<%=reason%>">
-      <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
-        <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
-        <TD align="left" width="12%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
+	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<TD align="left" width="5%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><a href=#
+			onClick='popupPage(700,720, "../../../billing/CA/BC/billingView.do?billing_no=<%=apptMainBean.getString(rs,"billing_no")%>&dboperation=search_bill&hotclick=0")'
+			title="<%=reason%>"> <%=apptMainBean.getString(rs,"billing_no")%></a></font></b></TD>
+		<TD align="left" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=demoName%></font></b></TD>
+		<TD align="left" width="12%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=apptDate%></font></b></TD>
 
-    <TD align="left" width="20%"><b><font size="2" face="Arial, Helvetica, sans-serif"> <% for(int x=0; x<10; x++){ %>
-      <%=param2[x]%> &nbsp;
-      <%}%>
-      </font></b></TD>
-    <TD align="right" width="10%"><b> <font size="2" face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
-   <TD align="center" width="5%"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=reason%></font></b></TD>
+		<TD align="left" width="20%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"> <% for(int x=0; x<10; x++){ %>
+		<%=param2[x]%> &nbsp; <%}%> </font></b></TD>
+		<TD align="right" width="10%"><b> <font size="2"
+			face="Arial, Helvetica, sans-serif"><%=total%></font></b></TD>
+		<TD align="center" width="5%"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=reason%></font></b></TD>
 
-  </tr>
-  <%  rowCount = rowCount + 1;
+	</tr>
+	<%  rowCount = rowCount + 1;
     }
     if (rowCount == 0) {
     %>
-  <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <TD colspan="6" align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">No 
-      unbill items</font></b></TD>
-  </tr>
-  <% }else{
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<TD colspan="6" align="center"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">No unbill items</font></b></TD>
+	</tr>
+	<% }else{
 %>
- <tr bgcolor="<%=bodd?"ivory":"white"%>"> 
-    <TD colspan="4" align="right"><b><font size="2" face="Arial, Helvetica, sans-serif">Total</font></b></TD>
-      <TD align="right"><b><font size="2" face="Arial, Helvetica, sans-serif"><%=BigOBTotal%></font></b></TD>
-      <TD align="center"><b><font size="2" face="Arial, Helvetica, sans-serif">Paid 
-      </font></b></TD>
-  </tr>
-<%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<TD colspan="4" align="right"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">Total</font></b></TD>
+		<TD align="right"><b><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=BigOBTotal%></font></b></TD>
+		<TD align="center"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">Paid </font></b></TD>
+	</tr>
+	<%
 }}%>
 
 </table>

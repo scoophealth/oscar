@@ -30,12 +30,10 @@
 <html lang="en">
 
 
-    <head>
-        <title>
-            Coronary Artery Disease Risk Prediction
-        </title>
-        <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-        <script type="text/javascript">
+<head>
+<title>Coronary Artery Disease Risk Prediction</title>
+<link rel="stylesheet" type="text/css" href="../encounterStyles.css">
+<script type="text/javascript">
 
         var ageM = new Array();
         var ageF = new Array();
@@ -719,7 +717,7 @@ function resetAverageChart(){
         
 }
         </script>
-        <script Language="JavaScript">
+<script Language="JavaScript">
             
             // QueryString
             
@@ -774,335 +772,297 @@ function setValues(){
 }
         </script>
 
-        <style type="text/css">
-            table.outline{
-                margin-top:50px;
-                border-bottom: 1pt solid #888888;
-                border-left: 1pt solid #888888;
-                border-top: 1pt solid #888888;
-                border-right: 1pt solid #888888;
-            }
-            table.grid{
-                border-bottom: 1pt solid #888888;
-                border-left: 1pt solid #888888;
-                border-top: 1pt solid #888888;
-                border-right: 1pt solid #888888;
-            }
-            td.gridTitles{
-                border-bottom: 2pt solid #888888;
-                font-weight: bold;
-            }
-            td.middleGrid{
-                border-left: 1pt solid #888888;	   
-                border-right: 1pt solid #888888;
-            }	
-        </style>
-    </head>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+</head>
 
-    <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()" >
-        <!--  -->
-        <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-            <tr class="MainTableTopRow">
-                <td class="MainTableTopRowLeftColumn">
-                    Calculators: Coronary Artery Disease Risk Prediction                            
-                </td>
-                <td style="text-align:right">
-                
-                    <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:
-                    popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>                
-                </td>
-            </tr>
-            <tr>
-                
-                <td class="MainTableRightColumn" colspan="2">
-                <table>
-                <tr>
-                <td>
-                <form name="calCorArDi">
-                <table>
-                <tr>
-                    <td>Female:</td>
-                    <td><input type="radio" name="sex" value="F" checked/></td>
-                </tr>
-                <tr>
-                    <td>Male:</td>
-                    <td><input type="radio" name="sex" value="M"/></td>
-                </tr>
-                <tr>
-                    <td>Age:</td>
-                    <td><input type="text" name="age" size="4"/></td>
-                </tr>
-                <tr>
-                    <td>HDL-Cholesterol:</td>				
-						
-                    <td> <select name="HDL">
-                        <option value="1"><1.04</option>
-                        <option value="2">1.04-1.29</option>
-                        <option value="3">1.30-1.54</option>
-                        <option value="4">>1.54</option>
-                    </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Total-Cholesterol:</td>
-                    <td>
-                        <select name="TCh">
-                            <option value="0"><4.15</option>
-                            <option value="1">4.15-5.19</option>
-                            <option value="2">5.20-6.19</option>
-                            <option value="3">6.20-7.20</option>															
-                            <option value="4">>7.20</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                <td>Systolic BP:</td>
-                <td>
-                    <select name="BP">
-                        <option value="1"><120</option>
-                        <option value="2">120-129</option>
-                        <option value="3">130-139</option>
-                        <option value="4">140-159</option>															
-                        <option value="5">>159</option>
-                    </select>
-                </td>
-                <td>Treated:</td>
-                <td>No</td><td><input type="radio" name="treated" value="no" checked/></td>
-                <td>Yes</td><td><input type="radio" name="treated" value="yes"/></td>
-                                                                                    
-            </tr>
-                        <tr>
-                            <td>Smoker:</td>
-                            <td><input type="checkbox" name="cigs"/></td>
-                        </tr>
-                        <tr>
-                            <td>Diabetic:</td>
-                            <td><input type="checkbox" name="diabetic"/></td>
-                        </tr>
-                        <tr>
-										
-                        </tr>
-                        <tr >
-                            <td colspan="2"><input type="button" value="Calculate" onClick="calculate();"/> </td>
-                        </tr>
-                        <!--<tr>
+<body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
+<!--  -->
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Calculators: Coronary
+		Artery Disease Risk Prediction</td>
+		<td style="text-align: right"><a
+			href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
+			href="javascript:
+                    popupStart(300,400,'About.jsp')">About</a>
+		| <a href="javascript:popupStart(300,400,'License.jsp')">License</a>
+		</td>
+	</tr>
+	<tr>
+
+		<td class="MainTableRightColumn" colspan="2">
+		<table>
+			<tr>
+				<td>
+				<form name="calCorArDi">
+				<table>
+					<tr>
+						<td>Female:</td>
+						<td><input type="radio" name="sex" value="F" checked /></td>
+					</tr>
+					<tr>
+						<td>Male:</td>
+						<td><input type="radio" name="sex" value="M" /></td>
+					</tr>
+					<tr>
+						<td>Age:</td>
+						<td><input type="text" name="age" size="4" /></td>
+					</tr>
+					<tr>
+						<td>HDL-Cholesterol:</td>
+
+						<td><select name="HDL">
+							<option value="1"><1.04</option>
+							<option value="2">1.04-1.29</option>
+							<option value="3">1.30-1.54</option>
+							<option value="4">>1.54</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Total-Cholesterol:</td>
+						<td><select name="TCh">
+							<option value="0"><4.15</option>
+							<option value="1">4.15-5.19</option>
+							<option value="2">5.20-6.19</option>
+							<option value="3">6.20-7.20</option>
+							<option value="4">>7.20</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>Systolic BP:</td>
+						<td><select name="BP">
+							<option value="1"><120</option>
+							<option value="2">120-129</option>
+							<option value="3">130-139</option>
+							<option value="4">140-159</option>
+							<option value="5">>159</option>
+						</select></td>
+						<td>Treated:</td>
+						<td>No</td>
+						<td><input type="radio" name="treated" value="no" checked /></td>
+						<td>Yes</td>
+						<td><input type="radio" name="treated" value="yes" /></td>
+
+					</tr>
+					<tr>
+						<td>Smoker:</td>
+						<td><input type="checkbox" name="cigs" /></td>
+					</tr>
+					<tr>
+						<td>Diabetic:</td>
+						<td><input type="checkbox" name="diabetic" /></td>
+					</tr>
+					<tr>
+
+					</tr>
+					<tr>
+						<td colspan="2"><input type="button" value="Calculate"
+							onClick="calculate();" /></td>
+					</tr>
+					<!--<tr>
                         <td><input type="text" name="totalVal" 
                         visible="false"/></td>
                         </tr>-->
-                    </table>
-                </form>
-			
-                <form name="second">
-                    <textarea name="prediction" rows="12" cols="43" style="overflow:auto"></textarea>
-                </form>	
-                
-                <input type="button" value="Paste" onClick="write2Parent();"/>               
-            </td>
-                <td>&nbsp;</td>
-                <td align="center" valign="top">
-                    <table class="outline">
-                        <tr>
-                            <td align="center">
-                                10-year Risk (%)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                Male
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  >
-                                <table class="grid" width="100%"  align="center" cellspacing="0">
-                                    <tr>
-                                        <td  align="center" class="gridTitles">Total Risk Points</td>
-                                        <td  align="center" class="gridTitles">-</td>
-                                        <td  align="center" class="gridTitles">10-year Risk</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL1" align="center">< 0</td>
-                                        <td id="cellC1" align="center" class="middleGrid">-</td>
-                                        <td id="cellR1" align="center">< 1%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL2" align="center">0 - 4</td>
-                                        <td id="cellC2" align="center" class="middleGrid">-</td>
-                                        <td id="cellR2" align="center">1%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL3" align="center">5 - 6</td>
-                                        <td id="cellC3" align="center" class="middleGrid">-</td>
-                                        <td id="cellR3" align="center">2%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL4" align="center">7</td>
-                                        <td id="cellC4" align="center" class="middleGrid">-</td>
-                                        <td id="cellR4" align="center">3%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL5" align="center">8</td>
-                                        <td id="cellC5" align="center" class="middleGrid">-</td>
-                                        <td id="cellR5" align="center">4%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL6" align="center">9</td>
-                                        <td id="cellC6" align="center" class="middleGrid">-</td>
-                                        <td id="cellR6" align="center">5%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL7" align="center">10</td>
-                                        <td id="cellC7" align="center" class="middleGrid">-</td>
-                                        <td id="cellR7" align="center">6%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL8" align="center">11</td>
-                                        <td id="cellC8" align="center" class="middleGrid">-</td>
-                                        <td id="cellR8" align="center">8%</td>
-                                    </tr>
-                                    <tr >
-                                        <td id="cellL9" align="center">12</td>
-                                        <td id="cellC9" align="center" class="middleGrid">-</td>
-                                        <td id="cellR9" align="center">10%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL10" align="center">13</td>
-                                        <td id="cellC10" align="center" class="middleGrid">-</td>
-                                        <td id="cellR10" align="center">12%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL11" align="center">14</td>
-                                        <td id="cellC11" align="center" class="middleGrid">-</td>
-                                        <td id="cellR11" align="center">16%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL12" align="center">15</td>
-                                        <td id="cellC12" align="center" class="middleGrid">-</td>
-                                        <td id="cellR12" align="center">20%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL13" align="center">16</td>
-                                        <td id="cellC13" align="center" class="middleGrid">-</td>
-                                        <td id="cellR13" align="center">25%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cellL14" align="center">>=17</td>
-                                        <td id="cellC14" align="center" class="middleGrid">-</td>
-                                        <td id="cellR14" align="center">>=30%</td>
-                                    </tr>
+				</table>
+				</form>
 
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td valign="top">
-                    <table class="outline">
-                        <tr>
-                            <td align="center">
-                                10-year Risk (%)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                Female
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  >
-                                <table class="grid" width="100%"  align="center" cellspacing="0">
-                                    <tr>
-                                        <td  align="center" class="gridTitles">Total Risk Points</td>
-                                        <td  align="center" class="gridTitles">-</td>
-                                        <td  align="center" class="gridTitles">10-year Risk</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL1" align="center">< 9</td>
-                                        <td id="2cellC1" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR1" align="center">< 1%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL2" align="center">9 - 12</td>
-                                        <td id="2cellC2" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR2" align="center">1%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL3" align="center">13 - 14</td>
-                                        <td id="2cellC3" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR3" align="center">2%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL4" align="center">15</td>
-                                        <td id="2cellC4" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR4" align="center">3%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL5" align="center">16</td>
-                                        <td id="2cellC5" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR5" align="center">4%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL6" align="center">17</td>
-                                        <td id="2cellC6" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR6" align="center">5%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL7" align="center">18</td>
-                                        <td id="2cellC7" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR7" align="center">6%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL8" align="center">19</td>
-                                        <td id="2cellC8" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR8" align="center">8%</td>
-                                    </tr>
-                                    <tr >
-                                        <td id="2cellL9" align="center">20</td>
-                                        <td id="2cellC9" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR9" align="center">11%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL10" align="center">21</td>
-                                        <td id="2cellC10" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR10" align="center">14%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL11" align="center">22</td>
-                                        <td id="2cellC11" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR11" align="center">17%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL12" align="center">23</td>
-                                        <td id="2cellC12" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR12" align="center">22%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL13" align="center">24</td>
-                                        <td id="2cellC13" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR13" align="center">27%</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="2cellL14" align="center">>=25</td>
-                                        <td id="2cellC14" align="center" class="middleGrid">-</td>
-                                        <td id="2cellR14" align="center">>=30%</td>
-                                    </tr>
+				<form name="second"><textarea name="prediction" rows="12"
+					cols="43" style="overflow: auto"></textarea></form>
 
-                                </table>
-                            </td>
-                        </tr>
-                    </table>    
-                </td>                
-                </tr>
-            </table>
-            </td>
-            </tr>
-            <tr>
-                <td class="MainTableBottomRowLeftColumn">
+				<input type="button" value="Paste" onClick="write2Parent();" /></td>
+				<td>&nbsp;</td>
+				<td align="center" valign="top">
+				<table class="outline">
+					<tr>
+						<td align="center">10-year Risk (%)</td>
+					</tr>
+					<tr>
+						<td align="center">Male</td>
+					</tr>
+					<tr>
+						<td>
+						<table class="grid" width="100%" align="center" cellspacing="0">
+							<tr>
+								<td align="center" class="gridTitles">Total Risk Points</td>
+								<td align="center" class="gridTitles">-</td>
+								<td align="center" class="gridTitles">10-year Risk</td>
+							</tr>
+							<tr>
+								<td id="cellL1" align="center">< 0</td>
+								<td id="cellC1" align="center" class="middleGrid">-</td>
+								<td id="cellR1" align="center">< 1%</td>
+							</tr>
+							<tr>
+								<td id="cellL2" align="center">0 - 4</td>
+								<td id="cellC2" align="center" class="middleGrid">-</td>
+								<td id="cellR2" align="center">1%</td>
+							</tr>
+							<tr>
+								<td id="cellL3" align="center">5 - 6</td>
+								<td id="cellC3" align="center" class="middleGrid">-</td>
+								<td id="cellR3" align="center">2%</td>
+							</tr>
+							<tr>
+								<td id="cellL4" align="center">7</td>
+								<td id="cellC4" align="center" class="middleGrid">-</td>
+								<td id="cellR4" align="center">3%</td>
+							</tr>
+							<tr>
+								<td id="cellL5" align="center">8</td>
+								<td id="cellC5" align="center" class="middleGrid">-</td>
+								<td id="cellR5" align="center">4%</td>
+							</tr>
+							<tr>
+								<td id="cellL6" align="center">9</td>
+								<td id="cellC6" align="center" class="middleGrid">-</td>
+								<td id="cellR6" align="center">5%</td>
+							</tr>
+							<tr>
+								<td id="cellL7" align="center">10</td>
+								<td id="cellC7" align="center" class="middleGrid">-</td>
+								<td id="cellR7" align="center">6%</td>
+							</tr>
+							<tr>
+								<td id="cellL8" align="center">11</td>
+								<td id="cellC8" align="center" class="middleGrid">-</td>
+								<td id="cellR8" align="center">8%</td>
+							</tr>
+							<tr>
+								<td id="cellL9" align="center">12</td>
+								<td id="cellC9" align="center" class="middleGrid">-</td>
+								<td id="cellR9" align="center">10%</td>
+							</tr>
+							<tr>
+								<td id="cellL10" align="center">13</td>
+								<td id="cellC10" align="center" class="middleGrid">-</td>
+								<td id="cellR10" align="center">12%</td>
+							</tr>
+							<tr>
+								<td id="cellL11" align="center">14</td>
+								<td id="cellC11" align="center" class="middleGrid">-</td>
+								<td id="cellR11" align="center">16%</td>
+							</tr>
+							<tr>
+								<td id="cellL12" align="center">15</td>
+								<td id="cellC12" align="center" class="middleGrid">-</td>
+								<td id="cellR12" align="center">20%</td>
+							</tr>
+							<tr>
+								<td id="cellL13" align="center">16</td>
+								<td id="cellC13" align="center" class="middleGrid">-</td>
+								<td id="cellR13" align="center">25%</td>
+							</tr>
+							<tr>
+								<td id="cellL14" align="center">>=17</td>
+								<td id="cellC14" align="center" class="middleGrid">-</td>
+								<td id="cellR14" align="center">>=30%</td>
+							</tr>
 
-                </td>
-                <td class="MainTableBottomRowRightColumn">
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+				<td valign="top">
+				<table class="outline">
+					<tr>
+						<td align="center">10-year Risk (%)</td>
+					</tr>
+					<tr>
+						<td align="center">Female</td>
+					</tr>
+					<tr>
+						<td>
+						<table class="grid" width="100%" align="center" cellspacing="0">
+							<tr>
+								<td align="center" class="gridTitles">Total Risk Points</td>
+								<td align="center" class="gridTitles">-</td>
+								<td align="center" class="gridTitles">10-year Risk</td>
+							</tr>
+							<tr>
+								<td id="2cellL1" align="center">< 9</td>
+								<td id="2cellC1" align="center" class="middleGrid">-</td>
+								<td id="2cellR1" align="center">< 1%</td>
+							</tr>
+							<tr>
+								<td id="2cellL2" align="center">9 - 12</td>
+								<td id="2cellC2" align="center" class="middleGrid">-</td>
+								<td id="2cellR2" align="center">1%</td>
+							</tr>
+							<tr>
+								<td id="2cellL3" align="center">13 - 14</td>
+								<td id="2cellC3" align="center" class="middleGrid">-</td>
+								<td id="2cellR3" align="center">2%</td>
+							</tr>
+							<tr>
+								<td id="2cellL4" align="center">15</td>
+								<td id="2cellC4" align="center" class="middleGrid">-</td>
+								<td id="2cellR4" align="center">3%</td>
+							</tr>
+							<tr>
+								<td id="2cellL5" align="center">16</td>
+								<td id="2cellC5" align="center" class="middleGrid">-</td>
+								<td id="2cellR5" align="center">4%</td>
+							</tr>
+							<tr>
+								<td id="2cellL6" align="center">17</td>
+								<td id="2cellC6" align="center" class="middleGrid">-</td>
+								<td id="2cellR6" align="center">5%</td>
+							</tr>
+							<tr>
+								<td id="2cellL7" align="center">18</td>
+								<td id="2cellC7" align="center" class="middleGrid">-</td>
+								<td id="2cellR7" align="center">6%</td>
+							</tr>
+							<tr>
+								<td id="2cellL8" align="center">19</td>
+								<td id="2cellC8" align="center" class="middleGrid">-</td>
+								<td id="2cellR8" align="center">8%</td>
+							</tr>
+							<tr>
+								<td id="2cellL9" align="center">20</td>
+								<td id="2cellC9" align="center" class="middleGrid">-</td>
+								<td id="2cellR9" align="center">11%</td>
+							</tr>
+							<tr>
+								<td id="2cellL10" align="center">21</td>
+								<td id="2cellC10" align="center" class="middleGrid">-</td>
+								<td id="2cellR10" align="center">14%</td>
+							</tr>
+							<tr>
+								<td id="2cellL11" align="center">22</td>
+								<td id="2cellC11" align="center" class="middleGrid">-</td>
+								<td id="2cellR11" align="center">17%</td>
+							</tr>
+							<tr>
+								<td id="2cellL12" align="center">23</td>
+								<td id="2cellC12" align="center" class="middleGrid">-</td>
+								<td id="2cellR12" align="center">22%</td>
+							</tr>
+							<tr>
+								<td id="2cellL13" align="center">24</td>
+								<td id="2cellC13" align="center" class="middleGrid">-</td>
+								<td id="2cellR13" align="center">27%</td>
+							</tr>
+							<tr>
+								<td id="2cellL14" align="center">>=25</td>
+								<td id="2cellC14" align="center" class="middleGrid">-</td>
+								<td id="2cellR14" align="center">>=30%</td>
+							</tr>
 
-                </td>
-            </tr>
-        </table>        
-    </body>
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
+</body>
 </html>

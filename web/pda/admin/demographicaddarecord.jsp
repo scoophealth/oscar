@@ -24,8 +24,10 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -41,14 +43,15 @@
     //-->
 </script>
 </head>
-<body  onload="start()"  background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="start()" background="../images/gray_bg.jpg"
+	bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A DEMOGRAPHIC RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A DEMOGRAPHIC RECORD</font></th>
+	</tr>
+</table>
 
 <%
   //if action is good, then give me the result
@@ -100,18 +103,20 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
   if (rowsAffected ==1) {
 %>
-  <p><h2>Successful Addition of a Demographic Record.
-  </h2></p>
+<p>
+<h2>Successful Addition of a Demographic Record.</h2>
+</p>
 <%  
   } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-<%@ include file="footer2.htm" %>
-</center>
+<p></p>
+<%@ include file="footer2.htm"%></center>
 </body>
 </html>

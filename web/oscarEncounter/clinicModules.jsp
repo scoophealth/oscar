@@ -1,10 +1,10 @@
 <%@page contentType="text/html"%>
 <%-- <%@page pageEncoding="UTF-8"%> --%>
 
-<%@page import="java.net.URLEncoder" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@page import="java.net.URLEncoder"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
   long startTime = System.currentTimeMillis();
   oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
@@ -19,9 +19,9 @@
   String winName = "";
 %>
 
-<h3>&nbsp;<bean:message key="oscarEncounter.Index.clinicalModules"/></h3>
-                <ul id="ModuleList">
-                    <%-- <li>               
+<h3>&nbsp;<bean:message key="oscarEncounter.Index.clinicalModules" /></h3>
+<ul id="ModuleList">
+	<%-- <li>               
                         <%
                             winName = "Master" + bean.demographicNo;
                             if (vLocale.getCountry().equals("BR")) {                            
@@ -40,16 +40,16 @@
                         <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href=# onClick="popupPage(700,960,'<%=winName%>','<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a>
                     </li>
                     --%>
-                    <li>
-                        <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
-                            <%
+	<li><oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
+		<%
                                winName = "Prevention" + bean.demographicNo;
                             %>
-                            <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="javascript:popupPage(700,960,'<%=winName%>','../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
-                            <oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
-                        </oscar:oscarPropertiesCheck>
-                    </li>
-                    <%-- <li>
+		<a class="links" onmouseover="this.className='linkhover'"
+			onmouseout="this.className='links'"
+			href="javascript:popupPage(700,960,'<%=winName%>','../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
+		<oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
+	</oscar:oscarPropertiesCheck></li>
+	<%-- <li>
                         <%
                            winName = "Disease" + bean.demographicNo;
                         %>
@@ -66,14 +66,16 @@
                         <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onClick="popupPage(700,1000,'<%=winName%>','../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
                         
                     </li> --%>
-                    <li>
-                        <%
+	<li>
+	<%
                            winName = "Calculator" + bean.demographicNo;
-                        %>                        
-                       <a class="links" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'<%=winName%>','calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a>
-                    </li>
-                    
-                </ul> 
-                <input type="hidden" id="modCount" value="7">
-               <% System.out.println("clinicModules.jsp load time: " + (System.currentTimeMillis()-startTime) + "ms"); %>
-                
+                        %> <a class="links"
+		onmouseover="this.className='linkhover'"
+		onmouseout="this.className='links'"
+		href="javascript: function myFunction() {return false; }"
+		onClick="popupPage(150,200,'<%=winName%>','calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;"><bean:message
+		key="oscarEncounter.Index.calculators" /></a></li>
+
+</ul>
+<input type="hidden" id="modCount" value="7">
+<% System.out.println("clinicModules.jsp load time: " + (System.currentTimeMillis()-startTime) + "ms"); %>

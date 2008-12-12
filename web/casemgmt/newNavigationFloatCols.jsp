@@ -22,11 +22,11 @@
 */
  -->
 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
-   
+
 <script type="text/javascript">            
        
     //This object stores the key -> cmd value passed to action class and the id of the created div
@@ -34,8 +34,10 @@
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
         
 </script>
-<div class="leftBox"><h3>Left Menu</h3></div>
+<div class="leftBox">
+<h3>Left Menu</h3>
+</div>
 <div id="leftNavBar"></div>
-<form style="display: none;" name="dummyForm" action="">
-    <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
-</form>
+<form style="display: none;" name="dummyForm" action=""><input
+	type="hidden" id="reloadDiv" name="reloadDiv" value="none"
+	onchange="updateDiv();"></form>

@@ -24,17 +24,19 @@
  */
 -->
 
- <% 
+<% 
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no="";
 user_no = (String) session.getAttribute("user");
-%> 
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbBilling.jsp" %>
+<%@ include file="dbBilling.jsp"%>
 <% 	GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
@@ -68,19 +70,35 @@ function openBrWindow(theURL,winName,features) {
 
 //-->
 </script>
-<style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>
+<style type='text/css'>
+<!--
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none;
+}
+-->
+</style>
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="0" onLoad="setfocus()">
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"> 
-      OHIP Report Simulation</font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
+	topmargin="0" onLoad="setfocus()">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF"> OHIP Report Simulation</font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
 
 <% String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
@@ -88,15 +106,16 @@ function openBrWindow(theURL,winName,features) {
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"":request.getParameter("xml_appointment_date");
 %>
 <table width="100%" border="0" bgcolor="#E6F0F7">
-  <form name="serviceform" method="post" action="genSimulation.jsp">
-    <tr> 
-      <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
-        provider </font></b></td>
-      <td width="254"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366"> 
-        <select name="provider">
-         <option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select 
-                Provider</b></option>
-          <% String proFirst="";
+	<form name="serviceform" method="post" action="genSimulation.jsp">
+	<tr>
+		<td width="220"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366">Select provider </font></b></td>
+		<td width="254"><b><font face="Arial, Helvetica, sans-serif"
+			size="2" color="#003366"> <select name="provider">
+			<option value="000000"
+				<%=providerview.equals("000000")?"selected":""%>><b>Select
+			Provider</b></option>
+			<% String proFirst="";
            String proLast="";
            String proOHIP="";
            String specialty_code; 
@@ -114,41 +133,42 @@ String billinggroup_no;
 
 
  %>
-          <option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>" <%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-          <% 
+			<option value="<%=proOHIP%>,<%=specialty_code%>|<%=billinggroup_no%>"
+				<%=providerview.equals(proOHIP)?"selected":""%>><%=proLast%>,
+			<%=proFirst%></option>
+			<% 
 
  }
 // apptMainBean.closePstmtConn();
   %>
-        </select>
-        </font></b></td>
-      <td width="254"><font color="#003366"><b><font face="Arial, Helvetica, sans-serif" size="2">Bill 
-        center: 
-        <input type="hidden" name="billcenter" value="G">
-        </font></b><font face="Arial, Helvetica, sans-serif" size="2">Hamilton 
-        </font></font></td>
-      <td width="277"> <font color="#003366"> 
-        <input type="hidden" name="monthCode" value="<%=monthCode%>">
-        <input type="hidden" name="verCode" value="V03">
-        <input type="hidden" name="curUser" value="<%=user_no%>">
-        <input type="hidden" name="curDate" value="<%=nowDate%>">
-        </font></td>
-    </tr>
-    <tr> 
-      <td><font color="#003366"><font face="Arial, Helvetica, sans-serif" size="2"><b> 
-        Service Date-Range: </b></font></font> </td>
-      <td><font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=admission&year=<%=curYear%>&month=<%=curMonth%>','','top=0,left=0,width=300,height=300')">Begin:</a></font> 
-        <input type="text" name="xml_vdate" value="<%=xml_vdate%>">
-      </td>
-      <td><font size="1" face="Arial, Helvetica, sans-serif"><a href="#" onClick="openBrWindow('billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','top=0,left=0,width=300,height=300')">End:</a> 
-        </font> 
-        <input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>">
-      </td>
-      <td><font color="#003366">
-        <input type="submit" name="Submit" value="Create Report">
-        </font></td>
-    </tr>
-  </form>
+		</select> </font></b></td>
+		<td width="254"><font color="#003366"><b><font
+			face="Arial, Helvetica, sans-serif" size="2">Bill center: <input
+			type="hidden" name="billcenter" value="G"> </font></b><font
+			face="Arial, Helvetica, sans-serif" size="2">Hamilton </font></font></td>
+		<td width="277"><font color="#003366"> <input
+			type="hidden" name="monthCode" value="<%=monthCode%>"> <input
+			type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"> </font></td>
+	</tr>
+	<tr>
+		<td><font color="#003366"><font
+			face="Arial, Helvetica, sans-serif" size="2"><b> Service
+		Date-Range: </b></font></font></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif"><a
+			href="#"
+			onClick="openBrWindow('billingCalendarPopup.jsp?type=admission&year=<%=curYear%>&month=<%=curMonth%>','','top=0,left=0,width=300,height=300')">Begin:</a></font>
+		<input type="text" name="xml_vdate" value="<%=xml_vdate%>"></td>
+		<td><font size="1" face="Arial, Helvetica, sans-serif"><a
+			href="#"
+			onClick="openBrWindow('billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','top=0,left=0,width=300,height=300')">End:</a>
+		</font> <input type="text" name="xml_appointment_date"
+			value="<%=xml_appointment_date%>"></td>
+		<td><font color="#003366"> <input type="submit"
+			name="Submit" value="Create Report"> </font></td>
+	</tr>
+	</form>
 </table>
 <%=request.getAttribute("html") == null?"":request.getAttribute("html")%>
 </body>

@@ -30,11 +30,15 @@
   String curUser_no = (String) session.getAttribute("user");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="patientBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="myGroupBean" class="java.util.Vector" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 //{"search_patient", "select provider_no, last_name, first_name, chart_no from demographic where provider_no = ? order by "+orderby }, 
@@ -44,14 +48,15 @@
   String[][] responseTargets=new String[][] {  };
   patientBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title><bean:message key="report.reportpatientchartlist.title"/> </title>
+<title><bean:message key="report.reportpatientchartlist.title" />
+</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="../web.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -81,12 +86,18 @@ function setfocus() {
     }
   }
 %>
-<body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#CCCCFF"><th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportpatientchartlist.msgTitle"/></font></th>
-    <th width="10%" nowrap>
-      <input type="button" name="Button" value="Print" onClick="window.print()"><input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()"></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#CCCCFF">
+		<th align=CENTER NOWRAP><font face="Helvetica"><bean:message
+			key="report.reportpatientchartlist.msgTitle" /></font></th>
+		<th width="10%" nowrap><input type="button" name="Button"
+			value="Print" onClick="window.print()"><input type="button"
+			name="Button" value="<bean:message key="global.btnExit" />"
+			onClick="window.close()"></th>
+	</tr>
 </table>
 <%
   boolean bFistL = true; //first line in a table for TH
@@ -111,29 +122,38 @@ function setfocus() {
 	      bFistL = false;
         bodd = false ;
 %>
-<table width="480" border="0" cellspacing="1" cellpadding="0" ><tr> 
-<td><%=providerBean.getProperty(strTemp) %>  </td>
-<td align="right"></td>
-</tr></table>
-<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1" cellpadding="0" > 
-<tr bgcolor="#CCCCFF" align="center">
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name"><bean:message key="report.reportpatientchartlist.msgLastName"/></a></b></TH>
-<TH width="40%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name"><bean:message key="report.reportpatientchartlist.msgFirstName"/></a> </b></TH>
-<TH width="20%"><b><a href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no"><bean:message key="report.reportpatientchartlist.msgChart"/></a> </b></TH>
-</tr>
-<%
+<table width="480" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td><%=providerBean.getProperty(strTemp) %></td>
+		<td align="right"></td>
+	</tr>
+</table>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="1"
+	cellpadding="0">
+	<tr bgcolor="#CCCCFF" align="center">
+		<TH width="40%"><b><a
+			href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=last_name"><bean:message
+			key="report.reportpatientchartlist.msgLastName" /></a></b></TH>
+		<TH width="40%"><b><a
+			href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=first_name"><bean:message
+			key="report.reportpatientchartlist.msgFirstName" /></a> </b></TH>
+		<TH width="20%"><b><a
+			href="reportpatientchartlist.jsp?provider_no=<%=provider_no%>&orderby=chart_no"><bean:message
+			key="report.reportpatientchartlist.msgChart" /></a> </b></TH>
+	</tr>
+	<%
     }
-%> 
-<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-      <td> &nbsp;<%=rsdemo.getString("last_name")%></td>
-      <td> &nbsp;<%=rsdemo.getString("first_name")%></td>
-      <td align="center"><%=rsdemo.getString("chart_no")%></td>
-</tr>
-<%
+%>
+	<tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
+		<td>&nbsp;<%=rsdemo.getString("last_name")%></td>
+		<td>&nbsp;<%=rsdemo.getString("first_name")%></td>
+		<td align="center"><%=rsdemo.getString("chart_no")%></td>
+	</tr>
+	<%
   }
   }
   patientBean.closePstmtConn();
-%> 
+%>
 
 </table>
 </body>

@@ -21,35 +21,35 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
 tr.highlight {
-    background: #f1f1fd;
+	background: #f1f1fd;
 }
-    div.grouplist {
-       border: 1px solid #c5c5e8;
-       margin-top: 15px;
-       background-color: #fafaff;
-       
-    }
-    div.grouplistHeader {
-       background-color: #ededff;
-       font-weight: bold;
-       border-bottom: 1px solid #e6e6ff;
-    }
-    ul.grouplist {
-       list-style: none;
-       list-style-type: none;
-       list-style-position: outside;
-       margin-top: 0px;
-       margin-left: 0px;
-       padding: 0;
-    }
-    ul.grouplist li {
-       padding-left: 8px;
-    }
-    
-    li.selected {
-       background-color: #ffedf4;
-    }
 
+div.grouplist {
+	border: 1px solid #c5c5e8;
+	margin-top: 15px;
+	background-color: #fafaff;
+}
 
+div.grouplistHeader {
+	background-color: #ededff;
+	font-weight: bold;
+	border-bottom: 1px solid #e6e6ff;
+}
+
+ul.grouplist {
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 0;
+}
+
+ul.grouplist li {
+	padding-left: 8px;
+}
+
+li.selected {
+	background-color: #ffedf4;
+}

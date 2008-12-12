@@ -36,17 +36,19 @@
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-%> 
-<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbBilling.jsp" %> 
+%>
+<%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 <html>
-<head> 
-<title> BILLING HISTORY</title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<head>
+<title>BILLING HISTORY</title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 
 <script language="JavaScript">
 <!--
@@ -55,31 +57,35 @@
 </SCRIPT>
 <!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" >
+<body background="../images/gray_bg.jpg" bgproperties="fixed">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">BILLING HISTORY 
-      </font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">BILLING
+		HISTORY </font></th>
+	</tr>
 </table>
 
 <!--%@ include file="zcppfulltitlesearch.htm" %-->
 
 <table width="95%" border="0">
-  <tr><td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%> (<%=request.getParameter("demographic_no")%>)</td></tr>
+	<tr>
+		<td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%>
+		(<%=request.getParameter("demographic_no")%>)</td>
+	</tr>
 </table>
 <hr>
-<CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
-<tr bgcolor="#339999">
-      <TH align="center" width="5%"><b>INVOICE#</b></TH>
-      <TH align="left" width="25%"><b>APPOINTMENT DATE-TIME</b></TH>      
-      <TH align="center" width="10%"><b>BILL TYPE</b></TH>
-      <TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
-      <TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
-      <TH align="center" width="10%"><b>COMMENTS</b></TH>
-</tr>
-<%
+<CENTER>
+<table width="100%" border="2" bgcolor="#ffffff">
+	<tr bgcolor="#339999">
+		<TH align="center" width="5%"><b>INVOICE#</b></TH>
+		<TH align="left" width="25%"><b>APPOINTMENT DATE-TIME</b></TH>
+		<TH align="center" width="10%"><b>BILL TYPE</b></TH>
+		<TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
+		<TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
+		<TH align="center" width="10%"><b>COMMENTS</b></TH>
+	</tr>
+	<%
  String proFirst="";
  String proLast="";
  String proNo = "";
@@ -121,25 +127,28 @@
 }
 }
 %>
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td width="5%" align="center" height="25"><a href=# onClick="popupPage(600,800, '../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
-      <td align="left" width="25%" height="25"><%=rs.getString("billing_date")%> &nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
-      <td align="center" width="10%" height="25"><%=billType%></td>
-      <td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
-       <td align="center" width="15%" height="25"><%=proLast+" "+proFirst%></td>
-    
-      <% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
-      <td align="center" width="10%" height="25">&nbsp;</td>
-      <% } else { %>
-      <td align="center" width="10%" height="25"><a href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
-      <% } %>
-</tr>
-<% 
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td width="5%" align="center" height="25"><a href=#
+			onClick="popupPage(600,800, '../oscarBilling/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a></td>
+		<td align="left" width="25%" height="25"><%=rs.getString("billing_date")%>
+		&nbsp; &nbsp; &nbsp; &nbsp; <%=rs.getString("billing_time")%></td>
+		<td align="center" width="10%" height="25"><%=billType%></td>
+		<td align="center" width="15%" height="25"><%=rs.getString("last_name")+","+rs.getString("first_name")%></td>
+		<td align="center" width="15%" height="25"><%=proLast+" "+proFirst%></td>
+
+		<% if (billCode.substring(0,1).compareTo("B")==0 || billCode.substring(0,1).compareTo("S")==0) { %>
+		<td align="center" width="10%" height="25">&nbsp;</td>
+		<% } else { %>
+		<td align="center" width="10%" height="25"><a
+			href="../billing/billingDeleteNoAppt.jsp?billing_no=<%=rs.getString("billing_no")%>&billCode=<%=billCode%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+		<% } %>
+	</tr>
+	<% 
     }
   }
   apptMainBean.closePstmtConn();
   
-%> 
+%>
 
 </table>
 <br>
@@ -148,18 +157,17 @@
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="../billing/billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last Page</a> |
-<%
+%> <a
+	href="../billing/billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>">Last
+Page</a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="../billing/billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
-<%
+%> <a
+	href="../billing/billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+Next Page</a> <%
 }
 %>
-<p>
-<%@ include file="../demographic/zfooterbackclose.jsp" %> 
+<p><%@ include file="../demographic/zfooterbackclose.jsp"%>
 </center>
 </body>
 </html>

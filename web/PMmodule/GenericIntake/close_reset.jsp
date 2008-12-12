@@ -23,20 +23,21 @@
  * Ontario, Canada 
  */
 -->
-<%@ include file="/taglibs.jsp" %>
+<%@ include file="/taglibs.jsp"%>
 
 <%
     Integer latestFrmId = (Integer) session.getAttribute("latestFrmId");
     session.removeAttribute("latestFrmId");
 %>
 <html:html locale="true">
-    <head>
-        <script language=javascript>
+<head>
+<script language=javascript>
           self.close();
 		  self.opener.location = "EditIntake.jsp?id=1&pub=<c:out value="${sessionScope.provider.formattedName}" />";
         </script>
-    </head>
-    <body>
-       <a href="javascript:window.close();"><bean:message key="oscarEncounter.close.btnHere"/></a>
-    </body>
+</head>
+<body>
+<a href="javascript:window.close();"><bean:message
+	key="oscarEncounter.close.btnHere" /></a>
+</body>
 </html:html>

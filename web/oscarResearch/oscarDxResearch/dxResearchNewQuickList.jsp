@@ -23,19 +23,19 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <html:html locale="true">
 <head>
-<title>
-    <bean:message key="oscarResearch.oscarDxResearch.dxCustomization.selectQuickList"/>
+<title><bean:message
+	key="oscarResearch.oscarDxResearch.dxCustomization.selectQuickList" />
 </title>
 
 <script type="text/javascript">
@@ -48,44 +48,49 @@ function setfocus(){
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" rightmargin="0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="setfocus()">
-<!--  -->    
-<html:form action="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-    <td>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr bgcolor="#000000"> 
-                <td class="subject" colspan="2">
-                &nbsp;&nbsp;&nbsp;<bean:message key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch"/>
-                </td>
-        </tr>
-        </table>
-    </td>
-</tr>
-<tr>
-    <td>
-        <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#EEEEFF" height="125">
-        <tr> 
-            <td align="left">
-                <bean:message key="oscarResearch.oscarDxResearch.dxCustomization.pleaseEnterTheNewQuickListName"/>: <input type="text" name="quickListName"/>
-            </td>
-        </tr>                                                                    
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <input type="hidden" name="forward" value="error"/>
-                        <td><input type="button" class="mbttn" name="Button" value="<bean:message key="global.btnClose"/>" onClick="window.close()"></td>
-                        <td><input type="submit" class="mbttn" name="Button" value="Continue"/></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>                                
-        </table>
-    </td>
-</tr>
-</table>
+<body class="BodyStyle" vlink="#0000FF" rightmargin="0" leftmargin="0"
+	topmargin="0" marginwidth="0" marginheight="0" onload="setfocus()">
+<!--  -->
+<html:form
+	action="/oscarResearch/oscarDxResearch/dxResearchLoadQuickListItems.do">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr bgcolor="#000000">
+					<td class="subject" colspan="2">&nbsp;&nbsp;&nbsp;<bean:message
+						key="oscarResearch.oscarDxResearch.dxResearch.msgDxResearch" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<table width="100%" border="0" cellpadding="0" cellspacing="1"
+				bgcolor="#EEEEFF" height="125">
+				<tr>
+					<td align="left"><bean:message
+						key="oscarResearch.oscarDxResearch.dxCustomization.pleaseEnterTheNewQuickListName" />:
+					<input type="text" name="quickListName" /></td>
+				</tr>
+				<tr>
+					<td>
+					<table>
+						<tr>
+							<input type="hidden" name="forward" value="error" />
+							<td><input type="button" class="mbttn" name="Button"
+								value="<bean:message key="global.btnClose"/>"
+								onClick="window.close()"></td>
+							<td><input type="submit" class="mbttn" name="Button"
+								value="Continue" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

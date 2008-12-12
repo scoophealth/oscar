@@ -1,9 +1,12 @@
+
 <% 
 	if(session.getAttribute("user") == null)
 		response.sendRedirect("../logout.jsp");
 	//String user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="oscar.oscarBilling.ca.on.data.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
+<%@ page
+	import="oscar.oscarBilling.ca.on.data.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="../errorpage.jsp"%>
 <% 
 response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
 response.setHeader("Pragma","no-cache"); //HTTP 1.0

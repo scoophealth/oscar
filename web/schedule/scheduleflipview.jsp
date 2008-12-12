@@ -36,10 +36,14 @@
   String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";
   String [] param = new String[3];
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="flipviewMainBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="flipviewMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
@@ -50,11 +54,11 @@
   String[][] responseTargets=new String[][] {  };
   flipviewMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title><bean:message key="schedule.scheduleflipview.title"/></title>
+<title><bean:message key="schedule.scheduleflipview.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta http-equiv=Expires content=-1>
 <link rel="stylesheet" href="../web.css" type="text/css">
@@ -97,7 +101,8 @@ function t(s1,s2,s3,s4,s5,s6) {
   // note: brain-dead calendar numbers months from 0, thus all the +1s in the expressions below
 //  String dateString1 = outform.format(inform.parse(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)) );
 %>
-<body bgcolor="#999FFF" text="#000000" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#999FFF" text="#000000" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <%--
   ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
   while (rsdemo.next()) { 
@@ -106,39 +111,45 @@ function t(s1,s2,s3,s4,s5,s6) {
 <%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%>
 <%--  } else { --%>
 <!--a href=# onClick="changePro(<%--=rsdemo.getString("provider_no")--%>)" -->
-  <!--font color='silver'--><%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%><!--/font></a-->
+<!--font color='silver'-->
+<%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%>
+<!--/font></a-->
 <%-- }  } --%>
 
-<div style="colur:#FF0000;text-decoration: none">
-<a href="javascript:history.go(-1)" style="text-decoration: none;color: #000000">Go Back</a>
-<a href="../provider/providercontrol.jsp" style="text-decoration: none;color: #000000">Day Page</a>
-</div>
+<div style="colur: #FF0000; text-decoration: none"><a
+	href="javascript:history.go(-1)"
+	style="text-decoration: none; color: #000000">Go Back</a> <a
+	href="../provider/providercontrol.jsp"
+	style="text-decoration: none; color: #000000">Day Page</a></div>
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
-  <tr align="center" bgcolor="#CCCCFF"> 
-    <td width="15%" nowrap>
-	<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=lastMonth.get(Calendar.YEAR)+"-"+(lastMonth.get(Calendar.MONTH)+1)+"-"+lastMonth.get(Calendar.DATE)%>" title="<bean:message key="schedule.scheduleflipview.msgLastMonth"/>" border='0'><img src="../images/previous.gif"></a>
-    <select name="provider_no" onChange="selectprovider(this)">
-<%
+	<tr align="center" bgcolor="#CCCCFF">
+		<td width="15%" nowrap><a
+			href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=lastMonth.get(Calendar.YEAR)+"-"+(lastMonth.get(Calendar.MONTH)+1)+"-"+lastMonth.get(Calendar.DATE)%>"
+			title="<bean:message key="schedule.scheduleflipview.msgLastMonth"/>"
+			border='0'><img src="../images/previous.gif"></a> <select
+			name="provider_no" onChange="selectprovider(this)">
+			<%
   ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
   while (rsdemo.next()) { 
 %>
-  <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(curProvider_no)?"selected":""%> >
-  <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
-<%
+			<option value="<%=rsdemo.getString("provider_no")%>"
+				<%=rsdemo.getString("provider_no").equals(curProvider_no)?"selected":""%>>
+			<%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+			<%
   }
 %>
-    </select><a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>" title="<bean:message key="schedule.scheduleflipview.msgNextmonth"/>" border='0'><img src="../images/next.gif"></a></td>
-<% for(int j=0; j<colscode; j++) { %>
-<td>
-<%  if(nStep<60) { %>	
-	  <%=j%(60/nStep)==0?""+(j/(60/nStep)+nStartTime):""%>
-<%	} else { //show everyhour %>
-      <%=j+nStartTime%>
-<%  } %>  
-	  </td>
-<% } %>  
-  </tr>
-<% 
+		</select><a
+			href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>"
+			title="<bean:message key="schedule.scheduleflipview.msgNextmonth"/>"
+			border='0'><img src="../images/next.gif"></a></td>
+		<% for(int j=0; j<colscode; j++) { %>
+		<td>
+		<%  if(nStep<60) { %> <%=j%(60/nStep)==0?""+(j/(60/nStep)+nStartTime):""%>
+		<%	} else { //show everyhour %> <%=j+nStartTime%> <%  } %>
+		</td>
+		<% } %>
+	</tr>
+	<% 
   cal.add(cal.DATE, 31);
   int starttime = 0, endtime = 0;
   StringBuffer hourmin = null;
@@ -211,10 +222,11 @@ function t(s1,s2,s3,s4,s5,s6) {
     appointmentTime.set(appointmentTime.MINUTE, 0);
     /* this -1 is explained below */
     appointmentTime.add(appointmentTime.MINUTE, -1);
-%>  
-	<tr align="center" bgcolor="<%=bgcolor%>"><td align="right" nowrap>
-	<a href="<%=request.getParameter("originalpage")%>?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>&view=0&displaymode=day&dboperation=searchappointmentday"><%=outform.format(inform.parse(strTempDate) )%>&nbsp;</a></td>
-<%
+%>
+	<tr align="center" bgcolor="<%=bgcolor%>">
+		<td align="right" nowrap><a
+			href="<%=request.getParameter("originalpage")%>?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>&view=0&displaymode=day&dboperation=searchappointmentday"><%=outform.format(inform.parse(strTempDate) )%>&nbsp;</a></td>
+		<%
   //calculate the ratio by the length of timecode
   for(int j=0; j<colscode; j++) {
 	hour = (nStartTime*60 + j*nStep)/60;
@@ -237,21 +249,28 @@ function t(s1,s2,s3,s4,s5,s6) {
 //	temp = new StringBuffer("-");
 //System.out.println("temp"+temp);
 	}
-%>  
-    <td <%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%> title="<%=hour+":"+(min<10?"0":"")+min%>">
-	<a href=# onClick ="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(appointmentTime.HOUR_OF_DAY)%>:<%=appointmentTime.get(appointmentTime.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;" >
-<%=temp.toString()%></a></td>
-<%
+%>
+		<td
+			<%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%>
+			title="<%=hour+":"+(min<10?"0":"")+min%>"><a href=#
+			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(appointmentTime.HOUR_OF_DAY)%>:<%=appointmentTime.get(appointmentTime.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;">
+		<%=temp.toString()%></a></td>
+		<%
   }
-%>  
-  </tr>
-<%
+%>
+	</tr>
+	<%
     cal.add(cal.DATE, 1);
   }
-%>  
-  
+%>
+
 </table>
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=lastMonth.get(Calendar.YEAR)+"-"+(lastMonth.get(Calendar.MONTH)+1)+"-"+lastMonth.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnLastMonth"/> </a> |
-<a href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>"><bean:message key="schedule.scheduleflipview.btnNextMonth"/></a>
+<a
+	href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=lastMonth.get(Calendar.YEAR)+"-"+(lastMonth.get(Calendar.MONTH)+1)+"-"+lastMonth.get(Calendar.DATE)%>"><bean:message
+	key="schedule.scheduleflipview.btnLastMonth" /> </a>
+|
+<a
+	href="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no=<%=curProvider_no%>&startDate=<%=nextMonth.get(Calendar.YEAR)+"-"+(nextMonth.get(Calendar.MONTH)+1)+"-"+nextMonth.get(Calendar.DATE)%>"><bean:message
+	key="schedule.scheduleflipview.btnNextMonth" /></a>
 </body>
 </html:html>

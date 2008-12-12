@@ -26,12 +26,14 @@
 
 <%
   
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
 <head>
@@ -43,14 +45,15 @@ function start(){
 //-->
 </script>
 </head>
-<body  onload="start()"  background="../images/gray_bg.jpg" bgproperties="fixed">
+<body onload="start()" background="../images/gray_bg.jpg"
+	bgproperties="fixed">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            <bean:message key="appointment.addappointment.msgMainLabel"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		<bean:message key="appointment.addappointment.msgMainLabel" /></font></th>
+	</tr>
+</table>
 <%
     String[] param =new String[16];
 	  param[0]=request.getParameter("provider_no");
@@ -75,25 +78,28 @@ function start(){
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h1><bean:message key="appointment.addappointment.msgAddSuccess"/></h1></p>
+<p>
+<h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
+</p>
 <script LANGUAGE="JavaScript">
      	self.opener.refresh();
 
   popupPage(350,750,'../report/reportdaysheet.jsp?dsmode=new&provider_no=<%=param[0]%>&sdate=<%=param[1]%>') ;
       self.close();
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1><bean:message key="appointment.addappointment.msgAddFailure"/></h1></p>
+<p>
+<h1><bean:message key="appointment.addappointment.msgAddFailure" /></h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="<bean:message key="global.btnClose"/>" onClick="window.close();">
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button"
+	value="<bean:message key="global.btnClose"/>" onClick="window.close();">
 </form>
 </center>
 </body>

@@ -1,14 +1,14 @@
-
 .dojoPopupMenu2 {
 	position: absolute;
 	border: 1px solid #7298d0;
-	background:#85aeec url(images/soriaMenuBg.gif) repeat-x bottom left !important;
+	background: #85aeec url(images/soriaMenuBg.gif) repeat-x bottom left
+		!important;
 	padding: 1px;
 	margin-top: 1px;
 	margin-bottom: 1px;
 }
 
-.dojoMenuItem2{
+.dojoMenuItem2 {
 	white-space: nowrap;
 	font: menu;
 	margin: 0;
@@ -16,8 +16,8 @@
 
 .dojoMenuItem2Hover {
 	background-color: #D2E4FD;
-	cursor:pointer;
-	cursor:hand;
+	cursor: pointer;
+	cursor: hand;
 }
 
 .dojoMenuItem2Icon {
@@ -46,8 +46,8 @@
 	padding-left: 3px;
 }
 
-.dojoMenuItem2Disabled .dojoMenuItem2Label,
-.dojoMenuItem2Disabled .dojoMenuItem2Accel {
+.dojoMenuItem2Disabled .dojoMenuItem2Label,.dojoMenuItem2Disabled .dojoMenuItem2Accel
+	{
 	color: #607a9e;
 }
 
@@ -60,6 +60,7 @@
 	height: 9px;
 	padding-left: 3px;
 }
+
 .dojoMenuItem2Hover .dojoMenuItem2Submenu {
 	background-image: url(images/submenu_on.gif);
 }
@@ -87,11 +88,9 @@
 	font-size: 1px;
 }
 
-.dojoMenuBar2 {
-	/*position: relative;*/
-	background:#85aeec url(images/soriaBarBg.gif) repeat-x top left;
-	border-bottom:1px solid #6b9fec;
-	
+.dojoMenuBar2 { /*position: relative;*/
+	background: #85aeec url(images/soriaBarBg.gif) repeat-x top left;
+	border-bottom: 1px solid #6b9fec;
 }
 
 .dojoMenuBar2Client {
@@ -112,12 +111,12 @@
 	margin: 0;
 	position: relative;
 	z-index: 2;
-	cursor:pointer;
-	cursor:hand;
+	cursor: pointer;
+	cursor: hand;
 }
 
 .dojoMenuBarItem2Hover {
-	background-color:#d2e4fd;
+	background-color: #d2e4fd;
 }
 
 .dojoMenuBarItem2Disabled span {

@@ -24,7 +24,7 @@
 
 <%@ page language="java" isErrorPage="true"%>
 <head>
-	<title>Doh!</title>
+<title>Doh!</title>
 </head>
 An Error has occurred in this application.
 <%
@@ -38,7 +38,7 @@ An Error has occurred in this application.
 <%
 	} else {
 %>
-		Please check your log files for further information.
+Please check your log files for further information.
 <%
 	}
 %>

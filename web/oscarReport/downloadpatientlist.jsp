@@ -13,18 +13,28 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
-    <body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>JSP Page</title>
+</head>
+<body>
 
-    <h1>Down Load Patient List</h1>
-    <tr><td>
-    <ul><li><a href="patientlist.txt"/> Down load the Patient List Text File</li></ul>
-    </td></tr>
-    <tr><td>
-    <ul><li><a href="patientlist.jsp">Back to Export Patient List Page</li></ul>
-    </td></tr>
-    </body>
+<h1>Down Load Patient List</h1>
+<tr>
+	<td>
+	<ul>
+		<li><a href="patientlist.txt" /> Down load the Patient List Text
+		File</li>
+	</ul>
+	</td>
+</tr>
+<tr>
+	<td>
+	<ul>
+		<li><a href="patientlist.jsp">Back to Export Patient List
+		Page</li>
+	</ul>
+	</td>
+</tr>
+</body>
 </html>

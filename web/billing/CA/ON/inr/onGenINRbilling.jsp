@@ -23,10 +23,12 @@
 			String user_no = "";
 			user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*,java.sql.*,oscar.util.*,oscar.*,oscar.oscarBilling.ca.on.data.*"
+<%@ page
+	import="java.util.*,java.sql.*,oscar.util.*,oscar.*,oscar.oscarBilling.ca.on.data.*"
 	errorPage="../../../errorpage.jsp"%>
 <%@ include file="../../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <%@ include file="dbINR.jsp"%>
 <%//
 			JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();

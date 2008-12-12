@@ -22,11 +22,11 @@
 */
  -->
 
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
-   
+
 <script type="text/javascript">            
        
     //This object stores the key -> cmd value passed to action class and the id of the created div
@@ -35,8 +35,11 @@
         
 </script>
 <!--dummmy div to force browser to allocate space -->
-<div id="leftColLoader" class="leftBox" style="width:100%"><h3 style="width:100%; background-color:#CCCCFF;"><a href="#" onclick="return false;">Loading...</a></h3></div>
+<div id="leftColLoader" class="leftBox" style="width: 100%">
+<h3 style="width: 100%; background-color: #CCCCFF;"><a href="#"
+	onclick="return false;">Loading...</a></h3>
+</div>
 
-<form style="display: none;" name="dummyForm" action="">
-    <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
-</form>
+<form style="display: none;" name="dummyForm" action=""><input
+	type="hidden" id="reloadDiv" name="reloadDiv" value="none"
+	onchange="updateDiv();"></form>

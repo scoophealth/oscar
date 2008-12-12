@@ -24,7 +24,7 @@
  */
 --%>
 
- 
+
 
 <%
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm");
@@ -35,10 +35,13 @@ String content = (String) session.getAttribute("content");
 session.setAttribute("content", ""); 
 %>
 
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.util.*, oscar.oscarBilling.ca.on.data.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.sql.*, java.util.*,java.net.*, oscar.util.*, oscar.oscarBilling.ca.on.data.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
@@ -53,10 +56,11 @@ function start(){
 
 <body onload="start()">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="90%" >
-  <tr bgcolor="#486ebd">
-    <th><font face="Helvetica" color="#FFFFFF">ADD A BILLING RECORD</font></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th><font face="Helvetica" color="#FFFFFF">ADD A BILLING
+		RECORD</font></th>
+	</tr>
 </table>
 
 <%
@@ -158,25 +162,30 @@ if (nBillNo > 0) {
         rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
         while (rsdemo.next()) {    
 %>
-<p><h1>Successful Addition of a billing Record.</h1></p>
+<p>
+<h1>Successful Addition of a billing Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
 	if (self.opener.document.caseManagementEntryForm) 
 		self.opener.document.caseManagementEntryForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
 	self.close();
 	if (!self.opener.document.caseManagementEntryForm) self.opener.refresh();
-</script>
-<%
+</script> <%
             break; //get only one billing_no
         }//end of while
 		apptMainBean.closePstmtConn();
     }  else {
 %>
-<p><h1>Sorry, billing has failed. Please do it again!</h1></p>
+<p>
+<h1>Sorry, billing has failed. Please do it again!</h1>
+</p>
 <%  
     }
 }  else {
 %>
-<p><h1>Sorry, billing has failed. Please do it again!</h1></p>
+<p>
+<h1>Sorry, billing has failed. Please do it again!</h1>
+</p>
 <%  
 }
 %>

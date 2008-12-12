@@ -1,4 +1,5 @@
-<%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
+<%@page
+	import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
 <%--
 /*
  *
@@ -25,56 +26,31 @@
  */
 --%>
 
-  <style type="text/css">
-      ul.dxlist {
-        margin-right:10px;
-        margin-top:0px;
-        //margin: 0;
-        padding: 0;
-        list-style:none;
-        font-size: 13px;
-        float:left;
-      }
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-      ul.dxlist li {
-        margin: 0;
-        padding: 0;
-        line-height: 1.3em;
-      }
-      
-      ul.dxlist li a {
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-  </style>
-
-  <%
+<%
   String demo = request.getParameter("demographicNo");
   DxReference dxRef = new DxReference();
   List<DxReference.DxCode> pastDxList = dxRef.getLatestDxCodes(demo);
   int col = 0;
   if (pastDxList != null){%>
-  <div style="margin-top: 2px;padding-left:6px;">
-          <%  
+<div style="margin-top: 2px; padding-left: 6px;">
+<%  
           for (DxReference.DxCode dxc : pastDxList){
               if (col ==0  ){    
               %>
-          <ul class="dxlist" >
-              <%}else if ( (col % 5 ) ==0){%>
-          </ul>
-          <ul class="dxlist" >
-             <%}%>  
-             <li>
-                 <a href="javascript: function myFunction() {return false; }" onClick="quickPickDiagnostic('<%=dxc.getDx()%>');return false;">         
-                    <%=dxc.getDx()%> <%=dxc.getNumMonthSinceDate()%>M
-                 </a>
-             
-             </li>
-          <%  
+<ul class="dxlist">
+	<%}else if ( (col % 5 ) ==0){%>
+</ul>
+<ul class="dxlist">
+	<%}%>
+	<li><a href="javascript: function myFunction() {return false; }"
+		onClick="quickPickDiagnostic('<%=dxc.getDx()%>');return false;"> <%=dxc.getDx()%>
+	<%=dxc.getNumMonthSinceDate()%>M </a></li>
+	<%  
           if (col >= 19){ break;}  // 24 gives 5 columns of 5  #  19 gives 4 columns of 5
           col++;
           }%>
-          </ul>
-  </div>
-  <%}%>
+</ul>
+</div>
+<%}%>

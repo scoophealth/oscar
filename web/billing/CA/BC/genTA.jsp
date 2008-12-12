@@ -22,14 +22,17 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->   
+-->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.oscarBilling.ca.bc.MSP.*,oscar.*"  %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.oscarBilling.ca.bc.MSP.*,oscar.*"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean"
+	scope="request" />
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<%@ include file="dbBilling.jsp"%>
 
 <%  
 GregorianCalendar now=new GregorianCalendar();
@@ -40,7 +43,7 @@ GregorianCalendar now=new GregorianCalendar();
   String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
   MSPReconcile mspReconcile = new MSPReconcile();
 %>
-  
+
 
 <% 
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
@@ -712,18 +715,17 @@ while ((nextline=input.readLine())!=null){
 }
 
 
-%>   
+%>
 
-<jsp:forward page="<%=forwardPage%>"/>
+<jsp:forward page="<%=forwardPage%>" />
 
 <html>
 <head>
 
-<html:base/>
-<link rel="stylesheet" href="../../../billing/billing.css" >
-<title>Billing 
-      Reconcilliation</title>
-       
+<html:base />
+<link rel="stylesheet" href="../../../billing/billing.css">
+<title>Billing Reconcilliation</title>
+
 <script language="JavaScript">
 <!--
     var remote=null;
@@ -757,33 +759,37 @@ while ((nextline=input.readLine())!=null){
 </SCRIPT>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
-      Reconcilliation </font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Billing Reconcilliation </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
- 
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF"><form>
-  <tr>  
-    
-     <td width="5%" height="16">Payment Date </td>
-     <td width="10%" height="16">Payable </td>
-     <td width="10%" height="16">Amount Billed</td>
-     <td width="10%" height="16">Amount Paid</td>
-     <td width="10%" height="16">Balance Fwd</td>
-     <td width="10%" height="16">Cheque Amount</td>
-     <td width="10%" height="16">New Balance</td>
-      <td width="20%" height="16">Action</td>
-      <td width="5%" height="16">Status</td>
-  </tr>
-   
-  <%	
+
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+
+		<td width="5%" height="16">Payment Date</td>
+		<td width="10%" height="16">Payable</td>
+		<td width="10%" height="16">Amount Billed</td>
+		<td width="10%" height="16">Amount Paid</td>
+		<td width="10%" height="16">Balance Fwd</td>
+		<td width="10%" height="16">Cheque Amount</td>
+		<td width="10%" height="16">New Balance</td>
+		<td width="20%" height="16">Action</td>
+		<td width="5%" height="16">Status</td>
+	</tr>
+
+	<%	
     ResultSet rsdemo;
     rsdemo = null;
     String[] param5 =new String[1];
@@ -799,21 +805,23 @@ while ((nextline=input.readLine())!=null){
         chequeamt= rsdemo.getString("t_cheque");
         newbalance = rsdemo.getString("t_newbalance");
         //total = rsdemo.getString("totalamount");
-   %> 
-		     
-  <tr> 
-    <td><%=paymentdate%>  </td>
-    <td><%=payable%> </td>
-    <td><%=amtbilled%></td>
-    <td><%=amtpaid%></td>
-    <td><%=balancefwd%></td>
-    <td><%=chequeamt%></td>
-    <td><%=newbalance%></td>
-    <td><a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a> | <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a>| <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
-    <td><%=rsdemo.getString("status")%></td>
-  </tr>
+   %>
 
- <% }%>
+	<tr>
+		<td><%=paymentdate%></td>
+		<td><%=payable%></td>
+		<td><%=amtbilled%></td>
+		<td><%=amtpaid%></td>
+		<td><%=balancefwd%></td>
+		<td><%=chequeamt%></td>
+		<td><%=newbalance%></td>
+		<td><a href="genTAS01.jsp?rano=<%=raNo%>&proNo=" target="_blank">Billed</a>
+		| <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a>|
+		<a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a></td>
+		<td><%=rsdemo.getString("status")%></td>
+	</tr>
+
+	<% }%>
 
 </table>
 

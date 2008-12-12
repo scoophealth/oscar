@@ -24,12 +24,13 @@
  */
 -->
 
-<%@ page isErrorPage="true" %>
+<%@ page isErrorPage="true"%>
 <HTML>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
 <BODY>
 
-<H1>Error page </H1>
+<H1>Error page</H1>
 
-<BR></BODY>
+<BR>
+</BODY>
 </HTML>

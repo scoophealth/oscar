@@ -23,13 +23,13 @@
  * Ontario, Canada 
  */
 -->
- <%
+<%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
 <%@ page import="java.sql.*, java.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
 
 
@@ -42,10 +42,8 @@
 
 <html:html locale="true">
 <head>
-<title>
-
-</title>
-<html:base/>
+<title></title>
+<html:base />
 </head>
 <script language="javascript">
 
@@ -68,15 +66,14 @@ function write2Parent(text){
 
 
 <link rel="stylesheet" type="text/css" href="../styles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF"  onunload="javascript: closePopup()">
+<body topmargin="0" leftmargin="0" vlink="#0000FF"
+	onunload="javascript: closePopup()">
 <table>
-    <tr>
-        <td>
-        <script>
+	<tr>
+		<td><script>
             write2Parent("<%=request.getAttribute("diagnosisVT")%>");            
-        </script>
-        </td>              
-    </tr>
+        </script></td>
+	</tr>
 </table>
 
 

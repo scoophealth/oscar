@@ -22,118 +22,114 @@
 */
  -->
 
-<%@ include file="/survey/taglibs.jsp" %>
-<style type="text/css">
-<!--
-    .surveyPage {
-        background-color: #EEEEEE;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        border-color: #CCCCCC;
-        border-width: 1px;
-        border-style: ridge;
-        margin: 3px;
-    }
-    
-    .pageTitle {
-        background-color: #CCCCCC;
-    }
-    
-    .section {
-        background-color: #FFEEEE;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        border-color: #CCCCCC;
-        border-width: 1px;
-        border-style: ridge;
-        margin: 5px;
-    }
-    
-    .container {
-       margin-left: 10px;
-    }
-    
-	.message {
-		color: red;
-		background-color: white;
-	}
-	.error {
-		color: red;
-		background-color: white;
-	}
--->
-</style>
-	<table width="100%">
-		<logic:messagesPresent message="true">
-			<html:messages id="message" message="true" bundle="survey">
-	   			<tr><td colspan="3" class="message"><c:out value="${message}"/></td></tr>
-	    	</html:messages>
-		</logic:messagesPresent>
-		<logic:messagesPresent>
-	  	  <html:messages id="error" bundle="survey">
-            <tr><td colspan="3" class="error"><c:out value="${error}"/></td></tr>
-       	 </html:messages>
-		</logic:messagesPresent>
-	</table>
-	<br/>
-<display:table cellspacing="2" cellpadding="3" id="entry" name="surveys" export="false" pagesize="10" requestURI="/SurveyManager.do">
-  <display:setProperty name="paging.banner.placement" value="bottom"/>
-  <display:setProperty name="basic.msg.empty_list" value="No Forms found."/>
-	  
-  	<display:column title="" style="white-space: nowrap; ">
-  		<c:if test="${entry.status eq 0}">
-  			<!--  in review -->
-	  		<a href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img src="images/edit.png" border="0"></a>
+<%@ include file="/survey/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<table width="100%">
+	<logic:messagesPresent message="true">
+		<html:messages id="message" message="true" bundle="survey">
+			<tr>
+				<td colspan="3" class="message"><c:out value="${message}" /></td>
+			</tr>
+		</html:messages>
+	</logic:messagesPresent>
+	<logic:messagesPresent>
+		<html:messages id="error" bundle="survey">
+			<tr>
+				<td colspan="3" class="error"><c:out value="${error}" /></td>
+			</tr>
+		</html:messages>
+	</logic:messagesPresent>
+</table>
+<br />
+<display:table cellspacing="2" cellpadding="3" id="entry" name="surveys"
+	export="false" pagesize="10" requestURI="/SurveyManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<display:setProperty name="basic.msg.empty_list"
+		value="No Forms found." />
+
+	<display:column title="" style="white-space: nowrap; ">
+		<c:if test="${entry.status eq 0}">
+			<!--  in review -->
+			<a
+				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/edit.png" border="0"></a>
   			&nbsp;
-	  		<a href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img src="images/delete.png" border="0"></a>
+	  		<a
+				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/delete.png" border="0"></a>
 		  	&nbsp;
-	        <a href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img src="images/test.png" border="0"></a>
-	    </c:if>
-	    <c:if test="${entry.status eq 1}">
-	    	<!-- test -->
-	   		 <a href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img src="images/edit.png" border="0"></a>
+	        <a
+				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/test.png" border="0"></a>
+		</c:if>
+		<c:if test="${entry.status eq 1}">
+			<!-- test -->
+			<a
+				href="<html:rewrite action="/SurveyManager"/>?method=edit&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/edit.png" border="0"></a>
   			&nbsp;
-	  		<a href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img src="images/delete.png" border="0"></a>
+	  		<a
+				href="<html:rewrite action="/SurveyManager"/>?method=delete&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/delete.png" border="0"></a>
 		  	&nbsp;
-			<a href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img src="images/test.png" border="0"></a>
+			<a
+				href="<html:rewrite action="/SurveyManager"/>?method=test&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/test.png" border="0"></a>
 	    	&nbsp;
-	    	<a href="<html:rewrite action="/SurveyManager"/>?method=clear_test_data&id=<c:out value="${entry.surveyId}"/>"><img src="images/clear.png" border="0"></a>
+	    	<a
+				href="<html:rewrite action="/SurveyManager"/>?method=clear_test_data&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/clear.png" border="0"></a>
 	    	&nbsp;
-	   		<a href="<html:rewrite action="/SurveyManager"/>?method=launch&id=<c:out value="${entry.surveyId}"/>"><img src="images/launch.png" border="0"></a>
+	   		<a
+				href="<html:rewrite action="/SurveyManager"/>?method=launch&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/launch.png" border="0"></a>
 		</c:if>
-	    <c:if test="${entry.status eq 2}">
-	    	<!-- launched -->
-	        <a href="<html:rewrite action="/SurveyManager"/>?method=close&id=<c:out value="${entry.surveyId}"/>"><img src="images/close.png" border="0"></a>
+		<c:if test="${entry.status eq 2}">
+			<!-- launched -->
+			<a
+				href="<html:rewrite action="/SurveyManager"/>?method=close&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/close.png" border="0"></a>
 	        &nbsp;
-	        <a href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img src="images/export.gif" border="0"></a>
+	        <a
+				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/export.gif" border="0"></a>
 		</c:if>
-	    <c:if test="${entry.status eq 3}">
-	    	<!--  closed -->
-	        <a href="<html:rewrite action="/SurveyManager"/>?method=reopen&id=<c:out value="${entry.surveyId}"/>"><img src="images/launch.png" border="0"></a>
+		<c:if test="${entry.status eq 3}">
+			<!--  closed -->
+			<a
+				href="<html:rewrite action="/SurveyManager"/>?method=reopen&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/launch.png" border="0"></a>
 	        &nbsp;
-	        <a href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img src="images/export.gif" border="0"></a>
+	        <a
+				href="<html:rewrite action="/SurveyManager"/>?method=export&id=<c:out value="${entry.surveyId}"/>"><img
+				src="images/export.gif" border="0"></a>
 		</c:if>
-	    
-    </display:column>
-    <display:column property="surveyId" sortable="false" title="SurveyId"/>
-    <display:column style="width:60%" property="description" sortable="false" title="Description"/>
-    <display:column property="version" sortable="false" title="Version"/>
-    <display:column title="Status">
-    	<c:choose>
-    		<c:when test="${entry.status == 0}">IN REVIEW</c:when>
-    		<c:when test="${entry.status == 1}">TEST</c:when>
-    		<c:when test="${entry.status == 2}">LAUNCHED</c:when>
-    		<c:when test="${entry.status == 3}">CLOSED</c:when>
-    	</c:choose>
-    </display:column>
-    
+
+	</display:column>
+	<display:column property="surveyId" sortable="false" title="SurveyId" />
+	<display:column style="width:60%" property="description"
+		sortable="false" title="Description" />
+	<display:column property="version" sortable="false" title="Version" />
+	<display:column title="Status">
+		<c:choose>
+			<c:when test="${entry.status == 0}">IN REVIEW</c:when>
+			<c:when test="${entry.status == 1}">TEST</c:when>
+			<c:when test="${entry.status == 2}">LAUNCHED</c:when>
+			<c:when test="${entry.status == 3}">CLOSED</c:when>
+		</c:choose>
+	</display:column>
+
 </display:table>
-<br/>
-<br/>
-<input type="button" value="Create New Form" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=new_survey'"/>
-<br/><br/>
-<input type="button" value="Import" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=show_import_form'"/>
-<br/><br/>
+<br />
+<br />
+<input type="button" value="Create New Form"
+	onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=new_survey'" />
+<br />
+<br />
+<input type="button" value="Import"
+	onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=show_import_form'" />
+<br />
+<br />
 <script>
 	function export_csv(selectObj) {
 		var formId = selectObj.options[selectObj.selectedIndex].value;
@@ -160,16 +156,19 @@
 Export Form Data:&nbsp;
 <select onchange="export_csv(this);">
 	<option value=""></option>
-<c:forEach var="f" items="${released_forms}">
-	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
-</c:forEach>
+	<c:forEach var="f" items="${released_forms}">
+		<option value="<c:out value="${f.formId}"/>"><c:out
+			value="${f.description}" /></option>
+	</c:forEach>
 </select>
 
-<br/><br/>
+<br />
+<br />
 Export form structure to database:&nbsp;
 <select onchange="export_to_db(this);">
 	<option value=""></option>
-<c:forEach var="f" items="${released_forms}">
-	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
-</c:forEach>
+	<c:forEach var="f" items="${released_forms}">
+		<option value="<c:out value="${f.formId}"/>"><c:out
+			value="${f.description}" /></option>
+	</c:forEach>
 </select>

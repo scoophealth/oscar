@@ -17,22 +17,24 @@
  * <OSCAR TEAM>
  */
 -->
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="*" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="*"
+	reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%@ page errorPage="../errorpage.jsp" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="oscar.util.*" %>
-<%@ page import="oscar.login.*" %>
-<%@ page import="oscar.log.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="oscar.util.*"%>
+<%@ page import="oscar.login.*"%>
+<%@ page import="oscar.log.*"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
 //if(session.getAttribute("user") == null )	response.sendRedirect("../logout.jsp");
 String curUser_no = (String)session.getAttribute("user");
@@ -208,12 +210,10 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 String keyword = request.getParameter("keyword")!=null?request.getParameter("keyword"):"";
 
 %>
-  <html>
-    <head>
-      <title>
-        PROVIDER
-      </title>
-      <script language="JavaScript"  type="text/javascript">
+<html>
+<head>
+<title>PROVIDER</title>
+<script language="JavaScript" type="text/javascript">
 <!--
 function setfocus() {
 	this.focus();
@@ -246,28 +246,21 @@ function onChangeSelect(){
 }
 // -->
       </script>
-    </head>
-    <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <form name="myform" action="providerPrivilege.jsp" method="POST">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-            <% if(msg.length()>1) {%>
-			<%=msg%>
-			<% } %>
-            </font>
-          </th>
-          <td nowrap>
-            <font size="-1" color="#FFFFFF">
-              Object Name/Role Name:
-              <input type="text" name="keyword" size="15" value="<%=keyword%>" />
-              <input type="submit" name="search" value="Search">
-            </font>
-          </td>
-        </tr>
-      </table>
-      </form>
+</head>
+<body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<form name="myform" action="providerPrivilege.jsp" method="POST">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> <% if(msg.length()>1) {%> <%=msg%> <% } %> </font></th>
+		<td nowrap><font size="-1" color="#FFFFFF"> Object
+		Name/Role Name: <input type="text" name="keyword" size="15"
+			value="<%=keyword%>" /> <input type="submit" name="search"
+			value="Search"> </font></td>
+	</tr>
+</table>
+</form>
 <%
 String     color       = "#ccCCFF";
 Properties prop        = null;
@@ -288,30 +281,19 @@ while (rs.next()) {
 	vec.add(prop);
 }
 %>
-        <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="mediumaquamarine">
-            <th colspan="5" align="left">
-              Role/Privilege List
-            </th>
-          </tr>
-          <tr bgcolor="silver">
-            <th width="8%" nowrap>
-              Role
-            </th>
-            <th width="35%" nowrap>
-              Object ID
-            </th>
-            <th width="40%" nowrap>
-              Privilege
-            </th>
-            <th width="5%" nowrap>
-              Priority
-            </th>
-            <th nowrap>
-              Action
-            </th>
-          </tr>
-<%
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="mediumaquamarine">
+		<th colspan="5" align="left">Role/Privilege List</th>
+	</tr>
+	<tr bgcolor="silver">
+		<th width="8%" nowrap>Role</th>
+		<th width="35%" nowrap>Object ID</th>
+		<th width="40%" nowrap>Privilege</th>
+		<th width="5%" nowrap>Priority</th>
+		<th nowrap>Action</th>
+	</tr>
+	<%
 		String tempNo = null;
 		String bgColor = color;
         for (int i = 0; i < vec.size(); i++) {
@@ -321,16 +303,13 @@ System.out.println(roleUser);
        		String roleUserName = vecProviderNo.contains(roleUser)? "<font size='-1'>"+(String)vecProviderName.get(vecProviderNo.indexOf(roleUser))+"</font>": roleUser;
        		String obj = ((Properties)vec.get(i)).getProperty("objectName", "");
 %>
-      <form name="myformrow<%=i%>" action="providerPrivilege.jsp" method="POST">
-            <tr bgcolor="<%=bgColor%>">
-              <td>
-                <%= roleUserName %>
-              </td>
-              <td>
-                <%= obj %>
-              </td>
-              <td align="left">
-<%
+	<form name="myformrow<%=i%>" action="providerPrivilege.jsp"
+		method="POST">
+	<tr bgcolor="<%=bgColor%>">
+		<td><%= roleUserName %></td>
+		<td><%= obj %></td>
+		<td align="left">
+		<%
 			String priv = ((Properties)vec.get(i)).getProperty("privilege", "");
 			boolean bSet = true;
             for (int j = 0; j < vecRightsName.size(); j++) {
@@ -338,119 +317,109 @@ System.out.println(roleUser);
             		out.print("</br>");
             		bSet = false;
             	}
-%>
-                      <input type="checkbox" name="privilege<%=vecRightsName.get(j)%>" <%=priv.indexOf(((String)vecRightsName.get(j)))>=0?"checked":""%> />
-                      <font size="-1"><%=((String)vecRightsDesc.get(j)).replaceAll("Only","O")%></font>
-<%			}%>
-                  <!--input type="text" name="privilege" value="<%--= priv--%>" /-->
-              </td>
-              <td>
-                  <select name="priority">
-						<option value="" >-</option>
-<%			for (int j = 10; j >=0; j--) {%>
-                      <option value="<%=j%>" <%= (""+j).equals(((Properties)vec.get(i)).getProperty("priority", ""))?"selected":"" %>><%= j %></option>
-<%			} %>
-                  </select>
-              </td>
-            <td align="center">
-<%			if(!roleUser.equals("admin") && !obj.equals("_admin")) { %>
-              <input type="hidden" name="keyword" value="<%=keyword%>" />
-              <input type="hidden" name="objectName" value="<%=obj %>" />
-              <input type="hidden" name="roleUserGroup" value="<%=roleUser %>" />
-              <input type="submit" name="buttonUpdate" value="Update">
-              <input type="submit" name="submit" value="Delete">
-<%			} %>
-            </td>
-            </tr>
-      </form>
-<%		} %>
-        </table>
-      <hr>
+%> <input type="checkbox" name="privilege<%=vecRightsName.get(j)%>"
+			<%=priv.indexOf(((String)vecRightsName.get(j)))>=0?"checked":""%> />
+		<font size="-1"><%=((String)vecRightsDesc.get(j)).replaceAll("Only","O")%></font>
+		<%			}%> <!--input type="text" name="privilege" value="<%--= priv--%>" /-->
+		</td>
+		<td><select name="priority">
+			<option value="">-</option>
+			<%			for (int j = 10; j >=0; j--) {%>
+			<option value="<%=j%>"
+				<%= (""+j).equals(((Properties)vec.get(i)).getProperty("priority", ""))?"selected":"" %>><%= j %></option>
+			<%			} %>
+		</select></td>
+		<td align="center">
+		<%			if(!roleUser.equals("admin") && !obj.equals("_admin")) { %> <input
+			type="hidden" name="keyword" value="<%=keyword%>" /> <input
+			type="hidden" name="objectName" value="<%=obj %>" /> <input
+			type="hidden" name="roleUserGroup" value="<%=roleUser %>" /> <input
+			type="submit" name="buttonUpdate" value="Update"> <input
+			type="submit" name="submit" value="Delete"> <%			} %>
+		</td>
+	</tr>
+	</form>
+	<%		} %>
+</table>
+<hr>
 
-        <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="mediumaquamarine">
-            <th colspan="4" align="left">
-              Add Role/Privilege
-            </th>
-          </tr>
-          <tr>
-          <th width="20%">Role</td>
-          <th width="30%">Object ID</th>
-          <th width="40%">Privilege</th>
-          <th>Priority</th>
-          </tr>
-      <form name="myform2" action="providerPrivilege.jsp" method="POST">
-<%		for (int i = 0; i <= vecObjectId.size(); i++) {
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="mediumaquamarine">
+		<th colspan="4" align="left">Add Role/Privilege</th>
+	</tr>
+	<tr>
+		<th width="20%">Role
+		</td>
+		<th width="30%">Object ID</th>
+		<th width="40%">Privilege</th>
+		<th>Priority</th>
+	</tr>
+	<form name="myform2" action="providerPrivilege.jsp" method="POST">
+	<%		for (int i = 0; i <= vecObjectId.size(); i++) {
 			if( i!=vecObjectId.size() && ((String)vecObjectId.get(i)).indexOf("$")>=0 ) { continue; }
 %>
-            <tr bgcolor="<%=bgColor%>">
-              <td>
-<%			if(i==0) { %>
-                  <select name="roleUserGroup" onChange="onChangeSelect()" >
-                    <option value="" > - </option>
-<%					for (int j = 0; j < vecRoleName.size(); j++) {%>
-                      <option value="<%=vecRoleName.get(j)%>" > <%= vecRoleName.get(j) %> </option>
-<%                  }%>
-                  </select>
-                  or
-                  <select name="roleUserGroup1"  >
-                    <option value="" > - </option>
-<%					for (int j = 0; j < vecProviderNo.size(); j++) {%>
-                      <option value="<%=vecProviderNo.get(j)%>" > <%= vecProviderName.get(j) %> </option>
-<%                  }%>
-                    <option value="_principal" > _principal </option>
-                  </select>
-<%			}%>
-              </td>
-<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
-              <td>
-<%
+	
+	<tr bgcolor="<%=bgColor%>">
+		<td>
+		<%			if(i==0) { %> <select name="roleUserGroup"
+			onChange="onChangeSelect()">
+			<option value="">-</option>
+			<%					for (int j = 0; j < vecRoleName.size(); j++) {%>
+			<option value="<%=vecRoleName.get(j)%>"><%= vecRoleName.get(j) %>
+			</option>
+			<%                  }%>
+		</select> or <select name="roleUserGroup1">
+			<option value="">-</option>
+			<%					for (int j = 0; j < vecProviderNo.size(); j++) {%>
+			<option value="<%=vecProviderNo.get(j)%>"><%= vecProviderName.get(j) %>
+			</option>
+			<%                  }%>
+			<option value="_principal">_principal</option>
+		</select> <%			}%>
+		</td>
+		<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
+		<td>
+		<%
 			String objName = "";
 			if(i==vecObjectId.size()) {
 				objName = "Name1";
-%>
-              	<input type="text" name="object$<%=objName%>" value="" size=35 />
-<%			} else {
+%> <input type="text" name="object$<%=objName%>" value="" size=35 /> <%			} else {
 				objName = (String)vecObjectId.get(i);
-%>
-				<input type="checkbox" name="object$<%=objName%>" />
-				<%= vecObjectId.get(i) %>
-<%			}%>
-              </td>
-<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
-              <td>
-<%
+%> <input type="checkbox" name="object$<%=objName%>" /> <%= vecObjectId.get(i) %>
+		<%			}%>
+		</td>
+		<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
+		<td>
+		<%
 					boolean bSet = true;
                     for (int j = 0; j < vecRightsName.size(); j++) {
                     	if(bSet&&((String)vecRightsName.get(j)).startsWith("o")) {
                     		out.print("</br>");
                     		bSet = false;
                     	}
-%>
-                      <font size="-1"><input type="checkbox" name="privilege$<%=objName%>$<%=vecRightsName.get(j)%>" />
-                      <%=vecRightsDesc.get(j)%></font>
-<%                  }%>
-              </td>
-<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
-              <td>
-                  <select name="priority$<%=objName%>">
-						<option value="" >-</option>
-<%                    for (int j = 10; j >=0; j--) { %>
-                      <option value="<%=j%>" <%= (""+j).equals("0")?"selected":"" %>> <%= j %> </option>
-<%                  }%>
-                  </select>
-              </td>
-            </tr>
-<%                  }%>
-<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
-            <tr bgcolor="<%=bgColor%>">
-              <td align="center" colspan="4">
-              <input type="hidden" name="keyword" value="<%=keyword%>" />
-              <input type="submit" name="submit" value="Add">
-            </td>
-            </tr>
-      </form>
-        </table>
+%> <font size="-1"><input type="checkbox"
+			name="privilege$<%=objName%>$<%=vecRightsName.get(j)%>" /> <%=vecRightsDesc.get(j)%></font>
+		<%                  }%>
+		</td>
+		<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
+		<td><select name="priority$<%=objName%>">
+			<option value="">-</option>
+			<%                    for (int j = 10; j >=0; j--) { %>
+			<option value="<%=j%>" <%= (""+j).equals("0")?"selected":"" %>>
+			<%= j %></option>
+			<%                  }%>
+		</select></td>
+	</tr>
+	<%                  }%>
+	<%       		bgColor = bgColor.equals("#EEEEFF")?color:"#EEEEFF"; %>
+	<tr bgcolor="<%=bgColor%>">
+		<td align="center" colspan="4"><input type="hidden"
+			name="keyword" value="<%=keyword%>" /> <input type="submit"
+			name="submit" value="Add"></td>
+	</tr>
+	</form>
+</table>
 
-      </body>
-    </html>
+</body>
+</html>

@@ -1,9 +1,10 @@
-<%@ page language="java" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*" %>
+<%@ page language="java"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ page
+	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <%long start = System.currentTimeMillis();%>
@@ -37,25 +38,26 @@
 
 <html:html locale="true">
 <head>
-<title><bean:message key="WriteScript.title"/></title>
+<title><bean:message key="WriteScript.title" /></title>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
-<html:base/>
+<html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
-    <logic:redirect href="error.html" />
+	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-    <bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
-    <logic:equal name="bean" property="valid" value="false">
-        <logic:redirect href="error.html" />
-    </logic:equal>
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
+		name="RxSessionBean" scope="session" />
+	<logic:equal name="bean" property="valid" value="false">
+		<logic:redirect href="error.html" />
+	</logic:equal>
 </logic:present>
 
 <logic:equal name="bean" property="stashIndex" value="-1">
-    <logic:redirect href="SearchDrug.jsp" />
+	<logic:redirect href="SearchDrug.jsp" />
 </logic:equal>
 
 <%
@@ -772,49 +774,19 @@ String regionalIdentifier="";
     }
 </script>
 
-<style type="text/css">
-        td.menuLayer{
-            background-color: #ccccff;
-            font-size: 14px;
-        }
-        table.layerTable{
-            border-top: 2px solid #cfcfcf;
-            border-left: 2px solid #cfcfcf;
-            border-bottom: 2px solid #333333;
-            border-right: 2px solid #333333;
-        }
-
-        table.messButtonsA{
-            border-top: 2px solid #cfcfcf;
-            border-left: 2px solid #cfcfcf;
-            border-bottom: 2px solid #333333;
-            border-right: 2px solid #333333;
-        }
-
-        table.messButtonsD{
-            border-top: 2px solid #333333;
-            border-left: 2px solid #333333;
-            border-bottom: 2px solid #cfcfcf;
-            border-right: 2px solid #cfcfcf;
-        }
-        
-        div.untrustedResource{
-            //visibility: hidden;
-            //display:none;
-        }
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 
 
 </head>
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="javascript:pageLoad();">
+<body topmargin="0" leftmargin="0" vlink="#0000FF"
+	onload="javascript:pageLoad();">
 
 <html:form action="/oscarRx/writeScript">
 
 
-<html:hidden property="action" />
-<%
+	<html:hidden property="action" />
+	<%
 
 
 
@@ -877,7 +849,7 @@ isCustom = thisForm.getGCN_SEQNO() == 0;
 int drugId = thisForm.getGCN_SEQNO();
 
 %>
-<!--
+	<!--
 DemographicNo:  <%= thisForm.getDemographicNo() %><br>
 RxDate:         <%= thisForm.getRxDate() %><br>
 EndDate:        <%= thisForm.getEndDate() %><br>
@@ -903,7 +875,7 @@ Custom Instruct; <%=thisForm.getCustomInstr() %>
 <% regionalIdentifier = thisForm.getRegionalIdentifier(); %>
 
 -->
-<%
+	<%
 
 // set patient info
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(thisForm.getDemographicNo());
@@ -942,7 +914,7 @@ int i;
 
 %>
 
-<script language=javascript>
+	<script language=javascript>
     freqMin = new Array(<%= freq.length%>);
     freqMax = new Array(<%= freq.length%>);
 
@@ -952,197 +924,176 @@ int i;
     <%}%>
 </script>
 
-<html:hidden property="demographicNo" />
-<html:hidden property="GCN_SEQNO" />
-<html:hidden property="atcCode" />
-<html:hidden property="regionalIdentifier" />
-<html:hidden property="dosage" /> 
+	<html:hidden property="demographicNo" />
+	<html:hidden property="GCN_SEQNO" />
+	<html:hidden property="atcCode" />
+	<html:hidden property="regionalIdentifier" />
+	<html:hidden property="dosage" />
 
 
 
-<table border="0" cellpadding="0" cellspacing="0" <% /*style="border-collapse: collapse"*/%> bordercolor="#111111" width="100%" height="100%">
-    <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
-    <tr>
-        <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
-        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
-            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
-                <tr>
-                    <td width="0%" valign="top">
-            	        <div class="DivCCBreadCrumbs">
-              	        <a href="SearchDrug.jsp">   <bean:message key="SearchDrug.title"/></a> >
-                        <bean:message key="ChooseDrug.title"/> >
-                        <b><bean:message key="WriteScript.title"/></b>
-                        </div>
-                    </td>
-                </tr>
-            <!----Start new rows here-->
+	<table border="0" cellpadding="0" cellspacing="0"
+		<% /*style="border-collapse: collapse"*/%> bordercolor="#111111"
+		width="100%" height="100%">
+		<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
+		<tr>
+			<%@ include file="SideLinksNoEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
+			<td width="100%" style="border-left: 2px solid #A9A9A9;"
+				height="100%" valign="top">
+			<table cellpadding="0" cellspacing="2"
+				style="border-collapse: collapse" bordercolor="#111111" width="100%"
+				height="100%">
+				<tr>
+					<td width="0%" valign="top">
+					<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
+						key="SearchDrug.title" /></a> > <bean:message key="ChooseDrug.title" />
+					> <b><bean:message key="WriteScript.title" /></b></div>
+					</td>
+				</tr>
+				<!----Start new rows here-->
 
-                <tr>
-                    <td>
- 		                <div class="DivContentTitle"><bean:message key="WriteScript.title"/></div>
-                    </td>
-		</tr>
+				<tr>
+					<td>
+					<div class="DivContentTitle"><bean:message
+						key="WriteScript.title" /></div>
+					</td>
+				</tr>
 
-                <tr>
-                    <td>
-                        <div class="DivContentSectionHead"><bean:message key="WriteScript.section2Title"/> for <%= patient.getFirstName() %> <%= patient.getSurname() %></div>
-                    </td>
-                </tr>
+				<tr>
+					<td>
+					<div class="DivContentSectionHead"><bean:message
+						key="WriteScript.section2Title" /> for <%= patient.getFirstName() %>
+					<%= patient.getSurname() %></div>
+					</td>
+				</tr>
 
 
-                <tr>
-                    <td>
-                        <table border=1 style="border: 1px solid #A9A9A9; ">
+				<tr>
+					<td>
+					<table border=1 style="border: 1px solid #A9A9A9;">
 
-                        <% if (! isCustom) { %>
-                            <tr>
-                                <td colspan=2>
-                                    Generic Name:
-                                </td>
-                                <td colspan=2>
-                                    <html:hidden property="genericName"/>
-                                    <b><%= thisForm.getGenericName() %></b>
-                                    <%if ( compString != null ){%>
-                                    <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" >Components</a>
-                                    <%}%>   
-                                </td>
-                                 <td valign=top rowspan=8>
-                                                <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();">
-                                                    <%for(i=0; i<spec.length; i++){%>
-                                                        <option value="<%= spec[i] %>">
-                                                            <%= spec[i] %>
-                                                        </option>
-                                                    <%}%>
-                                                </select>
-                                            </td>
-                            </tr>
+						<% if (! isCustom) { %>
+						<tr>
+							<td colspan=2>Generic Name:</td>
+							<td colspan=2><html:hidden property="genericName" /> <b><%= thisForm.getGenericName() %></b>
+							<%if ( compString != null ){%> <a
+								href="javascript: function myFunction() {return false; }"
+								title="<%=compString%>">Components</a> <%}%>
+							</td>
+							<td valign=top rowspan=8><select size=20 name="selSpecial"
+								ondblclick="javascript:cmdSpecial_click();">
+								<%for(i=0; i<spec.length; i++){%>
+								<option value="<%= spec[i] %>"><%= spec[i] %></option>
+								<%}%>
+							</select></td>
+						</tr>
 
-                            <tr>
-                                <td colspan=2>
-                                    Brand Name:
-                                </td>
-                                <td colspan=2>                                                                        
-                                            <html:hidden property="brandName" />
-                                            <b><%= thisForm.getBrandName() %></b>
-                                            <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">                          
-                                            <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->                             
-                                            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a> 
-                                            </oscar:oscarPropertiesCheck>
-                                </td>
-                                <!--<td >
+						<tr>
+							<td colspan=2>Brand Name:</td>
+							<td colspan=2><html:hidden property="brandName" /> <b><%= thisForm.getBrandName() %></b>
+							<oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">
+								<!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->
+								<a href="javascript: function myFunction() {return false; }"
+									onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB
+								info</a>
+							</oscar:oscarPropertiesCheck></td>
+							<!--<td >
                                     &nbsp;
                                 </td>-->
-                            </tr>
+						</tr>
 
-                            
-                        <% } else { /* Custom Drug Entry */%>
 
-                            <tr>
-                                <td colspan=2 valign="top">
-                                    Custom Drug:
-                                </td>
-                                <td colspan=2>
-                                    <html:textarea property="customName" cols="50" rows="3" onchange="javascript:writeScriptDisplay();" />
-                                </td>
-                                <td valign=top rowspan=8>
-                                            <div style="z-index: 0;">       
-                                                <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();" >
-                                                    <%for(i=0; i<spec.length; i++){%>
-                                                        <option value="<%= spec[i] %>">
-                                                            <%= spec[i] %>
-                                                        </option>
-                                                    <%}%>
-                                                </select>
-                                            </div>
-                                            </td>
-                            </tr>
+						<% } else { /* Custom Drug Entry */%>
 
-                        <% } /* Custom */ %>
+						<tr>
+							<td colspan=2 valign="top">Custom Drug:</td>
+							<td colspan=2><html:textarea property="customName" cols="50"
+								rows="3" onchange="javascript:writeScriptDisplay();" /></td>
+							<td valign=top rowspan=8>
+							<div style="z-index: 0;"><select size=20 name="selSpecial"
+								ondblclick="javascript:cmdSpecial_click();">
+								<%for(i=0; i<spec.length; i++){%>
+								<option value="<%= spec[i] %>"><%= spec[i] %></option>
+								<%}%>
+							</select></div>
+							</td>
+						</tr>
 
-                            <tr>
-                                <td colspan=2>
-                                  Start Date:
-                                </td>
-                                <td colspan=2>
-                                  <html:text property="rxDate" />
-                                </td>
-                                <!--<td >
+						<% } /* Custom */ %>
+
+						<tr>
+							<td colspan=2>Start Date:</td>
+							<td colspan=2><html:text property="rxDate" /></td>
+							<!--<td >
                                   &nbsp;
                                 </td>-->
-                            </tr>
-
-                            
-                            <tr>
-                                <td colspan=2>
-                                   <html:select property="method" style="width:90px" onchange="calcQty();">                                        
-                                        <html:option value="Take">Take</html:option>
-                                        <html:option value="Apply">Apply</html:option>
-                                        <html:option value="Rub">Rub well in</html:option>                 
-                                        <html:option value=""></html:option>
-                                    </html:select>
-                                </td>
-                                <td colspan=2>
-                                    <select name="take" style="width:72px" onChange="javascript:takeChg();">
-                                        <option value="1/4">1/4</option>
-                                        <option value="1/2">1/2</option>
-                                        <option value="1">1</option>
-                                        <option value="1-2">1-2</option>
-                                        <option value="1-3">1-3</option>
-                                        <option value="2">2</option>
-                                        <option value="2-3">2-3</option>
-                                        <option value="3">3</option>
-                                        <option value="3-4">3-4</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <input type=text name="takeOther" style="display:none" size="5" onChange="javascript:takeChg();" />
-                                    <html:select property="unit" style="width:80px" onchange="calcQty();">                                        
-                                        <html:option value="tab">Tabs</html:option>
-                                        <html:option value="mL">mL</html:option>
-                                        <html:option value="sqrt">Squirts</html:option>
-                                        <html:option value="gm" >gm</html:option>
-                                        <html:option value="mg">mg</html:option>
-                                        <html:option value="micg">µg</html:option>
-                                        <html:option value="drop">Drops</html:option>                                        
-                                        <html:option value="patc">Patch</html:option>
-                                        <html:option value="puff">Puffs</html:option>                     
-                                        <html:option value="units">Units</html:option>
-                                        <html:option value="units">Inhalations</html:option>
-                                        <html:option value=""></html:option>
-                                    </html:select>
-                                    
-                                    <html:select property="route" style="width:80px" onchange="calcQty();">                                        
-                                        <html:option value="PO">PO</html:option>
-                                        <html:option value="SL">SL</html:option>
-                                        <html:option value="IM">IM</html:option>
-                                        <html:option value="SC">SC</html:option>                                        
-                                        <html:option value="TOP">TOP.</html:option>
-                                        <html:option value="INH">INH</html:option>                                        
-                                        <html:option value="SUPP">SUPP</html:option>  
-                                        <html:option value="O.D.">O.D.</html:option> 
-                                        <html:option value="O.S.">O.S.</html:option> 
-                                        <html:option value="O.U.">O.U.</html:option> 
-                                        
-                                        <html:option value=""></html:option>
-                                    </html:select>
-                                    
-                                    <html:select property="frequencyCode" style="width:80px" onchange="javascript:changeDuration();calcQty();">
-                                        <%for(i=0; i<freq.length; i++){%>
-                                            <html:option value="<%= freq[i].getFreqCode() %>">
-                                                <%= freq[i].getFreqCode() %>
-                                            </html:option>
-                                        <%}%>
-                                    </html:select>
+						</tr>
 
 
-                                    <html:hidden property="takeMin" />
-                                    <html:hidden property="takeMax" />
-                                    <script language=javascript>
+						<tr>
+							<td colspan=2><html:select property="method"
+								style="width:90px" onchange="calcQty();">
+								<html:option value="Take">Take</html:option>
+								<html:option value="Apply">Apply</html:option>
+								<html:option value="Rub">Rub well in</html:option>
+								<html:option value=""></html:option>
+							</html:select></td>
+							<td colspan=2><select name="take" style="width: 72px"
+								onChange="javascript:takeChg();">
+								<option value="1/4">1/4</option>
+								<option value="1/2">1/2</option>
+								<option value="1">1</option>
+								<option value="1-2">1-2</option>
+								<option value="1-3">1-3</option>
+								<option value="2">2</option>
+								<option value="2-3">2-3</option>
+								<option value="3">3</option>
+								<option value="3-4">3-4</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="Other">Other</option>
+							</select> <input type=text name="takeOther" style="display: none" size="5"
+								onChange="javascript:takeChg();" /> <html:select
+								property="unit" style="width:80px" onchange="calcQty();">
+								<html:option value="tab">Tabs</html:option>
+								<html:option value="mL">mL</html:option>
+								<html:option value="sqrt">Squirts</html:option>
+								<html:option value="gm">gm</html:option>
+								<html:option value="mg">mg</html:option>
+								<html:option value="micg">µg</html:option>
+								<html:option value="drop">Drops</html:option>
+								<html:option value="patc">Patch</html:option>
+								<html:option value="puff">Puffs</html:option>
+								<html:option value="units">Units</html:option>
+								<html:option value="units">Inhalations</html:option>
+								<html:option value=""></html:option>
+							</html:select> <html:select property="route" style="width:80px"
+								onchange="calcQty();">
+								<html:option value="PO">PO</html:option>
+								<html:option value="SL">SL</html:option>
+								<html:option value="IM">IM</html:option>
+								<html:option value="SC">SC</html:option>
+								<html:option value="TOP">TOP.</html:option>
+								<html:option value="INH">INH</html:option>
+								<html:option value="SUPP">SUPP</html:option>
+								<html:option value="O.D.">O.D.</html:option>
+								<html:option value="O.S.">O.S.</html:option>
+								<html:option value="O.U.">O.U.</html:option>
+
+								<html:option value=""></html:option>
+							</html:select> <html:select property="frequencyCode" style="width:80px"
+								onchange="javascript:changeDuration();calcQty();">
+								<%for(i=0; i<freq.length; i++){%>
+								<html:option value="<%= freq[i].getFreqCode() %>">
+									<%= freq[i].getFreqCode() %>
+								</html:option>
+								<%}%>
+							</html:select> <html:hidden property="takeMin" /> <html:hidden
+								property="takeMax" /> <script language=javascript>
                                         var frm = document.forms.RxWriteScriptForm;
 
                                         
@@ -1164,40 +1115,33 @@ int i;
                                             frm.take.value = 'Other'; 
                                             frm.takeOther.style.display = '';
                                         }
-                                    </script>
-                                    PRN:<html:checkbox property="prn"  onchange="javascript:writeScriptDisplay();" />
-                                </td>
-                                <!--<td>
+                                    </script> PRN:<html:checkbox property="prn"
+								onchange="javascript:writeScriptDisplay();" /></td>
+							<!--<td>
                                     &nbsp;
                                 </td>-->
-                            </tr>
+						</tr>
 
 
-                            <tr>
-                                <td colspan=2>
-                                    For:
-                                </td>
-                                <td colspan=2>
-                                    <select name="cmbDuration" style="width:72px" onChange="javascript:calcQty();">
-                                        <%for(i=1; i<15; i++){%>
-                                            <option value="<%= i%>"><%= i%></option>
-                                        <%}%>
-                                        <option value="30">30</option>
-                                        <option value="60">60</option>
-                                        <option value="90">90</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <input type=text name="txtDuration" size="4" onchange="javascript:calcQty();" style="display:none" />
-                                    <html:select property="durationUnit" style="width:80px" onchange="javascript:calcQty();">
-                                        <html:option value="D">Days</html:option>
-                                        <html:option value="W">Weeks</html:option>
-                                        <html:option value="M">Months</html:option>
-                                    </html:select>
-
-
-                                    <html:hidden property="duration" />
-
-                                    <script language=javascript>
+						<tr>
+							<td colspan=2>For:</td>
+							<td colspan=2><select name="cmbDuration" style="width: 72px"
+								onChange="javascript:calcQty();">
+								<%for(i=1; i<15; i++){%>
+								<option value="<%= i%>"><%= i%></option>
+								<%}%>
+								<option value="30">30</option>
+								<option value="60">60</option>
+								<option value="90">90</option>
+								<option value="Other">Other</option>
+							</select> <input type=text name="txtDuration" size="4"
+								onchange="javascript:calcQty();" style="display: none" /> <html:select
+								property="durationUnit" style="width:80px"
+								onchange="javascript:calcQty();">
+								<html:option value="D">Days</html:option>
+								<html:option value="W">Weeks</html:option>
+								<html:option value="M">Months</html:option>
+							</html:select> <html:hidden property="duration" /> <script language=javascript>
                                         frm.txtDuration.value = frm.duration.value;
 
                                         frm.cmbDuration.value = frm.txtDuration.value;
@@ -1205,25 +1149,26 @@ int i;
                                             frm.cmbDuration.value = 'Other';
                                             frm.txtDuration.style.display = '';
                                         }
-                                    </script>
-                                </td>
-                                <!--<td>
+                                    </script></td>
+							<!--<td>
                                 &nbsp;
                                 </td>-->
-                            </tr>
+						</tr>
 
-                            <tr>
-                                <td colspan=2>
-                                    Quantity: auto<input type="checkbox" name="autoQty" />
-                                </td>
-                                <td colspan=2 width=65%>
-                                    <html:text property="quantity" size="8" onchange="javascript:if( chkQty(this.value) ) {writeScriptDisplay(); customQty(this.value);}"  onkeypress="return validNum(event);"  onkeyup="customQty(this.value);"/>
-
-                                    <input type=button value="<<" onclick="javascript:useQtyMax();" />
-                                    (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp; )&nbsp;<html:text property="unitName" size="5" onchange="javascript:writeScriptDisplay();"/>
-                                    <input type=hidden name="sugQtyMin" />
-                                    <input type=hidden name="sugQtyMax" />
-                                    <script language="javascript">
+						<tr>
+							<td colspan=2>Quantity: auto<input type="checkbox"
+								name="autoQty" /></td>
+							<td colspan=2 width=65%><html:text property="quantity"
+								size="8"
+								onchange="javascript:if( chkQty(this.value) ) {writeScriptDisplay(); customQty(this.value);}"
+								onkeypress="return validNum(event);"
+								onkeyup="customQty(this.value);" /> <input type=button
+								value="<<" onclick=" javascript:useQtyMax();" />
+							(Calculated:&nbsp;<span id="lblSugQty" style="font-weight: bold"></span>&nbsp;
+							)&nbsp;<html:text property="unitName" size="5"
+								onchange="javascript:writeScriptDisplay();" /> <input
+								type=hidden name="sugQtyMin" /> <input type=hidden
+								name="sugQtyMax" /> <script language="javascript">
                                         function setQuantity(){
                                             var sugQtyLbl = document.getElementById('lblSugQty');
                                             while (sugQtyLbl.hasChildNodes()){
@@ -1237,31 +1182,23 @@ int i;
                                         }
 
                                         setQuantity();
-                                    </script>
-                                    
-                                </td>
-                                <!--<td>
+                                    </script></td>
+							<!--<td>
                                     &nbsp;
                                 </td>-->
-                            </tr>
+						</tr>
 
-                            <tr>
-                                <td colspan=2>
-                                    Repeats:
-                                </td>
-                                <td colspan=2>
-                                    <select name="cmbRepeat" style="width:72px" onChange="javascript:calcQty();">
-                                        <%for(i=0; i<9; i++){%>
-                                            <option value="<%= i%>"><%= i%></option>
-                                        <%}%>
-                                        <option value="Other">Other</option>
-                                    </select>
-
-                                    <input type=text name="txtRepeat" size="5" onchange="javascript:calcQty();" style="display:none" />
-
-                                    <html:hidden property="repeat" />
-
-                                    <script language=javascript>
+						<tr>
+							<td colspan=2>Repeats:</td>
+							<td colspan=2><select name="cmbRepeat" style="width: 72px"
+								onChange="javascript:calcQty();">
+								<%for(i=0; i<9; i++){%>
+								<option value="<%= i%>"><%= i%></option>
+								<%}%>
+								<option value="Other">Other</option>
+							</select> <input type=text name="txtRepeat" size="5"
+								onchange="javascript:calcQty();" style="display: none" /> <html:hidden
+								property="repeat" /> <script language=javascript>
                                         frm.txtRepeat.value = frm.repeat.value;
 
                                         frm.cmbRepeat.value = frm.txtRepeat.value;
@@ -1269,15 +1206,15 @@ int i;
                                             frm.cmbRepeat.value = 'Other';
                                             frm.txtRepeat.style.display = '';
                                         }
-                                    </script>
-                                    No Subs:<html:checkbox property="nosubs" onchange="javascript:writeScriptDisplay();" />
-                                </td>
-                                                               
-                            </tr>
-                            <tr>
-                                <td colspan=4>
-                                    Special Instructions:&nbsp;<html:checkbox property="customInstr" />Custom Instructions
-                                    <script language=javascript>
+                                    </script> No Subs:<html:checkbox
+								property="nosubs" onchange="javascript:writeScriptDisplay();" />
+							</td>
+
+						</tr>
+						<tr>
+							<td colspan=4>Special Instructions:&nbsp;<html:checkbox
+								property="customInstr" />Custom Instructions <script
+								language=javascript>
                                         function cmdSpecial_click(){
                                             var frm = document.forms.RxWriteScriptForm;
                                             if(frm.selSpecial.selectedIndex >-1){
@@ -1287,121 +1224,119 @@ int i;
                                             }
                                         }
                                     </script>
-                                    
-                                    <table width=100% border=1 >
-                                        <tr>
-                                            <td valign=top>
-                                                <html:textarea property="special" cols="50" rows="5" />
-                                                <input type=button value="RD" title="Redraw" onclick="javascript:first = false; writeScriptDisplay(); clearWarning(); fillWarnings();"/>
-                                                <div id="warningDiv" style="display: none;">
-                                                   <ul id="warningList">
-                                                   <li>warning</li>
-                                                   </ul>
-                                                </div>
-                                                <oscar:oscarPropertiesCheck property="billregion" value="ON">
-                                                <a target="_new" href="https://www.healthinfo.moh.gov.on.ca/formulary/SearchServlet?searchType=drugID&keywords=<%=regionalIdentifier%>">ODB lookup</a>
-                                                <%
+
+							<table width=100% border=1>
+								<tr>
+									<td valign=top><html:textarea property="special" cols="50"
+										rows="5" /> <input type=button value="RD" title="Redraw"
+										onclick="javascript:first = false; writeScriptDisplay(); clearWarning(); fillWarnings();" />
+									<div id="warningDiv" style="display: none;">
+									<ul id="warningList">
+										<li>warning</li>
+									</ul>
+									</div>
+									<oscar:oscarPropertiesCheck property="billregion" value="ON">
+										<a target="_new"
+											href="https://www.healthinfo.moh.gov.on.ca/formulary/SearchServlet?searchType=drugID&keywords=<%=regionalIdentifier%>">ODB
+										lookup</a>
+										<%
                                                 ArrayList<LimitedUseCode> luList = LimitedUseLookup.getLUInfoForDin(regionalIdentifier);
                                                 if (luList != null){ %>
-                                                    
-                                                    <table style="border-width: 1px;border-spacing: 2px;border-style: outset;border-color: black;">
-                                                        <tr>
-                                                            <th colspan="2" align="left">Limited Use Codes</th>
-                                                        </tr> 
-                                                        
-                                                        
-                                                    <%for (LimitedUseCode limitedUseCode : luList){%>
-                                                        <tr>
-                                                            <td valign="top" >
-                                                                <a onclick="javascript:addLuCode('<%=limitedUseCode.getUseId()%>')" href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
-                                                            </td>
-                                                            <td><%=limitedUseCode.getTxt()%></td>
-                                                        </tr>
-                                                    <%}%>
-                                                    </table>
-                                                <%}%>
-                                                </oscar:oscarPropertiesCheck>
-                                            </td>
-                                            <td valign=center>
-                                                <input type=button name="cmdSpecial" value="<<" onclick="javascript:cmdSpecial_click();" />
-                                                
-                                            </td>
-                                            
-                                        </tr>
-                                    </table>
-                                </td>
-                               
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td>
-                        <!--3a-->
-                        </html:form>
-                        <input type=button class="ControlPushButton" style="width:55px"  onclick="javascript:submitForm('update');" value="Update" />
-                        <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:submitForm('updateAddAnother');" value="Update and Get New Drug" />
-                        <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:submitForm('updateAndPrint');" value="Update, Print and Save" />
-                        <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
+										<table
+											style="border-width: 1px; border-spacing: 2px; border-style: outset; border-color: black;">
+											<tr>
+												<th colspan="2" align="left">Limited Use Codes</th>
+											</tr>
+
+
+											<%for (LimitedUseCode limitedUseCode : luList){%>
+											<tr>
+												<td valign="top"><a
+													onclick="javascript:addLuCode('<%=limitedUseCode.getUseId()%>')"
+													href="javascript: return void();"><%=limitedUseCode.getUseId()%></a>&nbsp;
+												</td>
+												<td><%=limitedUseCode.getTxt()%></td>
+											</tr>
+											<%}%>
+										</table>
+										<%}%>
+									</oscar:oscarPropertiesCheck></td>
+									<td valign=center><input type=button name="cmdSpecial"
+										value="<<" onclick=" javascript:cmdSpecial_click();" /></td>
+
+								</tr>
+							</table>
+							</td>
+
+						</tr>
+					</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td><!--3a--> </html:form> <input type=button class="ControlPushButton"
+						style="width: 55px" onclick="javascript:submitForm('update');"
+						value="Update" /> <input type=button class="ControlPushButton"
+						style="width: 200px"
+						onclick="javascript:submitForm('updateAddAnother');"
+						value="Update and Get New Drug" /> <input type=button
+						class="ControlPushButton" style="width: 200px"
+						onclick="javascript:submitForm('updateAndPrint');"
+						value="Update, Print and Save" /> <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
-                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /--> 
-                        <br>
-                        <!-- peice Went Here -->
-                        <%//oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+                         <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
+					<br>
+					<!-- peice Went Here --> <%//oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
                           oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
                           if (allerg != null && allerg.length > 0){ 
-                            for (int i = 0 ; i < allerg.length; i++){  %>                                                           
-                                 <div style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-                                 <b>Allergy:</b> <%= allerg[i].getAllergy().getDESCRIPTION() %> <b>Reaction:</b> <%= allerg[i].getAllergy().getReaction() %> <b>Severity:</b> <%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%> <b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>   
-                                 </div>
-                        <%  }
-                          }%>   
-                        
-                          <div id="interactionsRx"></div>
-                          <div  id="renalDosing"></div>
-                          
-                       
-                        <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+                            for (int i = 0 ; i < allerg.length; i++){  %>
+					<div
+						style="background-color:<%=severityOfReactionColor(allerg[i].getAllergy().getSeverityOfReaction())%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
+					<b>Allergy:</b> <%= allerg[i].getAllergy().getDESCRIPTION() %> <b>Reaction:</b>
+					<%= allerg[i].getAllergy().getReaction() %> <b>Severity:</b> <%=severityOfReaction(allerg[i].getAllergy().getSeverityOfReaction())%>
+					<b>Onset of Reaction:</b> <%=onSetOfReaction(allerg[i].getAllergy().getOnSetOfReaction())%>
+					</div>
+					<%  }
+                          }%>
+
+					<div id="interactionsRx"></div>
+					<div id="renalDosing"></div>
+
+
+					<!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>
                         <div style="background-color:red;margin-right:100px;margin-left:20px;margin-top:1px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
-                        </div>-->
-                        
-                        <script language=javascript>
+                        </div>--> <script language=javascript>
                             function submitPending(stashId, action){
                                 var frm = document.getElementsByName("RxStashForm");                                                               
                                 frm[0].elements["stashId"].value = stashId;
                                 frm[0].elements["action"].value = action;
                                 frm[0].submit();
                             }
-                        </script>
-                    <!--6a-->
-                    <html:form action="/oscarRx/stash">
-                        <input type="hidden" name="action" value="">
-                        <input type="hidden" name="stashId" />
-                    </html:form>
+                        </script> <!--6a--> <html:form action="/oscarRx/stash">
+						<input type="hidden" name="action" value="">
+						<input type="hidden" name="stashId" />
+					</html:form></td>
+				</tr>
 
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
- <!--5a-->                       <div class="DivContentSectionHead"><bean:message key="WriteScript.section5Title"/></div>
-                    </td>
-                </tr>
+				<tr>
+					<td><!--5a-->
+					<div class="DivContentSectionHead"><bean:message
+						key="WriteScript.section5Title" /></div>
+					</td>
+				</tr>
 
 
-                <tr>
-                    <td>
-                        <script language=javascript>
+				<tr>
+					<td><script language=javascript>
                             function ShowDrugInfo(GN){
                                 window.open("drugInfo.do?GN=" + escape(GN), "_blank",
                                     "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
                             }
-                        </script>
-                        <script language=javascript>
+                        </script> <script language=javascript>
                             function addFavorite(stashId, brandName){
                                 var favoriteName = window.prompt('Please enter a name for the Favorite:',
                                     brandName);
@@ -1412,81 +1347,81 @@ int i;
                                 }
                             }
                         </script>
-                <table width="100%">
-                    <tr>
-                        <td width="60%" valign="top">
-                        <table cellspacing=0 cellpadding=5 width="100%">
-                        <% int i=0; %>
-                        <logic:iterate id="rx" name="bean" property="stash" length="stashSize">
-                            <%
+					<table width="100%">
+						<tr>
+							<td width="60%" valign="top">
+							<table cellspacing=0 cellpadding=5 width="100%">
+								<% int i=0; %>
+								<logic:iterate id="rx" name="bean" property="stash"
+									length="stashSize">
+									<%
                             oscar.oscarRx.data.RxPrescriptionData.Prescription rx2
                                 = ((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx);
 
                             if(i==bean.getStashIndex()){ 
-                                %> <tr class=tblRowSelected> <% 
+                                %>
+									<tr class=tblRowSelected>
+										<% 
                             }else{ 
-                                %> <tr> <% 
+                                %>
+									
+									<tr>
+										<% 
                             }
                             %>
-                                <td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
-                                <td><a href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
-                                <td>
-                                    <a href="javascript:submitPending(<%= i%>, 'edit');">
-                                        <bean:write name="rx" property="rxDisplay" />
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');">Info</a>
-                                </td>
-                                <td>
-                                    <a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');">Add to Favorites</a>
-                                </td>
-                            </tr>
-                            <% i++; %>
-                        </logic:iterate>
-                        </table>
-                    </td>
-                    <td width="40%">
-                        <%-- 
+										<td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
+										<td><a
+											href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
+										<td><a href="javascript:submitPending(<%= i%>, 'edit');">
+										<bean:write name="rx" property="rxDisplay" /> </a></td>
+										<td><a
+											href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');">Info</a>
+										</td>
+										<td><a
+											href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');">Add
+										to Favorites</a></td>
+									</tr>
+									<% i++; %>
+								</logic:iterate>
+							</table>
+							</td>
+							<td width="40%"><%-- 
                                 <div id="interactionsRx"></div>
                                 <div id="renalDosing"></div>
                                 --%>
-                        <div id="interactionsRxMyD"></div>
-                        <div id="warningsRxMyD"></div>
-                        <div id="bulletinsRxMyD"></div>&nbsp;
-                    </td>
-                </tr>
-               </table>
-                      </td>
-                    </td>
-                </tr>
+							<div id="interactionsRxMyD"></div>
+							<div id="warningsRxMyD"></div>
+							<div id="bulletinsRxMyD"></div>
+							&nbsp;</td>
+						</tr>
+					</table>
+					</td>
+					</td>
+				</tr>
 
 
-            <!----End new rows here-->
-		        <tr height="100%">
-                    <td>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+				<!----End new rows here-->
+				<tr height="100%">
+					<td></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
 
-	<tr>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-    	<td height="0%" style="border-bottom:2px solid #A9A9A9; border-top:2px solid #A9A9A9; "></td>
-  	</tr>
+		<tr>
+			<td height="0%"
+				style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+			<td height="0%"
+				style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		</tr>
 
-  	<tr>
-    	<td width="100%" height="0%" colspan="2">&nbsp;</td>
-  	</tr>
+		<tr>
+			<td width="100%" height="0%" colspan="2">&nbsp;</td>
+		</tr>
 
-  	<tr>
-    	<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2">
-        
-
-        
-        
-        <script language=javascript>
+		<tr>
+			<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+				colspan="2"><script language=javascript>
         <%if ( specialStringLen == 0 ){
                 out.write("first=false;"); 
           }else{  
@@ -1534,12 +1469,10 @@ int i;
           callReplacementWebService("WarningDisplayMyD.jsp",'warningsRxMyD');
           callReplacementWebService("BulletinDisplayMyD.jsp",'bulletinsRxMyD');
           --%>
-        </script>
-        
-        </td>
-  	</tr>
+        </script></td>
+		</tr>
 
-</table>
+	</table>
 </body>
 </html:html>
 <%long end  = System.currentTimeMillis() -start; System.out.println("millis "+end);%>

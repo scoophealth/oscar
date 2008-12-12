@@ -34,9 +34,11 @@
       return;
     }
   }
-%>    
-<%@ page  import="java.sql.*, java.util.*, oscar.*, java.net.*"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -48,13 +50,14 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">ADD AN ENCOUNTER/FORM RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">ADD
+		AN ENCOUNTER/FORM RECORD</font></th>
+	</tr>
+</table>
 <%
   GregorianCalendar now=new GregorianCalendar();
   String form_date =now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
@@ -96,8 +99,7 @@
         }
         //save as an encounter attachment 
         if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Save & Enc")==0) {
-%>
-<script LANGUAGE="JavaScript">
+%> <script LANGUAGE="JavaScript">
 //  self.close();
 	//self.location.href = urll;  
 //  var page = "index.html" ;
@@ -107,9 +109,7 @@
 //urll +=  "&reason="+<%=request.getParameter("reason")%>+"&appointment_date="+<%=form_date%>+"&start_time="+<%=form_time%>+"&displaymode=encounter&dboperation=search_demograph&template=" ;
 //  urll += "&encounterattachment="+<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>")%> ;
 //  urll += "&attachmentdisplay=" +<%=request.getParameter("xml_subject")%> ;
-</script>
-
-<%
+</script> <%
           response.sendRedirect("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=&status=T"+"&reason="+request.getParameter("reason")+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template="+
             "&encounterattachment="+URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>") +
             "&attachmentdisplay=" +request.getParameter("xml_subject") );
@@ -156,29 +156,28 @@
         break;
       } //end if
       
-%>
-<!--p><h1>Successful Addition of an appointment Record.</h1></p-->
-<script LANGUAGE="JavaScript">
+%> <!--p><h1>Successful Addition of an appointment Record.</h1></p--> <script
+	LANGUAGE="JavaScript">
       self.close();
       self.opener.document.encounter.encounterattachment.value +="<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>") %>";
       self.opener.document.encounter.attachmentdisplay.value += "<%=request.getParameter("xml_subject")%> "; //form_name")%> ";
      	//self.opener.refresh();
-</script>
-<%
+</script> <%
       break; //get only one form_no
     }//end of while
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
-<form>
-<input type="button" value="Close this window" onClick="window.close()">
-</form>
+<p></p>
+<hr width="90%"></hr>
+<form><input type="button" value="Close this window"
+	onClick="window.close()"></form>
 </center>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
   String DONOTBOOK = "Do_Not_Book";
@@ -31,16 +32,25 @@
   ApptData apptObj = (new ApptOpt()).getApptObj(request);
 
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, oscar.oscarDB.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="org.springframework.web.context.WebApplicationContext" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="oscar.appt.status.service.AppointmentStatusMgr" errorPage="../appointment/errorpage.jsp" %>
-<%@ page import="oscar.appt.status.model.AppointmentStatus" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, oscar.oscarDB.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page
+	import="org.springframework.web.context.support.WebApplicationContextUtils"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="oscar.appt.status.model.AppointmentStatus"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean"
+	scope="page" /><%@ include file="../admin/dbconnection.jsp"%>
 <%--RJ 07/07/2006 --%>
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <% 
 
 String [][] dbQueries=new String[][] { 
@@ -119,7 +129,7 @@ String [][] dbQueries=new String[][] {
 
 -->
 <head>
-<title><bean:message key="appointment.addappointment.title"/></title>
+<title><bean:message key="appointment.addappointment.title" /></title>
 <script type="text/javascript">
 
 <!-- start javascript ---- check to see if it is really empty in database
@@ -308,7 +318,7 @@ function pasteAppt() {
 </script>
 </head>
 <html:html locale="true">
-<meta http-equiv="Cache-Control" content="no-cache" >
+<meta http-equiv="Cache-Control" content="no-cache">
 <%
 
   SimpleDateFormat fullform = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
@@ -393,7 +403,8 @@ function pasteAppt() {
   }
   rspvd.close();
 %>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0"> 
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
 String patientStatus = "";
 String disabled="";
@@ -452,12 +463,14 @@ String disabled="";
 
 			  String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 
-%> 
-<table width="98%" <%=rsbgcolor%> border=0 align='center'> 
-  <tr> 
-    <td><font color='blue' title='<%=exp%>'> <b><bean:message key="Appointment.msgPatientStatus"/>:&nbsp;<font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message key="Appointment.msgRosterStatus"/>:&nbsp;<font color='yellow'><%=rosterStatus%></font></b></td> 
-  </tr> 
-</table> 
+%>
+<table width="98%" <%=rsbgcolor%> border=0 align='center'>
+	<tr>
+		<td><font color='blue' title='<%=exp%>'> <b><bean:message
+			key="Appointment.msgPatientStatus" />:&nbsp;<font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message
+			key="Appointment.msgRosterStatus" />:&nbsp;<font color='yellow'><%=rosterStatus%></font></b></td>
+	</tr>
+</table>
 <% 
 
 	      }
@@ -471,13 +484,14 @@ String disabled="";
 
           if(rsdemo.getString("cust3")!=null && !rsdemo.getString("cust3").equals("") ) {
 
-%> 
-<p>  
-<table width="98%" BGCOLOR="yellow" border=1 align='center'> 
-  <tr> 
-    <td><font color='red'><bean:message key="Appointment.formAlert"/>: <b><%=rsdemo.getString("cust3")%></b></td> 
-  </tr> 
-</table> 
+%>
+<p>
+<table width="98%" BGCOLOR="yellow" border=1 align='center'>
+	<tr>
+		<td><font color='red'><bean:message
+			key="Appointment.formAlert" />: <b><%=rsdemo.getString("cust3")%></b></td>
+	</tr>
+</table>
 <%    
 
           }
@@ -492,108 +506,158 @@ String disabled="";
 
   if(apptnum!=0) {
 
-%> 
-<table width="98%" BGCOLOR="<%=deepcolor%>" border=1 align='center'> 
-  <tr> 
-    <%--    <TH><font color='red'><%=apptnum>1?"Double ++ ":"Double"%> Booking</font></TH>--%> 
-    <TH><font color='red'> 
-      <% if(apptnum>1) {
+%>
+<table width="98%" BGCOLOR="<%=deepcolor%>" border=1 align='center'>
+	<tr>
+		<%--    <TH><font color='red'><%=apptnum>1?"Double ++ ":"Double"%> Booking</font></TH>--%>
+		<TH><font color='red'> <% if(apptnum>1) {
 
-         %> 
-      <bean:message key='appointment.addappointment.msgBooking'/> 
-      <%
+         %> <bean:message key='appointment.addappointment.msgBooking' />
+		<%
 
        } else {
 
-          %> 
-      <bean:message key='appointment.addappointment.msgDoubleBooking'/> 
-      <%
+          %> <bean:message
+			key='appointment.addappointment.msgDoubleBooking' /> <%
 			if(bDnb) out.println("<br/>You can NOT book an appointment on this time slot.");
        }
 
-     %> 
-      </font></TH> 
-  </tr> 
-</TABLE> 
-<% } %> 
-<FORM NAME = "ADDAPPT" METHOD="post" ACTION="appointmentcontrol.jsp" onsubmit="return(calculateEndTime())"> 
-  <INPUT TYPE="hidden" NAME="displaymode" value=""> 
-  <table border=0 cellspacing=0 cellpadding=0 width="100%" > 
-    <tr bgcolor="<%=deepcolor%>"> 
-      <th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/> (<%=pFirstname%> <%=pLastname%>)</font></th> 
-    </tr> 
-  </table> 
-  <table border="0" cellpadding="0" cellspacing="0" width="100%"> 
-    <tr> 
-      <td width="100%"> <table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%" BGCOLOR="#C0C0C0"> 
-          <tr valign="middle" BGCOLOR="#EEEEFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formDate"/><font size='-1' color='brown'>(<%=dateString1%>)</font>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="appointment_date" VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
-            <td width="5%" ></td> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formStatus"/>:</font></div></td> 
-            <td width="20%"> 
-            <%
+     %> </font></TH>
+	</tr>
+</TABLE>
+<% } %>
+<FORM NAME="ADDAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
+	onsubmit="return(calculateEndTime())"><INPUT TYPE="hidden"
+	NAME="displaymode" value="">
+<table border=0 cellspacing=0 cellpadding=0 width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica"><bean:message
+			key="appointment.addappointment.msgMainLabel" /> (<%=pFirstname%> <%=pLastname%>)</font></th>
+	</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td width="100%">
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="1" WIDTH="100%"
+			BGCOLOR="#C0C0C0">
+			<tr valign="middle" BGCOLOR="#EEEEFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formDate" /><font size='-1' color='brown'>(<%=dateString1%>)</font>:</font></div>
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="appointment_date"
+					VALUE="<%=dateString2%>" WIDTH="25" HEIGHT="20" border="0"
+					hspace="2"></td>
+				<td width="5%"></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formStatus" />:</font></div>
+				</td>
+				<td width="20%">
+				<%
             if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")){
-            %>
-              <select name="status" STYLE="width: 154px" HEIGHT="20" border="0">
-                <% for (int i = 0; i < allStatus.size(); i++) { %>
-                <option value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>" <%=((AppointmentStatus)allStatus.get(i)).getStatus().equals("t")?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
-                <% } %>
-              </select>
-            <%
+            %> <select name="status" STYLE="width: 154px" HEIGHT="20"
+					border="0">
+					<% for (int i = 0; i < allStatus.size(); i++) { %>
+					<option
+						value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()%>"
+						<%=((AppointmentStatus)allStatus.get(i)).getStatus().equals("t")?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
+					<% } %>
+				</select> <%
             }
             if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
-            %>
-            <INPUT TYPE="TEXT" NAME="status" VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'  WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
-            <%}%>
-            </td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#EEEEFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><font face="arial"><bean:message key="Appointment.formStartTime"/>:</font></font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="start_time" VALUE='<%=request.getParameter("start_time")%>' WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)"> </td> 
-            <td width="5%" ></td> 
-            <td width="20%" > <div align="right"><font face="arial"><bean:message key="Appointment.formType"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="type" VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#EEEEFF" > 
-            <td width="20%"  align="right"> <font face="arial"><bean:message key="Appointment.formDuration"/>:</font> 
-              <!--font face="arial"> End Time :</font--> </td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="duration" VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2" > 
-              <INPUT TYPE="hidden" NAME="end_time" VALUE='<%=request.getParameter("end_time")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)"> </td> 
-            <td width="5%" ></td> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formDoctor"/>:</font></div></td> 
-            <td width="20%"><%--RJ 07/10/2006 --%><%=bFirstDisp ? "" : providerBean.getProperty(curDoctor_no,"")%></td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#CCCCFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="keyword" VALUE='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>' HEIGHT="20" border="0" hspace="2" width="25" tabindex="1"> </td> 
-            <td width="5%"><font size=-1><a href=# onclick="onNotBook();">Not book</font></a></td> 
-            <td width="20%"> <div align="right"><font face="arial"> 
-                <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" > 
-                <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" > 
-                <INPUT TYPE="hidden" NAME="originalpage" VALUE="../appointment/addappointment.jsp" > 
-                <INPUT TYPE="hidden" NAME="limit1" VALUE="0" > 
-                <INPUT TYPE="hidden" NAME="limit2" VALUE="5" > 
-                <INPUT TYPE="hidden" NAME="ptstatus" VALUE="active"> 
-                <!--input type="hidden" name="displaymode" value="Search " --> 
-                <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Search '" VALUE="<bean:message key="appointment.addappointment.btnSearch"/> 
-"></font></div></td> 
-            <td width="20%" > <input type="TEXT" name="demographic_no" ONFOCUS="onBlockFieldFocus(this)" readonly value='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>' width="25" height="20" border="0" hspace="2"> </td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#CCCCFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formReason"/>:</font></div></td> 
-            <td width="20%"><font face="Times New Roman"> 
-              <textarea name="reason"  tabindex="2" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("reason").equals("")?"":request.getParameter("reason")%></textarea> 
-              </font> </TD> 
-            <td width="5%"><font face="Times New Roman"> </font></td> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formNotes"/>:</font></div></td> 
-            <td width="20%"><font face="Times New Roman"> 
-              <textarea name="notes"  tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("notes").equals("")?"":request.getParameter("notes")%></textarea> 
-              </font> </td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#EEEEFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formLocation"/>:</font></div></td> 
-            <% 
+            %> <INPUT TYPE="TEXT" NAME="status"
+					VALUE='<%=bFirstDisp?"t":request.getParameter("status").equals("")?"":request.getParameter("status")%>'
+					WIDTH="25" HEIGHT="20" border="0" hspace="2"> <%}%>
+				</td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#EEEEFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><font
+					face="arial"><bean:message key="Appointment.formStartTime" />:</font></font></div>
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="start_time"
+					VALUE='<%=request.getParameter("start_time")%>' WIDTH="25"
+					HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)"></td>
+				<td width="5%"></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formType" />:</font></div>
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="type"
+					VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
+					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#EEEEFF">
+				<td width="20%" align="right"><font face="arial"><bean:message
+					key="Appointment.formDuration" />:</font> <!--font face="arial"> End Time :</font-->
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="duration"
+					VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+				<INPUT TYPE="hidden" NAME="end_time"
+					VALUE='<%=request.getParameter("end_time")%>' WIDTH="25"
+					HEIGHT="20" border="0" hspace="2" onChange="checkTimeTypeIn(this)">
+				</td>
+				<td width="5%"></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formDoctor" />:</font></div>
+				</td>
+				<td width="20%"><%--RJ 07/10/2006 --%><%=bFirstDisp ? "" : providerBean.getProperty(curDoctor_no,"")%></td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#CCCCFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="appointment.addappointment.formSurName" />:</font></div>
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="keyword"
+					VALUE='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name")==null?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>'
+					HEIGHT="20" border="0" hspace="2" width="25" tabindex="1">
+				</td>
+				<td width="5%"><font size=-1><a href=#
+					onclick="onNotBook();">Not book</font></a></td>
+				<td width="20%">
+				<div align="right"><font face="arial"> <INPUT
+					TYPE="hidden" NAME="orderby" VALUE="last_name, first_name">
+				<INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name">
+				<INPUT TYPE="hidden" NAME="originalpage"
+					VALUE="../appointment/addappointment.jsp"> <INPUT
+					TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
+					TYPE="hidden" NAME="limit2" VALUE="5"> <INPUT
+					TYPE="hidden" NAME="ptstatus" VALUE="active"> <!--input type="hidden" name="displaymode" value="Search " -->
+				<INPUT TYPE="submit"
+					onclick="document.forms['ADDAPPT'].displaymode.value='Search '"
+					VALUE="<bean:message key="appointment.addappointment.btnSearch"/> 
+"></font></div>
+				</td>
+				<td width="20%"><input type="TEXT" name="demographic_no"
+					ONFOCUS="onBlockFieldFocus(this)" readonly
+					value='<%=(bFirstDisp && !bFromWL)?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>'
+					width="25" height="20" border="0" hspace="2"></td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#CCCCFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formReason" />:</font></div>
+				</td>
+				<td width="20%"><font face="Times New Roman"> <textarea
+					name="reason" tabindex="2" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("reason").equals("")?"":request.getParameter("reason")%></textarea>
+				</font></TD>
+				<td width="5%"><font face="Times New Roman"> </font></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formNotes" />:</font></div>
+				</td>
+				<td width="20%"><font face="Times New Roman"> <textarea
+					name="notes" tabindex="3" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("notes").equals("")?"":request.getParameter("notes")%></textarea>
+				</font></td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#EEEEFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formLocation" />:</font></div>
+				</td>
+				<% 
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
 			String tempLoc = "";
@@ -604,17 +668,34 @@ String disabled="";
             String loc = bFirstDisp?tempLoc:request.getParameter("location").equals("")?"":request.getParameter("location");
             String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
             %>
-            <td width="20%"> <input type="TEXT" name="location" style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2"> </TD> 
-            <td width="5%" ></td> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formResources"/>:</font></div></td> 
-            <td width="20%"> <input type="TEXT" name="resources"  tabindex="5" value='<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>' width="25" height="20" border="0" hspace="2"> </td> 
-          </tr> 
-          <tr valign="middle" BGCOLOR="#EEEEFF"> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formCreator"/>:</font></div></td> 
-            <td width="20%"> <INPUT TYPE="TEXT" NAME="user_id" readonly VALUE='<%=bFirstDisp?(userlastname+", "+userfirstname):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2"> </td> 
-            <td width="5%" ></td> 
-            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formDateTime"/>:</font></div></td> 
-            <td width="20%"> <%
+				<td width="20%"><input type="TEXT" name="location"
+					style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>"
+					width="25" height="20" border="0" hspace="2"></TD>
+				<td width="5%"></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formResources" />:</font></div>
+				</td>
+				<td width="20%"><input type="TEXT" name="resources"
+					tabindex="5"
+					value='<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>'
+					width="25" height="20" border="0" hspace="2"></td>
+			</tr>
+			<tr valign="middle" BGCOLOR="#EEEEFF">
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formCreator" />:</font></div>
+				</td>
+				<td width="20%"><INPUT TYPE="TEXT" NAME="user_id" readonly
+					VALUE='<%=bFirstDisp?(userlastname+", "+userfirstname):request.getParameter("user_id").equals("")?"Unknown":request.getParameter("user_id")%>'
+					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+				<td width="5%"></td>
+				<td width="20%">
+				<div align="right"><font face="arial"><bean:message
+					key="Appointment.formDateTime" />:</font></div>
+				</td>
+				<td width="20%">
+				<%
 
 				GregorianCalendar now=new GregorianCalendar();
 
@@ -626,22 +707,27 @@ String disabled="";
 
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
 
-			%> 
-              <INPUT TYPE="TEXT" NAME="createdatetime" readonly VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
-              <INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>"> 
-              <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord"> 
-              <INPUT TYPE="hidden" NAME="creator" VALUE='<%=userlastname+", "+userfirstname%>'> 
-              <INPUT TYPE="hidden" NAME="remarks" VALUE=""> </td> 
-          </tr> 
-        </table></td> 
-    </tr> 
-  </table> 
-  <table width="100%" BGCOLOR="<%=deepcolor%>"> 
-    <tr> 
-<% if(!bDnb) { %>    
-      <TD nowrap> <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'" VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/> 
-" <%=disabled%>> 
-        <%
+			%> <INPUT TYPE="TEXT" NAME="createdatetime" readonly
+					VALUE="<%=strDateTime%>" WIDTH="25" HEIGHT="20" border="0"
+					hspace="2"> <INPUT TYPE="hidden" NAME="provider_no"
+					VALUE="<%=curProvider_no%>"> <INPUT TYPE="hidden"
+					NAME="dboperation" VALUE="add_apptrecord"> <INPUT
+					TYPE="hidden" NAME="creator"
+					VALUE='<%=userlastname+", "+userfirstname%>'> <INPUT
+					TYPE="hidden" NAME="remarks" VALUE=""></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+</table>
+<table width="100%" BGCOLOR="<%=deepcolor%>">
+	<tr>
+		<% if(!bDnb) { %>
+		<TD nowrap><INPUT TYPE="submit"
+			onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'"
+			VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/> 
+"
+			<%=disabled%>> <%
 
   if(dateString2.equals( inform.format(inform.parse(now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH))) ) 
 
@@ -649,40 +735,49 @@ String disabled="";
 
     org.apache.struts.util.MessageResources resources = org.apache.struts.util.MessageResources.getMessageResources("oscarResources");
 
-    %> 
-        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'" VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>" <%=disabled%>> 
-        <%
+    %> <INPUT TYPE="submit"
+			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appt & PrintPreview'"
+			VALUE="<bean:message key='appointment.addappointment.btnAddApptPrintPreview'/>"
+			<%=disabled%>> <%
 
   }
 
-%> 
-        <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/> 
-" <%=disabled%>> </TD> 
-      <TD></TD> 
-<% } %>
-      <TD align="right">
-          <% if(apptObj!=null) { %>
-                <input type="button" value="Paste" onclick="pasteAppt();">
-          <% } %>
-          <INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/> 
-" onClick="window.close();"> 
-        <input type="button" value="<bean:message key="appointment.addappointment.btnRepeat"/> 
-" onclick="onButRepeat()" <%=disabled%>></TD> 
-    </tr> 
-  </TABLE> 
-</FORM> 
+%> <INPUT TYPE="submit"
+			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'"
+			tabindex="6"
+			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/> 
+"
+			<%=disabled%>></TD>
+		<TD></TD>
+		<% } %>
+		<TD align="right">
+		<% if(apptObj!=null) { %> <input type="button" value="Paste"
+			onclick="pasteAppt();"> <% } %> <INPUT TYPE="RESET"
+			VALUE="<bean:message key="appointment.addappointment.btnCancel"/> 
+"
+			onClick="window.close();"> <input type="button"
+			value="<bean:message key="appointment.addappointment.btnRepeat"/> 
+"
+			onclick="onButRepeat()" <%=disabled%>></TD>
+	</tr>
+</TABLE>
+</FORM>
 
-    <table style="font-size:8pt;" bgcolor="#c0c0c0" align="center">
-        <tr bgcolor="#ccccff">
-            <th style="font-family: arial, sans-serif" colspan="4"><bean:message key="appointment.addappointment.msgOverview" /></th>
-        </tr>
-        <tr style="font-family: arial, sans-serif" bgcolor="#ccccff">
-            <th style="padding-right:25px"><bean:message key="Appointment.formDate" /></th>
-            <th style="padding-right:25px"><bean:message key="Appointment.formStartTime" /></th>
-            <th style="padding-right:25px"><bean:message key="appointment.addappointment.msgProvider" /></th>
-            <th><bean:message key="appointment.addappointment.msgComments" /></th>
-        </tr>
-      <%        
+<table style="font-size: 8pt;" bgcolor="#c0c0c0" align="center">
+	<tr bgcolor="#ccccff">
+		<th style="font-family: arial, sans-serif" colspan="4"><bean:message
+			key="appointment.addappointment.msgOverview" /></th>
+	</tr>
+	<tr style="font-family: arial, sans-serif" bgcolor="#ccccff">
+		<th style="padding-right: 25px"><bean:message
+			key="Appointment.formDate" /></th>
+		<th style="padding-right: 25px"><bean:message
+			key="Appointment.formStartTime" /></th>
+		<th style="padding-right: 25px"><bean:message
+			key="appointment.addappointment.msgProvider" /></th>
+		<th><bean:message key="appointment.addappointment.msgComments" /></th>
+	</tr>
+	<%        
         String demoNo = request.getParameter("demographic_no");
         int iRow=0;
         if( bFromWL && demoNo != null && demoNo.length() > 0 ) {
@@ -710,13 +805,13 @@ String disabled="";
             for( int idx = appts.size()-1; idx >= 0; --idx ) {
                 appt = (ApptData)appts.get(idx);
         %>
-            <tr bgcolor="#eeeeff">
-                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getAppointment_date()%></td>
-                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getStart_time()%></td>
-                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getName()%></td>
-                <td style="background-color: #CCFFCC;" ><%=appt.getStatus()%></td>
-            </tr>
-        <%
+	<tr bgcolor="#eeeeff">
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getAppointment_date()%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getStart_time()%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getName()%></td>
+		<td style="background-color: #CCFFCC;"><%=appt.getStatus()%></td>
+	</tr>
+	<%
             }
             rsdemo.close();
             iRow=0;
@@ -732,18 +827,18 @@ String disabled="";
                 iRow ++;
                 if(iRow>iPageSize) break;
         %>
-            <tr bgcolor="#eeeeff">
-                <td style="padding-right:25px"><%=rsdemo.getString("appointment_date")%></td>
-                <td style="padding-right:25px"><%=rsdemo.getString("start_time")%></td>
-                <td style="padding-right:25px"><%=rsdemo.getString("last_name") + ",&nbsp;" + rsdemo.getString("first_name")%></td>
-                <td><%=rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") )%></td>
-            </tr>
-        <%
+	<tr bgcolor="#eeeeff">
+		<td style="padding-right: 25px"><%=rsdemo.getString("appointment_date")%></td>
+		<td style="padding-right: 25px"><%=rsdemo.getString("start_time")%></td>
+		<td style="padding-right: 25px"><%=rsdemo.getString("last_name") + ",&nbsp;" + rsdemo.getString("first_name")%></td>
+		<td><%=rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") )%></td>
+	</tr>
+	<%
             }
         }
         rsdemo.close();
         addApptBean.closePstmtConn();
         %>
-    </table>
+</table>
 </body>
 </html:html>

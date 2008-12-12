@@ -23,11 +23,12 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@page
+	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
   
@@ -40,38 +41,29 @@
   
   System.out.println("number of different labs :"+prevList.size());
           
-%>  
+%>
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-      
+
 
 <html:html locale="true">
 
 <head>
-<title>
-Cumulative Lab  2
-</title><!--I18n-->
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<title>Cumulative Lab 2</title>
+<!--I18n-->
+<link rel="stylesheet" type="text/css"
+	href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
-<style type="text/css">
-  div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
-  div.ImmSet h2 {  }
-  div.ImmSet h2 span { font-size:smaller; }
-  div.ImmSet ul {  }
-  div.ImmSet li {  }
-  div.ImmSet li a { text-decoration:none; color:blue;}
-  div.ImmSet li a:hover { text-decoration:none; color:red; }
-  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
-  
-  /*h3{font-size: 100%;margin:0 0 10px;padding: 2px 0;color: #497B7B;text-align: center}*/
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
-<link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
-<link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css"
+	href="../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <script type="text/javascript">
 window.onload=function(){
@@ -91,7 +83,7 @@ Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
 
 
 
-<script  type="text/javascript">
+<script type="text/javascript">
 <!--
 //if (document.all || document.layers)  window.resizeTo(790,580);
 function newWindow(file,window) {
@@ -104,142 +96,7 @@ function newWindow(file,window) {
 
 
 
-<style type="text/css">
-body {font-size:100%}
-
-//div.news{width: 100px; background: #FFF;margin-bottom: 20px;margin-left: 20px;}
-div.leftBox{
-   width:90%;
-   margin-top: 2px;
-   margin-left:3px;
-   margin-right:3px;   
-   float: left;
-}
-
-div.leftBox h3 {  
-   background-color: #ccccff; 
-   /*font-size: 1.25em;*/
-   font-size: 8pt;
-   font-variant:small-caps;
-   font:bold;
-   margin-top:0px;
-   padding-top:0px;
-   margin-bottom:0px;
-   padding-bottom:0px;
-}
-
-div.leftBox ul{ 
-       /*border-top: 1px solid #F11;*/
-       /*border-bottom: 1px solid #F11;*/
-       font-size: 1.0em;
-       list-style:none;
-       list-style-type:none; 
-       list-style-position:outside;       
-       padding-left:1px;
-       margin-left:1px;    
-       margin-top:0px;
-       padding-top:1px;
-       margin-bottom:0px;
-       padding-bottom:0px;	
-}
-
-div.leftBox li {
-padding-right: 15px;
-white-space: nowrap;
-}
-
-
-div.headPrevention {  
-    position:relative; 
-    float:left;     
-    width:8.4em;
-    height:2.5em;
-}
-
-div.headPrevention p {    
-    background: #EEF;
-    font-family: verdana,tahoma,sans-serif;
-    margin:0;
-    
-    padding: 4px 5px;
-    line-height: 1.3;
-    text-align: justify
-    height:2em;
-    font-family: sans-serif;
-}
-
-div.headPrevention a {    
-    text-decoration:none;
-}
-
-div.headPrevention a:active { color:blue; }
-div.headPrevention a:hover { color:blue; }
-div.headPrevention a:link { color:blue; }
-div.headPrevention a:visited { color:blue; }
-
-
-div.preventionProcedure{    
-    width:8em;
-    float:left;     
-    margin-left:3px; 
-    margin-bottom:3px;
-}
-
-div.preventionProcedure p {
-    font-size: 0.8em;
-    font-family: verdana,tahoma,sans-serif;
-    background: #F0F0E7;    
-    margin:0;
-    padding: 1px 2px;
-    /*line-height: 1.3;*/
-    /*text-align: justify*/
-}
-
-div.preventionSection {    
-    width: 100%;
-    postion:relative;   
-    margin-top:5px;
-    float:left;
-    clear:left;
-}
-
-div.preventionSet {
-    border: thin solid grey;
-    clear:left;
-    }
-    
-div.recommendations{
-    font-family: verdana,tahoma,sans-serif;
-    font-size: 1.2em;
-}    
-
-div.recommendations ul{
-    padding-left:15px;
-    margin-left:1px;    
-    margin-top:0px;
-    padding-top:1px;
-    margin-bottom:0px;
-    padding-bottom:0px;	
-}    
-
-div.recommendations li{
-    
-}   
- 
-table.cumlatable {
- border: .5px solid #dddddd; 
- border-spacing: 0px;
-}
-        
-table.cumlatable td,th{
- border-right: .5px solid #dddddd; 
-}
- 
-table.cumlatable td{
- border-bottom: .5px dotted #eeeeee; 
-}      
-
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script language="JavaScript">
 
@@ -310,34 +167,29 @@ function addLabToList(req){
 
 </head>
 
-<body class="BodyStyle" >
+<body class="BodyStyle">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" >
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn"  >
-      lab
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >                                                        
-                            <oscar:nameage demographicNo="<%=demographic_no%>"/>
-                        </td>
-                        <td  >&nbsp;
-							
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top">
-            
-                       
-               <!--div class="leftBox">
+<table class="MainTable" id="scrollNumber1">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">lab</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><oscar:nameage demographicNo="<%=demographic_no%>" /></td>
+				<td>&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn" valign="top"><!--div class="leftBox">
                   <h3>&nbsp;Labs</h3>
                   <div style="background-color: #EEEEFF;" >
                   <ul >               
@@ -376,25 +228,23 @@ function addLabToList(req){
                   <%}%>
                   </ul>
                   </div>
-               </div-->               
-              
-            </td>
-            <td valign="top" class="MainTableRightColumn">
-                <table class="cumlatable">
-                   <tr>
-                      <th>&nbsp;</th>                        
-                      <th>Latest Value</th>
-                      <th>Last Done</th>
-                      <!-- Dates start here. Need to have all the dates of the different labs -->
-                      <% Collections.sort(labTestDates,Collections.reverseOrder());
+               </div--></td>
+		<td valign="top" class="MainTableRightColumn">
+		<table class="cumlatable">
+			<tr>
+				<th>&nbsp;</th>
+				<th>Latest Value</th>
+				<th>Last Done</th>
+				<!-- Dates start here. Need to have all the dates of the different labs -->
+				<% Collections.sort(labTestDates,Collections.reverseOrder());
                          for(int h = 0; h < labTestDates.size(); h++){ 
                             //String labDate= (String) labTestDates.get(h);
                             Date labDate= (Date) labTestDates.get(h);   %>
-                      <th><%=UtilDateUtilities.DateToString( labDate , "dd-MMM yy")%></th>
-                      <%}%>
-                   </tr>
-                   
-                   <%for (int i = 0 ; i < prevList.size(); i++){ 
+				<th><%=UtilDateUtilities.DateToString( labDate , "dd-MMM yy")%></th>
+				<%}%>
+			</tr>
+
+			<%for (int i = 0 ; i < prevList.size(); i++){ 
                       Hashtable h = (Hashtable) prevList.get(i);
                       String prevName = (String) h.get("testName");
                       String labType = (String) h.get("labType");
@@ -415,12 +265,12 @@ function addLabToList(req){
                          }
                        }
                       
-                   %>   
-                   <tr> 
-                      <td><%=StringUtils.maxLenString(prevName,30,27,"...")%></td>
-                      <td <%=abn%>><%=latestVal%></td>
-                      <td <%=abn%>><%=latestDate%></td>
-                      <%  Hashtable dater = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);
+                   %>
+			<tr>
+				<td><%=StringUtils.maxLenString(prevName,30,27,"...")%></td>
+				<td <%=abn%>><%=latestVal%></td>
+				<td <%=abn%>><%=latestDate%></td>
+				<%  Hashtable dater = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);
                           for (int h2 = 0; h2 < labTestDates.size(); h2++){  
                             //String labDate= (String) labTestDates.get(h2);
                             Date labDate= (Date) labTestDates.get(h2);
@@ -432,23 +282,19 @@ function addLabToList(req){
                                 ab2 = r(hdata.get("abn")); 
                             }
                       %>
-                      <td <%=ab2%> ><%=val%></td>
-                      <%}%>
-                   </tr>
-                   <%}%>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
-    <script type="text/javascript" src="../share/javascript/boxover.js"></script>
+				<td <%=ab2%>><%=val%></td>
+				<%}%>
+			</tr>
+			<%}%>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
+	</tr>
+</table>
+<script type="text/javascript" src="../share/javascript/boxover.js"></script>
 </body>
 </html:html>
 <%! 

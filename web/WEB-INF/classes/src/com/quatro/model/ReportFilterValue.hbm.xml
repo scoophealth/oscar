@@ -7,14 +7,14 @@
 		<id name="fieldNo" column="fieldno" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="reportNo" /> 
-        <property name="fieldName" /> 
-        <property name="fieldDesc" /> 
-        <property name="fieldType" /> 
-        <property name="lookupTable" column="lookup_table" /> 
-        <property name="op" column="operator" /> 
-        <property name="tree" column="lookup_tree" /> 
-        <property name="fieldSQL" /> 
-        <property name="note" />
+		<property name="reportNo" />
+		<property name="fieldName" />
+		<property name="fieldDesc" />
+		<property name="fieldType" />
+		<property name="lookupTable" column="lookup_table" />
+		<property name="op" column="operator" />
+		<property name="tree" column="lookup_tree" />
+		<property name="fieldSQL" />
+		<property name="note" />
 	</class>
 </hibernate-mapping>

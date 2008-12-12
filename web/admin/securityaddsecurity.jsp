@@ -23,34 +23,42 @@
  * Ontario, Canada
  */
 -->
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r" reverse="<%=true%>" >
-<%response.sendRedirect("../logout.jsp");%>
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_admin,_admin.userAdmin,_admin.torontoRfq" rights="r"
+	reverse="<%=true%>">
+	<%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page  import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ page
+	import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils"
+	errorPage="errorpage.jsp"%>
 <%
   //if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html:html locale="true">
-<head><title><bean:message key="admin.securityaddsecurity.title"/></title>
+<head>
+<title><bean:message key="admin.securityaddsecurity.title" /></title>
 <link rel="stylesheet" href="../web.css">
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd">
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message key="admin.securityaddsecurity.description"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="admin.securityaddsecurity.description" /></font></th>
+	</tr>
+</table>
 <%
     StringBuffer sbTemp = new StringBuffer();
     MessageDigest md = MessageDigest.getInstance("SHA");
@@ -85,20 +93,21 @@
   if (rowsAffected ==1) {
   //System.out.println("********************");}
 %>
-  <h1><bean:message key="admin.securityaddsecurity.msgAdditionSuccess"/></h1>
+<h1><bean:message
+	key="admin.securityaddsecurity.msgAdditionSuccess" /></h1>
 <%
   } else if (duplicateError) {
 %>
-  <h1><bean:message key="admin.securityaddsecurity.msgAdditionFailureDuplicate"/></h1>
+<h1><bean:message
+	key="admin.securityaddsecurity.msgAdditionFailureDuplicate" /></h1>
 <%
   } else {
 %>
-  <h1><bean:message key="admin.securityaddsecurity.msgAdditionFailure"/></h1>
+<h1><bean:message
+	key="admin.securityaddsecurity.msgAdditionFailure" /></h1>
 <%
   }
   apptMainBean.closePstmtConn();
-%>
-<%@ include file="footer2htm.jsp" %>
-</center>
+%> <%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>

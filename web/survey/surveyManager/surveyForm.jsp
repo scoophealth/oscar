@@ -22,54 +22,13 @@
 */
  -->
 
-<%@ include file="/survey/taglibs.jsp" %>
+<%@ include file="/survey/taglibs.jsp"%>
 
-<style type="text/css">
-<!--
-    .surveyPage {
-        background-color: #EEEEEE;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        border-color: #CCCCCC;
-        border-width: 1px;
-        border-style: ridge;
-        margin: 3px;
-    }
-    
-    .pageTitle {
-        background-color: #CCCCCC;
-    }
-    
-    .section {
-        background-color: #FFEEEE;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        border-color: #CCCCCC;
-        border-width: 1px;
-        border-style: ridge;
-        margin: 5px;
-    }
-    
-    .container {
-       margin-left: 10px;
-    }
-    
-    
-    .message {
-		color: red;
-		background-color: white;
-	}
-	.error {
-		color: red;
-		background-color: white;
-	}
-	
--->
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <html:form action="/SurveyManager" method="POST" styleId="surveyForm">
-  
-    <script language="JavaScript">
+
+	<script language="JavaScript">
  
 		function OpenQuestionEditor(page,section,question) {
 			window.open('<html:rewrite action="/SurveyManager"/>?method=edit_question&page=' + page + '&section=' + section + '&id=' + question,'question_editor','width=500,height=500');
@@ -161,166 +120,168 @@
     
     </script>
 
-	<input type="hidden" name="method" value="save"/>
-	<html:hidden property="web.page"/>
-	<html:hidden property="web.section"/>
-	<html:hidden property="web.questionTypeData"/>
-	
-	<input type="hidden" name="numPages" id="numPages" value="1"/>
-    
-	<html:hidden property="survey.surveyId"/>
-	<br/>
+	<input type="hidden" name="method" value="save" />
+	<html:hidden property="web.page" />
+	<html:hidden property="web.section" />
+	<html:hidden property="web.questionTypeData" />
+
+	<input type="hidden" name="numPages" id="numPages" value="1" />
+
+	<html:hidden property="survey.surveyId" />
+	<br />
 	<table width="100%">
-        <tr>
-            <td align="left">
-               
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <table>
-                    <tr>
-                        <td class="field">Form Name:</td>
-                        <td><html:text property="survey.description" styleClass="formElement" disabled="true"/></td>
-                    </tr>
-                    <tr>
-                        <td class="field">Version:</td>
-                        <td><html:text property="survey.version" styleClass="formElement" disabled="true"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <table border="0" cellpadding="3" cellspacing="0">
-                                <tr>
-                                    <td><input type="button" value="Add Intro Text" onclick="addIntroPage()" style="introBttn"/></td>
-                                    <td><input type="button" value="Add New Page" onclick="addPage()" /></td>                                    
-	                                <td><input type="button" value="Add Closing Text" onclick="addClosingPage()" style="closeBttn"/></td>                                    
-                                    <td><input type="button" value="Save Survey" onclick="save()"/></td>
-                                    <td><html:cancel/></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        
-        <tr>
-        	<td align="center">
-        		<table>
-        			<tr>
-        				<td>
-        					<!-- navigate pages of the survey -->
-        					<c:forEach var="page" items="${pages}">
-        						<input type="button" value="<c:out value="${page.pageName}"/>" onclick="navigate('<c:out value="${page.pageNumber}"/>')"/>
-        					</c:forEach>
-        				</td>
-        			</tr>
-        		</table>
-        	</td>
-        </tr>
-        
-        <!-- error messages -->
-        <logic:messagesPresent message="true">
+		<tr>
+			<td align="left"></td>
+		</tr>
+		<tr>
+			<td align="center">
+			<table>
+				<tr>
+					<td class="field">Form Name:</td>
+					<td><html:text property="survey.description"
+						styleClass="formElement" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td class="field">Version:</td>
+					<td><html:text property="survey.version"
+						styleClass="formElement" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<table border="0" cellpadding="3" cellspacing="0">
+						<tr>
+							<td><input type="button" value="Add Intro Text"
+								onclick="addIntroPage()" style="" /></td>
+							<td><input type="button" value="Add New Page"
+								onclick="addPage()" /></td>
+							<td><input type="button" value="Add Closing Text"
+								onclick="addClosingPage()" style="" /></td>
+							<td><input type="button" value="Save Survey"
+								onclick="save()" /></td>
+							<td><html:cancel /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+
+		<tr>
+			<td align="center">
+			<table>
+				<tr>
+					<td><!-- navigate pages of the survey --> <c:forEach
+						var="page" items="${pages}">
+						<input type="button" value="<c:out value="${page.pageName}"/>"
+							onclick="navigate('<c:out value="${page.pageNumber}"/>')" />
+					</c:forEach></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+
+		<!-- error messages -->
+		<logic:messagesPresent message="true">
 			<html:messages id="message" message="true" bundle="survey">
-	   			<tr><td colspan="3" class="message"><c:out value="${message}"/></td></tr>
-	    	</html:messages>
+				<tr>
+					<td colspan="3" class="message"><c:out value="${message}" /></td>
+				</tr>
+			</html:messages>
 		</logic:messagesPresent>
 		<logic:messagesPresent>
-	  	  <html:messages id="error" bundle="survey">
-            <tr><td colspan="3" class="error"><c:out value="${error}"/></td></tr>
-       	 </html:messages>
+			<html:messages id="error" bundle="survey">
+				<tr>
+					<td colspan="3" class="error"><c:out value="${error}" /></td>
+				</tr>
+			</html:messages>
 		</logic:messagesPresent>
-		
-        <tr>
-            <td><hr/></td>
-        </tr>
-        <tr>
-            <td align="left" id="surveyPages">
-            	<c:choose>
-	            <c:when test="${surveyForm.map.web.page eq 'Introduction'}">
-	            	<div id="page_intro">
-	            		<table class="surveyPage" width="100%">
-	            			<tr>
-			            		<td colspan="2" class="pageTitle" width="1%">
-			            			<a href="javascript:removeIntro();">Remove Introduction</a>
-			            		</td>
-			            	</tr>
-			            	<tr>
-			            		<td width="1%" class="pageTitle" nowrap>Include on First Page</td>
-			            		<td align="left">
-			            			<html:radio property="model.survey.introduction.includeOnFirstPage" value="true"/>Yes&nbsp;
-			            			<html:radio property="model.survey.introduction.includeOnFirstPage" value="false"/>No&nbsp;
-			            			
-			            		</td>          
-			            	</tr>	
-			            	<tr>
-				            	<td width="1%" class="pageTitle" nowrap>Introduction Text: </td>
-				            	<td align="left">
-					            	<html:textarea cols="80" rows="10" property="model.survey.introduction.text"></html:textarea>
-				            	</td>
-			            	</tr>
-	            		</table>
-	            	</div>
-	            </c:when>
-	                            
-	            <c:when test="${surveyForm.map.web.page eq 'Closing'}">
-	            	<div id="page_intro">
-	            		<table class="surveyPage" width="100%">
-	            			<tr>
-			            		<td colspan="2" class="pageTitle" width="1%">
-			            			<a href="javascript:removeClose();">Remove Closing</a>
-			            		</td>
-			            	</tr>
-							<tr>
-			            		<td width="1%" class="pageTitle" nowrap>Include on Last Page</td>
-			            		<td align="left">
-			            			<html:radio property="model.survey.closing.includeOnLastPage" value="true"/>Yes&nbsp;
-			            			<html:radio property="model.survey.closing.includeOnLastPage" value="false"/>No&nbsp;
-			            			
-			            		</td>          
-			            	</tr>			            	
-			            	<tr>
-				            	<td width="1%" class="pageTitle" nowrap>Closing Text: </td>
-				            	<td align="left">
-					            	<html:textarea cols="80" rows="10" property="model.survey.closing.text"></html:textarea>
-				            	</td>
-			            	</tr>
-	            		</table>
-	            	</div>
-	            </c:when>
-	            
-	            <c:otherwise>
-	            	<!--  real page -->
-	       	   
-	       	    	 <div id="<c:out value="page${page_number}"/>">					            
-	            		<table class="surveyPage" width="100%">
-                        <tr>
-                            <td class="pageTitle" colspan="3">
-                            	<a href="<html:rewrite action="/SurveyManager"/>?method=remove_page&id=<c:out value="${page_number }"/>"><img src="images/delete.png" border="0"></a>
-								&nbsp;
-                            	Page Title:&nbsp;
-                                <html:text property="pageModel.description" size="60" styleClass="formElement"/>
-                            </td>
-                        </tr>
-                    <tr>
-                        <td width="1%">
-	                        <html:select property="web.questionType" onchange="addQuestionType('0', this.options[this.selectedIndex].value);" styleClass="formElement">
-	                            <html:option value="">Add New Question:</html:option>
-	                            <html:options collection="QuestionTypes" property="value" labelProperty="label" />
-	                        </html:select>
-	          		     </td>
-                            
-                            <td align="right">
-                                <input type="button" value="Add New Section" onclick="addSection()"/>
-                            </td>
-                            
-                            <td align="left">
-                                <input type="button" value="Update Section" onclick="updateSection()"/>
-                            </td>
-                        </tr>
-                        
-                        <c:set var="page" scope="page" value="${surveyForm.map.pageModel}"></c:set>
-                        <%
+
+		<tr>
+			<td>
+			<hr />
+			</td>
+		</tr>
+		<tr>
+			<td align="left" id="surveyPages"><c:choose>
+				<c:when test="${surveyForm.map.web.page eq 'Introduction'}">
+					<div id="page_intro">
+					<table class="surveyPage" width="100%">
+						<tr>
+							<td colspan="2" class="pageTitle" width="1%"><a
+								href="javascript:removeIntro();">Remove Introduction</a></td>
+						</tr>
+						<tr>
+							<td width="1%" class="pageTitle" nowrap>Include on First
+							Page</td>
+							<td align="left"><html:radio
+								property="model.survey.introduction.includeOnFirstPage"
+								value="true" />Yes&nbsp; <html:radio
+								property="model.survey.introduction.includeOnFirstPage"
+								value="false" />No&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="1%" class="pageTitle" nowrap>Introduction Text:</td>
+							<td align="left"><html:textarea cols="80" rows="10"
+								property="model.survey.introduction.text"></html:textarea></td>
+						</tr>
+					</table>
+					</div>
+				</c:when>
+
+				<c:when test="${surveyForm.map.web.page eq 'Closing'}">
+					<div id="page_intro">
+					<table class="surveyPage" width="100%">
+						<tr>
+							<td colspan="2" class="pageTitle" width="1%"><a
+								href="javascript:removeClose();">Remove Closing</a></td>
+						</tr>
+						<tr>
+							<td width="1%" class="pageTitle" nowrap>Include on Last Page</td>
+							<td align="left"><html:radio
+								property="model.survey.closing.includeOnLastPage" value="true" />Yes&nbsp;
+							<html:radio property="model.survey.closing.includeOnLastPage"
+								value="false" />No&nbsp;</td>
+						</tr>
+						<tr>
+							<td width="1%" class="pageTitle" nowrap>Closing Text:</td>
+							<td align="left"><html:textarea cols="80" rows="10"
+								property="model.survey.closing.text"></html:textarea></td>
+						</tr>
+					</table>
+					</div>
+				</c:when>
+
+				<c:otherwise>
+					<!--  real page -->
+
+					<div id="<c:out value="page${page_number}"/>">
+					<table class="surveyPage" width="100%">
+						<tr>
+							<td class="pageTitle" colspan="3"><a
+								href="<html:rewrite action="/SurveyManager"/>?method=remove_page&id=<c:out value="${page_number }"/>"><img
+								src="images/delete.png" border="0"></a> &nbsp; Page
+							Title:&nbsp; <html:text property="pageModel.description"
+								size="60" styleClass="formElement" /></td>
+						</tr>
+						<tr>
+							<td width="1%"><html:select property="web.questionType"
+								onchange="addQuestionType('0', this.options[this.selectedIndex].value);"
+								styleClass="formElement">
+								<html:option value="">Add New Question:</html:option>
+								<html:options collection="QuestionTypes" property="value"
+									labelProperty="label" />
+							</html:select></td>
+
+							<td align="right"><input type="button"
+								value="Add New Section" onclick="addSection()" /></td>
+
+							<td align="left"><input type="button" value="Update Section"
+								onclick="updateSection()" /></td>
+						</tr>
+
+						<c:set var="page" scope="page" value="${surveyForm.map.pageModel}"></c:set>
+						<%
                         	//loop through the questions/sections
                         	org.oscarehr.surveymodel.Page p = (org.oscarehr.surveymodel.Page)pageContext.getAttribute("page");
                    		    org.oscarehr.surveymodel.Page.QContainer[] containers =  p.getQContainerArray();	
@@ -331,51 +292,51 @@
 	                        		pageContext.setAttribute("question",containers[x].getQuestion());
     
                         %>
-                        
-                        <tr>
-                            <td id="page1_Container" colspan="3" class="container">
-	                            <table class="section" width="90%">
-	                            	<tr>
-	                            		<td width="10%">
-											<a href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&section=0"><img src="images/delete.png" border="0"></a>
-										  	&nbsp;
-										  	<!--
+
+						<tr>
+							<td id="page1_Container" colspan="3" class="container">
+							<table class="section" width="90%">
+								<tr>
+									<td width="10%"><a
+										href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&section=0"><img
+										src="images/delete.png" border="0"></a> &nbsp; <!--
 										  	<a href="javascript:void(0);return false;" onclick="OpenQuestionEditor('<c:out value="${surveyForm.map.web.page}"/>','0','<c:out value="${question.id}"/>')"><img src="images/edit.png" border="0"></a>
 									  		&nbsp;
-									  		  -->
-									  		<a href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=0&id=<c:out value="${question.id}"/>"><img src="images/edit.png" border="0"></a>
-	                            		</td>
-	                            		<td align="left">
-	                            			<c:out value="${question.description}"/>
-	                            		</td>
-	                            		<td align="right">
-	                            			<%
+									  		  --> <a
+										href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=0&id=<c:out value="${question.id}"/>"><img
+										src="images/edit.png" border="0"></a></td>
+									<td align="left"><c:out value="${question.description}" />
+									</td>
+									<td align="right">
+									<%
 	                            				if(question.getType().isSetRank()) { out.print("Rank"); }
 		                            			if(question.getType().isSetScale()) { out.print("Scale"); }
 		                            			if(question.getType().isSetOpenEnded()) { out.print("Open Ended"); }
 		                            			if(question.getType().isSetSelect()) { out.print("Select"); }
 		                            			if(question.getType().isSetDate()) { out.print("Date"); }
 	                            			%>
-	                            		</td>
-	                            	</tr>
-	                            </table>
-                            </td>
-                        </tr>
-                        
-                        <% } else if(containers[x].isSetSection()) {
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+
+						<% } else if(containers[x].isSetSection()) {
                      		pageContext.setAttribute("section",containers[x].getSection());
                         		
                          %>
-                        
-                         <tr><td id="page1_Container" colspan="3" class="container">
-                     		<table class="section" width="90%">
-                     			<tr>
-                     				<td class="sectionDescr" width="1%">
-                     					<a href="<html:rewrite action="/SurveyManager"/>?method=remove_section&id=<c:out value="${section.id}"/>"><img src="images/delete.png" border="0"></a>
-										  	&nbsp;
-                     					<input type="text" name="section_description_<%=containers[x].getSection().getId() %>"  value="<%=containers[x].getSection().getDescription() %>" size="50" />
-                     					&nbsp;&nbsp;&nbsp;&nbsp;
-                     					<%
+
+						<tr>
+							<td id="page1_Container" colspan="3" class="container">
+							<table class="section" width="90%">
+								<tr>
+									<td class="sectionDescr" width="1%"><a
+										href="<html:rewrite action="/SurveyManager"/>?method=remove_section&id=<c:out value="${section.id}"/>"><img
+										src="images/delete.png" border="0"></a> &nbsp; <input
+										type="text"
+										name="section_description_<%=containers[x].getSection().getId() %>"
+										value="<%=containers[x].getSection().getDescription() %>"
+										size="50" /> &nbsp;&nbsp;&nbsp;&nbsp; <%
                      						String bold_checked="", underline_checked="", italics_checked="", selected_color="";
                      						if(containers[x].getSection().getBold() != null && containers[x].getSection().getBold().equals("true")) {
                      							bold_checked="checked";
@@ -390,76 +351,82 @@
                      							selected_color=containers[x].getSection().getColor();
                      							pageContext.setAttribute("selected_color",selected_color);
                      						}
-                     					%>
-                     					<input type="checkbox" value="true" name="section_bold_<%=containers[x].getSection().getId() %>" <%=bold_checked%>/>Bold&nbsp;&nbsp;
-                     					<input type="checkbox" value="true" name="section_underline_<%=containers[x].getSection().getId() %>" <%=underline_checked%>/>Underline&nbsp;&nbsp;
-                     					<input type="checkbox" value="true" name="section_italics_<%=containers[x].getSection().getId() %>" <%=italics_checked%>/>Italics&nbsp;&nbsp;
-                     					<select name="section_color_<%=containers[x].getSection().getId() %>">
-                     						<option value="">&nbsp;</option>
-                     						<c:forEach var="color" items="${colors}">
-                     							<c:choose>
-                     								<c:when test="${selected_color eq color}">
-	                     								<option value="<c:out value="${color}"/>" selected><c:out value="${color}"/></option>
-                     								</c:when>
-                     								<c:otherwise>
-		                     							<option value="<c:out value="${color}"/>"><c:out value="${color}"/></option>
-	                     							</c:otherwise>
-	                     						</c:choose>
-                     						</c:forEach>
-                     					</select>
-                     				</td>
-                     				
-                     			</tr>
-								<tr>
-									<td colspan="3">
-										<html-el:select property="web.questionType" onchange="addQuestionType('${section.id}', this.options[this.selectedIndex].value);" styleClass="formElement">
-				                            <html:option value="">Add New Question:</html:option>
-		    		                        <html:options collection="QuestionTypes" property="value" labelProperty="label" />
-		            		            </html-el:select>
-	            		            </td>
+                     					%> <input type="checkbox" value="true"
+										name="section_bold_<%=containers[x].getSection().getId() %>"
+										<%=bold_checked%> />Bold&nbsp;&nbsp; <input type="checkbox"
+										value="true"
+										name="section_underline_<%=containers[x].getSection().getId() %>"
+										<%=underline_checked%> />Underline&nbsp;&nbsp; <input
+										type="checkbox" value="true"
+										name="section_italics_<%=containers[x].getSection().getId() %>"
+										<%=italics_checked%> />Italics&nbsp;&nbsp; <select
+										name="section_color_<%=containers[x].getSection().getId() %>">
+										<option value="">&nbsp;</option>
+										<c:forEach var="color" items="${colors}">
+											<c:choose>
+												<c:when test="${selected_color eq color}">
+													<option value="<c:out value="${color}"/>" selected><c:out
+														value="${color}" /></option>
+												</c:when>
+												<c:otherwise>
+													<option value="<c:out value="${color}"/>"><c:out
+														value="${color}" /></option>
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+									</select></td>
+
 								</tr>
-								<!--  loop through questions at this level -->                     			
+								<tr>
+									<td colspan="3"><html-el:select
+										property="web.questionType"
+										onchange="addQuestionType('${section.id}', this.options[this.selectedIndex].value);"
+										styleClass="formElement">
+										<html:option value="">Add New Question:</html:option>
+										<html:options collection="QuestionTypes" property="value"
+											labelProperty="label" />
+									</html-el:select></td>
+								</tr>
+								<!--  loop through questions at this level -->
 								<c:forEach var="question" items="${section.questionArray}">
-								<% org.oscarehr.surveymodel.Question question = (org.oscarehr.surveymodel.Question)pageContext.getAttribute("question"); %>
-                       <tr>
-                            <td id="page1_Container" colspan="3" class="container">
-	                            <table class="section" width="90%">
-	                            	<tr>
-	                            		<td width="10%">
-											<a href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&web.section=<c:out value="${section.id}"/>"><img src="images/delete.png" border="0"></a>
-										  	&nbsp;
-										  	<!--
+									<% org.oscarehr.surveymodel.Question question = (org.oscarehr.surveymodel.Question)pageContext.getAttribute("question"); %>
+									<tr>
+										<td id="page1_Container" colspan="3" class="container">
+										<table class="section" width="90%">
+											<tr>
+												<td width="10%"><a
+													href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&web.section=<c:out value="${section.id}"/>"><img
+													src="images/delete.png" border="0"></a> &nbsp; <!--
 										  	<a href="javascript:void(0);return false;" onclick="OpenQuestionEditor('<c:out value="${surveyForm.map.web.page}"/>','<c:out value="${section.id}"/>','<c:out value="${question.id}"/>')"><img src="images/edit.png" border="0"></a>
 									  		&nbsp;
-									  		 -->
-									  		<a href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=<c:out value="${section.id}"/>&id=<c:out value="${question.id}"/>"><img src="images/edit.png" border="0"></a> 
-	                            		</td>
-	                            		<td align="left">
-	                            			<c:out value="${question.description}"/>
-	                            		</td>
-	                            		<td align="right">
-	                            			<%
+									  		 --> <a
+													href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=<c:out value="${section.id}"/>&id=<c:out value="${question.id}"/>"><img
+													src="images/edit.png" border="0"></a></td>
+												<td align="left"><c:out value="${question.description}" />
+												</td>
+												<td align="right">
+												<%
 	                            				if(question.getType().isSetRank()) { out.print("Rank"); }
 		                            			if(question.getType().isSetScale()) { out.print("Scale"); }
 		                            			if(question.getType().isSetOpenEnded()) { out.print("Open Ended"); }
 		                            			if(question.getType().isSetSelect()) { out.print("Select"); }
 		                            			if(question.getType().isSetDate()) { out.print("Date"); }
 	                            			%>
-	                            		</td>
-	                            	</tr>
-	                            </table>
-                            </td>
-                        </tr>								
+												</td>
+											</tr>
+										</table>
+										</td>
+									</tr>
 								</c:forEach>
-                     		</table>   	   
-	                       </td></tr>
-	                    <% } } %>
-                        </table>
-	            	</div>
-	            </c:otherwise>
-	            
-	            </c:choose>
-            </td>
-        </tr>
+							</table>
+							</td>
+						</tr>
+						<% } } %>
+					</table>
+					</div>
+				</c:otherwise>
+
+			</c:choose></td>
+		</tr>
 	</table>
 </html:form>

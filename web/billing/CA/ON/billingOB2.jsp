@@ -24,7 +24,7 @@
  */
 -->
 
-  <%
+<%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
@@ -32,10 +32,13 @@
 //  mygroupno = (String) session.getAttribute("groupno");  
  
 %>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
-<%@ include file="../../../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<%@ include file="dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../../../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="dbBilling.jsp"%>
 
 <html>
 <head>
@@ -144,7 +147,7 @@
  BillDate = rsBillRec2.getString("appointment_date");   
 }
  %>
-         
+
 
 <body bgcolor="#FFFFFF" text="#000000">
 <SCRIPT Language="Javascript">
@@ -158,87 +161,103 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 }
 }
 </script>
- 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-    <tr bgcolor="#486ebd">
-     <th align='LEFT'>
-		<input type='button' name='print' value='Print' onClick='window.print()'> </th> 
-    <th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Biiling Summary </font></th>
-      <th align='RIGHT'><input type='button' name='close' value='Done' onClick='window.close()'></th>
-  </tr>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Biiling Summary </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Done'
+			onClick='window.close()'></th>
+	</tr>
 </table>
-  <br>
+<br>
 <table width="600" border="1">
-  <tr bgcolor="#CCCCCC"> 
-    <td colspan="2" height="21"><font size="2" face="Arial, Helvetica, sans-serif"><b><font size="3">Patient 
-      Information</font></b></font></td>
-  </tr>
-  <tr> 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Patient 
-      Name: <%=DemoName%></font></b></td>
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Health# 
-      : <%=hin%></font></b></td>
-  </tr>
-  <tr> 
-    <td><font size="2" face="Arial, Helvetica, sans-serif"><b>Sex: <%=DemoSex%></b></font></td>
-    <td><font size="2"><b><font face="Arial, Helvetica, sans-serif">D.O.B. : <%=DemoDOB%></font></b></font></td>
-  </tr>
-  <tr> 
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Address: <%=DemoAddress%></font></b></td>
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">City: <%=DemoCity%></font></b></td>
-  </tr>
-  <tr> 
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Province: <%=DemoProvince%></font></b></td>
-    <td><b><font size="2" face="Arial, Helvetica, sans-serif">Postal Code: <%=DemoPostal%></font></b></td>
-  </tr>
+	<tr bgcolor="#CCCCCC">
+		<td colspan="2" height="21"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b><font size="3">Patient
+		Information</font></b></font></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Patient Name: <%=DemoName%></font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Health# : <%=hin%></font></b></td>
+	</tr>
+	<tr>
+		<td><font size="2" face="Arial, Helvetica, sans-serif"><b>Sex:
+		<%=DemoSex%></b></font></td>
+		<td><font size="2"><b><font
+			face="Arial, Helvetica, sans-serif">D.O.B. : <%=DemoDOB%></font></b></font></td>
+	</tr>
+	<tr>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Address:
+		<%=DemoAddress%></font></b></td>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">City:
+		<%=DemoCity%></font></b></td>
+	</tr>
+	<tr>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Province:
+		<%=DemoProvince%></font></b></td>
+		<td><b><font size="2" face="Arial, Helvetica, sans-serif">Postal
+		Code: <%=DemoPostal%></font></b></td>
+	</tr>
 </table>
 <table width="600" border="1">
-  <tr bgcolor="#CCCCCC"> 
-    <td colspan="2"><font size="2" face="Arial, Helvetica, sans-serif"><b><font size="3">Billing 
-      Information</font></b></font></td>
-  </tr>
-  <tr> 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Billing 
-      Type: <%=BillType%></font></b></td>
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Billing 
-      Date: <%=BillDate%></font></b></td>
-  </tr>
-    <tr> 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Visit 
-      Type: <%=visittype%></font></b></td>
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Visit 
-      Date: <%=visitdate%></font></b></td>
-  </tr>
-  <tr> 
-    <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Visit 
-      Location: <%=BillLocation%></font></b></td>
-    <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Billing Physician#: <%=proFirst%> <%=proLast%>
-      </font></b></td>
-  </tr>
-    <tr> 
-      <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Appointment Physician:  <%=apptFirst%> <%=apptLast%>  </font></b></td>
-      <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Secordary Physician: <%=asstFirst%>  <%=asstLast%> </font></b></td>
-    </tr>
-    <tr> 
-      <td width="54%"><b><font face="Arial, Helvetica, sans-serif" size="2">Creator: <%=crFirst%> <%=crLast%>  </font></b></td>
-      <td width="46%"><b><font face="Arial, Helvetica, sans-serif" size="2">Update Date: <%=UpdateDate%></font></b></td>
-  </tr>
+	<tr bgcolor="#CCCCCC">
+		<td colspan="2"><font size="2"
+			face="Arial, Helvetica, sans-serif"><b><font size="3">Billing
+		Information</font></b></font></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Billing Type: <%=BillType%></font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Billing Date: <%=BillDate%></font></b></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Visit Type: <%=visittype%></font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Visit Date: <%=visitdate%></font></b></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Visit Location: <%=BillLocation%></font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Billing Physician#: <%=proFirst%> <%=proLast%> </font></b></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Appointment Physician: <%=apptFirst%> <%=apptLast%> </font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Secordary Physician: <%=asstFirst%> <%=asstLast%> </font></b></td>
+	</tr>
+	<tr>
+		<td width="54%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Creator: <%=crFirst%> <%=crLast%> </font></b></td>
+		<td width="46%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Update Date: <%=UpdateDate%></font></b></td>
+	</tr>
 
 </table>
-  <table width="600" border="1">
-    <tr> 
-      <td width="22%"><b><font face="Arial, Helvetica, sans-serif" size="2">Service 
-        Code</font></b></td>
-      <td width="58%"><b><font face="Arial, Helvetica, sans-serif" size="2">Description</font></b></td>
-      <td width="6%"> 
-        <div align="right"><b><font size="2" face="Arial, Helvetica, sans-serif">#Unit</font></b></div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><b><font face="Arial, Helvetica, sans-serif" size="2">$ 
-          Fee</font></b></div>
-      </td>
-    </tr>
-    <%
+<table width="600" border="1">
+	<tr>
+		<td width="22%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Service Code</font></b></td>
+		<td width="58%"><b><font face="Arial, Helvetica, sans-serif"
+			size="2">Description</font></b></td>
+		<td width="6%">
+		<div align="right"><b><font size="2"
+			face="Arial, Helvetica, sans-serif">#Unit</font></b></div>
+		</td>
+		<td width="14%">
+		<div align="right"><b><font
+			face="Arial, Helvetica, sans-serif" size="2">$ Fee</font></b></div>
+		</td>
+	</tr>
+	<%
     String serviceCode = "";
     String serviceDesc = "";
     String billAmount = "";
@@ -256,19 +275,23 @@ billUnit = rsBillRec.getString("billingunit");
  
   
  %>
-    
-    <tr> 
-      <td width="22%"><font face="Arial, Helvetica, sans-serif" size="2"><%=serviceCode%></font></td>
-   
-      <td width="58%"><font face="Arial, Helvetica, sans-serif" size="2"><%=serviceDesc%></font></td>
-       <td width="6%"> 
-              <div align="right"><font size="2" face="Arial, Helvetica, sans-serif"><%=billUnit%></font></div>
-      </td>
-      <td width="14%"> 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%></font></div>
-      </td>
-    </tr>
-    <%
+
+	<tr>
+		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=serviceCode%></font></td>
+
+		<td width="58%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=serviceDesc%></font></td>
+		<td width="6%">
+		<div align="right"><font size="2"
+			face="Arial, Helvetica, sans-serif"><%=billUnit%></font></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%></font></div>
+		</td>
+	</tr>
+	<%
 }
  String diagDesc = "";
    ResultSet rsDiagCode = null;
@@ -279,33 +302,36 @@ billUnit = rsBillRec.getString("billingunit");
   }
        apptMainBean.closePstmtConn();
     %>
- 
-    <tr bgcolor="#CCCCCC"> 
-      <td colspan="4"><font face="Arial, Helvetica, sans-serif" size="2"><b>Diagnostic 
-        Code</b></font></td>
-     
-    </tr>
-    <tr> 
-      <td width="22%"><font face="Arial, Helvetica, sans-serif" size="2"><%=diagCode%></font></td>
-      <td colspan="3"> 
-        <div align="left"><font face="Arial, Helvetica, sans-serif" size="2"><%=diagDesc%></font></div>
-      </td>
 
-    </tr>
-    <tr>
-      <td width="22%">&nbsp;</td>
-      <td colspan="2">
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2">Total: </font></div>
-      </td>
-      <td width="14%">
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><%=BillTotal%></font></div>
-      </td>
-    </tr>
-  </table>
-  <p>
-  </p>
-  <p></p>
-  <p><SCRIPT Language="Javascript">
+	<tr bgcolor="#CCCCCC">
+		<td colspan="4"><font face="Arial, Helvetica, sans-serif"
+			size="2"><b>Diagnostic Code</b></font></td>
+
+	</tr>
+	<tr>
+		<td width="22%"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=diagCode%></font></td>
+		<td colspan="3">
+		<div align="left"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=diagDesc%></font></div>
+		</td>
+
+	</tr>
+	<tr>
+		<td width="22%">&nbsp;</td>
+		<td colspan="2">
+		<div align="right"><font face="Arial, Helvetica, sans-serif"
+			size="2">Total: </font></div>
+		</td>
+		<td width="14%">
+		<div align="right"><font face="Arial, Helvetica, sans-serif"
+			size="2"><%=BillTotal%></font></div>
+		</td>
+	</tr>
+</table>
+<p></p>
+<p></p>
+<p><SCRIPT Language="Javascript">
 var NS = (navigator.appName == "Netscape");
 var VERSION = parseInt(navigator.appVersion);
 if (VERSION > 3) {

@@ -25,15 +25,16 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ page import="oscar.form.*"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_formMentalHealth" rights="o"  reverse="<%=true%>" >
+<security:oscarSec roleName="<%=roleName$%>"
+	objectName="_formMentalHealth" rights="o" reverse="<%=true%>">
 
-<%
+	<%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));
     //int provNo = Integer.parseInt(request.getParameter("provNo"));

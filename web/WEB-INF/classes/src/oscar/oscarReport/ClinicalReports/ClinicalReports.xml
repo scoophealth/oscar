@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-    Document   : ClinicalReports.xml
-    Created on : June 17, 2006, 10:18 PM
-    Author     : jay
-    Description:
-        Purpose of the document follows.
-        
-        IDEAS
-        -The numerators are so close they are only off by measurement and interval date, Might be able to make something dynamic from it.
--->
+	<!--
+		Document : ClinicalReports.xml Created on : June 17, 2006, 10:18 PM
+		Author : jay Description: Purpose of the document follows. IDEAS -The
+		numerators are so close they are only off by measurement and interval
+		date, Might be able to make something dynamic from it.
+	-->
 
 <ClinicalReports>
- <Numerator id ="A1C6" name="Has A1C in last 6 months" type="SQL" description="Number of patient in the denom with at least one a1c test in the last 6months"
-            outputfields="demographicNo,providerNo">
-    select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
+	<Numerator id="A1C6" name="Has A1C in last 6 months" type="SQL"
+		description="Number of patient in the denom with at least one a1c test in the last 6months"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'A1C' and dateObserved > DATE_SUB(now(),INTERVAL 6 Month)    
  </Numerator>
 
- <Numerator id="A1C6_2" name="Has A1C in last 12 mths less than or equal to 0.07" type="SQL" description="Number of patients in the denom with at least one a1c in last 12 mths less than or equal to 0.07"
-    outputfields="demographicNo,providerNo">
-        select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'A1C' and  dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month) and
+	<Numerator id="A1C6_2"
+		name="Has A1C in last 12 mths less than or equal to 0.07" type="SQL"
+		description="Number of patients in the denom with at least one a1c in last 12 mths less than or equal to 0.07"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'A1C' and dateObserved &gt; DATE_SUB(now(),INTERVAL 12 Month) and
         m.dataField &lt;= 0.07
 </Numerator>
 

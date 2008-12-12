@@ -25,7 +25,7 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*" %>
+<%@ page import="oscar.form.*"%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%

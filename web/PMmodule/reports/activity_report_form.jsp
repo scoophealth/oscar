@@ -36,85 +36,76 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-	
+
 <h1>Activity Report Form</h1>
-	
-<form method="post" action="activity_report.jsp" >
-	<table>
-		<tr>
-			<td>Program</td>
-			<td>Start Date</td>
-			<td>End Date</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<select name="programId">
-					<%
+
+<form method="post" action="activity_report.jsp">
+<table>
+	<tr>
+		<td>Program</td>
+		<td>Start Date</td>
+		<td>End Date</td>
+	</tr>
+
+	<tr>
+		<td><select name="programId">
+			<%
 						for (Program program : allPrograms)
 						{
 							%>
-								<option value="<%=program.getId() %>"><%=program.getName()%></option>
-							<%
+			<option value="<%=program.getId() %>"><%=program.getName()%></option>
+			<%
 						}
 					%>
-				</select>
-			</td>
-			
-			<td>
-				<input type="text" name="startDate" />
-			</td>
-			
-			<td>
-				<input type="text" name="endDate" />
-			</td>
-		</tr>	
-					
-		<tr>
-			<td></td>
-			<td>(YYYY-MM-DD)</td>
-			<td>(YYYY-MM-DD)</td>
-		</tr>
+		</select></td>
 
-		<tr>
-			<td></td>
-			<td></td>
-			<td><input type="submit" /></td>
-		</tr>
-	</table>
+		<td><input type="text" name="startDate" /></td>
+
+		<td><input type="text" name="endDate" /></td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td>(YYYY-MM-DD)</td>
+		<td>(YYYY-MM-DD)</td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td></td>
+		<td><input type="submit" /></td>
+	</tr>
+</table>
 </form>
-	
+
 <hr />
 
 <h2>Export to csv</h2>
-(This will export all bed/service programs to a csv broken down by month.)
+(This will export all bed/service programs to a csv broken down by
+month.)
 
-<form method="post" action="activity_report_export.jsp" >
-	<table>
-		<tr>
-			<td>Start Date</td>
-			<td>EndDate (inclusive)</td>
-		</tr>
-		<tr>
-			<td>
-				<input type="text" name="startDate" />
-			</td>
-			
-			<td>
-				<input type="text" name="endDate" />
-			</td>
-		</tr>	
-					
-		<tr>
-			<td>(YYYY-MM)</td>
-			<td>(YYYY-MM)</td>
-		</tr>
+<form method="post" action="activity_report_export.jsp">
+<table>
+	<tr>
+		<td>Start Date</td>
+		<td>EndDate (inclusive)</td>
+	</tr>
+	<tr>
+		<td><input type="text" name="startDate" /></td>
 
-		<tr>
-			<td></td>
-			<td><input type="submit" value="export" /></td>
-		</tr>
-	</table>
+		<td><input type="text" name="endDate" /></td>
+	</tr>
+
+	<tr>
+		<td>(YYYY-MM)</td>
+		<td>(YYYY-MM)</td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td><input type="submit" value="export" /></td>
+	</tr>
+</table>
 </form>
-	
+
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

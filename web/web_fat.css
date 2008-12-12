@@ -21,90 +21,157 @@
  * Hamilton 
  * Ontario, Canada 
  */
+BODY {
+	font-size: 11pt;
+	font-weight: normal;
+	font-style: normal;
+	color: black;
+	text-decoration: none;
+	font-family: "Times New Roman", Times, serif;
+	background-attachment: fixed
+}
 
-BODY  {	font-size : 11pt; font-weight : normal;		font-style : normal; color : black; text-decoration : none; font-family: "Times New Roman", Times, serif; background-attachment: fixed}
+a:active {
+	text-decoration: none;
+}
 
-a:active {  text-decoration : none;}
-a:link {  text-decoration : none;; color: #CC6600}
-a:visited {  text-decoration : none;; color: #0080c0}
-a:hover {COLOR: red; font-weight : bolder; TEXT-DECORATION: underline;} 
+a:link {
+	text-decoration: none;;
+	color: #CC6600
+}
+
+a:visited {
+	text-decoration: none;;
+	color: #0080c0
+}
+
+a:hover {
+	COLOR: red;
+	font-weight: bolder;
+	TEXT-DECORATION: underline;
+}
+
 td {
-    font-size: 18px;	
+	font-size: 18px;
 }
 
 tr.body {
-    background-color: #EEEEFF;
+	background-color: #EEEEFF;
 }
 
 th {
-    font-size: 18px;	
-    background-color: #CCCCFF;
+	font-size: 18px;
+	background-color: #CCCCFF;
 }
-  select,textarea { font-size:16px; border: 1 solid black;}
 
-.titleweb {  font-family: "Comic Sans MS"; font-size: medium; font-style: normal; color: #9900FF; text-align: center}
-.header1 {  font-weight: bolder; text-align: left}
-.logotxt1 { font-size : larger; font-weight : normal;	font-style : italic; color : blue; font-family: "Brush Script MT", "Times New Roman", Times}
-.logotxt2 { font-size : larger; font-weight : normal;	font-style : italic; color : red; text-decoration : none; font-family: "Brush Script MT", "Times New Roman", Times, serif}
-.lblyellow {  background-color: #FFFF00}
-.specialtxt {font-weight : bolder; font-style :  normal; color : blue;}
-.thheader {font-family: "Helvetica", "Brush Script MT"; font-style : normal; color : white; }
+select,textarea {
+	font-size: 16px;
+	border: 1 solid black;
+}
+
+.titleweb {
+	font-family: "Comic Sans MS";
+	font-size: medium;
+	font-style: normal;
+	color: #9900FF;
+	text-align: center
+}
+
+.header1 {
+	font-weight: bolder;
+	text-align: left
+}
+
+.logotxt1 {
+	font-size: larger;
+	font-weight: normal;
+	font-style: italic;
+	color: blue;
+	font-family: "Brush Script MT", "Times New Roman", Times
+}
+
+.logotxt2 {
+	font-size: larger;
+	font-weight: normal;
+	font-style: italic;
+	color: red;
+	text-decoration: none;
+	font-family: "Brush Script MT", "Times New Roman", Times, serif
+}
+
+.lblyellow {
+	background-color: #FFFF00
+}
+
+.specialtxt {
+	font-weight: bolder;
+	font-style: normal;
+	color: blue;
+}
+
+.thheader {
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	color: white;
+}
 
 th.detailLabel {
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 12px;
-   color: black;
-   background-color: #CCCCFF;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 12px;
+	color: black;
+	background-color: #CCCCFF;
 }
 
 th.tableLabel {
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
-   color: black;
-   background-color: #CCCCFF;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
+	color: black;
+	background-color: #CCCCFF;
 }
 
 .formLabel {
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
-   color: black;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
+	color: black;
 }
 
 a.formLink:active {
-   text-decoration: underline;
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
+	text-decoration: underline;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
 }
+
 a.formLink:link {
-   text-decoration: underline;
-   color: #CC6600;
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
+	text-decoration: underline;
+	color: #CC6600;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
 }
+
 a.formLink:visited {
-   text-decoration: underline;
-   color: #0080c0;
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
+	text-decoration: underline;
+	color: #0080c0;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
 }
+
 a.formLink:hover {
-   COLOR: blue;
-   TEXT-DECORATION: underline;
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
-} 
+	COLOR: blue;
+	TEXT-DECORATION: underline;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
+}
 
 .error {
-   font-family: "Helvetica", "Brush Script MT";
-   font-style: normal;
-   font-size: 10px;
-   color: red;
+	font-family: "Helvetica", "Brush Script MT";
+	font-style: normal;
+	font-size: 10px;
+	color: red;
 }
-

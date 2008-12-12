@@ -24,36 +24,39 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html>
 <head></head>
 <link rel="stylesheet" href="../web.css" />
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            DELETE A SECURITY RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		DELETE A SECURITY RECORD</font></th>
+	</tr>
+</table>
 <%
   //if action is good, then congratulations
   int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("keyword"), request.getParameter("dboperation"));
   if (rowsAffected ==1) {
 %>
-  <p><h2>Successful Deletion of a Security Record: <%= request.getParameter("keyword") %>.
-  </h2>
+<p>
+<h2>Successful Deletion of a Security Record: <%= request.getParameter("keyword") %>.
+</h2>
 <%  
   } else {
 %>
-  <h1>Sorry, deletion has failed: <%= request.getParameter("keyword") %>.
+<h1>Sorry, deletion has failed: <%= request.getParameter("keyword") %>.
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-<%@ include file="footer2.htm" %>
+<p></p>
+<%@ include file="footer2.htm"%>
 </center>
 </body>
 </html>

@@ -24,20 +24,23 @@
  */
 -->
 
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <html>
-<head><title>add a preference for a user</title>
+<head>
+<title>add a preference for a user</title>
 <link rel="stylesheet" href="../web.css">
 </head>
-<body   background="../images/gray_bg.jpg" bgproperties="fixed"  topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A PREFERENCE FOR A USER</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A PREFERENCE FOR A USER</font></th>
+	</tr>
+</table>
 <%
 String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
@@ -63,8 +66,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
 %>
-  <h1>Successful Update a Preference Record.
-  </h1>
+<h1>Successful Update a Preference Record.</h1>
 <%  
   } else {
   //now try to add the new preference record
@@ -87,19 +89,17 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
 %>
-  <h1>Successful Addition of a Preference Record.
-  </h1>
+<h1>Successful Addition of a Preference Record.</h1>
 <%  
     } else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
     }
   }
   apptMainBean.closePstmtConn();
-%>
-
-<%@ include file="footer2.htm" %>
-</center>
+%> <%@ include file="footer2.htm"%></center>
 </body>
 </html>

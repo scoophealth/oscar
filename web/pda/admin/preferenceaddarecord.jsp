@@ -58,79 +58,73 @@
     </script>
 </head>
 
-<body background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd"> 
-            
-      <th align="CENTER"><font face="Helvetica" color="#FFFFFF"> ADD A PREFERENCE 
-        FOR A USER</font></th>
-      </tr>
-    </table>
-  <table cellspacing="0" cellpadding="2" width="90%" border="0">
-    <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
-      <tr> 
-        <td width="50%" align="right">Provider No.<font color="red"> :</font> 
-        </td>
-        <td> 
-          <input type="text" name="provider_no" >
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">Start Hour <font color="red">:</font> </div>
-        </td>
-        <td> 
-          <input type="text" name="start_hour" value="8">
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">End Hour <font color="red">:</font> </div>
-        </td>
-        <td> 
-          <input type="text" name="end_hour" value="18">
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">Period (<font size="-2">in min.</font>) <font color="red">:</font> 
-          </div>
-        </td>
-        <td> 
-          <input type="text" name="every_min" value="15">
-        </td>
-      </tr>
-      <tr> 
-        <td> 
-          <div align="right">Group No <font color="red">:</font> </div>
-        </td>
-        <td> 
-          <input type="text" name="mygroup_no" value="">
-        </td>
-      </tr>
-      <tr> 
-        <td colspan="2"> 
-          <div align="center"> 
-            <input type="hidden" name="color_template" value="deepblue">
-            <input type="hidden" name="dboperation" value="preference_add_record">
-            <input type="hidden" name="displaymode" value="Preference_Add_Record">
-            <input type="submit" name="subbutton" value="Add Record">
-          </div>
-        </td>
-      </tr>
-    </form>
-  </table>
-  
-  <p></p>
-  <hr width="100%" color="orange">
-  <table border="0" cellspacing="0" cellpadding="0" width="100%">
-    <tr>
-      <td><a href="admin.jsp"> <img src="../images/leftarrow.gif" border="0" width="25" height="20" align="absmiddle"> 
-        Back to Admin Page.</a></td>
-      <td align="right"><a href="../logout.jsp">Log Out <img src="../images/rightarrow.gif"  border="0" width="25" height="20" align="absmiddle"></a></td>
-    </tr>
-  </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD A PREFERENCE FOR A USER</font></th>
+	</tr>
+</table>
+<table cellspacing="0" cellpadding="2" width="90%" border="0">
+	<form method="post" action="admincontrol.jsp" name="searchprovider"
+		onsubmit="return onsub()">
+	<tr>
+		<td width="50%" align="right">Provider No.<font color="red">
+		:</font></td>
+		<td><input type="text" name="provider_no"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">Start Hour <font color="red">:</font></div>
+		</td>
+		<td><input type="text" name="start_hour" value="8"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">End Hour <font color="red">:</font></div>
+		</td>
+		<td><input type="text" name="end_hour" value="18"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">Period (<font size="-2">in min.</font>) <font
+			color="red">:</font></div>
+		</td>
+		<td><input type="text" name="every_min" value="15"></td>
+	</tr>
+	<tr>
+		<td>
+		<div align="right">Group No <font color="red">:</font></div>
+		</td>
+		<td><input type="text" name="mygroup_no" value=""></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<div align="center"><input type="hidden" name="color_template"
+			value="deepblue"> <input type="hidden" name="dboperation"
+			value="preference_add_record"> <input type="hidden"
+			name="displaymode" value="Preference_Add_Record"> <input
+			type="submit" name="subbutton" value="Add Record"></div>
+		</td>
+	</tr>
+	</form>
+</table>
+
+<p></p>
+<hr width="100%" color="orange">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><a href="admin.jsp"> <img src="../images/leftarrow.gif"
+			border="0" width="25" height="20" align="absmiddle"> Back to
+		Admin Page.</a></td>
+		<td align="right"><a href="../logout.jsp">Log Out <img
+			src="../images/rightarrow.gif" border="0" width="25" height="20"
+			align="absmiddle"></a></td>
+	</tr>
+</table>
 
 </center>
 </body>

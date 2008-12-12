@@ -19,7 +19,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page errorPage="errorpage.jsp" import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*"%>
+<%@ page errorPage="errorpage.jsp"
+	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 
@@ -52,8 +53,9 @@
 <h1>Successful Updation of a billing Record.</h1>
 </p>
 <% if(request.getParameter("submit").equals("Submit&Correct Another")) { %>
-<center>
-	<input type='button' name='back' value='Correct Another' onclick='window.location.href="billingONCorrection.jsp?billing_no="'/>
+<center><input type='button' name='back'
+	value='Correct Another'
+	onclick='window.location.href="billingONCorrection.jsp?billing_no="' />
 </center>
 <%} else { %>
 <script LANGUAGE="JavaScript">

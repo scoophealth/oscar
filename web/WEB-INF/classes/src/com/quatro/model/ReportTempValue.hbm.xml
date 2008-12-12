@@ -7,15 +7,15 @@
 		<id name="templateNo" unsaved-value="0">
 			<generator class="native" />
 		</id>
-        <property name="reportNo" /> 
-        <property name="reportOptionID" /> 
-        <property name="desc" column="description" /> 
-        <property name="startDate" type="java.sql.Date" /> 
-        <property name="endDate" type="java.sql.Date" /> 
-        <property name="startPayPeriod" /> 
-        <property name="endPayPeriod" /> 
-        <property name="updateDate" type="java.sql.Date" /> 
-        <property name="loginId" /> 
-        <property name="privateTemplate" column="privateyn" /> 
+		<property name="reportNo" />
+		<property name="reportOptionID" />
+		<property name="desc" column="description" />
+		<property name="startDate" type="java.sql.Date" />
+		<property name="endDate" type="java.sql.Date" />
+		<property name="startPayPeriod" />
+		<property name="endPayPeriod" />
+		<property name="updateDate" type="java.sql.Date" />
+		<property name="loginId" />
+		<property name="privateTemplate" column="privateyn" />
 	</class>
 </hibernate-mapping>

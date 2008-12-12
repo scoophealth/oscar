@@ -28,12 +28,15 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp
 %>
 
 
-<%@ page contentType="text/xml" %>
-<%@ page import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"  errorPage="../../appointment/errorpage.jsp"%>
+<%@ page contentType="text/xml"%>
+<%@ page
+	import="java.util.*, java.sql.*,  org.w3c.dom.*, oscar.util.*,java.io.*"
+	errorPage="../../appointment/errorpage.jsp"%>
 <jsp:useBean id="studyMapping" class="java.util.Properties" scope="page" />
-<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean" scope="page" />
+<jsp:useBean id="studyBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 
-<%@ include file="../../admin/dbconnection.jsp" %>
+<%@ include file="../../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 	{"search_demographic", "select * from demographic where demographic_no=? "}, 

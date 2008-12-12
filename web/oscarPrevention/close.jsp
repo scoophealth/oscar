@@ -1,7 +1,8 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <html>
-<head><title>close</title>
+<head>
+<title>close</title>
 <script LANGUAGE="JavaScript">
 function closeWin() {
       
@@ -21,6 +22,9 @@ function closeThisWindow(){
 
 </head>
 <body onload="closeWin();">
-    Click to <a  href="javascript: function myFunction() {return false; }" onclick="window.close();">Close</a> window
+Click to
+<a href="javascript: function myFunction() {return false; }"
+	onclick="window.close();">Close</a>
+window
 </body>
 </html>

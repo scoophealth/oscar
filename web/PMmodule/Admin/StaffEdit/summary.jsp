@@ -31,12 +31,17 @@
 </table>
 </div>
 <!--  show current staff -->
-<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" export="false" pagesize="0" requestURI="/PMmodule/StaffManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3"
+	id="program" name="programs" export="false" pagesize="0"
+	requestURI="/PMmodule/StaffManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list" value="Not currently assigned to any programs." />
-	
+	<display:setProperty name="basic.msg.empty_list"
+		value="Not currently assigned to any programs." />
+
 	<display:column sortable="true" title="Program Name">
-		<a href="<html:rewrite action="/PMmodule/ProgramManager"/>?id=<c:out value="${program.programId}"/>&view.tab=staff&method=edit"><c:out value="${program.programName}" /></a>
+		<a
+			href="<html:rewrite action="/PMmodule/ProgramManager"/>?id=<c:out value="${program.programId}"/>&view.tab=staff&method=edit"><c:out
+			value="${program.programName}" /></a>
 	</display:column>
 	<display:column property="role.name" sortable="true" title="Role" />
 	<display:column sortable="true" title="Team(s)">

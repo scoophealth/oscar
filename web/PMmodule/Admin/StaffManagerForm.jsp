@@ -1,28 +1,32 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <style>
-	.sortable {
-		background-color: #555;
-		color: #555;
-	}
-	.b th{
-		border-right: 1px solid #333;
-		background-color: #ddd;
-		color: #ddd;
-		border-left: 1px solid #fff;
-	}
-	.message {
-		color: red;
-		background-color: white;
-	}
-	.error {
-		color: red;
-		background-color: white;
-	}
+.sortable {
+	background-color: #555;
+	color: #555;
+}
+
+.b th {
+	border-right: 1px solid #333;
+	background-color: #ddd;
+	color: #ddd;
+	border-left: 1px solid #fff;
+}
+
+.message {
+	color: red;
+	background-color: white;
+}
+
+.error {
+	color: red;
+	background-color: white;
+}
 </style>
 <html:form action="/PMmodule/StaffManager.do">
 	<html:hidden property="view.tab" />
-	<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
+	<input type="hidden" name="id"
+		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="edit" />
 	<html:hidden property="provider.providerNo" />
 	<c:choose>
@@ -36,7 +40,8 @@
 			</script>
 			<table width="100%">
 				<tr>
-					<td style="text-align: right;" align="right"><c:out value="${providerName }" /></td>
+					<td style="text-align: right;" align="right"><c:out
+						value="${providerName }" /></td>
 				</tr>
 			</table>
 			<div class="tabs" id="tabs">
@@ -54,11 +59,14 @@
 					<%
 					if (StaffManagerViewFormBean.tabs[x].equals(selectedTab)) {
 					%>
-					<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=StaffManagerViewFormBean.tabs[x] %>'); return false;"><%=StaffManagerViewFormBean.tabs[x]%></a></td>
+					<td style="background-color: #555;"><a
+						href="javascript:void(0)"
+						onclick="javascript:clickTab('<%=StaffManagerViewFormBean.tabs[x] %>'); return false;"><%=StaffManagerViewFormBean.tabs[x]%></a></td>
 					<%
 					} else {
 					%>
-					<td><a href="javascript:void(0)" onclick="javascript:clickTab('<%=StaffManagerViewFormBean.tabs[x] %>');return false;"><%=StaffManagerViewFormBean.tabs[x]%></a></td>
+					<td><a href="javascript:void(0)"
+						onclick="javascript:clickTab('<%=StaffManagerViewFormBean.tabs[x] %>');return false;"><%=StaffManagerViewFormBean.tabs[x]%></a></td>
 					<%
 					}
 					%>
@@ -69,7 +77,8 @@
 			</table>
 			</div>
 			<%@ include file="/common/messages.jsp"%>
-			<jsp:include page='<%="/PMmodule/Admin/StaffEdit/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
+			<jsp:include
+				page='<%="/PMmodule/Admin/StaffEdit/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 		</c:when>
 		<c:otherwise>
 			<%@ include file="/common/messages.jsp"%>

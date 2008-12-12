@@ -20,43 +20,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 <%@ include file="/taglibs.jsp"%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-	<title>Generic Intake Report</title>
-	<style type="text/css">
-		@import "<html:rewrite page="/css/genericIntakeReport.css" />";
-	</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<title>Generic Intake Report</title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 <body>
-    <table class="header">
-        <thead>
-            <tr>
-                <td class="header"><c:out value="${intakeType}"></c:out> Intake Report ( <c:out value="${startDate}"></c:out> / <c:out value="${endDate}"></c:out> )</td>
-            </tr>
-        </thead>
-    </table>
-    <br />
-    <br />
-    <c:forEach var="question" items="${questionStatistics}">
-    <table>
-        <caption><c:out value="${question.key}"></c:out></caption>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <td scope="col">Count / Total</td>
-                <td scope="col">Percent</td>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach var="statistic" items="${question.value}">
-            <tr>
-                <th><c:out value="${statistic.label}"></c:out></th>
-                <td><c:out value="${statistic.count}"></c:out> / <c:out value="${statistic.size}"></c:out></td>
-                <td><c:out value="${statistic.percent}"></c:out></td>
-            </tr>
-            </c:forEach>
-        </tbody>
-    </table>
-    <br />
-    </c:forEach>
+<table class="header">
+	<thead>
+		<tr>
+			<td class="header"><c:out value="${intakeType}"></c:out> Intake
+			Report ( <c:out value="${startDate}"></c:out> / <c:out
+				value="${endDate}"></c:out> )</td>
+		</tr>
+	</thead>
+</table>
+<br />
+<br />
+<c:forEach var="question" items="${questionStatistics}">
+	<table>
+		<caption><c:out value="${question.key}"></c:out></caption>
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<td scope="col">Count / Total</td>
+				<td scope="col">Percent</td>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="statistic" items="${question.value}">
+				<tr>
+					<th><c:out value="${statistic.label}"></c:out></th>
+					<td><c:out value="${statistic.count}"></c:out> / <c:out
+						value="${statistic.size}"></c:out></td>
+					<td><c:out value="${statistic.percent}"></c:out></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	<br />
+</c:forEach>
 </body>
 </html>

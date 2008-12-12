@@ -1,11 +1,15 @@
-<%@ page  import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList" errorPage="errorpage.jsp" %>
-<%@ page import="oscar.log.*" %>
-<%@ page  import="oscar.oscarDemographic.data.*"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page
+	import="java.sql.*, java.util.*, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList"
+	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.log.*"%>
+<%@ page import="oscar.oscarDemographic.data.*"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--
 /*
  *
@@ -47,14 +51,15 @@
     //-->
 </script>
 </head>
-<body  onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body onload="start()" bgproperties="fixed" topmargin="0" leftmargin="0"
+	rightmargin="0">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd">
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            <bean:message key="demographic.demographicaddarecord.title"/></font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		<bean:message key="demographic.demographicaddarecord.title" /></font></th>
+	</tr>
+</table>
 
 <%
     String curUser_no = (String)session.getAttribute("user");
@@ -175,10 +180,11 @@
 	  //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
     ResultSet rs = apptMainBean.queryResults(paramName, "search_lastfirstnamedob");
 
-    if(rs.next()) {  %>
-      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
-      <br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
-      <% return;
+    if(rs.next()) {  %> ***<font color='red'><bean:message
+	key="demographic.demographicaddarecord.msgDuplicatedRecord" /></font>***<br>
+<br>
+<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message
+	key="global.btnBack" /></b></a> <% return;
     }
 
     // add checking hin duplicated record, if there is a HIN number
@@ -196,10 +202,11 @@
 		String paramNameHin =new String();
 		paramNameHin=request.getParameter("hin").trim();
 	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
-	    if(rsHin.next()) {  %>
-	      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
-	      <br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
-      <% return;
+	    if(rsHin.next()) {  %> ***<font color='red'><bean:message
+	key="demographic.demographicaddarecord.msgDuplicatedHIN" /></font>***<br>
+<br>
+<a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message
+	key="global.btnBack" /></b></a> <% return;
 	    }
     }
 
@@ -332,18 +339,21 @@
     }
 
 %>
-  <p><h2><bean:message key="demographic.demographicaddarecord.msgSuccessful"/>
-  </h2></p>
+<p>
+<h2><bean:message
+	key="demographic.demographicaddarecord.msgSuccessful" /></h2>
+</p>
 <%
   } else {
 %>
-  <p><h1><bean:message key="demographic.demographicaddarecord.msgFailed"/></h1></p>
+<p>
+<h1><bean:message key="demographic.demographicaddarecord.msgFailed" /></h1>
+</p>
 <%
   }
   apptMainBean.closePstmtConn();
 %>
-  <p> </p>
-<%@ include file="footer.jsp" %>
-</center>
+<p></p>
+<%@ include file="footer.jsp"%></center>
 </body>
 </html:html>

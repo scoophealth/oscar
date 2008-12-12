@@ -16,12 +16,15 @@
  * Yi Li
  */
  -->
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.*,java.sql.*,oscar.*,oscar.util.*,java.net.*"
+	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ include file="../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
 <%if (session.getAttribute("user") == null) {
 				response.sendRedirect("../../../logout.jsp");
@@ -115,19 +118,23 @@ obj.visibility=v; }
 </script>
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<div id="Layer1" style="position:absolute; left:90px; top:35px; width:0px; height:12px; z-index:1"></div>
+<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<div id="Layer1"
+	style="position: absolute; left: 90px; top: 35px; width: 0px; height: 12px; z-index: 1"></div>
 <div id="Layer2"
-	style="position:absolute; left:45px; top:61px; width:129px; height:123px; z-index:2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
+	style="position: absolute; left: 45px; top: 61px; width: 129px; height: 123px; z-index: 2; background-color: #EEEEFF; layer-background-color: #6666FF; border: 1px none #000000; visibility: hidden;">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tr bgcolor="#DDDDEE">
-		<td align='CENTER'><font size="2"> <strong>Last 5 Years</strong></font></td>
+		<td align='CENTER'><font size="2"> <strong>Last 5
+		Years</strong></font></td>
 	</tr>
 	<%for (int i = 0; i < 5; i++) {
 
 				%>
 	<tr>
-		<td align='CENTER'><font size="2"> <a href="billingONMRI.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
+		<td align='CENTER'><font size="2"> <a
+			href="billingONMRI.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></font></td>
 	</tr>
 	<%}
 
@@ -135,19 +142,24 @@ obj.visibility=v; }
 </table>
 </div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
+<table border="0" cellspacing="0" cellpadding="0" width="100%"
+	class="myDarkGreen">
 	<tr>
-		<th align='LEFT'><input type='button' name='print' value='Print' onClick='window.print()'></th>
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print()'></th>
 		<th><font face="Arial" color="#FFFFFF"> OHIP Report - <%=thisyear%></font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
 	</tr>
 </table>
 
 
 <table width="100%" border="0" class="myGreen">
-<form name="form1" method="post" action="ongenreport.jsp" onsubmit="return checkSubmit();">
+	<form name="form1" method="post" action="ongenreport.jsp"
+		onsubmit="return checkSubmit();">
 	<tr>
-		<td width="220"><a href="#" onClick="showHideLayers('Layer2','','show')">Show Archive</a></td>
+		<td width="220"><a href="#"
+			onClick="showHideLayers('Layer2','','show')">Show Archive</a></td>
 		<td width="220">Select Provider</td>
 		<td width="254"><select name="provider">
 			<%
@@ -178,27 +190,31 @@ obj.visibility=v; }
 				String centerCode = (String) e.nextElement();
 %>
 
-			<option value="<%=centerCode%>" <%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=BillingDataHlp.propBillingCenter.getProperty(centerCode)%></option>
+			<option value="<%=centerCode%>"
+				<%=oscarVariables.getProperty("billcenter").compareTo(centerCode)==0?"selected":""%>><%=BillingDataHlp.propBillingCenter.getProperty(centerCode)%></option>
 			<%}
 
 			%>
 
 		</select></td>
-		<td><input type="submit" name="Submit" value="Create Report"> <input type="hidden" name="monthCode"
-			value="<%=monthCode%>"> <input type="hidden" name="verCode" value="V03"> <input type="hidden" name="curUser"
-			value="<%=user_no%>"> <input type="hidden" name="curDate" value="<%=nowDate%>"></td>
+		<td><input type="submit" name="Submit" value="Create Report">
+		<input type="hidden" name="monthCode" value="<%=monthCode%>">
+		<input type="hidden" name="verCode" value="V03"> <input
+			type="hidden" name="curUser" value="<%=user_no%>"> <input
+			type="hidden" name="curDate" value="<%=nowDate%>"></td>
 	</tr>
-</form>
+	</form>
 </table>
 
-<table width="100%" border="0" cellspacing="1" cellpadding="1" class="myIvory">
+<table width="100%" border="0" cellspacing="1" cellpadding="1"
+	class="myIvory">
 	<tr class="myYellow">
 		<th width="25%">Provider</th>
 		<th width="15%">Creation Date</th>
 		<th width="10%">Clm/Rec</th>
 		<th width="10%">Total</th>
 		<th width="12%" colspan=2>to OHIP</th>
-		<th >HTML</th>
+		<th>HTML</th>
 	</tr>
 
 	<%Properties proName = (new JdbcBillingPageUtil()).getPropProviderName();
@@ -227,23 +243,28 @@ obj.visibility=v; }
 					if(!updatedate.equals(createdate)) bgColor = "silver";
 %>
 
-	<tr bgcolor="<%=bgColor%>" onMouseOver="this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" >
+	<tr bgcolor="<%=bgColor%>"
+		onMouseOver="this.style.backgroundColor='pink';"
+		onMouseout="this.style.backgroundColor='<%=bgColor%>';">
 		<td><font size="2"><%=pro_name%></font></td>
 		<td align="center"><font size="2"><%=updatedate.substring(0,16)%></font></td>
 		<td align="center"><font size="2"><%=cr%></td>
 		<td align="right"><font size="2"><%=total%></font></td>
 
-		<td width="15%"><font size="2"> <a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
+		<td width="15%"><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
 			target="_blank"><%=oFile%></a></font></td>
-		<td width="3%"><input type="button" value="R" onclick="recreate(<%=obj.getId() %>)"/></td>
-		<td><font size="2"> <a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
+		<td width="3%"><input type="button" value="R"
+			onclick="recreate(<%=obj.getId() %>)" /></td>
+		<td><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
 			target="_blank"><%=hFile%></a></font></td>
 	</tr>
 
 	<%}}
 		%>
-		
-<% // get old data records
+
+	<% // get old data records
 proName = new Properties();
 ResultSet rspro = null;
 rspro = apptMainBean.queryResults("%", "search_provider_ohip_dt");
@@ -270,19 +291,21 @@ while(rslocal.next()){
 	pro_name = proName.getProperty(pro_ohip);
 %>
 
-<tr bgcolor="<%=count%2==0?yearColor:"white"%>"> 
-	<td><font size="2"><%=pro_name%></font></td>
-	<td align="center"><font size="2"><%=updatedate%></font></td>
-	<td align="center"><font size="2"><%=cr%></td>
-	<td align="right"><font size="2"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font></td>
+	<tr bgcolor="<%=count%2==0?yearColor:"white"%>">
+		<td><font size="2"><%=pro_name%></font></td>
+		<td align="center"><font size="2"><%=updatedate%></font></td>
+		<td align="center"><font size="2"><%=cr%></td>
+		<td align="right"><font size="2"><%=total.substring(0,total.indexOf(".")) + total.substring(total.indexOf("."), total.indexOf(".") + 3)%></font></td>
 
-	<td colspan=2><font size="2">
-	<a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>" target="_blank"><%=oFile%></a></font></td>
-	<td><font size="2">
-	<a href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>" target="_blank"><%=hFile%></a></font></td>
-</tr>
+		<td colspan=2><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=oFile%>"
+			target="_blank"><%=oFile%></a></font></td>
+		<td><font size="2"> <a
+			href="../../../servlet/OscarDownload?homepath=ohipdownload&filename=<%=hFile%>"
+			target="_blank"><%=hFile%></a></font></td>
+	</tr>
 
-<%
+	<%
 }
 apptMainBean.closePstmtConn();
 %>

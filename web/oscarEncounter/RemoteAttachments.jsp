@@ -1,9 +1,10 @@
-<%@ page language="java" %>
-<%@ page import="oscar.oscarEncounter.immunization.data.*" %>
-<%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*, sun.misc.BASE64Encoder" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page language="java"%>
+<%@ page import="oscar.oscarEncounter.immunization.data.*"%>
+<%@ page
+	import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*, sun.misc.BASE64Encoder"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
     if((bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean"))==null)
@@ -51,9 +52,8 @@ public String encode64(String plainText)
 -->
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarEncounter.RemoteAttachments.title"/>
-</title>
+<title><bean:message
+	key="oscarEncounter.RemoteAttachments.title" /></title>
 <script type="text/javascript" language=javascript>
 function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
@@ -80,47 +80,53 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="<bean:message key="oscarEncounter.RemoteAttachments.msgEncounterTable"/>">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarEncounter.RemoteAttachments.title"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar">
-                    <tr>
-                        <td >
-                        <%= bean.patientLastName %> , <%= bean.patientFirstName%>
-                        </td>
-                        <td  >
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/>p</a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-            <%String prov = bean.getDemographicNo();
+<table class="MainTable" id="scrollNumber1"
+	name="<bean:message key="oscarEncounter.RemoteAttachments.msgEncounterTable"/>">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarEncounter.RemoteAttachments.title" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td><%= bean.patientLastName %> , <%= bean.patientFirstName%>
+				</td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" />p</a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">
+		<%String prov = bean.getDemographicNo();
               String demog = bean.providerNo;
-            %>
-            <a href="javascript:popupSendAttach(700,960,'../oscarMessenger/Transfer/SelectItems.jsp?val1=<%=demog%>&val2=<%=prov%>')"><bean:message key="oscarEncounter.RemoteAttachments.msgSendEDoc"/></a>
-            </td>
-            <td class="MainTableRightColumn">
-                <h2><bean:message key="oscarEncounter.RemoteAttachments.msgDemogAtt"/></h2>
-                <table border="0" width="80%" cellspacing="1">
-                    <tr>
-                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSubject"/></th>
-                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSentFrom"/></th>
-                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgSavedBy"/></th>
-                        <th bgcolor="#DDDDFF"><bean:message key="oscarEncounter.RemoteAttachments.msgDate"/></th>
+            %> <a
+			href="javascript:popupSendAttach(700,960,'../oscarMessenger/Transfer/SelectItems.jsp?val1=<%=demog%>&val2=<%=prov%>')"><bean:message
+			key="oscarEncounter.RemoteAttachments.msgSendEDoc" /></a></td>
+		<td class="MainTableRightColumn">
+		<h2><bean:message
+			key="oscarEncounter.RemoteAttachments.msgDemogAtt" /></h2>
+		<table border="0" width="80%" cellspacing="1">
+			<tr>
+				<th bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.RemoteAttachments.msgSubject" /></th>
+				<th bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.RemoteAttachments.msgSentFrom" /></th>
+				<th bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.RemoteAttachments.msgSavedBy" /></th>
+				<th bgcolor="#DDDDFF"><bean:message
+					key="oscarEncounter.RemoteAttachments.msgDate" /></th>
 
-                    </tr>
-                <%
+			</tr>
+			<%
                 for(int i=0; i < remoAttach.messageIds.size(); i++){
                 String mesId   = (String) remoAttach.messageIds.get(i);
                 String theDate = (String) remoAttach.dates.get(i);
@@ -133,26 +139,23 @@ function popupSendAttach(vheight,vwidth,varpage) { //open a new popup window
                 String fromLoco = (String) lis.get(0);
                 String subject  = (String) lis.get(1);
                 %>
-                    <tr>
-                        <td bgcolor="#EEEEFF"><a href="javascript:popupViewAttach(700,960,'ViewAttachment.do?mesId=<%=mesId%>')"><%=subject%></a></td>
-                        <td bgcolor="#EEEEFF"><%=fromLoco%></td>
-                        <td bgcolor="#EEEEFF"><%=svBy%></td>
-                        <td bgcolor="#EEEEFF"><%=theDate%></td>
+			<tr>
+				<td bgcolor="#EEEEFF"><a
+					href="javascript:popupViewAttach(700,960,'ViewAttachment.do?mesId=<%=mesId%>')"><%=subject%></a></td>
+				<td bgcolor="#EEEEFF"><%=fromLoco%></td>
+				<td bgcolor="#EEEEFF"><%=svBy%></td>
+				<td bgcolor="#EEEEFF"><%=theDate%></td>
 
-                    </tr>
+			</tr>
 
-              <%}%>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-                &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-                &nbsp;
-            </td>
-        </tr>
-    </table>
+			<%}%>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
+		<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+	</tr>
+</table>
 </body>
 </html:html>

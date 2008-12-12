@@ -28,10 +28,13 @@
 //  
 //  String curUser_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*,java.io.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<%@ page
+	import="java.util.*, java.sql.*,java.io.*, oscar.*, java.text.*, java.lang.*,java.net.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
+	scope="page" />
 <jsp:useBean id="nameBean" class="java.util.Properties" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
 {"search_encounter", "select e.*, d.* from encounter e LEFT JOIN demographicaccessory d ON e.demographic_no=d.demographic_no where e.encounter_no<? order by e.demographic_no, e.encounter_date, e.encounter_time" }, 
@@ -42,7 +45,7 @@
 %>
 <html>
 <head>
-<title>ECHART SHEET </title>
+<title>ECHART SHEET</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>
 </head>
@@ -100,7 +103,7 @@ busy ...
   inf.close();
   
   daySheetBean.closePstmtConn();
-%> 
+%>
 
 done.
 </body>

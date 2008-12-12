@@ -27,9 +27,11 @@
 <%
     
   String user_no = (String) session.getAttribute("user");
-%>    
-<%@ page  import="java.sql.*, java.util.*, java.net.*, oscar.*"  errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+%>
+<%@ page import="java.sql.*, java.util.*, java.net.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 
 <html>
 <head>
@@ -41,14 +43,14 @@
     //-->
 </script>
 </head>
-<body  onload="start()">
+<body onload="start()">
 <center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD AN ENCOUNTER RECORD</font></th>
-      </tr>
-    </table>
+<table border="0" cellspacing="0" cellpadding="0" width="90%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+		ADD AN ENCOUNTER RECORD</font></th>
+	</tr>
+</table>
 <%
   //update the demo accessary data
   String content=null;//default is not null temp=null, 
@@ -159,21 +161,24 @@
   } 
 
 %>
-  <p><h1>Successful Addition of an Encounter Record.</h1></p>
+<p>
+<h1>Successful Addition of an Encounter Record.</h1>
+</p>
 <script LANGUAGE="JavaScript">
       self.close();
      	self.opener.refresh();
-</script>
-<%
+</script> <%
   }  else {
 %>
-  <p><h1>Sorry, addition has failed.</h1></p>
+<p>
+<h1>Sorry, addition has failed.</h1>
+</p>
 <%  
   }
   apptMainBean.closePstmtConn();
 %>
-  <p></p>
-  <hr width="90%"></hr>
+<p></p>
+<hr width="90%"></hr>
 <input type="button" value="Close this window" onClick="window.close()">
 </center>
 </body>

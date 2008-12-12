@@ -21,37 +21,37 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
 BODY {
 	font-size: 8pt;
 	background-color: white;
 	font-family: Arial, Tahoma, Verdana;
 	background-color: white;
-    	color: black;
+	color: black;
 }
 
 BODY TEXTAREA {
-    overflow:auto;
+	overflow: auto;
 }
 
 TABLE {
 	font-size: 8pt;
 	border-spacing: 0;
 }
+
 TABLE TD {
 	padding: 0;
 }
 
 .outerTable {
-    padding: 0;
-    border-spacing: 0;
-	width:650px;
+	padding: 0;
+	border-spacing: 0;
+	width: 650px;
 }
 
 .TableWithBorder {
-    border-width:2px;
-    border-style:solid;
-    border-color:#999999;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #999999;
 }
 
 .title {
@@ -66,33 +66,33 @@ TABLE TD {
 .test
 
 .testType {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    background-color: #CD9B9B;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: #CD9B9B;
 }
 
 .testType A {
-    font-weight: bold;
-    font-style: italic;
-    font-size: 8pt;
+	font-weight: bold;
+	font-style: italic;
+	font-size: 8pt;
 }
 
 .code {
-    font-size:5pt;
+	font-size: 5pt;
 }
 
 .Head {
-    background-color:#BBBBBB;
-    padding-top:3px;
-    padding-bottom:3px;
-    width:100%;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 100%;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }

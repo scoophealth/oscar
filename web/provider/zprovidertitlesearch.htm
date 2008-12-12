@@ -24,30 +24,33 @@
  */
 -->
 
-<table cellspacing="0" cellpadding="2" width="90%" border="0" BGCOLOR="#C4D9E7">
+<table cellspacing="0" cellpadding="2" width="90%" border="0"
+	BGCOLOR="#C4D9E7">
 
-  <form method="post" action="providercontrol.jsp" name="searchprovider" onsubmit="return onsub()">
+	<form method="post" action="providercontrol.jsp" name="searchprovider"
+		onsubmit="return onsub()">
 	<tr valign="top">
-      <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i>Search 
-          Criteria</i></b></font></td>
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-              <input type="radio"  checked name="dboperation" value="search_lastname">
-              Last Name </font></td>
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-              <input type="radio"  name="dboperation" value="search_lastfirstname">
-              LastName,FirstName</font></td>
-            <td valign="middle" rowspan="2" align="left">
-              <input type="text" name="keyword" size="18"  maxlength="50">
-              <input type="hidden" name="displaymode" value="Search">
-              <input type="submit" name="displaymode" value="Search" size="18"></td>
-   </tr><tr> 
-     <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-              <input type="radio" name="dboperation" value="search_firstname">
-              First Name </font></td> 
-            <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-              <input type="radio" name="dboperation" value="search_providerno">
-              Provider No.</font></td>
+		<td rowspan="2" align="right" valign="middle"><font
+			face="Verdana" color="#0000FF"><b><i>Search Criteria</i></b></font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" checked name="dboperation" value="search_lastname">
+		Last Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="dboperation" value="search_lastfirstname">
+		LastName,FirstName</font></td>
+		<td valign="middle" rowspan="2" align="left"><input type="text"
+			name="keyword" size="18" maxlength="50"> <input type="hidden"
+			name="displaymode" value="Search"> <input type="submit"
+			name="displaymode" value="Search" size="18"></td>
+	</tr>
+	<tr>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="dboperation" value="search_firstname">
+		First Name </font></td>
+		<td nowrap><font size="1" face="Verdana" color="#0000FF">
+		<input type="radio" name="dboperation" value="search_providerno">
+		Provider No.</font></td>
 
-    </tr>
-   </form>
+	</tr>
+	</form>
 </table>

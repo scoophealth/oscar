@@ -25,7 +25,7 @@
 --%>
 
 <%@ page language="java"%>
-<%@ page import="oscar.oscarEncounter.data.EctPatientData" %>
+<%@ page import="oscar.oscarEncounter.data.EctPatientData"%>
 
 <%
     String demoNo = request.getParameter("demographic_no");

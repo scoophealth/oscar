@@ -24,12 +24,14 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*,oscar.util.*,oscar.oscarDB.*,java.sql.*,oscar.oscarDemographic.data.*,oscar.oscarPrevention.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page
+	import="java.util.*,oscar.oscarReport.data.*,oscar.util.*,oscar.oscarDB.*,java.sql.*,oscar.oscarDemographic.data.*,oscar.oscarPrevention.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <%  //This could be done alot better.  
 if(session.getValue("user") == null)
     response.sendRedirect("../logout.htm");
@@ -73,53 +75,20 @@ if(session.getValue("user") == null)
 %>
 <html>
 <head>
-<title>
-Injection Report 
-</title>
+<title>Injection Report</title>
 
 <style type="text/css" media="print">
-.noprint{
-  display: none;
-}
-table.ele{
-   width: 450pt;
-   margin-left:0pt;
-}
-    </style>
-
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-   table.ele {
-   
-   border-collapse:collapse;
+.noprint {
+	display: none;
 }
 
-table.ele td{
-    border:1px solid grey;
-    padding:2px;
+table.ele {
+	width: 450pt;
+	margin-left: 0pt;
 }
-
-table.ele th{
-    border:1px solid grey;
-    padding:2px;
-}
-
-
 </style>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
   
@@ -127,85 +96,75 @@ table.ele th{
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable noprint" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                Report
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >
-                    <tr>
-                        <td >Injection</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-             &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-                <form action="InjectionReport2.jsp" >
-                    <fieldset>
-                        <legend>Injections</legend>
-                        
-                        <label>Start Date:</label> <input type="text" size="9" name="startDate" value="<%=startStr%>" />
-                        <label>End Date:</label> <input type="text" size="9" name="endDate"  value="<%=endStr%>"/>
-                        <label>Injection Type:</label>
-                        <select name="injectionType">
-                            <option value="RH" <%=selled ("RH",injectionType)%> >Rh</option>
-                            <option value="DTaP-IPV" <%=selled ("DTaP-IPV",injectionType)%> >DTaP-IPV</option>               
-                            <option value="Hib" <%=selled ("Hib",injectionType)%> >Hib</option>
-                            <option value="Pneu-C" <%=selled ("Pneu-C",injectionType)%> >Pneu-C</option>
-                            <option value="MMR" <%=selled ("MMR",injectionType)%> >MMR</option> 
-                            <option value="MenC-C" <%=selled ("MenC-C",injectionType)%> >MenC-C</option>
-                            <option value="VZ"<%=selled ("VZ",injectionType)%> >VZ</option>
-                            <option value="HepB"<%=selled ("HepB",injectionType)%> >HepB</option>
-                            <option value="dTap"<%=selled ("dTap",injectionType)%> >dTap</option>
-                            <option value="Td"<%=selled ("Td",injectionType)%> >Td</option>
-                            <option value="Flu"<%=selled ("Flu",injectionType)%> >Flu</option>
-                            <option value="HepA"<%=selled ("HepA",injectionType)%> >HepA</option>
-                            <option value="HepAB"<%=selled ("HepAB",injectionType)%> >HepAB</option>
-                            <option value="Rabies"<%=selled ("Rabies",injectionType)%> >Rabies</option>
-                            <option value="Tuberculosis"<%=selled ("Tuberculosis",injectionType)%> >Tuberculosis</option>
-                            <option value="Pneumovax"<%=selled ("Pneumovax",injectionType)%> >Pneumovax</option>
-                            <option value="TdP"<%=selled ("TdP",injectionType)%> >TdP</option>
-                            <option value="IPV"<%=selled ("IPV",injectionType)%> >IPV</option>
-                        </select>
-                        <input type="submit" value="Run Report"/>
-                    </fieldset>
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
+<table class="MainTable noprint" id="scrollNumber1"
+	name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn">Report</td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<tr>
+				<td>Injection</td>
+			</tr>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<form action="InjectionReport2.jsp">
+		<fieldset><legend>Injections</legend> <label>Start
+		Date:</label> <input type="text" size="9" name="startDate"
+			value="<%=startStr%>" /> <label>End Date:</label> <input type="text"
+			size="9" name="endDate" value="<%=endStr%>" /> <label>Injection
+		Type:</label> <select name="injectionType">
+			<option value="RH" <%=selled ("RH",injectionType)%>>Rh</option>
+			<option value="DTaP-IPV" <%=selled ("DTaP-IPV",injectionType)%>>DTaP-IPV</option>
+			<option value="Hib" <%=selled ("Hib",injectionType)%>>Hib</option>
+			<option value="Pneu-C" <%=selled ("Pneu-C",injectionType)%>>Pneu-C</option>
+			<option value="MMR" <%=selled ("MMR",injectionType)%>>MMR</option>
+			<option value="MenC-C" <%=selled ("MenC-C",injectionType)%>>MenC-C</option>
+			<option value="VZ" <%=selled ("VZ",injectionType)%>>VZ</option>
+			<option value="HepB" <%=selled ("HepB",injectionType)%>>HepB</option>
+			<option value="dTap" <%=selled ("dTap",injectionType)%>>dTap</option>
+			<option value="Td" <%=selled ("Td",injectionType)%>>Td</option>
+			<option value="Flu" <%=selled ("Flu",injectionType)%>>Flu</option>
+			<option value="HepA" <%=selled ("HepA",injectionType)%>>HepA</option>
+			<option value="HepAB" <%=selled ("HepAB",injectionType)%>>HepAB</option>
+			<option value="Rabies" <%=selled ("Rabies",injectionType)%>>Rabies</option>
+			<option value="Tuberculosis"
+				<%=selled ("Tuberculosis",injectionType)%>>Tuberculosis</option>
+			<option value="Pneumovax" <%=selled ("Pneumovax",injectionType)%>>Pneumovax</option>
+			<option value="TdP" <%=selled ("TdP",injectionType)%>>TdP</option>
+			<option value="IPV" <%=selled ("IPV",injectionType)%>>IPV</option>
+		</select> <input type="submit" value="Run Report" /></fieldset>
+		</form>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
-  
-    <%
+<%
     ArrayList report = (ArrayList) pageContext.getAttribute("list");
     if (report != null){
         DemographicData demoData= new DemographicData();                       
-    %>    
-        <table class="ele">
-             <tr>
-                <th>#</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>DOB</th>
-                <th>Chart #</th>
-                <th>Product #</th>
-                <th>Injection Date</th>
-                <th>Comments</th>
-            </tr>
-            <% for (int i = 0; i < report.size(); i++){ 
+    %>
+<table class="ele">
+	<tr>
+		<th>#</th>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>DOB</th>
+		<th>Chart #</th>
+		<th>Product #</th>
+		<th>Injection Date</th>
+		<th>Comments</th>
+	</tr>
+	<% for (int i = 0; i < report.size(); i++){ 
                 Hashtable h = (Hashtable) report.get(i);
                 String demo = (String) h.get("demographic_no");
                 DemographicData.Demographic demog = demoData.getDemographic(demo);
@@ -214,21 +173,22 @@ table.ele th{
                     comments = "";
                 }
             %>
-            <tr>
-                <td><%=i+1%></td>
-                <td><%=demog.getFirstName()%></td>
-                <td><%=demog.getLastName()%></td>
-                <td><%=demog.getDob("-")%></td>
-                <td><%=demog.getChartNo()%></td>
-                <td><%=h.get("val")%>&nbsp;</td>
-                <td><%=h.get("prevention_date")%></td>
-                <td><%=comments%></td>
-            </tr>
-            <%}%>
-        </table>
-        <input type="button" onclick="window.print();" value="Print"  class="noprint"/>
-        
-    <%}%>
+	<tr>
+		<td><%=i+1%></td>
+		<td><%=demog.getFirstName()%></td>
+		<td><%=demog.getLastName()%></td>
+		<td><%=demog.getDob("-")%></td>
+		<td><%=demog.getChartNo()%></td>
+		<td><%=h.get("val")%>&nbsp;</td>
+		<td><%=h.get("prevention_date")%></td>
+		<td><%=comments%></td>
+	</tr>
+	<%}%>
+</table>
+<input type="button" onclick="window.print();" value="Print"
+	class="noprint" />
+
+<%}%>
 </body>
 </html>
 <%!

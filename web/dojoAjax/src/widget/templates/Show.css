@@ -1,5 +1,5 @@
 @media screen {
-	html, body {
+	html,body {
 		margin: 0px;
 		padding: 0px;
 		width: 100%;
@@ -7,7 +7,7 @@
 	h1 {
 		font-size: 50px;
 	}
-	p, li {
+	p,li {
 		font-size: 30px;
 	}
 	.dojoShowNav {
@@ -37,6 +37,7 @@
 		display: none;
 	}
 }
+
 @media print {
 	.dojoShow {
 		display: none !important;
@@ -49,8 +50,8 @@
 		padding: 10px;
 		margin-bottom: 15px;
 	}
-	.dojoShowPrintSlide, ul {
-	page-break-inside: avoid;
+	.dojoShowPrintSlide,ul {
+		page-break-inside: avoid;
 	}
 	h1 {
 		margin-top: 0;

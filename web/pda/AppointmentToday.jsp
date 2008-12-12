@@ -24,17 +24,19 @@
  */
 -->
 
-<%@ page errorPage="ErrorPage.jsp" %>
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="bean.*" %>
-<%@ page import="java.util.GregorianCalendar" %>
-<%@ page import="java.util.*" %>
+<%@ page errorPage="ErrorPage.jsp"%>
+<%@ page import="java.sql.ResultSet"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="bean.*"%>
+<%@ page import="java.util.GregorianCalendar"%>
+<%@ page import="java.util.*"%>
 <jsp:useBean id="beanDBConnect" scope="session" class="bean.DBConnect" />
 <jsp:useBean id="beanDBQuery" scope="session" class="bean.DBQuery" />
 <jsp:useBean id="beanReturnPage" scope="session" class="bean.ReturnPage" />
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="beanSwitchControl" scope="session" class="bean.SwitchControl" />
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="beanSwitchControl" scope="session"
+	class="bean.SwitchControl" />
 <jsp:useBean id="beanAboutDate" scope="session" class="bean.AboutDate" />
 
 <HTML>
@@ -81,26 +83,28 @@ response.sendRedirect("NoAppointmentToday.jsp?todayString="+todayString);
 }else{
 
   
-%>     
+%>
 <table border="0">
-<tr>
-  <form method="post"  action="GoAppointmentToday.jsp">
-  <td colspan="2"><a href="Search.jsp">Search</a>&nbsp;&nbsp;
-   <INPUT TYPE="submit" NAME="submit" VALUE="GoTo">&nbsp;&nbsp;
-
-   <INPUT TYPE="text" NAME="year" VALUE="<%=curYear%>" WIDTH="4" HEIGHT="10" border="0"  size="4" maxlength="4">-
-   <INPUT TYPE="text" NAME="month" VALUE="<%=curMonthString%>" WIDTH="2" HEIGHT="10" border="0" size="2" maxlength="2">-
-   <INPUT TYPE="text" NAME="day" VALUE="<%=curDayString%>" WIDTH="2" HEIGHT="10" border="0" size="2" maxlength="2">
-   <INPUT TYPE="hidden" NAME="displaymode" VALUE="day" >
-  <INPUT TYPE="hidden" NAME="dboperation" VALUE="searchappointmentday" >
-  </td></form>
-</tr>
-<%
+	<tr>
+		<form method="post" action="GoAppointmentToday.jsp">
+		<td colspan="2"><a href="Search.jsp">Search</a>&nbsp;&nbsp; <INPUT
+			TYPE="submit" NAME="submit" VALUE="GoTo">&nbsp;&nbsp; <INPUT
+			TYPE="text" NAME="year" VALUE="<%=curYear%>" WIDTH="4" HEIGHT="10"
+			border="0" size="4" maxlength="4">- <INPUT TYPE="text"
+			NAME="month" VALUE="<%=curMonthString%>" WIDTH="2" HEIGHT="10"
+			border="0" size="2" maxlength="2">- <INPUT TYPE="text"
+			NAME="day" VALUE="<%=curDayString%>" WIDTH="2" HEIGHT="10" border="0"
+			size="2" maxlength="2"> <INPUT TYPE="hidden"
+			NAME="displaymode" VALUE="day"> <INPUT TYPE="hidden"
+			NAME="dboperation" VALUE="searchappointmentday"></td>
+		</form>
+	</tr>
+	<%
 	out.print("<tr><td>Date:"+todayString+"</td><td><a href=\"PreviousDay.jsp?todayString="+todayString+"\"><<</a>&nbsp;&nbsp;<a href=\"NextDay.jsp?todayString="+todayString+"\">>></a>&nbsp;&nbsp;<a href=\"GoAppointmentMonth.jsp\">Month</a>&nbsp;&nbsp;<a href=\"logout.jsp\">LogOut</a></td><td></td></tr>");
 %>
-</table> 
-<table border="0" > 
-<% 	    
+</table>
+<table border="0">
+	<% 	    
 //put all startTime into Array appointTime []
 
  ResultSet RS_2 = beanDBQuery.getAppointmentSubDetail(provider_no,todayString);
@@ -147,11 +151,12 @@ response.sendRedirect("NoAppointmentToday.jsp?todayString="+todayString);
                  for (int i=0; i<4; i++){               
 
 %>
-	           <tr><td>
-	                 <a href="AddAppointmentForm.jsp?appointment_date=<%=todayString%>&start_time=<%=(hourCursorNString+minute[i]+":00")%>" > 
-	                  <%=(hourCursor+minute[i]+am_pm)%> &nbsp;</a></td>
-                       <td>
-<%           
+	<tr>
+		<td><a
+			href="AddAppointmentForm.jsp?appointment_date=<%=todayString%>&start_time=<%=(hourCursorNString+minute[i]+":00")%>">
+		<%=(hourCursor+minute[i]+am_pm)%> &nbsp;</a></td>
+		<td>
+		<%           
 // print EVERY appointment (apt_no),
  
  		             for( int k=0;k<apt_no;k++){
@@ -184,8 +189,8 @@ response.sendRedirect("NoAppointmentToday.jsp?todayString="+todayString);
 
 
 }
-%>        
-
+%>
+		
 </table>
 </body>
 </HTML>

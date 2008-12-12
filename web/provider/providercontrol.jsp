@@ -24,14 +24,15 @@
  */
 --%>
 <%-- add by caisi --%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
-<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import="java.util.*,java.net.*" errorPage="errorpage.jsp"%>
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
-<caisi:isModuleLoad moduleName="caisi"><%
+<caisi:isModuleLoad moduleName="caisi">
+	<%
     String isOscar = request.getParameter("infirmaryView_isOscar");
     if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
     if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
@@ -62,8 +63,9 @@
         return;
     }
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
-    <%
+<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment"
+	rights="r" reverse="<%=true%>">
+	<%
         if (true)
         {
             response.sendRedirect("../logout.jsp");
@@ -88,8 +90,9 @@
         return;
     }
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@ include file="../admin/dbconnection.jsp"%>
 
 <%
     //operation available to the client - dboperation

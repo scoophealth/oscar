@@ -30,11 +30,11 @@
 
   String curUser_no = (String)session.getAttribute("user");
 %>
-  <%@ page errorPage="../errorpage.jsp" %>
-  <%@ page import="java.util.*" %>
-  <%@ page import="java.sql.*" %>
-  <%@ page import="org.apache.commons.lang.*" %>
-  <%@ page import="oscar.oscarBilling.data.BillingONDataHelp" %>
+<%@ page errorPage="../errorpage.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="org.apache.commons.lang.*"%>
+<%@ page import="oscar.oscarBilling.data.BillingONDataHelp"%>
 <%
   BillingONDataHelp dbObj = new BillingONDataHelp();
 
@@ -73,13 +73,11 @@
     }
   }
 %>
-  <html>
-    <head>
-      <title>
-        Diagnostic Categories
-      </title>
-      <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
-      <script language="JavaScript">
+<html>
+<head>
+<title>Diagnostic Categories</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
+<script language="JavaScript">
 
                 <!--
 function setfocus() {
@@ -99,17 +97,15 @@ function fillIn(dxcode, level1, level2, description) {
 //-->
 
       </script>
-    </head>
-    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-      <table border="0" cellspacing="0" cellpadding="0" width="100%">
-        <tr bgcolor="#486ebd">
-          <th align="CENTER" width="90%">
-            <font face="Helvetica" color="#FFFFFF">
-              Diagnostic Categories Headings
-            </font>
-          </th>
-        </tr>
-      </table>
+</head>
+<body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
+	leftmargin="0" rightmargin="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align="CENTER" width="90%"><font face="Helvetica"
+			color="#FFFFFF"> Diagnostic Categories Headings </font></th>
+	</tr>
+</table>
 <%
       String     color = "#ccCCFF";
       Properties prop  = new Properties();
@@ -129,16 +125,13 @@ function fillIn(dxcode, level1, level2, description) {
 
       System.out.println(" 3." + curUser_no);
 %>
-      <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-        <tr bgcolor="silver">
-          <th width="10%" nowrap>
-            <b>Code</b>
-          </th>
-          <th nowrap>
-            <b>Description</b>
-          </th>
-        </tr>
-<%
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="silver">
+		<th width="10%" nowrap><b>Code</b></th>
+		<th nowrap><b>Description</b></th>
+	</tr>
+	<%
         String catName = "";
 
         for (int i = 0; i < vec.size(); i++) {
@@ -158,62 +151,49 @@ function fillIn(dxcode, level1, level2, description) {
             bNewCat = true;
             catName = curCatName;
 %>
-            <tr bgcolor="<%=color%>">
-              <td></td>
-              <td>
-                <%= curCatName %>
-              </td>
-            </tr>
-<%
+	<tr bgcolor="<%=color%>">
+		<td></td>
+		<td><%= curCatName %></td>
+	</tr>
+	<%
           }
           color = "#ccCCFF";
 %>
-          <tr bgcolor="<%=color%>">
-            <td align="right"
-            onClick="fillIn('<%= ((Properties)vec.get(i)).getProperty("dxcode", "") %>', '<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level1", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level2", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("description", "")) %>')">
-              <%= ((Properties)vec.get(i)).getProperty("dxcode", "") %>
-            </td>
-            <td>
-              <%= ((Properties)vec.get(i)).getProperty("description", "") %>
-            </td>
-          </tr>
-<%
+	<tr bgcolor="<%=color%>">
+		<td align="right"
+			onClick="fillIn('<%= ((Properties)vec.get(i)).getProperty("dxcode", "") %>', '<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level1", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("level2", "")) %>','<%= StringEscapeUtils.escapeJavaScript(((Properties)vec.get(i)).getProperty("description", "")) %>')">
+		<%= ((Properties)vec.get(i)).getProperty("dxcode", "") %></td>
+		<td><%= ((Properties)vec.get(i)).getProperty("description", "") %>
+		</td>
+	</tr>
+	<%
         }
 %>
-      </table>
-      <hr>
-      <form name="myform" action="reportonbilleddxgrp.jsp" method="POST">
-        <table width="100%" border="0" bgcolor="ivory" cellspacing="1" cellpadding="1">
-          <tr bgcolor="silver">
-            <td width="10%" nowrap>
-              Dx Code:
-              <input type="text" name="dxcode" size="6">
-            </td>
-          </tr>
-          <tr>
-            <td nowrap>
-              Category - level1:
-              <input type="text" name="level1" size="90">
-            </td>
-          </tr>
-          <tr>
-            <td nowrap>
-              Category - level2:
-              <input type="text" name="level2" size="90">
-            </td>
-          </tr>
-          <tr>
-            <td >
-              Description:
-              <input type="text" name="description" size="120">
-            </td>
-          </tr>
-          <tr bgcolor="silver">
-            <td >
-              <input type="submit" name="submit" value=" Add ">
-            </td>
-          </tr>
-        </table>
-      </form>
-    </body>
-  </html>
+</table>
+<hr>
+<form name="myform" action="reportonbilleddxgrp.jsp" method="POST">
+<table width="100%" border="0" bgcolor="ivory" cellspacing="1"
+	cellpadding="1">
+	<tr bgcolor="silver">
+		<td width="10%" nowrap>Dx Code: <input type="text" name="dxcode"
+			size="6"></td>
+	</tr>
+	<tr>
+		<td nowrap>Category - level1: <input type="text" name="level1"
+			size="90"></td>
+	</tr>
+	<tr>
+		<td nowrap>Category - level2: <input type="text" name="level2"
+			size="90"></td>
+	</tr>
+	<tr>
+		<td>Description: <input type="text" name="description"
+			size="120"></td>
+	</tr>
+	<tr bgcolor="silver">
+		<td><input type="submit" name="submit" value=" Add "></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

@@ -22,43 +22,51 @@
 */
  -->
 
-<%@ include file="/taglibs.jsp" %>
-<%@ page import="org.oscarehr.PMmodule.web.formbean.*" %>
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <html:html>
 <head>
 <html:base />
-<title>Street Health Mental Health Intake - <c:out value="${intakeCForm.map.view2.version}" /></title>
+<title>Street Health Mental Health Intake - <c:out
+	value="${intakeCForm.map.view2.version}" /></title>
 <style>
-	.sortable {
-		background-color: #555;
-		color: #555;
-	}
-	.b th{
-		border-right: 1px solid #333;
-		background-color: #ddd;
-		color: #ddd;
-		border-left: 1px solid #fff;
-	}
-	.message {
-		color: red;
-		background-color: white;
-	}
-	.error {
-		color: red;
-		background-color: white;
-	}
+.sortable {
+	background-color: #555;
+	color: #555;
+}
+
+.b th {
+	border-right: 1px solid #333;
+	background-color: #ddd;
+	color: #ddd;
+	border-left: 1px solid #fff;
+}
+
+.message {
+	color: red;
+	background-color: white;
+}
+
+.error {
+	color: red;
+	background-color: white;
+}
 </style>
-<link rel="stylesheet" type="text/css" href='<html:rewrite page="/css/intakeC.css" />'>
-<script language="JavaScript" src='<html:rewrite page="/js/IntakeC.js" />'></script>
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/intakeC.css" />'>
+<script language="JavaScript"
+	src='<html:rewrite page="/js/IntakeC.js" />'></script>
 </head>
 <body>
 <html:form action="/PMmodule/IntakeC.do">
 	<html:hidden property="bean.clientId" />
 	<html:hidden property="view2.tab" />
-	<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
+	<input type="hidden" name="id"
+		value="<c:out value="${requestScope.id}"/>" />
 	<input type="hidden" name="method" value="refresh" />
 	<html:hidden property="intake.demographicNo" />
-	<input type="hidden" name="demographicNo" value="<c:out value="${requestScope.demographicNo}"/>" />
+	<input type="hidden" name="demographicNo"
+		value="<c:out value="${requestScope.demographicNo}"/>" />
 	<script>
 		function clickTab(name) {
 			document.intakeCForm.method.value='refresh';
@@ -68,10 +76,12 @@
 	</script>
 	<table width="100%">
 		<tr>
-			<td style="text-align: right;" align="right"><c:out value="${client.formattedName}" /></td>
+			<td style="text-align: right;" align="right"><c:out
+				value="${client.formattedName}" /></td>
 		</tr>
 	</table>
-	<center class="style51">Street Health Mental Health Intake - <c:out value="${intakeCForm.map.view2.version}" /></center>
+	<center class="style51">Street Health Mental Health Intake - <c:out
+		value="${intakeCForm.map.view2.version}" /></center>
 	<div class="tabs" id="tabs">
 	<%
 		String selectedTab = request.getParameter("view2.tab");
@@ -87,12 +97,14 @@
 			<%
 			if (IntakeCFormBean.tabs[x].equals(selectedTab)) {
 			%>
-			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=IntakeCFormBean.tabs[x] %>'); return false;"><%=IntakeCFormBean.tabs[x]%><br />
+			<td style="background-color: #555;"><a href="javascript:void(0)"
+				onclick="javascript:clickTab('<%=IntakeCFormBean.tabs[x] %>'); return false;"><%=IntakeCFormBean.tabs[x]%><br />
 			<%=IntakeCFormBean.getTabDescr()[x]%></a></td>
 			<%
 			} else {
 			%>
-			<td><a href="javascript:void(0)" onclick="javascript:clickTab('<%=IntakeCFormBean.tabs[x] %>');return false;"><%=IntakeCFormBean.tabs[x]%><br />
+			<td><a href="javascript:void(0)"
+				onclick="javascript:clickTab('<%=IntakeCFormBean.tabs[x] %>');return false;"><%=IntakeCFormBean.tabs[x]%><br />
 			<%=IntakeCFormBean.getTabDescr()[x]%></a></td>
 			<%
 			}
@@ -104,7 +116,8 @@
 	</table>
 	</div>
 	<%@ include file="/common/messages.jsp"%>
-	<jsp:include page='<%="/PMmodule/IntakeC/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
+	<jsp:include
+		page='<%="/PMmodule/IntakeC/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>' />
 </html:form>
 </body>
 </html:html>

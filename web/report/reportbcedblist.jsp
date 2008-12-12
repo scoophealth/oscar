@@ -39,10 +39,12 @@ String startDate =null, endDate=null;
 if(request.getParameter("startDate")!=null) startDate = request.getParameter("startDate");  
 if(request.getParameter("endDate")!=null) endDate = request.getParameter("endDate");
 %>
-<%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp" %>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerNameBean" class="java.util.Properties" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page import="java.util.*, java.sql.*" errorPage="../errorpage.jsp"%>
+<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerNameBean" class="java.util.Properties"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
 String [][] dbQueries=new String[][] { 
 //{"select_bcformar", "select distinct(demographic_no) from formBCAR where c_EDD >= ? and c_EDD <= ? order by c_EDD desc limit ? offset ?"  }, 
@@ -51,13 +53,13 @@ String [][] dbQueries=new String[][] {
 };
 reportMainBean.doConfigure(dbParams,dbQueries);
 %>
- 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title> <bean:message key="report.reportnewdblist.title"/> </title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
+<title><bean:message key="report.reportnewdblist.title" /></title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <script language="JavaScript">
 <!--
 
@@ -65,31 +67,48 @@ reportMainBean.doConfigure(dbParams,dbQueries);
 </SCRIPT>
 <!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.reportnewdblist.msgEDDList"/></font></th>
-  </tr><tr>
-   <td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()">
-   <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica"><bean:message
+			key="report.reportnewdblist.msgEDDList" /></font></th>
+	</tr>
+	<tr>
+		<td align="right"><input type="button" name="Button"
+			value="<bean:message key="global.btnPrint"/>"
+			onClick="window.print()"> <input type="button" name="Button"
+			value="<bean:message key="global.btnCancel" />"
+			onClick="window.close()">
+		</th>
+	</tr>
 </table>
 
-<CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2"> 
-<tr bgcolor='<%=deepcolor%>'> 
-<TH align="center" width="6%" nowrap><b><bean:message key="report.reportnewdblist.msgEDD"/></b></TH>
-<TH align="center" width="20%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
-<!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-<TH align="center" width="9%"><b><bean:message key="report.reportnewdblist.msgDOB"/></b></TH>
-<TH align="center" width="5%"><b>G</b><font size="-2">ravida</font></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msLanguage"/></b></TH>
-<TH align="center" width="8%"><b><bean:message key="report.reportnewdblist.msPHN"/></b></TH>
-<TH align="center" width="20%"><b>Doula</b></TH>
-<TH align="center"><b>Doula#</b></TH>
-</tr>
-<%
+<CENTER>
+<table width="100%" border="0" bgcolor="silver" cellspacing="2"
+	cellpadding="2">
+	<tr bgcolor='<%=deepcolor%>'>
+		<TH align="center" width="6%" nowrap><b><bean:message
+			key="report.reportnewdblist.msgEDD" /></b></TH>
+		<TH align="center" width="20%"><b><bean:message
+			key="report.reportnewdblist.msgName" /> </b></TH>
+		<!--TH align="center" width="20%"><b>Demog' No </b></TH-->
+		<TH align="center" width="9%"><b><bean:message
+			key="report.reportnewdblist.msgDOB" /></b></TH>
+		<TH align="center" width="5%"><b>G</b><font size="-2">ravida</font></TH>
+		<TH align="center" width="5%"><b><bean:message
+			key="report.reportnewdblist.msgTerm" /></b></TH>
+		<TH align="center" width="10%"><b><bean:message
+			key="report.reportnewdblist.msgPhone" /></b></TH>
+		<TH align="center" width="10%"><b><bean:message
+			key="report.reportnewdblist.msLanguage" /></b></TH>
+		<TH align="center" width="8%"><b><bean:message
+			key="report.reportnewdblist.msPHN" /></b></TH>
+		<TH align="center" width="20%"><b>Doula</b></TH>
+		<TH align="center"><b>Doula#</b></TH>
+	</tr>
+	<%
   ResultSet rs=null ;
   rs = reportMainBean.queryResults("search_provider");
   while (rs.next()) { 
@@ -118,24 +137,24 @@ reportMainBean.doConfigure(dbParams,dbQueries);
     bodd=bodd?false:true; //for the color of rows
     nItems++; 
 %>
-<tr bgcolor="<%=bodd?weakcolor:"white"%>">
-      <td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"0001/01/01"%></td>
-      <td><%=reportMainBean.getString(rs,"c_surname") + ", " + reportMainBean.getString(rs,"c_givenName")%></td>
-      <!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
-      <td><%=reportMainBean.getString(rs,"pg1_dateOfBirth")!=null?reportMainBean.getString(rs,"pg1_dateOfBirth"):""%></td>
-      <td><%=reportMainBean.getString(rs,"pg1_gravida")!=null?reportMainBean.getString(rs,"pg1_gravida"):""%></td>
-      <td><%=reportMainBean.getString(rs,"pg1_term")!=null?reportMainBean.getString(rs,"pg1_term"):""%></td>
-      <td nowrap><%=reportMainBean.getString(rs,"c_phone")%></td>
-      <!--td><%--=reportMainBean.getString(rs,"c_phyMid")--%><%--=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")--%></td-->
-      <td><%=reportMainBean.getString(rs,"pg1_langPref")%></td>
-      <td><%=reportMainBean.getString(rs,"c_phn")%></td> 
-      <td><%=reportMainBean.getString(rs,"ar2_doula")%></td> 
-      <td><%=reportMainBean.getString(rs,"ar2_doulaNo")%></td> 
-</tr>
-<%
+	<tr bgcolor="<%=bodd?weakcolor:"white"%>">
+		<td align="center" nowrap><%=reportMainBean.getString(rs,"c_EDD")!=null?reportMainBean.getString(rs,"c_EDD").replace('-','/'):"0001/01/01"%></td>
+		<td><%=reportMainBean.getString(rs,"c_surname") + ", " + reportMainBean.getString(rs,"c_givenName")%></td>
+		<!--td align="center" ><%=reportMainBean.getString(rs,"demographic_no")%> </td-->
+		<td><%=reportMainBean.getString(rs,"pg1_dateOfBirth")!=null?reportMainBean.getString(rs,"pg1_dateOfBirth"):""%></td>
+		<td><%=reportMainBean.getString(rs,"pg1_gravida")!=null?reportMainBean.getString(rs,"pg1_gravida"):""%></td>
+		<td><%=reportMainBean.getString(rs,"pg1_term")!=null?reportMainBean.getString(rs,"pg1_term"):""%></td>
+		<td nowrap><%=reportMainBean.getString(rs,"c_phone")%></td>
+		<!--td><%--=reportMainBean.getString(rs,"c_phyMid")--%><%--=providerNameBean.getProperty(reportMainBean.getString(rs,"provider_no"), "")--%></td-->
+		<td><%=reportMainBean.getString(rs,"pg1_langPref")%></td>
+		<td><%=reportMainBean.getString(rs,"c_phn")%></td>
+		<td><%=reportMainBean.getString(rs,"ar2_doula")%></td>
+		<td><%=reportMainBean.getString(rs,"ar2_doulaNo")%></td>
+	</tr>
+	<%
   }
   reportMainBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>
@@ -144,15 +163,16 @@ reportMainBean.doConfigure(dbParams,dbQueries);
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportnewdblist.msgLastPage"/></a> |
-<%
+%> <a
+	href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	key="report.reportnewdblist.msgLastPage" /></a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportnewdblist.msgNextPage"/></a>
-<%
+%> <a
+	href="reportbcedblist.jsp?startDate=<%=request.getParameter("startDate")%>&endDate=<%=request.getParameter("endDate")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+<bean:message key="report.reportnewdblist.msgNextPage" /></a> <%
 }
 %>
+
 </body>
 </html:html>

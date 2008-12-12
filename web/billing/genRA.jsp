@@ -28,11 +28,15 @@
  // 
 --%>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
-<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
-<%@ include file="../billing/dbBilling.jsp" %>
+<%@ page
+	import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*, oscar.*, oscar.util.*, oscar.MyDateFormat"
+	errorPage="errorpage.jsp"%>
+<%@ include file="../admin/dbconnection.jsp"%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean"
+	scope="request" />
+<%@ include file="../billing/dbBilling.jsp"%>
 
 <%  
 GregorianCalendar now=new GregorianCalendar();
@@ -42,7 +46,7 @@ int curDay = now.get(Calendar.DAY_OF_MONTH);
   
 String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); // String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay);
 %>
-  
+
 
 <% 
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
@@ -264,14 +268,14 @@ param3[5]=filename;
 // only one? for paymentdate, filename
 int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
  
-%>   
-   
+%>
+
 
 <html>
 <head>
-<link rel="stylesheet" href="../billing/billing.css" >
+<link rel="stylesheet" href="../billing/billing.css">
 <title>Billing Reconcilliation</title>
-       
+
 <script language="JavaScript">
 <!--
 var remote=null;
@@ -304,31 +308,34 @@ function checkReconcile(url){
 </SCRIPT>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
+	marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-<tr bgcolor="#486ebd">
-	<th align='LEFT'>
-	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
-	<th align='CENTER'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing 
-	Reconcilliation </font></th>
-	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
-</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align='LEFT'><input type='button' name='print' value='Print'
+			onClick='window.print(); return false;'></th>
+		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
+			color="#FFFFFF">Billing Reconcilliation </font></th>
+		<th align='RIGHT'><input type='button' name='close' value='Close'
+			onClick='window.close()'></th>
+	</tr>
 </table>
- 
-<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
-<form>
-<tr>  
-	<td width="10%" height="16">Read Date</td>
-	<td width="10%" height="16">Payment Date </td>
-	<td width="20%" height="16">Payable </td>
-	<td width="10%" height="16">Records/Claims</td>
-	<td width="10%" height="16">Total </td>
-	<td width="30%" height="16">Action</td>
-	<td width="10%" height="16">Status</td>
-</tr>
-   
-<%
+
+<table width="100%" border="1" cellspacing="0" cellpadding="0"
+	bgcolor="#EFEFEF">
+	<form>
+	<tr>
+		<td width="10%" height="16">Read Date</td>
+		<td width="10%" height="16">Payment Date</td>
+		<td width="20%" height="16">Payable</td>
+		<td width="10%" height="16">Records/Claims</td>
+		<td width="10%" height="16">Total</td>
+		<td width="30%" height="16">Action</td>
+		<td width="10%" height="16">Status</td>
+	</tr>
+
+	<%
 ResultSet rsdemo = null;
 String[] param5 =new String[1];
 param5[0] = "D";
@@ -341,18 +348,24 @@ while (rsdemo.next()) {
 	strcount= rsdemo.getString("claims");
 	strtCount = rsdemo.getString("records");
 	total = rsdemo.getString("totalamount");
-%> 
-		     
-<tr> 
-    <td width="10%" height="16"><%=nowDate%>  </td>
-    <td width="10%" height="16"><%=paymentdate%> </td>
-    <td width="20%" height="16"><%=payable%></td>
-    <td width="10%" height="16"><%=strcount%>/<%=strtCount%></td>
-    <td width="10%" height="16"><%=total%></td>
-    <td width="30%" height="16"><a href="../billing/genRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | <a href="../billing/genRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| <a href="../billing/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
-    <td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
-</tr>
-<%}%>
+%>
+
+	<tr>
+		<td width="10%" height="16"><%=nowDate%></td>
+		<td width="10%" height="16"><%=paymentdate%></td>
+		<td width="20%" height="16"><%=payable%></td>
+		<td width="10%" height="16"><%=strcount%>/<%=strtCount%></td>
+		<td width="10%" height="16"><%=total%></td>
+		<td width="30%" height="16"><a
+			href="../billing/genRAError.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Error</a> | <a
+			href="../billing/genRASummary.jsp?rano=<%=raNo%>&proNo="
+			target="_blank">Summary</a>| <a
+			href="../billing/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report
+		</a></td>
+		<td width="10%" height="16"><%=rsdemo.getString("status").compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/genRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":rsdemo.getString("status").compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/genRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+	</tr>
+	<%}%>
 </table>
 
 </body>

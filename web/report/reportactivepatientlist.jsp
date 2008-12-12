@@ -31,19 +31,22 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
-<%@ include file="reportMainBeanConn.jsp" %>  
+<%@ include file="reportMainBeanConn.jsp"%>
 <% } %>
- 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
-<title> <bean:message key="report.reportactivepatientlist.title"/> </title>
-<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
+<title><bean:message key="report.reportactivepatientlist.title" />
+</title>
+<link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -54,29 +57,47 @@ function setfocus() {
 </SCRIPT>
 
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER><font face="Helvetica" color="#FFFFFF"><bean:message key="report.reportactivepatientlist.msgTitle"/></font></th>
-   <th align="right" width="10%" NOWRAP><input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()">
-   <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER><font face="Helvetica" color="#FFFFFF"><bean:message
+			key="report.reportactivepatientlist.msgTitle" /></font></th>
+		<th align="right" width="10%" NOWRAP><input type="button"
+			name="Button" value="<bean:message key="global.btnPrint" />"
+			onClick="window.print()"> <input type="button" name="Button"
+			value="<bean:message key="global.btnCancel" />"
+			onClick="window.close()"></th>
+	</tr>
 </table>
 
-<CENTER><table width="100%" border="1" bgcolor="#ffffff" cellspacing="0" cellpadding="1"> 
-<tr bgcolor="silver"> 
-<TH align="center" width="12%" nowrap><b><bean:message key="report.reportactivepatientlist.msgLastName"/></b></TH>
-<TH align="center" width="12%"><b><bean:message key="report.reportactivepatientlist.msgFirstName"/> </b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportactivepatientlist.msgChart"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportactivepatientlist.msgAge"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportactivepatientlist.msgSex"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportactivepatientlist.msgHIN"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportactivepatientlist.msgVer"/></b></TH>
-<TH align="center" width="16%"><b><bean:message key="report.reportactivepatientlist.msgMCDoc"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportactivepatientlist.msgDateJoined"/></b></TH>
-<TH align="center" width="15%"><b><bean:message key="report.reportactivepatientlist.msgPhone"/></b></TH>
-</tr>
-<%
+<CENTER>
+<table width="100%" border="1" bgcolor="#ffffff" cellspacing="0"
+	cellpadding="1">
+	<tr bgcolor="silver">
+		<TH align="center" width="12%" nowrap><b><bean:message
+			key="report.reportactivepatientlist.msgLastName" /></b></TH>
+		<TH align="center" width="12%"><b><bean:message
+			key="report.reportactivepatientlist.msgFirstName" /> </b></TH>
+		<TH align="center" width="5%"><b><bean:message
+			key="report.reportactivepatientlist.msgChart" /></b></TH>
+		<TH align="center" width="5%"><b><bean:message
+			key="report.reportactivepatientlist.msgAge" /></b></TH>
+		<TH align="center" width="5%"><b><bean:message
+			key="report.reportactivepatientlist.msgSex" /></b></TH>
+		<TH align="center" width="10%"><b><bean:message
+			key="report.reportactivepatientlist.msgHIN" /></b></TH>
+		<TH align="center" width="5%"><b><bean:message
+			key="report.reportactivepatientlist.msgVer" /></b></TH>
+		<TH align="center" width="16%"><b><bean:message
+			key="report.reportactivepatientlist.msgMCDoc" /></b></TH>
+		<TH align="center" width="10%"><b><bean:message
+			key="report.reportactivepatientlist.msgDateJoined" /></b></TH>
+		<TH align="center" width="15%"><b><bean:message
+			key="report.reportactivepatientlist.msgPhone" /></b></TH>
+	</tr>
+	<%
   int age=0;
   ResultSet rs=null ;
   int[] itemp1 = new int[2];
@@ -92,24 +113,25 @@ function setfocus() {
     nItems++; 
     if(reportMainBean.getString(rs,"year_of_birth")!=null && reportMainBean.getString(rs,"month_of_birth")!=null && reportMainBean.getString(rs,"date_of_birth")!=null) age=MyDateFormat.getAge(Integer.parseInt(reportMainBean.getString(rs,"year_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"month_of_birth")),Integer.parseInt(reportMainBean.getString(rs,"date_of_birth")));
 %>
-<tr bgcolor="<%=bodd?"ivory":"white"%>">
-      <td nowrap><%=reportMainBean.getString(rs,"last_name")%></td>
-      <td nowrap><%=reportMainBean.getString(rs,"first_name")%></td>
-      <td align="center" ><%=reportMainBean.getString(rs,"chart_no")%> </td>
-      <td align="center"><%=age%></td>
-      <td align="center"><%=reportMainBean.getString(rs,"sex")%></td>
-      <td><%=reportMainBean.getString(rs,"hin")%></td>
-      <td align="center"><%=reportMainBean.getString(rs,"ver")%></td>
-      <td><%=reportMainBean.getString(rs,"provider_no").length()>11?reportMainBean.getString(rs,"provider_no").substring(0,11):reportMainBean.getString(rs,"provider_no")%></td>
-      <td><%=reportMainBean.getString(rs,"date_joined")%></td>
-      <td><%=reportMainBean.getString(rs,"phone")%></td>
-</tr>
-<%
+	<tr bgcolor="<%=bodd?"ivory":"white"%>">
+		<td nowrap><%=reportMainBean.getString(rs,"last_name")%></td>
+		<td nowrap><%=reportMainBean.getString(rs,"first_name")%></td>
+		<td align="center"><%=reportMainBean.getString(rs,"chart_no")%>
+		</td>
+		<td align="center"><%=age%></td>
+		<td align="center"><%=reportMainBean.getString(rs,"sex")%></td>
+		<td><%=reportMainBean.getString(rs,"hin")%></td>
+		<td align="center"><%=reportMainBean.getString(rs,"ver")%></td>
+		<td><%=reportMainBean.getString(rs,"provider_no").length()>11?reportMainBean.getString(rs,"provider_no").substring(0,11):reportMainBean.getString(rs,"provider_no")%></td>
+		<td><%=reportMainBean.getString(rs,"date_joined")%></td>
+		<td><%=reportMainBean.getString(rs,"phone")%></td>
+	</tr>
+	<%
   }
 
 if(reportMainBean.getBDoConfigure()) reportMainBean.setBDoConfigure();
   reportMainBean.closePstmtConn();
-%> 
+%>
 
 </table>
 <br>
@@ -118,15 +140,16 @@ if(reportMainBean.getBDoConfigure()) reportMainBean.setBDoConfigure();
   nNextPage=Integer.parseInt(strLimit2)+Integer.parseInt(strLimit1);
   nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
   if(nLastPage>=0) {
-%>
-<a href="reportactivepatientlist.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportactivepatientlist.msgLastPage"/></a> |
-<%
+%> <a
+	href="reportactivepatientlist.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	key="report.reportactivepatientlist.msgLastPage" /></a> | <%
   }
   if(nItems==Integer.parseInt(strLimit2)) {
-%>
-<a href="reportactivepatientlist.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportactivepatientlist.msgNextPage"/></a>
-<%
+%> <a
+	href="reportactivepatientlist.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+<bean:message key="report.reportactivepatientlist.msgNextPage" /></a> <%
   }
 %>
+
 </body>
 </html:html>

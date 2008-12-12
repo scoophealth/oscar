@@ -5,147 +5,161 @@
     Description:
         CSS for the reportByTemplate module.
 */
-
 div.titleHP {
-    font-size: 16px;
-    font-weight: bold;
+	font-size: 16px;
+	font-weight: bold;
 }
+
 div.templatelistdivHP {
+	
 }
+
 ul.templatelistHP {
-   list-style: none;
-   list-style-type: none;
-   list-style-position: outside;
-   margin-top: 0px;
-   margin-left: 20px;
-   padding: 0;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	margin-top: 0px;
+	margin-left: 20px;
+	padding: 0;
 }
 
 div.templateDescriptionHP {
-   font-size: 11px;
-   padding-left: 25px;
+	font-size: 11px;
+	padding-left: 25px;
 }
 
 div.configDiv {
-   float: left;
-   border: 1px solid black;
-   padding: 6px;
+	float: left;
+	border: 1px solid black;
+	padding: 6px;
 }
+
 /*---configuration table----*/
 table.configTable {
-   padding: 3px;
-   border-collapse: collapse;
+	padding: 3px;
+	border-collapse: collapse;
 }
+
 table.configTable td,th {
-   border: 1px solid #e9f1f5;
-   padding-left: 3px;
-   font-size: 12px;
+	border: 1px solid #e9f1f5;
+	padding-left: 3px;
+	font-size: 12px;
 }
+
 table.configTable th {
-   font-size: 13px;
-   width: 60px;
+	font-size: 13px;
+	width: 60px;
 }
+
 a.link {
-    font-size: 10px; 
-    color: green;
+	font-size: 10px;
+	color: green;
 }
 
 input {
-    border: 1px solid #7682b1;
+	border: 1px solid #7682b1;
 }
 
-a { 
+a {
+	
 }
+
 a:hover {
-    color: #bd528e;
+	color: #bd528e;
 }
-
 
 input.datefield {
-    width: 80px;
-    text-align: left;
+	width: 80px;
+	text-align: left;
 }
 
 .reportTitle {
-    font-size: 16px;
-    font-weight: bold;
+	font-size: 16px;
+	font-weight: bold;
 }
+
 .reportDescription {
-    padding-left: 10px;
+	padding-left: 10px;
 }
 
 div.warning {
-    color: #e26e6e;
-    font-size: 12px;
+	color: #e26e6e;
+	font-size: 12px;
 }
 
 div.green {
-    color: green;
-    font-size: 12px;
-}
-/*----Report Data Table ---*/
-table.reportTable {
-    padding: 3px;
-    border-collapse: collapse;
-}
-th.reportHeader{
-    font-weight: bold;
-}
-table.reportTable td {
-   border: 1px solid #e9f1f5;
-   padding-left: 3px;
-   font-size: 12px;
-}
-div.reportBorderDiv {
-   margin-left: 5px;
-   margin-top: 8px;
-   margin-right: 5px;
-   float: left;
-   border: 1px solid black;
-   padding: 6px;
+	color: green;
+	font-size: 12px;
 }
 
-div.sqlBorderDiv, div.xmlBorderDiv {
-   margin-top: 10px;
-   margin-bottom: 10px;
-   margin-left: 5px;
-   margin-right: 5px;
-   border: 1px solid #a1a1a1;
-   padding: 6px;
+/*----Report Data Table ---*/
+table.reportTable {
+	padding: 3px;
+	border-collapse: collapse;
 }
+
+th.reportHeader {
+	font-weight: bold;
+}
+
+table.reportTable td {
+	border: 1px solid #e9f1f5;
+	padding-left: 3px;
+	font-size: 12px;
+}
+
+div.reportBorderDiv {
+	margin-left: 5px;
+	margin-top: 8px;
+	margin-right: 5px;
+	float: left;
+	border: 1px solid black;
+	padding: 6px;
+}
+
+div.sqlBorderDiv,div.xmlBorderDiv {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 5px;
+	margin-right: 5px;
+	border: 1px solid #a1a1a1;
+	padding: 6px;
+}
+
 /*
 tr.reportRow1{
 
 }
 tr.reportRow2{
 
-}*/
-/*---------listTemplates.jsp List -------*/
+}*/ /*---------listTemplates.jsp List -------*/
 div.templatelist {
-   border: 1px solid #c5c5e8;
-   margin-top: 15px;
-   background-color: #fafaff;
+	border: 1px solid #c5c5e8;
+	margin-top: 15px;
+	background-color: #fafaff;
+}
 
-}
 div.templatelistHeader {
-   background-color: #ededff;
-   font-weight: bold;
-   border-bottom: 1px solid #e6e6ff;
+	background-color: #ededff;
+	font-weight: bold;
+	border-bottom: 1px solid #e6e6ff;
 }
+
 ul.templatelist {
-   list-style: none;
-   list-style-type: none;
-   list-style-position: outside;
-   margin-top: 0px;
-   margin-left: 0px;
-   padding: 0;
+	list-style: none;
+	list-style-type: none;
+	list-style-position: outside;
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 0;
 }
+
 ul.templatelist li {
-   padding-left: 18px;
-   font-size: 11px;
-   text-indent: -16px;
+	padding-left: 18px;
+	font-size: 11px;
+	text-indent: -16px;
 }
 
 li.selectedTemplate {
-   background-color: #ffedf4;
+	background-color: #ffedf4;
 }

@@ -22,44 +22,43 @@
  * Ontario, Canada 
  */
  -->
- <%@ include file="/casemgmt/taglibs.jsp" %>
- <%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*, org.oscarehr.PMmodule.service.ProviderManager, org.oscarehr.casemgmt.model.CaseManagementNote" %>
- <%
+<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@ page
+	import="org.springframework.web.context.*,org.springframework.web.context.support.*, org.oscarehr.PMmodule.service.ProviderManager, org.oscarehr.casemgmt.model.CaseManagementNote"%>
+<%
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     ProviderManager pMgr = (ProviderManager)ctx.getBean("providerManager");
  %>
- <html>
-     <head>
-         <title>Note History</title>
-     </head>    
-     <body>
-             <h3 style="text-align:center;"><nested:write name="title"/></h3>
-             <h3 style="text-align:center;"><nested:write name="demoName"/></h3>
-             <nested:iterate indexId="idx" id="note" name="history">
-                 <div style="width:99%; background-color:#EFEFEF; font-size:12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000;">
-                     <pre><nested:write name="note" property="note" /></pre>
-                     <div style="color:#0000FF;">
-                         <nested:notEmpty name="current">
-                             <c:if test="${current[idx] == false}">
-                                 <div style="color:#FF0000;">REMOVED</div>
-                             </c:if>
-                         </nested:notEmpty>
-                         Documentation Date: <nested:write name="note" property="observation_date" format="dd-MMM-yyyy H:mm" /><br>                         
-                         <nested:equal name="note" property="signed" value="true"> 
+<html>
+<head>
+<title>Note History</title>
+</head>
+<body>
+<h3 style="text-align: center;"><nested:write name="title" /></h3>
+<h3 style="text-align: center;"><nested:write name="demoName" /></h3>
+<nested:iterate indexId="idx" id="note" name="history">
+	<div
+		style="width: 99%; background-color: #EFEFEF; font-size: 12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000;">
+	<pre><nested:write name="note" property="note" /></pre>
+	<div style="color: #0000FF;"><nested:notEmpty name="current">
+		<c:if test="${current[idx] == false}">
+			<div style="color: #FF0000;">REMOVED</div>
+		</c:if>
+	</nested:notEmpty> Documentation Date: <nested:write name="note"
+		property="observation_date" format="dd-MMM-yyyy H:mm" /><br>
+	<nested:equal name="note" property="signed" value="true"> 
                              Signed by 
                              <%                               
                                CaseManagementNote n = (CaseManagementNote)note;
                                out.println(pMgr.getProvider(n.getSigning_provider_no()).getFormattedName());
                              %>
-                         </nested:equal>
-                         <nested:notEqual name="note" property="signed" value="true"> 
+	</nested:equal> <nested:notEqual name="note" property="signed" value="true"> 
                              Saved by 
-                             <nested:write name="note" property="provider.formattedName" />:
-                         </nested:notEqual>           
-                         <nested:write name="note" property="update_date" format="dd-MMM-yyyy H:mm" />
-                        
-                     </div>
-                 </div>
-             </nested:iterate>                            
-     </body>     
- </html>
+                             <nested:write name="note"
+			property="provider.formattedName" />:
+                         </nested:notEqual> <nested:write name="note"
+		property="update_date" format="dd-MMM-yyyy H:mm" /></div>
+	</div>
+</nested:iterate>
+</body>
+</html>

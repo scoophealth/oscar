@@ -30,9 +30,11 @@
   user_no = (String) session.getAttribute("user");
   //username =  request.getParameter("username").toUpperCase();
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="errorpage.jsp" %>
-<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean" scope="page" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
     {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
@@ -43,10 +45,10 @@
 
 <html>
 <head>
-<title> DEMO ACCS </title>
-<link rel="stylesheet" href="../web.css" >
-      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-      <meta http-equiv="Pragma" content="no-cache">
+<title>DEMO ACCS</title>
+<link rel="stylesheet" href="../web.css">
+<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+<meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
 function setfocus() {
@@ -57,10 +59,13 @@ function setfocus() {
 //-->
 </script>
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body background="../images/gray_bg.jpg" bgproperties="fixed"
+	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd"><th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><%=request.getParameter("demographic_name")%></font></th></tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="#486ebd">
+		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><%=request.getParameter("demographic_name")%></font></th>
+	</tr>
 </table>
 <%
    ResultSet rsdemo = null;
@@ -74,7 +79,7 @@ function setfocus() {
 %>
 <xml id="xml_list">
 <encounteraccessory>
-     <%=content%>
+<%=content%>
 </encounteraccessory>
 </xml>
 <%
@@ -82,49 +87,70 @@ function setfocus() {
      accsBean.closePstmtConn();
 
 %>
-<table width="100%" border="0"  cellspacing="0" cellpadding="0"><!--for form use-->
-<form name="demoacce" method="post" action="providersavedemographicaccessory.jsp" >
-<tr><td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<!--for form use-->
+	<form name="demoacce" method="post"
+		action="providersavedemographicaccessory.jsp">
+	<tr>
+		<td>
 
-<table border="0" cellpadding="2" cellspacing="0" bgcolor="#aabbcc" width=100%>
-<tr><td>
-<table bgcolor="#eeeeee" border="0" cellpadding="3" cellspacing="0" width="100%"> 
-<tr><td bgcolor="#ffffff" align="center">
+		<table border="0" cellpadding="2" cellspacing="0" bgcolor="#aabbcc"
+			width=100%>
+			<tr>
+				<td>
+				<table bgcolor="#eeeeee" border="0" cellpadding="3" cellspacing="0"
+					width="100%">
+					<tr>
+						<td bgcolor="#ffffff" align="center">
 
-<table width="100%" border="0"  cellpadding="2" cellspacing="0" bgcolor="#aabbcc" <%=bNewDemoAcc?"":"datasrc='#xml_list'"%> >
-  <tr> 
-    <td width="50%" align="center"> 
-      Problem List:<br>
-        <textarea name="xml_Problem_List" style="width:100%" cols="30" rows="18" <%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%> ></textarea>
+						<table width="100%" border="0" cellpadding="2" cellspacing="0"
+							bgcolor="#aabbcc" <%=bNewDemoAcc?"":"datasrc='#xml_list'"%>>
+							<tr>
+								<td width="50%" align="center">Problem List:<br>
+								<textarea name="xml_Problem_List" style="width: 100%" cols="30"
+									rows="18" <%=bNewDemoAcc?"":"datafld='xml_Problem_List'"%>></textarea>
 
-      </td>
-    <td width="50%" align="center"> Medication:<br>
-      <textarea name="xml_Medication" style="width:100%" cols="30" rows="18" <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
-    </td>
-  </tr>
-  <tr> 
-    <td > 
-      <div align="center">Allergy/Alert:<br>
-        <textarea name="xml_Alert" style="width:100%" cols="30" rows="15" <%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea>
-      </div>
-    </td>
-    <td > 
-      <div align="center">Family Social History:<br>
-        <textarea name="xml_Family_Social_History" style="width:100%" cols="30" rows="15" <%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
-      </div>
-    </td>
-  </tr>
-</table>
+								</td>
+								<td width="50%" align="center">Medication:<br>
+								<textarea name="xml_Medication" style="width: 100%" cols="30"
+									rows="18" <%=bNewDemoAcc?"":"datafld='xml_Medication'"%>></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td>
+								<div align="center">Allergy/Alert:<br>
+								<textarea name="xml_Alert" style="width: 100%" cols="30"
+									rows="15" <%=bNewDemoAcc?"":"datafld='xml_Alert'"%>></textarea>
+								</div>
+								</td>
+								<td>
+								<div align="center">Family Social History:<br>
+								<textarea name="xml_Family_Social_History" style="width: 100%"
+									cols="30" rows="15"
+									<%=bNewDemoAcc?"":"datafld='xml_Family_Social_History'"%>></textarea>
+								</div>
+								</td>
+							</tr>
+						</table>
 
-</td></tr></table></td></tr></table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
 
-</td></tr>
-<tr><td align="center"><br>
-          <input type="hidden" name="demographic_no" value="<%=request.getParameter("demographic_no")%>">
-          <input type="submit" name="submit" value=" Save " >
-          <input type="button" name="Button" value="Cancel" onClick="window.close();">
-</td></tr>
-</form>
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><br>
+		<input type="hidden" name="demographic_no"
+			value="<%=request.getParameter("demographic_no")%>"> <input
+			type="submit" name="submit" value=" Save "> <input
+			type="button" name="Button" value="Cancel" onClick="window.close();">
+		</td>
+	</tr>
+	</form>
 </table>
 
 </body>

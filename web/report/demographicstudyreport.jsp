@@ -1,3 +1,4 @@
+
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 	String curUser_no = (String) session.getAttribute("user");
@@ -9,12 +10,14 @@
 	if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 %>
 
-<%@ page import="java.sql.*" errorPage="../errorpage.jsp" %>
-<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@ page import="java.sql.*" errorPage="../errorpage.jsp"%>
+<jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean"
+	scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <jsp:useBean id="studyBean" class="java.util.Properties" scope="page" />
 
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="../admin/dbconnection.jsp"%>
 <% 
 	String [][] dbQueries=new String[][] { 
 		{"search_study", "select study_no, study_name, description from study where current1 = ?"}, 
@@ -22,9 +25,9 @@
 	};
 	reportMainBean.doConfigure(dbParams,dbQueries);
 %>
- 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <!--  
 /*
  * 
@@ -52,7 +55,8 @@
 -->
 <html:html locale="true">
 <head>
-<title> <bean:message key="report.demographicstudyreport.title"/> </title>
+<title><bean:message key="report.demographicstudyreport.title" />
+</title>
 <!--link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" -->
 <script language="JavaScript">
 <!--
@@ -63,23 +67,33 @@
 
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="<%=deepcolor%>"><th><font face="Helvetica"><bean:message key="report.demographicstudyreport.msgTitle"/></font></th></tr>
-  <tr>
-	<td align="right" ><input type="button" name="Button" value="<bean:message key="global.btnPrint" />" onClick="window.print()">
-	<input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></td>
-  </tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr bgcolor="<%=deepcolor%>">
+		<th><font face="Helvetica"><bean:message
+			key="report.demographicstudyreport.msgTitle" /></font></th>
+	</tr>
+	<tr>
+		<td align="right"><input type="button" name="Button"
+			value="<bean:message key="global.btnPrint" />"
+			onClick="window.print()"> <input type="button" name="Button"
+			value="<bean:message key="global.btnCancel" />"
+			onClick="window.close()"></td>
+	</tr>
 </table>
 
-<table width="100%" border="0" bgcolor="white" cellspacing="2" cellpadding="2"> 
-<tr bgcolor='<%=deepcolor%>'>
-  <TH width="20%" nowrap><bean:message key="report.reportpatientchartlist.msgLastName"/></TH>
-  <TH width="20%"><bean:message key="report.reportpatientchartlist.msgFirstName"/></TH>
-  <TH width="20%"><bean:message key="report.demographicstudyreport.msgStudy"/></TH>
-  <TH width="20%">Email</TH>
-  <TH><bean:message key="report.demographicstudyreport.msgProvider"/></TH>
-</tr>
-<%
+<table width="100%" border="0" bgcolor="white" cellspacing="2"
+	cellpadding="2">
+	<tr bgcolor='<%=deepcolor%>'>
+		<TH width="20%" nowrap><bean:message
+			key="report.reportpatientchartlist.msgLastName" /></TH>
+		<TH width="20%"><bean:message
+			key="report.reportpatientchartlist.msgFirstName" /></TH>
+		<TH width="20%"><bean:message
+			key="report.demographicstudyreport.msgStudy" /></TH>
+		<TH width="20%">Email</TH>
+		<TH><bean:message key="report.demographicstudyreport.msgProvider" /></TH>
+	</tr>
+	<%
 	ResultSet rs=null ;
 	rs = reportMainBean.queryResults("1", "search_study");
 	while (rs.next()) { 
@@ -94,17 +108,19 @@
 	while (rs.next()) {
 		nItems++; 
 %>
-<tr bgcolor="<%=(nItems%2 == 0)?weakcolor:"white"%>">
-  <td nowrap><a href="../demographic/demographiccontrol.jsp?demographic_no=<%=reportMainBean.getString(rs,"s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=reportMainBean.getString(rs,"last_name")%></a></td>
-  <td><%=reportMainBean.getString(rs,"d.first_name")%></td>
-  <td  title='<%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")+studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")), "")%>'><%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no"), "")%></td>
-  <td><%=reportMainBean.getString(rs,"d.email")%></td>
-  <td><%=providerBean.getProperty(reportMainBean.getString(rs,"d.provider_no"), "")%></td>
-</tr>
-<%
+	<tr bgcolor="<%=(nItems%2 == 0)?weakcolor:"white"%>">
+		<td nowrap><a
+			href="../demographic/demographiccontrol.jsp?demographic_no=<%=reportMainBean.getString(rs,"s.demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=reportMainBean.getString(rs,"last_name")%></a></td>
+		<td><%=reportMainBean.getString(rs,"d.first_name")%></td>
+		<td
+			title='<%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")+studyBean.getProperty(reportMainBean.getString(rs,"s.study_no")), "")%>'><%=studyBean.getProperty(reportMainBean.getString(rs,"s.study_no"), "")%></td>
+		<td><%=reportMainBean.getString(rs,"d.email")%></td>
+		<td><%=providerBean.getProperty(reportMainBean.getString(rs,"d.provider_no"), "")%></td>
+	</tr>
+	<%
 	}
 	reportMainBean.closePstmtConn();
-%> 
+%>
 </table>
 <br>
 <%
@@ -113,12 +129,17 @@
 	nLastPage=Integer.parseInt(strLimit1)-Integer.parseInt(strLimit2);
 	if(nLastPage>=0) {
 %>
-<a href="demographicstudyreport.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message key="report.reportactivepatientlist.msgLastPage"/></a> |
+<a
+	href="demographicstudyreport.jsp?limit1=<%=nLastPage%>&limit2=<%=strLimit2%>"><bean:message
+	key="report.reportactivepatientlist.msgLastPage" /></a>
+|
 <%
 	}
 	if(nItems==Integer.parseInt(strLimit2)) {
 %>
-<a href="demographicstudyreport.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> <bean:message key="report.reportactivepatientlist.msgNextPage"/></a>
+<a
+	href="demographicstudyreport.jsp?limit1=<%=nNextPage%>&limit2=<%=strLimit2%>">
+<bean:message key="report.reportactivepatientlist.msgNextPage" /></a>
 <%
 	}
 %>

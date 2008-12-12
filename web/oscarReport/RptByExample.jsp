@@ -26,12 +26,13 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <html:html locale="true">
 <script language="JavaScript" type="text/JavaScript">
 <!--
@@ -59,55 +60,22 @@ function showHideLayers() { //v6.0
 //-->
 </script>
 <head>
-<title>
-    <bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/>
-</title>
+<title><bean:message
+	key="oscarReport.RptByExample.MsgQueryByExamples" /></title>
 
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.headerColor{
-      font-family: tahoma, helvetica ;
-      font-size:12pt;
-      font-weight: bold;
-      
-      background-color: #C3D4E5
-   }
-   
-   tr.rowColor1 {
-         font-family: tahoma, helvetica ;
-         font-size:10pt;
-        
-         background-color: #FFFFFF
-         }
-         tr.rowColor2 {
-	          font-family: tahoma, helvetica ;
-	          font-size:10pt;
-	         
-	          background-color: #EEEEFF
-         }
-</style>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <style type="text/css" media="print">
 .header {
-    display:none;
+	display: none;
 }
+
 .header INPUT {
-    display:none;
+	display: none;
 }
 
 .header A {
-    display:none;
+	display: none;
 }
-
 </style>
 <script type="text/javascript">
    var remote=null;
@@ -147,101 +115,93 @@ function showHideLayers() { //v6.0
 
 </head>
 
-<body vlink="#0000FF" class="BodyStyle" >
-<div id="Layer1" style="position:absolute; left:5px; top:200px; width:800px; height:600px; z-index:1; visibility: hidden;"> 
-  <table width="100%" border="1" cellpadding="0" cellspacing="0" bgcolor="#D6D5C5">
-    <tr>
-      <td><font size="2" face="Tahoma">
-        <logic:present name="resultText">
-            <pre><bean:write name="resultText" filter="false"/></pre>
-        </logic:present>
-     </font></td>
-    </tr>
-  </table>
+<body vlink="#0000FF" class="BodyStyle">
+<div id="Layer1"
+	style="position: absolute; left: 5px; top: 200px; width: 800px; height: 600px; z-index: 1; visibility: hidden;">
+<table width="100%" border="1" cellpadding="0" cellspacing="0"
+	bgcolor="#D6D5C5">
+	<tr>
+		<td><font size="2" face="Tahoma"> <logic:present
+			name="resultText">
+			<pre><bean:write name="resultText" filter="false" /></pre>
+		</logic:present> </font></td>
+	</tr>
+</table>
 </div>
-<table  class="MainTable" id="scrollNumber1" name="encounterTable">
-<html:form action="/oscarReport/RptByExample.do">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.CDMReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >                 
-                    <tr>
-                        <td><bean:message key="oscarReport.RptByExample.MsgQueryByExamples"/></td>                                               
-                    </tr>                  
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn" valign="top"> 
-                <table>                  
-                  <tr>
-                    <td nowrap><a href="#" onClick="popupPage(600, 1000, 'RptViewAllQueryByExamples.do')">View Query History</a></td>
-                  </tr>
-                  <tr>
-                    <td><a href="#" onClick="popupPage(600, 1000, 'RptByExamplesAllFavorites.do')">Edit My Favorite</a></td>
-                  </tr>
-                </table>
-            </td>
-            <td class="MainTableRightColumn">
-                <table>
-                   <tr>
-                        <td>
-                            <bean:message key="oscarReport.RptByExample.MsgEnterAQuery"/>                           
-                        </td> 
-                   </tr>
-                   <tr>
-                        <td>
-                            <html:textarea property="sql" cols="80" rows="4"/>
-                        </td>
-                   </tr>
-                   <tr>
-                        <td>
-                            <bean:message key="oscarReport.RptByExample.MsgOr"/>
-                        </td>
-                   </tr>
-                   <tr>
-                        <td>
-                            <bean:message key="oscarReport.RptByExample.MsgSelectFromMyFavorites"/>
-                        </td>
-                   </tr>
-                   <tr>
-                        <td>
-                            <html:select property="selectedRecentSearch" style="width:660">
-                                <html:option value="My favorites" disabled="true"/>
-                                <html:options collection="favorites" labelProperty="queryName" property="query" />
-                            </html:select>
-                            <input type="button" value="Load Query" onClick="write2TextArea(); return false;">
-                        </td>                        
-                   </tr>
-                   <tr>
-                        <td>
-                            <input type="button" value="Query" onclick="submit();"/>
-                        </td>
-                   </tr>
-                   <tr></tr>
-                   <tr>
-                        <td>
-                        <logic:present name="results">
-                            <bean:write name="results" filter="false"/>
-                        </logic:present>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<html:form action="/oscarReport/RptByExample.do">
+		<tr class="MainTableTopRow">
+			<td class="MainTableTopRowLeftColumn"><bean:message
+				key="oscarReport.CDMReport.msgReport" /></td>
+			<td class="MainTableTopRowRightColumn">
+			<table class="TopStatusBar">
+				<tr>
+					<td><bean:message
+						key="oscarReport.RptByExample.MsgQueryByExamples" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableLeftColumn" valign="top">
+			<table>
+				<tr>
+					<td nowrap><a href="#"
+						onClick="popupPage(600, 1000, 'RptViewAllQueryByExamples.do')">View
+					Query History</a></td>
+				</tr>
+				<tr>
+					<td><a href="#"
+						onClick="popupPage(600, 1000, 'RptByExamplesAllFavorites.do')">Edit
+					My Favorite</a></td>
+				</tr>
+			</table>
+			</td>
+			<td class="MainTableRightColumn">
+			<table>
+				<tr>
+					<td><bean:message
+						key="oscarReport.RptByExample.MsgEnterAQuery" /></td>
+				</tr>
+				<tr>
+					<td><html:textarea property="sql" cols="80" rows="4" /></td>
+				</tr>
+				<tr>
+					<td><bean:message key="oscarReport.RptByExample.MsgOr" /></td>
+				</tr>
+				<tr>
+					<td><bean:message
+						key="oscarReport.RptByExample.MsgSelectFromMyFavorites" /></td>
+				</tr>
+				<tr>
+					<td><html:select property="selectedRecentSearch"
+						style="width:660">
+						<html:option value="My favorites" disabled="true" />
+						<html:options collection="favorites" labelProperty="queryName"
+							property="query" />
+					</html:select> <input type="button" value="Load Query"
+						onClick="write2TextArea(); return false;"></td>
+				</tr>
+				<tr>
+					<td><input type="button" value="Query" onclick="submit();" />
+					</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td><logic:present name="results">
+						<bean:write name="results" filter="false" />
+					</logic:present></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
 
-            <td class="MainTableBottomRowRightColumn">
-                &nbsp;
-            </td>
-        </tr>
-        </table>
-        
+			<td class="MainTableBottomRowRightColumn">&nbsp;</td>
+		</tr>
+</table>
+
 </html:form>
 </body>
 </html:html>

@@ -1,10 +1,11 @@
 
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 
 <%
     String formClass = "2MinWalk";
@@ -54,102 +55,9 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
-    <title>2 Minute Walk Test and Lower Extremity Function Test</title>
-    <html:base/>
-        <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:active{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:visited{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-        a:hover{
-            text-decoration: none;
-            color:#FFFFFF;
-        }
-
-	.Head {
-            background-color:#BBBBBB;
-            padding-top:3px;
-            padding-bottom:3px;
-            width:740px;
-            height: 30px;
-            font-size:12pt;
-        }
-
-        .Head INPUT {
-            width: 100px;
-        }
-
-        .Head A {
-            font-size:12pt;
-        }
-
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;             
-            background-color: #F2F2F2;            
-        }
-
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
-        
-        TD{
-            font-size:13pt;
-        }
-
-        TH{
-            font-size:14pt;
-            font-weight: normal;            
-        }
-
-        .checkbox{
-            height: 25px;
-            width: 25px;     
-            background-color: #FFFFFF;
-        }
-
-        .checkboxError{
-            height: 25px;
-            width: 25px;     
-            background-color: red;
-        }
-
-        .subject {
-            background-color: #000000;
-            color: #FFFFFF;  
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: centre;
-        }
-
-        .title {
-            background-color: #486ebd;
-            color: #FFFFFF;            
-            font-weight: bold;
-            text-align: left;
-        }
-        .subTitle {
-            backgroud-color: #F2F2F2;
-            font-weight: bold;
-            text-align: center;             
-        }
-        .question{
-            text-align: left;
-        }
-        
-        
-
-    </style>
+<title>2 Minute Walk Test and Lower Extremity Function Test</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
 
@@ -189,7 +97,8 @@
 </script>
 
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,768)">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0"
+	onload="window.resizeTo(768,768)">
 <!--
 @oscar.formDB Table="formAdf" 
 @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -199,236 +108,222 @@
 @oscar.formDB Field="formEdited" Type="timestamp"  
 -->
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<input type="hidden" name="formId" value="<%=formId%>" />
-<input type="hidden" name="submit" value="exit"/>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="formId" value="<%=formId%>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="95%">
-<tr><td>
-<table border="0" cellspacing="0" cellpadding="0" width="740px" height="10%">
-    <tr>
-        <th class="subject">2 Minute Walk Test and Lower Extremity Function Test</th>
-    </tr>    
-</table>
-</td></tr>
-<tr><td valign="top">
-<table border="0" cellspacing="0" cellpadding="0" height="85%" width="740px" id="page1">        
-    <tr>        
-        <td colspan="2">
-            <table width="740px" height="620px" border="0"  cellspacing="0" cellpadding="0" >  
-                <tr class="title" >
-                    <th colspan="5">2 Minute Walk</th>
-                </tr>
-                <tr>
-                    <td valign="top" align="right"><li></li></td>
-                    <td valign="top" colspan="4">                        
-                        "Please walk as quickly and as safely as possible for 2 minutes. I will let you know when the time is up."                        
-                    </td>
-                </tr>
-                <tr>
-                    <td  valign="top" align="right"><li></li></td>
-                    <td  valign="top" colspan="4">   
-                            Assessor should time and measure the distance the respondent walks                             
-                    </td>                    
-                </tr>
-                <tr bgcolor="white">
-                    <td></td>
-                    <td colspan="4">
-                        Distance: <input type="text" size="10" name="distance" value="<%= props.getProperty("distance", "") %>"/> meter
-                    </td>
-                </tr>
-                <tr class="title" >
-                    <th colspan="5">Lower Extremity Function Test</th>
-                </tr>                
-                <tr>                    
-                    <th>1. </th>
-                    <th colspan="4" class="question">Balance</th>
-                </tr>
-                <tr bgcolor="white">                
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1tried" <%= props.getProperty("Q1tried", "") %>/>
-                    </td>
-                    <td width="40%">Tried but unable</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1FullTandem3To9" <%= props.getProperty("Q1FullTandem3To9", "") %>/>
-                    </td>
-                    <td width="55%">3-9 secs. full tandem</td>                
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1SideBySide10" <%= props.getProperty("Q1SideBySide10", "") %>/>
-                    </td>
-                    <td width="40%">10 secs. side by side</td>                
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1FullTandem10" <%= props.getProperty("Q1FullTandem10", "") %>/>
-                    </td>
-                    <td width="55%">10 secs. full tandem</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q1SemiTandem10" <%= props.getProperty("Q1SemiTandem10", "") %>/>
-                    </td>
-                    <td width="40%">10 secs semi tandem</td>
-                    <td width="5%"></td>
-                    <td width="55%"></td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td colspan="4">
-                        Comments: <input type="text" size="80" name="Q1Cmt" value="<%= props.getProperty("Q1Cmt", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <th>2. </th>
-                    <th colspan="4" class="question">Measured Walk (May use walking aids)</th>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td colspan="4">
-                        <li>
-                            Measure 8 feet (But allow 10 feet in which they can walk)
-                        </li>
-                        <li>
-                            "I want you to walk at your usual speed. Ready begin"
-                        </li>
-                        <li>
-                            When the respondent starts, begin timing*
-                        </li>
-                        <li>
-                            Record the time in the number of seconds
-                        </li>
-                        <li>
-                            Repeat walk
-                        </li><br>
-                        * Should begin with feet together and end when both feet past the end of the ruler
-                    </td>                                 
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>                    
-                    <td colspan="2">Time 1:<input type="text" size="10" name="Q2time1" value="<%= props.getProperty("Q2time1", "") %>"/></td>                
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="55%"></td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td colspan="2">Time 2:<input type="text" size="10" name="Q2time2" value="<%= props.getProperty("Q2time2", "") %>"/></td>                
-                    <td width="5%" align="right">                        
-                    </td>
-                    <td width="55%"></td>
-                </tr> 
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td colspan="4">
-                        Comments: <input type="text" size="80" name="Q2Cmt" value="<%= props.getProperty("Q2Cmt", "") %>"/>
-                    </td>
-                </tr>
-                <tr>                    
-                    <th>3. </th>
-                    <th colspan="4" class="question">Chair Stands</th>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>                    
-                    <td colspan="4" >
-                        <li>
-                            Armless at front and straight backed chair 18" high and 16" deep
-                        </li>
-                        <li>
-                            Stand 5X from sit to standing, ending with standing
-                        </li>
-                        <li>
-                            If they are not able to stand unaided, code "Can't stand"
-                        </li>
-                        <li>
-                            Record why the respondent thinks it would be unsafe
-                        </li>                        
-                    </td>                                 
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q3Unable" <%= props.getProperty("Q3Unable", "") %>/>
-                    </td>
-                    <td width="40%">Unable to stand without using arms</td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q3From11To13s" <%= props.getProperty("Q3From11To13s", "") %>/>
-                    </td>
-                    <td width="55%">(11.2 - 13.6 seconds)</td>                
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q3LessThan16s" <%= props.getProperty("Q3LessThan16s", "") %>/>
-                    </td>
-                    <td width="40%">(Greater than or equal to 16.7 seconds)</td>                
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q3LessThan11s" <%= props.getProperty("Q3LessThan11s", "") %>/>
-                    </td>
-                    <td width="55%">(Less than or equal to 11.1 seconds)</td>
-                </tr>
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td width="5%" align="right">
-                        <input type="checkbox"  class="checkbox" name="Q3From13To16s" <%= props.getProperty("Q3From13To16s", "") %>/>
-                    </td>
-                    <td width="40%">(13.7 - 16.6 seconds)</td>
-                    <td width="5%"></td>
-                    <td width="55%"></td>
-                </tr>   
-                <tr bgcolor="white">
-                    <td width="5%" align="right">
-                    </td>
-                    <td colspan="4">
-                        Comments: <input type="text" size="80" name="Q3Cmt" value="<%= props.getProperty("Q3Cmt", "") %>"/>
-                    </td>
-                </tr>
-            </table>            
-        </td>
-    </tr>   
-</table>
-</td></tr>
+	<table border="0" cellspacing="0" cellpadding="0" width="740px"
+		height="95%">
+		<tr>
+			<td>
+			<table border="0" cellspacing="0" cellpadding="0" width="740px"
+				height="10%">
+				<tr>
+					<th class="subject">2 Minute Walk Test and Lower Extremity
+					Function Test</th>
+				</tr>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
+			<table border="0" cellspacing="0" cellpadding="0" height="85%"
+				width="740px" id="page1">
+				<tr>
+					<td colspan="2">
+					<table width="740px" height="620px" border="0" cellspacing="0"
+						cellpadding="0">
+						<tr class="title">
+							<th colspan="5">2 Minute Walk</th>
+						</tr>
+						<tr>
+							<td valign="top" align="right">
+							<li></li>
+							</td>
+							<td valign="top" colspan="4">"Please walk as quickly and as
+							safely as possible for 2 minutes. I will let you know when the
+							time is up."</td>
+						</tr>
+						<tr>
+							<td valign="top" align="right">
+							<li></li>
+							</td>
+							<td valign="top" colspan="4">Assessor should time and
+							measure the distance the respondent walks</td>
+						</tr>
+						<tr bgcolor="white">
+							<td></td>
+							<td colspan="4">Distance: <input type="text" size="10"
+								name="distance" value="<%= props.getProperty("distance", "") %>" />
+							meter</td>
+						</tr>
+						<tr class="title">
+							<th colspan="5">Lower Extremity Function Test</th>
+						</tr>
+						<tr>
+							<th>1.</th>
+							<th colspan="4" class="question">Balance</th>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q1tried"
+								<%= props.getProperty("Q1tried", "") %> /></td>
+							<td width="40%">Tried but unable</td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q1FullTandem3To9"
+								<%= props.getProperty("Q1FullTandem3To9", "") %> /></td>
+							<td width="55%">3-9 secs. full tandem</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q1SideBySide10"
+								<%= props.getProperty("Q1SideBySide10", "") %> /></td>
+							<td width="40%">10 secs. side by side</td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q1FullTandem10"
+								<%= props.getProperty("Q1FullTandem10", "") %> /></td>
+							<td width="55%">10 secs. full tandem</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q1SemiTandem10"
+								<%= props.getProperty("Q1SemiTandem10", "") %> /></td>
+							<td width="40%">10 secs semi tandem</td>
+							<td width="5%"></td>
+							<td width="55%"></td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="4">Comments: <input type="text" size="80"
+								name="Q1Cmt" value="<%= props.getProperty("Q1Cmt", "") %>" /></td>
+						</tr>
+						<tr>
+							<th>2.</th>
+							<th colspan="4" class="question">Measured Walk (May use
+							walking aids)</th>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="4">
+							<li>Measure 8 feet (But allow 10 feet in which they can
+							walk)</li>
+							<li>"I want you to walk at your usual speed. Ready begin"</li>
+							<li>When the respondent starts, begin timing*</li>
+							<li>Record the time in the number of seconds</li>
+							<li>Repeat walk</li>
+							<br>
+							* Should begin with feet together and end when both feet past the
+							end of the ruler</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="2">Time 1:<input type="text" size="10"
+								name="Q2time1" value="<%= props.getProperty("Q2time1", "") %>" /></td>
+							<td width="5%" align="right"></td>
+							<td width="55%"></td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="2">Time 2:<input type="text" size="10"
+								name="Q2time2" value="<%= props.getProperty("Q2time2", "") %>" /></td>
+							<td width="5%" align="right"></td>
+							<td width="55%"></td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="4">Comments: <input type="text" size="80"
+								name="Q2Cmt" value="<%= props.getProperty("Q2Cmt", "") %>" /></td>
+						</tr>
+						<tr>
+							<th>3.</th>
+							<th colspan="4" class="question">Chair Stands</th>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="4">
+							<li>Armless at front and straight backed chair 18" high and
+							16" deep</li>
+							<li>Stand 5X from sit to standing, ending with standing</li>
+							<li>If they are not able to stand unaided, code "Can't
+							stand"</li>
+							<li>Record why the respondent thinks it would be unsafe</li>
+							</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q3Unable"
+								<%= props.getProperty("Q3Unable", "") %> /></td>
+							<td width="40%">Unable to stand without using arms</td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q3From11To13s"
+								<%= props.getProperty("Q3From11To13s", "") %> /></td>
+							<td width="55%">(11.2 - 13.6 seconds)</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q3LessThan16s"
+								<%= props.getProperty("Q3LessThan16s", "") %> /></td>
+							<td width="40%">(Greater than or equal to 16.7 seconds)</td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q3LessThan11s"
+								<%= props.getProperty("Q3LessThan11s", "") %> /></td>
+							<td width="55%">(Less than or equal to 11.1 seconds)</td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td width="5%" align="right"><input type="checkbox"
+								class="checkbox" name="Q3From13To16s"
+								<%= props.getProperty("Q3From13To16s", "") %> /></td>
+							<td width="40%">(13.7 - 16.6 seconds)</td>
+							<td width="5%"></td>
+							<td width="55%"></td>
+						</tr>
+						<tr bgcolor="white">
+							<td width="5%" align="right"></td>
+							<td colspan="4">Comments: <input type="text" size="80"
+								name="Q3Cmt" value="<%= props.getProperty("Q3Cmt", "") %>" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+			</table>
+			</td>
+		</tr>
 
-<tr><td valign="top">
-<table class="Head" class="hidePrint" height="5%">
-    <tr>
-        <td align="left">
-<%
+		<tr>
+			<td valign="top">
+			<table class="Head" class="hidePrint" height="5%">
+				<tr>
+					<td align="left">
+					<%
   if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript: if(checkBeforeSave()==true) return onSave(); else return false;" />
-            <input type="submit" value="Save and Exit" onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;"/>
-<%
+%> <input type="submit" value="Save"
+						onclick="javascript: if(checkBeforeSave()==true) return onSave(); else return false;" />
+					<input type="submit" value="Save and Exit"
+						onclick="javascript:if(checkBeforeSave()==true) return onSaveExit(); else return false;" />
+					<%
   }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
-        </td>
-        <td align="right">
-            Study ID: <%= props.getProperty("studyID", "N/A") %>
-            <input type="hidden" name="studyID" value="<%= props.getProperty("studyID", "N/A") %>"/>
-        </td>
-    </tr>
-</table>
-</td></tr>
-</table>
+%> <input type="button" value="Exit"
+						onclick="javascript:return onExit();" /> <input type="button"
+						value="Print" onclick="javascript:window.print();" /></td>
+					<td align="right">Study ID: <%= props.getProperty("studyID", "N/A") %>
+					<input type="hidden" name="studyID"
+						value="<%= props.getProperty("studyID", "N/A") %>" /></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
 </html:form>
 </body>
 </html:html>

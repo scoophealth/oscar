@@ -24,12 +24,13 @@
  */
 -->
 
-<%@ page language="java" %>
-<%@ page import="java.util.*,oscar.oscarReport.data.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
+<%@ page language="java"%>
+<%@ page import="java.util.*,oscar.oscarReport.data.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<link rel="stylesheet" type="text/css"
+	href="../oscarEncounter/encounterStyles.css">
 <%
 if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -66,26 +67,9 @@ ArrayList proList = conData.providerList();
 
 <html:html locale="true">
 <head>
-<title>
-<bean:message key="oscarReport.ConsultationReport.title"/> <%= mons %>
-</title>
-<style type="text/css">
-   td.nameBox {
-      border-bottom: 1pt solid #888888;
-      font-family: tahoma, helvetica; ;
-      font-size: 12pt;
-   }
-   td.sideLine {
-      border-right: 1pt solid #888888;
-   }
-   td.fieldBox {
-      font-family: tahoma, helvetica;
-   }
-   th.subTitles{
-      font-family: tahoma, helvetica ;
-      font-size:10pt;
-   }
-</style>
+<title><bean:message key="oscarReport.ConsultationReport.title" />
+<%= mons %></title>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
    var remote=null;
@@ -114,149 +98,163 @@ ArrayList proList = conData.providerList();
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
+<body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
-        <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn">
-                <bean:message key="oscarReport.ConsultationReport.msgReport"/>
-            </td>
-            <td class="MainTableTopRowRightColumn">
-                <table class="TopStatusBar" >
-                 <form action="ConsultationReport.jsp">
-                    <tr>
-                        <td ><bean:message key="oscarReport.ConsultationReport.msgTitle"/></td>
-                        <td>
-                           <select name="numMonth">
-                              <option value="1" <%=selled("1",mons)%> >1 <bean:message key="oscarReport.ConsultationReport.formMonth"/></option>
-                              <option value="2" <%=selled("2",mons)%> >2 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="3" <%=selled("3",mons)%> >3 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="4" <%=selled("4",mons)%> >4 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="5" <%=selled("5",mons)%> >5 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="6" <%=selled("6",mons)%> >6 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="7" <%=selled("7",mons)%> >7 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="8" <%=selled("8",mons)%> >8 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="9" <%=selled("9",mons)%> >9 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="10" <%=selled("10",mons)%> >10 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="11" <%=selled("11",mons)%> >11 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                              <option value="12" <%=selled("12",mons)%> >12 <bean:message key="oscarReport.ConsultationReport.formMonths"/></option>
-                           </select>
-                           <select name="proNo">
-                                 <option value="-1" <%=selled("-1",pros)%> ><bean:message key="oscarReport.ConsultationReport.formAllProviders"/></option>
-                              <%
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+	<tr class="MainTableTopRow">
+		<td class="MainTableTopRowLeftColumn"><bean:message
+			key="oscarReport.ConsultationReport.msgReport" /></td>
+		<td class="MainTableTopRowRightColumn">
+		<table class="TopStatusBar">
+			<form action="ConsultationReport.jsp">
+			<tr>
+				<td><bean:message
+					key="oscarReport.ConsultationReport.msgTitle" /></td>
+				<td><select name="numMonth">
+					<option value="1" <%=selled("1",mons)%>>1 <bean:message
+						key="oscarReport.ConsultationReport.formMonth" /></option>
+					<option value="2" <%=selled("2",mons)%>>2 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="3" <%=selled("3",mons)%>>3 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="4" <%=selled("4",mons)%>>4 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="5" <%=selled("5",mons)%>>5 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="6" <%=selled("6",mons)%>>6 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="7" <%=selled("7",mons)%>>7 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="8" <%=selled("8",mons)%>>8 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="9" <%=selled("9",mons)%>>9 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="10" <%=selled("10",mons)%>>10 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="11" <%=selled("11",mons)%>>11 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+					<option value="12" <%=selled("12",mons)%>>12 <bean:message
+						key="oscarReport.ConsultationReport.formMonths" /></option>
+				</select> <select name="proNo">
+					<option value="-1" <%=selled("-1",pros)%>><bean:message
+						key="oscarReport.ConsultationReport.formAllProviders" /></option>
+					<%
                                   for( int i = 0; i < proList.size(); i++){
                                      ArrayList w = (ArrayList) proList.get(i);
                                      String proNum  = (String) w.get(0);
                                      String proName = (String) w.get(1);
                               %>
-                                  <option value="<%=proNum%>" <%=selled(proNum,pros)%>  ><%=proName%></option>
-                              <% 
+					<option value="<%=proNum%>" <%=selled(proNum,pros)%>><%=proName%></option>
+					<% 
                                   }
                               %>
-                           </select>
-                           <input type=submit value="<bean:message key="oscarReport.ConsultationReport.btnUpdateReport"/>"/>
-                        </td>
-                        <td style="text-align:right">
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
-                        </td>
-                    </tr>
-                  </form>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableLeftColumn">
-             &nbsp;
-            </td>
-            <td class="MainTableRightColumn">
-               <table border=0 cellspacing=4 width=900>
-<%
+				</select> <input type=submit
+					value="<bean:message key="oscarReport.ConsultationReport.btnUpdateReport"/>" />
+				</td>
+				<td style="text-align: right"><a
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
+					key="global.help" /></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
+					key="global.about" /></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
+					key="global.license" /></a></td>
+			</tr>
+			</form>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableLeftColumn">&nbsp;</td>
+		<td class="MainTableRightColumn">
+		<table border=0 cellspacing=4 width=900>
+			<%
 oscar.oscarReport.data.RptConsultReportData.DemoConsultDataStruct  demoData;
 for (int i = 0; i < conData.demoList.size(); i++ ){
 demoData = (RptConsultReportData.DemoConsultDataStruct)  conData.demoList.get(i);
 %>
-<tr>
-   <td bgcolor="#eeeeff" width=900>
-      <table border=0 cellspacing=2 >
-         <tr>
-            <td class="nameBox" colspan=2>Patient Name: <%= demoData.getDemographicName()%></td>
-         </tr>
-         <tr>
+			<tr>
+				<td bgcolor="#eeeeff" width=900>
+				<table border=0 cellspacing=2>
+					<tr>
+						<td class="nameBox" colspan=2>Patient Name: <%= demoData.getDemographicName()%></td>
+					</tr>
+					<tr>
 
-            <td valign=top width=600 class=sideLine >
+						<td valign=top width=600 class=sideLine>
 
-               <table border=0 cellspacing=3 >
-                  <td colspan=4 class=nameBox>Consultations</td>
-                  <tr>
-                     <th width=100 class="subTitles" align=left>Referal Date</th>
-                     <th width=120 class="subTitles" align=left>Service</th>
-                     <th width=280 class="subTitles" align=left>Specialist</th>
-                     <th width=100 class="subTitles" align=left>App. Date</th>
-                  </tr>
-                  <%
+						<table border=0 cellspacing=3>
+							<td colspan=4 class=nameBox>Consultations</td>
+							<tr>
+								<th width=100 class="subTitles" align=left>Referal Date</th>
+								<th width=120 class="subTitles" align=left>Service</th>
+								<th width=280 class="subTitles" align=left>Specialist</th>
+								<th width=100 class="subTitles" align=left>App. Date</th>
+							</tr>
+							<%
                   RptConsultReportData.DemoConsultDataStruct.Consult demoCon;
                   java.util.ArrayList conL =  demoData.getConsults();
                   for (int j = 0; j < conL.size(); j++){
                   demoCon = (RptConsultReportData.DemoConsultDataStruct.Consult)  conL.get(j);
                   %>
-                  <tr>
-                     <td class="fieldBox" bgcolor="#ddddff"><a href="javascript:popupOscarConsultationConfig(700,960,'ShowCo
-nsult.do?requestId=<%=demoCon.requestId%>')"><%=demoCon.referalDate%></td></a>
-                     <td class="fieldBox" bgcolor="#ddddff"><%=demoCon.getService(demoCon.serviceId)%></td>
-                     <td class="fieldBox" bgcolor="#ddddff"><%=demoCon.getSpecialist(demoCon.specialist)%></td>
-                     <td class="fieldBox" bgcolor="#ddddff"><%=demoCon.appDate %></td>
-                  </tr>
-                  <%
+							<tr>
+								<td class="fieldBox" bgcolor="#ddddff"><a
+									href="javascript:popupOscarConsultationConfig(700,960,'ShowCo
+nsult.do?requestId=<%=demoCon.requestId%>')"><%=demoCon.referalDate%></td>
+								</a>
+								<td class="fieldBox" bgcolor="#ddddff"><%=demoCon.getService(demoCon.serviceId)%></td>
+								<td class="fieldBox" bgcolor="#ddddff"><%=demoCon.getSpecialist(demoCon.specialist)%></td>
+								<td class="fieldBox" bgcolor="#ddddff"><%=demoCon.appDate %></td>
+							</tr>
+							<%
                   }
      %>
-               </table>
-            </td>
-            <td valign=top width=300>
-               <table border=0 cellspacing=3>
-                  <tr>
-                    <td class=nameBox colspan=2><bean:message key="oscarReport.ConsultationReport.msgConsDoc"/></td>
-                  </tr>
-                  <tr>
-                     <th width=200 class="subTitles" align=left><bean:message key="oscarReport.ConsultationReport.msgDocDesc"/></th>
-                     <th width=100 class="subTitles" align=left><bean:message key="oscarReport.ConsultationReport.msgDate"/></th>
-                  </tr>
-                  <%
+						</table>
+						</td>
+						<td valign=top width=300>
+						<table border=0 cellspacing=3>
+							<tr>
+								<td class=nameBox colspan=2><bean:message
+									key="oscarReport.ConsultationReport.msgConsDoc" /></td>
+							</tr>
+							<tr>
+								<th width=200 class="subTitles" align=left><bean:message
+									key="oscarReport.ConsultationReport.msgDocDesc" /></th>
+								<th width=100 class="subTitles" align=left><bean:message
+									key="oscarReport.ConsultationReport.msgDate" /></th>
+							</tr>
+							<%
                   RptConsultReportData.DemoConsultDataStruct.ConLetter demoLetter;
                   java.util.ArrayList letL = demoData.getConReplys();
                   for (int j = 0; j < letL.size(); j++){
                   demoLetter = (RptConsultReportData.DemoConsultDataStruct.ConLetter) letL.get(j);
 
                   %>
-                  <tr>
-                      <td class="fieldBox" bgcolor="#deddff">
-                     <a href=# onclick="javascript:rs('new','../dms/documentGetFile.jsp?document=<%=demoLetter.docfileName%>&type=active&doc_no=<%=demoLetter.document_no%>', 480,480,1)"><%=demoLetter.docdesc%></a>
-                      </td>
-                      <td class="fieldBox"  bgcolor="#deddff"><%=demoLetter.docDate.toString()%></td>
-                  </tr>
-                  <%
+							<tr>
+								<td class="fieldBox" bgcolor="#deddff"><a href=#
+									onclick="javascript:rs('new','../dms/documentGetFile.jsp?document=<%=demoLetter.docfileName%>&type=active&doc_no=<%=demoLetter.document_no%>', 480,480,1)"><%=demoLetter.docdesc%></a>
+								</td>
+								<td class="fieldBox" bgcolor="#deddff"><%=demoLetter.docDate.toString()%></td>
+							</tr>
+							<%
                   }
                   %>
-               </table>
-            </td>
-         </tr>
-      </table>
-   </td>
-</tr>
-<%
+						</table>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+			<%
 }
 %>
+		</table>
+
+		</td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
 </table>
-
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-
-            </td>
-            <td class="MainTableBottomRowRightColumn">
-
-            </td>
-        </tr>
-    </table>
 </body>
 </html:html>

@@ -50,11 +50,15 @@
 <%
   
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" />
+<%@ page
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*"
+	errorPage="../appointment/errorpage.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
+	scope="session" />
 <% //save or delete the holiday settings
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete")) ) {
     //save the record first, change holidaybean next
@@ -112,7 +116,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
 %>
 <html:html locale="true">
 <head>
-<title><bean:message key="schedule.scheduleholidaysetting.title"/></title>
+<title><bean:message key="schedule.scheduleholidaysetting.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
@@ -158,48 +162,71 @@ function saveHoliday() {
 //-->
 </script>
 </head>
-<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<form method="post" name="schedule" action="scheduleholidaysetting.jsp" onSubmit="return(checkInput());">
+<body bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()"
+	topmargin="0" leftmargin="0" rightmargin="0">
+<form method="post" name="schedule" action="scheduleholidaysetting.jsp"
+	onSubmit="return(checkInput());">
 
-  <table border="0" width="100%">
-    <tr> 
-      <td width="50" bgcolor="#009966">&nbsp;</td>
-      <td align="center">
-	  
-        <table width="95%" border="0" cellspacing="0" cellpadding="5">
-          <tr> 
-            <td bgcolor="#CCFFCC"> 
-              <p align="right"><bean:message key="schedule.scheduleholidaysetting.formHolidayName"/>: </p>
-            </td>
-            <td bgcolor="#CCFFCC"><input type="text" name="holiday_name" ></td>
-          </tr>
-        </table>
-<%
+<table border="0" width="100%">
+	<tr>
+		<td width="50" bgcolor="#009966">&nbsp;</td>
+		<td align="center">
+
+		<table width="95%" border="0" cellspacing="0" cellpadding="5">
+			<tr>
+				<td bgcolor="#CCFFCC">
+				<p align="right"><bean:message
+					key="schedule.scheduleholidaysetting.formHolidayName" />:</p>
+				</td>
+				<td bgcolor="#CCFFCC"><input type="text" name="holiday_name"></td>
+			</tr>
+		</table>
+		<%
 	//now = new GregorianCalendar(year, month+1, 1);
   now.add(now.DATE, -1); 
   DateInMonthTable aDate = new DateInMonthTable(year, month-1, 1);
   int [][] dateGrid = aDate.getMonthDateGrid();
 %>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
-  			<tr>
-        	  <td width="50%" align="center" >
-			  <a href="scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=-1&bFirstDisp=0"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT='<bean:message key="schedule.scheduleholidaysetting.btnLastMonthTip"/>' vspace="2"> <bean:message key="schedule.scheduleholidaysetting.btnLastMonth"/>&nbsp;&nbsp; 
-              </a>  <b><span CLASS=title><%=year%>-<%=month%></span></b>
-        <a href="scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=1&bFirstDisp=0"> &nbsp;&nbsp;<bean:message key="schedule.scheduleholidaysetting.btnNextMonth"/> <img src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT='<bean:message key="schedule.scheduleholidaysetting.btnNextMonthTip"/>' vspace="2">&nbsp;&nbsp;</a></td>
-  			</TR>
+		<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="95%">
+			<tr>
+				<td width="50%" align="center"><a
+					href="scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=-1&bFirstDisp=0">
+				&nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9"
+					BORDER="0"
+					ALT='<bean:message key="schedule.scheduleholidaysetting.btnLastMonthTip"/>'
+					vspace="2"> <bean:message
+					key="schedule.scheduleholidaysetting.btnLastMonth" />&nbsp;&nbsp; </a>
+				<b><span CLASS=title><%=year%>-<%=month%></span></b> <a
+					href="scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=1&bFirstDisp=0">
+				&nbsp;&nbsp;<bean:message
+					key="schedule.scheduleholidaysetting.btnNextMonth" /> <img
+					src="../images/next.gif" WIDTH="10" HEIGHT="9" BORDER="0"
+					ALT='<bean:message key="schedule.scheduleholidaysetting.btnNextMonthTip"/>'
+					vspace="2">&nbsp;&nbsp;</a></td>
+			</TR>
 		</table>
 
-          <table width="95%" border="1" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-            <tr bgcolor="#FOFOFO" align="center"> 
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="red"><bean:message key="schedule.scheduleholidaysetting.msgSunday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.scheduleholidaysetting.msgMonday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.scheduleholidaysetting.msgTuesday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.scheduleholidaysetting.msgWednesday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.scheduleholidaysetting.msgThursday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message key="schedule.scheduleholidaysetting.msgFriday"/></font></td>
-              <td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2" color="green"><bean:message key="schedule.scheduleholidaysetting.msgSaturday"/></font></td>
-            </tr>
-            <%
+		<table width="95%" border="1" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<tr bgcolor="#FOFOFO" align="center">
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+					color="red"><bean:message
+					key="schedule.scheduleholidaysetting.msgSunday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+					key="schedule.scheduleholidaysetting.msgMonday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+					key="schedule.scheduleholidaysetting.msgTuesday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+					key="schedule.scheduleholidaysetting.msgWednesday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+					key="schedule.scheduleholidaysetting.msgThursday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"><bean:message
+					key="schedule.scheduleholidaysetting.msgFriday" /></font></td>
+				<td width="12.5%"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2"
+					color="green"><bean:message
+					key="schedule.scheduleholidaysetting.msgSaturday" /></font></td>
+			</tr>
+			<%
               StringBuffer bgcolor = new StringBuffer("white");
               StringBuffer strHolidayName = new StringBuffer("");
               HScheduleHoliday aHScheduleHoliday = null;
@@ -218,41 +245,45 @@ function saveHoliday() {
                     }
                       
             %>
-                      <td bgcolor='<%=bgcolor.toString()%>'>
-                      <font color="red"><%= dateGrid[i][j] %></font>
-                      <input type="checkbox" name="sdate_<%=month+"_"+dateGrid[i][j]%>" value="<%=year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])%>" >
-                      <font size="-2">
-                      <br>&nbsp;<%=strHolidayName.toString()%></font></td>
-            <%    
+			<td bgcolor='<%=bgcolor.toString()%>'><font color="red"><%= dateGrid[i][j] %></font>
+			<input type="checkbox" name="sdate_<%=month+"_"+dateGrid[i][j]%>"
+				value="<%=year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])%>">
+			<font size="-2"> <br>
+			&nbsp;<%=strHolidayName.toString()%></font></td>
+			<%    
                   }
                 }
                 out.println("</tr>");
               }
             %>
-        </table>
-            
-            
-          <table width="95%" border="0" cellspacing="0" cellpadding="2"  bgcolor="silver" >
-          <tr bgcolor="#CCFFCC">
-                <input type="hidden" name="dboperation" value="">
-            <td><input type="button" value='<bean:message key="schedule.scheduleholidaysetting.btnDelete"/>' onclick="deleteHoliday();"></td>
-			<td><div align="right"> 
-                <input type="hidden" name="year" value="<%=year%>">
-                <input type="hidden" name="month" value="<%=month%>">
-                <input type="hidden" name="day" value="<%=day%>">
-                <input type="hidden" name="bFirstDisp" value="0">
-                <input type="button" value='<bean:message key="schedule.scheduleholidaysetting.btnSave"/>' onclick="return(saveHoliday());">
-                <input type="button" value='<bean:message key="global.btnClose"/>' onClick="window.close()">
-                
-              </div>
-            </td>
-          </tr>
-        </table>
-        <p>&nbsp;</p>
-        
-      </td>
-    </tr>
-  </table>
+		</table>
+
+
+		<table width="95%" border="0" cellspacing="0" cellpadding="2"
+			bgcolor="silver">
+			<tr bgcolor="#CCFFCC">
+				<input type="hidden" name="dboperation" value="">
+				<td><input type="button"
+					value='<bean:message key="schedule.scheduleholidaysetting.btnDelete"/>'
+					onclick="deleteHoliday();"></td>
+				<td>
+				<div align="right"><input type="hidden" name="year"
+					value="<%=year%>"> <input type="hidden" name="month"
+					value="<%=month%>"> <input type="hidden" name="day"
+					value="<%=day%>"> <input type="hidden" name="bFirstDisp"
+					value="0"> <input type="button"
+					value='<bean:message key="schedule.scheduleholidaysetting.btnSave"/>'
+					onclick="return(saveHoliday());"> <input type="button"
+					value='<bean:message key="global.btnClose"/>'
+					onClick="window.close()"></div>
+				</td>
+			</tr>
+		</table>
+		<p>&nbsp;</p>
+
+		</td>
+	</tr>
+</table>
 
 </form>
 </body>

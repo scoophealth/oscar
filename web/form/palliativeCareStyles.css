@@ -21,43 +21,41 @@
  * Hamilton 
  * Ontario, Canada 
  */
-
-BODY
-{
-    FONT-SIZE: 12pt;
-    FONT-FAMILY: Arial, Verdana, Tahoma, sans-serif;
-    background-color: #FFEFDB; //#FFCC99;
+BODY {
+	FONT-SIZE: 12pt;
+	FONT-FAMILY: Arial, Verdana, Tahoma, sans-serif;
+	background-color: #FFEFDB;
+	//#
+	FFCC99;
 }
 
-TABLE
-{
+TABLE {
 	FONT-SIZE: 12pt;
-    border-color:#999999;
+	border-color: #999999;
 }
 
 TEXTAREA {
-    overflow: auto;
+	overflow: auto;
 }
 
-
 TABLE TD {
-    vertical-align: top;
+	vertical-align: top;
 }
 
 .Head {
-    background-color:#BBBBBB;
-    padding-top:3px;
-    padding-bottom:3px;
-    width:940px;
-    font-size:12pt;
+	background-color: #BBBBBB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	width: 940px;
+	font-size: 12pt;
 }
 
 .Head INPUT {
-    width: 100px;
+	width: 100px;
 }
 
 .Head A {
-    font-size:12pt;
+	font-size: 12pt;
 }
 
 .title {
@@ -66,7 +64,7 @@ TABLE TD {
 	font-size: 14pt;
 }
 
-.format TD{
+.format TD {
 	vertical-align: top;
 }
 
@@ -76,41 +74,42 @@ TABLE TD {
 
 .format TEXTAREA {
 	width: 100%;
-    overflow: auto;
+	overflow: auto;
 }
 
 .date TD {
-	font-size:8pt;
+	font-size: 8pt;
 }
 
 .date A {
 	font-size: 12pt;
 }
-.pain TEXTAREA{
+
+.pain TEXTAREA {
 	height: 100px;
-    overflow: auto;
+	overflow: auto;
 }
 
-.signature INPUT{
+.signature INPUT {
 	width: 100%;
 }
 
 .giBowels TEXTAREA {
 	height: 75px;
-    overflow: auto;
+	overflow: auto;
 }
 
 .gu TEXTAREA {
 	height: 60px;
-    overflow: auto;
+	overflow: auto;
 }
 
 .psychAgitation TEXTAREA {
 	height: 60px;
-    overflow: auto;
+	overflow: auto;
 }
 
 .other TEXTAREA {
 	height: 100px;
-    overflow: auto;
+	overflow: auto;
 }

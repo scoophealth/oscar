@@ -18,34 +18,36 @@
  */
 -->
 
-  
-<%@ page import="java.util.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="errorpage.jsp" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
+<%@ page import="java.util.*, oscar.oscarDemographic.data.ProvinceNames"
+	errorPage="errorpage.jsp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
 <% 
   ProvinceNames pNames = ProvinceNames.getInstance();
   String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
   String billingCentre = ((String ) oscarVariables.getProperty("billcenter","")).trim().toUpperCase();
-%>  
-  
-  <html lang="en">
-    <head>
-      <title>
-         Report List
-      </title>
-      <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-      <meta http-equiv="Cache-Control" content="no-cache">
-      <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
-      <!-- calendar stylesheet -->
-      <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
-      <!-- main calendar program -->
-      <script type="text/javascript" src="../share/calendar/calendar.js"></script>
-      <!-- language for the calendar -->
-      <script type="text/javascript" src="../share/calendar/lang/calendar-en.js"></script>
-      <!-- the following script defines the Calendar.setup helper function, which makes
+%>
+
+<html lang="en">
+<head>
+<title>Report List</title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+<LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../share/calendar/lang/calendar-en.js"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-      <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-      <script language="JavaScript">
+<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+<script language="JavaScript">
 
 		<!--
 		function setfocus() {
@@ -80,156 +82,112 @@
             }
 
       </script>
-    </head>
-    <body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-    <center>
-	<form method="post" id ="clientform" name="baseurl" action="reportBCARDemo2.jsp" >
-      <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
-        <tr BGCOLOR="#CCFFFF">
-          <th>Client Database Report</th>
-        </tr>
-      </table>
-      </center>
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-		  <tr bgcolor="silver"><td >
-              <input type="hidden" name="demoReport" value="1">
-              <input type="submit" name="submit" value="Report in HTML">
-              | <input type="submit" name="submit" value="Report in CSV">
-                  
-              BCAR: <input type="radio" name="bcartype"   value="BCAR"/>
-              BCAR2007: <input type="radio" id="bcartype"  checked name="bcartype"  value="BCAR2007"/>
-              
-                  
-      </table>
-      
-      <table width="100%" border="0" cellspacing="1" cellpadding="0">
-		<tr><td>
-		
+</head>
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0"
+	rightmargin="0">
+<center>
+<form method="post" id="clientform" name="baseurl"
+	action="reportBCARDemo2.jsp">
+<table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
+	<tr BGCOLOR="#CCFFFF">
+		<th>Client Database Report</th>
+	</tr>
+</table>
+</center>
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr bgcolor="silver">
+		<td><input type="hidden" name="demoReport" value="1"> <input
+			type="submit" name="submit" value="Report in HTML"> | <input
+			type="submit" name="submit" value="Report in CSV"> BCAR: <input
+			type="radio" name="bcartype" value="BCAR" /> BCAR2007: <input
+			type="radio" id="bcartype" checked name="bcartype" value="BCAR2007" />
+</table>
+
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+	<tr>
+		<td>
+
 		<table width="100%" border="0" cellspacing="2" cellpadding="0">
-          <tr bgcolor="#EEdddd">
-            <td colspan="2" align="center">
-              Data Field
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right" width="10%">
-              <b><input type="checkbox" name="last_name" ></b>
-            </td>
-            <td>
-              Last Name
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="first_name" ></b>
-            </td>
-            <td>
-              First Name
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="date_joined" ></b>
-            </td>
-            <td>
-              Date Joined
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="hin" ></b>
-            </td>
-            <td>
-              PHN
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="hc_type" ></b>
-            </td>
-            <td>
-              Province
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="address" ></b>
-            </td>
-            <td>
-              Address
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="city" ></b>
-            </td>
-            <td>
-              City
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="postal" ></b>
-            </td>
-            <td>
-              Postal Code
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="phone" ></b>
-            </td>
-            <td>
-              Phone (H)
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="phone2" ></b>
-            </td>
-            <td>
-              Phone (W)
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="email" ></b>
-            </td>
-            <td>
-              Email
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="prefer_language" ></b>
-            </td>
-            <td nowrap>
-              Preferred Language
-            </td>
-          </tr>
-          
-<% if(oscarVariables.getProperty("demographicExt") != null) {
+			<tr bgcolor="#EEdddd">
+				<td colspan="2" align="center">Data Field</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right" width="10%"><b><input type="checkbox"
+					name="last_name"></b></td>
+				<td>Last Name</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="first_name"></b></td>
+				<td>First Name</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="date_joined"></b></td>
+				<td>Date Joined</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="hin"></b>
+				</td>
+				<td>PHN</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="hc_type"></b>
+				</td>
+				<td>Province</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="address"></b>
+				</td>
+				<td>Address</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="city"></b>
+				</td>
+				<td>City</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="postal"></b>
+				</td>
+				<td>Postal Code</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="phone"></b>
+				</td>
+				<td>Phone (H)</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="phone2"></b>
+				</td>
+				<td>Phone (W)</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="email"></b>
+				</td>
+				<td>Email</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="prefer_language"></b></td>
+				<td nowrap>Preferred Language</td>
+			</tr>
+
+			<% if(oscarVariables.getProperty("demographicExt") != null) {
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int i=0; i<propDemoExt.length; i++) {%>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="<%=propDemoExt[i].replace(' ', '_') %>" ></b>
-            </td>
-            <td nowrap>
-              <%=propDemoExt[i] %>
-            </td>
-          </tr>
-<%} }%>          
-          
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="c_EDD" ></b>
-            </td>
-            <td>
-              EDD
-            </td>
-          </tr>
-          <!--  tr bgcolor="#EEEEFF">
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="<%=propDemoExt[i].replace(' ', '_') %>"></b></td>
+				<td nowrap><%=propDemoExt[i] %></td>
+			</tr>
+			<%} }%>
+
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="c_EDD"></b>
+				</td>
+				<td>EDD</td>
+			</tr>
+			<!--  tr bgcolor="#EEEEFF">
             <td align="right">
               <b><input type="checkbox" name="ga" ></b>
             </td>
@@ -237,255 +195,225 @@
               GA Today
             </td>
           </tr-->
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="pg1_famPhy" ></b>
-            </td>
-            <td>
-              Family Physician
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="pg1_partnerName" ></b>
-            </td>
-            <td>
-              Partner's Name
-            </td>
-          </tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="pg1_famPhy"></b></td>
+				<td>Family Physician</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="pg1_partnerName"></b></td>
+				<td>Partner's Name</td>
+			</tr>
 		</table>
 
-		</td><td valign="top">
-		
-		<!-- right hand -->
+		</td>
+		<td valign="top"><!-- right hand -->
 		<table width="100%" border="0" cellspacing="2" cellpadding="2">
-          <tr bgcolor="#EEdddd">
-            <td colspan="3" align="center">
-              Limitation
-            </td>
-          </tr>
-          <tr bgcolor="#EEEEFF">
-            <td align="right" width="6%">
-              <b><input type="checkbox" name="filter_1" checked></b>
-            </td>
-            <td>
-              Active Clients
-            </td>
-            <td width="1%" align="right">
-              <input type="hidden" name="value_1" value="demographic.patient_status='AC'">
-              <input type="hidden" name="position_1" value="sql">
-              <input type="hidden" name="dateFormat_1" value="">
-            </td>
-          </tr>
+			<tr bgcolor="#EEdddd">
+				<td colspan="3" align="center">Limitation</td>
+			</tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right" width="6%"><b><input type="checkbox"
+					name="filter_1" checked></b></td>
+				<td>Active Clients</td>
+				<td width="1%" align="right"><input type="hidden"
+					name="value_1" value="demographic.patient_status='AC'"> <input
+					type="hidden" name="position_1" value="sql"> <input
+					type="hidden" name="dateFormat_1" value=""></td>
+			</tr>
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_2" ></b>
-            </td>
-            <td>
-              Inactive Clients
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_2" value="demographic.patient_status='IN'">
-              <input type="hidden" name="position_2" value="sql">
-              <input type="hidden" name="dateFormat_2" value="">
-            </td>
-          </tr>
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox" name="filter_2"></b>
+				</td>
+				<td>Inactive Clients</td>
+				<td align="right"><input type="hidden" name="value_2"
+					value="demographic.patient_status='IN'"> <input
+					type="hidden" name="position_2" value="sql"> <input
+					type="hidden" name="dateFormat_2" value=""></td>
+			</tr>
 
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="filter_3" ></b>
-            </td>
-            <td>
-              Delivered Clients
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_3" value="formBCAR.demographic_no in (select distinct demographic_no from formBCBirthSumMo)">
-              <input type="hidden" name="position_3" value="sql">
-              <input type="hidden" name="dateFormat_3" value="">
-            </td>
-          </tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="filter_3"></b>
+				</td>
+				<td>Delivered Clients</td>
+				<td align="right"><input type="hidden" name="value_3"
+					value="formBCAR.demographic_no in (select distinct demographic_no from formBCBirthSumMo)">
+				<input type="hidden" name="position_3" value="sql"> <input
+					type="hidden" name="dateFormat_3" value=""></td>
+			</tr>
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_4" ></b>
-            </td>
-            <td>
-              Date of Birth between <input type="text" name="startDate4" id="startDate4" value="" size="10" readonly><img src="../images/cal.gif" id="startDate4_cal"> and <input type="text" name="endDate4" id="endDate4" value="" size="10" readonly><img src="../images/cal.gif" id="endDate4_cal">
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_4" value="(concat(demographic.year_of_birth,'-',demographic.month_of_birth,'-',demographic.date_of_birth)) between '${startDate4}' and '${endDate4}'">
-              <input type="hidden" name="position_4" value="sql">
-              <input type="hidden" name="dateFormat_4" value="dd/MM/yyyy">
-            </td>
-          </tr>
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox" name="filter_4"></b>
+				</td>
+				<td>Date of Birth between <input type="text" name="startDate4"
+					id="startDate4" value="" size="10" readonly><img
+					src="../images/cal.gif" id="startDate4_cal"> and <input
+					type="text" name="endDate4" id="endDate4" value="" size="10"
+					readonly><img src="../images/cal.gif" id="endDate4_cal">
+				</td>
+				<td align="right"><input type="hidden" name="value_4"
+					value="(concat(demographic.year_of_birth,'-',demographic.month_of_birth,'-',demographic.date_of_birth)) between '${startDate4}' and '${endDate4}'">
+				<input type="hidden" name="position_4" value="sql"> <input
+					type="hidden" name="dateFormat_4" value="dd/MM/yyyy"></td>
+			</tr>
 
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="filter_8" ></b>
-            </td>
-            <td>
-              EDD between <input type="text" name="startDate8" id="startDate8" value="" size="10" readonly><img src="../images/cal.gif" id="startDate8_cal"> and <input type="text" name="endDate8" id="endDate8" value="" size="10" readonly><img src="../images/cal.gif" id="endDate8_cal">
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_8" value="formBCAR.c_EDD between '${startDate8}' and '${endDate8}'">
-              <input type="hidden" name="position_8" value="sql">
-              <input type="hidden" name="dateFormat_8" value="dd/MM/yyyy">
-            </td>
-          </tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox" name="filter_8"></b>
+				</td>
+				<td>EDD between <input type="text" name="startDate8"
+					id="startDate8" value="" size="10" readonly><img
+					src="../images/cal.gif" id="startDate8_cal"> and <input
+					type="text" name="endDate8" id="endDate8" value="" size="10"
+					readonly><img src="../images/cal.gif" id="endDate8_cal">
+				</td>
+				<td align="right"><input type="hidden" name="value_8"
+					value="formBCAR.c_EDD between '${startDate8}' and '${endDate8}'">
+				<input type="hidden" name="position_8" value="sql"> <input
+					type="hidden" name="dateFormat_8" value="dd/MM/yyyy"></td>
+			</tr>
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_12" ></b>
-            </td>
-            <td>
-              Individual Client Search: <font size="-1">(Last Name) <input type="text" name="pLastName12" value="" size="15">, (First Name) <input type="text" name="pFirstName12" value="" size="15"></font>
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_12" value="demographic.last_name like '${pLastName12}%' and demographic.first_name like '${pFirstName12}%'">
-              <input type="hidden" name="position_12" value="sql">
-              <input type="hidden" name="dateFormat_12" value="">
-            </td>
-          </tr>
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox"
+					name="filter_12"></b></td>
+				<td>Individual Client Search: <font size="-1">(Last
+				Name) <input type="text" name="pLastName12" value="" size="15">,
+				(First Name) <input type="text" name="pFirstName12" value=""
+					size="15"></font></td>
+				<td align="right"><input type="hidden" name="value_12"
+					value="demographic.last_name like '${pLastName12}%' and demographic.first_name like '${pFirstName12}%'">
+				<input type="hidden" name="position_12" value="sql"> <input
+					type="hidden" name="dateFormat_12" value=""></td>
+			</tr>
 
-          <tr bgcolor="#EEEEFF">
-            <td align="right" >
-              <b><input type="checkbox" name="filter_14" ></b>
-            </td>
-            <td>
-              Primiparous (T=0 and P=0)
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_14" value="formBCAR.pg1_term =0 and formBCAR.pg1_preterm =0">
-              <input type="hidden" name="position_14" value="sql">
-              <input type="hidden" name="dateFormat_14" value="">
-            </td>
-          </tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="filter_14"></b></td>
+				<td>Primiparous (T=0 and P=0)</td>
+				<td align="right"><input type="hidden" name="value_14"
+					value="formBCAR.pg1_term =0 and formBCAR.pg1_preterm =0"> <input
+					type="hidden" name="position_14" value="sql"> <input
+					type="hidden" name="dateFormat_14" value=""></td>
+			</tr>
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_15" ></b>
-            </td>
-            <td>
-              Multiparous (T>0 or P>0)
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_15" value="(formBCAR.pg1_term >0 or formBCAR.pg1_preterm >0)">
-              <input type="hidden" name="position_15" value="sql">
-              <input type="hidden" name="dateFormat_15" value="">
-            </td>
-          </tr>
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox"
+					name="filter_15"></b></td>
+				<td>Multiparous (T>0 or P>0)</td>
+				<td align="right"><input type="hidden" name="value_15"
+					value="(formBCAR.pg1_term >0 or formBCAR.pg1_preterm >0)">
+				<input type="hidden" name="position_15" value="sql"> <input
+					type="hidden" name="dateFormat_15" value=""></td>
+			</tr>
 
-          <tr bgcolor="#EEEEFF">
-            <td align="right">
-              <b><input type="checkbox" name="filter_16" ></b>
-            </td>
-            <td>
-              Either (G>0)
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_16" value="formBCAR.pg1_gravida >0">
-              <input type="hidden" name="position_16" value="sql">
-              <input type="hidden" name="dateFormat_16" value="">
-            </td>
-          </tr>
+			<tr bgcolor="#EEEEFF">
+				<td align="right"><b><input type="checkbox"
+					name="filter_16"></b></td>
+				<td>Either (G>0)</td>
+				<td align="right"><input type="hidden" name="value_16"
+					value="formBCAR.pg1_gravida >0"> <input type="hidden"
+					name="position_16" value="sql"> <input type="hidden"
+					name="dateFormat_16" value=""></td>
+			</tr>
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_100" ></b>
-            </td>
-            <td>
-              Approximate EDD between <input type="text" name="startDate100" id="startDate100" value="" size="10" readonly><img src="../images/cal.gif" id="startDate100_cal"> and <input type="text" name="endDate100" id="endDate100" value="" size="10" readonly><img src="../images/cal.gif" id="endDate100_cal">
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_100" value="demographicExt.key_val='Approximate_EDD' and demographicExt.value >= '${startDate100}' and demographicExt.value <= '${endDate100}'">
-              <input type="hidden" name="position_100" value="sql">
-              <input type="hidden" name="dateFormat_100" value="dd/MM/yyyy">
-            </td>
-          </tr>
-          
-<% if(oscarVariables.getProperty("demographicExt") != null) {
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox"
+					name="filter_100"></b></td>
+				<td>Approximate EDD between <input type="text"
+					name="startDate100" id="startDate100" value="" size="10" readonly><img
+					src="../images/cal.gif" id="startDate100_cal"> and <input
+					type="text" name="endDate100" id="endDate100" value="" size="10"
+					readonly><img src="../images/cal.gif" id="endDate100_cal">
+				</td>
+				<td align="right"><input type="hidden" name="value_100"
+					value="demographicExt.key_val='Approximate_EDD' and demographicExt.value >= '${startDate100}' and demographicExt.value <= '${endDate100}'">
+				<input type="hidden" name="position_100" value="sql"> <input
+					type="hidden" name="dateFormat_100" value="dd/MM/yyyy"></td>
+			</tr>
+
+			<% if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
     String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int i=1; i<propDemoExt.length; i++) {%>
-          
-          <tr bgcolor="<%=i%2==0?"":"#EEEEFF" %>">
-            <td align="right">
-              <b><input type="checkbox" name="filter_<%=100+i %>" ></b>
-            </td>
-            <td>
-			<% if(bExtForm) {  %>
-			  <%=propDemoExt[i] %><%=propDemoExtForm[i].replaceAll("name=\""+propDemoExt[i].replace(' ', '_')+"\"", "name=\"pSpec"+(100+i)+"\"") %>
-			<% } else { %>
-              <%=propDemoExt[i] %> <input type="text" name="pSpec<%=100+i %>" value="" size="15">
-	        <% }  %>    
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_<%=100+i %>" value="demographicExt.key_val='<%=propDemoExt[i].replace(' ', '_') %>' and demographicExt.value like '${pSpec<%=100+i %>}%' ">
-              <input type="hidden" name="position_<%=100+i %>" value="sql">
-              <input type="hidden" name="dateFormat_<%=100+i %>" value="">
-            </td>
-          </tr>
-<%} }%>          
 
-          <tr bgcolor="">
-            <td align="right">
-              <b><input type="checkbox" name="filter_200" ></b>
-            </td>
-            <td>
-            Province
-	        <select name="province">
-	        <option value="OT"<%=prov.equals("") || prov.equals("OT")?" selected":""%>>Other</option>
-	        <% if (pNames.isDefined()) {
+			<tr bgcolor="<%=i%2==0?"":"#EEEEFF" %>">
+				<td align="right"><b><input type="checkbox"
+					name="filter_<%=100+i %>"></b></td>
+				<td>
+				<% if(bExtForm) {  %> <%=propDemoExt[i] %><%=propDemoExtForm[i].replaceAll("name=\""+propDemoExt[i].replace(' ', '_')+"\"", "name=\"pSpec"+(100+i)+"\"") %>
+				<% } else { %> <%=propDemoExt[i] %> <input type="text"
+					name="pSpec<%=100+i %>" value="" size="15"> <% }  %>
+				</td>
+				<td align="right"><input type="hidden" name="value_<%=100+i %>"
+					value="demographicExt.key_val='<%=propDemoExt[i].replace(' ', '_') %>' and demographicExt.value like '${pSpec<%=100+i %>}%' ">
+				<input type="hidden" name="position_<%=100+i %>" value="sql">
+				<input type="hidden" name="dateFormat_<%=100+i %>" value="">
+				</td>
+			</tr>
+			<%} }%>
+
+			<tr bgcolor="">
+				<td align="right"><b><input type="checkbox"
+					name="filter_200"></b></td>
+				<td>Province <select name="province">
+					<option value="OT"
+						<%=prov.equals("") || prov.equals("OT")?" selected":""%>>Other</option>
+					<% if (pNames.isDefined()) {
 	                   for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
 	                       String province = (String) li.next(); %>
-	                       <option value="<%=province%>"<%=province.equals(prov)?" selected":""%>><%=li.next()%></option>
-	                   <% } %>
-	            <% } else { %>
-	                  <option value="AB"<%=prov.equals("AB")?" selected":""%>>AB-Alberta</option>
-	                  <option value="BC"<%=prov.equals("BC")?" selected":""%>>BC-British Columbia</option>
-	                  <option value="MB"<%=prov.equals("MB")?" selected":""%>>MB-Manitoba</option>
-	                  <option value="NB"<%=prov.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-	                  <option value="NL"<%=prov.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-	                  <option value="NT"<%=prov.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
-	                  <option value="NS"<%=prov.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-	                  <option value="NU"<%=prov.equals("NU")?" selected":""%>>NU-Nunavut</option>
-	                  <option value="ON"<%=prov.equals("ON")?" selected":""%>>ON-Ontario</option>
-	                  <option value="PE"<%=prov.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-	                  <option value="QC"<%=prov.equals("QC")?" selected":""%>>QC-Quebec</option>
-	                  <option value="SK"<%=prov.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-	                  <option value="YT"<%=prov.equals("YT")?" selected":""%>>YT-Yukon</option>
-	                  <option value="US"<%=prov.equals("US")?" selected":""%>>US resident</option>
-	          <% } %>
-	          </select>
-            </td>
-            <td align="right">
-              <input type="hidden" name="value_200" value="demographic.hc_type like '${province}'">
-              <input type="hidden" name="position_200" value="sql">
-              <input type="hidden" name="dateFormat_200" value="">
-            </td>
-          </tr>
+					<option value="<%=province%>"
+						<%=province.equals(prov)?" selected":""%>><%=li.next()%></option>
+					<% } %>
+					<% } else { %>
+					<option value="AB" <%=prov.equals("AB")?" selected":""%>>AB-Alberta</option>
+					<option value="BC" <%=prov.equals("BC")?" selected":""%>>BC-British
+					Columbia</option>
+					<option value="MB" <%=prov.equals("MB")?" selected":""%>>MB-Manitoba</option>
+					<option value="NB" <%=prov.equals("NB")?" selected":""%>>NB-New
+					Brunswick</option>
+					<option value="NL" <%=prov.equals("NL")?" selected":""%>>NL-Newfoundland
+					& Labrador</option>
+					<option value="NT" <%=prov.equals("NT")?" selected":""%>>NT-Northwest
+					Territory</option>
+					<option value="NS" <%=prov.equals("NS")?" selected":""%>>NS-Nova
+					Scotia</option>
+					<option value="NU" <%=prov.equals("NU")?" selected":""%>>NU-Nunavut</option>
+					<option value="ON" <%=prov.equals("ON")?" selected":""%>>ON-Ontario</option>
+					<option value="PE" <%=prov.equals("PE")?" selected":""%>>PE-Prince
+					Edward Island</option>
+					<option value="QC" <%=prov.equals("QC")?" selected":""%>>QC-Quebec</option>
+					<option value="SK" <%=prov.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+					<option value="YT" <%=prov.equals("YT")?" selected":""%>>YT-Yukon</option>
+					<option value="US" <%=prov.equals("US")?" selected":""%>>US
+					resident</option>
+					<% } %>
+				</select></td>
+				<td align="right"><input type="hidden" name="value_200"
+					value="demographic.hc_type like '${province}'"> <input
+					type="hidden" name="position_200" value="sql"> <input
+					type="hidden" name="dateFormat_200" value=""></td>
+			</tr>
 
 		</table>
-		
-		
-		</td></tr>
-		</table>
-		
-
-      <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-		  <tr bgcolor="silver"><td >
-              <input type="hidden" name="id" value="1">
-              <input type="submit" name="submit" value="Report in HTML">
-              | <input type="submit" name="submit" value="Report in CSV">
-          </td>
-        </form>
-      </table>
 
 
-    </body>
-      <script type="text/javascript">
+		</td>
+	</tr>
+</table>
+
+
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<tr bgcolor="silver">
+		<td><input type="hidden" name="id" value="1"> <input
+			type="submit" name="submit" value="Report in HTML"> | <input
+			type="submit" name="submit" value="Report in CSV"></td>
+		</form>
+</table>
+
+
+</body>
+<script type="text/javascript">
 Calendar.setup({ inputField : "startDate4", ifFormat : "%d/%m/%Y", showsTime :false, button : "startDate4_cal", singleClick : true, step : 1 }); 
 Calendar.setup({ inputField : "endDate4", ifFormat : "%d/%m/%Y", showsTime :false, button : "endDate4_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "startDate8", ifFormat : "%d/%m/%Y", showsTime :false, button : "startDate8_cal", singleClick : true, step : 1 }); 
@@ -494,4 +422,4 @@ Calendar.setup({ inputField : "endDate8", ifFormat : "%d/%m/%Y", showsTime :fals
 Calendar.setup({ inputField : "startDate100", ifFormat : "%Y/%m/%d", showsTime :false, button : "startDate100_cal", singleClick : true, step : 1 }); 
 Calendar.setup({ inputField : "endDate100", ifFormat : "%Y/%m/%d", showsTime :false, button : "endDate100_cal", singleClick : true, step : 1 });
       </script>
-  </html>
+</html>
