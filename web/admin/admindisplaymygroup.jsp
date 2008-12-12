@@ -41,9 +41,7 @@
 
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
-function setfocus() {
-  this.focus();
-}
+
 //function upCaseCtrl(ctrl) {
 //	ctrl.value = ctrl.value.toUpperCase();
 //}

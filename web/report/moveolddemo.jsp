@@ -1,6 +1,6 @@
 <%
   //moveolddemo.jsp?provider_no=&filename=
-  //if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  //
   String curUser_no = (String) session.getAttribute("user");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
@@ -42,9 +42,8 @@ function setfocus() {
   this.focus();
   //document.titlesearch.keyword.select();
 }
-function refresh() {
-  history.go(0);
-}
+
+  
 
 //-->
 </SCRIPT>

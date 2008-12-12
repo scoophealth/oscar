@@ -25,7 +25,7 @@
 -->
 
 <%
-//  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+//  
 //  String curUser_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*,java.io.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>

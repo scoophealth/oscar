@@ -107,9 +107,7 @@
         return ret;
     }
 
-function setfocus() {
-    this.focus();
-}
+
 
     function onSave() {
         document.forms[0].submit.value="save";
@@ -120,13 +118,7 @@ function setfocus() {
         }
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         //document.forms[0].submit.value="exit";
         var ret = checkAllDates();

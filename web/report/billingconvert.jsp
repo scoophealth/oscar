@@ -1,5 +1,5 @@
 <%
-//  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+//  
 //  String curUser_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*,java.io.*, oscar.*, oscar.login.*, org.apache.commons.lang.StringEscapeUtils" errorPage="../appointment/errorpage.jsp" %>

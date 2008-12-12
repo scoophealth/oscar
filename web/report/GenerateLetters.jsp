@@ -32,7 +32,7 @@
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String demographic_no = request.getParameter("demographic_no"); 
   
   String[] demos = request.getParameterValues("demo");

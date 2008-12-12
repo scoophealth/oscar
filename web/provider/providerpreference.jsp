@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String provider_name = (String) session.getAttribute("userlastname")+", "+(String) session.getAttribute("userfirstname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
@@ -122,16 +122,7 @@ function checkTypeInAll() {
 	return checkin;
 }
 
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
-  var popup=window.open(page, "<bean:message key="provider.providerpreference.titlePopup"/>", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 
 function isNumeric(strString) {
     var validNums = "0123456789";

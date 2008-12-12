@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   int nStartTime=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
   int nEndTime=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
   int nStep=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
@@ -69,20 +69,10 @@ function selectprovider(s) {
   a="scheduleflipview.jsp?originalpage=<%=request.getParameter("originalpage")%>&provider_no="+s.options[s.selectedIndex].value+<%=request.getParameter("startDate")!=null?("\"&startDate="+request.getParameter("startDate")+"\""):"\""%>;
   self.location.href = a;
 }//-->
-function refresh() {
-  history.go(0);
-}
 
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";//360,680
-  var popup=window.open(page, "apptReception", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+  
+
+
 function t(s1,s2,s3,s4,s5,s6) {
   popupPage(360,680,('../appointment/addappointment.jsp?demographic_no=<%=curDemoNo%>&name=<%=curDemoName%>&provider_no=<%=curProvider_no%>&bFirstDisp=<%=true%>&year='+s1+'&month='+s2+'&day='+s3+'&start_time='+s4+'&end_time='+s5+'&duration='+s6 ) );
 }

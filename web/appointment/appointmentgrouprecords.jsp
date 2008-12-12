@@ -1,5 +1,5 @@
 <% 
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String curProvider_no = request.getParameter("provider_no");
     String mygroupno = (String) session.getAttribute("groupno");  
     String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
@@ -183,9 +183,7 @@ self.opener.refresh();
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-    this.focus();
-}
+
 function onCheck(a) {
     if (a.checked) {
 		var s ;

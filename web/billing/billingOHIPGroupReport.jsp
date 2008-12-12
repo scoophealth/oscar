@@ -82,9 +82,7 @@ String monthCode = "";
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </script>
 </head>

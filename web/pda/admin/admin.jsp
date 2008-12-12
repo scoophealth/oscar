@@ -54,16 +54,7 @@
       // do nothing at the moment
       // check input data in the future 
     }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";//360,680
-  var popup=window.open(page, "groupno", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 
     //-->
     </script>

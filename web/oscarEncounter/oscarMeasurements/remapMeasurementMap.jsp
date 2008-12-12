@@ -31,7 +31,7 @@
 <%@ page import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties, oscar.util.StringUtils" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 MeasurementMapConfig mmc = new MeasurementMapConfig();
 String id = request.getParameter("id");
 String identifier = request.getParameter("identifier");

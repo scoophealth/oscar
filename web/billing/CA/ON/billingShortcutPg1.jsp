@@ -365,9 +365,7 @@
             <!--
 window.focus();
 
-function setfocus() {
-    this.focus();
-}
+
 function gotoBillingOB() {
   if(self.location.href.lastIndexOf("?") > 0) {
     a = self.location.href.substring(self.location.href.lastIndexOf("?"));

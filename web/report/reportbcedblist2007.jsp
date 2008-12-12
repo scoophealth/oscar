@@ -60,9 +60,7 @@ reportMainBean.doConfigure(dbParams,dbQueries);
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </SCRIPT>
 <!--base target="pt_srch_main"-->

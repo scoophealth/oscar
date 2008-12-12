@@ -1,5 +1,5 @@
 <% 
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 %>
 
 <%@page contentType="text/html"%>

@@ -1,5 +1,5 @@
 <%
-	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	
 
 	String curUser_no = (String) session.getAttribute("user");
     String userName = (String) session.getAttribute("userlastname") + "," + (String) session.getAttribute("userfirstname");
@@ -70,9 +70,7 @@
 <meta http-equiv=Expires content=-1>
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </SCRIPT>
 </head>

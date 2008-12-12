@@ -29,7 +29,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
   String id = request.getParameter("id");

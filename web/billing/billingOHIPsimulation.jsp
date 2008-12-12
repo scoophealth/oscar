@@ -65,9 +65,7 @@ user_no = (String) session.getAttribute("user");
 function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </script>
 <style type='text/css'><!-- .bodytext{  font-family: Arial, Helvetica, sans-serif;  font-size: 12px; font-style: normal;  line-height: normal;  font-weight: normal;  font-variant: normal;  text-transform: none;  color: #003366;  text-decoration: none; --></style>

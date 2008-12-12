@@ -1,0 +1,65 @@
+<script type="text/javascript" language="Javascript">
+
+//setfocus to the current window
+function setfocus() {
+    this.focus();
+}
+
+//refresh this page
+function refresh() {
+	  history.go(0);
+}
+
+//open a new popup window
+function popupPage(vheight,vwidth,varpage) { 
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
+
+//Prompt user if exiting without saving
+function onExit() {
+    if(confirm("Are you sure you wish to exit without saving your changes?")==true)
+    {
+        window.close();
+    }
+    return(false);
+}
+
+//Check if the entered type is a number
+function checkTypeNum(typeIn) {
+	var typeInOK = true;
+	var i = 0;
+	var length = typeIn.length;
+	var ch;
+	// walk through a string and find a number
+	if (length>=1) {
+	  while (i <  length) {
+		ch = typeIn.substring(i, i+1);
+		if ((ch < "0") || (ch > "9")) {
+			typeInOK = false;
+			break;
+		}
+	    i++;
+      }
+	} else typeInOK = false;
+	return typeInOK;
+}
+
+//print the current window
+function onPrint() {
+	windows.print();
+}
+
+//change the case of current control's text to upper case
+function upCaseCtrl(ctrl) {
+	ctrl.value = ctrl.value.toUpperCase();
+}
+
+</script>
+

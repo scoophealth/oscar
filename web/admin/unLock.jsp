@@ -67,9 +67,7 @@ String curUser_no = (String)session.getAttribute("user");
       <script type="text/javascript" language="JavaScript">
 
       <!--
-		function setfocus() {
-		  this.focus();
-		}
+		
 	    function onSearch() {
 	    }
 //-->

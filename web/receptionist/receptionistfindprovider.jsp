@@ -68,9 +68,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <link rel="stylesheet" href="../web.css" >
 <script language="JavaScript">
 
-function setfocus() {
-  this.focus();
-}
+
 function selectProvider(p,pn) {
 	  newGroupNo = p;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){

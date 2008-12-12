@@ -48,9 +48,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function typeInDate(year1,month1,day1) {
   opener.serviceform.xml_vdate.value=year1+"-"+month1+"-"+day1;
   close();

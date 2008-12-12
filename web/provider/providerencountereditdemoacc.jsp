@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String apptProvider_no, user_no, username;
   user_no = (String) session.getAttribute("user");
   //username =  request.getParameter("username").toUpperCase();

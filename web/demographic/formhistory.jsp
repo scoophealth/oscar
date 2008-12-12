@@ -87,20 +87,8 @@
       <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-  var popup=window.open(page, "formhist", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-      alert("hi this is a null for self!");
-    }
-  }
-}
+
+
 //-->
 </script>
 </head>

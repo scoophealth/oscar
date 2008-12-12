@@ -34,9 +34,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 <meta http-equiv="Content-Type" content="text/html">
 <script language="JavaScript">
 <!--
-function setfocus() {
-    this.focus();
-}
+
 
 //-->
 

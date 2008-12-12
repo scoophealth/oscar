@@ -1,7 +1,7 @@
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="../../errorpage.jsp" %>
 <%
     //this is a quick independent page to let you select study.
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
     String curUser_no = (String) session.getAttribute("user");
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;

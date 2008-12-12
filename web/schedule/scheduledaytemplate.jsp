@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />

@@ -119,9 +119,7 @@ pageContext.setAttribute("billActivityList",billList);
     <script language="JavaScript">
 
 
-function setfocus() {
-  this.focus();
-}
+
 var checkSubmitFlg = false;
 function checkSubmit() {
 	if (checkSubmitFlg == true) {

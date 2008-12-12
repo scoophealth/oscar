@@ -80,16 +80,7 @@ GregorianCalendar now=new GregorianCalendar();
 <script language="JavaScript">
 <!--
 
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-  var popup=window.open(page, "attachment", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function selectprovider(s) {
   if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
   else a = self.location.href;
@@ -98,9 +89,7 @@ function selectprovider(s) {
 function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
-function setfocus() {
-  this.focus();
-}
+
 function refresh() {
   var u = self.location.href;  
   //if(u.lastIndexOf("view=1") > 0) {

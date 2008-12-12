@@ -75,13 +75,7 @@
         }
         return ret;
     }
-    function onExit() {
-        if(confirm("<bean:message key="oscarEncounter.formRourke1.msgExit"/>")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();

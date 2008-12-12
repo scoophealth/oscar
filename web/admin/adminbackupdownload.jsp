@@ -48,9 +48,7 @@
 <link rel="stylesheet" href="../web.css">
 <script LANGUAGE="JavaScript">
     <!--
-		function setfocus() {
-		  this.focus();
-		}
+		
     //-->
 </script>
 </head>

@@ -113,9 +113,7 @@ docdate = request.getParameter("docdate");
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-  this.focus();
-}
+
 
 var remote=null;
 

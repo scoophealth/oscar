@@ -64,9 +64,8 @@ if(!filename.equals("")) {
 <script language="JavaScript">
 <!--
 var remote=null;
-function refresh() {
-  history.go(0);
-}
+
+  
 function rs(n,u,w,h,x) {
   args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
   remote=window.open(u,n,args);

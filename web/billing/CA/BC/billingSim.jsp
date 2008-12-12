@@ -68,9 +68,7 @@ String billCenter = oscarVariables.getProperty("billcenter", "").trim();
 function openBrWindow(theURL,winName,features) {
 	window.open(theURL,winName,features);
 }
-function setfocus() {
-	this.focus();
-}
+
 
 function checkData() {
 	var b = true;

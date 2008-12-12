@@ -72,9 +72,7 @@
 			%>
 <script language="JavaScript" type="text/JavaScript">
 <!--
-function setfocus() {
-	this.focus();
-}
+
 var checkSubmitFlg = false;
 function checkSubmit() {
 	if (checkSubmitFlg == true) {

@@ -58,9 +58,7 @@ reportMainBean.doConfigure(dbParams,dbQueries);
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" >
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function typeInData(v) {
   self.close();
   <% if(fieldName.equals("pg1_priCare") ) {%>

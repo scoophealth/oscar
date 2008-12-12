@@ -26,7 +26,7 @@
 
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String curUser_no = (String) session.getAttribute("user");
@@ -56,12 +56,7 @@ plannerBean.doConfigure(dbParams,dbQueries);
 	-->
 	</STYLE>
 	<script type="text/javascript" language="Javascript">
-function onExit() {
-  if(confirm("Are you sure you wish to exit without saving your changes?")==true)  {
-    window.close();
-  }
-  return(false);
-}
+
 </script>
 </head>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">

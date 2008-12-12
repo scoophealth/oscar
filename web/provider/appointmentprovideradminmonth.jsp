@@ -215,9 +215,8 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
         }
     }
 
-function refresh() {
-  history.go(0);
-}
+
+  
 function refresh1() {
   var u = self.location.href;
   if(u.lastIndexOf("&providerview=") > 0) {

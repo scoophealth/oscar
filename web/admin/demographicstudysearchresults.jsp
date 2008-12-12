@@ -83,16 +83,7 @@ function checkTypeIn() {
     }
   }
 } 
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-  var popup=window.open(page, "studypopup", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function popupPage1(varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height=660,width=1000,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";

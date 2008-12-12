@@ -2,7 +2,7 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <%
 //Lists forms available to add to patient
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String demographic_no = request.getParameter("demographic_no"); 
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
   String country = request.getLocale().getCountry();

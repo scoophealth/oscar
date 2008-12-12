@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>

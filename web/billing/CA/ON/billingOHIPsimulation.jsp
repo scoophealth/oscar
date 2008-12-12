@@ -107,9 +107,7 @@ switch (billCenter.charAt(0)) {
 function openBrWindow(theURL,winName,features) {
 	window.open(theURL,winName,features);
 }
-function setfocus() {
-	this.focus();
-}
+
 
 function checkData() {
 	var b = true;

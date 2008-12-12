@@ -48,9 +48,7 @@
 
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function onNewPatient() {
   document.labelprint.label1no.value="1";
   document.labelprint.label2no.value="6";

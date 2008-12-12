@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String form_name="ar1_99_12";
   String user_no = (String) session.getAttribute("user");
   String resource_baseurl = "http://resource.oscarmcmaster.org/oscarResource/";
@@ -57,19 +57,8 @@
 <script language="JavaScript">
 <!--		
 var saveTemp=0;
-function setfocus() {
-  this.focus();
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "printlocation", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
+
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;

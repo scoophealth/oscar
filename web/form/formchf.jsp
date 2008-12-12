@@ -112,13 +112,7 @@ temp = "";
         var ret = checkAllDates();
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         if (temp != "") { document.forms[0].action = temp; }
         document.forms[0].target="_self";

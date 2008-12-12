@@ -218,13 +218,7 @@
         return false; 
         
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         if( checkMeasures() ) {
             document.forms[0].submit.value="exit";

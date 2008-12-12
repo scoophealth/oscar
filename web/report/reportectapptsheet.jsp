@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("appointment_date") ;
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"0" ;
@@ -55,16 +55,7 @@ function setfocus() {
   this.focus();
   //document.titlesearch.keyword.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=15";//360,680
-  var popup=window.open(page, "apptday", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 //-->
 </SCRIPT>
 </head>

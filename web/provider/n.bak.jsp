@@ -89,16 +89,7 @@ function setfocus() {
   document.jumptodate.year.focus();
   document.jumptodate.year.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "apptProvider", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function popupPage2(varpage) {
 var page = "" + varpage;
 windowprops = "height=600,width=700,location=no,"
@@ -116,9 +107,8 @@ if(self.location.href.lastIndexOf("?") > 0) {
 	self.location.href = a + "&viewall="+key ;
 }
 
-function refresh() {
-  history.go(0);
-}
+
+  
 function onUnbilled(url) {
   if(confirm("You are about to delete the previous billing, are you sure?")) {
     popupPage(700,720, url);

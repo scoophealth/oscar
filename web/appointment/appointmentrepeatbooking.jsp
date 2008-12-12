@@ -211,25 +211,14 @@ self.opener.refresh();
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-    this.focus();
-}
+
 function onCheck(a, b) {
     if (a.checked) {
 		document.getElementById("everyUnit").value = b;
 		//document.groupappt.everyUnit.value = b;
     }
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=250,left=150";//360,680
-  var popup=window.open(page, "repeat", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 
 function onExit() {
     if (confirm("<bean:message key="appointment.appointmentgrouprecords.msgExitConfirmation"/>")) {

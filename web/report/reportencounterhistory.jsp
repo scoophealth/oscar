@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*" errorPage="../errorpage.jsp" %>
 <jsp:useBean id="encPrintBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -47,9 +47,7 @@
       <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </script>
 </head>

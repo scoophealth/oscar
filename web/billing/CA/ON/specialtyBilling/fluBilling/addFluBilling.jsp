@@ -80,9 +80,7 @@ if(oscarVariables.getProperty("isNewONbilling", "").equals("true")) {
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-  this.focus();
-}
+
 
 var remote=null;
 

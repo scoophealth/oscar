@@ -5,7 +5,7 @@
 <%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 %>
 
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">

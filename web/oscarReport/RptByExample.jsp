@@ -133,17 +133,7 @@ function showHideLayers() { //v6.0
     }
   }
   
-    function popupPage(vheight,vwidth,varpage) { //open a new popup window
-      var page = "" + varpage;
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-      var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-      if (popup != null) {
-        if (popup.opener == null) {
-          popup.opener = self;
-          alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-        }
-      }
-    }
+    
 
     function write2TextArea(){ 
         if (document.forms[0].selectedRecentSearch.options[document.forms[0].selectedRecentSearch.selectedIndex].value=='Recent Search')

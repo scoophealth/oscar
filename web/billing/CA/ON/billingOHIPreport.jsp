@@ -87,9 +87,7 @@ session.setAttribute("ohipdownload", ohipdownload);
 <meta http-equiv="Content-Type" content="text/html; charset=charset=iso-8859-1">
 <script language="JavaScript" type="text/JavaScript">
 <!--
-function setfocus() {
-	this.focus();
-}
+
 var checkSubmitFlg = false;
 function checkSubmit() {
 	if (checkSubmitFlg == true) {

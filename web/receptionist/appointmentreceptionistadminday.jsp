@@ -100,16 +100,7 @@ function setfocus() {
   document.findprovider.providername.focus();
   document.findprovider.providername.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";//360,680
-  var popup=window.open(page, '<bean:message key="receptionist.appointmentreceptionistadminday.titlePopupPage"/>', windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function popupPage2(varpage) {
 var page = "" + varpage;
 windowprops = "height=700,width=1000,location=no,"

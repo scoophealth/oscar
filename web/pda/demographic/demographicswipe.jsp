@@ -32,9 +32,7 @@
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function Attach(lname, fname, hin, yob,mob,dob) {
         	 self.close(); 
         	 self.opener.document.updatedelete.last_name.value = lname;

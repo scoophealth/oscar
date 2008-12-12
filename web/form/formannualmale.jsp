@@ -57,13 +57,7 @@
         }
         return ret;
     }
-    function onExit() {
-        if(confirm("<bean:message key="oscarEncounter.formMaleAnnual.msgNotSave"/>")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();

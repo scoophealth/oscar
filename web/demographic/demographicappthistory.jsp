@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String curProvider_no = (String) session.getAttribute("user");
   String demographic_no = request.getParameter("demographic_no");
   String strLimit1="0";
@@ -53,19 +53,9 @@
 <meta http-equiv="Pragma" content="no-cache">
 <script type="text/javascript">
 <!--
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";//360,680
-  var popup=window.open(page, "appthist", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
-function refresh() {
-  history.go(0);
-}
+
+
+  
 
 //-->
 

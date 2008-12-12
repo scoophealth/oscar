@@ -48,7 +48,7 @@
 */
 --%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String user_no = (String) session.getAttribute("user");
   String creator = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
 %>
@@ -112,16 +112,7 @@ function setfocus() {
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=100,left=115";//360,680
-  var popup=window.open(page, "apptReception", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 
 //-->
 </script>

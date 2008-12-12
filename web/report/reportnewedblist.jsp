@@ -251,9 +251,7 @@ function addEvent(elm, evType, fn, useCapture)
   }
 }
 --%>
-function setfocus() {
-  this.focus();
-}
+
 
 function loadPage() {
     //sortables_init();

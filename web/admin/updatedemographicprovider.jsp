@@ -83,9 +83,7 @@
 <meta http-equiv="Cache-Control" content="no-cache" >
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
-function setfocus() {
-	this.focus();
-}
+
 function setregexp() {
 	var exp = "^[" +document.ADDAPPT.last_name_from.value + "-" +document.ADDAPPT.last_name_to.value + "]" ;
 	document.ADDAPPT.regexp.value = exp ;

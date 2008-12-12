@@ -26,7 +26,7 @@
 
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"  %>
@@ -40,19 +40,8 @@
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
-function setfocus() {
-  this.focus();
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "riskcontent", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
+
 function onExit() {
   if(confirm("Are you sure to exit WITHOUT saving the form?")) window.close();
 }

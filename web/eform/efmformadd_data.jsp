@@ -53,7 +53,7 @@ function hideDiv() {
 <% } %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String provider_no = (String) session.getValue("user");
   String demographic_no = request.getParameter("demographic_no"); 
   String fid = request.getParameter("fid");

@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 
 <html>

@@ -56,9 +56,7 @@
 <!--link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" -->
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </SCRIPT>
 </head>

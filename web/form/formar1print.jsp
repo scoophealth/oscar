@@ -42,9 +42,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 var ox = <%=oox%>;
 var oy = <%=ooy%>;
 //x: left margin, y:top margin, w: width, h:height

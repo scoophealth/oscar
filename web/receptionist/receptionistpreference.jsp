@@ -43,16 +43,7 @@ function setfocus() {
   document.UPDATEPRE.start_hour.focus();
   document.UPDATEPRE.start_hour.select();
 }
-function popupPage(vheight,vwidth,varpage) { 
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";//360,680
-  var popup=window.open(page, '<bean:message key="receptionist.receptionistpreference.titlePopupPage"/>', windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
 }

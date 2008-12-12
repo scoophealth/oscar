@@ -31,7 +31,7 @@
 <%@ page import="java.util.*, oscar.oscarEncounter.oscarMeasurements.data.MeasurementMapConfig, oscar.OscarProperties" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 %>
 
 <link rel="stylesheet" type="text/css" href="../../oscarMDS/encounterStyles.css">

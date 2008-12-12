@@ -152,19 +152,7 @@
 
     }
 
-    function onExit() {
-
-        if(confirm("<bean:message key="oscarEncounter.formRourke3.msgExit"/>")==true)
-
-        {
-
-            window.close();
-
-        }
-
-        return(false);
-
-    }
+    
 
     function onSaveExit() {
 

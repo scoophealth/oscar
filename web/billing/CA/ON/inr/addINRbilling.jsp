@@ -58,9 +58,7 @@ while(rslocal.next()){
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-  this.focus();
-}
+
 
 var remote=null;
 

@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
 %>
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
@@ -50,9 +50,7 @@
 
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
-function setfocus() {
-  this.focus();
-}
+
 // stop javascript -->
 </script>
 

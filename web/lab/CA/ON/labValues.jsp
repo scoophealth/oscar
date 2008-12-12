@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 
 
 System.out.println(" test name "+request.getParameter("testName"));

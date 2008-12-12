@@ -46,9 +46,7 @@
 		<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 		<meta http-equiv="Cache-Control" content="no-cache">
 		<script type="text/javascript">
-			function setfocus() {
-			  this.focus();
-			}
+			
 			
 			function typeInDate(year1,month1,day1) {
 			  self.close();

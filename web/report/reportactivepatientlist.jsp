@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String strLimit1="0";
   String strLimit2="50";  
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");  

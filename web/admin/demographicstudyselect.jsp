@@ -1,7 +1,7 @@
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%
     //this is a quick independent page to let you add studying patient.
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String demographic_no = request.getParameter("demographic_no")!=null ? request.getParameter("demographic_no") : "0";
     String curUser_no = (String) session.getAttribute("user");
     String strLimit1 = request.getParameter("limit1")!=null ? request.getParameter("limit1") : "0";

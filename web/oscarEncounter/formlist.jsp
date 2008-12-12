@@ -4,7 +4,7 @@
 <%@ page language="java"%>
 <%@ page import="oscar.util.UtilMisc,oscar.oscarEncounter.data.*,java.net.*,java.util.*"%>
 <%
-	if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+	
 	String provNo = request.getParameter("provider_no");
 	String demoNo = request.getParameter("demographic_no");
     String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
@@ -50,9 +50,7 @@
 <title><bean:message key="oscarEncounter.formlist.title"/></title>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <script type="text/javascript" language=javascript>
-function setfocus() {
-    this.focus();
-}
+
 function popupPageK(page) {
     windowprops = "height=700,width=960,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";

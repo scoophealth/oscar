@@ -60,13 +60,7 @@
         
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = confirm("Are you sure you wish to save and close this window?");

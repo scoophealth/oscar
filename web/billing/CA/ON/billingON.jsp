@@ -377,9 +377,7 @@
 <script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
-function setfocus() {
-    this.focus();
-}
+
 
 function gotoBillingOB() {
     if(self.location.href.lastIndexOf("?") > 0) {

@@ -1,5 +1,5 @@
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF" ;
 %>
@@ -74,9 +74,7 @@ td { font-size: 16px; }
 </style>
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </SCRIPT>
 </head>

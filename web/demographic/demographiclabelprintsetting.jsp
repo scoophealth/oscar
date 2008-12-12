@@ -57,9 +57,7 @@
 <script src="../share/javascript/prototype.js" language="javascript" type="text/javascript"></script>
 
 <script  type="text/javascript">
-function setfocus() {
-  this.focus();
-}
+
 function onNewPatient() {
   document.labelprint.label1no.value="1";
   document.labelprint.label1checkbox.checked=true;

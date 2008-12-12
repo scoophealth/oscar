@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*,java.sql.*" errorPage="../provider/errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -38,9 +38,7 @@
 
 <script language="javascript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 // stop -->
 </script>
 

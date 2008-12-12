@@ -65,9 +65,7 @@
 
 
 <script type="text/javascript" language="Javascript">
-function setfocus() {
-    this.focus();
-}
+
 function onCheck(a, groupName) {
     if (a.checked) {
 		var s = groupName;
@@ -138,12 +136,7 @@ function onCheckSlave(a, masterName) {
         }
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true) {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();

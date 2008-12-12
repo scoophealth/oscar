@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 String demographic_no = request.getParameter("demographic_no");
 
 CommonLabTestValues labTests = new CommonLabTestValues();

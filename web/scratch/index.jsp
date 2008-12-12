@@ -40,7 +40,7 @@
 //    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 //
    ////
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no");  
   String user_no = (String) request.getSession().getAttribute("user");

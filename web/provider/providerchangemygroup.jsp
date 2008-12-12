@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   //String curProvider_no, curOperator_no;
   //curProvider_no = request.getParameter("provider_no");
   //curOperator_no = (String) session.getAttribute("user");

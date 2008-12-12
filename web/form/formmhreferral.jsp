@@ -105,15 +105,7 @@
         
         return ret;
     }
-    function onExit() {
-        document.forms[0].action = mainAction;
-        document.forms[0].target = mainTarget;
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function insert(fromName, num) {
         switch(fromName) {
         case "r_rps":

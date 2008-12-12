@@ -26,7 +26,7 @@
 
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String curUser_no = (String) session.getAttribute("user");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("last_name") ;
 %>
@@ -58,19 +58,9 @@ function setfocus() {
   this.focus();
   //document.titlesearch.keyword.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=15";//360,680
-  var popup=window.open(page, "apptday", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
-function refresh() {
-  history.go(0);
-}
+
+
+  
 
 //-->
 </SCRIPT>

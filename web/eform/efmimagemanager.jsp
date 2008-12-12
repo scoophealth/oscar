@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
 %>  
 <%@ page import = "oscar.eform.data.*, oscar.OscarProperties, oscar.eform.*, java.util.*"%> 

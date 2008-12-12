@@ -48,20 +48,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=big5">
 <script language="JavaScript">
 <!--
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-  var popup=window.open(page, "attachment", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
 
-function refresh() {
-  history.go(0);
-}
+
+
+  
 function onUnbilled(url) {
   if(confirm("You are about to delete the previous billing, are you sure?")) {
   self.location.href = url;

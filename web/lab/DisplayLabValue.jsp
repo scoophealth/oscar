@@ -27,7 +27,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"  %>
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
 
     String ran = ""+Math.random();
     

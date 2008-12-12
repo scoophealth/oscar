@@ -26,7 +26,7 @@
 <%@ include file="/taglibs.jsp" %>
 
  <%
-  //if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  //
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*,java.net.*" %>
 <%
@@ -52,9 +52,7 @@
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function typeInDate(year1,month1,day1) {
   self.close();
   opener.document.serviceform.xml_vdate.value=year1+"-"+month1+"-"+day1;

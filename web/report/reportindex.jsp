@@ -32,7 +32,7 @@
 <%
 String country = request.getLocale() .getCountry();
 
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 String curUser_no = (String) session.getAttribute("user");
 String mygroupno = (String) session.getAttribute("groupno");
 String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billregion");
@@ -66,16 +66,7 @@ function setfocus() {
 function selectprovider(s) {
 	self.location.href = "scheduletemplatesetting1.jsp?provider_no="+s.options[s.selectedIndex].value+"&provider_name="+urlencode(s.options[s.selectedIndex].text);
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=15";//360,680
-  var popup=window.open(page, "scheduleholiday", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
-}
+
 function ogo() {
   var region = '<%=billingRegion%>';
   var s = document.report.startDate.value.replace('/', '-');

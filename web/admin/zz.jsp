@@ -1,7 +1,7 @@
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
 <%
     //this is a quick independent page to let you add studying patient.
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String deepColor = "#CCCCFF", weakColor = "#EEEEFF", rightColor = "gold" ;
 %>
 
@@ -48,16 +48,7 @@ function setfocus() {
   this.focus();
   //document.titlesearch.keyword.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-  var popup=window.open(page, "studypopup", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 //-->
 </SCRIPT>
 </head>

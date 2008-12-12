@@ -65,9 +65,7 @@ Use returnForm and returnItem request params and this page will fill in that inp
 <meta http-equiv="Cache-Control" content="no-cache">
 <script language="JavaScript">
 
-function setfocus() {
-  this.focus();
-}
+
 
 function typeInDate(year1,month1,day1) {
     self.close();

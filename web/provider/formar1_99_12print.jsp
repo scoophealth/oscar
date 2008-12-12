@@ -40,9 +40,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
-function setfocus() {
-  this.focus();
-}
+
 var ox = <%=oox%>;
 var oy = <%=ooy%>;
 function ff(x,y,w,h,name) { //need escape to name for ' and "

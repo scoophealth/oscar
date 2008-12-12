@@ -38,9 +38,7 @@
 
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 
 //-->
 </script>

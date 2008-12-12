@@ -371,9 +371,7 @@ function selectprovider(s) {
 function openBrWindow(theURL,winName,features) { //v2.0
   window.open(theURL,winName,features);
 }
-function setfocus() {
-  this.focus();
-}
+
 function refresh() {
       history.go(0);
 

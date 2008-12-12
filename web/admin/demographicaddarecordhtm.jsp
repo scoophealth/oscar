@@ -63,6 +63,7 @@ function checkTypeNum(typeIn) {
 	} else typeInOK = false;
 	return typeInOK;
 }
+
 function checkTypeIn() {
 	var typeInOK = false;
 	if(document.adddemographic.last_name.value!="" && document.adddemographic.first_name.value!="" && document.adddemographic.sex.value!="") {

@@ -282,17 +282,7 @@ if (request.getParameter("casetoEncounter")==null)
           + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
         window.open(page, "<bean:message key="oscarEncounter.Index.popupPage2Window"/>", windowprops);
     }
-    function popupPage(vheight,vwidth,varpage) { //open a new popup window
-      var page = "" + varpage;
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-      var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-      if (popup != null) {
-        if (popup.opener == null) {
-          popup.opener = self;
-          alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-        }
-      }
-    }
+    
     function urlencode(str) {
         var ns = (navigator.appName=="Netscape") ? 1 : 0;
         if (ns) { return escape(str); }

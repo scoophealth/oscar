@@ -1,6 +1,6 @@
 <%
   //reportbilledvisit1.jsp?sdate=2002-04-15&edate=2003-03-31
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String curUser_no = (String) session.getAttribute("user");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("b.billing_date") ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
@@ -43,9 +43,8 @@ function setfocus() {
   this.focus();
   //document.titlesearch.keyword.select();
 }
-function refresh() {
-  history.go(0);
-}
+
+  
 
 //-->
 </SCRIPT>

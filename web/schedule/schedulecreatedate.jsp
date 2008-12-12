@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String user_no = (String) session.getAttribute("user");
   String user_name = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
@@ -232,16 +232,7 @@ function setfocus() {
   //document.schedule.keyword.focus();
   //document.schedule.keyword.select();
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=100,left=100";//360,680
-  var popup=window.open(page, "schdatepopup", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function refresh() {
   history.go(0);//
   //window.location.reload(); //

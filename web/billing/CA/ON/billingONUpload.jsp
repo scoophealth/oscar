@@ -34,9 +34,7 @@ session.setAttribute("homepath", props.getProperty("project_home", ""));
 
 <script type="text/javascript">
 <!--
-function setfocus() {
-    this.focus();
-}
+
 
 //-->
 

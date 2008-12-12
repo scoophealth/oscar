@@ -5,7 +5,7 @@
 <%@ page import="oscar.oscarMDS.data.ProviderData, java.util.ArrayList, oscar.oscarLab.ForwardingRules, oscar.OscarProperties" %>
 
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 ForwardingRules fr = new ForwardingRules();
 String providerNo = request.getParameter("providerNo");
 if (providerNo == null)

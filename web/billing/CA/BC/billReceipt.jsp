@@ -172,17 +172,7 @@ function showHideLayers() { //v3.0
     if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
     obj.visibility=v; }
 }
-function popupPage(vheight,vwidth,varpage) {
 
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no";
-  var popup=window.open(page, "mywindow", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
-}
 
 
 var remote=null;

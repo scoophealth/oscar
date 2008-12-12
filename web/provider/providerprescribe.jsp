@@ -43,9 +43,7 @@
       <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 //-->
 </SCRIPT>
 </head>

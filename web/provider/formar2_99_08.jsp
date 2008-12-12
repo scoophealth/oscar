@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String user_no = (String) session.getAttribute("user");
   String form_name="ar2_99_08";
   String username = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
@@ -58,19 +58,8 @@
 <script language="JavaScript">
 <!--		
 var saveTemp=0;
-function setfocus() {
-  this.focus();
-}
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=50,left=100";
-  var popup=window.open(page, "printlocation", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
+
 function onAR1FieldsFocus(obj) {
   obj.blur();
     window.alert("Please edit Antenatal Record 1 for this field value.");

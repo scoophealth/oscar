@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Print Preview")==0) {
     //    response.sendRedirect("form"+request.getParameter("form_name")+ "print.jsp");
     if(true) {

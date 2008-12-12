@@ -32,9 +32,7 @@
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 
 function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
         	 if(confirm("You are about to replace the existing patient's information, are you sure?")) {

@@ -10,7 +10,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <%
@@ -64,9 +64,7 @@ boolean bTodayDate = false;
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 function typeInDate(year1,month1,day1) {
   self.close();
 <%

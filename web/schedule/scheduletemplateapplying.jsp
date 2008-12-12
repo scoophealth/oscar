@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
   boolean bOrigAlt = false;
@@ -90,9 +90,7 @@
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
 <!--
-function setfocus() {
-  this.focus();
-}
+
 
 function displayTemplate(s) {
     var url = "scheduleDisplayTemplate.jsp?name=" + s[s.selectedIndex].value + "&providerid=<%=request.getParameter("provider_no")%>";

@@ -31,7 +31,7 @@
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,oscar.*" errorPage="errorpage.jsp" %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
   String curUser_no, curProvider_no,userfirstname,userlastname, mygroupno,n_t_w_w="";
   curProvider_no = (String) session.getAttribute("user");
 
@@ -154,16 +154,7 @@ function setfocus() {
   document.jumptodate.year.select();
 }
 
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";//360,680
-  var popup=window.open(page, "apptReception", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 
 function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
@@ -197,9 +188,8 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 }
 
-function refresh() {
-  history.go(0);
-}
+
+  
 function refresh1() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {

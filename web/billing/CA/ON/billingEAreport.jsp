@@ -25,7 +25,7 @@
 -->
 
  <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page language="java" %>
 <%@ page import="java.util.*,oscar.oscarReport.pageUtil.*" %>

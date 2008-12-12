@@ -12,7 +12,7 @@ org.apache.commons.codec.binary.Base64" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%
-if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
 
 //String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+request.getParameter("segmentID")+"';";
 String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+request.getParameter("segmentID")+"';";

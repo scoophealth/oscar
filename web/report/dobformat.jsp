@@ -1,5 +1,5 @@
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*, java.sql.*,java.io.*, oscar.util.*, java.text.*, java.net.*,sun.misc.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />

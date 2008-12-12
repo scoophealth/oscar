@@ -57,9 +57,7 @@ user_no = (String) session.getAttribute("user");
 function openBrWindow(theURL,winName,features) {
   window.open(theURL,winName,features);
 }
-function setfocus() {
-  this.focus();
-}
+
 function jumpMenu(targ,selObj,restore){ 
   eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
   if (restore) selObj.selectedIndex=0;
@@ -78,9 +76,8 @@ function rs(n,u,w,h,x) {
 
 
 var awnd=null;
-function refresh(){
-history.go(0);
-}
+
+
 //-->
 </script>
 <link rel="stylesheet" href="../billing.css">

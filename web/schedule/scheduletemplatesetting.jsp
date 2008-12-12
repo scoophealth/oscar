@@ -22,7 +22,7 @@
 */
 --%> 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
 
@@ -79,16 +79,7 @@ function urlencode(str) {
 	}
 	return str;
 }
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=100,left=115";//360,680
-  var popup=window.open(page, "scheduleholiday", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 function go() {
   var s = document.schedule.providerid.value ;
   var u = 'scheduleedittemplate.jsp?providerid=' + s +'&providername='+urlencode(document.schedule.providerid.options[document.schedule.providerid.selectedIndex].text);

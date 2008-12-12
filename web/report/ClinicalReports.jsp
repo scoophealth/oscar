@@ -30,7 +30,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+    
     String provider = (String) session.getValue("user");
 
     String numeratorId = (String) request.getAttribute("numeratorId");

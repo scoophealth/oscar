@@ -76,13 +76,7 @@
         }
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true)
-        {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
@@ -92,16 +86,7 @@
         }
         return ret;
     }
-	function popupPage(vheight,vwidth,varpage) { 
-		var page = "" + varpage;
-		windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=300";
-		var popup=window.open(page, "dt", windowprops);
-		if (popup != null) {
-			if (popup.opener == null) {
-				popup.opener = self; 
-			}
-		}
-	}
+	
 
 
 /**

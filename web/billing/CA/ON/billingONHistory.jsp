@@ -42,16 +42,7 @@
 
 <script language="JavaScript">
 <!--
-function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
-  var popup=window.open(page, "attachment", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self; 
-    }
-  }
-}
+
 //-->
 </SCRIPT>
 </head>

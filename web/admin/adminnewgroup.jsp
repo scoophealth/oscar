@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  
 %>
 <%@ page 
    import="java.util.*,java.sql.*,java.util.ResourceBundle" errorPage="../provider/errorpage.jsp"
