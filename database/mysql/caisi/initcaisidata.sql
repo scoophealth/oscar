@@ -107,6 +107,8 @@ INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,emai
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus) VALUES (10013,1,'Community Shelter','Community Shelter','','','','','','','community','',99999,0,0,0,0,'active');
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus) VALUES (10014,1,'Other','Other','','','','','','','community','',99999,0,0,0,0,'active');
 
+INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,exclusiveView,defaultServiceRestrictionDays) VALUES (10015,1,'Outside on Street','Outside on Street','','','','','','','community','',99999,0,0,0,0,'active','no',30);
+
 -- DEFAULT BED TYPE
 INSERT INTO `bed_type` VALUES (1, 'N/A', 1);
 
