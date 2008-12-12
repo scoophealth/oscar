@@ -1,16 +1,16 @@
 <script type="text/javascript" language="Javascript">
 
-//setfocus to the current window
+// setfocus to the current window
 function setfocus() {
     this.focus();
 }
 
-//refresh this page
+// refresh this page
 function refresh() {
 	  history.go(0);
 }
 
-//open a new popup window
+// open a new popup window
 function popupPage(vheight,vwidth,varpage) { 
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
@@ -22,7 +22,7 @@ function popupPage(vheight,vwidth,varpage) {
   }
 }
 
-//Prompt user if exiting without saving
+// Prompt user if exiting without saving
 function onExit() {
     if(confirm("Are you sure you wish to exit without saving your changes?")==true)
     {
@@ -31,7 +31,7 @@ function onExit() {
     return(false);
 }
 
-//Check if the entered type is a number
+// Check if the entered type is a number
 function checkTypeNum(typeIn) {
 	var typeInOK = true;
 	var i = 0;
@@ -51,14 +51,47 @@ function checkTypeNum(typeIn) {
 	return typeInOK;
 }
 
-//print the current window
+// print the current window
 function onPrint() {
 	windows.print();
 }
 
-//change the case of current control's text to upper case
+// change the case of current control's text to upper case
 function upCaseCtrl(ctrl) {
 	ctrl.value = ctrl.value.toUpperCase();
+}
+
+
+function openBrWindow(theURL,winName,features) { 
+  window.open(theURL,winName,features);
+}
+
+function Check(e) {
+	e.checked = true;
+}
+
+function Clear(e) {
+	e.checked = false;
+}
+    
+function CheckAll(ml) {
+	var len = ml.elements.length;
+	for (var i = 0; i < len; i++) {
+	    var e = ml.elements[i];
+	    if (e.name == "checkbox") {
+			Check(e);
+	    }
+	}
+}
+
+function ClearAll(ml) {
+	var len = ml.elements.length;
+	for (var i = 0; i < len; i++) {
+	    var e = ml.elements[i];
+	    if (e.name == "checkbox") {
+		Clear(e);
+	    }
+	}
 }
 
 </script>
