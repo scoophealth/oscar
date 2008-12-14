@@ -80,7 +80,7 @@ response.addCookie(admCookie);
   -->
         </script>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="share/css/extractedFromPages.css"  />
 </head>
 
 <body onLoad="setfocus()" bgcolor="#ffffff">
