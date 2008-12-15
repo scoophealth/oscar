@@ -23,43 +23,48 @@
  * Ontario, Canada
  */
 -->
-<%@ include file="/taglibs.jsp"%>
 
-<%@ page language="java" contentType="text/html"
-	import="oscar.OscarProperties,oscar.util.BuildInfo,javax.servlet.http.Cookie,oscar.oscarSecurity.CookieSecurity"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%
-	OscarProperties props = OscarProperties.getInstance();
+<%@ page language="java" contentType="text/html" import="oscar.OscarProperties, oscar.util.BuildInfo, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<caisi:isModuleLoad moduleName="ticklerplus"><%
+    if(session.getValue("user") != null) {
+        response.sendRedirect("provider/providercontrol.jsp");
+    }
+%></caisi:isModuleLoad><%
+OscarProperties props = OscarProperties.getInstance();
 
-	BuildInfo buildInfo = BuildInfo.getInstance();
-	String buildDate = "2008-05-20 18:22"; //buildInfo.getBuildDate();
+BuildInfo buildInfo = BuildInfo.getInstance();
+String buildDate = buildInfo.getBuildDate();
 
-	if (props.isSiteSecured()) {
-		response.sendRedirect("login.jsp");
-	}
+// clear old cookies
+Cookie rcpCookie = new Cookie(CookieSecurity.receptionistCookie, "");
+Cookie prvCookie = new Cookie(CookieSecurity.providerCookie, "");
+Cookie admCookie = new Cookie(CookieSecurity.adminCookie, "");
+rcpCookie.setPath("/");
+prvCookie.setPath("/");
+admCookie.setPath("/");
+response.addCookie(rcpCookie);
+response.addCookie(prvCookie);
+response.addCookie(admCookie);
 %>
 
 <html:html locale="true">
-<head>
-<html:base />
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
-<title>
-<%
-if (props.getProperty("logintitle", "").equals("")) {
-%> <bean:message
-	key="loginApplication.title" /> <%
- } else {
- %> <%=props.getProperty("logintitle", "")%>
-<%
-}
-%>
-</title>
-<!--LINK REL="StyleSheet" HREF="web.css" TYPE="text/css"-->
+    <head>
+        <html:base/>
+        <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
+        <title>
+            <% if (props.getProperty("logintitle", "").equals("")) { %>
+            <bean:message key="loginApplication.title"/>
+            <% } else { %>
+            <%= props.getProperty("logintitle", "")%>
+            <% } %>
+        </title>
+        <!--LINK REL="StyleSheet" HREF="web.css" TYPE="text/css"-->
 
-<script language="JavaScript">
+        <script language="JavaScript">
   <!-- hide
   function setfocus() {
     document.loginForm.username.focus();
@@ -70,26 +75,12 @@ if (props.getProperty("logintitle", "").equals("")) {
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(page, "gpl", windowprops);
   }
-  
-  function checkLoginLength(){
-    var usr = document.loginForm.username.value;
-    var pwd = document.loginForm.password.value;
-    if(usr.length==0 || pwd.length == 0){
-      alert("User Id and password are required");
-      return false;
-    }
-    return true;
-  }
   -->
         </script>
-
-<style type="text/css">
+        
+        <style type="text/css">
             body { 
                font-family: Verdana, helvetica, sans-serif;
-               margin-left: 1px;
-               margin-right: 0px;
-               margin-bottom: 0px;
-               margin-top: 0px;
                margin: 0px;
                padding:0px;
                
@@ -115,115 +106,80 @@ if (props.getProperty("logintitle", "").equals("")) {
                     font-size: x-small;
                 }
         </style>
-</head>
-
-
-<body onfocus="javascript:return setfocus();">
-<div align="center">
-<html:form action="login" onsubmit="return checkLoginLength();">
-<input
-						type="hidden" name="pin" size="15" maxlength="15"
-						autocomplete="off" value="1117"/>
-<table align="center" border="0" cellspacing="0" width="100%" height="100%">
-	<tr>
-		<td>
-			<table align="center">
-				<tr>
-					<td align="center"><img src="images/QuatroShelter-Logo400.gif" height="80" width="400" ></td>
-				</tr>
-				<tr>
-					<Td align="center"><img border="0" src="images/city-toronto.gif"  ></td>
-				</tr>
-				<tr>
-					<td align="center"><font size="1" face="Arial">Build: <%=OscarProperties.getInstance().getBuildDate() %></font>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	
-	<tr>
-		<td>
-			<table align="center" width="100%">
-				<tr>
-					<td align="center">
-					<font size="5" face="Arial">Welcome to QuatroShelter</font><br><br>
-					<font size="3" face="Arial">Please log in</font>
-					</td>
-				</tr>
-				<tr><td>&nbsp;</td></tr>
-				<!-- messages -->
-				<tr>
-					<td align="center" class="message">
-					<logic:messagesPresent message="true">
-						<br />
-						<html:messages id="message" message="true">
-							<c:out escapeXml="false" value="${message}" />
-						</html:messages>
-						<br />
-					</logic:messagesPresent></td>
-				</tr>
-				<tr>
-					<td>
-						<table cellspacing="2" border="0" style="BORDER-RIGHT:Gray 1px solid; BORDER-Top:Silver 1px solid; BORDER-LEFT:Silver 1px solid;BORDER-BOTTOM:Gray 1px solid" align="center" valing="center" background="images/Silver-background.gif"  width="70%">
-							<tr><td height="5"></td></tr>
-							<tr>
-								<td width="30%" align="right">
-									<font size="2" face="Arial"> <b><bean:message
-									key="loginApplication.formUserName" /> 
-								</b></font></td>
-								<td width="40%" align="center"><font size="2"
-									face="Arial"><b><input type="text" name="username" value='<c:out value="${userName}" />'
-									size="50%" maxlength="12" autocomplete="off" id="username" /></b></font></td>
-								<td width="30%">&nbsp</td>
-							</tr>
-							<tr>
-								<td align="right"><font
-									size="2" face="Arial"><b><bean:message
-									key="loginApplication.formPwd" /></b></font></td>
-								<td align="center"><font size="2"
-									face="Arial"><b><input type="password" name="password"  
-									size="50%" maxlength="15" autocomplete="off" /></b></font></td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>&nbsp;</td>
-								<td align="center" valign="center" align=""><font face="Arial"
-									size="1"><input type="submit"
-									value="<bean:message key="index.btnSignIn"/>" />&nbsp; <input
-									type="reset" value="Reset"></font></td>
-									<td>&nbsp</td>
-							</tr>
-							<tr><td height="5"></td></tr>
-						</table>
-						
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr><td height=70></td></tr>
-	<tr>
-		<td  height="41" align="center"><img border="0"
-			src="images/QuatroGroup-Logo.gif" >&nbsp;&nbsp;&nbsp;&nbsp;
-		<img border="0" src="images/SMIS-Logo.gif"  >&nbsp;&nbsp;&nbsp;&nbsp;
-		<img border="0" src="images/Caisi-Logo.gif" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<img border="0" src="images/OSCAR-LOGO.gif" ></td>
-	</tr>
-	<tr><td height=30></td></tr>
-	<tr>
-		<td height="25" align="center" style="BORDER-TOP:Gray 1px solid; BORDER-right:Silver 1px solid; BORDER-LEFT:Gray 1px solid" background="images/Silver-background.gif">
-		<p align="center"><font face="Arial" size="2">Quatro Group
-		Software System Inc. Support at: <a href="http://www.QuatroGroup.com">http://www.QuatroGroup.com</a></font>
-		</td>
-	</tr>
-	<tr><td height=20></td></tr>
-</table>
-<input type="hidden" name="method" value="login"/>" />
-<input type="hidden" name="token" value="<c:out value="${token}"/>" />
-</html:form>
-</div>
-
-</body>
+    </head>
+    
+    <body onLoad="setfocus()" bgcolor="#ffffff">
+        
+        <table border=0 width="100%" height="100%">
+            <tr>
+                <td align="center" class="leftbar" height="20px"><%
+                    String key = "loginApplication.formLabel" ;
+                    if(request.getParameter("login")!=null && request.getParameter("login").equals("failed") )
+                    key = "loginApplication.formFailedLabel" ;
+                    %><bean:message key="<%=key%>"/>        
+                </td>
+                <td  class="topbar" align="center" >
+                    <span style="float: right; color:#FFFFFF; font-size: xx-small;">build date: <%= buildDate %></span>     
+                    <%=props.getProperty("logintitle", "")%>
+                    <% if (props.getProperty("logintitle", "").equals("")) { %>
+                    <bean:message key="loginApplication.alert"/>
+                    <% } %>                    
+                </td>
+            </tr>
+            <tr>
+                <td width="200  " class="leftinput" valign="top">
+                    <!--- left side -->
+                        
+                            <html:form action="login" >
+                            <bean:message key="loginApplication.formUserName"/><%
+                            if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled() && !net.sf.cookierevolver.CRFactory.getManager().isMachineIdentified(request)){
+                            %><img src="gatekeeper/appid/?act=image&/empty<%=System.currentTimeMillis() %>.gif" width='1' height='1'><%
+                            }
+                            %>
+                        
+                        <br/>            
+                        <input type="text" name="username" size="15" maxlength="15" autocomplete="off"/>
+                        <br/>                
+                        <bean:message key="loginApplication.formPwd"/><br/>
+                        <input type="password" name="password" size="15" maxlength="15" autocomplete="off"/><br/>
+                                <input type="submit" value="<bean:message key="index.btnSignIn"/>" />
+                        </br></br>
+                        <bean:message key="index.formPIN"/>: 
+                        <br/>
+                        <input type="password" name="pin" size="15" maxlength="15" autocomplete="off"/><br/>
+                       
+                        <span class="extrasmall">
+                            <bean:message key="loginApplication.formCmt"/>
+                        </span>
+                        <input type=hidden name='propname' value='<bean:message key="loginApplication.propertyFile"/>' />
+                        </html:form>
+                        <hr width="100%" color="navy">
+                        
+                        <span class="extrasmall">
+                            <bean:message key="loginApplication.leftRmk"/>
+                            <a href=# onClick='popupPage(500,700,"<bean:message key="loginApplication.gpltext"/>")'><bean:message key="loginApplication.gplLink"/></a>
+                        </span>
+                    <!-- left side end-->
+                </td>
+                <td align="center" valign="top">
+                    <div style="margin-top:25px;"><% if (props.getProperty("loginlogo", "").equals("")) { %>
+                            <html:img srcKey="loginApplication.image.logo" width="450" height="274"/>
+                            <% } else { %>
+                            <img src="<%=props.getProperty("loginlogo", "")%>">
+                            <% } %>
+                            <p>
+                            <font face="Verdana, Arial, Helvetica, sans-serif" size="-1">
+                                <% if (props.getProperty("logintext", "").equals("")) { %>
+                                <bean:message key="loginApplication.image.logoText"/>
+                                <% } else { %>
+                                <%=props.getProperty("logintext", "")%>
+                                <% } %>
+                            </font>
+                    </div>
+                    
+                </td>
+            </tr>     
+        </table>
+        
+    </body>
 </html:html>
-
