@@ -23,7 +23,9 @@ ar2_labRhIgG	: left, 45, 145, 0, BaseFont.HELVETICA, 8
 ar2_labRhIgG2	: left, 45, 161, 0, BaseFont.HELVETICA, 8
 ar2_labHem1st	: left, 50, 185, 0, BaseFont.HELVETICA, 8
 ar2_labHem3rd	: left, 93, 185, 0, BaseFont.HELVETICA, 8
-ar2_urineCS     : left, 65, 210, 0, BaseFont.HELVETICA, 8
+ar2_urineCS     : left, 85, 197, 0, BaseFont.HELVETICA, 8
+ar2_urineCStxt  : left, 45, 210, 0, BaseFont.HELVETICA, 8
+
 
 ar2_labPPvac    : left, 131, 70, 0, BaseFont.HELVETICA, 8  , X
 ar2_labRubella	: left, 140, 78, 0, BaseFont.HELVETICA, 8 
