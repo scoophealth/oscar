@@ -51,6 +51,8 @@
 			not-null="false" length="5" />
 		<property name="Route" column="route" type="string" not-null="false"
 			length="5" />
+		<property name="DrugForm" column="drug_form" type="string" not-null="false"
+			length="50" />
 		<property name="Dosage" column="dosage" type="string"
 			not-null="false" />
 		<property name="CustomInstructions" column="custom_instructions"
