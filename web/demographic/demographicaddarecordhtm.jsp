@@ -380,6 +380,12 @@ function checkFormTypeIn() {
 	return true;
 }
 
+function checkTitleSex() {
+    var title = document.adddemographic.title.selectedIndex;
+	if (title<=2 || title==11) document.adddemographic.sex.selectedIndex=0;
+	else if (title==3 || title==4) document.adddemographic.sex.selectedIndex=1;
+}
+
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -395,29 +401,49 @@ function checkFormTypeIn() {
 
 <%@ include file="zdemographicfulltitlesearch.jsp"%>
 <table width="100%" bgcolor="#CCCCFF">
-	<tr>
-		<td class="RowTop"><b><bean:message key="demographic.record" /></b>
-		</td>
-	</tr>
-	<tr>
-		<td>
-		<form method="post" name="adddemographic"
-			action="demographiccontrol.jsp" onsubmit="return checkFormTypeIn()">
-		<table border="0" cellpadding="1" cellspacing="0" width="100%"
-			bgcolor="#EEEEFF">
-			<tr>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formLastName" /><font
-					color="red">:</font> </b></td>
-				<td align="left"><input type="text" name="last_name"
-					onBlur="upCaseCtrl(this)" size=30 /></td>
-				<td align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formFirstName" /><font
-					color="red">:</font> </b></td>
-				<td align="left"><input type="text" name="first_name"
-					onBlur="upCaseCtrl(this)" size=30></td>
-			</tr>
-			<%
+<tr><td class="RowTop">
+    <b><bean:message key="demographic.record"/></b>
+</td></tr>
+<tr><td>
+<form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
+<table border="1" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
+    <tr>
+      <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
+      <td align="left">
+        <input type="text" name="last_name" onBlur="upCaseCtrl(this)" size=30 />
+      </td>
+      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formFirstName"/><font color="red">:</font> </b> </td>
+      <td align="left">
+        <input type="text" name="first_name" onBlur="upCaseCtrl(this)"  size=30>
+      </td>
+    </tr>
+    <tr>
+	<td align="right"><b>Title<font color="red">:</font></b></td>
+	<td align="left">
+	    <select name="title" onchange="checkTitleSex();">
+		<option value="MS" selected>MS</option>
+		<option value="MISS">MISS</option>
+		<option value="MRS">MRS</option>
+		<option value="MR">MR</option>
+		<option value="MSSR">MSSR</option>
+		<option value="PROF">PROF</option>
+		<option value="REEVE">REEVE</option>
+		<option value="REV">REV</option>
+		<option value="RT_HON">RT_HON</option>
+		<option value="SEN">SEN</option>
+		<option value="SGT">SGT</option>
+		<option value="SR">SR</option>
+	    </select>
+	</td>
+	<td align="right"><b>Language<font color="red">:</font></b></td>
+	<td align="left">
+	    <select name="preferred_lang">
+		<option value="English">English</option>
+		<option value="French">French</option>
+	    </select>
+	</td>
+    </tr>
+    <%
     if (vLocale.getCountry().equals("BR")) { %>
 			<tr>
 				<td align="right"><b><bean:message
@@ -698,67 +724,59 @@ function checkFormTypeIn() {
 					<% if (pNames.isDefined()) {
                    for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                        String province = (String) li.next(); %>
-					<option value="<%=province%>"
-						<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
-					<% } %>
-					<% } else { %>
-					<option value="AB" <%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
-					<option value="BC" <%=billregion.equals("BC")?" selected":""%>>BC-British
-					Columbia</option>
-					<option value="MB" <%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
-					<option value="NB" <%=billregion.equals("NB")?" selected":""%>>NB-New
-					Brunswick</option>
-					<option value="NL" <%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland
-					& Labrador</option>
-					<option value="NT" <%=billregion.equals("NT")?" selected":""%>>NT-Northwest
-					Territory</option>
-					<option value="NS" <%=billregion.equals("NS")?" selected":""%>>NS-Nova
-					Scotia</option>
-					<option value="NU" <%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
-					<option value="ON" <%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
-					<option value="PE" <%=billregion.equals("PE")?" selected":""%>>PE-Prince
-					Edward Island</option>
-					<option value="QC" <%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
-					<option value="SK" <%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-					<option value="YT" <%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
-					<option value="US" <%=billregion.equals("US")?" selected":""%>>US
-					resident</option>
-					<% } %>
-				</select> <% }%>
-				</td>
-				<td align="right"><b>Language:</b></td>
-				<td><input type="text" name="language" value=""
-					onBlur="upCaseCtrl(this)" size="19" /></td>
-			</tr>
-			<tr valign="top">
-				<td align="right"><b> Sin#:</b></td>
-				<td align="left"><input type="text" name="sin"></td>
-
-
-				<td align="right" rowspan="2"><b>Country of Origin:</b></td>
-				<td rowspan="2"><select name="countryOfOrigin">
-					<option value="-1">Not Set</option>
-					<%for(CountryCode cc : countryList){ %>
-					<option value="<%=cc.getCountryId()%>"><%=cc.getCountryName() %></option>
-					<%}%>
-				</select></td>
-			</tr>
-			<tr valign="top">
-				<td align="right"><b> <bean:message
-					key="demographic.demographiceditdemographic.cytolNum" />:</b></td>
-				<td align="left"><input type="text" name="cytolNum">
-
-				</td>
-				<!--  missing rows because of rowspan above -->
-			</tr>
-			<tr valign="top">
-				<td align="right"><b>
-				<% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
-				<bean:message
-					key="demographic.demographiceditdemographic.formDoctor" />
-				<% } %> : </b></td>
-				<td align="left"><select name="staff">
-					<%
+                       <option value="<%=province%>"<%=province.equals(billregion)?" selected":""%>><%=li.next()%></option>
+                   <% } %>
+            <% } else { %>
+                  <option value="AB"<%=billregion.equals("AB")?" selected":""%>>AB-Alberta</option>
+                  <option value="BC"<%=billregion.equals("BC")?" selected":""%>>BC-British Columbia</option>
+                  <option value="MB"<%=billregion.equals("MB")?" selected":""%>>MB-Manitoba</option>
+                  <option value="NB"<%=billregion.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+                  <option value="NL"<%=billregion.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+                  <option value="NT"<%=billregion.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
+                  <option value="NS"<%=billregion.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+                  <option value="NU"<%=billregion.equals("NU")?" selected":""%>>NU-Nunavut</option>
+                  <option value="ON"<%=billregion.equals("ON")?" selected":""%>>ON-Ontario</option>
+                  <option value="PE"<%=billregion.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+                  <option value="QC"<%=billregion.equals("QC")?" selected":""%>>QC-Quebec</option>
+                  <option value="SK"<%=billregion.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+                  <option value="YT"<%=billregion.equals("YT")?" selected":""%>>YT-Yukon</option>
+                  <option value="US"<%=billregion.equals("US")?" selected":""%>>US resident</option>
+          <% } %>
+          </select>
+        <% }%>
+      </td>
+      <td align="right">
+         <b>Country of Origin:</b>          
+      </td>
+      <td>
+          <select name="countryOfOrigin">
+              <option value="-1">Not Set</option>
+              <%for(CountryCode cc : countryList){ %>
+              <option value="<%=cc.getCountryId()%>"><%=cc.getCountryName() %></option>
+              <%}%>
+          </select>
+      </td>
+    </tr>
+    <tr valign="top">
+	<td  align="right"><b> Sin#:</b> </td>
+	<td align="left"  >
+	    <input type="text" name="sin">
+	</td>
+	
+	
+	<td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
+	<td align="left"  >
+	    <input type="text" name="cytolNum">
+	    
+	</td>
+    </tr>
+    <tr valign="top">
+      <td align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
+                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>
+                                                : </b></td>
+      <td align="left" >
+        <select name="staff">
+          <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
 %>

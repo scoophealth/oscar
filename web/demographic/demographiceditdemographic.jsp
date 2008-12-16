@@ -850,13 +850,13 @@ function grabEnterCustomReason(event){
 							<bean:message
 								key="demographic.demographiceditdemographic.formFirstName" />: <b>
 							<%=apptMainBean.getString(rs,"first_name")%></b></li>
+							<li>Title:<b><%=apptMainBean.getString(rs,"title")%></b> &nbsp;
+							    <bean:message key="demographic.demographiceditdemographic.formSex" />:<b><%=apptMainBean.getString(rs,"sex")%></b>
+							</li>
 							<li>Age:<b><%=age%></b> &nbsp; <bean:message
 								key="demographic.demographiceditdemographic.formDOB" />:<b>(<%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)</b>
 							</li>
-							<li><bean:message
-								key="demographic.demographiceditdemographic.formSex" />:<b><%=apptMainBean.getString(rs,"sex")%></b>
-							</li>
-							<li>Language: <b><%= apptMainBean.getString(demoExt.get("language"))%></b>
+							<li>Language: <b><%= apptMainBean.getString(apptMainBean.getString(rs,"preferred_lang"))%></b>
 							<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
                                                         CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
                                                         if  (countryCode != null){
@@ -1089,7 +1089,34 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									size="30" value="<%=apptMainBean.getString(rs,"first_name")%>"
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
-
+							<tr>
+							  <td align="right" <b>Title: </b></td>
+							    <td align="left">
+					<% String title = apptMainBean.getString(rs,"title"); %>
+								<select name="title" onchange="checkTitleSex();">
+								    <option value="MS" <%=title.equals("MS")?"selected":""%> >MS</option>
+								    <option value="MISS" <%=title.equals("MISS")?"selected":""%> >MISS</option>
+								    <option value="MRS" <%=title.equals("MRS")?"selected":""%> >MRS</option>
+								    <option value="MR" <%=title.equals("MR")?"selected":""%> >MR</option>
+								    <option value="MSSR" <%=title.equals("MSSR")?"selected":""%> >MSSR</option>
+								    <option value="PROF" <%=title.equals("PROF")?"selected":""%> >PROF</option>
+								    <option value="REEVE" <%=title.equals("REEVE")?"selected":""%> >REEVE</option>
+								    <option value="REV" <%=title.equals("REV")?"selected":""%> >REV</option>
+								    <option value="RT_HON" <%=title.equals("RT_HON")?"selected":""%> >RT_HON</option>
+								    <option value="SEN" <%=title.equals("SEN")?"selected":""%> >SEN</option>
+								    <option value="SGT" <%=title.equals("SGT")?"selected":""%> >SGT</option>
+								    <option value="SR" <%=title.equals("SR")?"selected":""%> >SR</option>
+								</select>
+							    </td>
+							  <td align="right"><b>Language: </b> </td>
+							    <td align="left">
+					<% String lang = apptMainBean.getString(rs,"preferred_lang"); %>
+								<select name="preferred_lang">
+								    <option value="English" <%=lang.equals("English")?"selected":""%> >English</option>
+								    <option value="French" <%=lang.equals("French")?"selected":""%> >French</option>
+								</select>
+							    </td>
+							</tr>
 							<%
                             if (vLocale.getCountry().equals("BR")) { %>
 							<tr>
@@ -1358,12 +1385,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left" valign="top"><input type="text" name="sex"
 									style="width: 20px;"
 									value="<%=apptMainBean.getString(rs,"sex")%>"
-									onBlur="upCaseCtrl(this)" size="1" maxlength="1"> <b>Language:</b>
-								<input type="text" name="language"
-									value="<%=apptMainBean.getString(demoExt.get("language"))%>"
-									onBlur="upCaseCtrl(this)" size="19" /> <input type="hidden"
-									name="languageOrig"
-									value="<%=apptMainBean.getString(demoExt.get("language"))%>" />
+									onBlur="upCaseCtrl(this)" size="1" maxlength="1">
 								</td>
 							</tr>
 							<tr valign="top">

@@ -63,7 +63,7 @@ if( users != null && users.size() > 0 )
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[26];
+    String[] param =new String[28];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -90,6 +90,8 @@ if( users != null && users.size() > 0 )
           param[23] =request.getParameter("countryOfOrigin");
           param[24]=request.getParameter("newsletter");
           param[25]=request.getParameter("sin");
+	  param[26]=request.getParameter("title");
+	  param[27]=request.getParameter("preferred_lang");
 	
            java.sql.Date [] dtparam = new java.sql.Date[4];
 	  dtparam[0]=MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
@@ -102,7 +104,7 @@ if( users != null && users.size() > 0 )
   //DemographicExt
      DemographicExt dExt = new DemographicExt();
      String proNo = (String) session.getValue("user");
-     dExt.addKey(proNo,request.getParameter("demographic_no") ,"language",request.getParameter("language"),request.getParameter("languageOrig") );
+//   dExt.addKey(proNo,request.getParameter("demographic_no") ,"language",request.getParameter("language"),request.getParameter("languageOrig") ); **moved to preferred_lang in demographic
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"demo_cell",request.getParameter("demo_cell"),request.getParameter("demo_cellOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
