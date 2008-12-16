@@ -54,7 +54,7 @@ public class RxPrescriptionData {
             
             if (rs.next()) {
                 prescription = new Prescription(drugId,
-                db.getString(rs,"provider_no"), rs.getInt("demographic_no"));
+				db.getString(rs,"provider_no"), rs.getInt("demographic_no"));
                 prescription.setRxDate(rs.getDate("rx_date"));
                 prescription.setRxCreatedDate(rs.getDate("create_date"));
                 prescription.setEndDate(rs.getDate("end_date"));
@@ -68,6 +68,7 @@ public class RxPrescriptionData {
                 prescription.setDurationUnit(db.getString(rs,"durunit"));
                 prescription.setQuantity(db.getString(rs,"quantity"));
                 prescription.setRepeat(rs.getInt("repeat"));
+		prescription.setLastRefillDate(rs.getDate("last_refill_date"));
                 prescription.setNosubs(rs.getInt("nosubs"));
                 prescription.setPrn(rs.getInt("prn"));
                 prescription.setSpecial(db.getString(rs,"special"));
@@ -79,11 +80,13 @@ public class RxPrescriptionData {
                 prescription.setUnitName(db.getString(rs,"unitName"));
                 prescription.setMethod(db.getString(rs,"method"));
                 prescription.setRoute(db.getString(rs,"route"));
+		prescription.setDrugForm(db.getString(rs,"drug_form"));
                 prescription.setCustomInstr(rs.getBoolean("custom_instructions"));
                 prescription.setDosage(db.getString(rs,"dosage"));
+		prescription.setLongTerm(rs.getBoolean("long_term"));
+		prescription.setPastMed(rs.getBoolean("past_med"));
+		prescription.setPatientCompliance(rs.getInt("patient_compliance"));
             }
-            
-            
             rs.close();            
             
         } catch (SQLException e) {
@@ -127,6 +130,7 @@ public class RxPrescriptionData {
         prescription.setUnitName(favorite.getUnitName());
         prescription.setMethod(favorite.getMethod());
         prescription.setRoute(favorite.getRoute());
+	prescription.setDrugForm(favorite.getDrugForm());
         prescription.setCustomInstr(favorite.getCustomInstr());
         prescription.setDosage(favorite.getDosage());
         
@@ -150,6 +154,7 @@ public class RxPrescriptionData {
         prescription.setDurationUnit(rePrescribe.getDurationUnit());
         prescription.setQuantity(rePrescribe.getQuantity());
         prescription.setRepeat(rePrescribe.getRepeat());
+	prescription.setLastRefillDate(rePrescribe.getLastRefillDate());
         prescription.setNosubs(rePrescribe.getNosubs());
         prescription.setPrn(rePrescribe.getPrn());
         prescription.setSpecial(rePrescribe.getSpecial());
@@ -160,9 +165,14 @@ public class RxPrescriptionData {
         prescription.setUnit(rePrescribe.getUnit());
         prescription.setUnitName(rePrescribe.getUnitName());
         prescription.setMethod(rePrescribe.getMethod());
-        prescription.setRoute(rePrescribe.getRoute()); 
+        prescription.setRoute(rePrescribe.getRoute());
+	prescription.setDrugForm(rePrescribe.getDrugForm());
         prescription.setCustomInstr(rePrescribe.getCustomInstr());
         prescription.setDosage(rePrescribe.getDosage());
+	prescription.setLongTerm(rePrescribe.getLongTerm());
+	prescription.setPastMed(rePrescribe.getPastMed());
+	prescription.setPatientCompliance(rePrescribe.getPatientCompliance());
+	
         return prescription;
     }
     //JAY CHANGED THIS FUNCTION on desc 3 2002.
@@ -201,6 +211,7 @@ public class RxPrescriptionData {
                 p.setDurationUnit(db.getString(rs,"durunit"));
                 p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setSpecial(db.getString(rs,"special"));
@@ -213,8 +224,12 @@ public class RxPrescriptionData {
                 p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
+		p.setDrugForm(db.getString(rs,"drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
                 lst.add(p);
             }
             
@@ -268,6 +283,7 @@ public class RxPrescriptionData {
                 p.setDurationUnit(db.getString(rs,"durunit"));
                 p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setSpecial(db.getString(rs,"special"));
@@ -280,8 +296,12 @@ public class RxPrescriptionData {
                 p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
+		p.setDrugForm(db.getString(rs,"drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");                
                 if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
@@ -336,6 +356,7 @@ public class RxPrescriptionData {
                 p.setDurationUnit(db.getString(rs,"durunit"));
                 p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setSpecial(db.getString(rs,"special"));
@@ -347,8 +368,12 @@ public class RxPrescriptionData {
                 p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
+		p.setDrugForm(db.getString(rs,"drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
                 p.setPrintDate(rs.getDate("date_printed"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");
@@ -404,6 +429,7 @@ public class RxPrescriptionData {
                 p.setDurationUnit(db.getString(rs,"durunit"));
                 p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setSpecial(db.getString(rs,"special"));
@@ -415,8 +441,12 @@ public class RxPrescriptionData {
                 p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
+		p.setDrugForm(db.getString(rs,"drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
                 lst.add(p);
             }
             
@@ -507,6 +537,7 @@ public class RxPrescriptionData {
                     p.setDurationUnit(db.getString(rs,"durunit"));
                     p.setQuantity(db.getString(rs,"quantity"));
                     p.setRepeat(rs.getInt("repeat"));
+		    p.setLastRefillDate(rs.getDate("last_refill_date"));
                     p.setNosubs(rs.getInt("nosubs"));
                     p.setPrn(rs.getInt("prn"));
                     p.setSpecial(db.getString(rs,"special"));
@@ -517,9 +548,13 @@ public class RxPrescriptionData {
                     p.setUnit(db.getString(rs,"unit"));
                     p.setUnitName(db.getString(rs,"unitName"));
                     p.setMethod(db.getString(rs,"method"));
-                    p.setRoute(db.getString(rs,"route")); 
+                    p.setRoute(db.getString(rs,"route"));
+		    p.setDrugForm(db.getString(rs,"drug_form"));
                     p.setCustomInstr(rs.getBoolean("custom_instructions"));
                     p.setDosage(db.getString(rs,"dosage"));
+		    p.setLongTerm(rs.getBoolean("long_term"));
+		    p.setPastMed(rs.getBoolean("past_med"));
+		    p.setPatientCompliance(rs.getInt("patient_compliance"));
                     
                     if( myOscarEnabled ) {
                         String tmp = indivoSql.replaceFirst("\\?", db.getString(rs,"drugid"));
@@ -592,6 +627,7 @@ public class RxPrescriptionData {
                 p.setDurationUnit(db.getString(rs,"durunit"));
                 p.setQuantity(db.getString(rs,"quantity"));
                 p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
                 p.setNosubs(rs.getInt("nosubs"));
                 p.setPrn(rs.getInt("prn"));
                 p.setArchived(db.getString(rs,"archived"));
@@ -604,8 +640,12 @@ public class RxPrescriptionData {
                 p.setUnitName(db.getString(rs,"unitName"));
                 p.setMethod(db.getString(rs,"method"));
                 p.setRoute(db.getString(rs,"route"));
+		p.setDrugForm(db.getString(rs,"drug_form"));
                 p.setCustomInstr(rs.getBoolean("custom_instructions"));
                 p.setDosage(db.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
                 lst.add(p);
             }
             
@@ -644,7 +684,7 @@ public class RxPrescriptionData {
                 db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
                 rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
-                db.getString(rs,"unit"),db.getString(rs, "unitName"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
+                db.getString(rs,"unit"),db.getString(rs, "unitName"),db.getString(rs,"method"),db.getString(rs,"route"),db.getString(rs,"drug_form"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
                 
               
                 
@@ -683,7 +723,7 @@ public class RxPrescriptionData {
                 db.getString(rs,"quantity"),
                 rs.getInt("repeat"), rs.getInt("nosubs"),
                 rs.getInt("prn"), db.getString(rs,"special"),db.getString(rs,"GN"),db.getString(rs,"ATC"),db.getString(rs,"regional_identifier"),
-                db.getString(rs,"unit"),db.getString(rs,"unitName"),db.getString(rs,"method"),db.getString(rs,"route"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
+                db.getString(rs,"unit"),db.getString(rs,"unitName"),db.getString(rs,"method"),db.getString(rs,"route"),db.getString(rs,"drug_form"),rs.getBoolean("custom_instructions"),db.getString(rs,"dosage"));
             }
             
             rs.close();
@@ -841,8 +881,13 @@ public class Prescription {
     String durationUnit = null;
     String quantity = null;
     int repeat = 0;
+    java.util.Date lastRefillDate = null;
+    
     boolean nosubs = false;
     boolean prn = false;
+    boolean longTerm = false;
+    boolean pastMed = false;
+    int patientCompliance = 0;
     String special = null;
     String genericName = null;
     boolean archived = false;  // ADDED BY JAY DEC 3 2002
@@ -853,6 +898,7 @@ public class Prescription {
     String unit = null; 
     String unitName = null;
     String route = null;
+    String drugForm = null;
     String dosage = null;
     boolean custom = false;
     private String indivoIdx = null;        //indivo document index for this prescription
@@ -1128,6 +1174,14 @@ public class Prescription {
         this.repeat = RHS;
     }
     
+    public java.util.Date getLastRefillDate() {
+        return this.lastRefillDate;
+    }
+    
+    public void setLastRefillDate(java.util.Date RHS) {
+        this.lastRefillDate = RHS;
+    }
+    
     public boolean getNosubs() {
         return this.nosubs;
     }
@@ -1174,6 +1228,46 @@ public class Prescription {
         } else {
             this.setPrn(true);
         }
+    }
+    
+    public boolean getLongTerm() {
+	return this.longTerm;
+    }
+    
+    public void setLongTerm(boolean lt) {
+	this.longTerm = lt;
+    }
+    
+    public boolean getPastMed() {
+	return this.pastMed;
+    }
+    
+    public void setPastMed(boolean pm) {
+	this.pastMed = pm;
+    }
+    
+    public int getPatientCompliance() {
+	return this.patientCompliance;
+    }
+    
+    public void setPatientCompliance(int pc) {
+	this.patientCompliance = pc;
+    }
+    
+    public boolean getPatientCompliance(String YN) {
+	boolean ret = false;
+	if (YN.equals("Y")) {
+	    ret = (getPatientCompliance()==1);
+	} else if (YN.equals("N")) {
+	    ret = (getPatientCompliance()==-1);
+	}
+	return ret;
+    }
+    
+    public void setPatientCompliance(boolean Y, boolean N) {
+	if (Y) setPatientCompliance(1);
+	else if (N) setPatientCompliance(-1);
+	else setPatientCompliance(0);
     }
     
     public String getSpecial() {
@@ -1445,7 +1539,7 @@ public class Prescription {
     
     public boolean Save(String scriptId) {
         boolean b = false;
-        
+	
         // calculate end date
         this.calcEndDate();
         
@@ -1480,10 +1574,14 @@ public class Prescription {
                 + "quantity = '" + this.getQuantity() + "' AND "
                 + "unitName = '" + this.getUnitName() + "' AND "
                 + "`repeat` = " + this.getRepeat() + " AND "
+		+ "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "' AND "
                 + "nosubs = " + this.getNosubsInt() + " AND "
                 + "prn = " + this.getPrnInt() + " AND "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "' AND "
-                + "custom_instructions = " + this.getCustomInstr();
+                + "custom_instructions = " + this.getCustomInstr() + " AND "
+		+ "long_term = " + this.getLongTerm() + " AND "
+		+ "past_med = " + this.getPastMed() + " AND "
+		+ "patient_compliance = " + this.getPatientCompliance();
                 
                 rs = db.GetSQL(sql);
                 
@@ -1501,9 +1599,10 @@ public class Prescription {
                 if(this.getDrugId() == 0) {
                     sql = "INSERT INTO drugs (provider_no, demographic_no, "
                     + "rx_date, end_date, BN, GCN_SEQNO, customName, "
-                    + "takemin, takemax, "
-                    + "freqcode, duration, durunit, quantity, "
-                    + "`repeat`, nosubs, prn, special,GN,script_no,ATC,regional_identifier,unit,method,route,create_date,custom_instructions,dosage,unitName) "
+                    + "takemin, takemax, freqcode, duration, durunit, quantity, "
+                    + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, "
+		    + "regional_identifier, unit, method, route, drug_form, create_date, custom_instructions, "
+		    + "dosage, unitName, long_term, past_med, patient_compliance) "
                     + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '"
                     + RxUtil.DateToString(this.getRxDate()) + "', '"
                     + RxUtil.DateToString(this.getEndDate()) + "', '"
@@ -1512,13 +1611,12 @@ public class Prescription {
                     + this.getTakeMin() + ", " + this.getTakeMax() + ", '"
                     + this.getFrequencyCode() + "', '" + this.getDuration() + "', '"
                     + this.getDurationUnit() + "', '" + this.getQuantity() + "', "
-                    + this.getRepeat() + ", " + this.getNosubsInt() + ", "
-                    + this.getPrnInt() + ", '"
+                    + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate())+ "', "
+		    + this.getNosubsInt() + ", " + this.getPrnInt() + ", '"
                     + RxUtil.replace(this.getSpecial(), "'", "") + "','"+this.getGenericName()+"','"+scriptId+"', '"
                     + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"+this.getMethod()+"','"
-                    + this.getRoute()+"',now()," + this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+ "')";
-                    
-                     
+                    + this.getRoute()+"','"+this.getDrugForm()+"',now(),"+ this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+"', "
+		    + this.getLongTerm()+", "+this.getPastMed()+", "+this.getPatientCompliance()+")";
                     
                     db.RunSQL(sql);
                     
@@ -1536,8 +1634,8 @@ public class Prescription {
                     b = true;
                 }
                 
-            } else { // update the daterbase          
-                sql = "UPDATE drugs SET "
+            } else { // update the database    
+		sql = "UPDATE drugs SET "
                 + "provider_no = '" + this.getProviderNo() + "', "
                 + "demographic_no = " + this.getDemographicNo() + ", "
                 + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', "
@@ -1552,6 +1650,7 @@ public class Prescription {
                 + "durunit = '" + this.getDurationUnit() + "', "
                 + "quantity = '" + this.getQuantity() + "', "
                 + "`repeat` = " + this.getRepeat() + ", "
+		+ "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', "
                 + "nosubs = " + this.getNosubsInt() + ", "
                 + "prn = " + this.getPrnInt() + ", "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "', "
@@ -1560,9 +1659,13 @@ public class Prescription {
                 + "unit = '"+this.getUnit()+"', "
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"', "
+                + "drug_form = '"+this.getDrugForm()+"', "
                 + "dosage = '"+this.getDosage()+"', "        
-                + "custom_instructions = " + this.getCustomInstr()+"', " 
-                + "unitName = " + this.getUnitName() + " "        
+                + "custom_instructions = " + this.getCustomInstr()+", " 
+                + "unitName = '" + this.getUnitName() + "', "
+		+ "long_term = " + this.getLongTerm() + ", "
+		+ "past_med = " + this.getPastMed() + ", "
+		+ "patient_compliance = " + this.getPatientCompliance() + " "
                 + "WHERE drugid = " + this.getDrugId();
                 
                 db.RunSQL(sql);
@@ -1590,7 +1693,7 @@ public class Prescription {
         this.getDurationUnit(), this.getQuantity(),
         this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), 
         this.getSpecial(),this.getGenericName(),
-        this.getAtcCode(),this.getRegionalIdentifier(),this.getUnit(),this.getUnitName(),this.getMethod(),this.getRoute(), this.getCustomInstr(),this.getDosage());
+        this.getAtcCode(),this.getRegionalIdentifier(),this.getUnit(),this.getUnitName(),this.getMethod(),this.getRoute(),this.getDrugForm(),this.getCustomInstr(),this.getDosage());
         
         return fav.Save();
     }
@@ -1702,6 +1805,14 @@ public class Prescription {
        this.route = route;
     }
     
+    public java.lang.String getDrugForm() {
+       return drugForm;
+    }
+    
+    public void setDrugForm(java.lang.String drugForm) {
+       this.drugForm = drugForm;
+    }
+    
     /**
      *Setter for property custom (does it have customized directions)
      *@param boolean value for custom
@@ -1773,13 +1884,13 @@ public class Favorite {
     String unitName;
     String method;
     String route;
+    String drugForm;
     String dosage;
     
     public Favorite(int favoriteId, String providerNo, String favoriteName,
-    String BN, int GCN_SEQNO, String customName,
-    float takeMin, float takeMax, String frequencyCode, String duration,
-    String durationUnit, String quantity,
-    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier,String unit,String unitName,String method,String route,boolean customInstr,String dosage) {
+    String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax,
+    String frequencyCode, String duration, String durationUnit, String quantity,
+    int repeat, int nosubs, int prn, String special,String GN,String atc,String regionalIdentifier,String unit,String unitName,String method,String route,String drugForm,boolean customInstr,String dosage) {
         this.favoriteId = favoriteId;
         this.providerNo = providerNo;
         this.favoriteName = favoriteName;
@@ -1803,6 +1914,7 @@ public class Favorite {
         this.unitName = unitName;
         this.method = method;
         this.route = route;
+	this.drugForm = drugForm;
         this.customInstr = customInstr;
         this.dosage = dosage;
     }
@@ -2016,7 +2128,7 @@ public class Favorite {
                     sql = "INSERT INTO favorites (provider_no, favoritename, "
                     + "BN, GCN_SEQNO, customName, takemin, takemax, "
                     + "freqcode, duration, durunit, quantity, "
-                    + "`repeat`, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,custom_instructions,dosage) "
+                    + "`repeat`, last_refill_date, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,drug_form,custom_instructions,dosage) "
                     + "VALUES ('" + this.getProviderNo() + "', '" + StringEscapeUtils.escapeSql(this.getFavoriteName()) + "', '"
                     + StringEscapeUtils.escapeSql(this.getBN()) + "', " + this.getGCN_SEQNO() + ", '"
                     + StringEscapeUtils.escapeSql(this.getCustomName()) + "', "
@@ -2033,6 +2145,7 @@ public class Favorite {
                     + this.getUnitName()+"', '"        
                     + this.getMethod()+"', '"
                     + this.getRoute()+"', "
+                    + this.getDrugForm()+"', "
                     + this.getCustomInstr() + ", '"
                     + this.getDosage()+"')"; 
                     
@@ -2076,6 +2189,7 @@ public class Favorite {
                 + "unitName = '"+this.getUnitName()+"', "         
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"', "
+                + "drug_form = '"+this.getDrugForm()+"', "
                 + "custom_instructions = " + this.getCustomInstr() + ", "
                 + "dosage = '"+this.getDosage()+"' "
                 + "WHERE favoriteid = " + this.getFavoriteId();
@@ -2190,6 +2304,14 @@ public class Favorite {
      */
     public void setRoute(java.lang.String route) {
        this.route = route;
+    }
+    
+    public java.lang.String getDrugForm() {
+       return drugForm;
+    }
+    
+    public void setDrugForm(java.lang.String drugForm) {
+       this.drugForm = drugForm;
     }
     
      /**

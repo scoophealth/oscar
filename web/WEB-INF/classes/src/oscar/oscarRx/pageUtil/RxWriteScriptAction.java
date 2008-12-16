@@ -47,7 +47,7 @@ public final class RxWriteScriptAction extends Action {
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
-    HttpServletResponse response) throws IOException, ServletException {
+    HttpServletResponse response) throws IOException, ServletException, Exception {
         
         // Extract attributes we will need
         Locale locale = getLocale(request);
@@ -85,7 +85,6 @@ public final class RxWriteScriptAction extends Action {
             }
             
             rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(),"yyyy-MM-dd"));
-            
             rx.setTakeMin(frm.getTakeMinFloat());
             rx.setTakeMax(frm.getTakeMaxFloat());
             rx.setFrequencyCode(frm.getFrequencyCode());
@@ -93,6 +92,7 @@ public final class RxWriteScriptAction extends Action {
             rx.setDurationUnit(frm.getDurationUnit());
             rx.setQuantity(frm.getQuantity());
             rx.setRepeat(frm.getRepeat());
+	    rx.setLastRefillDate(RxUtil.StringToDate(frm.getLastRefillDate(),"yyyy-MM-dd"));
             rx.setNosubs(frm.getNosubs());
             rx.setPrn(frm.getPrn());
             rx.setSpecial(frm.getSpecial());
@@ -104,8 +104,12 @@ public final class RxWriteScriptAction extends Action {
             rx.setRoute(frm.getRoute());
             rx.setCustomInstr(frm.getCustomInstr());
             rx.setDosage(frm.getDosage());
+	    rx.setLongTerm(frm.getLongTerm());
+	    rx.setPastMed(frm.getPastMed());
+	    rx.setPatientCompliance(frm.getPatientComplianceY(),frm.getPatientComplianceN());
+	    rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
             System.out.println("SAVING STASH " + rx.getCustomInstr());
-                     
+	    
             bean.setStashItem(bean.getStashIndex(), rx);
          
             rx=null;

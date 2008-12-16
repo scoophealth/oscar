@@ -46,9 +46,14 @@ public final class RxWriteScriptForm extends ActionForm {
     String durationUnit = null;
     String quantity = null;
     int repeat = 0;
+    String lastRefillDate = null;
     boolean nosubs = false;
     boolean prn = false;
     boolean customInstr = false;
+    boolean longTerm = false;
+    boolean pastMed = false;
+    boolean patientComplianceY=false;
+    boolean patientComplianceN=false;
     String special = null;
     String atcCode = null;
     String regionalIdentifier = null;
@@ -206,6 +211,14 @@ public final class RxWriteScriptForm extends ActionForm {
         this.repeat = RHS;
     }
     
+    public String getLastRefillDate() {
+	return this.lastRefillDate;
+    }
+    
+    public void setLastRefillDate(String RHS) {
+	this.lastRefillDate = RHS;
+    }
+    
     public boolean getNosubs() {
         return this.nosubs;
     }
@@ -230,12 +243,44 @@ public final class RxWriteScriptForm extends ActionForm {
         this.special = RHS;
     }
     
+    public boolean getCustomInstr() {
+        return this.customInstr;
+    }
+    
     public void setCustomInstr(boolean c) {
         this.customInstr = c;        
     }
     
-    public boolean getCustomInstr() {
-        return this.customInstr;
+    public boolean getLongTerm() {
+	return this.longTerm;
+    }
+    
+    public void setLongTerm(boolean l) {
+	this.longTerm = l;
+    }
+    
+    public boolean getPastMed() {
+	return this.pastMed;
+    }
+    
+    public void setPastMed(boolean p) {
+	this.pastMed = p;
+    }
+    
+    public boolean getPatientComplianceY() {
+	return this.patientComplianceY;
+    }
+    
+    public void setPatientComplianceY(boolean c) {
+	this.patientComplianceY = c;
+    }
+    
+    public boolean getPatientComplianceN() {
+	return this.patientComplianceN;
+    }
+    
+    public void setPatientComplianceN(boolean c) {
+	this.patientComplianceN = c;
     }
     
     /**
@@ -260,11 +305,16 @@ public final class RxWriteScriptForm extends ActionForm {
         this.durationUnit = null;
         this.quantity = null;
         this.repeat = 0;
+	this.lastRefillDate = null;
         this.nosubs = false;
         this.prn = false;
         this.special = null;
         this.unitName = null;
         this.customInstr = false;
+	this.longTerm = false;
+	this.pastMed = false;
+	this.patientComplianceY = false;
+	this.patientComplianceN = false;
     }
     
     

@@ -361,7 +361,7 @@ String regionalIdentifier="";
                                 
                 //Replace units and frequency Unit  //TODO Pull this from Database
                 
-                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/;
+                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|ï¿½g|Drops|Patch|Puffs|Units|Inhalations)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -389,7 +389,7 @@ String regionalIdentifier="";
                    addWarning("Could not find place to put "+frm.frequencyCode.value);
                 }
                 
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|ï¿½g|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/,frm.route.options[frm.route.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
@@ -444,7 +444,7 @@ String regionalIdentifier="";
        var frm = document.forms.RxWriteScriptForm;
        var retval = str;
        if (frm.prn.checked == false){
-          retval = str.replace(/PRN/,"");
+          retval = str.replace(/PRN /,"");
        }
        return retval;
     }   
@@ -463,9 +463,7 @@ String regionalIdentifier="";
        if (frm.prn.checked){//is PRN CHECKED?
           var prnFindRegExp = /PRN/; 
           var p = prnFindRegExp.exec(str);
-          if(p){
-             //PRN found leave it
-          }else{
+          if(!p){//PRN not found
              retval = "PRN ";
           }
        }
@@ -475,12 +473,10 @@ String regionalIdentifier="";
     function getNoSubs(str){
        var retval = "";
        var frm = document.forms.RxWriteScriptForm;
-       if (frm.nosubs.checked){//is PRN CHECKED?
+       if (frm.nosubs.checked){//is NOSUB CHECKED?
           var noSubFindRegExp = /No Subs/; 
           var p = noSubFindRegExp.exec(str);
-          if(p){
-             //No Subs found leave it
-          }else{
+          if(!p){//NOSUB not found
              retval = " No Subs ";
           }
        }
@@ -529,7 +525,15 @@ String regionalIdentifier="";
        return retval;
     }
     
-    
+    function checkPatientCompliance(pc) {
+	var frm = document.forms.RxWriteScriptForm;
+	if (pc=="Y") {
+	    if (frm.patientComplianceY.checked) frm.patientComplianceN.checked = false;
+	} else if (pc=="N") {
+	    if (frm.patientComplianceN.checked) frm.patientComplianceY.checked = false;
+	}
+	writeScriptDisplay();
+    }
     
     function writeScriptDisplay(){  
   //      alert ("f"+first);
@@ -799,15 +803,11 @@ if(bean.getStashIndex() > -1){ //new way
     oscar.oscarRx.data.RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
     oscar.oscarRx.data.RxDrugData drugData = new oscar.oscarRx.data.RxDrugData();
     thisForm.setDemographicNo(bean.getDemographicNo());
-    
-    thisForm.setRxDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );    
-    
+    thisForm.setRxDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
     thisForm.setEndDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getEndDate()));
-    
     try{
         System.out.println(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
     }catch(Exception e){ e.printStackTrace(); }
-
     if(! rx.isCustom()){
         thisForm.setGenericName(rx.getGenericName());        
         thisForm.setBrandName(rx.getBrandName() );
@@ -830,9 +830,14 @@ if(bean.getStashIndex() > -1){ //new way
 
     thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
+    thisForm.setLastRefillDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
     thisForm.setSpecial(rx.getSpecial());
+    thisForm.setLongTerm(rx.getLongTerm());
+    thisForm.setPastMed(rx.getPastMed());
+    thisForm.setPatientComplianceY(rx.getPatientCompliance("Y"));
+    thisForm.setPatientComplianceN(rx.getPatientCompliance("N"));
     thisForm.setAtcCode(rx.getAtcCode());
     thisForm.setRegionalIdentifier(rx.getRegionalIdentifier());
     thisForm.setUnit(rx.getUnit());
@@ -840,6 +845,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
     thisForm.setCustomInstr(rx.getCustomInstr());
+    
     System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
     System.out.println("route "+rx.getRoute());
@@ -849,28 +855,31 @@ isCustom = thisForm.getGCN_SEQNO() == 0;
 int drugId = thisForm.getGCN_SEQNO();
 
 %>
-	<!--
-DemographicNo:  <%= thisForm.getDemographicNo() %><br>
-RxDate:         <%= thisForm.getRxDate() %><br>
-EndDate:        <%= thisForm.getEndDate() %><br>
-GenericName:    <%= thisForm.getGenericName() %><br>
-BrandName:      <%= thisForm.getBrandName() %><br>
-GCN_SEQNO:      <%= thisForm.getGCN_SEQNO() %><br>
-CustomName:     <%= thisForm.getCustomName() %><br>
-TakeMin:        <%= thisForm.getTakeMin() %><br>
-TakeMax:        <%= thisForm.getTakeMax() %><br>
-FrequencyCode:  <%= thisForm.getFrequencyCode() %><br>
-Duration:       <%= thisForm.getDuration() %><br>
-DurationUnit:   <%= thisForm.getDurationUnit() %><br>
-Quantity:       <%= thisForm.getQuantity() %><br>
-Repeat:         <%= thisForm.getRepeat() %><br>
-Nosubs:         <%= String.valueOf(thisForm.getNosubs()) %><br>
-Prn:            <%= String.valueOf(thisForm.getPrn()) %><br>
-Dosage:         <%= thisForm.getDosage() %><br>
-Special:        <%= thisForm.getSpecial() %><br>
-ATC:            <%= thisForm.getAtcCode() %>
-regional ident  <%= thisForm.getRegionalIdentifier() %>
-Custom Instruct; <%=thisForm.getCustomInstr() %>
+<!--
+DemographicNo:   <%= thisForm.getDemographicNo() %><br>
+RxDate:          <%= thisForm.getRxDate() %><br>
+EndDate:         <%= thisForm.getEndDate() %><br>
+GenericName:     <%= thisForm.getGenericName() %><br>
+BrandName:       <%= thisForm.getBrandName() %><br>
+GCN_SEQNO:       <%= thisForm.getGCN_SEQNO() %><br>
+CustomName:      <%= thisForm.getCustomName() %><br>
+TakeMin:         <%= thisForm.getTakeMin() %><br>
+TakeMax:         <%= thisForm.getTakeMax() %><br>
+FrequencyCode:   <%= thisForm.getFrequencyCode() %><br>
+Duration:        <%= thisForm.getDuration() %><br>
+DurationUnit:    <%= thisForm.getDurationUnit() %><br>
+Quantity:        <%= thisForm.getQuantity() %><br>
+Repeat:          <%= thisForm.getRepeat() %><br>
+Nosubs:          <%= String.valueOf(thisForm.getNosubs()) %><br>
+Prn:             <%= String.valueOf(thisForm.getPrn()) %><br>
+Long Term Med:   <%= String.valueOf(thisForm.getLongTerm()) %><br>
+Past Med:	 <%= String.valueOf(thisForm.getPastMed()) %><br>
+Patient Complia: <%= String.valueOf(thisForm.getPatientComplianceY()) %><br>
+Dosage:          <%= thisForm.getDosage() %><br>
+Special:         <%= thisForm.getSpecial() %><br>
+ATC:             <%= thisForm.getAtcCode() %>
+regional ident:  <%= thisForm.getRegionalIdentifier() %>
+Custom Instruct: <%=thisForm.getCustomInstr() %>
 
 <% regionalIdentifier = thisForm.getRegionalIdentifier(); %>
 
@@ -924,80 +933,84 @@ int i;
     <%}%>
 </script>
 
-	<html:hidden property="demographicNo" />
-	<html:hidden property="GCN_SEQNO" />
-	<html:hidden property="atcCode" />
-	<html:hidden property="regionalIdentifier" />
-	<html:hidden property="dosage" />
+<html:hidden property="demographicNo" />
+<html:hidden property="GCN_SEQNO" />
+<html:hidden property="atcCode" />
+<html:hidden property="regionalIdentifier" />
+<html:hidden property="dosage" /> 
 
 
 
-	<table border="0" cellpadding="0" cellspacing="0"
-		<% /*style="border-collapse: collapse"*/%> bordercolor="#111111"
-		width="100%" height="100%">
-		<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
-		<tr>
-			<%@ include file="SideLinksNoEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
-			<td width="100%" style="border-left: 2px solid #A9A9A9;"
-				height="100%" valign="top">
-			<table cellpadding="0" cellspacing="2"
-				style="border-collapse: collapse" bordercolor="#111111" width="100%"
-				height="100%">
-				<tr>
-					<td width="0%" valign="top">
-					<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message
-						key="SearchDrug.title" /></a> > <bean:message key="ChooseDrug.title" />
-					> <b><bean:message key="WriteScript.title" /></b></div>
-					</td>
-				</tr>
-				<!----Start new rows here-->
+<table border="0" cellpadding="0" cellspacing="0" <% /*style="border-collapse: collapse"*/%> bordercolor="#111111" width="100%" height="100%">
+    <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
+    <tr>
+        <%@ include file="SideLinksNoEditFavorites.jsp" %><!-- <td></td>Side Bar File --->
+        <td width="100%" style="border-left: 2px solid #A9A9A9; " height="100%" valign="top">
+            <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
+                <tr>
+                    <td width="0%" valign="top">
+            	        <div class="DivCCBreadCrumbs">
+              	        <a href="SearchDrug.jsp">   <bean:message key="SearchDrug.title"/></a> >
+                        <bean:message key="ChooseDrug.title"/> >
+                        <b><bean:message key="WriteScript.title"/></b>
+                        </div>
+                    </td>
+                </tr>
+            <!----Start new rows here-->
 
-				<tr>
-					<td>
-					<div class="DivContentTitle"><bean:message
-						key="WriteScript.title" /></div>
-					</td>
-				</tr>
+                <tr>
+                    <td>
+ 		                <div class="DivContentTitle"><bean:message key="WriteScript.title"/></div>
+                    </td>
+		</tr>
 
-				<tr>
-					<td>
-					<div class="DivContentSectionHead"><bean:message
-						key="WriteScript.section2Title" /> for <%= patient.getFirstName() %>
-					<%= patient.getSurname() %></div>
-					</td>
-				</tr>
+                <tr>
+                    <td>
+                        <div class="DivContentSectionHead"><bean:message key="WriteScript.section2Title"/> for <%= patient.getFirstName() %> <%= patient.getSurname() %></div>
+                    </td>
+                </tr>
 
 
-				<tr>
-					<td>
-					<table border=1 style="border: 1px solid #A9A9A9;">
+                <tr>
+                    <td>
+                        <table border=1 style="border: 1px solid #A9A9A9; ">
 
-						<% if (! isCustom) { %>
-						<tr>
-							<td colspan=2>Generic Name:</td>
-							<td colspan=2><html:hidden property="genericName" /> <b><%= thisForm.getGenericName() %></b>
-							<%if ( compString != null ){%> <a
-								href="javascript: function myFunction() {return false; }"
-								title="<%=compString%>">Components</a> <%}%>
-							</td>
-							<td valign=top rowspan=8><select size=20 name="selSpecial"
-								ondblclick="javascript:cmdSpecial_click();">
-								<%for(i=0; i<spec.length; i++){%>
-								<option value="<%= spec[i] %>"><%= spec[i] %></option>
-								<%}%>
-							</select></td>
-						</tr>
+                        <% if (! isCustom) { %>
+                            <tr>
+                                <td colspan=2>
+                                    Generic Name:
+                                </td>
+                                <td colspan=2>
+                                    <html:hidden property="genericName"/>
+                                    <b><%= thisForm.getGenericName() %></b>
+                                    <%if ( compString != null ){%>
+                                    <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" >Components</a>
+                                    <%}%>   
+                                </td>
+                                 <td valign=top rowspan=9>
+                                                <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();">
+                                                    <%for(i=0; i<spec.length; i++){%>
+                                                        <option value="<%= spec[i] %>">
+                                                            <%= spec[i] %>
+                                                        </option>
+                                                    <%}%>
+                                                </select>
+                                            </td>
+                            </tr>
 
-						<tr>
-							<td colspan=2>Brand Name:</td>
-							<td colspan=2><html:hidden property="brandName" /> <b><%= thisForm.getBrandName() %></b>
-							<oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">
-								<!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->
-								<a href="javascript: function myFunction() {return false; }"
-									onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB
-								info</a>
-							</oscar:oscarPropertiesCheck></td>
-							<!--<td >
+                            <tr>
+                                <td colspan=2>
+                                    Brand Name:
+                                </td>
+                                <td colspan=2>                                                                        
+                                            <html:hidden property="brandName" />
+                                            <b><%= thisForm.getBrandName() %></b>
+                                            <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">                          
+                                            <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->                             
+                                            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a> 
+                                            </oscar:oscarPropertiesCheck>
+                                </td>
+                                <!--<td >
                                     &nbsp;
                                 </td>-->
 						</tr>
@@ -1064,7 +1077,7 @@ int i;
 								<html:option value="sqrt">Squirts</html:option>
 								<html:option value="gm">gm</html:option>
 								<html:option value="mg">mg</html:option>
-								<html:option value="micg">µg</html:option>
+								<html:option value="micg">ï¿½g</html:option>
 								<html:option value="drop">Drops</html:option>
 								<html:option value="patc">Patch</html:option>
 								<html:option value="puff">Puffs</html:option>
@@ -1206,15 +1219,25 @@ int i;
                                             frm.cmbRepeat.value = 'Other';
                                             frm.txtRepeat.style.display = '';
                                         }
-                                    </script> No Subs:<html:checkbox
-								property="nosubs" onchange="javascript:writeScriptDisplay();" />
-							</td>
-
-						</tr>
-						<tr>
-							<td colspan=4>Special Instructions:&nbsp;<html:checkbox
-								property="customInstr" />Custom Instructions <script
-								language=javascript>
+                                    </script>
+				    &nbsp;
+                                    No Subs:<html:checkbox property="nosubs" onchange="javascript:writeScriptDisplay();" />
+				    &nbsp;
+				    Last Refill Date:<html:text property="lastRefillDate" />
+                                </td>
+                            </tr>
+			    <tr>
+				<td colspan=4>
+				    Long Term Medcation:<html:checkbox property="longTerm" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
+				    Past Medication:<html:checkbox property="pastMed" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
+				    Patient Compliance: Yes<html:checkbox property="patientComplianceY" onchange="javascript:checkPatientCompliance('Y');" />
+							No<html:checkbox property="patientComplianceN" onchange="javascript:checkPatientCompliance('N');" />
+				</td>
+			    </tr>
+                            <tr>
+                                <td colspan=4>
+                                    Special Instructions:&nbsp;<html:checkbox property="customInstr" />Custom Instructions
+                                    <script language=javascript>
                                         function cmdSpecial_click(){
                                             var frm = document.forms.RxWriteScriptForm;
                                             if(frm.selSpecial.selectedIndex >-1){
