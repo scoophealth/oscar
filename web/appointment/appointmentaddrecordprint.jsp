@@ -37,15 +37,9 @@
 
 <html:html locale="true">
 <head>
-<script LANGUAGE="JavaScript">
-<!--
-function start(){
- //this.focus();
-}
-//-->
-</script>
+
 </head>
-<body onload="start()" background="../images/gray_bg.jpg"
+<body background="../images/gray_bg.jpg"
 	bgproperties="fixed">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
