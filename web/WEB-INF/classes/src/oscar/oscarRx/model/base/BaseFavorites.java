@@ -29,6 +29,7 @@ public abstract class BaseFavorites  implements Serializable {
 	public static String PROP_REPEAT = "Repeat";
 	public static String PROP_TAKEMAX = "Takemax";
 	public static String PROP_ROUTE = "Route";
+	public static String PROP_DRUGFORM = "DrugForm";
 	public static String PROP_FAVORITENAME = "Favoritename";
 	public static String PROP_QUANTITY = "Quantity";
 	public static String PROP_PROVIDER_NO = "ProviderNo";
@@ -108,6 +109,7 @@ public abstract class BaseFavorites  implements Serializable {
 	private java.lang.String unit;
 	private java.lang.String method;
 	private java.lang.String route;
+	private java.lang.String drugform;
 	private java.lang.String dosage;
 	private boolean customInstructions;
 	private java.lang.String unitName;
@@ -493,6 +495,14 @@ public abstract class BaseFavorites  implements Serializable {
 
 
 
+	public java.lang.String getDrugForm() {
+		return drugform;
+	}
+	
+	public void setDrugForm (java.lang.String drugform) {
+		this.drugform = drugform;
+	}
+	
 	/**
 	 * Return the value associated with the column: dosage
 	 */
