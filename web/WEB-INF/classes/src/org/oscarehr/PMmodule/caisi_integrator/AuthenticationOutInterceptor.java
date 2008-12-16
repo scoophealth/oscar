@@ -14,38 +14,34 @@ import org.apache.cxf.phase.Phase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class AuthenticationOutInterceptor extends AbstractSoapInterceptor
-{
-    private String username=null;
-    private String password=null;
-    
+public class AuthenticationOutInterceptor extends AbstractSoapInterceptor {
+    private String username = null;
+    private String password = null;
+
     public AuthenticationOutInterceptor(String username, String password) {
-        super(Phase.WRITE);
-        this.username = username;
-        this.password = password;
+	super(Phase.WRITE);
+	this.username = username;
+	this.password = password;
     }
 
-	public void handleMessage(SoapMessage message) throws Fault
-	{
-		addUserPassword(message);
-	}
-	
-	private void addUserPassword(SoapMessage message)
-	{
-		List<Header> headers=message.getHeaders();
-		headers.add(getHeader("username", username));
-		headers.add(getHeader("password", password));
-	}
-	
-	private Header getHeader(String key, String value)
-	{
-		QName qName=new QName("http://oscarehr.org/caisi_integrator", key, "oscar_caisi");
-		
-		Document document=DOMUtils.createDocument();
-		Element element=document.createElementNS("http://oscarehr.org/caisi_integrator", "oscar_caisi:"+key);
-		element.setTextContent(value);
-				
-		SoapHeader header=new SoapHeader(qName, element);
-		return(header);
-	}
+    public void handleMessage(SoapMessage message) throws Fault {
+	addUserPassword(message);
+    }
+
+    private void addUserPassword(SoapMessage message) {
+	List<Header> headers = message.getHeaders();
+	headers.add(getHeader("username", username));
+	headers.add(getHeader("password", password));
+    }
+
+    private Header getHeader(String key, String value) {
+	QName qName = new QName("http://oscarehr.org/caisi", key, "caisi");
+
+	Document document = DOMUtils.createDocument();
+	Element element = document.createElementNS("http://oscarehr.org/caisi", "caisi:" + key);
+	element.setTextContent(value);
+
+	SoapHeader header = new SoapHeader(qName, element);
+	return (header);
+    }
 }
