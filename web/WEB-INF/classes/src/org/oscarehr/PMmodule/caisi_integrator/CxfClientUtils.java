@@ -10,7 +10,7 @@ import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
-public class CxfUtils {
+public class CxfClientUtils {
 	public static class TrustAllManager implements X509TrustManager {
 		public X509Certificate[] getAcceptedIssuers() {
 			return new X509Certificate[0];

@@ -90,7 +90,7 @@ public class CaisiIntegratorManager {
 		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
 		FacilityWs port = service.getFacilityWsPort();
 
-		CxfUtils.configureClientConnection(port);
+		CxfClientUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -131,7 +131,7 @@ public class CaisiIntegratorManager {
 		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
 		DemographicWs port = service.getDemographicWsPort();
 
-		CxfUtils.configureClientConnection(port);
+		CxfClientUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -143,7 +143,7 @@ public class CaisiIntegratorManager {
 		ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
 		ProgramWs port = service.getProgramWsPort();
 
-		CxfUtils.configureClientConnection(port);
+		CxfClientUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -208,7 +208,7 @@ public class CaisiIntegratorManager {
 		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderService"));
 		ProviderWs port = service.getProviderWsPort();
 
-		CxfUtils.configureClientConnection(port);
+		CxfClientUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
@@ -259,7 +259,7 @@ public class CaisiIntegratorManager {
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();
 
-		CxfUtils.configureClientConnection(port);
+		CxfClientUtils.configureClientConnection(port);
 		addAuthenticationInterceptor(facility, port);
 
 		return (port);
