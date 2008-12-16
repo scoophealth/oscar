@@ -388,6 +388,7 @@ CREATE TABLE ctl_specialinstructions (
 
 CREATE TABLE demographic (
   demographic_no int(10) NOT NULL auto_increment,
+  title varchar(10),
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   address varchar(60) default NULL,
@@ -407,6 +408,7 @@ CREATE TABLE demographic (
   patient_status varchar(20) default NULL,
   date_joined date default NULL,
   chart_no varchar(10) default NULL,
+  preferred_lang varchar(20),
   provider_no varchar(250) default NULL,
   sex char(1) NOT NULL default '',
   end_date date default NULL,
@@ -581,6 +583,7 @@ CREATE TABLE drugs (
   durunit char(1) default NULL,
   quantity varchar(20) default NULL,
   `repeat` tinyint(4) default NULL,
+  last_refill_date date,
   nosubs tinyint(1) NOT NULL default '0',
   prn tinyint(1) NOT NULL default '0',
   special text,
@@ -592,10 +595,14 @@ CREATE TABLE drugs (
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
   route varchar(5) default 'PO',
+  drug_form varchar(50),
   create_date datetime,
   dosage text,
   custom_instructions boolean default false,
   unitName varchar(10) default NULL,
+  long_term boolean,
+  past_med boolean,
+  patient_compliance tinyint(1),
   PRIMARY KEY  (drugid)
 ) ;
 
@@ -822,6 +829,7 @@ CREATE TABLE favorites (
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
   route varchar(5) default 'PO',
+  drug_form varchar(50),
   dosage text,
   custom_instructions boolean default false,
   unitName varchar(10) default NULL,
