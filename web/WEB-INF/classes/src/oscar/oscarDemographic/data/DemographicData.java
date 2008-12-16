@@ -275,17 +275,25 @@ public class DemographicData {
             rs = db.GetSQL(sql);
             
             if (rs.next()) {
-                demographic = new Demographic(DemographicNo, db.getString(rs,"last_name"),
-                db.getString(rs,"first_name"), db.getString(rs,"address"), db.getString(rs,"city"),
-                db.getString(rs,"province"), db.getString(rs,"postal"), db.getString(rs,"phone"),
-                db.getString(rs,"phone2"), db.getString(rs,"email"), db.getString(rs,"pin"),
-                db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"), db.getString(rs,"date_of_birth"),
-                db.getString(rs,"hin"), db.getString(rs,"ver"), db.getString(rs,"roster_status"),
-                db.getString(rs,"patient_status"), db.getString(rs,"date_joined"), db.getString(rs,"chart_no"),
-                db.getString(rs,"provider_no"), db.getString(rs,"sex"), db.getString(rs,"end_date"),
-                db.getString(rs,"eff_date"), db.getString(rs,"pcn_indicator"), db.getString(rs,"hc_type"),
-                db.getString(rs,"hc_renew_date"), db.getString(rs,"family_doctor"),
-                db.getString(rs,"alias"),db.getString(rs,"previousAddress"),db.getString(rs,"children"),db.getString(rs,"sourceOfIncome"),db.getString(rs,"citizenship"),db.getString(rs,"sin"));
+                demographic = new Demographic(DemographicNo,
+		    db.getString(rs,"title"),		db.getString(rs,"last_name"),
+		    db.getString(rs,"first_name"),	db.getString(rs,"address"),
+		    db.getString(rs,"city"),		db.getString(rs,"province"),
+		    db.getString(rs,"postal"),		db.getString(rs,"phone"),
+		    db.getString(rs,"phone2"),		db.getString(rs,"email"),
+		    db.getString(rs,"pin"),		db.getString(rs,"year_of_birth"),
+		    db.getString(rs,"month_of_birth"),	db.getString(rs,"date_of_birth"),
+		    db.getString(rs,"hin"),		db.getString(rs,"ver"),
+		    db.getString(rs,"roster_status"),	db.getString(rs,"patient_status"),
+		    db.getString(rs,"date_joined"),	db.getString(rs,"chart_no"),
+		    db.getString(rs,"preferred_lang"),  db.getString(rs,"provider_no"),
+		    db.getString(rs,"sex"),		db.getString(rs,"end_date"),
+		    db.getString(rs,"eff_date"),	db.getString(rs,"pcn_indicator"),
+		    db.getString(rs,"hc_type"),		db.getString(rs,"hc_renew_date"),
+		    db.getString(rs,"family_doctor"),	db.getString(rs,"alias"),
+		    db.getString(rs,"previousAddress"),	db.getString(rs,"children"),
+		    db.getString(rs,"sourceOfIncome"),	db.getString(rs,"citizenship"),
+		    db.getString(rs,"sin"));
             }
             
             rs.close();
@@ -353,6 +361,7 @@ public class DemographicData {
     public class Demographic {
         
         protected String demographic_no;
+	protected String title;
         protected String last_name;
         protected String first_name;
         protected String address   ;
@@ -372,6 +381,7 @@ public class DemographicData {
         protected String patient_status;
         protected String date_joined   ;
         protected String chart_no      ;
+	protected String preferred_lang;
         protected String provider_no   ;
         protected String sex           ;
         protected String end_date      ;
@@ -394,15 +404,22 @@ public class DemographicData {
         public Demographic(String DemographicNo){
             init(DemographicNo);
         }
-        
-        protected Demographic(String DemographicNo, String last_name,String first_name, String address,
-        String city, String province, String postal, String phone, String phone2, String email,
-        String pin, String year_of_birth, String month_of_birth, String date_of_birth, String hin,
-        String ver, String roster_status, String patient_status, String date_joined, String chart_no,
-        String provider_no, String sex, String end_date, String eff_date, String pcn_indicator,
-        String hc_type, String hc_renew_date, String family_doctor, 
-        String alias,String previousAddress,String children,String sourceOfIncome,String citizenship,String sin) {
-            this.demographic_no= DemographicNo;
+	
+        protected Demographic(String DemographicNo,  String title,	     String last_name,
+			      String first_name,     String address,	     String city,
+			      String province,	     String postal,	     String phone,
+			      String phone2,	     String email,	     String pin, 
+			      String year_of_birth,  String month_of_birth,  String date_of_birth, 
+		              String hin,	     String ver,	     String roster_status,
+			      String patient_status, String date_joined,     String chart_no,
+			      String preferred_lang, String provider_no,     String sex,
+			      String end_date,	     String eff_date,	     String pcn_indicator,
+			      String hc_type,	     String hc_renew_date,   String family_doctor,
+			      String alias,	     String previousAddress, String children,
+			      String sourceOfIncome, String citizenship,     String sin)
+	{
+            this.demographic_no = DemographicNo;
+	    this.title = title;
             this.last_name = last_name;
             this.first_name = first_name;
             this.address = address;
@@ -422,6 +439,7 @@ public class DemographicData {
             this.patient_status= patient_status;
             this.date_joined = date_joined;
             this.chart_no = chart_no;
+	    this.preferred_lang = preferred_lang;
             this.provider_no = provider_no;
             this.sex = sex;
             this.end_date = end_date;
@@ -453,6 +471,7 @@ public class DemographicData {
 
                 if (rs.next()) {
                     this.demographic_no= DemographicNo;
+		    this.title = db.getString(rs,"title");
                     this.last_name = db.getString(rs,"last_name");
                     this.first_name = db.getString(rs,"first_name");
                     this.address = db.getString(rs,"address");
@@ -472,6 +491,7 @@ public class DemographicData {
                     this.patient_status= db.getString(rs,"patient_status");
                     this.date_joined = db.getString(rs,"date_joined");
                     this.chart_no = db.getString(rs,"chart_no");
+		    this.preferred_lang = db.getString(rs,"preferred_lang");
                     this.provider_no = db.getString(rs,"provider_no");
                     this.sex = db.getString(rs,"sex");
                     this.end_date = db.getString(rs,"end_date");
@@ -502,6 +522,9 @@ public class DemographicData {
         public String getDemographicNo() {
             return demographic_no;
         }
+	public String getTitle() {
+	    return title;
+	}
         public String getLastName() {
             return last_name;
         }
@@ -619,10 +642,12 @@ public class DemographicData {
         public String getChartNo() {
             return chart_no;
         }
+	public String getPreferredLang() {
+	    return preferred_lang;
+	}
         public String getProviderNo() {
             return provider_no;
         }
-        
         public String getSex() {
             return sex;
         }
@@ -797,15 +822,17 @@ public class DemographicData {
     
     
     ////////////////
-    String add_record_string ="insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor, alias, previousAddress, children, sourceOfIncome, citizenship, sin) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?,?,?)" ;                                      
-    public DemographicAddResult   addDemographic(String last_name,     String  first_name,   String  address,    String  city,         String  province,
-                           String  postal,       String  phone,        String  phone2,     String  year_of_birth,String  month_of_birth,
-                           String  date_of_birth,String  hin,          String  ver,        String  roster_status,String  patient_status,
-                           String  date_joined,  String  chart_no,     String  provider_no,String  sex,          String  end_date,
-                           String  eff_date,     String  pcn_indicator,String  hc_type,    String  hc_renew_date,String  family_doctor,
-                           String  email,        String pin, 
-                           String alias, String previousAddress,String children,String sourceOfIncome,String citizenship,String sin){
-        
+    String add_record_string ="insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email,pin,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,patient_status,date_joined,chart_no,preferred_lang,provider_no,sex,end_date,eff_date,pcn_indicator,hc_type,hc_renew_date,family_doctor,alias,previousAddress,children,sourceOfIncome,citizenship,sin) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    public DemographicAddResult  addDemographic(String title,	       String last_name,     String first_name,
+			 String address,	String city,	       String province,      String postal,
+			 String phone,		String phone2,	       String year_of_birth, String month_of_birth,
+			 String date_of_birth,	String hin,	       String ver,	     String roster_status,
+			 String patient_status, String date_joined,    String chart_no,	     String preferred_lang,
+			 String provider_no,	String sex,	       String end_date,	     String eff_date,
+			 String pcn_indicator,	String hc_type,	       String hc_renew_date, String family_doctor,
+			 String email,		String pin,	       String alias,	     String previousAddress,
+			 String children,	String sourceOfIncome, String citizenship,   String sin)
+    {
         boolean duplicateRecord = false;
         DemographicAddResult ret = new DemographicAddResult();
                         
@@ -860,39 +887,41 @@ public class DemographicData {
                Connection conn = db.GetConnection();
 
                PreparedStatement add_record = conn.prepareStatement(add_record_string);
-               add_record.setString(1,last_name);
-               add_record.setString(2,first_name); 
-               add_record.setString(3,address);
-               add_record.setString(4,city);
-               add_record.setString(5,province);
-               add_record.setString(6,postal);
-               add_record.setString(7,phone);
-               add_record.setString(8,phone2);
-               add_record.setString(9,email);
-               add_record.setString(10,"");
-               add_record.setString(11,year_of_birth);
-               add_record.setString(12,month_of_birth);
-               add_record.setString(13,date_of_birth);
-               add_record.setString(14,hin);
-               add_record.setString(15,ver);
-               add_record.setString(16,roster_status);
-               add_record.setString(17,patient_status);
-               add_record.setString(18,date_joined);
-               add_record.setString(19,chart_no);
-               add_record.setString(20,provider_no);
-               add_record.setString(21,sex);
-               add_record.setString(22,end_date);
-               add_record.setString(23,eff_date);
-               add_record.setString(24,pcn_indicator);
-               add_record.setString(25,hc_type);
-               add_record.setString(26,hc_renew_date);
-               add_record.setString(27,family_doctor);
-               add_record.setString(28,alias);
-               add_record.setString(29,previousAddress);
-               add_record.setString(30,children);
-               add_record.setString(31,sourceOfIncome);
-               add_record.setString(32,citizenship);
-               add_record.setString(33,sin);
+	       add_record.setString(1,title);
+               add_record.setString(2,last_name);
+               add_record.setString(3,first_name); 
+               add_record.setString(4,address);
+               add_record.setString(5,city);
+               add_record.setString(6,province);
+               add_record.setString(7,postal);
+               add_record.setString(8,phone);
+               add_record.setString(9,phone2);
+               add_record.setString(10,email);
+               add_record.setString(11,"");
+               add_record.setString(12,year_of_birth);
+               add_record.setString(13,month_of_birth);
+               add_record.setString(14,date_of_birth);
+               add_record.setString(15,hin);
+               add_record.setString(16,ver);
+               add_record.setString(17,roster_status);
+               add_record.setString(18,patient_status);
+               add_record.setString(19,date_joined);
+               add_record.setString(20,chart_no);
+	       add_record.setString(21,preferred_lang);
+               add_record.setString(22,provider_no);
+               add_record.setString(23,sex);
+               add_record.setString(24,end_date);
+               add_record.setString(25,eff_date);
+               add_record.setString(26,pcn_indicator);
+               add_record.setString(27,hc_type);
+               add_record.setString(28,hc_renew_date);
+               add_record.setString(29,family_doctor);
+               add_record.setString(30,alias);
+               add_record.setString(31,previousAddress);
+               add_record.setString(32,children);
+               add_record.setString(33,sourceOfIncome);
+               add_record.setString(34,citizenship);
+               add_record.setString(35,sin);
                
                String outString = add_record.toString();
                int firstmark = outString.indexOf(':');
