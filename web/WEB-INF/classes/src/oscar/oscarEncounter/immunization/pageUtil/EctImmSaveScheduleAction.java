@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import oscar.oscarEncounter.immunization.data.EctImmImmunizationData;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.UtilMisc;
 import oscar.util.UtilXML;
 
@@ -59,8 +58,6 @@ public final class EctImmSaveScheduleAction extends Action {
             
       Locale locale = getLocale(request);
       MessageResources messages = getResources(request);      
-      EctSessionBean bean = null;
-      bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
       try {
          String sDoc = UtilMisc.decode64(request.getParameter("xmlDoc"));
          Document doc = UtilXML.parseXML(sDoc);
@@ -102,7 +99,9 @@ public final class EctImmSaveScheduleAction extends Action {
          
          String sXML = UtilXML.toXML(doc);
          EctImmImmunizationData imm = new EctImmImmunizationData();
-         imm.saveImmunizations(bean.demographicNo, bean.providerNo, sXML);
+         String demographicNo = request.getParameter("demographic_no");
+         String providerNo = (String)request.getSession().getAttribute("user");
+         imm.saveImmunizations(demographicNo, providerNo, sXML);
       }
       catch(Exception ex) {
          ex.printStackTrace();
