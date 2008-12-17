@@ -397,7 +397,7 @@ div.recommendations li {
 		<oscar:oscarPropertiesCheck property="IMMUNIZATION_IN_PREVENTION"
 			value="yes">
 			<a href="javascript: function myFunction() {return false; }"
-				onclick="javascript:popup(700,960,'<rewrite:reWrite jspPage="../oscarEncounter/immunization/initSchedule.do"/>','oldImms')">Old
+				onclick="javascript:popup(700,960,'<rewrite:reWrite jspPage="../oscarEncounter/immunization/initSchedule.do"/>?demographic_no=<%=demographic_no%>','oldImms')">Old
 			<bean:message key="global.immunizations" /></a>
 			<br>
 		</oscar:oscarPropertiesCheck></td>
