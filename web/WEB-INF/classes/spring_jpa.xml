@@ -8,20 +8,6 @@
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
 			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-	<!--
-		load properties from additional property files; oscar.properties is
-		already loaded
-	-->
-	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="locations">
-			<list>
-				<value>/WEB-INF/classes/oscar_mcmaster.properties
-				</value>
-			</list>
-		</property>
-	</bean>
-
 	<!-- DataSource -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">

@@ -5,20 +5,6 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
 	default-autowire="no">
 
-	<!--
-		load properties from additional property files; oscar.properties is
-		already loaded
-	-->
-	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer"
-		lazy-init="default" autowire="default" dependency-check="default">
-		<property name="locations">
-			<list>
-				<value>/WEB-INF/classes/oscar_mcmaster.properties
-				</value>
-			</list>
-		</property>
-	</bean>
-
 	<!-- hibernate session factory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
