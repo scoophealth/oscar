@@ -1,4 +1,3 @@
-<script type="text/javascript" language="Javascript">
 
 // setfocus to the current window
 function setfocus() {
@@ -94,5 +93,22 @@ function ClearAll(ml) {
 	}
 }
 
-</script>
+//set the focus to this window
+function start(){
+	  this.focus();
+}
 
+//close the current window
+function closeit() {
+  self.opener.refresh();
+  close();
+}   
+
+//ajax update of the current window
+function updateAjax() {
+    var parentAjaxId = "<%=parentAjaxId%>";    
+    if( parentAjaxId != "null" ) {
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+        window.opener.updateNeeded = true;    
+    }
+}
