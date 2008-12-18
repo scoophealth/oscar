@@ -1247,7 +1247,13 @@ public class ClientManagerAction extends BaseAction {
 				doRefer = false;
 			}
 			if (doRefer) {
-				clientManager.saveClientReferral(referral);
+				/*
+				 * Fix for 2390337 to populate FacilityId with current facility from user's session for receptionists
+				 */
+				if(referral.getFacilityId() == null)
+				{
+					referral.setFacilityId((Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID));
+				}clientManager.saveClientReferral(referral);
 			}
 
 			if (doAdmit) {
