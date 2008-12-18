@@ -26,6 +26,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title>Program Management Module</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

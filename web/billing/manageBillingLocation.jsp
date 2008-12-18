@@ -50,6 +50,7 @@ String reportAction=request.getParameter("reportAction")==null?"":request.getPar
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.manageBillingLocation.title" /></title>
 <link rel="stylesheet" href="billing.css">
 

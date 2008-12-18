@@ -36,6 +36,7 @@
 <html>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>oscarLogging</title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css"

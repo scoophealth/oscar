@@ -26,6 +26,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Oscar Prescription Module - Error</title>
 </head>
 <body style="width: 600px">

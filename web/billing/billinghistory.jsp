@@ -45,6 +45,7 @@
 <%@ include file="dbBilling.jsp"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>BILLING HISTORY</title>
 <link rel="stylesheet" href="../web.css">
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">

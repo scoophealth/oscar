@@ -113,6 +113,7 @@ String level2 = CddmLevels.MEDICATIONS;
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Send Prescription to PHR</title>
 <html:base />
 

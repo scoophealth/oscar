@@ -37,6 +37,7 @@
 	property="ectWin.rowTwoSize" />
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">

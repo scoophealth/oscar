@@ -37,6 +37,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 %>
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <title>Schedule to resubmit hsfo xml</title>
 </head>

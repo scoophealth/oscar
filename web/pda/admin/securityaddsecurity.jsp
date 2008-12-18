@@ -34,6 +34,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>add a login user</title>
 <link rel="stylesheet" href="../web.css">
 </head>

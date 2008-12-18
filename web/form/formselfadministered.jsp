@@ -55,6 +55,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Self Administered Questions Used in Self-Report Risk
 Index</title>
 <html:base />

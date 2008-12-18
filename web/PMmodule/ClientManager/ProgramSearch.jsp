@@ -27,6 +27,7 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Program Search</title>
 <link href="<html:rewrite page='/css/tigris.css'/>" rel="stylesheet"
 	type="text/css" />

@@ -52,6 +52,7 @@ String AbnFlag = "";
 <html>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=pd.getPatientName()%> - <bean:message
 	key="oscarMDS.segmentDisplay.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">

@@ -48,6 +48,7 @@ String last_name="", first_name="", mygroup="";
 %>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Manage Provider</title>
 <link rel="stylesheet" href="oscarReport.css">
 <link rel="stylesheet" href="tree.css">

@@ -45,6 +45,7 @@
 <%@ include file="dbBilling.jsp"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Report</title>
 <link rel="stylesheet" href="../web.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

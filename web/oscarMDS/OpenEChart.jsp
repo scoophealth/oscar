@@ -29,6 +29,7 @@
 <%@ page import="java.net.URLEncoder"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>E-Chart</title>
 
 <script language="javascript">

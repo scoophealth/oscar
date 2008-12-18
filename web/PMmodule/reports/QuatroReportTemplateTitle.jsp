@@ -11,6 +11,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>QuatroReportTemplateTitle</title>
 <script language="javascript">
 function showTitle() {

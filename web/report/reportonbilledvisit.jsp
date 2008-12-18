@@ -31,6 +31,7 @@
 <%@ page errorPage="../errorpage.jsp"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>REPORT PHCP</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <script language="JavaScript">

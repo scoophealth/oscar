@@ -72,6 +72,7 @@
 
 <html:html xhtml="true" locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Untitled Document</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 <link rel="stylesheet" type="text/css"

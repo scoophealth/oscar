@@ -25,6 +25,7 @@ String pdfTitle = (String) request.getParameter("pdfTitle");
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Generate Preview Page</title>
 </head>
 <script type="text/javascript">   

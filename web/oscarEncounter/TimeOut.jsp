@@ -51,6 +51,7 @@
     }
 </script>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.timeOut.title" /></title>
 </head>
 <body onload="javascript:loadUp()">

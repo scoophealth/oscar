@@ -212,6 +212,7 @@ if (request.getParameter("casetoEncounter")==null)
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.Index.title" /> - <oscar:nameage
 	demographicNo="<%=demoNo%>" /></title>
 <html:base />

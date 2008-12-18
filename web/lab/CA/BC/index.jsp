@@ -50,6 +50,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR oscarPathNET - Patient Linking</title>
 <link rel="stylesheet" href="../../../share/css/oscar.css">
 <script language="JavaScript">

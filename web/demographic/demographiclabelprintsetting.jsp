@@ -51,6 +51,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographiclabelprintsetting.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">

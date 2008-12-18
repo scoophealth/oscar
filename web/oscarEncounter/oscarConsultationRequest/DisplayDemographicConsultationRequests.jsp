@@ -59,6 +59,7 @@ theRequests.estConsultationVecByDemographic(demo);
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.DisplayDemographicConsultationRequests.title" />
 </title>

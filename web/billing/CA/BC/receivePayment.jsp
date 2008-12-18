@@ -6,6 +6,7 @@
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title><bean:message key="oscar.billing.CA.BC.title" /></title>
 <script type="javascript">

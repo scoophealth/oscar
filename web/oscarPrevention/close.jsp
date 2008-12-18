@@ -2,6 +2,7 @@
 <%@page pageEncoding="UTF-8"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>close</title>
 <script LANGUAGE="JavaScript">
 function closeWin() {

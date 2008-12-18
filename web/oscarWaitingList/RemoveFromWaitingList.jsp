@@ -45,6 +45,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title></title>
 <html:base />
 </head>

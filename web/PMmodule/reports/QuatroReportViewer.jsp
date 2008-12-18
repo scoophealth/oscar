@@ -4,6 +4,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="../theme/Master.css" type="text/css">
 <title>reportViewer</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">

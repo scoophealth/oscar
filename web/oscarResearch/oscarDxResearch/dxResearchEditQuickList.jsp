@@ -41,6 +41,7 @@
 <link rel="stylesheet" type="text/css" href="dxResearch.css">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarResearch.oscarDxResearch.dxResearch.title" /></title>
 <script language="JavaScript">

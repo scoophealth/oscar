@@ -46,6 +46,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
 <title>oscarPrevention</title>
 <script src="../share/javascript/Oscar.js"></script>

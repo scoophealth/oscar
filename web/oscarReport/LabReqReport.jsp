@@ -77,6 +77,7 @@ cal.add(Calendar.MONTH,-months);
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Lab Requestion Report <%= mons %></title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 

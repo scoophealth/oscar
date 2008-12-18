@@ -196,6 +196,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <%@page import="oscar.oscarDB.*"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
 <c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">

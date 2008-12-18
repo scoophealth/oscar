@@ -33,6 +33,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarMDS.selectProvider.title" /></title>
 </head>
 

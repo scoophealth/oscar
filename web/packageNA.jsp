@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title><bean:message key="packageNA.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">

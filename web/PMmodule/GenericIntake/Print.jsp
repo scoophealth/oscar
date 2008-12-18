@@ -8,6 +8,7 @@ Intake intake = intakeEditForm.getIntake();
 %>
 <html:html xhtml="true" locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Generic Intake Print</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript">

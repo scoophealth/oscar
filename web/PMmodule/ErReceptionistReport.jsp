@@ -28,6 +28,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META HTTP-EQUIV="refresh"
 	content="0;URL=<c:out value="${ctx}"/>/ReceptionistReport.do?id=<c:out value="${id}"/>">
 </head>

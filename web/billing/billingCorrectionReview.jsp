@@ -29,6 +29,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><bean:message key="billing.billingCorrection.title" /></title>
 </head>

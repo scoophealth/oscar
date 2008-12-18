@@ -19,6 +19,7 @@
 <c:if test="${requestScope.from ne 'CaseMgmt'}">
 	<html>
 	<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 	<title>TicklerPlus</title>
 	</head>
 	<body>

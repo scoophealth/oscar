@@ -35,6 +35,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PATIENT DEMO LIST</title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>

@@ -129,6 +129,7 @@ String [][] dbQueries=new String[][] {
 
 -->
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.addappointment.title" /></title>
 <script type="text/javascript">
 

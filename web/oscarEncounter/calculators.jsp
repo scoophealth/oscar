@@ -49,6 +49,7 @@ if(demo != null){
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html:base />
 <script type="text/javascript" language=javascript>

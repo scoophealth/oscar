@@ -37,6 +37,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
 <title>Import Demographic Information</title>
 <link rel="stylesheet" type="text/css"

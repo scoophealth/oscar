@@ -45,6 +45,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PATIENT STUDY</title>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">

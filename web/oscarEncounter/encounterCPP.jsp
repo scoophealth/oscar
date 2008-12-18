@@ -37,6 +37,7 @@
 <html:html>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Cumulative Patient Profile</title>
 <link rel="stylesheet" type="text/css" media="print" href="print.css" />
 <link rel="stylesheet" type="text/css" href="encounterPrintStyles.css" />

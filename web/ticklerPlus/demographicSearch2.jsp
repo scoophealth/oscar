@@ -3,6 +3,7 @@
 	scope="request" />
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Demographic Search</title>
 <%
 	String query=request.getParameter("query");

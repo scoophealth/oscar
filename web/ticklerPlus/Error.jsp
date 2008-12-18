@@ -3,6 +3,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>An error has occurred</title>
 </head>
 

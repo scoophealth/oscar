@@ -61,6 +61,7 @@
 <html>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>AppointmentForm2</title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">

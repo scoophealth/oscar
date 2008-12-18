@@ -39,6 +39,7 @@
 	scope="session" />
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Summary</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">

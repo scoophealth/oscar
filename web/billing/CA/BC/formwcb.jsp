@@ -63,6 +63,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title>OSCAR BC Billing - WCB</title>
 <link rel="stylesheet" href="../../../share/css/oscar.css">

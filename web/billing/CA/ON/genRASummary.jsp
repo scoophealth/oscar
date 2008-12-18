@@ -39,6 +39,7 @@ if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
 <title>Billing Reconcilliation</title>
 </head>

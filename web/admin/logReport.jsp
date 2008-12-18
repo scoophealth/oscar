@@ -68,6 +68,7 @@ String curUser_no = (String)session.getAttribute("user");
 %>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Log Report</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <!-- calendar stylesheet -->

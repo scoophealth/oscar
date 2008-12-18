@@ -33,6 +33,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
 <title>Teleplan Reconcilliation</title>
 <script language="JavaScript">

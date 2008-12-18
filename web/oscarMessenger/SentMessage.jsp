@@ -32,6 +32,7 @@
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <logic:notPresent name="msgSessionBean" scope="session">
 	<logic:redirect href="index.jsp" />

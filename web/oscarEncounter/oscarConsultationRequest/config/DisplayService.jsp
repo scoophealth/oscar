@@ -39,6 +39,7 @@ String serviceId = (String) request.getAttribute("serviceId");
 String serviceDesc = (String) displayServiceUtil.getServiceDesc(serviceId);
 %>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.config.DisplayService.title" />
 </title>

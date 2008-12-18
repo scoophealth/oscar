@@ -65,6 +65,7 @@ function showHideLayers() { //v6.0
 //-->
 </script>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Rehab Study Reports</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

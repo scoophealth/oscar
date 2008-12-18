@@ -50,6 +50,7 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="report.reportindex.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">

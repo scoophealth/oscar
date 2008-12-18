@@ -85,6 +85,7 @@
 	locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>oscarPrevention</title>
 <!--I18n-->
 <link rel="stylesheet" type="text/css"

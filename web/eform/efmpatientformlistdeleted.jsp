@@ -52,6 +52,7 @@ String parentAjaxId = request.getParameter("parentAjaxId");
 
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="eform.showmyform.title" /></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">

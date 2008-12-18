@@ -153,6 +153,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="provider.appointmentprovideradminmonth.title" /></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"

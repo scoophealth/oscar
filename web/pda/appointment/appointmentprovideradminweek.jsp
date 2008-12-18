@@ -88,6 +88,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>StoneChurch Provider Appointment Access</title>
 <link rel="stylesheet" href="provapptstyle.css" type="text/css">
 </head>

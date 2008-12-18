@@ -29,6 +29,7 @@
 	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Adjust Billing Codes</title>
 <link rel="stylesheet" type="text/css"
 	href="../../../oscarEncounter/encounterStyles.css">

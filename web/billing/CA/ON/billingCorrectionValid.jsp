@@ -29,6 +29,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title></title>
 </head>

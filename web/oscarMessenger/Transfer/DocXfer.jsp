@@ -26,6 +26,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>DocXfer</title>
 </head>
 <body>

@@ -60,6 +60,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.manageBillingLocation.title" /></title>
 <link rel="stylesheet" href="billingON.css">
 <script language="JavaScript">

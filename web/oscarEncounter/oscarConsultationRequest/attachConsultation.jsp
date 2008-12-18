@@ -69,6 +69,7 @@ String[] docType = {"D","L"};
    "http://www.w3.org/TR/html4/strict.dtd">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta content="text/html;  charset=UTF-8" http-equiv="Content-Type">
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title" /></title>

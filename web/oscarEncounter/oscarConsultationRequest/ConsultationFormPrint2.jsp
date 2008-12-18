@@ -118,7 +118,8 @@
 %>
 <html:base />
 
-<HEAD>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <style type="text/css" media="print">
 .header {
 	display: none;

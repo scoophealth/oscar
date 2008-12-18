@@ -68,6 +68,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta content="text/html;  charset=UTF-8" http-equiv="Content-Type">
 <title>Rourke2006 Record 3</title>
 <link rel="stylesheet" type="text/css" href="rourkeStyle.css">

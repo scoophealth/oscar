@@ -30,6 +30,7 @@ String percent = gstProp.getProperty("gstPercent", "");
 	import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.* ,oscar.oscarBilling.ca.on.administration.*"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Billing Invoice</title>
 </head>

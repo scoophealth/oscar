@@ -51,7 +51,8 @@
 
 <HTML>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<HEAD>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta content="no-cache" />
 <TITLE>main</TITLE>
 </HEAD>

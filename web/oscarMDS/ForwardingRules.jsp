@@ -40,6 +40,7 @@ ArrayList frwdProviders = fr.getProviders(providerNo);
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Lab Report Forwarding Rules</title>
 
 <script type="text/javascript" language=javascript>

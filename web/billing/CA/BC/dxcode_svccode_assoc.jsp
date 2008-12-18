@@ -8,6 +8,7 @@
 	import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscar.billing.CA.BC.billingBC.dxcode_svccode_assoc.title" /></title>
 <html:base />

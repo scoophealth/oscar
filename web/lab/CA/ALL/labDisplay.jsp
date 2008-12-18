@@ -57,6 +57,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title><%=handler.getPatientName()+" Lab Results"%></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

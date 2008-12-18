@@ -355,6 +355,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
 <title>HospitalBilling</title>

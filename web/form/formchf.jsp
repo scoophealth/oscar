@@ -36,6 +36,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Congestive Heart Failure Record</title>
 

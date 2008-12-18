@@ -49,6 +49,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><logic:present name="title">
 	<bean:write name="title" />
 </logic:present></title>

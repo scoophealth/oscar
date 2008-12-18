@@ -390,6 +390,7 @@ System.out.println(" * ******************************" + sql);
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OscarBilling</title>
 <script language="JavaScript">
 	<!--

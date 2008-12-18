@@ -40,6 +40,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
 <title>Schedule Of Benefits Upload Utility</title>
 <html:base />

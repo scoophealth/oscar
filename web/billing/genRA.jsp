@@ -273,6 +273,7 @@ int rowsAffected1 = apptMainBean.queryExecuteUpdate(param3,"update_rahd");
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="../billing/billing.css">
 <title>Billing Reconcilliation</title>
 

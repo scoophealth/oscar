@@ -41,6 +41,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.providersearchresults.title" /></title>
 <link rel="stylesheet" href="../web.css" />
 <script LANGUAGE="JavaScript">

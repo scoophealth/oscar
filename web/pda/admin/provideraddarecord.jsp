@@ -30,6 +30,7 @@
 	scope="session" />
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>add a provider - provideraddarecord</title>
 <link rel="stylesheet" href="../web.css">
 </head>

@@ -33,7 +33,8 @@
 
 <HTML>
 <!--Copyright (c) http://oscar.mcmaster.ca:8888/oscartest/copyright -->
-<HEAD>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <TITLE>PreviousMonth</TITLE>
 <meta content="no-cache" />
 </HEAD>

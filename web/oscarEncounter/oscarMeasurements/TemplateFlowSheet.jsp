@@ -110,6 +110,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><%=flowSheet%> - <oscar:nameage
 	demographicNo="<%=demographic_no%>" /></title>
 <!--I18n-->

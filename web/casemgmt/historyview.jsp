@@ -26,6 +26,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Note History</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />

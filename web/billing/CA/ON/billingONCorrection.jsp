@@ -80,6 +80,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingCorrection.title" /></title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <!-- calendar stylesheet -->

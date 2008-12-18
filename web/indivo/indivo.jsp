@@ -15,6 +15,7 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Indivo</title>
 </head>

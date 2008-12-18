@@ -42,6 +42,7 @@ if(session.getValue("user") == null)
 	scope="request" />
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><bean-el:message key="${providertitle}" /></title>

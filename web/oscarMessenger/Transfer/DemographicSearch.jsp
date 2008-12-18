@@ -38,6 +38,7 @@
 
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">

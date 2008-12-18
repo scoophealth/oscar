@@ -88,6 +88,7 @@ boolean adminAccess = false;
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title>Invoice List</title>
 <link rel="stylesheet" type="text/css" media="all"

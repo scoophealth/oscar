@@ -54,6 +54,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <html:base />
 <title>Billing Record</title>
 <link rel="stylesheet" type="text/css" media="all"

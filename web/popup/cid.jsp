@@ -29,6 +29,7 @@
 -->
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="cid.title" /></title>
 <link rel="stylesheet" href="../../web_fat.css">

@@ -70,6 +70,7 @@ bean.setProviderNo(prov);
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 

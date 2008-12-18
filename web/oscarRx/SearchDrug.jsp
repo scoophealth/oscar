@@ -77,6 +77,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="SearchDrug.title" /></title>
 <link rel="stylesheet" type="text/css" href="styles.css">
 

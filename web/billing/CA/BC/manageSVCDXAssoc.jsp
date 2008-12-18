@@ -30,6 +30,7 @@
 	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscar.billing.CA.BC.billingBC.manageSVCDXAssoc.title" /></title>
 <link rel="stylesheet" type="text/css"

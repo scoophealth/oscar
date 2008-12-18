@@ -99,6 +99,7 @@ String formattedDate = year+"/"+mon+"/"+day;
 OscarProperties props = OscarProperties.getInstance();
 
 %><head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>

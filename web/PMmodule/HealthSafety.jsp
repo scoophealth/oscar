@@ -8,6 +8,7 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Health and Safety</title>
 <script>
 function submitForm(form) {

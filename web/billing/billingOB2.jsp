@@ -42,6 +42,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing History</title>
 <meta http-equiv="Content-Type" content="text/html; charset=big5">
 </head>

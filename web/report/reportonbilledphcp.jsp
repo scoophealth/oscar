@@ -87,6 +87,7 @@
 <%@page import="oscar.oscarDB.DBPreparedHandler"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PHCP Report</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css">
 <!-- calendar stylesheet -->

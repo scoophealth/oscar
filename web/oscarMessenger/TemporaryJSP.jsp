@@ -33,6 +33,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Group Configurator</title>
 <html:base />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

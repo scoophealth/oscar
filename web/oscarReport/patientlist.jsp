@@ -17,6 +17,7 @@
 <%@ page contentType="text/html;charset=windows-1252"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1252" />
 <title>PatientList</title>

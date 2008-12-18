@@ -39,6 +39,7 @@ if (wPhoneExt != null)
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Register Indivo</title>
 <link rel="stylesheet" type="text/css" href="../phr.css">

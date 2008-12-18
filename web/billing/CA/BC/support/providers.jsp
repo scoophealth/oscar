@@ -29,6 +29,7 @@
 -->
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OSCAR Providers</title>
 <link rel="stylesheet" href="../../../../share/css/oscar.css">
 </head>

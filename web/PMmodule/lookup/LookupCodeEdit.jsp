@@ -27,6 +27,7 @@
 <html>
 <title>Lookup Code Edit</title>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript"
 	src='<html:rewrite page="/js/quatroLookup.js" />'></script>
 <script type="text/javascript">

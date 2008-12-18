@@ -55,6 +55,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>MEDICAL HISTORY AND ADMISSION EXAMINATION</title>
 <link rel="stylesheet" type="text/css" href="arStyle.css">
 <html:base />

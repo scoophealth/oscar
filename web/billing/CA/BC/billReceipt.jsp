@@ -69,6 +69,7 @@
 %>
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.bc.title" /></title>
 <style type="text/css" media="print">
 BODY {

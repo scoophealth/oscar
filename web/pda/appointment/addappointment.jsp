@@ -38,6 +38,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>ADD APPOINTMENTS</title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">

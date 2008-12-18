@@ -53,6 +53,7 @@ response.addCookie(admCookie);
 
 <html:html locale="true">
     <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
         <html:base/>
         <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8">
         <title>

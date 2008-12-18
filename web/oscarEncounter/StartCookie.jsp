@@ -31,6 +31,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.StartCookie.title" /></title>
 <script type="text/javascript" language=javascript>
 //tilde operator function variables

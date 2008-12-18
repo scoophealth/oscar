@@ -38,6 +38,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Manage Billing Codes</title>
 <!--I18n-->
 <html:base />

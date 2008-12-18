@@ -73,6 +73,7 @@ if (request.getParameter("view") != null && request.getParameter("view").equals(
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Antenatal Record 1</title>
 <link rel="stylesheet" type="text/css"
 	href="<%=bView?"bcArStyleView.css" : "bcAr2007Style.css"%>">

@@ -41,7 +41,8 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
 %>
 <html:html locale="true">
-<head></head>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
 
 <body>
 <center>

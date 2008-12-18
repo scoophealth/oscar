@@ -721,6 +721,7 @@ while ((nextline=input.readLine())!=null){
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <html:base />
 <link rel="stylesheet" href="../../../billing/billing.css">

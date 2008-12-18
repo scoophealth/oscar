@@ -32,6 +32,7 @@
 <%@ include file="dbReport.jsp"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script LANGUAGE="JavaScript">
     <!--
     function start(){

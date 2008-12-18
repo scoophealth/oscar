@@ -27,6 +27,7 @@
 <%@ include file="/taglibs.jsp"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Admission Details</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

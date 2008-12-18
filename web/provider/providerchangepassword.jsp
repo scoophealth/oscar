@@ -37,6 +37,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providerchangepassword.title" /></title>
 </head>
 <meta http-equiv="Cache-Control" content="no-cache">

@@ -31,6 +31,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Rating statistic</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 

@@ -38,6 +38,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.preferenceaddarecord.title" /></title>
 <link rel="stylesheet" href="../web.css">

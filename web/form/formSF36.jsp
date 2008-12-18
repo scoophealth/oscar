@@ -55,6 +55,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Appendix K: Health Status Quetionnaire (SF36) - Health
 and Daily Activities</title>
 <html:base />

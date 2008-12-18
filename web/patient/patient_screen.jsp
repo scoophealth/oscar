@@ -53,6 +53,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>YOUR DEMOGRAPHIC RECORD</title>
 </head>
 <body background="../images/gray_bg.jpg" bgproperties="fixed"

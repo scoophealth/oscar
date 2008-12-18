@@ -212,6 +212,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
 %>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PROVIDER</title>
 <script language="JavaScript" type="text/javascript">
 <!--

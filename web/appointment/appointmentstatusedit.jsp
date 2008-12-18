@@ -20,6 +20,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.appt.status.mgr.title" /></title>
 <link href="colr.css" rel="stylesheet" type="text/css" />
 <script src="../mochikit_packed.js" type="text/javascript"></script>

@@ -28,7 +28,8 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <html>
-<head></head>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
 <link rel="stylesheet" href="../web.css" />
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	topmargin="0" leftmargin="0" rightmargin="0">

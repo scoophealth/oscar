@@ -58,6 +58,7 @@ if (groupView == null) {
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="eform.myform.title" /></title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">
@@ -79,14 +80,7 @@ function popupPage(varpage, windowname) {
     }
 }
 
-function updateAjax() {
-    var parentAjaxId = "<%=parentAjaxId%>";    
-    if( parentAjaxId != "null" ) {
-        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
-        window.opener.updateNeeded = true;    
-    }
 
-}
 </script>
 </head>
 

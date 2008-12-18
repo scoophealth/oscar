@@ -39,6 +39,7 @@ immuSets.estImmunizationVecs();
 
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Administrate Immunization Sets</title>
 <html:base />
 

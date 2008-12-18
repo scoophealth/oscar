@@ -61,6 +61,7 @@ String curUser_no = (String)session.getAttribute("user");
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Unlock</title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT" />
 <meta http-equiv="Cache-Control" content="no-cache" />

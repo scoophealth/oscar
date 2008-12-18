@@ -32,17 +32,7 @@
 -->
 <html:html locale="true">
 <head>
-<script LANGUAGE="JavaScript">
-<!--
-function start(){
-  this.focus();
-}
-function closeit() {
-  self.opener.refresh();
-  close();
-}   
-//-->
-</script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 </head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed">

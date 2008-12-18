@@ -42,6 +42,7 @@ if(props.getProperty("isNewONbilling", "").equals("true")) {
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" href="billing.css">
 <title>Billing Reconcilliation</title>
 </head>

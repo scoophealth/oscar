@@ -43,6 +43,7 @@
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>PATIENT STUDY SEARCH RESULTS</title>
 <link rel="stylesheet" href="../web.css">
 <script language="JavaScript">

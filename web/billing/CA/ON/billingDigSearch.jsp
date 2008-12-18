@@ -61,6 +61,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.billingDigSearch.title" /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">

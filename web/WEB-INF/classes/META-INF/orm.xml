@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<description />
+	<package>org.oscar.model</package>
+	
+	<!--  RegEx 
+	\{(".*?"), \s*"(.*?)"\s*\}\s*,?
+	<named-native-query name=\1><query><![CDATA[\2]]></query></named-native-query>
+	 -->
+
+	<entity class="org.oscar.model.Appointment" name="Appointment">
+		<table name="appointment" />
+
+		<named-native-query name="search_appt">
+			<query><![CDATA[select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )]]></query>
+		</named-native-query>
+		<named-native-query name="search_appt_name">
+			<query><![CDATA[select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )]]></query>
+		</named-native-query>
+		<named-native-query name="search_demographiccust_alert">
+			<query><![CDATA[select cust3 from demographiccust where demographic_no = ? ]]></query>
+		</named-native-query>
+		<named-native-query name="search_provider_name">
+			<query><![CDATA[select last_name,first_name from provider where provider_no= ? ]]></query>
+		</named-native-query>
+
+		<named-native-query name="search_demographic_statusroster">
+			<query><![CDATA[select patient_status,roster_status from demographic where demographic_no = ? ]]></query>
+		</named-native-query>
+		<named-native-query name="search_appt_future">
+			<query><![CDATA[select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date]]></query>
+		</named-native-query>
+		<named-native-query name="search_appt_past">
+			<query><![CDATA[select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc]]></query>
+		</named-native-query>
+	</entity>
+
+
+</entity-mappings>
+

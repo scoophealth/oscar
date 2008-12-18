@@ -73,6 +73,7 @@ pageContext.setAttribute("billActivityList",billList);
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Report</title>
 <meta http-equiv="Content-Type" content="text/html; ">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

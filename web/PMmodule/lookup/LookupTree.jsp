@@ -13,6 +13,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Lookup</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />

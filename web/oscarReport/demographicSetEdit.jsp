@@ -46,6 +46,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Demographic Set Edit I18n</title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css"

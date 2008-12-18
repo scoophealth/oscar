@@ -30,6 +30,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Preference: the following records</title>
 </head>
 <link rel="stylesheet" href="../web.css" />

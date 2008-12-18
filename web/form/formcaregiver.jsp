@@ -54,6 +54,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Caregiver Questionnaire</title>
 <html:base />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

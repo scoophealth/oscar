@@ -43,6 +43,7 @@ if(session.getValue("user") == null)
 %>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OscarFax - Consultations</title>
 <html:base />
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">

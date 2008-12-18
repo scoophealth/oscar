@@ -40,6 +40,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 	media="print">
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <logic:notPresent name="msgSessionBean" scope="session">
 	<logic:redirect href="index.jsp" />

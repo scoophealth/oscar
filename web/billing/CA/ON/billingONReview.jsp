@@ -229,6 +229,7 @@ boolean dupServiceCode = false;
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">

@@ -61,6 +61,7 @@ if(!filename.equals("")) {
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Reconcilliation</title>
 <link rel="stylesheet" type="text/css"
 	href="../billing/CA/ON/billingON.css" />

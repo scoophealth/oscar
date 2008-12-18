@@ -44,6 +44,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <link rel="stylesheet" type="text/css" href="../phr/phr.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>PHR Call</title>

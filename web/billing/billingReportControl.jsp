@@ -60,6 +60,7 @@ GregorianCalendar now=new GregorianCalendar();
 %>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Billing Report</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

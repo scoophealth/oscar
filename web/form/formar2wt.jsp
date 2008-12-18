@@ -34,7 +34,8 @@
  */
 -->
 <HTML>
-<HEAD>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <TITLE>New Document</TITLE>
 </HEAD>
 

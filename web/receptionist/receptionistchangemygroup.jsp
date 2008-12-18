@@ -48,6 +48,7 @@
 
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="recepcionist.recepcionistchangemygroup.title" /></title>
 </head>

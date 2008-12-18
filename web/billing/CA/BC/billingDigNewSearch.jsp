@@ -85,6 +85,7 @@ System.err.print("THIS IS IN DIG NEW\n");
 %>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Diagnostic Code Search</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 <script LANGUAGE="JavaScript">

@@ -30,6 +30,7 @@
 <%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Adjust Private Billing Codes</title>
 <link rel="stylesheet" type="text/css"
 	href="../../../oscarEncounter/encounterStyles.css">

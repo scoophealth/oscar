@@ -70,6 +70,7 @@
 -->
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="report.reportdaysheet.title" /></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv=Expires content=-1>

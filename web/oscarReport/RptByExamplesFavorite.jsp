@@ -38,6 +38,7 @@
 
 </script>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarReport.RptByExample.MsgQueryByExamples" /> - <bean:message
 	key="oscarReport.RptByExample.MsgEditMyFavorite" /></title>

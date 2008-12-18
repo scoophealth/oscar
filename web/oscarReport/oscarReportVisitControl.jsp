@@ -64,6 +64,7 @@ GregorianCalendar now=new GregorianCalendar();
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarReport.oscarReportVisitControl.title" /></title>
 <link rel="stylesheet" href="oscarReport.css">

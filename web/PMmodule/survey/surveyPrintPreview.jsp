@@ -25,6 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <html:html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Oscar Forms</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />

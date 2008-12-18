@@ -42,6 +42,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Clinic</title>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">

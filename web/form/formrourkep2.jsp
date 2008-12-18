@@ -33,6 +33,7 @@
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.formRourke2.title" /></title>
 <html:base />
 <link rel="stylesheet" type="text/css" media="screen"

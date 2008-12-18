@@ -81,6 +81,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Doctor Appointment Access - appointmentprovideradminday</title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css"
 	type="text/css">

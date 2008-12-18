@@ -42,6 +42,7 @@
 <%@page import="org.apache.commons.lang.StringUtils"%><html:html
 	xhtml="true" locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Generic Intake Edit</title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script type="text/javascript">

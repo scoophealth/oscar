@@ -61,6 +61,7 @@
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Consent Form</title>
 <script>
 		function submitConsent(form) {

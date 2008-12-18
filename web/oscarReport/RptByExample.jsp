@@ -60,6 +60,7 @@ function showHideLayers() { //v6.0
 //-->
 </script>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarReport.RptByExample.MsgQueryByExamples" /></title>
 

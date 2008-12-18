@@ -42,7 +42,8 @@
   formMainBean.doConfigure(dbParams,dbQueries,responseTargets);
 %>
 <HTML>
-<HEAD>
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <TITLE>ALPHA print</TITLE>
 </HEAD>
 <BODY BGCOLOR="#FFFFFF">

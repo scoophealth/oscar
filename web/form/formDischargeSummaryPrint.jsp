@@ -54,6 +54,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>MULTI-DISCIPLINARY TEAM DISCHARGE SUMMARY</title>
 <html:base />
 <style type="text/css" media="print">

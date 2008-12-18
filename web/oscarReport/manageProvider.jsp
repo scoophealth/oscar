@@ -50,6 +50,7 @@ String last_name="", first_name="", mygroup="";
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarReport.manageProvider.title" /></title>
 <link rel="stylesheet" href="oscarReport.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

@@ -36,6 +36,7 @@ String service_form="", service_name="";
 -->
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>oscarBilling :: Clip board ::</title>
 <link rel="stylesheet" href="billing.css">
 

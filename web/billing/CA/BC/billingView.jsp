@@ -59,6 +59,7 @@ BillingFormData billform = new BillingFormData();
 
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="billing.bc.title" /></title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <script language="JavaScript">

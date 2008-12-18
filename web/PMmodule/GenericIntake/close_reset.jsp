@@ -31,6 +31,7 @@
 %>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script language=javascript>
           self.close();
 		  self.opener.location = "EditIntake.jsp?id=1&pub=<c:out value="${sessionScope.provider.formattedName}" />";

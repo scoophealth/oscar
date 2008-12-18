@@ -32,6 +32,7 @@ bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttri
 %>
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="oscarEncounter.concurrencyError.title" /></title>
 </head>
 <body>

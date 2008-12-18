@@ -47,6 +47,7 @@
 <html:html locale="true">
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><logic:present name="groupName">
 	<bean:write name="groupName" />
 </logic:present> <bean:message key="oscarEncounter.Index.measurements" /></title>

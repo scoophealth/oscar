@@ -26,6 +26,7 @@
 <%@ page import="org.caisi.model.*"%>
 <html>
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Caisi Roles</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />

@@ -52,6 +52,7 @@ public String encode64(String plainText)
 -->
 <html:html locale="true">
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="oscarEncounter.RemoteAttachments.title" /></title>
 <script type="text/javascript" language=javascript>

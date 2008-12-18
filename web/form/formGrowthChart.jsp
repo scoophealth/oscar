@@ -51,6 +51,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>CDC US Growth Charts</title>
 <link rel="stylesheet" type="text/css" href="bcArStyle.css">
 <!-- calendar stylesheet -->
