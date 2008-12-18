@@ -38,7 +38,7 @@
 	<div style="text-align:right;width:175px">
 	Statistics <input type="checkbox" name="Statistics" <%=integratorConsent!=null&&integratorConsent.isConsentToStatistics()?"checked=\"checked\"":""%>/><br />
 	BasicPersonalId <input type="checkbox" name="BasicPersonalId" <%=integratorConsent!=null&&integratorConsent.isConsentToBasicPersonalId()?"checked=\"checked\"":""%>/><br />
-	HealthCardId / Health Number Registry <input type="checkbox" name="HealthCardId" <%=integratorConsent!=null&&integratorConsent.isConsentToHealthCardId()?"checked=\"checked\"":""%>/><br />
+	HealthCardId <input type="checkbox" name="HealthCardId" <%=integratorConsent!=null&&integratorConsent.isConsentToHealthCardId()?"checked=\"checked\"":""%>/><br />
 	Issues <input type="checkbox" name="Issues" <%=integratorConsent!=null&&integratorConsent.isConsentToIssues()?"checked=\"checked\"":""%>/><br />
 	Notes <input type="checkbox" name="Notes" <%=integratorConsent!=null&&integratorConsent.isConsentToNotes()?"checked=\"checked\"":""%>/><br />
 	Preventions <input type="checkbox" name="Preventions" <%=integratorConsent!=null&&integratorConsent.isConsentToPreventions()?"checked=\"checked\"":""%>/><br />
