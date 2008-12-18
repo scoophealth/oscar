@@ -33,12 +33,21 @@ public class Facility implements Serializable {
     private Date integratorLastPushTime=null;
     private boolean allowQuickConsent=true;
     private boolean enableIntegratedReferrals=true;
+    private boolean enableHealthNumberRegistry=true;
     //private String lastUpdateUser;
     //private Date lastUpdateDate;
     
     public boolean isEnableIntegratedReferrals() {
 		return enableIntegratedReferrals;
 	}
+
+	public boolean isEnableHealthNumberRegistry() {
+    	return enableHealthNumberRegistry;
+    }
+
+	public void setEnableHealthNumberRegistry(boolean enableHealthNumberRegistry) {
+    	this.enableHealthNumberRegistry = enableHealthNumberRegistry;
+    }
 
 	public void setEnableIntegratedReferrals(boolean enableIntegratedReferrals) {
 		this.enableIntegratedReferrals = enableIntegratedReferrals;

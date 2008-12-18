@@ -15,7 +15,8 @@ create table Facility (
 	integratorPassword varchar(255),
 	integratorLastPushTime datetime,
 	allowQuickConsent tinyint(1) not null,
-	enableIntegratedReferrals tinyint(1) not null
+	enableIntegratedReferrals tinyint(1) not null,
+	enableHealthNumberRegistry tinyint(1) not null
 );
 
 
