@@ -39,163 +39,163 @@ import java.util.Properties;
  */
 public class OscarProperties extends Properties {
 
-    public static void readFromFile(String url, Properties p) throws IOException {
-	InputStream is = OscarProperties.class.getResourceAsStream(url);
-	if (is == null) is = new FileInputStream(url);
+	public static void readFromFile(String url, Properties p) throws IOException {
+		InputStream is = OscarProperties.class.getResourceAsStream(url);
+		if (is == null) is = new FileInputStream(url);
 
-	try {
-	    p.load(is);
-	} finally {
-	    is.close();
+		try {
+			p.load(is);
+		} finally {
+			is.close();
+		}
 	}
-    }
 
-    /**
-     * @return OscarProperties the instance of OscarProperties
-     */
-    public static OscarProperties getInstance() {
-	return oscarProperties;
-    }
-
-    static OscarProperties oscarProperties = new OscarProperties();
-    static {
-	try {
-	    readFromFile("/oscar_mcmaster.properties", oscarProperties);
-	} catch (IOException e) {
-	    // don't use a logger here or your asking for trouble, it's a static initialiser
-	    e.printStackTrace();
+	/**
+	 * @return OscarProperties the instance of OscarProperties
+	 */
+	public static OscarProperties getInstance() {
+		return oscarProperties;
 	}
-    }
 
-    static boolean loaded = false;
-
-    /* If cant find the file, inform and continue */
-    /*
-     * private OscarProperties() {
-     * 
-     * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { System.out.println("Error, file oscar_mcmaster.properties not found.");
-     * System.out.println("This file must be placed at WEB-INF/classes."); }
-     * 
-     * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); e.printStackTrace(); } } //OscarProperties - end
-     */
-    /* Do not use this constructor. Use getInstance instead */
-    private OscarProperties() {
-	System.out.println("OSCAR PROPS CONSTRUCTOR");
-    }
-
-    /**
-     * Will check the properties to see if that property is set and if its set to the value. If it is method returns true if not method returns false
-     * 
-     * @param key
-     *            key of property
-     * @param val
-     *            value that will cause a true value to be returned
-     * @return boolean
-     */
-    public boolean getBooleanProperty(String key, String val) {
-	boolean prop = false;
-	String propertyValue = getProperty(key);
-	if (propertyValue != null && propertyValue.equalsIgnoreCase(val)) {
-	    prop = true;
+	static OscarProperties oscarProperties = new OscarProperties();
+	static {
+		try {
+			readFromFile("/oscar_mcmaster.properties", oscarProperties);
+		} catch (IOException e) {
+			// don't use a logger here or your asking for trouble, it's a static initialiser
+			e.printStackTrace();
+		}
 	}
-	return prop;
-    }
 
-    public void loader(InputStream propertyStream) {
-	if (!loaded) {
-	    try {
-		load(propertyStream);
-		propertyStream.close();
-		loaded = true;
-	    } catch (IOException ex) {
-		System.err.println("IO Error: " + ex.getMessage());
-	    }
+	static boolean loaded = false;
+
+	/* If cant find the file, inform and continue */
+	/*
+	 * private OscarProperties() {
+	 * 
+	 * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { System.out.println("Error, file oscar_mcmaster.properties not found.");
+	 * System.out.println("This file must be placed at WEB-INF/classes."); }
+	 * 
+	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); e.printStackTrace(); } } //OscarProperties - end
+	 */
+	/* Do not use this constructor. Use getInstance instead */
+	private OscarProperties() {
+		System.out.println("OSCAR PROPS CONSTRUCTOR");
 	}
-    }
 
-    public void loader(String propFileName) throws java.io.FileNotFoundException {
-	if (!loaded) {
-	    FileInputStream fis2 = new FileInputStream(propFileName);
-	    try {
-		load(fis2);
-		fis2.close();
-		loaded = true;
-	    } catch (IOException ex) {
-		System.err.println("IO Error: " + ex.getMessage());
-	    }
+	/**
+	 * Will check the properties to see if that property is set and if its set to the value. If it is method returns true if not method returns false
+	 * 
+	 * @param key
+	 *            key of property
+	 * @param val
+	 *            value that will cause a true value to be returned
+	 * @return boolean
+	 */
+	public boolean getBooleanProperty(String key, String val) {
+		boolean prop = false;
+		String propertyValue = getProperty(key);
+		if (propertyValue != null && propertyValue.equalsIgnoreCase(val)) {
+			prop = true;
+		}
+		return prop;
 	}
-    }
 
-    /**
-     * Comma delimited spring configuration modules Options: Caisi,Indivo Caisi - Required to run the Caisi Shelter Management System Indivo - Indivo PHR record. Required for integration with Indivo.
-     */
-    public final String ModuleNames = "ModuleNames";
-
-    public Date getStartTime() {
-	String str = getProperty("OSCAR_START_TIME");
-	Date ret = null;
-	try {
-	    ret = new Date(Long.parseLong(str));
-	} catch (Exception e) {/* No Date Found */
+	public void loader(InputStream propertyStream) {
+		if (!loaded) {
+			try {
+				load(propertyStream);
+				propertyStream.close();
+				loaded = true;
+			} catch (IOException ex) {
+				System.err.println("IO Error: " + ex.getMessage());
+			}
+		}
 	}
-	return ret;
-    }
 
-    public boolean isTorontoRFQ() {
-	return getBooleanProperty("TORONTO_RFQ", "yes") || getBooleanProperty("TORONTO_RFQ", "true");
-    }
+	public void loader(String propFileName) throws java.io.FileNotFoundException {
+		if (!loaded) {
+			FileInputStream fis2 = new FileInputStream(propFileName);
+			try {
+				load(fis2);
+				fis2.close();
+				loaded = true;
+			} catch (IOException ex) {
+				System.err.println("IO Error: " + ex.getMessage());
+			}
+		}
+	}
 
-    public boolean isProviderNoAuto() {
-	return getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "yes") || getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "true");
-    }
+	/**
+	 * Comma delimited spring configuration modules Options: Caisi,Indivo Caisi - Required to run the Caisi Shelter Management System Indivo - Indivo PHR record. Required for integration with Indivo.
+	 */
+	public final String ModuleNames = "ModuleNames";
 
-    public boolean isSiteSecured() {
-	return getBooleanProperty("security_site_control", "yes") || getBooleanProperty("security_site_control", "true");
-    }
+	public Date getStartTime() {
+		String str = getProperty("OSCAR_START_TIME");
+		Date ret = null;
+		try {
+			ret = new Date(Long.parseLong(str));
+		} catch (Exception e) {/* No Date Found */
+		}
+		return ret;
+	}
 
-    public boolean isPINEncripted() {
-	return getBooleanProperty("IS_PIN_ENCRYPTED", "yes") || getBooleanProperty("IS_PIN_ENCRYPTED", "true");
-    }
+	public boolean isTorontoRFQ() {
+		return getBooleanProperty("TORONTO_RFQ", "yes") || getBooleanProperty("TORONTO_RFQ", "true");
+	}
 
-    public boolean isAdminOptionOn() {
-	return getBooleanProperty("with_admin_option", "yes") || getBooleanProperty("with_admin_option", "true");
-    }
+	public boolean isProviderNoAuto() {
+		return getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "yes") || getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "true");
+	}
 
-    public boolean isLogAccessClient() {
-	return getBooleanProperty("log_accesses_of_client", "yes") || getBooleanProperty("log_accesses_of_client", "true");
-    }
+	public boolean isSiteSecured() {
+		return getBooleanProperty("security_site_control", "yes") || getBooleanProperty("security_site_control", "true");
+	}
 
-    public boolean isLogAccessProgram() {
-	return getBooleanProperty("log_accesses_of_program", "yes") || getBooleanProperty("log_accesses_of_program", "true");
-    }
+	public boolean isPINEncripted() {
+		return getBooleanProperty("IS_PIN_ENCRYPTED", "yes") || getBooleanProperty("IS_PIN_ENCRYPTED", "true");
+	}
 
-    public boolean isAccountLockingEnabled() {
-	String val = getProperty("ENABLE_ACCOUNT_LOCKING");
-	if (val == null) return false;
-	return val.toUpperCase().startsWith("Y") || val.toUpperCase().startsWith("T");
-    }
+	public boolean isAdminOptionOn() {
+		return getBooleanProperty("with_admin_option", "yes") || getBooleanProperty("with_admin_option", "true");
+	}
 
-    public String getDbType() {
-	return getProperty("db_type");
-    }
+	public boolean isLogAccessClient() {
+		return getBooleanProperty("log_accesses_of_client", "yes") || getBooleanProperty("log_accesses_of_client", "true");
+	}
 
-    public String getDbUserName() {
-	return getProperty("db_username");
-    }
+	public boolean isLogAccessProgram() {
+		return getBooleanProperty("log_accesses_of_program", "yes") || getBooleanProperty("log_accesses_of_program", "true");
+	}
 
-    public String getDbPassword() {
-	return getProperty("db_password");
-    }
+	public boolean isAccountLockingEnabled() {
+		String val = getProperty("ENABLE_ACCOUNT_LOCKING");
+		if (val == null) return false;
+		return val.toUpperCase().startsWith("Y") || val.toUpperCase().startsWith("T");
+	}
 
-    public String getDbUri() {
-	return getProperty("db_uri");
-    }
+	public String getDbType() {
+		return getProperty("db_type");
+	}
 
-    public String getDbDriver() {
-	return getProperty("db_driver");
-    }
+	public String getDbUserName() {
+		return getProperty("db_username");
+	}
 
-    public String getBuildDate() {
-	return getProperty("builddate");
-    }
+	public String getDbPassword() {
+		return getProperty("db_password");
+	}
+
+	public String getDbUri() {
+		return getProperty("db_uri");
+	}
+
+	public String getDbDriver() {
+		return getProperty("db_driver");
+	}
+
+	public String getBuildDate() {
+		return getProperty("builddate");
+	}
 }

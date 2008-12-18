@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 public class IntegratorConsent {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private int facilityId;
 	private int demographicId;
@@ -132,7 +132,7 @@ public class IntegratorConsent {
 	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
 		this.restrictConsentToHic = restrictConsentToHic;
 	}
-	
+
 	public String getFormVersion() {
 		return formVersion;
 	}
@@ -162,51 +162,43 @@ public class IntegratorConsent {
 	}
 
 	@PreRemove
-	protected void jpa_preventDelete()
-	{
-		throw(new IllegalArgumentException("Remove is not allowed for this type of item."));
+	protected void jpa_preventDelete() {
+		throw (new IllegalArgumentException("Remove is not allowed for this type of item."));
 	}
 
 	@PreUpdate
-	protected void jpa_preventUpdate()
-	{
-		throw(new IllegalArgumentException("Update is not allowed for this type of item."));
-	}
-	
-	public boolean isConsentToAll()
-	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&consentToPhoto&&!restrictConsentToHic); 
+	protected void jpa_preventUpdate() {
+		throw (new IllegalArgumentException("Update is not allowed for this type of item."));
 	}
 
-	public boolean isConsentToAllHic()
-	{
-		return(consentToStatistics&&consentToBasicPersonalId&&consentToHealthCardId&&consentToIssues&&consentToNotes&&consentToPreventions&&consentToPhoto&&restrictConsentToHic); 
+	public boolean isConsentToAll() {
+		return (consentToStatistics && consentToBasicPersonalId && consentToHealthCardId && consentToIssues && consentToNotes && consentToPreventions && consentToPhoto && !restrictConsentToHic);
 	}
 
-	public boolean isConsentToNone()
-	{
-		return(!consentToStatistics&&!consentToBasicPersonalId&&!consentToHealthCardId&&!consentToIssues&&!consentToPreventions&&!consentToPhoto&&!consentToNotes);
+	public boolean isConsentToAllHic() {
+		return (consentToStatistics && consentToBasicPersonalId && consentToHealthCardId && consentToIssues && consentToNotes && consentToPreventions && consentToPhoto && restrictConsentToHic);
 	}
-	
-	public void setConsentToAll()
-	{
+
+	public boolean isConsentToNone() {
+		return (!consentToStatistics && !consentToBasicPersonalId && !consentToHealthCardId && !consentToIssues && !consentToPreventions && !consentToPhoto && !consentToNotes);
+	}
+
+	public void setConsentToAll() {
 		setAllConsents(true);
-		restrictConsentToHic=false;
+		restrictConsentToHic = false;
 	}
-	
-	public void setConsentToNone()
-	{
+
+	public void setConsentToNone() {
 		setAllConsents(false);
 	}
-	
-	private void setAllConsents(boolean b)
-	{
-		consentToStatistics=b;
-		consentToBasicPersonalId=b;
-		consentToHealthCardId=b;
-		consentToIssues=b;
-		consentToNotes=b;
-		consentToPreventions=b;
-		consentToPhoto=b;
+
+	private void setAllConsents(boolean b) {
+		consentToStatistics = b;
+		consentToBasicPersonalId = b;
+		consentToHealthCardId = b;
+		consentToIssues = b;
+		consentToNotes = b;
+		consentToPreventions = b;
+		consentToPhoto = b;
 	}
 }
