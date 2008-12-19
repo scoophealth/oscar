@@ -227,8 +227,12 @@
         <servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
     </servlet>
     <servlet> 
- 	<servlet-name>RxCloneService</servlet-name> 
- 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class> 
+	 	<servlet-name>RxCloneService</servlet-name> 
+	 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class> 
+    </servlet> 
+    <servlet> 
+	 	<servlet-name>ImageRenderingServlet</servlet-name> 
+	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class> 
     </servlet> 
     
     <servlet-mapping>
@@ -296,8 +300,12 @@
         <url-pattern>/redirectLinkTracking</url-pattern>
     </servlet-mapping>
     <servlet-mapping> 
- 	<servlet-name>RxCloneService</servlet-name> 
- 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern> 
+	 	<servlet-name>RxCloneService</servlet-name> 
+	 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern> 
+    </servlet-mapping>  
+    <servlet-mapping> 
+	 	<servlet-name>ImageRenderingServlet</servlet-name> 
+	 	<url-pattern>/imageRenderingServlet</url-pattern> 
     </servlet-mapping>  
     
     <session-config>
