@@ -10,8 +10,7 @@
 	<bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" lazy-init="default" autowire="default" dependency-check="default">
 		<property name="locations">
 			<list>
-				<value>/WEB-INF/classes/oscar_mcmaster.properties
-				</value>
+				<value>/WEB-INF/classes/oscar_mcmaster.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -38,10 +37,9 @@
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-	<!--
-		<bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName"
-		/>
-	-->
+	<!-- 
+    <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
+ -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
@@ -111,21 +109,11 @@
 	<bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
 		<property name="flowSheets">
 			<list>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml
-				</value>
-				<!--
-					value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/chf.xml</value
-				-->
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
+				<!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/chf.xml</value -->
 			</list>
 		</property>
 	</bean>
@@ -238,8 +226,7 @@
 		<property name="target" ref="ticklerManagerTarget" />
 		<property name="transactionAttributes">
 			<props>
-				<prop key="*">PROPAGATION_REQUIRED,readOnly
-				</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
 			</props>
 		</property>
 	</bean>
@@ -287,9 +274,7 @@
 		</property>
 	</bean>
 	<!--
-		<bean id="topazManager" parent="baseTransactionProxy"> <property
-		name="target"> <bean class="com.quatro.service.TopazManager">
-		<property name="topazDao" ref="topazDao"/> </bean> </property> </bean>
+		<bean id="topazManager" parent="baseTransactionProxy"> <property name="target"> <bean class="com.quatro.service.TopazManager"> <property name="topazDao" ref="topazDao"/> </bean> </property> </bean>
 	-->
 	<bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager" autowire="byName" />
 	<bean id="infirmBedProgramManager" parent="baseTransactionProxy">
