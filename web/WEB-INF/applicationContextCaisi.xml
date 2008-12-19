@@ -7,30 +7,14 @@
 	<bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
 		<property name="flowSheets">
 			<list>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/intakeFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/financesFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/identificationFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/housingFlowsheet.xml
-				</value>
-				<value>
-					classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml
-				</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/intakeFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/financesFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/identificationFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/housingFlowsheet.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml</value>
 			</list>
 		</property>
 	</bean>
@@ -67,8 +51,7 @@
 			<props>
 				<prop key="save*">PROPAGATION_REQUIRED</prop>
 				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED,readOnly
-				</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
 			</props>
 		</property>
 	</bean>
@@ -187,9 +170,7 @@
 			</bean>
 		</property>
 	</bean>
-	<!--
-		========================= SCHEDULED JOBS =========================
-	-->
+	<!-- ========================= SCHEDULED JOBS ========================= -->
 	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
 		<property name="timerTask">
 			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask" lazy-init="default" dependency-check="default">
@@ -222,11 +203,7 @@
 	</bean>
 	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" scope="singleton" lazy-init="default" dependency-check="default" />
 	<!--
-		<bean id="UCRConfigurationManager"
-		class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager">
-		<property name="filename">
-		<value>org/oscarehr/PMmodule/web/reports/custom/test.xml</value>
-		</property> </bean>
+		<bean id="UCRConfigurationManager" class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager"> <property name="filename"> <value>org/oscarehr/PMmodule/web/reports/custom/test.xml</value> </property> </bean>
 	-->
 
 
