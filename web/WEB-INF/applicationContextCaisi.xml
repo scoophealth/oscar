@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
-	default-autowire="no">
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="no">
 
 	<!-- configure the available measurement flow sheets -->
-	<bean id="measurementTemplateFlowSheet"
-		class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
+	<bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
 		<property name="flowSheets">
 			<list>
 				<value>
@@ -39,54 +36,31 @@
 	</bean>
 
 	<!-- audit strategy -->
-	<bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy"
-		autowire="byName" />
-	<bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy"
-		autowire="byName" />
-	<bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.RoomAuditStrategy"
-		lazy-init="default" autowire="byName" />
+	<bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy" autowire="byName" />
+	<bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName" />
+	<bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.RoomAuditStrategy" lazy-init="default" autowire="byName" />
 
 	<!-- DAO -->
-	<bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO"
-		autowire="byName" />
-	<bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO"
-		autowire="byName" />
-	<bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO"
-		autowire="byName" />
-	<bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO"
-		autowire="byName" />
-	<bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.RatePageDao"
-		autowire="byName" />
-	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO"
-		autowire="byName" />
-	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO"
-		autowire="byName" />
-	<bean id="intakeADao" class="org.oscarehr.PMmodule.dao.IntakeADao"
-		autowire="byName" />
-	<bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao"
-		autowire="byName" />
-	<bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao"
-		autowire="byName" />
-	<bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO"
-		autowire="byName" />
-	<bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO"
-		autowire="byName" />
-	<bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate"
-		autowire="byName" />
-	<bean id="surveyTestDAO"
-		class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate"
-		autowire="byName" />
-	<bean id="oscarFormDAO"
-		class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate"
-		autowire="byName" />
-	<bean id="populationReportDao" class="org.oscarehr.common.dao.PopulationReportDao"
-		autowire="byName" />
+	<bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
+	<bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO" autowire="byName" />
+	<bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName" />
+	<bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO" autowire="byName" />
+	<bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.RatePageDao" autowire="byName" />
+	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO" autowire="byName" />
+	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName" />
+	<bean id="intakeADao" class="org.oscarehr.PMmodule.dao.IntakeADao" autowire="byName" />
+	<bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao" autowire="byName" />
+	<bean id="healthSafetyDao" class="org.oscarehr.PMmodule.dao.HealthSafetyDao" autowire="byName" />
+	<bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
+	<bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName" />
+	<bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate" autowire="byName" />
+	<bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName" />
+	<bean id="oscarFormDAO" class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" autowire="byName" />
+	<bean id="populationReportDao" class="org.oscarehr.common.dao.PopulationReportDao" autowire="byName" />
 
 
 	<!-- managers  -->
-	<bean id="issueAdminManager"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-		lazy-init="default" dependency-check="default">
+	<bean id="issueAdminManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="default" dependency-check="default">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target" ref="issueAdminManagerTarget" />
 		<property name="transactionAttributes">
@@ -98,11 +72,8 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="issueAdminManagerTarget" class="org.caisi.service.IssueAdminManager"
-		autowire="byName" />
-	<bean id="caisiRoleManager"
-		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-		lazy-init="default" dependency-check="default">
+	<bean id="issueAdminManagerTarget" class="org.caisi.service.IssueAdminManager" autowire="byName" />
+	<bean id="caisiRoleManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="default" dependency-check="default">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target" ref="caisiRoleManagerTarget" />
 		<property name="transactionAttributes">
@@ -112,37 +83,28 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="caisiRoleManagerTarget" class="org.caisi.service.CaisiRoleManager"
-		autowire="byName" />
+	<bean id="caisiRoleManagerTarget" class="org.caisi.service.CaisiRoleManager" autowire="byName" />
 
 
-	<bean id="bedCheckTimeManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="bedCheckTimeManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.BedCheckTimeManagerImpl"
-				autowire="byName" />
+			<bean class="org.oscarehr.PMmodule.service.impl.BedCheckTimeManagerImpl" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="ratePageManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="ratePageManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.RatePageManagerImpl"
-				autowire="byName" />
+			<bean class="org.oscarehr.PMmodule.service.impl.RatePageManagerImpl" autowire="byName" />
 		</property>
 	</bean>
 	<!-- Generic Intake -->
-	<bean id="genericIntakeManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="genericIntakeManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.GenericIntakeManager"
-				autowire="byName" />
+			<bean class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="intakeAManager" parent="baseTransactionProxy" lazy-init="default"
-		dependency-check="default">
+	<bean id="intakeAManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.IntakeAManagerImpl"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.service.impl.IntakeAManagerImpl" lazy-init="default" dependency-check="default">
 				<property name="intakeADao" ref="intakeADao" />
 				<property name="clientDao" ref="clientDao" />
 				<property name="enabled" value="${intakea.enabled}" />
@@ -150,11 +112,9 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="intakeCManager" parent="baseTransactionProxy" lazy-init="default"
-		dependency-check="default">
+	<bean id="intakeCManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.service.impl.IntakeCManagerImpl" lazy-init="default" dependency-check="default">
 				<property name="intakeCDao" ref="intakeCDao" />
 				<property name="clientDao" ref="clientDao" />
 				<property name="enabled" value="${intakec.enabled}" />
@@ -162,85 +122,66 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="streetHealthReportManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="streetHealthReportManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean
-				class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.service.impl.StreetHealthReportManagerImpl" lazy-init="default" dependency-check="default">
 				<property name="clientDao" ref="clientDao" />
 				<property name="genericIntakeManager" ref="genericIntakeManager" />
 			</bean>
 		</property>
 	</bean>
 	<!-- Generic Intake -->
-	<bean id="healthSafetyManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="healthSafetyManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.HealthSafetyManager"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.service.HealthSafetyManager" lazy-init="default" dependency-check="default">
 				<property name="healthSafetyDao" ref="healthSafetyDao" />
 			</bean>
 		</property>
 	</bean>
 
-	<bean id="logManager" parent="baseTransactionProxy" lazy-init="default"
-		dependency-check="default">
+	<bean id="logManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
 			<bean class="org.oscarehr.PMmodule.service.LogManager" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="oscarSecurityManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="oscarSecurityManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.OscarSecurityManagerImpl"
-				autowire="byName" />
+			<bean class="org.oscarehr.PMmodule.service.impl.OscarSecurityManagerImpl" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="formsManager" parent="baseTransactionProxy" lazy-init="default"
-		dependency-check="default">
+	<bean id="formsManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl"
-				autowire="byName" />
+			<bean class="org.oscarehr.PMmodule.service.impl.FormsManagerImpl" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="surveyManager" parent="baseTransactionProxy" lazy-init="default"
-		dependency-check="default">
+	<bean id="surveyManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
 			<bean class="org.oscarehr.survey.service.impl.SurveyManagerImpl">
 				<property name="surveyDAO" ref="surveyDAO" />
 			</bean>
 		</property>
 	</bean>
-	<bean id="oscarFormManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="oscarFormManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
 			<bean class="org.oscarehr.survey.service.impl.OscarFormManagerImpl">
 				<property name="oscarFormDAO" ref="oscarFormDAO" />
 			</bean>
 		</property>
 	</bean>
-	<bean id="surveyTestManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="surveyTestManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.survey.service.impl.SurveyTestManagerImpl"
-				autowire="byName" />
+			<bean class="org.oscarehr.survey.service.impl.SurveyTestManagerImpl" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="surveyLaunchManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="surveyLaunchManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.survey.service.impl.SurveyLaunchManagerOscar"
-				autowire="byName" />
+			<bean class="org.oscarehr.survey.service.impl.SurveyLaunchManagerOscar" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar"
-		autowire="byName" />
-	<bean id="populationReportManager" parent="baseTransactionProxy"
-		lazy-init="default" dependency-check="default">
+	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar" autowire="byName" />
+	<bean id="populationReportManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">
-			<bean class="org.oscarehr.common.service.PopulationReportManager"
-				autowire="byName">
+			<bean class="org.oscarehr.common.service.PopulationReportManager" autowire="byName">
 				<property name="issueDAO" ref="IssueDAO" />
 				<property name="populationReportDao" ref="populationReportDao" />
 			</bean>
@@ -249,11 +190,9 @@
 	<!--
 		========================= SCHEDULED JOBS =========================
 	-->
-	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
-		lazy-init="default" dependency-check="default">
+	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask" lazy-init="default" dependency-check="default">
 				<property name="programManager" ref="programManager" />
 				<property name="bedManager" ref="bedManager" />
 				<property name="bedDemographicManager" ref="bedDemographicManager" />
@@ -263,11 +202,9 @@
 		<property name="period" value="3600000" />
 	</bean>
 
-	<bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
-		lazy-init="default" dependency-check="default">
+	<bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
 		<property name="timerTask">
-			<bean class="org.oscarehr.PMmodule.task.ErProgramDischargeTask"
-				lazy-init="default" dependency-check="default">
+			<bean class="org.oscarehr.PMmodule.task.ErProgramDischargeTask" lazy-init="default" dependency-check="default">
 				<property name="admissionManager" ref="admissionManager" />
 				<property name="providerManager" ref="providerManager" />
 			</bean>
@@ -275,8 +212,7 @@
 		<property name="delay" value="180000" />
 		<property name="period" value="300000" />
 	</bean>
-	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean"
-		lazy-init="default" dependency-check="default">
+	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean" lazy-init="default" dependency-check="default">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="scheduledBedProgramDischargeTask" />
@@ -284,8 +220,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes"
-		scope="singleton" lazy-init="default" dependency-check="default" />
+	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" scope="singleton" lazy-init="default" dependency-check="default" />
 	<!--
 		<bean id="UCRConfigurationManager"
 		class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager">
@@ -297,8 +232,7 @@
 
 	<!--   from Quatro start -->
 
-	<bean id="quatroReportDao" class="com.quatro.dao.QuatroReportDao"
-		autowire="byName" />
+	<bean id="quatroReportDao" class="com.quatro.dao.QuatroReportDao" autowire="byName" />
 	<bean id="quatroReportManager" parent="baseTransactionProxy">
 		<property name="target">
 			<bean class="com.quatro.service.QuatroReportManager">
