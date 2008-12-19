@@ -291,6 +291,8 @@ INSERT INTO encounterForm VALUES ('Vascular Tracker', ' ../form/SetupForm.do?for
 INSERT INTO encounterForm VALUES ('Growth 0-36m', ' ../form/formGrowth0_36.jsp?demographic_no=','formGrowth0_36',0);
 INSERT INTO encounterForm VALUES ('Letterhead', '../form/formConsultant.jsp?demographic_no=', 'formConsult', 0);
 INSERT INTO `encounterForm`(`form_name`,`form_value`,`form_table`,`hidden`) VALUES ('CHF','../form/formchf.jsp?demographic_no=','formchf',0);
+INSERT INTO encounterForm VALUES("Mental Health Form1","../form/formMentalHealthForm1.jsp?demographic_no=","formMentalHealthForm1",0);
+INSERT INTO encounterForm VALUES("Mental Health Form14","../form/formMentalHealthForm14.jsp?demographic_no=","formMentalHealthForm14",0);
 
 
 
