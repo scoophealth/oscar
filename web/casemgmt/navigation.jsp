@@ -21,19 +21,17 @@
 * Toronto, Ontario, Canada
 */
 -->
-<%@ include file="/casemgmt/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@ page
-	import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet"%>
-<%@ page
-	import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig"%>
-<%@ page
-	import="oscar.oscarEncounter.oscarMeasurements.util.MeasurementHelper"%>
-<%@ page
-	import="oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler"%>
-<%@ page import="java.util.ArrayList"%>
-<%@ page import="java.util.Vector"%>
+
+<% long loadPage = System.currentTimeMillis(); %>
+<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.util.MeasurementHelper" %>
+<%@ page import="oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Vector" %>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
@@ -632,5 +630,8 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 </div>
 
 
-
+<%
+long finLoad = System.currentTimeMillis();
+System.out.println("TOTAL LOAD TIME FOR NAVIGATION:" + (finLoad-loadPage)*.001);
+%>
 
