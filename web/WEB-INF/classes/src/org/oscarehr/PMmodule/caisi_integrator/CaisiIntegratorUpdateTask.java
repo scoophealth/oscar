@@ -81,390 +81,384 @@ import oscar.OscarProperties;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
-    private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
+	private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
 
-    private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
+	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 
-    private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
-    private static TimerTask timerTask = null;
+	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
+	private static TimerTask timerTask = null;
 
-    private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-    private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
-    private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-    private CaseManagementIssueDAO caseManagementIssueDAO = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
-    private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
-    private IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
-    private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-    private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
-    private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
-    //private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
+	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
+	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
+	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	private CaseManagementIssueDAO caseManagementIssueDAO = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
+	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
+	private IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
+	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 
-    public static void startTask() {
-	synchronized (CaisiIntegratorUpdateTask.class) {
-	    if (timerTask == null) {
-		int period = 0;
-		String periodStr = null;
+	// private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
+
+	public static synchronized void startTask() {
+		if (timerTask == null) {
+			int period = 0;
+			String periodStr = null;
+			try {
+				periodStr = (String) OscarProperties.getInstance().get(INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY);
+				period = Integer.parseInt(periodStr);
+			} catch (Exception e) {
+				logger.error("CaisiIntegratorUpdateTask not scheduled, period is missing or invalid properties file : " + INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY + '=' + periodStr, e);
+				return;
+			}
+
+			logger.info("Scheduling CaisiIntegratorUpdateTask for period : " + period);
+			timerTask = new CaisiIntegratorUpdateTask();
+			timer.schedule(timerTask, 10000, period);
+		} else {
+			logger.error("Start was called twice on this timer task object.", new Exception());
+		}
+	}
+
+	public static synchronized void stopTask() {
+		if (timerTask != null) {
+			timerTask.cancel();
+			timerTask = null;
+
+			logger.info("CaisiIntegratorUpdateTask has been unscheduled.");
+		}
+	}
+
+	public void run() {
+		logger.info("CaisiIntegratorUpdateTask starting");
+
 		try {
-		    periodStr = (String) OscarProperties.getInstance().get(INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY);
-		    period = Integer.parseInt(periodStr);
+			pushAllFacilities();
+		} catch (WebServiceException e) {
+			logger.warn("Error connecting to integrator. " + e.getMessage());
+			logger.debug("Error connecting to integrator.", e);
 		} catch (Exception e) {
-		    logger.error("CaisiIntegratorUpdateTask not scheduled, period is missing or invalid properties file : " + INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY + '='
-			    + periodStr, e);
-		    return;
+			logger.error("unexpected error occurred", e);
+		} finally {
+			DbConnectionFilter.releaseThreadLocalDbConnection();
+
+			logger.info("CaisiIntegratorUpdateTask finished)");
+		}
+	}
+
+	public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+		List<Facility> facilities = facilityDao.findAll(null);
+
+		for (Facility facility : facilities) {
+			if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
+				pushAllFacilityData(facility);
+			}
+		}
+	}
+
+	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+		logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
+
+		// check all parameters are present
+		String integratorBaseUrl = facility.getIntegratorUrl();
+		String user = facility.getIntegratorUser();
+		String password = facility.getIntegratorPassword();
+
+		if (integratorBaseUrl == null || user == null || password == null) {
+			logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
+			return;
 		}
 
-		logger.info("Scheduling CaisiIntegratorUpdateTask for period : " + period);
-		timerTask = new CaisiIntegratorUpdateTask();
-		timer.schedule(timerTask, 10000, period);
-	    } else {
-		logger.error("Start was called twice on this timer task object.", new Exception());
-	    }
-	}
-    }
+		// get the time here so there's a slight over lap in actual runtime and
+		// activity time, other wise you'll have a gap, better to unnecessarily
+		// send a few more records than to miss some.
+		Date currentPushTime = new Date();
 
-    public static void stopTask() {
-	synchronized (CaisiIntegratorUpdateTask.class) {
-	    if (timerTask != null) {
-		timerTask.cancel();
-		timerTask = null;
+		// do all the sync work
+		// in theory sync should only send changed data, but currently due to
+		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
+		// data model.
+		pushFacility(facility);
+		pushPrograms(facility);
+		pushProviders(facility);
+		pushAllDemographics(facility);
 
-		logger.info("CaisiIntegratorUpdateTask has been unscheduled.");
-	    }
-	}
-    }
-
-    public void run() {
-	logger.info("CaisiIntegratorUpdateTask starting");
-
-	try {
-	    pushAllFacilities();
-	} catch (WebServiceException e) {
-	    logger.warn("Error connecting to integrator. " + e.getMessage());
-	    logger.debug("Error connecting to integrator.", e);
-	} catch (Exception e) {
-	    logger.error("unexpected error occurred", e);
-	} finally {
-	    DbConnectionFilter.releaseThreadLocalDbConnection();
-
-	    logger.info("CaisiIntegratorUpdateTask finished)");
-	}
-    }
-
-    public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
-	List<Facility> facilities = facilityDao.findAll(null);
-
-	for (Facility facility : facilities) {
-	    if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
-		pushAllFacilityData(facility);
-	    }
-	}
-    }
-
-    private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
-	logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
-
-	// check all parameters are present
-	String integratorBaseUrl = facility.getIntegratorUrl();
-	String user = facility.getIntegratorUser();
-	String password = facility.getIntegratorPassword();
-
-	if (integratorBaseUrl == null || user == null || password == null) {
-	    logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url="
-		    + integratorBaseUrl);
-	    return;
+		// update late push time only if an exception didn't occur
+		// re-get the facility as the sync time could be very long and changes
+		// may have been made to the facility.
+		facility = facilityDao.find(facility.getId());
+		facility.setIntegratorLastPushTime(currentPushTime);
+		facilityDao.merge(facility);
 	}
 
-	// get the time here so there's a slight over lap in actual runtime and
-	// activity time, other wise you'll have a gap, better to unnecessarily
-	// send a few more records than to miss some.
-	Date currentPushTime = new Date();
+	private void pushFacility(Facility facility) throws MalformedURLException {
+		try {
+			CachedFacility cachedFacility = new CachedFacility();
+			BeanUtils.copyProperties(cachedFacility, facility);
 
-	// do all the sync work
-	// in theory sync should only send changed data, but currently due to
-	// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
-	// data model.
-	pushFacility(facility);
-	pushPrograms(facility);
-	pushProviders(facility);
-	pushAllDemographics(facility);
+			FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
 
-	// update late push time only if an exception didn't occur
-	// re-get the facility as the sync time could be very long and changes
-	// may have been made to the facility.
-	facility = facilityDao.find(facility.getId());
-	facility.setIntegratorLastPushTime(currentPushTime);
-	facilityDao.merge(facility);
-    }
-
-    private void pushFacility(Facility facility) throws MalformedURLException {
-	try {
-	    CachedFacility cachedFacility = new CachedFacility();
-	    BeanUtils.copyProperties(cachedFacility, facility);
-
-	    FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
-
-	    logger.debug("pushing facility");
-	    service.setMyFacility(cachedFacility);
-	} catch (IllegalAccessException e) {
-	    logger.error("Unexpected Error.", e);
-	} catch (InvocationTargetException e) {
-	    logger.error("Unexpected Error.", e);
-	}
-    }
-
-    private void pushPrograms(Facility facility) throws MalformedURLException {
-	try {
-	    List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
-
-	    ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
-
-	    for (Program program : programs) {
-		CachedProgram cachedProgram = new CachedProgram();
-
-		BeanUtils.copyProperties(cachedProgram, program);
-
-		FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
-		pk.setCaisiItemId(program.getId());
-		cachedProgram.setFacilityIdIntegerCompositePk(pk);
-
-		cachedProgram.setGender(program.getManOrWoman());
-		if (program.isTransgender()) cachedProgram.setGender("T");
-
-		cachedProgram.setMaxAge(program.getAgeMax());
-		cachedProgram.setMinAge(program.getAgeMin());
-		cachedProgram.setStatus(program.getProgramStatus());
-
-		cachedPrograms.add(cachedProgram);
-	    }
-
-	    ProgramWs service = caisiIntegratorManager.getProgramWs(facility.getId());
-	    service.setCachedPrograms(cachedPrograms);
-	} catch (IllegalAccessException e) {
-	    logger.error("Unexpected Error", e);
-	} catch (InvocationTargetException e) {
-	    logger.error("Unexpected Error", e);
-	}
-    }
-
-    private void pushProviders(Facility facility) throws MalformedURLException {
-	try {
-	    List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
-
-	    ArrayList<CachedProvider> cachedProviders = new ArrayList<CachedProvider>();
-
-	    for (String providerId : providerIds) {
-		Provider provider = providerDao.getProvider(providerId);
-
-		CachedProvider cachedProvider = new CachedProvider();
-
-		BeanUtils.copyProperties(cachedProvider, provider);
-
-		FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
-		pk.setCaisiItemId(provider.getProviderNo());
-		cachedProvider.setFacilityIdStringCompositePk(pk);
-
-		cachedProviders.add(cachedProvider);
-	    }
-
-	    ProviderWs service = caisiIntegratorManager.getProviderWs(facility.getId());
-	    service.setCachedProviders(cachedProviders);
-	} catch (IllegalAccessException e) {
-	    logger.error("Unexpected error.", e);
-	} catch (InvocationTargetException e) {
-	    logger.error("Unexpected error.", e);
-	}
-    }
-
-    private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
-	List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-	DemographicWs service = caisiIntegratorManager.getDemographicWs(facility.getId());
-
-	for (Integer demographicId : demographicIds) {
-	    logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-
-	    try {
-		pushDemographic(facility, service, demographicId);
-		pushDemographicIssues(facility, service, demographicId);
-		pushDemographicImages(facility, service, demographicId);
-		pushDemographicPreventions(facility, service, demographicId);
-		pushDemographicNotes(facility, service, demographicId);
-	    } catch (Exception e) {
-		logger.error("Unexpected error.", e);
-	    }
-	}
-    }
-
-    private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException,
-	    DatatypeConfigurationException {
-	CachedDemographic cachedDemographic = new CachedDemographic();
-
-	// set consent info
-	IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
-	if (consent != null) {
-	    BeanUtils.copyProperties(cachedDemographic, consent);
+			logger.debug("pushing facility");
+			service.setMyFacility(cachedFacility);
+		} catch (IllegalAccessException e) {
+			logger.error("Unexpected Error.", e);
+		} catch (InvocationTargetException e) {
+			logger.error("Unexpected Error.", e);
+		}
 	}
 
-	// set demographic info
-	Demographic demographic = demographicDao.getDemographicById(demographicId);
+	private void pushPrograms(Facility facility) throws MalformedURLException {
+		try {
+			List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
-	BeanUtils.copyProperties(cachedDemographic, demographic);
+			ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
 
-	FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
-	facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
-	cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
+			for (Program program : programs) {
+				CachedProgram cachedProgram = new CachedProgram();
 
-	try {
-	    XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-	    if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
-	    if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
-	    if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
-	    cachedDemographic.setBirthDate(cal);
-	} catch (NumberFormatException e) {
-	    logger.error("Unexpected error.", e);
+				BeanUtils.copyProperties(cachedProgram, program);
+
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+				pk.setCaisiItemId(program.getId());
+				cachedProgram.setFacilityIdIntegerCompositePk(pk);
+
+				cachedProgram.setGender(program.getManOrWoman());
+				if (program.isTransgender()) cachedProgram.setGender("T");
+
+				cachedProgram.setMaxAge(program.getAgeMax());
+				cachedProgram.setMinAge(program.getAgeMin());
+				cachedProgram.setStatus(program.getProgramStatus());
+
+				cachedPrograms.add(cachedProgram);
+			}
+
+			ProgramWs service = caisiIntegratorManager.getProgramWs(facility.getId());
+			service.setCachedPrograms(cachedPrograms);
+		} catch (IllegalAccessException e) {
+			logger.error("Unexpected Error", e);
+		} catch (InvocationTargetException e) {
+			logger.error("Unexpected Error", e);
+		}
 	}
 
-	cachedDemographic.setHinVersion(demographic.getVer());
-	cachedDemographic.setGender(demographic.getSex());
+	private void pushProviders(Facility facility) throws MalformedURLException {
+		try {
+			List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
-	// send the request
-	service.setCachedDemographic(cachedDemographic);
-    }
+			ArrayList<CachedProvider> cachedProviders = new ArrayList<CachedProvider>();
 
-    private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
-	logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+			for (String providerId : providerIds) {
+				Provider provider = providerDao.getProvider(providerId);
 
-	ClientImage clientImage = clientImageDAO.getClientImage(demographicId.toString());
-	if (clientImage == null) return;
+				CachedProvider cachedProvider = new CachedProvider();
 
-	CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
+				BeanUtils.copyProperties(cachedProvider, provider);
 
-	FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
-	facilityDemographicPrimaryKey.setCaisiItemId(demographicId);
+				FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
+				pk.setCaisiItemId(provider.getProviderNo());
+				cachedProvider.setFacilityIdStringCompositePk(pk);
 
-	cachedDemographicImage.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
-	cachedDemographicImage.setImage(clientImage.getImage_data());
+				cachedProviders.add(cachedProvider);
+			}
 
-	service.setCachedDemographicImage(cachedDemographicImage);
-    }
-
-    private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) {
-	logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-
-	List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
-	if (caseManagementIssues.size() == 0) return;
-
-	ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
-	for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-	    try {
-		Issue issue = caseManagementIssue.getIssue();
-		CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
-
-		FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
-		facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
-		facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
-		issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
-
-		BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
-		issueTransfer.setIssueDescription(issue.getDescription());
-
-		issues.add(issueTransfer);
-	    } catch (IllegalAccessException e) {
-		logger.error("Unexpected Error.", e);
-	    } catch (InvocationTargetException e) {
-		logger.error("Unexpected Error.", e);
-	    }
+			ProviderWs service = caisiIntegratorManager.getProviderWs(facility.getId());
+			service.setCachedProviders(cachedProviders);
+		} catch (IllegalAccessException e) {
+			logger.error("Unexpected error.", e);
+		} catch (InvocationTargetException e) {
+			logger.error("Unexpected error.", e);
+		}
 	}
 
-	service.setCachedDemographicIssues(issues);
-    }
+	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+		DemographicWs service = caisiIntegratorManager.getDemographicWs(facility.getId());
 
-    private void pushDemographicPreventions(Facility facility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
-	logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		for (Integer demographicId : demographicIds) {
+			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-	ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
-	ArrayList<PreventionExtTransfer> preventionExtsToSend = new ArrayList<PreventionExtTransfer>();
-
-	// get all preventions
-	// for each prevention, copy fields to an integrator prevention
-	// need to copy ext info
-	// add prevention to array list to send
-	List<Prevention> localPreventions = preventionDao.findByDemographicId(demographicId);
-	for (Prevention localPrevention : localPreventions) {
-	    CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
-	    cachedDemographicPrevention.setCaisiDemographicId(demographicId);
-	    cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
-
-	    {
-		FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
-		pk.setCaisiItemId(localPrevention.getId());
-		cachedDemographicPrevention.setFacilityPreventionPk(pk);
-	    }
-
-	    if (localPrevention.getNextDate() != null) {
-		GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-		localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
-
-		XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
-		cachedDemographicPrevention.setNextDate(soapCalendar);
-	    }
-
-	    if (localPrevention.getPreventionDate() != null) {
-		GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-		localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
-
-		XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
-		cachedDemographicPrevention.setPreventionDate(soapCalendar);
-	    }
-
-	    cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
-
-	    preventionsToSend.add(cachedDemographicPrevention);
-
-	    // add ext info
-	    Integer preventionId = localPrevention.getId();
-	    HashMap<String, String> localPreventionExts = preventionDao.getPreventionExt(preventionId);
-	    for (Map.Entry<String, String> entry : localPreventionExts.entrySet()) {
-		PreventionExtTransfer preventionExtTransfer = new PreventionExtTransfer();
-		preventionExtTransfer.setPreventionId(preventionId);
-		preventionExtTransfer.setKey(entry.getKey());
-		preventionExtTransfer.setValue(entry.getValue());
-		preventionExtsToSend.add(preventionExtTransfer);
-	    }
+			try {
+				pushDemographic(facility, service, demographicId);
+				pushDemographicIssues(facility, service, demographicId);
+				pushDemographicImages(facility, service, demographicId);
+				pushDemographicPreventions(facility, service, demographicId);
+				pushDemographicNotes(facility, service, demographicId);
+			} catch (Exception e) {
+				logger.error("Unexpected error.", e);
+			}
+		}
 	}
 
-	service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
-    }
+	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
+		CachedDemographic cachedDemographic = new CachedDemographic();
 
-    private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
-	logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		// set consent info
+		IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
+		if (consent != null) {
+			BeanUtils.copyProperties(cachedDemographic, consent);
+		}
 
-	// List<CaseManagementNote> caseManagementNotes = caseManagementNoteDAO.findLatestUnlockedByDemographicIdProgramId(demographicId.toString());
-	// if (caseManagementIssues.size() == 0) return;
-	//
-	// ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
-	// for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
-	// try {
-	// Issue issue = caseManagementIssue.getIssue();
-	// CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
-	//
-	// FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
-	// facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
-	// facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
-	// issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
-	//
-	// BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
-	// issueTransfer.setIssueDescription(issue.getDescription());
-	//
-	// issues.add(issueTransfer);
-	// }
-	// catch (IllegalAccessException e) {
-	// logger.error("Unexpected Error.", e);
-	// }
-	// catch (InvocationTargetException e) {
-	// logger.error("Unexpected Error.", e);
-	// }
-	// }
-	//
-	// service.setCachedDemographicNotes(issues);
-    }
+		// set demographic info
+		Demographic demographic = demographicDao.getDemographicById(demographicId);
+
+		BeanUtils.copyProperties(cachedDemographic, demographic);
+
+		FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
+		facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
+		cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
+
+		try {
+			XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+			if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
+			if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
+			if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
+			cachedDemographic.setBirthDate(cal);
+		} catch (NumberFormatException e) {
+			logger.error("Unexpected error.", e);
+		}
+
+		cachedDemographic.setHinVersion(demographic.getVer());
+		cachedDemographic.setGender(demographic.getSex());
+
+		// send the request
+		service.setCachedDemographic(cachedDemographic);
+	}
+
+	private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
+		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		ClientImage clientImage = clientImageDAO.getClientImage(demographicId.toString());
+		if (clientImage == null) return;
+
+		CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
+
+		FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
+		facilityDemographicPrimaryKey.setCaisiItemId(demographicId);
+
+		cachedDemographicImage.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
+		cachedDemographicImage.setImage(clientImage.getImage_data());
+
+		service.setCachedDemographicImage(cachedDemographicImage);
+	}
+
+	private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) {
+		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
+		if (caseManagementIssues.size() == 0) return;
+
+		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
+		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+			try {
+				Issue issue = caseManagementIssue.getIssue();
+				CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
+
+				FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
+				facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+				facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
+				issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
+
+				BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
+				issueTransfer.setIssueDescription(issue.getDescription());
+
+				issues.add(issueTransfer);
+			} catch (IllegalAccessException e) {
+				logger.error("Unexpected Error.", e);
+			} catch (InvocationTargetException e) {
+				logger.error("Unexpected Error.", e);
+			}
+		}
+
+		service.setCachedDemographicIssues(issues);
+	}
+
+	private void pushDemographicPreventions(Facility facility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
+		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
+		ArrayList<PreventionExtTransfer> preventionExtsToSend = new ArrayList<PreventionExtTransfer>();
+
+		// get all preventions
+		// for each prevention, copy fields to an integrator prevention
+		// need to copy ext info
+		// add prevention to array list to send
+		List<Prevention> localPreventions = preventionDao.findNotDeletedByDemographicId(demographicId);
+		for (Prevention localPrevention : localPreventions) {
+			CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
+			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
+			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
+
+			{
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+				pk.setCaisiItemId(localPrevention.getId());
+				cachedDemographicPrevention.setFacilityPreventionPk(pk);
+			}
+
+			if (localPrevention.getNextDate() != null) {
+				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+				localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
+
+				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
+				cachedDemographicPrevention.setNextDate(soapCalendar);
+			}
+
+			if (localPrevention.getPreventionDate() != null) {
+				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+				localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
+
+				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
+				cachedDemographicPrevention.setPreventionDate(soapCalendar);
+			}
+
+			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
+
+			preventionsToSend.add(cachedDemographicPrevention);
+
+			// add ext info
+			Integer preventionId = localPrevention.getId();
+			HashMap<String, String> localPreventionExts = preventionDao.getPreventionExt(preventionId);
+			for (Map.Entry<String, String> entry : localPreventionExts.entrySet()) {
+				PreventionExtTransfer preventionExtTransfer = new PreventionExtTransfer();
+				preventionExtTransfer.setPreventionId(preventionId);
+				preventionExtTransfer.setKey(entry.getKey());
+				preventionExtTransfer.setValue(entry.getValue());
+				preventionExtsToSend.add(preventionExtTransfer);
+			}
+		}
+
+		service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
+	}
+
+	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
+		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		// List<CaseManagementNote> caseManagementNotes = caseManagementNoteDAO.findLatestUnlockedByDemographicIdProgramId(demographicId.toString());
+		// if (caseManagementIssues.size() == 0) return;
+		//
+		// ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
+		// for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+		// try {
+		// Issue issue = caseManagementIssue.getIssue();
+		// CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
+		//
+		// FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
+		// facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+		// facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
+		// issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
+		//
+		// BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
+		// issueTransfer.setIssueDescription(issue.getDescription());
+		//
+		// issues.add(issueTransfer);
+		// }
+		// catch (IllegalAccessException e) {
+		// logger.error("Unexpected Error.", e);
+		// }
+		// catch (InvocationTargetException e) {
+		// logger.error("Unexpected Error.", e);
+		// }
+		// }
+		//
+		// service.setCachedDemographicNotes(issues);
+	}
 }
