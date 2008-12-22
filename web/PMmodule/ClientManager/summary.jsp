@@ -5,16 +5,18 @@
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
-<%@page
-	import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page	import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.casemgmt.dao.ClientImageDAO"%>
+<%@page import="org.oscarehr.casemgmt.model.ClientImage"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@page import="oscar.OscarProperties"%>
 <%
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 %>
 
 <input type="hidden" name="clientId" value="" />
@@ -92,6 +94,26 @@ function openSurvey() {
 
 </script>
 
+<div style="text-align:right">
+	<%
+		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
+		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
+		
+		String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
+		String imagePresentPlaceholderUrl="/images/default_img.jpg";
+		
+		String imagePlaceholder=imageMissingPlaceholderUrl;
+		String imageUrl=imageMissingPlaceholderUrl;
+
+		if (clientImage!=null)
+		{
+			imagePlaceholder=imagePresentPlaceholderUrl;
+			imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographic.getDemographicNo();
+		}
+	%>
+	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
+</div>
+
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -134,7 +156,7 @@ function openSurvey() {
 			<td>
 			<%
 		if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
-			Integer demographicNo = ((Demographic) request.getAttribute("client")).getDemographicNo();
+			Integer demographicNo = currentDemographic.getDemographicNo();
 			pageContext.setAttribute("demographicNo", demographicNo);
 		%> <% if (!OscarProperties.getInstance().isTorontoRFQ()) {%> <a
 				href="javascript:void(0);"
