@@ -95,7 +95,7 @@ response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,"Not implemented y
 		}
 		
 		// get image
-		ClientImage clientImage=clientImageDAO.getClientImage(request.getParameter("clientId"));
+		ClientImage clientImage=clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
 		if (clientImage==null || !"jpg".equals(clientImage.getImage_type()))
 		{
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);

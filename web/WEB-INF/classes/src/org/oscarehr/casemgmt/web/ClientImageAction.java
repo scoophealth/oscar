@@ -70,7 +70,7 @@ public class ClientImageAction extends DispatchAction {
 				byte[] imageData = formFile.getFileData();
 
 				ClientImage clientImage = new ClientImage();
-				clientImage.setDemographic_no(Long.valueOf(id).longValue());
+				clientImage.setDemographic_no(Integer.parseInt(id));
 				clientImage.setImage_data(imageData);
 				clientImage.setImage_type(type);
 				

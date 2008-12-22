@@ -29,7 +29,7 @@ import org.caisi.model.BaseObject;
 
 public class ClientImage extends BaseObject {
 	private Long id;
-	private long demographic_no;
+	private int demographic_no;
 	private String image_type;
 	private byte[] image_data;
 	private Date update_date;
@@ -38,11 +38,11 @@ public class ClientImage extends BaseObject {
 		update_date = new Date();
 	}
 
-	public long getDemographic_no() {
+	public int getDemographic_no() {
 		return demographic_no;
 	}
 
-	public void setDemographic_no(long demographic_no) {
+	public void setDemographic_no(int demographic_no) {
 		this.demographic_no = demographic_no;
 	}
 

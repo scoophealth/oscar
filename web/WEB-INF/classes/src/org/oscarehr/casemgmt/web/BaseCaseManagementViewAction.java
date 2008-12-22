@@ -133,7 +133,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	}
 	
 	protected String getImageFilename(String demoNo, HttpServletRequest request) {
-		ClientImage img = clientImageMgr.getClientImage(demoNo);
+		ClientImage img = clientImageMgr.getClientImage(Integer.parseInt(demoNo));
 		
 		if(img != null) {
 			String path=request.getSession().getServletContext().getRealPath("/");

@@ -43,13 +43,13 @@ public class ClientImageManager {
 
     public void saveClientImage(String id, byte[] image_data, String image_type) {
         ClientImage clientImage = new ClientImage();
-        clientImage.setDemographic_no(Long.valueOf(id).longValue());
+        clientImage.setDemographic_no(Integer.parseInt(id));
         clientImage.setImage_data(image_data);
         clientImage.setImage_type(image_type);
         clientImageDAO.saveClientImage(clientImage);
     }
 
-    public ClientImage getClientImage(String clientId) {
+    public ClientImage getClientImage(Integer clientId) {
         return clientImageDAO.getClientImage(clientId);
     }
 

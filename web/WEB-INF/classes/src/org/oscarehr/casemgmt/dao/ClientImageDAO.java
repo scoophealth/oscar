@@ -39,7 +39,7 @@ public class ClientImageDAO extends HibernateDaoSupport {
     }
 
     public void saveClientImage(ClientImage clientImage) {
-        ClientImage existing = getClientImage(String.valueOf(clientImage.getDemographic_no()));
+        ClientImage existing = getClientImage(clientImage.getDemographic_no());
         if (existing != null) {
             existing.setImage_data(clientImage.getImage_data());
             existing.setImage_type(clientImage.getImage_type());
@@ -48,8 +48,8 @@ public class ClientImageDAO extends HibernateDaoSupport {
         getHibernateTemplate().saveOrUpdate(clientImage);
     }
 
-    public ClientImage getClientImage(String clientId) {
-        List results = getHibernateTemplate().find("from ClientImage i where i.demographic_no=?", Long.valueOf(clientId));
+    public ClientImage getClientImage(Integer clientId) {
+        List results = getHibernateTemplate().find("from ClientImage i where i.demographic_no=?", clientId);
         if (results.size() > 0) {
             return (ClientImage)results.get(0);
         }

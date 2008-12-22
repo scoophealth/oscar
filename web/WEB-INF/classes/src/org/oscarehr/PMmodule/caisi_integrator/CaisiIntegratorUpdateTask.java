@@ -327,7 +327,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		ClientImage clientImage = clientImageDAO.getClientImage(demographicId.toString());
+		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
 		if (clientImage == null) return;
 
 		CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
