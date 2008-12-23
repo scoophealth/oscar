@@ -312,6 +312,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
 			if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
 			if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
+			cal.setTime(0, 0, 0);
 			cachedDemographic.setBirthDate(cal);
 		} catch (NumberFormatException e) {
 			logger.error("Unexpected error.", e);

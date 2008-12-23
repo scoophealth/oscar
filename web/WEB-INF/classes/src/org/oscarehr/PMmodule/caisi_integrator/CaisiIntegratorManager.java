@@ -250,4 +250,16 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
+//	public HnrWs getHnrWs(int facilityId) throws MalformedURLException {
+//		Facility facility = getLocalFacility(facilityId);
+//
+//		HnrWsService service = new HnrWsService(buildURL(facility, "HnrService"));
+//		HnrWs port = service.getHnrWsPort();
+//
+//		CxfClientUtils.configureClientConnection(port);
+//		addAuthenticationInterceptor(facility, port);
+//
+//		return (port);
+//	}
+
 }
