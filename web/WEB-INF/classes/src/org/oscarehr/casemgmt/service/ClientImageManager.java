@@ -32,15 +32,6 @@ public class ClientImageManager {
         this.clientImageDAO = dao;
     }
 
-    public byte[] getClientImage(String id, String image_type) {
-        //System.out.println("QQQQQQQQQQQQQQQQQQQQQ"+id +image_type);
-        ClientImage image = clientImageDAO.getClientImage(id, image_type);
-        if (image != null) {
-            return image.getImage_data();
-        }
-        return null;
-    }
-
     public void saveClientImage(String id, byte[] image_data, String image_type) {
         ClientImage clientImage = new ClientImage();
         clientImage.setDemographic_no(Integer.parseInt(id));
