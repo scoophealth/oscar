@@ -52,7 +52,7 @@ public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
 
 	/**
 	 * @param maxDataAge in ms
-	 * @param checkPeriod in ms
+	 * @param checkPeriod in ms (make sure you don't thrash your jvm)
 	 */
 	public TimeClearedHashMap(long maxDataAge, long checkPeriod) {
 		this.maxDataAge = maxDataAge;
