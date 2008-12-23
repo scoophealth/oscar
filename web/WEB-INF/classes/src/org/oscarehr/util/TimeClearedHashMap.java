@@ -29,6 +29,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.WeakHashMap;
 
+/**
+ * This is a hash map for which every entry is timestamped upon it being added to the hashmap.
+ * There is a reaper thread which runs periodically removing entries older than a certain age.
+ * <br /><br />
+ * Note this does not limit the number of entries in the map so you should use this only 
+ * in places which you can for the most part guarantee that the memory usage won't be a problem. 
+ */
 public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
 	private static Timer timer = new Timer(TimeClearedHashMap.class.getName(), true);
 
