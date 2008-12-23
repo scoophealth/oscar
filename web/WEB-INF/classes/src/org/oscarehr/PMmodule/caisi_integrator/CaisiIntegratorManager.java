@@ -52,205 +52,202 @@ import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
 
 public class CaisiIntegratorManager {
 
-    private FacilityDao facilityDao;
+	private FacilityDao facilityDao;
 
-    public void setFacilityDao(FacilityDao facilityDao) {
-	this.facilityDao = facilityDao;
-    }
-
-    /**
-     * This is a simple cache mechanism which removes objects based on time.
-     */
-    private static FacilitySegmentedTimeClearedHashMap simpleTimeCache = new FacilitySegmentedTimeClearedHashMap(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
-
-    public boolean isIntegratorEnabled(int facilityId) {
-	Facility facility = getLocalFacility(facilityId);
-	if (facility != null && facility.isIntegratorEnabled() == true)
-	    return (true);
-	else
-	    return (false);
-    }
-
-    private Facility getLocalFacility(int facilityId) {
-	return (facilityDao.find(facilityId));
-    }
-
-    private void addAuthenticationInterceptor(Facility facility, Object wsPort) {
-	Client cxfClient = ClientProxy.getClient(wsPort);
-	cxfClient.getOutInterceptors().add(new AuthenticationOutInterceptor(facility.getIntegratorUser(), facility.getIntegratorPassword()));
-    }
-
-    private URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {
-	return (new URL(facility.getIntegratorUrl() + '/' + servicePoint + "?wsdl"));
-    }
-
-    public FacilityWs getFacilityWs(int facilityId) throws MalformedURLException {
-	Facility facility = getLocalFacility(facilityId);
-
-	FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
-	FacilityWs port = service.getFacilityWsPort();
-
-	CxfClientUtils.configureClientConnection(port);
-	addAuthenticationInterceptor(facility, port);
-
-	return (port);
-    }
-
-    public void flushCachedFacilityInfo(int facilityId) {
-	simpleTimeCache.remove(facilityId, "ALL_REMOTE_FACILITIES");
-    }
-
-    public List<CachedFacility> getRemoteFacilities(int facilityId) throws MalformedURLException {
-	@SuppressWarnings("unchecked")
-	List<CachedFacility> results = (List<CachedFacility>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
-
-	if (results == null) {
-	    FacilityWs facilityWs = getFacilityWs(facilityId);
-	    results = facilityWs.getAllFacility();
-	    simpleTimeCache.put(facilityId, "ALL_REMOTE_FACILITIES", results);
+	public void setFacilityDao(FacilityDao facilityDao) {
+		this.facilityDao = facilityDao;
 	}
 
-	// cloned so alterations don't affect the cached data
-	return (new ArrayList<CachedFacility>(results));
-    }
+	/**
+	 * This is a simple cache mechanism which removes objects based on time.
+	 */
+	private static FacilitySegmentedTimeClearedHashMap simpleTimeCache = new FacilitySegmentedTimeClearedHashMap(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
-    public CachedFacility getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException {
-	for (CachedFacility facility : getRemoteFacilities(myFacilityId)) {
-	    if (facility.getIntegratorFacilityId().equals(remoteFacilityId))
-		return (facility);
+	public boolean isIntegratorEnabled(int facilityId) {
+		Facility facility = getLocalFacility(facilityId);
+		if (facility != null && facility.isIntegratorEnabled() == true) return (true);
+		else return (false);
 	}
 
-	return (null);
-    }
-
-    public DemographicWs getDemographicWs(int facilityId) throws MalformedURLException {
-	Facility facility = getLocalFacility(facilityId);
-
-	DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
-	DemographicWs port = service.getDemographicWsPort();
-
-	CxfClientUtils.configureClientConnection(port);
-	addAuthenticationInterceptor(facility, port);
-
-	return (port);
-    }
-
-    public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
-	Facility facility = getLocalFacility(facilityId);
-
-	ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
-	ProgramWs port = service.getProgramWsPort();
-
-	CxfClientUtils.configureClientConnection(port);
-	addAuthenticationInterceptor(facility, port);
-
-	return (port);
-    }
-
-    public List<CachedProgram> getRemotePrograms(int facilityId) throws MalformedURLException {
-	@SuppressWarnings("unchecked")
-	List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
-
-	if (results == null) {
-	    ProgramWs programWs = getProgramWs(facilityId);
-	    results = programWs.getAllPrograms();
-	    simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS", results);
+	private Facility getLocalFacility(int facilityId) {
+		return (facilityDao.find(facilityId));
 	}
 
-	// cloned so alterations don't affect the cached data
-	return (new ArrayList<CachedProgram>(results));
-    }
-
-    public CachedProgram getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
-	List<CachedProgram> programs = getRemotePrograms(facilityId);
-
-	for (CachedProgram cachedProgram : programs) {
-	    if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
-		return (cachedProgram);
-	    }
+	private void addAuthenticationInterceptor(Facility facility, Object wsPort) {
+		Client cxfClient = ClientProxy.getClient(wsPort);
+		cxfClient.getOutInterceptors().add(new AuthenticationOutInterceptor(facility.getIntegratorUser(), facility.getIntegratorPassword()));
 	}
 
-	return (null);
-    }
-
-    private static boolean facilityIdIntegerPkEquals(FacilityIdIntegerCompositePk o1, FacilityIdIntegerCompositePk o2) {
-	try {
-	    return (o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
-	} catch (RuntimeException e) {
-	    return (false);
-	}
-    }
-
-    public List<CachedProgram> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException {
-	@SuppressWarnings("unchecked")
-	List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
-
-	if (results == null) {
-	    ProgramWs programWs = getProgramWs(facilityId);
-	    results = programWs.getAllProgramsAllowingIntegratedReferrals();
-	    simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", results);
+	private URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {
+		return (new URL(facility.getIntegratorUrl() + '/' + servicePoint + "?wsdl"));
 	}
 
-	// cloned so alterations don't affect the cached data
-	return (new ArrayList<CachedProgram>(results));
-    }
+	public FacilityWs getFacilityWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
 
-    public ProviderWs getProviderWs(int facilityId) throws MalformedURLException {
-	Facility facility = getLocalFacility(facilityId);
+		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
+		FacilityWs port = service.getFacilityWsPort();
 
-	ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderService"));
-	ProviderWs port = service.getProviderWsPort();
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
 
-	CxfClientUtils.configureClientConnection(port);
-	addAuthenticationInterceptor(facility, port);
-
-	return (port);
-    }
-
-    public List<CachedProvider> getAllProviders(int facilityId) throws MalformedURLException {
-	@SuppressWarnings("unchecked")
-	List<CachedProvider> results = (List<CachedProvider>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
-
-	if (results == null) {
-	    ProviderWs providerWs = getProviderWs(facilityId);
-	    results = providerWs.getAllProviders();
-	    simpleTimeCache.put(facilityId, "ALL_REMOTE_PROVIDERS", results);
+		return (port);
 	}
 
-	// cloned so alterations don't affect the cached data
-	return (new ArrayList<CachedProvider>(results));
-    }
-
-    public CachedProvider getProvider(int facilityId, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException {
-	List<CachedProvider> providers = getAllProviders(facilityId);
-
-	for (CachedProvider cachedProvider : providers) {
-	    if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdStringCompositePk(), remoteProviderPk)) {
-		return (cachedProvider);
-	    }
+	public void flushCachedFacilityInfo(int facilityId) {
+		simpleTimeCache.remove(facilityId, "ALL_REMOTE_FACILITIES");
 	}
 
-	return (null);
-    }
+	public List<CachedFacility> getRemoteFacilities(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedFacility> results = (List<CachedFacility>) simpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
 
-    private static boolean facilityProviderPrimaryKeyEquals(FacilityIdStringCompositePk o1, FacilityIdStringCompositePk o2) {
-	try {
-	    return (o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
-	} catch (RuntimeException e) {
-	    return (false);
+		if (results == null) {
+			FacilityWs facilityWs = getFacilityWs(facilityId);
+			results = facilityWs.getAllFacility();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_FACILITIES", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedFacility>(results));
 	}
-    }
 
-    public ReferralWs getReferralWs(int facilityId) throws MalformedURLException {
-	Facility facility = getLocalFacility(facilityId);
+	public CachedFacility getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException {
+		for (CachedFacility facility : getRemoteFacilities(myFacilityId)) {
+			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return (facility);
+		}
 
-	ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
-	ReferralWs port = service.getReferralWsPort();
+		return (null);
+	}
 
-	CxfClientUtils.configureClientConnection(port);
-	addAuthenticationInterceptor(facility, port);
+	public DemographicWs getDemographicWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
 
-	return (port);
-    }
+		DemographicWsService service = new DemographicWsService(buildURL(facility, "DemographicService"));
+		DemographicWs port = service.getDemographicWsPort();
+
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
+	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		ProgramWsService service = new ProgramWsService(buildURL(facility, "ProgramService"));
+		ProgramWs port = service.getProgramWsPort();
+
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
+	public List<CachedProgram> getRemotePrograms(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
+
+		if (results == null) {
+			ProgramWs programWs = getProgramWs(facilityId);
+			results = programWs.getAllPrograms();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedProgram>(results));
+	}
+
+	public CachedProgram getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
+		List<CachedProgram> programs = getRemotePrograms(facilityId);
+
+		for (CachedProgram cachedProgram : programs) {
+			if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
+				return (cachedProgram);
+			}
+		}
+
+		return (null);
+	}
+
+	private static boolean facilityIdIntegerPkEquals(FacilityIdIntegerCompositePk o1, FacilityIdIntegerCompositePk o2) {
+		try {
+			return (o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
+		} catch (RuntimeException e) {
+			return (false);
+		}
+	}
+
+	public List<CachedProgram> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedProgram> results = (List<CachedProgram>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
+
+		if (results == null) {
+			ProgramWs programWs = getProgramWs(facilityId);
+			results = programWs.getAllProgramsAllowingIntegratedReferrals();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedProgram>(results));
+	}
+
+	public ProviderWs getProviderWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		ProviderWsService service = new ProviderWsService(buildURL(facility, "ProviderService"));
+		ProviderWs port = service.getProviderWsPort();
+
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
+	public List<CachedProvider> getAllProviders(int facilityId) throws MalformedURLException {
+		@SuppressWarnings("unchecked")
+		List<CachedProvider> results = (List<CachedProvider>) simpleTimeCache.get(facilityId, "ALL_REMOTE_PROVIDERS");
+
+		if (results == null) {
+			ProviderWs providerWs = getProviderWs(facilityId);
+			results = providerWs.getAllProviders();
+			simpleTimeCache.put(facilityId, "ALL_REMOTE_PROVIDERS", results);
+		}
+
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedProvider>(results));
+	}
+
+	public CachedProvider getProvider(int facilityId, FacilityIdStringCompositePk remoteProviderPk) throws MalformedURLException {
+		List<CachedProvider> providers = getAllProviders(facilityId);
+
+		for (CachedProvider cachedProvider : providers) {
+			if (facilityProviderPrimaryKeyEquals(cachedProvider.getFacilityIdStringCompositePk(), remoteProviderPk)) {
+				return (cachedProvider);
+			}
+		}
+
+		return (null);
+	}
+
+	private static boolean facilityProviderPrimaryKeyEquals(FacilityIdStringCompositePk o1, FacilityIdStringCompositePk o2) {
+		try {
+			return (o1.getIntegratorFacilityId().equals(o2.getIntegratorFacilityId()) && o1.getCaisiItemId().equals(o2.getCaisiItemId()));
+		} catch (RuntimeException e) {
+			return (false);
+		}
+	}
+
+	public ReferralWs getReferralWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
+		ReferralWs port = service.getReferralWsPort();
+
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
 
 }
