@@ -54,7 +54,7 @@ public class ClientImageDAO extends HibernateDaoSupport {
 		getHibernateTemplate().saveOrUpdate(clientImage);
 
 		// update cache
-		dataCache.put(clientImage.getDemographic_no(), clientImage);
+		dataCache.remove(clientImage.getDemographic_no());
 	}
 
 	public ClientImage getClientImage(Integer clientId) {
