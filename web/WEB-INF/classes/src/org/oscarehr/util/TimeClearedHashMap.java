@@ -30,89 +30,86 @@ import java.util.TimerTask;
 import java.util.WeakHashMap;
 
 public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
-    private static Timer timer = new Timer(TimeClearedHashMap.class.getName(), true);
+	private static Timer timer = new Timer(TimeClearedHashMap.class.getName(), true);
 
-    /** E should be the item added and Long should be the time it was added in ms */
-    private WeakHashMap<K, Long> data = new WeakHashMap<K, Long>();
+	/** E should be the item added and Long should be the time it was added in ms */
+	private WeakHashMap<K, Long> data = new WeakHashMap<K, Long>();
 
-    private TimerTask timerTask = new TimerTask() {
-        public void run() {
-            removeOld();
-        }
-    };
+	private TimerTask timerTask = new TimerTask() {
+		public void run() {
+			removeOld();
+		}
+	};
 
-    private long maxDataAge = -1;
+	private long maxDataAge = -1;
 
-    /**
-     * @param maxDataAge
-     *            in ms
-     * @param checkPeriod
-     *            in ms
-     */
-    public TimeClearedHashMap(long maxDataAge, long checkPeriod) {
-        this.maxDataAge = maxDataAge;
-        timer.schedule(timerTask, checkPeriod, checkPeriod);
-    }
+	/**
+	 * @param maxDataAge in ms
+	 * @param checkPeriod in ms
+	 */
+	public TimeClearedHashMap(long maxDataAge, long checkPeriod) {
+		this.maxDataAge = maxDataAge;
+		timer.schedule(timerTask, checkPeriod, checkPeriod);
+	}
 
-    public void removeOld() {
-        try {
-            long tooOld = System.currentTimeMillis() - maxDataAge;
+	public void removeOld() {
+		try {
+			long tooOld = System.currentTimeMillis() - maxDataAge;
 
-            Iterator<K> it = data.keySet().iterator();
-            while (it.hasNext()) {
-                K key = it.next();
-                Long value = data.get(key);
+			Iterator<K> it = data.keySet().iterator();
+			while (it.hasNext()) {
+				K key = it.next();
+				Long value = data.get(key);
 
-                if (value < tooOld) {
-                    it.remove();
-                    remove(key);
-                }
-            }
-        }
-        catch (ConcurrentModificationException e) {
-            // that's okay, we'll try again next time.
-        }
-    }
+				if (value < tooOld) {
+					it.remove();
+					remove(key);
+				}
+			}
+		} catch (ConcurrentModificationException e) {
+			// that's okay, we'll try again next time.
+		}
+	}
 
-    public V put(K key, V value) {
-        V result=super.put(key, value);
-        data.put(key, System.currentTimeMillis());
-        return (result);
-    }
+	public V put(K key, V value) {
+		V result = super.put(key, value);
+		data.put(key, System.currentTimeMillis());
+		return (result);
+	}
 
-    public void putAll(Map<? extends K, ? extends V> m) {
-        super.putAll(m);
-        for (K key : m.keySet()) {
-            data.put(key, System.currentTimeMillis());
-        }
-    }
+	public void putAll(Map<? extends K, ? extends V> m) {
+		super.putAll(m);
+		for (K key : m.keySet()) {
+			data.put(key, System.currentTimeMillis());
+		}
+	}
 
-    // @Test
-    // public void test() throws InterruptedException {
-    public static void main(String... argv) throws Exception { 
-        TimeClearedHashMap<String,String> map = new TimeClearedHashMap<String,String>(1000, 25);
-        map.put("foo", "FOO");
-        // assertEquals(1, map.size());
-        if (map.size()!=1) throw(new IllegalStateException());
+	// @Test
+	// public void test() throws InterruptedException {
+	public static void main(String... argv) throws Exception {
+		TimeClearedHashMap<String, String> map = new TimeClearedHashMap<String, String>(1000, 25);
+		map.put("foo", "FOO");
+		// assertEquals(1, map.size());
+		if (map.size() != 1) throw (new IllegalStateException());
 
-        Thread.sleep(600);
-        map.put("bar", "BAR");
-        // assertEquals(2, map.size());
-        if (map.size()!=2) throw(new IllegalStateException());        
-        
-        Thread.sleep(600);
-        // assertEquals(1, map.size());
-        if (map.size()!=1) throw(new IllegalStateException());        
-        if (map.data.size()!=1) throw(new IllegalStateException());        
-        map.put("bar", "BAR");
-        map.put("blah", "BLAH");
-        // assertEquals(2, map.size());
-        if (map.size()!=2) throw(new IllegalStateException());        
-        if (map.data.size()!=2) throw(new IllegalStateException());
-        
-        if (!map.get("bar").equals("BAR")) throw(new IllegalStateException());
-        
-        System.err.println("all good");
-    }
-    
+		Thread.sleep(600);
+		map.put("bar", "BAR");
+		// assertEquals(2, map.size());
+		if (map.size() != 2) throw (new IllegalStateException());
+
+		Thread.sleep(600);
+		// assertEquals(1, map.size());
+		if (map.size() != 1) throw (new IllegalStateException());
+		if (map.data.size() != 1) throw (new IllegalStateException());
+		map.put("bar", "BAR");
+		map.put("blah", "BLAH");
+		// assertEquals(2, map.size());
+		if (map.size() != 2) throw (new IllegalStateException());
+		if (map.data.size() != 2) throw (new IllegalStateException());
+
+		if (!map.get("bar").equals("BAR")) throw (new IllegalStateException());
+
+		System.err.println("all good");
+	}
+
 }

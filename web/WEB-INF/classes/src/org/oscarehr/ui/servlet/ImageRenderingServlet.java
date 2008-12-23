@@ -19,16 +19,16 @@ import org.oscarehr.util.SpringUtils;
 /**
  * This servlet requires a parameter called "source" which should signify where to get the image from. Examples include source=local_client, or source=hnr_client. Depending on the source, you may optionally need more parameters, as examples a local_client
  * may need a clientId=5 or a hnr_client may need integratorFacilityId=3&caisiClientId=9. <br />
- * <br /><br />
- * The structure of this class follows the structure of the Servlet class itself in the pattern of the service() -> (doPost/doGet/doDelete), from the doGet we fork to each specific source processor.
- * <br /><br />
- * This servlet assumes the image exists, for the most part this servlet is a "drop in" replacement for serving images from the HD directly, i.e. things like existence and appropriateness of the image 
- * should have already been checked. In general security should also be checked before hand, we also check again here as security is a special case.
+ * <br />
+ * The structure of this class follows the structure of the Servlet class itself in the pattern of the service() -> (doPost/doGet/doDelete), from the doGet we fork to each specific source processor. <br />
+ * <br />
+ * This servlet assumes the image exists, for the most part this servlet is a "drop in" replacement for serving images from the HD directly, i.e. things like existence and appropriateness of the image should have already been checked. In general security
+ * should also be checked before hand, we also check again here as security is a special case.
  */
 public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
-	private ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
-	
+	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
+
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			String source = request.getParameter("source");
@@ -55,8 +55,7 @@ public class ImageRenderingServlet extends HttpServlet {
 	 * 
 	 * @param response
 	 * @param image
-	 * @param imageType
-	 *            image sub type of the contentType, i.e. "jpeg" "png"
+	 * @param imageType image sub type of the contentType, i.e. "jpeg" "png"
 	 * @throws IOException
 	 */
 	private static final void renderImage(HttpServletResponse response, byte[] image, String imageType) throws IOException {
@@ -69,40 +68,35 @@ public class ImageRenderingServlet extends HttpServlet {
 
 	private void renderHnrClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects integratorFacilityId and caisiClientId as parameters
-		
+
 		// security check
-		HttpSession session=request.getSession();
-		Provider provider=(Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-		if (provider==null)
-		{
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
-response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,"Not implemented yet.");
+response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Not implemented yet.");
 	}
 
 	private void renderLocalClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects clientId as a parameter
-		
+
 		// security check
-		HttpSession session=request.getSession();
-		Provider provider=(Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-		if (provider==null)
-		{
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
-		
+
 		// get image
-		ClientImage clientImage=clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
-		if (clientImage==null || !"jpg".equals(clientImage.getImage_type()))
-		{
+		ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
+		if (clientImage == null || !"jpg".equals(clientImage.getImage_type())) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
-		}
-		else
-		{
+		} else {
 			renderImage(response, clientImage.getImage_data(), "jpeg");
 		}
 	}
