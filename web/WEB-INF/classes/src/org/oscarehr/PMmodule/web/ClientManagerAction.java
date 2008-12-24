@@ -94,7 +94,6 @@ import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
@@ -1102,7 +1101,7 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("programs", programManager.search(criteria));
 
 		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-		if (facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
+		if (caisiIntegratorManager.isEnableIntegratedReferrals(facility.getId())) {
 			try {
 				List<CachedProgram> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
 				filterResultsByCriteria(results, criteria);

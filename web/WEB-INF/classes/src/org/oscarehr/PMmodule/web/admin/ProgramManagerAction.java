@@ -117,12 +117,10 @@ public class ProgramManagerAction extends BaseAction {
 
 			if (userrole.indexOf("admin") != -1) {
 				list = programManager.getAllPrograms();
-			}
-			else {
+			} else {
 				list = programManager.getProgramDomain(providerNo);
 			}
-		}
-		else {
+		} else {
 			list = programManager.getAllPrograms(searchStatus, searchType, Integer.parseInt(searchFacilityId));
 		}
 		request.setAttribute("programs", list);
@@ -525,21 +523,19 @@ public class ProgramManagerAction extends BaseAction {
 		DynaActionForm programForm = (DynaActionForm) form;
 		Program program = (Program) programForm.get("program");
 
-		Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		
-		Integer remoteReferralId=Integer.valueOf(request.getParameter("remoteReferralId"));
-		
+		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+
+		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
+
 		try {
 			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
 			referralWs.removeReferral(remoteReferralId);
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
+			logger.error("Unexpected error", e);
+		} catch (WebServiceException e) {
 			logger.error("Unexpected error", e);
 		}
-		catch (WebServiceException e) {
-			logger.error("Unexpected error", e);
-		}
-		
+
 		setEditAttributes(request, String.valueOf(program.getId()));
 		return mapping.findForward("edit");
 	}
@@ -646,8 +642,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		try {
 			program.setFacilityId(Integer.parseInt(request.getParameter("program.facilityId")));
-		}
-		catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 
@@ -932,7 +927,7 @@ public class ProgramManagerAction extends BaseAction {
 			request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 			request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
 
-			if (facility != null && facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals()) {
+			if (caisiIntegratorManager.isEnableIntegratedReferrals(facility.getId())) {
 				request.setAttribute("remoteQueue", getRemoteQueue(facility.getId(), Integer.parseInt(programId)));
 			}
 
@@ -990,12 +985,10 @@ public class ProgramManagerAction extends BaseAction {
 				RemoteQueueEntry remoteQueueEntry = new RemoteQueueEntry();
 				remoteQueueEntry.setReferral(remoteReferral);
 
-				CachedDemographic cachedDemographic = demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(),
-						remoteReferral.getSourceCaisiDemographicId());
+				CachedDemographic cachedDemographic = demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 				if (cachedDemographic != null) {
-					remoteQueueEntry.setClientName(cachedDemographic.getLastName() + ", " +cachedDemographic.getFirstName());
-				}
-				else {
+					remoteQueueEntry.setClientName(cachedDemographic.getLastName() + ", " + cachedDemographic.getFirstName());
+				} else {
 					remoteQueueEntry.setClientName("N/A");
 				}
 
@@ -1004,20 +997,17 @@ public class ProgramManagerAction extends BaseAction {
 				pk.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
 				CachedProvider cachedProvider = caisiIntegratorManager.getProvider(facilityId, pk);
 				if (cachedProvider != null) {
-					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " +cachedProvider.getFirstName());
-				}
-				else {
+					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " + cachedProvider.getFirstName());
+				} else {
 					remoteQueueEntry.setProviderName("N/A");
 				}
 
 				results.add(remoteQueueEntry);
 			}
 			return (results);
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			logger.error("Unexpected Error.", e);
-		}
-		catch (WebServiceException e) {
+		} catch (WebServiceException e) {
 			logger.error("Unexpected Error.", e);
 		}
 
@@ -1146,19 +1136,14 @@ public class ProgramManagerAction extends BaseAction {
 	private boolean isChanged(Program program1, Program program2) {
 		boolean changed = false;
 
-		if (program1.getMaxAllowed().intValue() != program2.getMaxAllowed().intValue() || !program1.getName().equals(program2.getName())
-				|| !program1.getType().equals(program2.getType()) || !program1.getDescription().equals(program2.getDescription())
-				|| !program1.getAddress().equals(program2.getAddress()) || !program1.getPhone().equals(program2.getPhone()) || !program1.getFax().equals(program2.getFax())
-				|| !program1.getUrl().equals(program2.getUrl()) || !program1.getEmail().equals(program2.getEmail())
-				|| !program1.getEmergencyNumber().equals(program2.getEmergencyNumber()) || !program1.getLocation().equals(program2.getLocation())
-				|| !program1.getProgramStatus().equals(program2.getProgramStatus()) || !program1.getBedProgramLinkId().equals(program2.getBedProgramLinkId())
-				|| !program1.getManOrWoman().equals(program2.getManOrWoman()) || !program1.getAbstinenceSupport().equals(program2.getAbstinenceSupport())
-				|| !program1.getExclusiveView().equals(program2.getExclusiveView()) || (program1.isHoldingTank() ^ program2.isHoldingTank())
-				|| (program1.isAllowBatchAdmission() ^ program2.isAllowBatchAdmission()) || (program1.isAllowBatchDischarge() ^ program2.isAllowBatchDischarge())
-				|| (program1.isHic() ^ program2.isHic()) || (program1.isTransgender() ^ program2.isTransgender()) || (program1.isFirstNation() ^ program2.isFirstNation())
-				|| (program1.isBedProgramAffiliated() ^ program2.isBedProgramAffiliated()) || (program1.isAlcohol() ^ program2.isAlcohol())
-				|| (program1.isPhysicalHealth() ^ program2.isPhysicalHealth()) || (program1.isMentalHealth() ^ program2.isMentalHealth())
-				|| (program1.getFacilityId() != program2.getFacilityId()) || (program1.isHousing() ^ program2.isHousing()))
+		if (program1.getMaxAllowed().intValue() != program2.getMaxAllowed().intValue() || !program1.getName().equals(program2.getName()) || !program1.getType().equals(program2.getType()) || !program1.getDescription().equals(program2.getDescription())
+		        || !program1.getAddress().equals(program2.getAddress()) || !program1.getPhone().equals(program2.getPhone()) || !program1.getFax().equals(program2.getFax()) || !program1.getUrl().equals(program2.getUrl())
+		        || !program1.getEmail().equals(program2.getEmail()) || !program1.getEmergencyNumber().equals(program2.getEmergencyNumber()) || !program1.getLocation().equals(program2.getLocation())
+		        || !program1.getProgramStatus().equals(program2.getProgramStatus()) || !program1.getBedProgramLinkId().equals(program2.getBedProgramLinkId()) || !program1.getManOrWoman().equals(program2.getManOrWoman())
+		        || !program1.getAbstinenceSupport().equals(program2.getAbstinenceSupport()) || !program1.getExclusiveView().equals(program2.getExclusiveView()) || (program1.isHoldingTank() ^ program2.isHoldingTank())
+		        || (program1.isAllowBatchAdmission() ^ program2.isAllowBatchAdmission()) || (program1.isAllowBatchDischarge() ^ program2.isAllowBatchDischarge()) || (program1.isHic() ^ program2.isHic())
+		        || (program1.isTransgender() ^ program2.isTransgender()) || (program1.isFirstNation() ^ program2.isFirstNation()) || (program1.isBedProgramAffiliated() ^ program2.isBedProgramAffiliated()) || (program1.isAlcohol() ^ program2.isAlcohol())
+		        || (program1.isPhysicalHealth() ^ program2.isPhysicalHealth()) || (program1.isMentalHealth() ^ program2.isMentalHealth()) || (program1.getFacilityId() != program2.getFacilityId()) || (program1.isHousing() ^ program2.isHousing()))
 
 		changed = true;
 

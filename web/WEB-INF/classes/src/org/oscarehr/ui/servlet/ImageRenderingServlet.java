@@ -10,15 +10,16 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
-import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hnr.ws.client.HnrWs;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 /**
  * This servlet requires a parameter called "source" which should signify where to get the image from. Examples include source=local_client, or source=hnr_client. Depending on the source, you may optionally need more parameters, as examples a local_client
- * may need a clientId=5 or a hnr_client may need integratorFacilityId=3&caisiClientId=9. <br />
+ * may need a clientId=5 or a hnr_client may need hin=3. <br />
  * <br />
  * The structure of this class follows the structure of the Servlet class itself in the pattern of the service() -> (doPost/doGet/doDelete), from the doGet we fork to each specific source processor. <br />
  * <br />
@@ -28,7 +29,8 @@ import org.oscarehr.util.SpringUtils;
 public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
 	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
-
+	private CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+	
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			String source = request.getParameter("source");
@@ -77,7 +79,17 @@ public class ImageRenderingServlet extends HttpServlet {
 			return;
 		}
 
-response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Not implemented yet.");
+		// get image
+		Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacilityId);
+		String dataRequester="caisi logged in facilityId="+loggedInFacilityId+", logged in providerId="+provider.getProviderNo();
+		org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=hnrWs.getClientImage2(dataRequester, request.getParameter("hin"));
+
+		if (hnrClientImage != null) {
+			renderImage(response, hnrClientImage.getImage(), "jpeg");
+		} else {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
 	}
 
 	private void renderLocalClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -92,12 +104,11 @@ response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Not implemented 
 		}
 
 		// get image
-		ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
-		if (clientImage == null || !"jpg".equals(clientImage.getImage_type())) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return;
-		} else {
+		org.oscarehr.casemgmt.model.ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
+		if (clientImage != null && "jpg".equals(clientImage.getImage_type())) {
 			renderImage(response, clientImage.getImage_data(), "jpeg");
+		} else {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
 	}
 

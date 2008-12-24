@@ -3,21 +3,24 @@
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
+<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
 <%@page	import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.casemgmt.dao.ClientImageDAO"%>
-<%@page import="org.oscarehr.casemgmt.model.ClientImage"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
 <%@page import="oscar.OscarProperties"%>
+<%@page import="org.oscarehr.hnr.ws.client.HnrWs"%>
+
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	Provider loggedInProvider=(Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 %>
+
 
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
@@ -94,10 +97,11 @@ function openSurvey() {
 
 </script>
 
-<div style="text-align:right">
+<div>
 	<%
+		// sort out local image
 		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
-		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
+		org.oscarehr.casemgmt.model.ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
 		
 		String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
 		String imagePresentPlaceholderUrl="/images/default_img.jpg";
@@ -110,8 +114,63 @@ function openSurvey() {
 			imagePlaceholder=imagePresentPlaceholderUrl;
 			imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographic.getDemographicNo();
 		}
+
+		// sort out hnr image
+		String hnrImagePlaceholder=imageMissingPlaceholderUrl;
+		String hnrImageUrl=imageMissingPlaceholderUrl;
+		boolean showHnrImage=false;
+		
+		try
+		{
+			if (currentDemographic.getHin()!=null && caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInFacilityId))
+			{
+				HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacilityId);
+				String dataRequester="caisi logged in facilityId="+loggedInFacilityId+", logged in providerId="+loggedInProvider.getProviderNo();
+				org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=hnrWs.getClientImage2(dataRequester, currentDemographic.getHin());
+	
+				if (hnrClientImage!=null)
+				{
+					hnrImagePlaceholder=imagePresentPlaceholderUrl;
+					hnrImageUrl="/imageRenderingServlet?source=hnr_client&hin="+currentDemographic.getHin();
+				}			
+
+				showHnrImage=true;
+			}
+		}
+		catch (Exception e)
+		{
+			// most likely integrator is not reachable.
+			e.printStackTrace();
+		}
 	%>
-	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
+	<table style="margin-left:auto">
+		<tr>
+			<td style="text-align:center">Local Picture</td>
+			<%
+				if (showHnrImage)
+				{
+					%>
+						<td style="text-align:center">HNR Picture</td>
+					<%
+				}
+			%>
+		</tr>
+		<tr>
+			<td>
+				<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
+			</td>
+			<%
+				if (showHnrImage)
+				{
+					%>
+						<td>
+							<img style="height:96px; width:96px" src="<%=request.getContextPath()+hnrImagePlaceholder%>" alt="hnr_client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+hnrImageUrl%>'" onmouseout="src='<%=request.getContextPath()+hnrImagePlaceholder%>'" />		
+						</td>
+					<%
+				}
+			%>
+		</tr>
+	</table>
 </div>
 
 <div class="tabs">
