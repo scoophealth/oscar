@@ -116,8 +116,13 @@ function openSurvey() {
 		}
 
 		// sort out hnr image
+		//----
+		// note that the showHnrImage boolean and checking for hnrClientImage!=null
+		// is not the same thing, the hnr image should be shown if the integrator is enabled and running, even if there's no image
+		// checking != null will only tell you if there is or is not an image.
 		String hnrImagePlaceholder=imageMissingPlaceholderUrl;
 		String hnrImageUrl=imageMissingPlaceholderUrl;
+		org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=null;
 		boolean showHnrImage=false;
 		
 		try
@@ -126,7 +131,7 @@ function openSurvey() {
 			{
 				HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacilityId);
 				String dataRequester="caisi logged in facilityId="+loggedInFacilityId+", logged in providerId="+loggedInProvider.getProviderNo();
-				org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=hnrWs.getClientImage2(dataRequester, currentDemographic.getHin());
+				hnrClientImage=hnrWs.getClientImage2(dataRequester, currentDemographic.getHin());
 	
 				if (hnrClientImage!=null)
 				{
@@ -150,6 +155,7 @@ function openSurvey() {
 				if (showHnrImage)
 				{
 					%>
+						<td></td>
 						<td style="text-align:center">HNR Picture</td>
 					<%
 				}
@@ -163,6 +169,11 @@ function openSurvey() {
 				if (showHnrImage)
 				{
 					%>
+						<td style="text-align:center">
+							<input type="button" value="Send To Hnr -->" <%=clientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this is a true likeness of <%=currentDemographic.getFormattedName()%>')" />
+							<br /><br />
+							<input type="button" value="<-- Copy From Hnr" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Would you like to copy the HNR picture of this client to your local system?')" />
+						</td>
 						<td>
 							<img style="height:96px; width:96px" src="<%=request.getContextPath()+hnrImagePlaceholder%>" alt="hnr_client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+hnrImageUrl%>'" onmouseout="src='<%=request.getContextPath()+hnrImagePlaceholder%>'" />		
 						</td>
