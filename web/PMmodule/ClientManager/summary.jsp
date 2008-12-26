@@ -170,9 +170,9 @@ function openSurvey() {
 				{
 					%>
 						<td style="text-align:center">
-							<input type="button" value="Send To Hnr -->" <%=clientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this is a true likeness of <%=currentDemographic.getFormattedName()%>')" />
+							<input type="button" value="Send To HNR -->" <%=clientImage==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this is a true likeness of <%=currentDemographic.getFormattedName()%>')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=sendImageToHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
 							<br /><br />
-							<input type="button" value="<-- Copy From Hnr" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Would you like to copy the HNR picture of this client to your local system?')" />
+							<input type="button" value="<-- Copy From HNR" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Would you like to copy the HNR picture of this client to your local system?')" />
 						</td>
 						<td>
 							<img style="height:96px; width:96px" src="<%=request.getContextPath()+hnrImagePlaceholder%>" alt="hnr_client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+hnrImageUrl%>'" onmouseout="src='<%=request.getContextPath()+hnrImagePlaceholder%>'" />		
@@ -181,6 +181,23 @@ function openSurvey() {
 				}
 			%>
 		</tr>
+		<%
+			if (showHnrImage)
+			{
+				%>
+					<tr>
+						<td></td>
+						<td></td>
+
+						<td style="text-align:center">
+							<input type="button" value="Flag Valid" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Please confirm that you believe this picture is an accurate photo of this client.')" />
+							<br />
+							<input type="button" value="Flag Invalid" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Please confirm that you do not believe this picture is an accurate photo of this client.')" />
+						</td>
+					</tr>
+				<%
+			}
+		%>
 	</table>
 </div>
 
