@@ -172,7 +172,7 @@ function openSurvey() {
 						<td style="text-align:center">
 							<input type="button" value="Send To HNR -->" <%=clientImage==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this is a true likeness of <%=currentDemographic.getFormattedName()%>')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=sendImageToHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
 							<br /><br />
-							<input type="button" value="<-- Copy From HNR" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Would you like to copy the HNR picture of this client to your local system?')" />
+							<input type="button" value="<-- Copy From HNR" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Would you like to copy the HNR picture of this client to your local system?')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=copyImageFromHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
 						</td>
 						<td>
 							<img style="height:96px; width:96px" src="<%=request.getContextPath()+hnrImagePlaceholder%>" alt="hnr_client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+hnrImageUrl%>'" onmouseout="src='<%=request.getContextPath()+hnrImagePlaceholder%>'" />		

@@ -139,8 +139,8 @@ public class ClientManagerAction extends BaseAction {
 	}
 
 	public void setDemographicDao(DemographicDao demographicDao) {
-    	this.demographicDao = demographicDao;
-    }
+		this.demographicDao = demographicDao;
+	}
 
 	public void setClientImageDAO(ClientImageDAO clientImageDAO) {
 		this.clientImageDAO = clientImageDAO;
@@ -167,37 +167,70 @@ public class ClientManagerAction extends BaseAction {
 
 	public ActionForward sendImageToHnr(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		try {
-	        Integer clientId = Integer.parseInt(request.getParameter("id"));
-	        org.oscarehr.casemgmt.model.ClientImage localClientImage=clientImageDAO.getClientImage(clientId);
-	        
-	        if (localClientImage!=null)
-	        {
-	    		HttpSession session = request.getSession();
-	    		Facility loggedInFacility=(Facility)session.getAttribute(SessionConstants.CURRENT_FACILITY);
-	    		Provider provider = (Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-	    		Demographic demographic=demographicDao.getDemographicById(clientId);
-	    		
-	    		HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacility.getId());
-	    		String dataSetter="caisi logged in facilityId="+loggedInFacility.getId()+", logged in providerId="+provider.getProviderNo();
-	    		
-	    		org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=new org.oscarehr.hnr.ws.client.ClientImage();
-	    		hnrClientImage.setCreatedBy(loggedInFacility.getName()+":"+provider.getFormattedName());
-	    		
-	    		//the following line shouldn't be here but our data in the db is so dirty some one needs to flag the warning.
-	    		if (StringUtils.trimToNull(demographic.getHin())==null) logger.error("Invalid data in the database, blank was set for the HIN, null should be used for no hin. clientId="+clientId);
-	    			
-	    		hnrClientImage.setHin(demographic.getHin());
-	    		hnrClientImage.setImage(localClientImage.getImage_data());
-	    		
-	    		hnrWs.setClientImage2(dataSetter, hnrClientImage);
-	        }
-	        else
-	        {
-	        	logger.warn("Odd, client image disappeared, either code error or some one removed the client image while some one was viewing it and just about to send it to the HNR. clientId="+request.getParameter("id"));
-	        }
-        } catch (Exception e) {
-        	logger.error("Unexpected error. QS="+request.getQueryString(), e);        	
-        }
+			Integer clientId = Integer.parseInt(request.getParameter("id"));
+			org.oscarehr.casemgmt.model.ClientImage localClientImage = clientImageDAO.getClientImage(clientId);
+
+			if (localClientImage != null) {
+				HttpSession session = request.getSession();
+				Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+				Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+				Demographic demographic = demographicDao.getDemographicById(clientId);
+
+				HnrWs hnrWs = caisiIntegratorManager.getHnrWs(loggedInFacility.getId());
+				String dataSetter = "caisi logged in facilityId=" + loggedInFacility.getId() + ", logged in providerId=" + provider.getProviderNo();
+
+				org.oscarehr.hnr.ws.client.ClientImage hnrClientImage = new org.oscarehr.hnr.ws.client.ClientImage();
+				hnrClientImage.setCreatedBy(loggedInFacility.getName() + ":" + provider.getFormattedName());
+
+				// the following if/else shouldn't be here but our data in the db is so dirty some one needs to flag the warning.
+				if (StringUtils.trimToNull(demographic.getHin()) == null) {
+					logger.error("Invalid data in the database, blank was set for the HIN, null should be used for no hin. clientId=" + clientId);
+				} else {
+					hnrClientImage.setHin(demographic.getHin());
+					hnrClientImage.setImage(localClientImage.getImage_data());
+
+					hnrWs.setClientImage2(dataSetter, hnrClientImage);
+				}
+			} else {
+				logger.warn("Odd, client image disappeared, either code error or some one removed the client image while some one was viewing it and just about to send it to the HNR. clientId=" + request.getParameter("id"));
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error. QS=" + request.getQueryString(), e);
+		}
+
+		DynaActionForm clientForm = (DynaActionForm) form;
+		clientForm.set("view", new ClientManagerFormBean());
+
+		return edit(mapping, form, request, response);
+	}
+
+	public ActionForward copyImageFromHnr(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Integer clientId = Integer.parseInt(request.getParameter("id"));
+			HttpSession session = request.getSession();
+			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+			Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+			Demographic demographic = demographicDao.getDemographicById(clientId);
+
+			// the following if/else block shouldn't be here but our data in the db is so dirty some one needs to flag the warning.
+			if (StringUtils.trimToNull(demographic.getHin()) == null) {
+				logger.error("Invalid data in the database, blank was set for the HIN, null should be used for no hin. clientId=" + clientId);
+			} else {
+				HnrWs hnrWs = caisiIntegratorManager.getHnrWs(loggedInFacility.getId());
+				String dataGetter = "caisi logged in facilityId=" + loggedInFacility.getId() + ", logged in providerId=" + provider.getProviderNo();
+
+				org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=hnrWs.getClientImage2(dataGetter, demographic.getHin());
+				org.oscarehr.casemgmt.model.ClientImage localClientImage=new org.oscarehr.casemgmt.model.ClientImage();
+				localClientImage.setDemographic_no(demographic.getDemographicNo());
+				localClientImage.setImage_data(hnrClientImage.getImage());
+				localClientImage.setImage_type("jpg");
+				localClientImage.setUpdate_date(new Date());
+				
+				clientImageDAO.saveClientImage(localClientImage);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error. QS=" + request.getQueryString(), e);
+		}
 
 		DynaActionForm clientForm = (DynaActionForm) form;
 		clientForm.set("view", new ClientManagerFormBean());
