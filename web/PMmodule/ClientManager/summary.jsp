@@ -182,7 +182,7 @@ function openSurvey() {
 			%>
 		</tr>
 		<%
-			if (showHnrImage)
+			if (showHnrImage && false)
 			{
 				%>
 					<tr>
@@ -235,8 +235,43 @@ function openSurvey() {
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<th width="20%">Health Card</th>
-			<td><c:out value="${client.hin}" />&nbsp;<c:out
-				value="${client.ver}" /></td>
+			<td>
+				<%
+					boolean showHnrHin=false;
+					String localHin=currentDemographic.getHin();
+					String hnrHin=null;
+					
+					if (!showHnrHin)
+					{
+						%>
+							<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
+						<%
+					}
+					else
+					{
+						%>
+							<table>
+								<tr>
+									<td>Local Heath Number</td>
+									<td><%=localHin%></td>
+								</tr>
+								<tr>
+									<td>
+										<input type="button" value="Send To HNR -->" <%=localHin==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this health number is accurate for <%=currentDemographic.getFormattedName()%>')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=sendHinToHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
+										<br /><br />
+										<input type="button" value="<-- Copy From HNR" <%=hnrHin==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Would you like to copy the HNR health number to your local system?')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=copyHinFromHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
+									</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>HNR Heath Number</td>
+									<td><%=hnrHin%></td>
+								</tr>
+							</table>
+						<%
+					}
+				%>
+			</td>
 		</tr>
 		<tr>
 			<th width="20%">Resources</th>
