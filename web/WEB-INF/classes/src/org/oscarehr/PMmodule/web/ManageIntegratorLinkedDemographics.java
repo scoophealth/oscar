@@ -85,8 +85,7 @@ public class ManageIntegratorLinkedDemographics {
 			ArrayList<IntegratorLinkedDemographicHolder> sortedResult = getSortedResults(results);
 
 			return (sortedResult);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.error(e);
 			return (null);
 		}
@@ -107,8 +106,7 @@ public class ManageIntegratorLinkedDemographics {
 		return (sortedResults);
 	}
 
-	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic,
-			DemographicWs demographicWs) {
+	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicWs demographicWs) {
 		List<CachedDemographic> currentLinks = demographicWs.getAllLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
 
 		List<CachedDemographic> directLinksTemp = demographicWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
@@ -134,16 +132,14 @@ public class ManageIntegratorLinkedDemographics {
 		}
 	}
 
-	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic,
-			DemographicWs demographicWs) throws DatatypeConfigurationException {
+	private static void addPotentialMatches(HashMap<FacilityDemographicPrimaryKey, IntegratorLinkedDemographicHolder> results, Demographic demographic, DemographicWs demographicWs) throws DatatypeConfigurationException {
 		MatchingDemographicParameters parameters = getMatchingDemographicParameters(demographic);
 		List<MatchingDemographicScore> potentialMatches = demographicWs.getMatchingDemographics(parameters);
 
 		if (potentialMatches == null) return;
 
 		for (MatchingDemographicScore matchingDemographicScore : potentialMatches) {
-			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey(matchingDemographicScore.getCachedDemographic()
-					.getFacilityIdIntegerCompositePk());
+			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey(matchingDemographicScore.getCachedDemographic().getFacilityIdIntegerCompositePk());
 			IntegratorLinkedDemographicHolder integratorLinkedDemographicHolder = results.get(facilityDemographicPrimaryKey);
 
 			if (integratorLinkedDemographicHolder == null) {
@@ -207,8 +203,7 @@ public class ManageIntegratorLinkedDemographics {
 			for (FacilityDemographicPrimaryKey pk : linkedIds) {
 				if (!currentLinks.contains(pk)) demographicWs.linkDemographics(providerId, demographicId, pk.getFacilityId(), pk.getDemographicId());
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.error(e);
 		}
 	}
