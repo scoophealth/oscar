@@ -61,7 +61,7 @@
 					CachedDemographic tempDemographic=temp.getCachedDemographic();
 					CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
 					Calendar cal=null;
-					if (tempDemographic.getBirthDate()!=null) cal=tempDemographic.getBirthDate().toGregorianCalendar()					
+					if (tempDemographic.getBirthDate()!=null) cal=tempDemographic.getBirthDate().toGregorianCalendar();
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
 							<td class="genericTableData"><input type="checkbox" name="linked.<%=tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()%>.<%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%>" <%=temp.isLinked()?"checked=\"on\"":""%> <%=temp.isLinked()&&!temp.isDirectlyLinked()?"disabled=\"disabled\"":""%> /></td>
