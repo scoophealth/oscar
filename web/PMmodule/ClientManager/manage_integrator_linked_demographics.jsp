@@ -60,8 +60,8 @@
 				{
 					CachedDemographic tempDemographic=temp.getCachedDemographic();
 					CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-					Calendar cal=null;
-					if (tempDemographic.getBirthDate()!=null) cal=tempDemographic.getBirthDate().toGregorianCalendar();
+					String bday="";
+					if (tempDemographic.getBirthDate()!=null) bday=DateFormatUtils.ISO_DATE_FORMAT.format(tempDemographic.getBirthDate().toGregorianCalendar());
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
 							<td class="genericTableData"><input type="checkbox" name="linked.<%=tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()%>.<%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%>" <%=temp.isLinked()?"checked=\"on\"":""%> <%=temp.isLinked()&&!temp.isDirectlyLinked()?"disabled=\"disabled\"":""%> /></td>
@@ -70,7 +70,7 @@
 							<td class="genericTableData"><%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%></td>
 							<td class="genericTableData"><%=tempDemographic.getLastName()%></td>
 							<td class="genericTableData"><%=tempDemographic.getFirstName()%></td>
-							<td class="genericTableData"><%=DateFormatUtils.ISO_DATE_FORMAT.format(cal)%></td>
+							<td class="genericTableData"><%=bday%></td>
 							<td class="genericTableData"><%=tempDemographic.getHin()%></td>
 							<td class="genericTableData"><%=tempDemographic.getGender()%></td>
 						</tr>
