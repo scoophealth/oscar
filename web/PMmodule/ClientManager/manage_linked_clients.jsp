@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients.LinkedDemographicHolder"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
@@ -18,11 +19,13 @@
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	Facility currentFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+	Provider currentProvider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageLinkedClients.IntegratorLinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentFacilityId, currentDemographicId);
+	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentFacility, currentProvider, currentDemographicId);
 %>
+
 
 <h3>Manage Linked Clients</h3>
 
@@ -56,23 +59,19 @@
 		<%
 			if (demographicsToDisplay!=null)
 			{
-				for (ManageLinkedClients.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
+				for (LinkedDemographicHolder temp : demographicsToDisplay)
 				{
-					CachedDemographic tempDemographic=temp.getCachedDemographic();
-					CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-					String bday="";
-					if (tempDemographic.getBirthDate()!=null) bday=DateFormatUtils.ISO_DATE_FORMAT.format(tempDemographic.getBirthDate().toGregorianCalendar());
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
-							<td class="genericTableData"><input type="checkbox" name="linked.<%=tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId()%>.<%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%>" <%=temp.isLinked()?"checked=\"on\"":""%> <%=temp.isLinked()&&!temp.isDirectlyLinked()?"disabled=\"disabled\"":""%> /></td>
-							<td class="genericTableData"><%=temp.getMatchingScore()%></td>
-							<td class="genericTableData"><%=tempFacility.getName()%></td>
-							<td class="genericTableData"><%=tempDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId()%></td>
-							<td class="genericTableData"><%=tempDemographic.getLastName()%></td>
-							<td class="genericTableData"><%=tempDemographic.getFirstName()%></td>
-							<td class="genericTableData"><%=bday%></td>
-							<td class="genericTableData"><%=tempDemographic.getHin()%></td>
-							<td class="genericTableData"><%=tempDemographic.getGender()%></td>
+							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> /></td>
+							<td class="genericTableData"><%=temp.matchingScore%></td>
+							<td class="genericTableData"><%=temp.linkDestination%></td>
+							<td class="genericTableData"><%=temp.remoteLinkId%></td>
+							<td class="genericTableData"><%=temp.lastName%></td>
+							<td class="genericTableData"><%=temp.firstName%></td>
+							<td class="genericTableData"><%=temp.birthDate%></td>
+							<td class="genericTableData"><%=temp.hin%></td>
+							<td class="genericTableData"><%=temp.gender%></td>
 						</tr>
 					<%
 				}
