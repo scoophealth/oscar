@@ -3,24 +3,21 @@
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
-<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
 <%@page	import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.casemgmt.dao.ClientImageDAO"%>
-<%@page import="oscar.OscarProperties"%>
-<%@page import="org.oscarehr.hnr.ws.client.HnrWs"%>
-
+<%@page import="org.oscarehr.casemgmt.model.ClientImage"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+
+<%@page import="oscar.OscarProperties"%>
 <%
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-	Provider loggedInProvider=(Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 %>
-
 
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
@@ -97,11 +94,10 @@ function openSurvey() {
 
 </script>
 
-<div>
+<div style="text-align:right">
 	<%
-		// sort out local image
 		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
-		org.oscarehr.casemgmt.model.ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
+		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
 		
 		String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
 		String imagePresentPlaceholderUrl="/images/default_img.jpg";
@@ -114,91 +110,8 @@ function openSurvey() {
 			imagePlaceholder=imagePresentPlaceholderUrl;
 			imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographic.getDemographicNo();
 		}
-
-		// sort out hnr image
-		//----
-		// note that the showHnrImage boolean and checking for hnrClientImage!=null
-		// is not the same thing, the hnr image should be shown if the integrator is enabled and running, even if there's no image
-		// checking != null will only tell you if there is or is not an image.
-		String hnrImagePlaceholder=imageMissingPlaceholderUrl;
-		String hnrImageUrl=imageMissingPlaceholderUrl;
-		org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=null;
-		boolean showHnrImage=false;
-		
-		try
-		{
-			if (currentDemographic.getHin()!=null && caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInFacilityId))
-			{
-				HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacilityId);
-				String dataRequester="caisi logged in facilityId="+loggedInFacilityId+", logged in providerId="+loggedInProvider.getProviderNo();
-				hnrClientImage=hnrWs.getClientImage2(dataRequester, currentDemographic.getHin());
-	
-				if (hnrClientImage!=null)
-				{
-					hnrImagePlaceholder=imagePresentPlaceholderUrl;
-					hnrImageUrl="/imageRenderingServlet?source=hnr_client&hin="+currentDemographic.getHin();
-				}			
-
-				showHnrImage=true;
-			}
-		}
-		catch (Exception e)
-		{
-			// most likely integrator is not reachable.
-			e.printStackTrace();
-		}
 	%>
-	<table style="margin-left:auto">
-		<tr>
-			<td style="text-align:center">Local Picture</td>
-			<%
-				if (showHnrImage)
-				{
-					%>
-						<td></td>
-						<td style="text-align:center">HNR Picture</td>
-					<%
-				}
-			%>
-		</tr>
-		<tr>
-			<td>
-				<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
-			</td>
-			<%
-				if (showHnrImage)
-				{
-					%>
-						<td style="text-align:center">
-							<input type="button" value="Send To HNR -->" <%=clientImage==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Do you <%=loggedInProvider.getFormattedName()%> confirm that this is a true likeness of <%=currentDemographic.getFormattedName()%>')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=sendImageToHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
-							<br /><br />
-							<input type="button" value="<-- Copy From HNR" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="if (confirm('Would you like to copy the HNR picture of this client to your local system?')) document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?method=copyImageFromHnr&id=<%=currentDemographic.getDemographicNo()%>'" />
-						</td>
-						<td>
-							<img style="height:96px; width:96px" src="<%=request.getContextPath()+hnrImagePlaceholder%>" alt="hnr_client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+hnrImageUrl%>'" onmouseout="src='<%=request.getContextPath()+hnrImagePlaceholder%>'" />		
-						</td>
-					<%
-				}
-			%>
-		</tr>
-		<%
-			if (showHnrImage && false)
-			{
-				%>
-					<tr>
-						<td></td>
-						<td></td>
-
-						<td style="text-align:center">
-							<input type="button" value="Flag Valid" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Please confirm that you believe this picture is an accurate photo of this client.')" />
-							<br />
-							<input type="button" value="Flag Invalid" <%=hnrClientImage==null?"disabled=\"disabled\"":""%> onclick="confirm('Please confirm that you do not believe this picture is an accurate photo of this client.')" />
-						</td>
-					</tr>
-				<%
-			}
-		%>
-	</table>
+	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
 </div>
 
 <div class="tabs">
@@ -235,19 +148,8 @@ function openSurvey() {
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<th width="20%">Health Card</th>
-			<td>
-				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
-				<%
-					// this criteria should be sufficient to show the button
-					if (caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInFacilityId))
-					{
-						%>
-							&nbsp;
-							<input type="button" value="Search HNR for Health Number" onclick="document.location='ClientManager/search_hnr.jsp?id=<%=currentDemographic.getDemographicNo()%>'" />
-						<%
-					}
-				%>
-			</td>
+			<td><c:out value="${client.hin}" />&nbsp;<c:out
+				value="${client.ver}" /></td>
 		</tr>
 		<tr>
 			<th width="20%">Resources</th>
