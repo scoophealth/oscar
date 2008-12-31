@@ -69,6 +69,9 @@ public class SystemMessage {
 		return id;
 	}
 
+	/**
+	 * @deprecated you should never set id's in an existing jpa object, this leads to known problems and is considered bad practice.
+	 */
 	public void setId(Integer id) {
 		this.id = id;
 	}
