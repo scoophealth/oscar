@@ -1,0 +1,65 @@
+/*
+* 
+* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. * 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+* 
+* <OSCAR TEAM>
+* 
+* This software was written for 
+* Centre for Research on Inner City Health, St. Michael's Hospital, 
+* Toronto, Ontario, Canada 
+*/
+
+package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.oscarehr.common.model.ClientLink;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class ClientLinkDao extends AbstractDao {
+	
+	public ClientLink find(Integer id) {
+        return(entityManager.find(ClientLink.class, id));
+	}
+	
+	/**
+	 * @param clientId can not be null
+	 * @param active can be null to return both active and inactive records
+	 * @param type can be null to return all link types
+	 */
+	public List<ClientLink> findActiveByClientIdAndType(Integer clientId, Boolean active, ClientLink.Type type) {
+		// build sql string
+		StringBuilder sqlCommand=new StringBuilder();
+		sqlCommand.append("select x from ClientLink x where x.clientId=?1");
+		int parameterCounter=2;
+		if (active!=null) sqlCommand.append(" and x.active=?"+parameterCounter++);
+		if (type!=null) sqlCommand.append(" and x.type=?"+parameterCounter++);
+		
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand.toString());
+		query.setParameter(1, clientId);
+		parameterCounter=2;
+		if (active!=null) query.setParameter(parameterCounter++, active);
+		if (type!=null) query.setParameter(parameterCounter++, type);
+		
+		// run query
+		@SuppressWarnings("unchecked")
+		List<ClientLink> results = query.getResultList();
+
+		return(results);
+	}
+}

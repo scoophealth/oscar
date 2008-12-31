@@ -6,7 +6,7 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
-<%@page import="org.oscarehr.PMmodule.web.ManageIntegratorLinkedDemographics"%>
+<%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
@@ -21,13 +21,13 @@
 	int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder> demographicsToDisplay=ManageIntegratorLinkedDemographics.getDemographicsToDisplay(currentFacilityId, currentDemographicId);	
+	ArrayList<ManageLinkedClients.IntegratorLinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentFacilityId, currentDemographicId);
 %>
 
-<h3>Manage integrator linked demographics</h3>
+<h3>Manage Linked Clients</h3>
 
 <h4>Demographic</h4>
-<form action="manage_integrator_linked_demographics_action.jsp">
+<form action="manage_linked_clients_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 	<table style="padding-left:20px" class="genericTable">
 		<tr class="genericTableRow">
@@ -56,7 +56,7 @@
 		<%
 			if (demographicsToDisplay!=null)
 			{
-				for (ManageIntegratorLinkedDemographics.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
+				for (ManageLinkedClients.IntegratorLinkedDemographicHolder temp : demographicsToDisplay)
 				{
 					CachedDemographic tempDemographic=temp.getCachedDemographic();
 					CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, tempDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());

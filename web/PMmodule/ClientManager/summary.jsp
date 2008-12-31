@@ -231,9 +231,9 @@ function openSurvey() {
 		{
 			%>
 	<tr>
-		<th width="20%">Integrator linked clients</th>
+		<th width="20%">Linked clients</th>
 		<td><input type="button" value="Manage linked clients"
-			onclick="document.location='ClientManager/manage_integrator_linked_demographics.jsp?demographicId=<c:out value="${demographicId}" />'" />
+			onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<c:out value="${demographicId}" />'" />
 		</td>
 	</tr>
 	<%

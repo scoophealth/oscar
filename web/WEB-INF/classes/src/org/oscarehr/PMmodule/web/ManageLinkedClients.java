@@ -24,8 +24,8 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.util.SpringUtils;
 
-public class ManageIntegratorLinkedDemographics {
-	public static Logger logger = LogManager.getLogger(ManageIntegratorLinkedDemographics.class);
+public class ManageLinkedClients {
+	public static Logger logger = LogManager.getLogger(ManageLinkedClients.class);
 	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 
@@ -81,6 +81,8 @@ public class ManageIntegratorLinkedDemographics {
 
 			addPotentialMatches(results, demographic, demographicWs);
 			addCurrentLinks(results, demographic, demographicWs);
+//			addHnrMatches(results, demographic)
+//			addHnrLinks(results, demographic);
 
 			ArrayList<IntegratorLinkedDemographicHolder> sortedResult = getSortedResults(results);
 
