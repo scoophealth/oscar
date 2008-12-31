@@ -13,14 +13,14 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.hnr.ws.client.HnrWs;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 /**
  * This servlet requires a parameter called "source" which should signify where to get the image from. Examples include source=local_client, or source=hnr_client. Depending on the source, you may optionally need more parameters, as examples a local_client
- * may need a clientId=5 or a hnr_client may need hin=3. <br />
+ * may need a clientId=5 or a hnr_client may need linkingId=3. <br />
  * <br />
  * The structure of this class follows the structure of the Servlet class itself in the pattern of the service() -> (doPost/doGet/doDelete), from the doGet we fork to each specific source processor. <br />
  * <br />
@@ -77,7 +77,7 @@ public class ImageRenderingServlet extends HttpServlet {
 	}
 
 	private void renderHnrClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// this expects integratorFacilityId and caisiClientId as parameters
+		// this expects linkingId as a parameter
 
 		// security check
 		HttpSession session = request.getSession();
@@ -88,13 +88,12 @@ public class ImageRenderingServlet extends HttpServlet {
 		}
 
 		// get image
-		Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		HnrWs hnrWs=caisiIntegratorManager.getHnrWs(loggedInFacilityId);
-		String dataRequester="caisi logged in facilityId="+loggedInFacilityId+", logged in providerId="+provider.getProviderNo();
-		org.oscarehr.hnr.ws.client.ClientImage hnrClientImage=hnrWs.getClientImage2(dataRequester, request.getParameter("hin"));
+		Facility loggedInFacility=(Facility)session.getAttribute(SessionConstants.CURRENT_FACILITY);
+		Integer linkingId=Integer.parseInt(request.getParameter("linkingId"));
+		org.oscarehr.hnr.ws.client.Client hnrClient=caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
 
-		if (hnrClientImage != null) {
-			renderImage(response, hnrClientImage.getImage(), "jpeg");
+		if (hnrClient != null) {
+			renderImage(response, hnrClient.getImage(), "jpeg");
 		} else {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}

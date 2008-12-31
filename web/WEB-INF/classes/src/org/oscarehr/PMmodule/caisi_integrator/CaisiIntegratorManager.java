@@ -25,6 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -45,27 +47,25 @@ import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.hnr.ws.client.HnrWs;
 import org.oscarehr.hnr.ws.client.HnrWsService;
+import org.oscarehr.hnr.ws.client.MatchingClientParameters;
+import org.oscarehr.hnr.ws.client.MatchingClientScore;
+import org.oscarehr.util.FacilityProviderSegmentedTimeClearedHashMap;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
 
 /**
- * This class is a manager for integration related functionality.
- * <br /><br />
- * Disregarding the current code base which may not properly conform to the standards...
- * <br /><br />
- * All privacy related data access should be logged (read and write). As a result, if data is cached locally, the cached read must also be 
- * logged locally. If we currently can not log the access locally for what ever reason (such as current
- * schema is a mess and we don't have a good logging facility), then the data should not be cached and 
- * individual requests should be made to the service provider. This presumes the service provider
- * conforms to access logging standards and therefore you push the logging responsibility to the other
- * application since we are currently unable to provide that locally. When and if a good local logging 
- * facility is made available, local caching can then occur. 
- * <br /><br />
- * Note that not all data is privacy related, examples include a Facility and it's information
- * is not covered under the regulations for privacy of an individual. Note also that for some
- * reason we're only concerned about client privacy, providers seem to not be covered and or have 
- * no expectation of privacy (although we could be wrong in this interpretation). 
+ * This class is a manager for integration related functionality. <br />
+ * <br />
+ * Disregarding the current code base which may not properly conform to the standards... <br />
+ * <br />
+ * All privacy related data access should be logged (read and write). As a result, if data is cached locally, the cached read must also be logged locally. If we currently can not log the access locally for what ever reason (such as current schema is a mess
+ * and we don't have a good logging facility), then the data should not be cached and individual requests should be made to the service provider. This presumes the service provider conforms to access logging standards and therefore you push the logging
+ * responsibility to the other application since we are currently unable to provide that locally. When and if a good local logging facility is made available, local caching can then occur. <br />
+ * <br />
+ * Note that not all data is privacy related, examples include a Facility and it's information is not covered under the regulations for privacy of an individual. Note also that for some reason we're only concerned about client privacy, providers seem to
+ * not be covered and or have no expectation of privacy (although we could be wrong in this interpretation).
  */
 public class CaisiIntegratorManager {
 
@@ -76,18 +76,17 @@ public class CaisiIntegratorManager {
 	}
 
 	/**
-	 * This is a simple cache mechanism which removes objects based on time.
-	 * All data is segmented via the requesting facility. i.e. this is not
-	 * data cached on a remote facility basis, it's on a viewing facility basis.
-	 * As an example for "providers", the cached data is NOT facility and the list of 
-	 * providers at each facility. It is the viewers facility, followed by a list 
-	 * of providers at all other facilities. i.e. This does mean there is duplicated
-	 * data as in 2 viewing facilities may cache the same provider from the third 
-	 * facility; however due to the nature of the segmentation and permissions
-	 * not all cases are so simple and the "view" of the remote data can be different
-	 * depending on who is viewing it; therefore, we must cache the view. 
+	 * This is a simple cache mechanism which removes objects based on time. All data is segmented via the requesting facility. i.e. this is not data cached on a remote facility basis, it's on a viewing facility basis. As an example for "providers", the
+	 * cached data is NOT facility and the list of providers at each facility. It is the viewers facility, followed by a list of providers at all other facilities. i.e. This does mean there is duplicated data as in 2 viewing facilities may cache the same
+	 * provider from the third facility; however due to the nature of the segmentation and permissions not all cases are so simple and the "view" of the remote data can be different depending on who is viewing it; therefore, we must cache the view.
 	 */
-	private static FacilitySegmentedTimeClearedHashMap facilitySegmentedSimpleTimeCache = new FacilitySegmentedTimeClearedHashMap(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static FacilitySegmentedTimeClearedHashMap<Object> facilitySegmentedSimpleTimeCache = new FacilitySegmentedTimeClearedHashMap<Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+
+	/**
+	 * This caching mechanism uses the key=hnrClient.linkingId, value=hnrClient.
+	 * Note for auditing purposes the cache must be segmented by facility and provider.
+	 */
+	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client> hnrClientCache = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
@@ -299,4 +298,31 @@ public class CaisiIntegratorManager {
 
 		return (port);
 	}
+
+	public List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws DatatypeConfigurationException, MalformedURLException {
+		HnrWs hnrWs = getHnrWs(facility.getId());
+		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(getProviderAuditString(facility, provider), matchingClientParameters);
+
+		for (MatchingClientScore temp : potentialMatches) hnrClientCache.put(facility.getId(), provider.getProviderNo(), temp.getClient().getLinkingId(), temp.getClient());
+		
+		return (potentialMatches);
+	}
+	
+	public org.oscarehr.hnr.ws.client.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException
+	{
+		org.oscarehr.hnr.ws.client.Client client=hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
+		
+		if (client==null)
+		{
+			HnrWs hnrWs = getHnrWs(facility.getId());
+			client=hnrWs.getHnrClient(getProviderAuditString(facility, provider), linkingId);
+			if (client!=null) hnrClientCache.put(facility.getId(), provider.getProviderNo(), linkingId, client);
+		}
+		
+		return(client);
+	}
+
+	private static String getProviderAuditString(Facility facility, Provider provider) {
+	    return "facility=" + facility.getName() + ", provider=" + provider.getFormattedName();
+    }
 }

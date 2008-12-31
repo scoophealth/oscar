@@ -22,29 +22,29 @@
 
 package org.oscarehr.util;
 
-public class FacilitySegmentedTimeClearedHashMap<V> extends TimeClearedHashMap<String, V>
+public class FacilityProviderSegmentedTimeClearedHashMap<V> extends TimeClearedHashMap<String, V>
 {
-    public FacilitySegmentedTimeClearedHashMap(long maxDataAge, long checkPeriod) {
+    public FacilityProviderSegmentedTimeClearedHashMap(long maxDataAge, long checkPeriod) {
     	super(maxDataAge, checkPeriod);
     }
  
-    public static final String getCompositeFacilityKey(Integer facilityId, Object key)
+    public static final String getCompositeFacilityKey(Integer facilityId, String providerNo, Object key)
     {
-    	return(facilityId.toString()+':'+key.toString());
+    	return(facilityId.toString()+':'+providerNo+':'+key.toString());
     }
     
-	public V put(Integer facilityId, Object key, V value)
+	public V put(Integer facilityId, String providerNo, Object key, V value)
 	{
-		return(put(getCompositeFacilityKey(facilityId, key), value));
+		return(put(getCompositeFacilityKey(facilityId, providerNo, key), value));
 	}
 
-	public V get(Integer facilityId, Object key)
+	public V get(Integer facilityId, String providerNo, Object key)
 	{
-		return(get(getCompositeFacilityKey(facilityId, key)));
+		return(get(getCompositeFacilityKey(facilityId, providerNo, key)));
 	}
 	
-	public V remove(Integer facilityId, Object key)
+	public V remove(Integer facilityId, String providerNo, Object key)
 	{
-		return(remove(getCompositeFacilityKey(facilityId, key)));
+		return(remove(getCompositeFacilityKey(facilityId, providerNo, key)));
 	}
 }
