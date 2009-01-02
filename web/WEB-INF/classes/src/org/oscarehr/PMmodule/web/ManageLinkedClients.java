@@ -21,6 +21,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore;
+import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
@@ -34,17 +35,18 @@ public class ManageLinkedClients {
 	public static Logger logger = LogManager.getLogger(ManageLinkedClients.class);
 	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 
 	public static class LinkedDemographicHolder {
 		public int matchingScore = 0;
 		public boolean linked = false;
-		public String linkDestination="";
-		public Integer remoteLinkId=null;
-		public String firstName="";
-		public String lastName="";
-		public String gender="";
-		public String birthDate="";
-		public String hin="";
+		public String linkDestination = "";
+		public Integer remoteLinkId = null;
+		public String firstName = "";
+		public String lastName = "";
+		public String gender = "";
+		public String birthDate = "";
+		public String hin = "";
 	}
 
 	public static ArrayList<LinkedDemographicHolder> getDemographicsToDisplay(Facility currentFacility, Provider currentProvider, Integer demographicId) {
@@ -54,14 +56,14 @@ public class ManageLinkedClients {
 		try {
 			Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-			// the string key is just used to prevent duplicte entries caused by matched + current links if some one is in both.
+			// the string key is just used to prevent duplicate entries caused by matched + current links if some one is in both.
 			// the string itself is arbitrary so use something like the facility+clientId or something
 			HashMap<String, LinkedDemographicHolder> results = new HashMap<String, LinkedDemographicHolder>();
 
 			addPotentialMatches(results, demographic, currentFacility);
-//			addCurrentLinks(results, demographic, demographicWs);
+			addCurrentLinks(results, demographic, currentFacility);
 			addHnrMatches(results, demographic, currentFacility, currentProvider);
-//			addHnrLinks(results, demographic);
+			addHnrLinks(results, demographic, currentFacility, currentProvider);
 
 			ArrayList<LinkedDemographicHolder> sortedResult = getSortedResults(results);
 
@@ -72,12 +74,14 @@ public class ManageLinkedClients {
 		}
 	}
 
-	private static void addHnrMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException, DatatypeConfigurationException {
-		MatchingClientParameters matchingClientParameters=getMatchingHnrClientParameters(demographic);
-		List<MatchingClientScore> potentialMatches=caisiIntegratorManager.searchHnrForMatchingClients(currentFacility, currentProvider, matchingClientParameters);
-		
-		for (MatchingClientScore matchingClientScore : potentialMatches) {
-			String tempKey = "hnr:"+matchingClientScore.getClient().getLinkingId();
+	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException {
+	    List<ClientLink> currentLinks=clientLinkDao.findByClientIdAndType(demographic.getDemographicNo(), true, ClientLink.Type.HNR);
+	    
+	    for (ClientLink clientLink : currentLinks)
+	    {
+	    	org.oscarehr.hnr.ws.client.Client hnrClient=caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
+	    	
+			String tempKey = ClientLink.Type.HNR.name() + '.' + hnrClient.getLinkingId();
 			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
 
 			if (integratorLinkedDemographicHolder == null) {
@@ -85,18 +89,40 @@ public class ManageLinkedClients {
 				results.put(tempKey, integratorLinkedDemographicHolder);
 			}
 
-			// copy the data to holder entry
-			org.oscarehr.hnr.ws.client.Client hnrClient=matchingClientScore.getClient();
-			if (hnrClient.getBirthDate()!=null) integratorLinkedDemographicHolder.birthDate=DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar()); 
-			integratorLinkedDemographicHolder.firstName=StringUtils.trimToEmpty(hnrClient.getFirstName()); 
-			if (hnrClient.getGender()!=null) integratorLinkedDemographicHolder.gender=hnrClient.getGender().name(); 
-			integratorLinkedDemographicHolder.hin=StringUtils.trimToEmpty(hnrClient.getHin()); 
-			integratorLinkedDemographicHolder.lastName=StringUtils.trimToEmpty(hnrClient.getLastName()); 
-			integratorLinkedDemographicHolder.linkDestination=ClientLink.Type.HNR.name(); 
-			integratorLinkedDemographicHolder.linked=false; 
-			integratorLinkedDemographicHolder.matchingScore=matchingClientScore.getScore(); 
-			integratorLinkedDemographicHolder.remoteLinkId=hnrClient.getLinkingId(); 
+			integratorLinkedDemographicHolder.linked = true;
+			copyHnrClientDataToMatchingScorePlaceholder(integratorLinkedDemographicHolder, hnrClient);	    	
+	    }
+    }
+
+	private static void addHnrMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException, DatatypeConfigurationException {
+		MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
+		List<MatchingClientScore> potentialMatches = caisiIntegratorManager.searchHnrForMatchingClients(currentFacility, currentProvider, matchingClientParameters);
+
+		for (MatchingClientScore matchingClientScore : potentialMatches) {
+			String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();
+			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
+
+			if (integratorLinkedDemographicHolder == null) {
+				integratorLinkedDemographicHolder = new LinkedDemographicHolder();
+				results.put(tempKey, integratorLinkedDemographicHolder);
+			}
+
+			integratorLinkedDemographicHolder.linked = false;
+			integratorLinkedDemographicHolder.matchingScore = matchingClientScore.getScore();
+			org.oscarehr.hnr.ws.client.Client hnrClient = matchingClientScore.getClient();
+			copyHnrClientDataToMatchingScorePlaceholder(integratorLinkedDemographicHolder, hnrClient);
 		}
+	}
+
+	private static void copyHnrClientDataToMatchingScorePlaceholder(LinkedDemographicHolder integratorLinkedDemographicHolder, org.oscarehr.hnr.ws.client.Client hnrClient) {
+	    // copy the data to holder entry
+	    if (hnrClient.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());
+	    integratorLinkedDemographicHolder.firstName = StringUtils.trimToEmpty(hnrClient.getFirstName());
+	    if (hnrClient.getGender() != null) integratorLinkedDemographicHolder.gender = hnrClient.getGender().name();
+	    integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(hnrClient.getHin());
+	    integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(hnrClient.getLastName());
+	    integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.HNR.name();
+	    integratorLinkedDemographicHolder.remoteLinkId = hnrClient.getLinkingId();
     }
 
 	private static MatchingClientParameters getMatchingHnrClientParameters(Demographic demographic) throws DatatypeConfigurationException {
@@ -145,31 +171,24 @@ public class ManageLinkedClients {
 		return (sortedResults);
 	}
 
-//	private static void addCurrentLinks(HashMap<FacilityDemographicPrimaryKey, LinkedDemographicHolder> results, Demographic demographic, DemographicWs demographicWs) {
-//		List<CachedDemographic> currentLinks = demographicWs.getAllLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
-//
-//		List<CachedDemographic> directLinksTemp = demographicWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
-//		HashSet<FacilityDemographicPrimaryKey> directLinks = new HashSet<FacilityDemographicPrimaryKey>();
-//		for (CachedDemographic cachedDemographic : directLinksTemp)
-//			directLinks.add(new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk()));
-//
-//		if (currentLinks == null) return;
-//
-//		for (CachedDemographic cachedDemographic : currentLinks) {
-//			FacilityDemographicPrimaryKey facilityDemographicPrimaryKey = new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
-//			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(facilityDemographicPrimaryKey);
-//
-//			if (integratorLinkedDemographicHolder == null) {
-//				integratorLinkedDemographicHolder = new LinkedDemographicHolder();
-//				results.put(facilityDemographicPrimaryKey, integratorLinkedDemographicHolder);
-//			}
-//
-//			integratorLinkedDemographicHolder.setCachedDemographic(cachedDemographic);
-//			integratorLinkedDemographicHolder.setLinked(true);
-//
-//			if (directLinks.contains(facilityDemographicPrimaryKey)) integratorLinkedDemographicHolder.setDirectlyLinked(true);
-//		}
-//	}
+	private static void addCurrentLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility) throws MalformedURLException {
+		DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacility.getId());
+		List<CachedDemographic> directLinksTemp = demographicWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographic.getDemographicNo());
+		
+		for (CachedDemographic cachedDemographic : directLinksTemp) {
+			String tempKey = ClientLink.Type.OSCAR_CAISI.name() + '.' + cachedDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId() + '.' + cachedDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId();
+			
+			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
+
+			if (integratorLinkedDemographicHolder == null) {
+				integratorLinkedDemographicHolder = new LinkedDemographicHolder();
+				results.put(tempKey, integratorLinkedDemographicHolder);
+			}
+
+			integratorLinkedDemographicHolder.linked=true;
+			copyCachedDemographicDataToScorePlaceholder(currentFacility, cachedDemographic, integratorLinkedDemographicHolder);
+		}
+	}
 
 	private static void addPotentialMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility) throws DatatypeConfigurationException, MalformedURLException {
 		MatchingDemographicParameters parameters = getMatchingDemographicParameters(demographic);
@@ -179,7 +198,8 @@ public class ManageLinkedClients {
 		if (potentialMatches == null) return;
 
 		for (MatchingDemographicScore matchingDemographicScore : potentialMatches) {
-			String tempKey = ""+matchingDemographicScore.getCachedDemographic().getFacilityIdIntegerCompositePk().getIntegratorFacilityId()+':'+matchingDemographicScore.getCachedDemographic().getFacilityIdIntegerCompositePk().getCaisiItemId();
+			String tempKey = ClientLink.Type.OSCAR_CAISI.name() + '.' + matchingDemographicScore.getCachedDemographic().getFacilityIdIntegerCompositePk().getIntegratorFacilityId() + '.'
+			        + matchingDemographicScore.getCachedDemographic().getFacilityIdIntegerCompositePk().getCaisiItemId();
 			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
 
 			if (integratorLinkedDemographicHolder == null) {
@@ -187,22 +207,24 @@ public class ManageLinkedClients {
 				results.put(tempKey, integratorLinkedDemographicHolder);
 			}
 
-			// copy the data to holder entry
-			CachedDemographic cachedDemographic=matchingDemographicScore.getCachedDemographic();
-			if (cachedDemographic.getBirthDate()!=null) integratorLinkedDemographicHolder.birthDate=DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographic.getBirthDate().toGregorianCalendar()); 
-			integratorLinkedDemographicHolder.firstName=StringUtils.trimToEmpty(cachedDemographic.getFirstName()); 
-			integratorLinkedDemographicHolder.gender=StringUtils.trimToEmpty(cachedDemographic.getGender()); 
-			integratorLinkedDemographicHolder.hin=StringUtils.trimToEmpty(cachedDemographic.getHin()); 
-			integratorLinkedDemographicHolder.lastName=StringUtils.trimToEmpty(cachedDemographic.getLastName()); 
-			
-			CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacility.getId(), cachedDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-			integratorLinkedDemographicHolder.linkDestination=ClientLink.Type.OSCAR_CAISI.name()+'.'+tempFacility.getIntegratorFacilityId(); 
-
-			integratorLinkedDemographicHolder.linked=false; 
-			integratorLinkedDemographicHolder.matchingScore=matchingDemographicScore.getScore(); 
-			integratorLinkedDemographicHolder.remoteLinkId=cachedDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId(); 
+		    integratorLinkedDemographicHolder.matchingScore = matchingDemographicScore.getScore();
+		    integratorLinkedDemographicHolder.linked = false;
+			copyCachedDemographicDataToScorePlaceholder(currentFacility, matchingDemographicScore.getCachedDemographic(), integratorLinkedDemographicHolder);
 		}
 	}
+
+	private static void copyCachedDemographicDataToScorePlaceholder(Facility currentFacility, CachedDemographic cachedDemographic, LinkedDemographicHolder integratorLinkedDemographicHolder) throws MalformedURLException {
+	    // copy the data to holder entry
+	    if (cachedDemographic.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographic.getBirthDate().toGregorianCalendar());
+	    integratorLinkedDemographicHolder.firstName = StringUtils.trimToEmpty(cachedDemographic.getFirstName());
+	    integratorLinkedDemographicHolder.gender = StringUtils.trimToEmpty(cachedDemographic.getGender());
+	    integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(cachedDemographic.getHin());
+	    integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(cachedDemographic.getLastName());
+
+	    CachedFacility tempFacility = caisiIntegratorManager.getRemoteFacility(currentFacility.getId(), cachedDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+	    integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.OSCAR_CAISI.name() + '.' + tempFacility.getIntegratorFacilityId();
+	    integratorLinkedDemographicHolder.remoteLinkId = cachedDemographic.getFacilityIdIntegerCompositePk().getCaisiItemId();
+    }
 
 	private static MatchingDemographicParameters getMatchingDemographicParameters(Demographic demographic) throws DatatypeConfigurationException {
 		MatchingDemographicParameters parameters = new MatchingDemographicParameters();
