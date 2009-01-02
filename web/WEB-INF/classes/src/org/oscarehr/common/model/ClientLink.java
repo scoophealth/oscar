@@ -25,10 +25,13 @@ package org.oscarehr.common.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class ClientLink {
@@ -41,11 +44,17 @@ public class ClientLink {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id = null;
 	private Integer clientId = null;
+	@Enumerated(EnumType.STRING)
 	private Type linkType = null;
 	private Integer remoteLinkId = null;
-	private Date creationDate = new Date();
-	private String creatorProviderId = null;
-	private boolean active=true;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date linkDate = null;
+	/** this is the provider id who linked the client */
+	private String linkProviderNo = null;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date unlinkDate = null;
+	/** this is the provider id who unlinked the client */
+	private String unlinkProviderNo = null;
 
 	public Integer getClientId() {
 		return clientId;
@@ -71,37 +80,39 @@ public class ClientLink {
 		this.remoteLinkId = remoteLinkId;
 	}
 
-	public Date getCreationDate() {
-		return creationDate;
+	public Date getLinkDate() {
+		return linkDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setLinkDate(Date linkDate) {
+		this.linkDate = linkDate;
 	}
 
-	public String getCreatorProviderId() {
-		return creatorProviderId;
+	public Date getUnlinkDate() {
+		return unlinkDate;
 	}
 
-	public void setCreatorProviderId(String creatorProviderId) {
-		this.creatorProviderId = creatorProviderId;
+	public void setUnlinkDate(Date unlinkDate) {
+		this.unlinkDate = unlinkDate;
+	}
+
+	public String getLinkProviderNo() {
+		return linkProviderNo;
+	}
+
+	public void setLinkProviderNo(String linkProviderNo) {
+		this.linkProviderNo = linkProviderNo;
+	}
+
+	public String getUnlinkProviderNo() {
+		return unlinkProviderNo;
+	}
+
+	public void setUnlinkProviderNo(String unlinkProviderNo) {
+		this.unlinkProviderNo = unlinkProviderNo;
 	}
 
 	public Integer getId() {
 		return id;
-	}
-
-	public boolean isActive() {
-    	return active;
-    }
-
-	public void setActive(boolean active) {
-    	this.active = active;
-    }
-
-	@PreUpdate
-	protected void jpa_preventUpdate()
-	{
-		throw(new IllegalArgumentException("Update is not allowed for this type of item."));
 	}
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -26,7 +25,6 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.hnr.ws.client.MatchingClientParameters;
 import org.oscarehr.hnr.ws.client.MatchingClientScore;
@@ -198,7 +196,7 @@ public class ManageLinkedClients {
 			integratorLinkedDemographicHolder.lastName=StringUtils.trimToEmpty(cachedDemographic.getLastName()); 
 			
 			CachedFacility tempFacility=caisiIntegratorManager.getRemoteFacility(currentFacility.getId(), cachedDemographic.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
-			integratorLinkedDemographicHolder.linkDestination=ClientLink.Type.OSCAR_CAISI.name()+":"+tempFacility.getName(); 
+			integratorLinkedDemographicHolder.linkDestination=ClientLink.Type.OSCAR_CAISI.name()+'.'+tempFacility.getIntegratorFacilityId(); 
 
 			integratorLinkedDemographicHolder.linked=false; 
 			integratorLinkedDemographicHolder.matchingScore=matchingDemographicScore.getScore(); 
@@ -237,28 +235,4 @@ public class ManageLinkedClients {
 		return parameters;
 	}
 
-	public static void saveLinkedClients(Integer facilityId, String providerId, Integer demographicId, HashSet<FacilityDemographicPrimaryKey> linkedIds) {
-		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
-			List<CachedDemographic> tempLinks = demographicWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographicId);
-			HashSet<FacilityDemographicPrimaryKey> currentLinks = new HashSet<FacilityDemographicPrimaryKey>();
-
-			// check for removals and populate a hashSet (for later use)
-			for (CachedDemographic cachedDemographic : tempLinks) {
-				FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
-				currentLinks.add(pk);
-
-				if (!linkedIds.contains(pk)) {
-					demographicWs.unLinkDemographics(demographicId, pk.getFacilityId(), pk.getDemographicId());
-				}
-			}
-
-			// process additions
-			for (FacilityDemographicPrimaryKey pk : linkedIds) {
-				if (!currentLinks.contains(pk)) demographicWs.linkDemographics(providerId, demographicId, pk.getFacilityId(), pk.getDemographicId());
-			}
-		} catch (Exception e) {
-			logger.error(e);
-		}
-	}
 }

@@ -1,4 +1,5 @@
-<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.common.model.Facility"%>
+<%@page import="org.oscarehr.PMmodule.web.ManageLinkedClientsAction"%><%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="org.oscarehr.common.model.FacilityDemographicPrimaryKey"%>
 <%@page import="java.util.HashSet"%>
@@ -8,9 +9,8 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-	int currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
-	HashSet<FacilityDemographicPrimaryKey> linkedIds=new HashSet<FacilityDemographicPrimaryKey>();
+	Facility currentFacility=(Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+	ManageLinkedClientsAction manageLinkedClientsAction=new ManageLinkedClientsAction();
 
 	@SuppressWarnings("unchecked")
 	Enumeration<String> e=request.getParameterNames();
@@ -19,15 +19,8 @@
 		try
 		{
 			String key=e.nextElement();
-			if (key.startsWith("linked."))
-			{
-				String[] keySplit=key.split("\\.");
-
-				FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey();
-				pk.setFacilityId(Integer.parseInt(keySplit[1]));
-				pk.setDemographicId(Integer.parseInt(keySplit[2]));
-				linkedIds.add(pk);
-			}
+			// must check for "on" because some versions of IE submit "off" or ""
+			if (key.startsWith("linked.") && "on".equals(request.getParameter(key))) manageLinkedClientsAction.addLinkedId(key);
 		}
 		catch (Exception ex)
 		{
@@ -36,7 +29,7 @@
 	}
 
 	Provider provider=(Provider)session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-	ManageLinkedClients.saveLinkedClients(currentFacilityId, provider.getProviderNo(), currentDemographicId, linkedIds);
+	manageLinkedClientsAction.saveLinkedIds(currentFacility, provider, currentDemographicId);
 
 	response.sendRedirect("../ClientManager.do?id="+currentDemographicId);
 %>
