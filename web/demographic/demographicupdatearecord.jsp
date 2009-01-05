@@ -94,11 +94,104 @@ if( users != null && users.size() > 0 )
 	  param[26]=request.getParameter("title");
 	  param[27]=request.getParameter("preferred_lang");
 	
-           java.sql.Date [] dtparam = new java.sql.Date[4];
-	  dtparam[0]=MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
-	  dtparam[1]=MyDateFormat.getSysDate(request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date"));
-	  dtparam[2]=MyDateFormat.getSysDate(request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date"));
-	  dtparam[3]=MyDateFormat.getSysDate(request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date"));
+          java.sql.Date [] dtparam = new java.sql.Date[4];
+          StringBuffer sbDate = new StringBuffer();
+          String reqTmp;
+          reqTmp = request.getParameter("date_joined_year");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("0001");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          reqTmp = request.getParameter("date_joined_month");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          
+          reqTmp = request.getParameter("date_joined_date");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+
+	  dtparam[0]=MyDateFormat.getSysDate(sbDate.toString());
+          
+          sbDate = new StringBuffer();
+          reqTmp = request.getParameter("end_date_year");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("0001");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          reqTmp = request.getParameter("end_date_month");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          
+          reqTmp = request.getParameter("end_date_date");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+                   
+          
+	  dtparam[1]=MyDateFormat.getSysDate(sbDate.toString());
+          
+          sbDate = new StringBuffer();
+          reqTmp = request.getParameter("eff_date_year");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("0001");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          reqTmp = request.getParameter("eff_date_month");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          
+          reqTmp = request.getParameter("eff_date_date");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+                   
+	  dtparam[2]=MyDateFormat.getSysDate(sbDate.toString());
+          
+          sbDate = new StringBuffer();
+          reqTmp = request.getParameter("hc_renew_date_year");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("0001");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          reqTmp = request.getParameter("hc_renew_date_month");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+          
+          sbDate.append("-");
+          
+          reqTmp = request.getParameter("hc_renew__date_date");
+          if( reqTmp == null || reqTmp.trim().equals("") )
+              sbDate.append("01");
+          else
+              sbDate.append(reqTmp.trim());
+          
+	  dtparam[3]=MyDateFormat.getSysDate(sbDate.toString());
  
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
 
