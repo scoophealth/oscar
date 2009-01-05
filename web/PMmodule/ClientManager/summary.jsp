@@ -10,14 +10,19 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.casemgmt.dao.ClientImageDAO"%>
 <%@page import="org.oscarehr.casemgmt.model.ClientImage"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
+<%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
+<%@page import="org.oscarehr.common.model.IntegratorConsent"%>
 <%@page import="oscar.OscarProperties"%>
+
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
 %>
+
+
 
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
@@ -98,10 +103,10 @@ function openSurvey() {
 	<%
 		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
 		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
-		
+
 		String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
 		String imagePresentPlaceholderUrl="/images/default_img.jpg";
-		
+
 		String imagePlaceholder=imageMissingPlaceholderUrl;
 		String imageUrl=imageMissingPlaceholderUrl;
 
@@ -148,22 +153,37 @@ function openSurvey() {
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 		<tr>
 			<th width="20%">Health Card</th>
-			<td><c:out value="${client.hin}" />&nbsp;<c:out
-				value="${client.ver}" /></td>
+			<td>
+				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
+				<%
+					if (caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInFacilityId))
+					{
+						IntegratorConsent integratorConsent=integratorConsentDao.findLatestByFacilityAndDemographic(loggedInFacilityId,currentDemographic.getDemographicNo());
+						boolean consented=(integratorConsent!=null && integratorConsent.isConsentToHealthCardId());
+						%>
+							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<%
+					}
+				%>				
+			</td>
 		</tr>
 		<tr>
 			<th width="20%">Resources</th>
 			<td>
-			<%
-		if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
-			Integer demographicNo = currentDemographic.getDemographicNo();
-			pageContext.setAttribute("demographicNo", demographicNo);
-		%> <% if (!OscarProperties.getInstance().isTorontoRFQ()) {%> <a
-				href="javascript:void(0);"
-				onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR
-			Master File</a> <%}%> <%
- 		}
-		%>
+				<%
+					if (session.getAttribute("userrole")!=null&&((String)session.getAttribute("userrole")).indexOf("admin")!=-1)
+					{
+						Integer demographicNo=currentDemographic.getDemographicNo();
+						pageContext.setAttribute("demographicNo", demographicNo);
+	
+						if (!OscarProperties.getInstance().isTorontoRFQ())
+						{
+							%>
+								<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a> 
+							<%
+	 					}
+	 				}
+ 				%>
 			</td>
 		</tr>
 		<tr>
@@ -187,15 +207,13 @@ function openSurvey() {
 				<c:when test="${empty healthsafety}">
 					<tr>
 						<td><span style="color: red">None found</span></td>
-						<td><input type="button" value="New Health and Safety"
-							onclick="openHealthSafety()" /></td>
+						<td><input type="button" value="New Health and Safety" onclick="openHealthSafety()" /></td>
 					</tr>
 				</c:when>
 				<c:when test="${empty healthsafety.message}">
 					<tr>
 						<td><span style="color: red">None found</span></td>
-						<td><input type="button" value="New Health and Safety"
-							onclick="openHealthSafety()" /></td>
+						<td><input type="button" value="New Health and Safety" onclick="openHealthSafety()" /></td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -203,12 +221,9 @@ function openSurvey() {
 						<td colspan="3"><c:out value="${healthsafety.message}" /></td>
 					</tr>
 					<tr>
-						<td width="50%">User Name: <c:out
-							value="${healthsafety.userName}" /></td>
-						<td width="30%">Date: <fmt:formatDate
-							value="${healthsafety.updateDate}" pattern="yyyy-MM-dd" /></td>
-						<td width="20%"><input type="button" value="Edit"
-							onclick="openHealthSafety()" /></td>
+						<td width="50%">User Name: <c:out value="${healthsafety.userName}" /></td>
+						<td width="30%">Date: <fmt:formatDate value="${healthsafety.updateDate}" pattern="yyyy-MM-dd" /></td>
+						<td width="20%"><input type="button" value="Edit" onclick="openHealthSafety()" /></td>
 					</tr>
 				</c:otherwise>
 			</c:choose>
@@ -217,26 +232,24 @@ function openSurvey() {
 	</tr>
 	<tr>
 		<th width="20%">Integrator Consent</th>
-		<td><c:out value="${integratorConsent}" /> &nbsp;&nbsp;&nbsp; <c:if
-			test="${allowQuickConsent}">
-			<input type="button" value="Change Consent (Quick/Detailed)"
-				onclick="document.location='ClientManager/integrator_consent.jsp?demographicId=<c:out value="${demographicId}" />'" />
+		<td>
+			<c:out value="${integratorConsent}" /> &nbsp;&nbsp;&nbsp; 
+			<c:if test="${allowQuickConsent}">
+				<input type="button" value="Change Consent (Quick/Detailed)" onclick="document.location='ClientManager/integrator_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 				&nbsp;&nbsp;
-			</c:if> <input type="button" value="Change Consent (Complex)"
-			onclick="window.open('ClientManager/complex_integrator_consent.jsp?demographicId=<c:out value="${demographicId}" />')" />
+			</c:if> 
+			<input type="button" value="Change Consent (Complex)" onclick="window.open('ClientManager/complex_integrator_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>')" />
 		</td>
 	</tr>
 	<%
 		if (caisiIntegratorManager.isIntegratorEnabled(loggedInFacilityId))
 		{
 			%>
-	<tr>
-		<th width="20%">Linked clients</th>
-		<td><input type="button" value="Manage linked clients"
-			onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<c:out value="${demographicId}" />'" />
-		</td>
-	</tr>
-	<%
+				<tr>
+					<th width="20%">Linked clients</th>
+				 	<td><input type="button" value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
+				</tr>
+			<%
 		}
 	%>
 </table>
@@ -247,8 +260,7 @@ function openSurvey() {
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
 		<th>Family <c:if test="${groupHead != null}">
-                                -- <c:out
-				value="${client.formattedName}" /> ( HEAD )
+                                -- <c:out value="${client.formattedName}" /> ( HEAD )
                             </c:if></th>
 	</tr>
 </table>
@@ -258,9 +270,7 @@ function openSurvey() {
 	<c:choose>
 		<c:when test="${relations == null}">
 			<tr>
-				<td><span style="color: red">No Family Members
-				Registered</span> <input type="button" value="Update"
-					onclick="openRelations()" /></td>
+				<td><span style="color: red">No Family Members Registered</span> <input type="button" value="Update" onclick="openRelations()" /></td>
 			</tr>
 		</c:when>
 		<c:otherwise>
@@ -283,12 +293,8 @@ function openSurvey() {
 						<c:when test="${rHash['dependent'] == null}">
 							<c:if test="${rHash['dependentable'] != null}">
                                         Add as 
-                                        <input type="button"
-									onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','2')"
-									value="dependent" />
-								<input type="button"
-									onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','1')"
-									value="spouse" />
+                                        <input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','2')" value="dependent" />
+								<input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','1')" value="spouse" />
 							</c:if>
 						</c:when>
 						<c:when test="${rHash['dependent'] == 2}">
@@ -430,13 +436,13 @@ function openSurvey() {
 			<td><c:out value="${mostRecentQuickIntake.intakeStatus}" /></td>
 			<td>
 			<%
-					if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
+				if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
 					{
-						%> <input type="button" value="Update"
+			%> <input type="button" value="Update"
 				onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />&nbsp;
 			<%
-					}
-				%> <input type="button" value="Print Preview"
+				}
+			%> <input type="button" value="Print Preview"
 				onclick="printQuickIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${mostRecentQuickIntake.id}"/>')" />
 			</td>
 		</c:if>
@@ -450,7 +456,9 @@ function openSurvey() {
 </table>
 <br />
 
-<%/*User Created Form*/ %>
+<%
+	/*User Created Form*/
+%>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 	<div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
@@ -516,17 +524,17 @@ function openSurvey() {
 		title="Admission Date" />
 	<display:column sortable="true" title="Days in Program">
 		<%
-			Admission tempAdmission = (Admission) pageContext.getAttribute("admission");
-			Date admissionDate = tempAdmission.getAdmissionDate();
-			Date dischargeDate = tempAdmission.getDischargeDate() != null ? tempAdmission.getDischargeDate() : new Date();
-			
-			long diff = dischargeDate.getTime() - admissionDate.getTime();
-			diff = diff / 1000; // seconds
-			diff = diff / 60; // minutes
-			diff = diff / 60; // hours
-			diff = diff / 24; // days
+			Admission tempAdmission=(Admission)pageContext.getAttribute("admission");
+					Date admissionDate=tempAdmission.getAdmissionDate();
+					Date dischargeDate=tempAdmission.getDischargeDate()!=null?tempAdmission.getDischargeDate():new Date();
 
-			String numDays = String.valueOf(diff);
+					long diff=dischargeDate.getTime()-admissionDate.getTime();
+					diff=diff/1000; // seconds
+					diff=diff/60; // minutes
+					diff=diff/60; // hours
+					diff=diff/24; // days
+
+					String numDays=String.valueOf(diff);
 		%>
 		<%=numDays%>
 	</display:column>
@@ -565,17 +573,17 @@ function openSurvey() {
 		title="Referring Provider" />
 	<display:column sortable="true" title="Days in Queue">
 		<%
-			ClientReferral tempReferral = (ClientReferral) pageContext.getAttribute("referral");
-			Date referralDate = tempReferral.getReferralDate();
-			Date currentDate = new Date();
-			
-			long referralDiff = currentDate.getTime() - referralDate.getTime();
-			referralDiff = referralDiff / 1000; // seconds
-			referralDiff = referralDiff / 60; // minutes
-			referralDiff = referralDiff / 60; // hours
-			referralDiff = referralDiff / 24; // days
+			ClientReferral tempReferral=(ClientReferral)pageContext.getAttribute("referral");
+					Date referralDate=tempReferral.getReferralDate();
+					Date currentDate=new Date();
 
-			String referralNumDays = String.valueOf(referralDiff);
+					long referralDiff=currentDate.getTime()-referralDate.getTime();
+					referralDiff=referralDiff/1000; // seconds
+					referralDiff=referralDiff/60; // minutes
+					referralDiff=referralDiff/60; // hours
+					referralDiff=referralDiff/24; // days
+
+					String referralNumDays=String.valueOf(referralDiff);
 		%>
 		<%=referralNumDays%>
 	</display:column>
