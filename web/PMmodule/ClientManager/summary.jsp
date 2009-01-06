@@ -161,7 +161,7 @@ function openSurvey() {
 						IntegratorConsent integratorConsent=integratorConsentDao.findLatestByFacilityAndDemographic(loggedInFacilityId,currentDemographic.getDemographicNo());
 						boolean consented=(integratorConsent!=null && integratorConsent.isConsentToHealthCardId());
 						%>
-							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 						<%
 					}
 				%>				
