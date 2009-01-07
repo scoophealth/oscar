@@ -98,7 +98,6 @@ You have no rights to access the data!
 
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="demographic.demographiceditdemographic.title" /></title>
 <html:base />
