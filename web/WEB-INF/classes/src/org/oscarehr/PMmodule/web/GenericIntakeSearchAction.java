@@ -133,6 +133,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
 
         // if matches found display results, otherwise create local intake
+        @SuppressWarnings("unchecked")
         List<MatchingDemographicScore> remoteMatches=(List<MatchingDemographicScore>) request.getAttribute("remoteMatches");
         if (!localMatches.isEmpty() || (remoteMatches!=null && remoteMatches.size()>0)) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
@@ -159,20 +160,20 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		    temp = StringUtils.trimToNull(intakeSearchBean.getHealthCardNumber());
 		    parameters.setHin(temp);
 
-		    XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+		    XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 		    {
 		        temp = StringUtils.trimToNull(intakeSearchBean.getYearOfBirth());
-		        if (temp != null) cal.setYear(Integer.parseInt(temp));
+		        if (temp != null) soapCal.setYear(Integer.parseInt(temp));
 
 		        temp = StringUtils.trimToNull(intakeSearchBean.getMonthOfBirth());
-		        if (temp != null) cal.setMonth(Integer.parseInt(temp));
+		        if (temp != null) soapCal.setMonth(Integer.parseInt(temp));
 
 		        temp = StringUtils.trimToNull(intakeSearchBean.getDayOfBirth());
-		        if (temp != null) cal.setDay(Integer.parseInt(temp));
+		        if (temp != null) soapCal.setDay(Integer.parseInt(temp));
 
-		        cal.setTime(0, 0, 0);
+		        soapCal.setTime(0, 0, 0);
 		    }
-		    parameters.setBirthDate(cal);
+		    parameters.setBirthDate(soapCal);
 
 		    List<MatchingDemographicScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 		    if (LOG.isDebugEnabled()) {
@@ -223,8 +224,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
             CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
-            XMLGregorianCalendar cal=cachedDemographic.getBirthDate();
-            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), cal==null?null:make0PrependedDateString(cal.getMonth()), cal==null?null:make0PrependedDateString(cal.getDay()), cal==null?null:String.valueOf(cal.getYear()), cachedDemographic.getHin(), null, true);
+            XMLGregorianCalendar soapCal=cachedDemographic.getBirthDate();
+            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), null, null, null, cachedDemographic.getHin(), null, true);
+            demographic.setBirthDay(soapCal.toGregorianCalendar());
             demographic.setCity(cachedDemographic.getCity());
             demographic.setProvince(cachedDemographic.getProvince());
             demographic.setSin(cachedDemographic.getSin());
@@ -237,12 +239,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
     }
 
-    private String make0PrependedDateString(int i)
-    {
-    	if (i<=9) return("0"+i);
-    	else return(""+i);
-    }
-    
     private List<Demographic> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
         ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
         clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
