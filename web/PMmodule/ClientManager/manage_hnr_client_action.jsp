@@ -13,11 +13,11 @@
 	
 	if ("copyLocalToHnr".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.copyLocalToHnr();
+		ManageHnrClientAction.copyLocalToHnr(currentFacility, currentProvider, currentDemographicId);
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.copyHnrToLocal();
+		ManageHnrClientAction.copyHnrToLocal(currentFacility, currentProvider, currentDemographicId);
 	}
 	
 	response.sendRedirect("manage_hnr_client.jsp?demographicId="+currentDemographicId);
