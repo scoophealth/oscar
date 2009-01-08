@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -142,20 +143,17 @@ public class ManageLinkedClients {
 		temp = StringUtils.trimToNull(demographic.getHin());
 		parameters.setHin(temp);
 
-		XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+		XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+		Calendar cal=demographic.getBirthDay();
+		if (cal!=null)
 		{
-			temp = StringUtils.trimToNull(demographic.getYearOfBirth());
-			if (temp != null) cal.setYear(Integer.parseInt(temp));
+			soapCal.setYear(cal.get(Calendar.YEAR));
+			soapCal.setMonth(cal.get(Calendar.MONTH));
+			soapCal.setDay(cal.get(Calendar.DAY_OF_MONTH));
 
-			temp = StringUtils.trimToNull(demographic.getMonthOfBirth());
-			if (temp != null) cal.setMonth(Integer.parseInt(temp));
-
-			temp = StringUtils.trimToNull(demographic.getDateOfBirth());
-			if (temp != null) cal.setDay(Integer.parseInt(temp));
-
-			cal.setTime(0, 0, 0);
+			soapCal.setTime(0, 0, 0);
+			parameters.setBirthDate(soapCal);
 		}
-		parameters.setBirthDate(cal);
 		return parameters;
 	}
 
