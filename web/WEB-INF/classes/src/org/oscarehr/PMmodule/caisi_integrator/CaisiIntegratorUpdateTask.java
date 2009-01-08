@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -307,15 +308,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
 		cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
 
-		try {
-			XMLGregorianCalendar cal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-			if (demographic.getYearOfBirth() != null) cal.setYear(Integer.parseInt(demographic.getYearOfBirth()));
-			if (demographic.getMonthOfBirth() != null) cal.setMonth(Integer.parseInt(demographic.getMonthOfBirth()));
-			if (demographic.getDateOfBirth() != null) cal.setDay(Integer.parseInt(demographic.getDateOfBirth()));
-			cal.setTime(0, 0, 0);
-			cachedDemographic.setBirthDate(cal);
-		} catch (NumberFormatException e) {
-			logger.error("Unexpected error.", e);
+		XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+		Calendar cal=demographic.getBirthDay();
+		if (cal!=null)
+		{
+			soapCal.setYear(cal.get(Calendar.YEAR));
+			soapCal.setMonth(cal.get(Calendar.MONTH));
+			soapCal.setDay(cal.get(Calendar.DAY_OF_MONTH));
+			soapCal.setTime(0, 0, 0);
+			cachedDemographic.setBirthDate(soapCal);
 		}
 
 		cachedDemographic.setHinVersion(demographic.getVer());
