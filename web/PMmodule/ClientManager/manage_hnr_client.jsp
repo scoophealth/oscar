@@ -45,19 +45,13 @@
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
 		<%
-			String localBDay="";
-			if (demographic.getYearOfBirth()!=null && demographic.getMonthOfBirth()!=null && demographic.getDateOfBirth()!=null)	
-			{
-				localBDay=demographic.getYearOfBirth()+'-'+demographic.getMonthOfBirth()+'-'+demographic.getDateOfBirth();
-			}
-			
 			String remoteBDay="";
 			if (hnrClient!=null && hnrClient.getBirthDate()!=null)
 			{
 				remoteBDay=DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());						
 			}
 		%>
-		<td class="genericTableData"><%=localBDay%></td>
+		<td class="genericTableData"><%=demographic.getFormattedDob()%></td>
 		<td class="genericTableData"><%=remoteBDay%></td>
 	</tr>
 	<tr>
@@ -113,6 +107,6 @@
 
 <br />
 
-<input type="button" value="Send Local Data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR Data To Local" onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="cancel" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
+<input type="button" value="Send Local Data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR Data To Local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="cancel" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
