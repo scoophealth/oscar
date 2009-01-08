@@ -36,6 +36,12 @@ import javax.persistence.TemporalType;
 @Entity
 public class ClientLink {
 
+	/**
+	 * As a special mention, the OSCAR_CAISI links are not actually currently saved locally due to
+	 * privacy reasons, they are stored on the integrator. This may change in the future. This 
+	 * DAO structure still holds valid though as we will have more datasources coming online 
+	 * shortly which will also require linking. 
+	 */
 	public enum Type {
 		HNR, OSCAR_CAISI
 	}
