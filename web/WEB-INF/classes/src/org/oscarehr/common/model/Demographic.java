@@ -21,6 +21,7 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -825,11 +826,11 @@ public class Demographic implements Serializable {
 		}
 	}
 
-	public Calendar getBirthDay() {
-		Calendar cal = null;
+	public GregorianCalendar getBirthDay() {
+		GregorianCalendar cal = null;
 
 		if (dateOfBirth != null && monthOfBirth != null && yearOfBirth != null) {
-			cal = Calendar.getInstance();
+			cal = new GregorianCalendar();
 			cal.setTimeInMillis(0);
 			cal.set(Integer.parseInt(yearOfBirth), Integer.parseInt(monthOfBirth) - 1, Integer.parseInt(dateOfBirth));
 		}
