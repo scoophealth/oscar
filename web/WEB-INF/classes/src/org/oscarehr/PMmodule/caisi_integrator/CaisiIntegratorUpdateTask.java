@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -308,14 +307,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
 		cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
 
-		XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-		Calendar cal=demographic.getBirthDay();
+		GregorianCalendar cal=demographic.getBirthDay();
 		if (cal!=null)
 		{
-			soapCal.setYear(cal.get(Calendar.YEAR));
-			soapCal.setMonth(cal.get(Calendar.MONTH));
-			soapCal.setDay(cal.get(Calendar.DAY_OF_MONTH));
-			soapCal.setTime(0, 0, 0);
+			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
 			cachedDemographic.setBirthDate(soapCal);
 		}
 
@@ -397,7 +392,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 
 			if (localPrevention.getNextDate() != null) {
-				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+				GregorianCalendar localCalendar = new GregorianCalendar();
 				localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
 
 				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
@@ -405,7 +400,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 
 			if (localPrevention.getPreventionDate() != null) {
-				GregorianCalendar localCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+				GregorianCalendar localCalendar = new GregorianCalendar();
 				localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
 
 				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
