@@ -24,7 +24,10 @@ package org.oscarehr.PMmodule.web.forms;
 
 import java.io.File;
 import java.io.StringReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -661,7 +664,10 @@ public class SurveyExecuteAction extends DispatchAction {
                 data.getValues().put(key, client.getLastName());
             } else if (dataLink.equals("Demographic/birthDate")) {
                 format = format.replaceAll("mm", "MM");
-                data.getValues().put(key, client.getFormattedDob(format));
+        		SimpleDateFormat formatter = new SimpleDateFormat(format);
+        		Calendar cal = client.getBirthDay();
+        		String temp=formatter.format(cal.getTime());
+                data.getValues().put(key, temp);
             }
         } else {
             if (admissionId > 0) {
@@ -690,9 +696,19 @@ public class SurveyExecuteAction extends DispatchAction {
             String value = (String) data.getValues().get(key);
             client.setLastName(value);
         } else if (dataLink.equals("Demographic/birthDate")) {
-            format = format.replaceAll("mm", "MM");
-            String value = (String) data.getValues().get(key);
-            client.setFormattedDob(format, value);
+            try {
+	            format = format.replaceAll("mm", "MM");
+	            SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+	            String value = (String) data.getValues().get(key);
+	            Date d = formatter.parse(value);
+	            Calendar cal = Calendar.getInstance();
+	            cal.setTime(d);
+	            
+	            client.setBirthDay(cal);
+            } catch (ParseException e) {
+	            log.error(e);
+            }
         }
         clientManager.saveClient(client);
     }
