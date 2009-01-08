@@ -492,8 +492,79 @@ function grabEnterCustomReason(event){
 </security:oscarSec>
 </script>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+div.demographicSection{
+   //width:49%;
+   width:100%;
+   margin-top: 2px;
+   margin-left:3px;
+   border-top: 1px solid #ccccff;
+   border-bottom: 1px solid #ccccff;
+   border-left: 1px solid #ccccff;
+   border-right: 1px solid #ccccff;
+   float: left;
+}
 
+div.demographicSection h3 {
+   background-color: #ccccff;
+   font-size: 8pt;
+   font-variant:small-caps;
+   font:bold;
+   margin-top:0px;
+   padding-top:0px;
+   margin-bottom:0px;
+   padding-bottom:0px;
+}
+
+div.demographicSection ul{
+
+       list-style:none;
+       list-style-type:none;
+       list-style-position:outside;
+       padding-left:1px;
+       margin-left:1px;
+       margin-top:0px;
+       padding-top:1px;
+       margin-bottom:0px;
+       padding-bottom:0px;
+}
+
+
+div.demographicSection li {
+padding-right: 15px;
+white-space: nowrap;
+}
+
+
+div.demographicWrapper {
+  background-color: #eeeeff;
+  margin-top: 5px;
+  margin-left:1px;
+  margin-right:1px;
+}
+
+/* popup menu style for encounter reason */
+.menu { 
+    position: absolute; 
+    visibility: hidden; 
+    background-color: #6699cc; 
+    layer-background-color: #6699cc; 
+    color: white; 
+    border-left: 1px solid black; 
+    border-top: 1px solid black; 
+    border-bottom: 3px solid black; 
+    border-right: 3px solid black; 
+    padding: 3px; 
+    z-index: 10;    
+    font-size: 9px;
+    width: 25em;
+}   
+
+.menu a {
+    text-decoration: none;
+    color:white;
+}
+</style>
 </head>
 <body onLoad="setfocus(); checkONReferralNo(); formatPhoneNum();"
 	topmargin="0" leftmargin="0" rightmargin="0">
