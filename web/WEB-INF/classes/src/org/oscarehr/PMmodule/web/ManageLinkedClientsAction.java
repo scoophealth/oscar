@@ -22,32 +22,29 @@ public class ManageLinkedClientsAction {
 	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 
-	private ArrayList<Integer> linkedHnrIds=new ArrayList<Integer>();
-	private ArrayList<FacilityDemographicPrimaryKey> linkedCaisiIds=new ArrayList<FacilityDemographicPrimaryKey>();
-	
+	private Integer newHnrLinkedId = null;
+	private ArrayList<FacilityDemographicPrimaryKey> linkedCaisiIds = new ArrayList<FacilityDemographicPrimaryKey>();
+
 	/**
 	 * @param linkString should be of the format linked.<ClientLink.Type.name()>.<type specific identifier>
 	 */
-	public void addLinkedId(String linkString)
-	{
-		String[] linkStringSplit=linkString.split("\\.");
+	public void addLinkedId(String linkString) {
+		String[] linkStringSplit = linkString.split("\\.");
 
-		if (ClientLink.Type.HNR.name().equals(linkStringSplit[1]))
-		{
-			linkedHnrIds.add(Integer.parseInt(linkStringSplit[2]));
-		}
-		else if (ClientLink.Type.OSCAR_CAISI.name().equals(linkStringSplit[1]))
-		{
-			FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey();
+		if (ClientLink.Type.HNR.name().equals(linkStringSplit[1])) {
+			// this is an odd case where we only support 1 HNR link so we'll just take the last selected one.
+			newHnrLinkedId=Integer.parseInt(linkStringSplit[2]);
+		} else if (ClientLink.Type.OSCAR_CAISI.name().equals(linkStringSplit[1])) {
+			FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey();
 			pk.setFacilityId(Integer.parseInt(linkStringSplit[2]));
 			pk.setDemographicId(Integer.parseInt(linkStringSplit[3]));
 			linkedCaisiIds.add(pk);
 		}
 	}
-	
+
 	public void saveLinkedIds(Facility facility, Provider provider, Integer demographicId) {
 		saveHnrLinkedIds(facility, provider, demographicId);
-		saveCaisiLinkedIds(facility, provider, demographicId);		
+		saveCaisiLinkedIds(facility, provider, demographicId);
 	}
 
 	private void saveCaisiLinkedIds(Facility facility, Provider provider, Integer demographicId) {
@@ -71,38 +68,41 @@ public class ManageLinkedClientsAction {
 		} catch (Exception e) {
 			logger.error(e);
 		}
-    }
+	}
 
 	private void saveHnrLinkedIds(Facility facility, Provider provider, Integer demographicId) {
-	    List<ClientLink> currentLinks=clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
-	    HashSet<Integer> currentLinkIds=new HashSet<Integer>();
-	    
-	    // process entries removed and populate hashset for additions lookup
-	    for (ClientLink clientLink : currentLinks)
-	    {
-	    	currentLinkIds.add(clientLink.getRemoteLinkId());
-	    	
-	    	if (!linkedHnrIds.contains(clientLink.getRemoteLinkId()))
-	    	{
-	    		clientLink.setUnlinkDate(new Date());
-	    		clientLink.setUnlinkProviderNo(provider.getProviderNo());
-	    		clientLinkDao.merge(clientLink);
-	    	}
-	    }
-	    
-	    // process entries added
-	    for (Integer tempId : linkedHnrIds)
-	    {
-	    	if (!currentLinkIds.contains(tempId))
-	    	{
-	    		ClientLink clientLink=new ClientLink();
-	    		clientLink.setClientId(demographicId);
-	    		clientLink.setLinkDate(new Date());
-	    		clientLink.setLinkProviderNo(provider.getProviderNo());
-	    		clientLink.setLinkType(ClientLink.Type.HNR);
-	    		clientLink.setRemoteLinkId(tempId);
-	    		clientLinkDao.persist(clientLink);
-	    	}
-	    }
-    }
+		List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
+		if (currentLinks.size() > 1) throw (new IllegalArgumentException("The client passed in should have had at most 1 hnr link. links.size=" + currentLinks.size()));
+
+		boolean addNewEntry = false;
+		boolean removeOldEntry = false;
+
+		// if we never use to have an entry but we do now add entry
+		if (currentLinks.size() == 0 && newHnrLinkedId != null) addNewEntry = true;
+
+		// if we use to have an entry but we do not anymore, just remove entry
+		if (currentLinks.size() == 1 && newHnrLinkedId == null) removeOldEntry = true;
+
+		// if we use to have an entry, and we still do, but the entry is different, then update
+		if (currentLinks.size() == 1 && newHnrLinkedId != null && !newHnrLinkedId.equals(currentLinks.get(0).getRemoteLinkId())) addNewEntry = removeOldEntry = true;
+
+		// process entry removed
+		if (removeOldEntry) {
+			ClientLink existingLink=currentLinks.get(0);
+			existingLink.setUnlinkDate(new Date());
+			existingLink.setUnlinkProviderNo(provider.getProviderNo());
+			clientLinkDao.merge(existingLink);
+		}
+
+		// process entry added
+		if (addNewEntry) {
+			ClientLink newLink = new ClientLink();
+			newLink.setClientId(demographicId);
+			newLink.setLinkDate(new Date());
+			newLink.setLinkProviderNo(provider.getProviderNo());
+			newLink.setLinkType(ClientLink.Type.HNR);
+			newLink.setRemoteLinkId(newHnrLinkedId);
+			clientLinkDao.persist(newLink);
+		}
+	}
 }
