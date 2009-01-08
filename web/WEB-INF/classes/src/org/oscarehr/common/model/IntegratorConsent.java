@@ -163,12 +163,12 @@ public class IntegratorConsent {
 
 	@PreRemove
 	protected void jpa_preventDelete() {
-		throw (new IllegalArgumentException("Remove is not allowed for this type of item."));
+		throw (new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
 
 	@PreUpdate
 	protected void jpa_preventUpdate() {
-		throw (new IllegalArgumentException("Update is not allowed for this type of item."));
+		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
 
 	public boolean isConsentToAll() {
