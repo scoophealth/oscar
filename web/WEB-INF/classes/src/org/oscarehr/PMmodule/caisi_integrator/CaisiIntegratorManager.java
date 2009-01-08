@@ -83,8 +83,7 @@ public class CaisiIntegratorManager {
 	private static FacilitySegmentedTimeClearedHashMap<Object> facilitySegmentedSimpleTimeCache = new FacilitySegmentedTimeClearedHashMap<Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
 	/**
-	 * This caching mechanism uses the key=hnrClient.linkingId, value=hnrClient.
-	 * Note for auditing purposes the cache must be segmented by facility and provider.
+	 * This caching mechanism uses the key=hnrClient.linkingId, value=hnrClient. Note for auditing purposes the cache must be segmented by facility and provider.
 	 */
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client> hnrClientCache = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
@@ -303,26 +302,32 @@ public class CaisiIntegratorManager {
 		HnrWs hnrWs = getHnrWs(facility.getId());
 		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(getProviderAuditString(facility, provider), matchingClientParameters);
 
-		for (MatchingClientScore temp : potentialMatches) hnrClientCache.put(facility.getId(), provider.getProviderNo(), temp.getClient().getLinkingId(), temp.getClient());
-		
+		for (MatchingClientScore temp : potentialMatches)
+			hnrClientCache.put(facility.getId(), provider.getProviderNo(), temp.getClient().getLinkingId(), temp.getClient());
+
 		return (potentialMatches);
 	}
-	
-	public org.oscarehr.hnr.ws.client.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException
-	{
-		org.oscarehr.hnr.ws.client.Client client=hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
-		
-		if (client==null)
-		{
+
+	public org.oscarehr.hnr.ws.client.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException {
+		org.oscarehr.hnr.ws.client.Client client = hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
+
+		if (client == null) {
 			HnrWs hnrWs = getHnrWs(facility.getId());
-			client=hnrWs.getHnrClient(getProviderAuditString(facility, provider), linkingId);
-			if (client!=null) hnrClientCache.put(facility.getId(), provider.getProviderNo(), linkingId, client);
+			client = hnrWs.getHnrClient(getProviderAuditString(facility, provider), linkingId);
+			if (client != null) hnrClientCache.put(facility.getId(), provider.getProviderNo(), linkingId, client);
 		}
-		
-		return(client);
+
+		return (client);
+	}
+
+	public void setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.client.Client hnrClient) throws MalformedURLException {
+		hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
+
+		HnrWs hnrWs = getHnrWs(facility.getId());
+		hnrWs.setHnrClientData(getProviderAuditString(facility, provider), hnrClient);
 	}
 
 	private static String getProviderAuditString(Facility facility, Provider provider) {
-	    return "facility=" + facility.getName() + ", provider=" + provider.getFormattedName();
-    }
+		return "facility=" + facility.getName() + ", provider=" + provider.getFormattedName();
+	}
 }
