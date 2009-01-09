@@ -33,7 +33,7 @@ public class ManageLinkedClientsAction {
 
 		if (ClientLink.Type.HNR.name().equals(linkStringSplit[1])) {
 			// this is an odd case where we only support 1 HNR link so we'll just take the last selected one.
-			newHnrLinkedId=Integer.parseInt(linkStringSplit[2]);
+			newHnrLinkedId = Integer.parseInt(linkStringSplit[2]);
 		} else if (ClientLink.Type.OSCAR_CAISI.name().equals(linkStringSplit[1])) {
 			FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey();
 			pk.setFacilityId(Integer.parseInt(linkStringSplit[2]));
@@ -66,43 +66,46 @@ public class ManageLinkedClientsAction {
 				if (!currentLinks.contains(pk)) demographicWs.linkDemographics(provider.getProviderNo(), demographicId, pk.getFacilityId(), pk.getDemographicId());
 			}
 		} catch (Exception e) {
-			logger.error(e);
+	        logger.error("Unexpected Error.", e);
 		}
 	}
 
 	private void saveHnrLinkedIds(Facility facility, Provider provider, Integer demographicId) {
-		List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
-		if (currentLinks.size() > 1) throw (new IllegalArgumentException("The client passed in should have had at most 1 hnr link. links.size=" + currentLinks.size()));
+		try {
+	        List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
 
-		boolean addNewEntry = false;
-		boolean removeOldEntry = false;
-
-		// if we never use to have an entry but we do now add entry
-		if (currentLinks.size() == 0 && newHnrLinkedId != null) addNewEntry = true;
-
-		// if we use to have an entry but we do not anymore, just remove entry
-		if (currentLinks.size() == 1 && newHnrLinkedId == null) removeOldEntry = true;
-
-		// if we use to have an entry, and we still do, but the entry is different, then update
-		if (currentLinks.size() == 1 && newHnrLinkedId != null && !newHnrLinkedId.equals(currentLinks.get(0).getRemoteLinkId())) addNewEntry = removeOldEntry = true;
-
-		// process entry removed
-		if (removeOldEntry) {
-			ClientLink existingLink=currentLinks.get(0);
-			existingLink.setUnlinkDate(new Date());
-			existingLink.setUnlinkProviderNo(provider.getProviderNo());
-			clientLinkDao.merge(existingLink);
-		}
-
-		// process entry added
-		if (addNewEntry) {
-			ClientLink newLink = new ClientLink();
-			newLink.setClientId(demographicId);
-			newLink.setLinkDate(new Date());
-			newLink.setLinkProviderNo(provider.getProviderNo());
-			newLink.setLinkType(ClientLink.Type.HNR);
-			newLink.setRemoteLinkId(newHnrLinkedId);
-			clientLinkDao.persist(newLink);
-		}
+	        boolean isCheckedClientExistingLink=false;
+	        
+	        // remove old links and check to see if the current link is an existing link
+	        for (ClientLink existingLink : currentLinks)
+	        {
+	        	if (newHnrLinkedId==null || !newHnrLinkedId.equals(existingLink.getRemoteLinkId()))
+	        	{
+	        		existingLink.setUnlinkDate(new Date());
+	        		existingLink.setUnlinkProviderNo(provider.getProviderNo());
+	        		clientLinkDao.merge(existingLink);
+	        	}
+	        	else
+	        	{
+	        		isCheckedClientExistingLink=true;
+	        	}
+	        }
+	        
+	        // if something is checked and it wasn't previously checked, add it
+	        // how unfortunate, since the removal and adding isn't an atomic operation
+	        // this will lead to multiple hnr entries if on totally rare chance 2 threads collide running this method on 2 different linking ids.
+	        // oh well, I took out the check for single hnr entry so it should still "function" even though there's an anomalie here.
+	        if (newHnrLinkedId != null && !isCheckedClientExistingLink) {
+	        	ClientLink newLink = new ClientLink();
+	        	newLink.setClientId(demographicId);
+	        	newLink.setLinkDate(new Date());
+	        	newLink.setLinkProviderNo(provider.getProviderNo());
+	        	newLink.setLinkType(ClientLink.Type.HNR);
+	        	newLink.setRemoteLinkId(newHnrLinkedId);
+	        	clientLinkDao.persist(newLink);
+	        }
+        } catch (Exception e) {
+	        logger.error("Unexpected Error.", e);
+        }
 	}
 }

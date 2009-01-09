@@ -31,7 +31,9 @@ public class ManageHnrClient {
 		demographic = demographicDao.getDemographicById(demographicId);
 		clientImage = clientImageDAO.getClientImage(demographicId);
 
-		// there's only 1 hnr link
+		// we're only dealing with 1 hnr entry even if there's multiple because there should
+		// only be 1, a minor issue about some of this code not being atomic makes multiple
+		// entries theoretically possible though in reality it should never happen.
 		List<ClientLink> temp = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 

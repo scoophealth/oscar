@@ -320,11 +320,11 @@ public class CaisiIntegratorManager {
 		return (client);
 	}
 
-	public void setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.client.Client hnrClient) throws MalformedURLException {
-		hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
+	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.client.Client hnrClient) throws MalformedURLException {
+		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());
-		hnrWs.setHnrClientData(getProviderAuditString(facility, provider), hnrClient);
+		return(hnrWs.setHnrClientData(getProviderAuditString(facility, provider), hnrClient));
 	}
 
 	private static String getProviderAuditString(Facility facility, Provider provider) {

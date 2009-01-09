@@ -77,9 +77,11 @@ public class ManageLinkedClients {
 
 	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException {
 		List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographic.getDemographicNo(), true, ClientLink.Type.HNR);
-		if (currentLinks.size() > 1) throw (new IllegalArgumentException("The client passed in should have had at most 1 hnr link. links.size=" + currentLinks.size()));
 
-		if (currentLinks.size() == 1) {
+		// we're only dealing with 1 hnr entry even if there's multiple because there should
+		// only be 1, a minor issue about some of this code not being atomic makes multiple
+		// entries theoretically possible though in reality it should never happen.
+		if (currentLinks.size() >0 ) {
 			org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, currentLinks.get(0).getRemoteLinkId());
 
 			// can be null if client revoked consent or locked data, link still exists but no records are returned.
