@@ -104,7 +104,77 @@ OscarProperties props = OscarProperties.getInstance();
 	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title" />
 </title>
 <html:base />
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+ 
+/* Used for "import from enctounter" button */
+input.btn{
+   color:black;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#B8B8FF;
+   border:1px solid;
+   border-top-color:#696;
+   border-left-color:#696;
+   border-right-color:#363;
+   border-bottom-color:#363;
+}
+    
+.doc {
+    color:blue;
+}
+
+.lab {
+    color: #CC0099;
+}
+td.tite {
+
+background-color: #bbbbFF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite1 {
+
+background-color: #ccccFF;
+color : black;
+font-size: 12pt;
+
+}
+
+th,td.tite2 {
+
+background-color: #BFBFFF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite3 {
+
+background-color: #B8B8FF;
+color : black;
+font-size: 12pt;
+
+}
+
+td.tite4 {
+
+background-color: #ddddff;
+color : black;
+font-size: 12pt;
+
+}
+
+td.stat{
+font-size: 10pt;
+}
+
+input.righty{
+text-align: right;
+}
+</style>
 </head>
 
 
