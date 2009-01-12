@@ -24,16 +24,19 @@
 	<tr>
 		<td class="genericTableHeader"></td>
 		<td class="genericTableHeader">Local Information</td>
+		<td class="genericTableHeader">Local Validation</td>
 		<td class="genericTableHeader">Health Number Registry Information</td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Picture</td>
 		<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getLocalClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
+		<td class="genericTableData" style="vertical-align:middle"><input type="checkbox" name="validatePicture" />Validated</td>
 		<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getHnrClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">First Name</td>
 		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
+		<td class="genericTableData" rowspan="11" style="vertical-align:middle"><input type="checkbox" name="validateHcInfo" />Validated</td>
 		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
@@ -89,6 +92,7 @@
 	<tr>
 		<td class="genericTableHeader">Gender</td>
 		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
+		<td class="genericTableData" rowspan="2" style="vertical-align:middle"><input type="checkbox" name="validateOther" />Validated</td>
 		<td class="genericTableData"><%=manageHnrClient.getRemoteGender()%></td>
 	</tr>
 	<tr>
@@ -100,6 +104,6 @@
 
 <br />
 
-<input type="button" value="Send Local Data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR Data To Local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="cancel" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
+<input type="button" value="Send Local Data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR Data To Local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Back to Client Summary" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
