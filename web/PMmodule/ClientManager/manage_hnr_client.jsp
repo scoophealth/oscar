@@ -29,76 +29,76 @@
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Picture</td>
-		<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getLocalClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
-		<td class="genericTableData" style="vertical-align:middle"><input type="checkbox" name="validatePicture" />Validated</td>
-		<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getHnrClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
+		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getLocalClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
+		<td style="vertical-align:middle;border-right:solid black 1px"><input type="checkbox" name="validatePicture" />Validated</td>
+		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getHnrClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">First Name</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
-		<td class="genericTableData" rowspan="11" style="vertical-align:middle"><input type="checkbox" name="validateHcInfo" />Validated</td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
+		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
+		<td rowspan="11" style="vertical-align:middle;border-top:solid black 1px;border-right:solid black 1px"><input type="checkbox" name="validateHcInfo" />Validated</td>
+		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Last Name</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getLastName())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getLastName())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getLastName())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getLastName())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
-		<td class="genericTableData"><%=demographic.getFormattedDob()%></td>
-		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedBirthDate()%></td>
+		<td><%=demographic.getFormattedDob()%></td>
+		<td><%=manageHnrClient.getRemoteFormatedBirthDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Number</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getHin())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHin())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getHin())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHin())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Type</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getHcType())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinType())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getHcType())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinType())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Version</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getVer())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinVersion())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getVer())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinVersion())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Valid Start</td>
-		<td class="genericTableData"><%=manageHnrClient.getLocalFormatedHinStartDate()%></td>
-		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
+		<td><%=manageHnrClient.getLocalFormatedHinStartDate()%></td>
+		<td><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Valid End</td>
-		<td class="genericTableData"><%=manageHnrClient.getLocalFormatedHinEndDate()%></td>
-		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
+		<td><%=manageHnrClient.getLocalFormatedHinEndDate()%></td>
+		<td><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Province/State/Territory</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getProvince())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getProvince())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getProvince())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getProvince())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">City</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getCity())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getCity())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getCity())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getCity())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Street Address</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Gender</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
-		<td class="genericTableData" rowspan="2" style="vertical-align:middle"><input type="checkbox" name="validateOther" />Validated</td>
-		<td class="genericTableData"><%=manageHnrClient.getRemoteGender()%></td>
+		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
+		<td rowspan="2" style="vertical-align:middle;border-top:solid black 1px;border-right:solid black 1px"><input type="checkbox" name="validateOther" />Validated</td>
+		<td style="border-top:solid black 1px"><%=manageHnrClient.getRemoteGender()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">SIN</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSin())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getSin())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getSin())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getSin())%></td>
 	</tr>
 </table>
 
