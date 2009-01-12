@@ -104,6 +104,6 @@
 
 <br />
 
-<input type="button" value="Send Local Data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR Data To Local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Back to Client Summary" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
+<input type="button" value="Send validated local data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR data to local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Back to client summary" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

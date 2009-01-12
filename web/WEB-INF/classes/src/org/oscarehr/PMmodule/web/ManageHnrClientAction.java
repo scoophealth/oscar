@@ -31,7 +31,7 @@ public class ManageHnrClientAction {
 		try {
 	        logger.debug("copyHnrToLocal currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId);
 
-	        List<ClientLink> clientLinks = clientLinkDao.findByClientIdAndType(clientId, true, ClientLink.Type.HNR);
+	        List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
 
 	        // it might be 0 if some one unlinked the client at the same time you are looking at this screen.
 	        if (clientLinks.size() > 0)
@@ -90,7 +90,7 @@ public class ManageHnrClientAction {
 	        // 2) there is no linked client at which point create a new linked client on the hnr and create the link.
 
 	        // were ignoring the anomalie of multiple hnr links as it should never really happen though it's theorietically possible due to lack of atomic updates on this table.
-	        List<ClientLink> clientLinks = clientLinkDao.findByClientIdAndType(clientId, true, ClientLink.Type.HNR);
+	        List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
 
 	        org.oscarehr.hnr.ws.client.Client hnrClient = null;
 	        ClientLink clientLink = null;
@@ -169,6 +169,7 @@ public class ManageHnrClientAction {
 	        if (clientLink==null && linkingId!=null)
 	        {
 	        	clientLink=new ClientLink();
+	        	clientLink.setFacilityId(currentFacility.getId());
 	        	clientLink.setClientId(clientId);
 	        	clientLink.setLinkDate(new Date());
 	        	clientLink.setLinkProviderNo(currentProvider.getProviderNo());

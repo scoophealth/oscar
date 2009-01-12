@@ -2459,6 +2459,7 @@ create table formMentalHealthForm14 (
 create table ClientLink
 (
 	id int primary key auto_increment,
+	facilityId int not null, index(facilityId), foreign key (facilityId) references Facility(id),
 	clientId int not null, index(clientId), foreign key (clientId) references demographic(demographic_no),
 	linkType varchar(32) not null,
 	remoteLinkId int not null,
@@ -2466,5 +2467,17 @@ create table ClientLink
 	linkProviderNo varchar(6) not null,  foreign key (linkProviderNo) references provider(provider_no),
 	unlinkDate datetime,
 	unlinkProviderNo varchar(6),  foreign key (unlinkProviderNo) references provider(provider_no)
+);
+
+create table HnrDataValidation
+(
+	id int primary key auto_increment,
+	facilityId int not null, index(facilityId), foreign key (facilityId) references Facility(id),
+	clientId int not null, index(clientId), foreign key (clientId) references demographic(demographic_no),
+	created datetime not null,
+	validatorProviderNo varchar(6) not null, foreign key (validatorProviderNo) references provider(provider_no),
+	valid tinyint(1) not null,
+	validationType varchar(32) not null, index(validationType),
+	validationCrc bigint not null
 );
 

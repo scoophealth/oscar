@@ -49,6 +49,7 @@ public class ClientLink {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id = null;
+	private Integer facilityId = null;
 	private Integer clientId = null;
 	@Enumerated(EnumType.STRING)
 	private Type linkType = null;
@@ -65,6 +66,14 @@ public class ClientLink {
 	public Integer getClientId() {
 		return clientId;
 	}
+
+	public Integer getFacilityId() {
+    	return facilityId;
+    }
+
+	public void setFacilityId(Integer facilityId) {
+    	this.facilityId = facilityId;
+    }
 
 	public void setClientId(Integer clientId) {
 		this.clientId = clientId;

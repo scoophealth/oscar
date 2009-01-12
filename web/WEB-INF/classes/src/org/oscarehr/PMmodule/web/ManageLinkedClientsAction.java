@@ -72,7 +72,7 @@ public class ManageLinkedClientsAction {
 
 	private void saveHnrLinkedIds(Facility facility, Provider provider, Integer demographicId) {
 		try {
-	        List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
+	        List<ClientLink> currentLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
 
 	        boolean isCheckedClientExistingLink=false;
 	        
@@ -97,6 +97,7 @@ public class ManageLinkedClientsAction {
 	        // oh well, I took out the check for single hnr entry so it should still "function" even though there's an anomalie here.
 	        if (newHnrLinkedId != null && !isCheckedClientExistingLink) {
 	        	ClientLink newLink = new ClientLink();
+	        	newLink.setFacilityId(facility.getId());
 	        	newLink.setClientId(demographicId);
 	        	newLink.setLinkDate(new Date());
 	        	newLink.setLinkProviderNo(provider.getProviderNo());

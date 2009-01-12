@@ -76,7 +76,7 @@ public class ManageLinkedClients {
 	}
 
 	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException {
-		List<ClientLink> currentLinks = clientLinkDao.findByClientIdAndType(demographic.getDemographicNo(), true, ClientLink.Type.HNR);
+		List<ClientLink> currentLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), demographic.getDemographicNo(), true, ClientLink.Type.HNR);
 
 		// we're only dealing with 1 hnr entry even if there's multiple because there should
 		// only be 1, a minor issue about some of this code not being atomic makes multiple

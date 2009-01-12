@@ -35,7 +35,7 @@ public class ManageHnrClient {
 		// we're only dealing with 1 hnr entry even if there's multiple because there should
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
-		List<ClientLink> temp = clientLinkDao.findByClientIdAndType(demographicId, true, ClientLink.Type.HNR);
+		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 
 		if (caisiIntegratorManager.isEnableHealthNumberRegistry(currentFacility.getId()) && clientLink != null) {

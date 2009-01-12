@@ -37,15 +37,16 @@ public class ClientLinkDao extends AbstractDao {
 	}
 	
 	/**
+	 * @param facilityId can not be null
 	 * @param clientId can not be null
-	 * @param active can be null to return both active and inactive records
+	 * @param currentlyLinked can be null to return both active and inactive records
 	 * @param type can be null to return all link types
 	 */
-	public List<ClientLink> findByClientIdAndType(Integer clientId, Boolean currentlyLinked, ClientLink.Type type) {
+	public List<ClientLink> findByFacilityIdClientIdType(Integer facilityId, Integer clientId, Boolean currentlyLinked, ClientLink.Type type) {
 		// build sql string
 		StringBuilder sqlCommand=new StringBuilder();
-		sqlCommand.append("select x from ClientLink x where x.clientId=?1");
-		if (type!=null) sqlCommand.append(" and x.linkType=?2");
+		sqlCommand.append("select x from ClientLink x where x.facilityId=?1 and x.clientId=?2");
+		if (type!=null) sqlCommand.append(" and x.linkType=?3");
 		if (currentlyLinked!=null)
 		{
 			if (currentlyLinked) sqlCommand.append(" and x.unlinkProviderNo is null");
@@ -54,8 +55,9 @@ public class ClientLinkDao extends AbstractDao {
 		
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand.toString());
-		query.setParameter(1, clientId);
-		if (type!=null) query.setParameter(2, type);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, clientId);
+		if (type!=null) query.setParameter(3, type);
 		
 		// run query
 		@SuppressWarnings("unchecked")
