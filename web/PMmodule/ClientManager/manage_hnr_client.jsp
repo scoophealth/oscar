@@ -3,7 +3,6 @@
 <%@page import="org.oscarehr.common.model.Facility"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
@@ -44,29 +43,8 @@
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
-		<%
-			String remoteBDay="";
-			if (hnrClient!=null && hnrClient.getBirthDate()!=null)
-			{
-				remoteBDay=DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());						
-			}
-		%>
 		<td class="genericTableData"><%=demographic.getFormattedDob()%></td>
-		<td class="genericTableData"><%=remoteBDay%></td>
-	</tr>
-	<tr>
-		<td class="genericTableHeader">Gender</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
-		<td class="genericTableData">
-			<%
-				String gender="";
-				if (hnrClient!=null && hnrClient.getGender()!=null)
-				{
-					gender=hnrClient.getGender().name();						
-				}
-			%>
-			<%=gender%>
-		</td>
+		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedBirthDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Number</td>
@@ -84,9 +62,14 @@
 		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinVersion())%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">SIN</td>
-		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSin())%></td>
-		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getSin())%></td>
+		<td class="genericTableHeader">Health Card Valid Start</td>
+		<td class="genericTableData"><%=manageHnrClient.getLocalFormatedHinStartDate()%></td>
+		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
+	</tr>
+	<tr>
+		<td class="genericTableHeader">Health Card Valid End</td>
+		<td class="genericTableData"><%=manageHnrClient.getLocalFormatedHinEndDate()%></td>
+		<td class="genericTableData"><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Province/State/Territory</td>
@@ -102,6 +85,16 @@
 		<td class="genericTableHeader">Street Address</td>
 		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
 		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
+	</tr>
+	<tr>
+		<td class="genericTableHeader">Gender</td>
+		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
+		<td class="genericTableData"><%=manageHnrClient.getRemoteGender()%></td>
+	</tr>
+	<tr>
+		<td class="genericTableHeader">SIN</td>
+		<td class="genericTableData"><%=StringUtils.trimToEmpty(demographic.getSin())%></td>
+		<td class="genericTableData"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getSin())%></td>
 	</tr>
 </table>
 

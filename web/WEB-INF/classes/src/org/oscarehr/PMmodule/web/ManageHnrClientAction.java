@@ -1,11 +1,9 @@
 package org.oscarehr.PMmodule.web;
 
-import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -53,6 +51,9 @@ public class ManageHnrClientAction {
 	        	if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
 	        	if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
 	        	if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
+
+	        	if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart().toGregorianCalendar().getTime());
+	        	if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd().toGregorianCalendar().getTime());
 
 	        	if (hnrClient.getImage() != null) {
 	        		ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -127,6 +128,22 @@ public class ManageHnrClientAction {
 	        if (demographic.getHin()!=null) hnrClient.setHin(demographic.getHin());
 	        if (demographic.getHcType()!=null) hnrClient.setHinType(demographic.getHcType());
 	        if (demographic.getVer()!=null) hnrClient.setHinVersion(demographic.getVer());
+	        
+	        if (demographic.getEffDate()!=null)
+	        {
+	        	GregorianCalendar gcal=new GregorianCalendar();
+	        	gcal.setTime(demographic.getEffDate());
+	        	XMLGregorianCalendar soapCal=DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+	        	hnrClient.setHinValidStart(soapCal);
+	        }
+
+	        if (demographic.getHcRenewDate()!=null)
+	        {
+	        	GregorianCalendar gcal=new GregorianCalendar();
+	        	gcal.setTime(demographic.getHcRenewDate());
+	        	XMLGregorianCalendar soapCal=DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+	        	hnrClient.setHinValidEnd(soapCal);
+	        }
 	        
 	        ClientImage clientImage = clientImageDAO.getClientImage(clientId);
 	        if (clientImage!=null) hnrClient.setImage(clientImage.getImage_data());

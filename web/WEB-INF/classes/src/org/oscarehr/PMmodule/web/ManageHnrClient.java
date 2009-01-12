@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -50,10 +51,9 @@ public class ManageHnrClient {
 		return demographic;
 	}
 
-	
 	public org.oscarehr.hnr.ws.client.Client getHnrClient() {
-    	return hnrClient;
-    }
+		return hnrClient;
+	}
 
 	public String getLocalClientImageUrl() {
 		if (clientImage == null) return ("/images/defaultR_img.jpg");
@@ -61,7 +61,67 @@ public class ManageHnrClient {
 	}
 
 	public String getHnrClientImageUrl() {
-		if (hnrClient == null || hnrClient.getImage()==null) return ("/images/defaultR_img.jpg");
+		if (hnrClient == null || hnrClient.getImage() == null) return ("/images/defaultR_img.jpg");
 		else return ("/imageRenderingServlet?source=hnr_client&linkingId=" + clientLink.getRemoteLinkId());
+	}
+
+	public String getRemoteFormatedBirthDate() {
+		String date = "";
+
+		if (hnrClient != null && hnrClient.getBirthDate() != null) {
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());
+		}
+
+		return (date);
+	}
+
+	public String getRemoteFormatedHinStartDate() {
+		String date = "";
+
+		if (hnrClient != null && hnrClient.getHinValidStart() != null) {
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidStart().toGregorianCalendar());
+		}
+
+		return (date);
+	}
+
+	public String getRemoteFormatedHinEndDate() {
+		String date = "";
+
+		if (hnrClient != null && hnrClient.getHinValidEnd() != null) {
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidEnd().toGregorianCalendar());
+		}
+
+		return (date);
+	}
+
+	public String getLocalFormatedHinStartDate() {
+		String date = "";
+
+		if (demographic != null && demographic.getEffDate() != null) {
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getEffDate());
+		}
+
+		return (date);
+	}
+
+	public String getLocalFormatedHinEndDate() {
+		String date = "";
+
+		if (demographic != null && demographic.getHcRenewDate() != null) {
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(demographic.getHcRenewDate());
+		}
+
+		return (date);
+	}
+
+	public String getRemoteGender() {
+		String gender = "";
+
+		if (hnrClient != null && hnrClient.getGender() != null) {
+			gender = hnrClient.getGender().name();
+		}
+
+		return (gender);
 	}
 }
