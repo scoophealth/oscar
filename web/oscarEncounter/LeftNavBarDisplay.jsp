@@ -40,7 +40,7 @@
         menuWidth *= 2;
         }
         %>
-<div id=menu <%=rh%> class='menu' style='width: <%=menuWidth%>;px'
+<div id='menu<%=rh%>' class='menu' style='width: <%=menuWidth%>;px'
 	onclick='event.cancelBubble = true;'>
 <h3 style='text-align: center'><%=dao.getMenuHeader()%></h3>
 <%            
