@@ -86,6 +86,13 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
     if (rowsAffected ==1) {
 
+    //turn off reminder of "remove patient from the waiting list"
+    oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+    String strMWL = pros.getProperty("MANUALLY_CLEANUP_WL");
+    if (strMWL!=null&&strMWL.equalsIgnoreCase("yes")){
+       ;
+    }
+    else{
         WaitingList wL = WaitingList.getInstance();
         if(wL.getFound()){
 
@@ -107,7 +114,7 @@
                 }
                 </script></form>
 <%}
-        }
+        }}
 %>
 <p>
 <h1><bean:message key="appointment.addappointment.msgAddSuccess" /></h1>
