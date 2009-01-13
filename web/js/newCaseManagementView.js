@@ -1081,16 +1081,18 @@ function completeChangeToView(note,newId) {
         Element.remove(printId);
     }
 
-    new Insertion.Top(parent, input);
+    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+
+    new Insertion.Top(parent, input);    
+    new Insertion.Top(parent, anchor);
     new Insertion.Top(parent, printimg);        
     new Insertion.Top(parent, img);    
 
-    $(parent).style.height = "auto";        
-    Element.observe(parent, 'click', editNote); 
+    $(parent).style.height = "auto";            
 
 }
 
-function minView(e) {          
+function minView(e) {     
     var divHeight = "1.1em";
     var txt = Event.element(e).parentNode.id;   
     var nId = txt.substr(1);
