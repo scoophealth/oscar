@@ -725,6 +725,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
+                        <a title="Edit" id="edit<%=note.getId()%>" href="#" onclick="editNote(event); return false;" style='float: right; margin-right: 5px; font-size:8px;'>E</a>
 
 		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();
@@ -829,7 +830,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             if( note.isLocked() ) { 
                                 lockedNotes.add(note.getId());
                             }
-                            else {
+                            else if( !fulltxt) {
                                 unLockedNotes.add(note.getId());
                             }
                         }
@@ -971,7 +972,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
         while( iterator.hasNext() ) {
             num = (Long)iterator.next();
     %>
-            Element.observe('n<%=num%>', 'click', editNote);
+            Element.observe('n<%=num%>', 'click', fullView);
     <%
         }      
     
