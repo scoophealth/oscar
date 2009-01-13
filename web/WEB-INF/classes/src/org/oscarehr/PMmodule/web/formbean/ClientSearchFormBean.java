@@ -47,6 +47,7 @@ public class ClientSearchFormBean {
 	private boolean searchOutsideDomain;
 	private boolean searchUsingSoundex;
 	private String bedProgramId; 
+	private String assignedToProviderNo; 
 	private String dateFrom;
 	private String dateTo;
 	private List programDomain;
@@ -261,6 +262,13 @@ public class ClientSearchFormBean {
 
 	public void setGenders(List genders) {
 		this.genders = genders;
+	}
+	public String getAssignedToProviderNo() {
+		return assignedToProviderNo;
+	}
+
+	public void setAssignedToProviderNo(String assignedToProviderNo) {
+		this.assignedToProviderNo = assignedToProviderNo;
 	}
 	
 }

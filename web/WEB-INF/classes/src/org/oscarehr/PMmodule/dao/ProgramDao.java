@@ -23,12 +23,15 @@
 package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -36,6 +39,9 @@ import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.OscarProperties;
+
+import com.quatro.common.KeyConstants;
+import com.quatro.util.Utility;
 
 public class ProgramDao extends HibernateDaoSupport {
 
@@ -156,6 +162,37 @@ public class ProgramDao extends HibernateDaoSupport {
         }
 
         return name;
+    }
+
+    public List getAllPrograms(String programStatus, String type, Integer facilityId, String providerNo,Integer shelterId)
+    {
+    	return getAllPrograms(programStatus, type,facilityId,null,providerNo,shelterId);
+    }
+    public List getAllPrograms(String programStatus, String type, Integer facilityId, Integer clientId, String providerNo,Integer shelterId)
+    {
+    	Criteria c = getSession().createCriteria(Program.class);
+    	if (!(Utility.IsEmpty(programStatus))) {
+    		c.add(Restrictions.eq("programStatus", programStatus));
+    	}
+    	if (null != type && !("Any".equalsIgnoreCase(type) || "".equals(type))) {
+    		c.add(Restrictions.eq("type", type));
+    	}
+    	if (null != facilityId && facilityId.intValue() > 0) {
+    		c.add(Restrictions.eq("facilityId", facilityId));
+    	}
+    	if (null != clientId && clientId.intValue() > 0) {
+    		String clientProgram = "id in (select itk.program_id from intake itk where itk.client_id=" + clientId.toString() + ")";
+    		c.add(Restrictions.sqlRestriction(clientProgram));
+    	}
+    	c.add(Restrictions.sqlRestriction("id in " + Utility.getUserOrgSqlString(providerNo, shelterId)));
+    	c.addOrder(Order.asc("name"));
+    	List list = c.list();
+    	for(int i=0; i<list.size(); i++)
+    	{
+    		Program p = (Program) list.get(i);
+    		if(p.getType().equals(KeyConstants.PROGRAM_TYPE_Service)) p.setNumOfMembers(p.getNumOfIntakes());
+    	}
+    	return 	list;
     }
 
     public List<Program> getAllPrograms() {

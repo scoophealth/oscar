@@ -25,10 +25,13 @@
 			<generator class="native" />
 		</id>
 		<property name="facilityId" />
-		<property name="numOfMembers" type="integer"
-			formula="(select count(*) from admission a where a.program_id = id and a.admission_status = 'current')" />
-		<property name="queueSize" type="integer"
-			formula="(select count(*) from program_queue a where a.program_id = id and a.status = 'active')" />
+		<property name="shelterId" column="shelter_id" />
+		<property name="userDefined" column="userDefined" type="boolean" length="1" />
+		<property name="numOfMembers" type="integer" formula="(select count(*) from admission a where a.program_id = id and a.admission_status = 'current')" />
+<!--
+		<property name="numOfIntakes" lazy="true" type="integer" formula="(select count(*) from intake itk where itk.program_id = id and (sysdate between itk.creation_date and itk.end_date or itk.end_date is null))" />
+-->
+		<property name="queueSize" type="integer" formula="(select count(*) from program_queue a where a.program_id = id and a.status = 'active')" />
 		<property name="maxAllowed" />
 		<property name="type" />
 		<property name="description" />
@@ -59,8 +62,22 @@
 		<property name="exclusiveView" />
 		<property name="ageMin" />
 		<property name="ageMax" />
-		<property name="maximumServiceRestrictionDays" />
-		<property name="defaultServiceRestrictionDays" />
-
-	</class>
+		<property name="capacity_funding" column="capacity_funding" type="integer" not-null="false" length="10" />
+		<property name="capacity_space" column="capacity_space" type="integer" not-null="false" length="10" />        
+	        <property name="maximumServiceRestrictionDays" />
+        	<property name="defaultServiceRestrictionDays" />
+<!--
+		<property name="orgCd" formula="(select l1.codetree from lst_orgcd l1 where l1.code='P'||id)" update="false"/>
+-->
+		<property name="facilityDesc" formula="(select fac.name from Facility fac where fac.id=facilityId)"></property>		
+<!--
+		<property name="genderDesc" formula="(select l2.progdesc from lst_gender l2 where l2.code=manOrWoman)"></property>
+-->
+<!--
+		<property name="capacity_actual" type="integer" 
+			formula="(select sum(r.beds) from v_room_beds r where r.program_id=id)" />
+-->
+		<property name="lastUpdateDate" column="lastupdatedate"></property>
+		<property name="lastUpdateUser" column="lastupdateuser"></property>
+    </class>
 </hibernate-mapping>

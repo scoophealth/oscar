@@ -72,6 +72,9 @@ public class ClientManager {
         return dao.getClients();
     }
 
+    public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly,boolean excludeMerged) {
+        return dao.search(criteria, returnOptinsOnly,excludeMerged);
+    }
     public List<Demographic> search(ClientSearchFormBean criteria) {
         return dao.search(criteria);
     }

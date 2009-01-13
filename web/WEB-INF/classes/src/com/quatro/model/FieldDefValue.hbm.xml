@@ -18,5 +18,6 @@
 		<property name="auto" column="autoyn" />
 		<property name="unique" column="uniqueyn" />
 		<property name="genericIdx" column="genericidx" />
+		<property name="fieldLength" />
 	</class>
 </hibernate-mapping>

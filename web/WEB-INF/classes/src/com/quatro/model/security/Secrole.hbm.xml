@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.quatro.model.security.Secrole" table="secRole">
+        <id name="roleName" type="java.lang.String">
+            <column name="role_name" length="30" unique="true" />
+        </id>       
+        <property name="description" type="java.lang.String">
+            <column name="description" length="60" />
+        </property>
+        <property name="lastUpdateDate" column="lastupdatedate"></property>
+		<property name="lastUpdateUser" column="lastupdateuser"></property>
+		<property name="active" column="isactive"></property>
+		<property name="orderByIndex" column="displayorder"></property>  
+    </class>
+</hibernate-mapping>

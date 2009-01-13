@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,6 +62,9 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.MyDateFormat;
+
+import com.quatro.common.KeyConstants;
+import com.quatro.util.Utility;
 import oscar.OscarProperties;
 import oscar.util.SqlUtils;
 
@@ -108,6 +113,131 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 
 		return rs;
+	}
+
+//Quatro Merge
+	public List search(ClientSearchFormBean bean, boolean returnOptinsOnly,boolean excludeMerged) {
+		Criteria criteria = getSession().createCriteria(Demographic.class);
+		String firstName = "";
+		String lastName = "";
+		String firstNameL = "";
+		String lastNameL = "";
+		String bedProgramId = "";
+		String assignedToProviderNo = "";
+		String admitDateFromCond = "";
+		String admitDateToCond = "";
+		String active = "";
+		String gender = "";
+		String AND = " and ";
+		String WHERE = " where ";
+		String sql = "";
+		String sql2 = "";
+		
+		//@SuppressWarnings("unchecked")
+		List results = null;
+
+		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
+			firstName = bean.getFirstName();
+			// firstName = StringEscapeUtils.escapeSql(firstName);
+			firstNameL = firstName + "%"; 
+		}
+		
+		if (bean.getLastName() != null && bean.getLastName().length() > 0) {
+			lastName = bean.getLastName();
+//			lastName = StringEscapeUtils.escapeSql(lastName);
+			lastNameL =  lastName + "%";
+		}
+		
+		String clientNo = bean.getDemographicNo(); 
+		//exclude merged client 
+		if(excludeMerged)criteria.add(Expression.eq("merged", Boolean.FALSE));
+		if (clientNo != null && !"".equals(clientNo))
+		{
+			if (com.quatro.util.Utility.IsInt(clientNo) ) {
+				criteria.add(Expression.eq("DemographicNo", Integer.valueOf(clientNo)));
+				results = criteria.list();
+			} 
+			else 
+			{
+				/* invalid client no generates a empty search results */
+				results = new ArrayList();
+			}
+		    return results;
+		}
+		LogicalExpression condAlias1 = null;
+		LogicalExpression condAlias2 = null;
+		LogicalExpression condFirstName = null;
+		LogicalExpression condLastName = null;
+		if (firstName.length() > 0) {
+//			sql = "(LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+//			sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + firstName + "'),4))";
+//			condFirstName = Restrictions.or(Restrictions.ilike("FirstName", firstNameL), Restrictions.sqlRestriction(sql));
+//			condAlias1 = Restrictions.or(Restrictions.ilike("Alias", firstNameL),Restrictions.sqlRestriction(sql2));
+			criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("LastName", firstNameL), Restrictions.ilike("Alias", firstNameL)),Restrictions.ilike("FirstName", firstNameL)));
+		}
+		if (lastName.length() > 0) {
+//				sql = "(LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+//				sql2 = "(LEFT(SOUNDEX(alias),4) = LEFT(SOUNDEX('" + lastName + "'),4))";
+//				condLastName = Restrictions.or(Restrictions.ilike("LastName", lastNameL), Restrictions.sqlRestriction(sql));
+//				condAlias2 = Restrictions.or(Restrictions.ilike("Alias", lastNameL),Restrictions.sqlRestriction(sql2));
+				criteria.add(Restrictions.or(Restrictions.or(Restrictions.ilike("FirstName", lastNameL), Restrictions.ilike("Alias", lastNameL)),Restrictions.ilike("LastName", lastNameL)));
+		}
+/*
+		if (firstName.length() > 0 && lastName.length()>0)
+		{
+			criteria.add(Restrictions.or(Restrictions.and(condFirstName, condLastName),  Restrictions.or(condAlias1, condAlias2)));
+		}
+		else if (firstName.length() > 0)
+		{
+			criteria.add(Restrictions.or(condFirstName,condAlias1));
+		}
+		else if (lastName.length()>0)
+		{
+			criteria.add(Restrictions.or(condLastName,condAlias2));
+		}
+*/		
+		if (bean.getDob() != null && bean.getDob().length() > 0) {
+			criteria.add(Expression.eq("DateOfBirth", MyDateFormat.getCalendar(bean.getDob())));
+		}
+
+		if (bean.getHealthCardNumber() != null && bean.getHealthCardNumber().length() > 0) {
+			criteria.add(Expression.eq("Hin", bean.getHealthCardNumber()));
+		}
+
+		if (bean.getHealthCardVersion() != null && bean.getHealthCardVersion().length() > 0) {
+			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
+		}
+		
+		if(bean.getBedProgramId() != null && bean.getBedProgramId().length() > 0) {
+			bedProgramId = bean.getBedProgramId(); 
+			sql = " demographic_no in (select decode(dm.merged_to,null,i.client_id,dm.merged_to) from intake i,demographic_merged dm where i.client_id=dm.demographic_no(+) and i.program_id in (" + bedProgramId + "))";		
+			criteria.add(Restrictions.sqlRestriction(sql));
+		}
+		if(bean.getAssignedToProviderNo() != null && bean.getAssignedToProviderNo().length() > 0) {
+			assignedToProviderNo = bean.getAssignedToProviderNo();
+			sql = " demographic_no in (select decode(dm.merged_to,null,a.client_id,dm.merged_to) from admission a,demographic_merged dm where a.client_id=dm.demographic_no(+)and a.primaryWorker='" + assignedToProviderNo + "')"; 
+			criteria.add(Restrictions.sqlRestriction(sql));
+		}
+		
+		active = bean.getActive();
+		if("1".equals(active)) {
+			criteria.add(Expression.ge("activeCount", new Integer(1)));
+		}else if ("0".equals(active)){
+			criteria.add(Expression.eq("activeCount", new Integer(0)));
+		}
+			
+		gender = bean.getGender();
+		if (gender != null && !"".equals(gender)){
+			criteria.add(Expression.eq("Sex", gender));
+		}
+		criteria.addOrder(Order.asc("LastName"));
+		criteria.addOrder(Order.asc("FirstName"));
+		results = criteria.list();
+
+		if (log.isDebugEnabled()){
+			log.debug("search: # of results=" + results.size());
+		}
+		return results;
 	}
 
 	/*

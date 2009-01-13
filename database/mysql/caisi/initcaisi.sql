@@ -1538,6 +1538,9 @@ CREATE TABLE `intake` (
   `intake_status` varchar(10) not null default 'Signed',
   `intake_location` int(10) default 0,
   `facility_id` int,
+  `program_id` int(10) default NULL,
+  `lastUpdateDate` date default NULL,
+  `end_date` date default NULL,
   PRIMARY KEY  (`intake_id`),
   KEY `IDX_intake_intake_node` (`intake_node_id`),
   KEY `IDX_intake_client_creation_date` (`client_id`,`creation_date`),
@@ -1614,7 +1617,15 @@ CREATE TABLE `program` (
 	maximumServiceRestrictionDays int,
 	defaultServiceRestrictionDays int not null,
 	ageMin int not null default 0,
-	ageMax int not null default 0
+	ageMax int not null default 0,
+  `userDefined` int(1) default NULL,
+  `shelter_id` int(11) default '0',
+  `facility_id` int(10) default '0',
+  `capacity_funding` int(10) default NULL,
+  `capacity_space` int(10) default NULL,
+  `lastUpdateUser` varchar(6) default NULL,
+  `lastUpdateDate` date default NULL
+
 );
 
 --
@@ -1699,6 +1710,7 @@ CREATE TABLE `program_queue` (
   `referral_id` bigint(20) default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
   `present_problems` varchar(255) default NULL,
+  `intake_id` int(10) default NULL,
   PRIMARY KEY  (`queue_id`)
 );
 

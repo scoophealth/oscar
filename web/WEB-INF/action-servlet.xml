@@ -56,6 +56,10 @@
 	</bean>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
+    <bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction" 
+    	singleton="false"  autowire="byName"/>
+    <bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction" 
+    	singleton="false"  autowire="byName" />		
 	<bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false" autowire="byName" />
@@ -155,23 +159,47 @@
 	<bean name="/Lookup/LookupList" class="com.quatro.web.lookup.LookupListAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
-	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
 	<bean name="/Lookup/LookupTree" class="com.quatro.web.lookup.LookupTreeAction" singleton="false">
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
+        	<property name="lookupManager" ref="lookupManager"/>
+ 	</bean>
+	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">    
+        	<property name="lookupManager" ref="lookupManager"/>
+ 	</bean>
+	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
+        	<property name="lookupManager" ref="lookupManager"/>
+	</bean> 	 	
 	<bean name="/Lookup/LookupCodeEdit" class="com.quatro.web.lookup.LookupCodeEditAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
-	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
-		<property name="lookupManager" ref="lookupManager" />
-	</bean>
+
+
+<!-- Admin Start -->
+	<bean name="/PMmodule/Admin/SysAdmin" class="org.oscarehr.PMmodule.web.admin.AdminHomeAction" singleton="false">
+ 	</bean>
 
 	<bean name="/PMmodule/Admin/ShowORGTree" class="com.quatro.web.admin.ShowORGTreeAction" singleton="false">
 		<property name="orgManager" ref="orgManager" />
 	</bean>
-
+	<bean name="/PMmodule/Admin/RoleManager" class="com.quatro.web.admin.RoleManagerAction" singleton="false">
+		<property name="rolesManager" ref="rolesManager"/>
+		<property name="logManager" ref="logManager"/>
+		<property name="lookupManager" ref="lookupManager"/>
+	</bean>
+	<bean name="/PMmodule/Admin/UserManager" class="com.quatro.web.admin.UserManagerAction" singleton="false" autowire="byName">
+                <!--<property name="rolesManager" ref="rolesManager"/>-->
+                <property name="logManager" ref="logManager"/>
+                <property name="usersManager" ref="usersManager"/>
+                <!--<property name="orgManager" ref="orgManager"/>-->
+                <property name="lookupManager" ref="lookupManager" />
+	</bean>
+	<bean name="/PMmodule/Admin/UserSearch" class="com.quatro.web.admin.UserSearchAction" singleton="false">
+		<property name="rolesManager" ref="rolesManager"/>
+		<property name="logManager" ref="logManager"/>
+		<property name="usersManager" ref="usersManager"/>
+	</bean>
+	<bean name="/PMmodule/Admin/UnlockAccount" class="oscar.login.UnlockAccountAction" singleton="false">
+	</bean>
+	<!-- admin End -->
 	<!-- Provider Property -->
 	<bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />

@@ -4,13 +4,18 @@ import java.util.List;
 
 import org.apache.struts.action.ActionForm;
 
+import com.quatro.model.LookupTableDefValue;
+
 public class LookupListForm extends ActionForm{
 	List lookups;
-    String openerFormName;
-    String openerCodeElementName;
-    String openerDescElementName;
+    String openerForm;
+    String codeName;
+    String descName;
     String keywordName;
     String tableId;
+    String parentCode;
+    String grandParentCode;
+    LookupTableDefValue tableDef;
     
 	public List getLookups() {
 		return lookups;
@@ -20,28 +25,28 @@ public class LookupListForm extends ActionForm{
 		this.lookups = lookups;
 	}
 
-	public String getOpenerCodeElementName() {
-		return openerCodeElementName;
+	public String getCodeName() {
+		return codeName;
 	}
 
-	public void setOpenerCodeElementName(String openerCodeElementName) {
-		this.openerCodeElementName = openerCodeElementName;
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
 	}
 
-	public String getOpenerDescElementName() {
-		return openerDescElementName;
+	public String getDescName() {
+		return descName;
 	}
 
-	public void setOpenerDescElementName(String openerDescElementName) {
-		this.openerDescElementName = openerDescElementName;
+	public void setDescName(String descName) {
+		this.descName = descName;
 	}
 
-	public String getOpenerFormName() {
-		return openerFormName;
+	public String getOpenerForm() {
+		return openerForm;
 	}
 
-	public void setOpenerFormName(String openerFormName) {
-		this.openerFormName = openerFormName;
+	public void setOpenerForm(String openerForm) {
+		this.openerForm = openerForm;
 	}
 
 	public String getKeywordName() {
@@ -58,5 +63,29 @@ public class LookupListForm extends ActionForm{
 
 	public void setTableId(String tableId) {
 		this.tableId = tableId;
+	}
+
+	public LookupTableDefValue getTableDef() {
+		return tableDef;
+	}
+
+	public void setTableDef(LookupTableDefValue tableDef) {
+		this.tableDef = tableDef;
+	}
+
+	public String getGrandParentCode() {
+		return grandParentCode;
+	}
+
+	public void setGrandParentCode(String grandParentCode) {
+		this.grandParentCode = grandParentCode;
+	}
+
+	public String getParentCode() {
+		return parentCode;
+	}
+
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 }

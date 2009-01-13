@@ -14,12 +14,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.web.BaseAction;
 
 import com.quatro.model.LookupCodeValue;
 import com.quatro.model.LookupTableDefValue;
 import com.quatro.service.LookupManager;
 
-public class LookupTreeAction extends DispatchAction {
+public class LookupTreeAction extends BaseAction {
     private LookupManager lookupManager=null;
     
 	public void setLookupManager(LookupManager lookupManager) {
@@ -30,7 +31,7 @@ public class LookupTreeAction extends DispatchAction {
 		return tree(mapping,form,request,response);
 	}
 	
-	public ActionForward tree(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	private ActionForward tree(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String tableId=request.getParameter("tableId");
 		LookupTableDefValue tableDef = lookupManager.GetLookupTableDef(tableId); 
 
@@ -40,6 +41,8 @@ public class LookupTreeAction extends DispatchAction {
    	    DynaActionForm qform = (DynaActionForm) form;
 	    qform.set("tableDef", tableDef);
 	    qform.set("tree", repository);
+	    
+		request.setAttribute("notoken", "Y");
 
    	    return mapping.findForward("tree");
 	}
@@ -54,6 +57,8 @@ public class LookupTreeAction extends DispatchAction {
 
 	    qform.set("tableDef", tableDef);
 	    qform.set("tree", repository);
+
+	    request.setAttribute("notoken", "Y");
 
    	    return mapping.findForward("tree");
 	}
@@ -84,8 +89,8 @@ public class LookupTreeAction extends DispatchAction {
    	      String title = obj.getDescription();
    	      mc.setTitle(title);
    	      
-   	      String location = "javascript:selectMe('" +  obj.getCode() + "','" + 
-   	   oscar.Misc.getStringJs(obj.getDescription()) + "','" + request.getParameter("openerForm") + "','"
+   	      String location = "javascript:selectMe('" +  obj.getCode() + "','" 
+   	         + obj.getDescriptionJs() + "','" + request.getParameter("openerForm") + "','"
    	         + request.getParameter("codeName") + "','" 
    	         + oscar.Misc.getStringJs(request.getParameter("descName")) + "');";
    	      mc.setLocation(location);

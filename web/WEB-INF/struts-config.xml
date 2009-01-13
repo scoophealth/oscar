@@ -22,6 +22,15 @@
             <form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
             <form-property name="codes" type="java.util.List"></form-property>    
         </form-bean>
+        <form-bean name="lookupTreeForm" type="org.apache.struts.validator.DynaValidatorForm">
+        	<form-property name="tableDef" type="com.quatro.model.LookupTableDefValue"></form-property>
+        	<form-property name="tree" type="net.sf.navigator.menu.MenuRepository"></form-property>    
+        	<form-property name="tableId" type="java.lang.String"></form-property>    
+        	<form-property name="keywordName" type="java.lang.String"></form-property>    
+        	<form-property name="openerForm" type="java.lang.String"></form-property>    
+        	<form-property name="codeName" type="java.lang.String"></form-property>    
+        	<form-property name="descName" type="java.lang.String"></form-property>    
+        </form-bean>        
         <form-bean name="lookupCodeEditForm" type="com.quatro.web.lookup.LookupCodeEditForm">
         </form-bean>
         <form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -362,7 +371,58 @@
                 <form-bean name="CreateIndivoMessageActionForm" type="oscar.indivoMessenger.CreateIndivoMessageActionForm"/>
                 <form-bean name="DisplayIndivoMsgsActionForm" type="oscar.indivoMessenger.DisplayIndivoMsgsActionForm"/ -->
         <form-bean name="apptStatusEditForm" type="org.apache.struts.validator.LazyValidatorForm" /> 	
+
+        <form-bean name="mergeClientForm" type="org.apache.struts.validator.DynaValidatorForm">
+               <form-property name="criteria" type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
+        </form-bean>
+
+        <form-bean name="duplicateClientCheckForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="client" type="org.oscarehr.PMmodule.model.Demographic" />
+            <form-property name="genders" type="java.util.List" />
+        </form-bean>
+
+	<form-bean name="secroleForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="roleNo" type="java.lang.Integer" />
+		<form-property name="roleName" type="java.lang.String"></form-property>
+		<form-property name="description" type="java.lang.String"></form-property>
+		<form-property name="active" type="java.lang.String"></form-property>
+		<form-property name="functions" type="com.quatro.model.LookupCodeValue"></form-property>
+		<form-property name="accessTypes" type="com.quatro.model.LookupCodeValue"></form-property>
+		<form-property name="funSelectionList" type="java.util.ArrayList"></form-property>
+		<form-property name="txtFUNKey" type="java.lang.String"></form-property>
+		<form-property name="txtFUNValue" type="java.lang.String"></form-property>
+		<form-property name="lstFUN" type="java.lang.String"></form-property>
+		<form-property name="secobjprivilegeLst" type="java.util.ArrayList"></form-property>
+	</form-bean>
         
+	<form-bean name="secuserForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="securityNo" type="java.lang.Integer"></form-property>
+		<form-property name="userName" type="java.lang.String"></form-property>
+		<form-property name="password" type="java.lang.String"></form-property>
+		<form-property name="confirmPassword" type="java.lang.String"></form-property>
+		<form-property name="pin" type="java.lang.String"></form-property>
+		<form-property name="confirmPin" type="java.lang.String"></form-property>
+		<form-property name="providerNo" type="java.lang.String"></form-property>
+		<form-property name="lastName" type="java.lang.String"></form-property>
+		<form-property name="firstName" type="java.lang.String"></form-property>
+		<form-property name="init" type="java.lang.String"></form-property>
+		<form-property name="title" type="java.lang.String"></form-property>
+		<form-property name="jobTitle" type="java.lang.String"></form-property>
+		<form-property name="email" type="java.lang.String"></form-property>
+		<form-property name="status" type="java.lang.String"></form-property>
+		<form-property name="secUserRoleLst" type="java.util.ArrayList"></form-property>
+		<form-property name="roleName" type="java.lang.String"></form-property>
+		<form-property name="oldPassword" type="java.lang.String"></form-property>
+	</form-bean>
+
+	<form-bean name="userSearchForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="criteria" type="com.quatro.web.admin.UserSearchFormBean" />
+	</form-bean>
+
+	<form-bean name="userUnlockForm" type="org.apache.struts.validator.DynaValidatorForm">
+		<form-property name="userId" type="java.lang.String" />
+	</form-bean>
+
     </form-beans>
     
     <global-forwards>
@@ -375,6 +435,9 @@
     <action-mappings>
         
         
+		<action path="/Home" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request"  validate="false">
+			<forward name="home" path="page.home" />
+		</action>
         
         <!-- caisi core action -->
         <action path="/Admin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="systemMessageForm" input="/admin/admin.jsp" validate="false">
@@ -406,6 +469,12 @@
             <forward name="failure" path="/logout.jsp?login=failed" />
             <forward name="error" path="/loginfailed.jsp" />
             <forward name="caisiPMM" path="/PMmodule/ProviderInfo.do" />
+            <forward name="shelterSelection" path="/shelterSelection.do" redirect="true"/>
+        </action>        
+        <action path="/shelterSelection" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" validate="true" parameter="method">
+                        <forward name="shelterSelection" path="page.pmm.shelterSelection"/>
+                        <forward name="home" path="/Home.do" redirect="true" />
+                        <forward name="login" path="/index.jsp" />
         </action>        
         <action input="/oscarMessenger/SendMessage.jsp" name="msgSendMessageForm" path="/oscarMessenger/SendMessage" scope="request" type="oscar.oscarMessenger.pageUtil.MsgSendMessageAction">
             <forward name="success" path="/oscarMessenger/SentMessage.jsp" />
@@ -1579,12 +1648,12 @@
         
         <action path="/Lookup/LookupTableList" type="org.springframework.web.struts.DelegatingActionProxy" 
                 name="lookupTableListForm" scope="request" validate="false" parameter="method">
-            <forward name="list" path="/PMmodule/lookup/LookupTableList.jsp" />
+            <forward name="list" path="page.admin.lookup.tablelist" />
         </action>
         
         <action path="/Lookup/LookupCodeList" type="org.springframework.web.struts.DelegatingActionProxy"
                 name="lookupCodeListForm" scope="request" validate="false" parameter="method">
-            <forward name="list" path="/PMmodule/lookup/LookupCodeList.jsp" />
+             <forward name="list" path="page.admin.lookup.codelist" />
         </action>
         
         <action path="/Lookup/LookupCodeEdit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" 
@@ -1765,9 +1834,41 @@
             <forward name="success" path="/appointment/appointmentstatussetting.jsp"/>
             <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
         </action>
+	<action path="/PMmodule/MergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
+            <forward name="view" path="page.pmm.client.merge" />
+            <forward name="unmerge" path="/PMmodule/UnmergeClient.do" redirect="true" />
+        </action>
+        <action path="/PMmodule/UnmergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
+            <forward name="view" path="page.pmm.client.merge" />
+        </action>
+        <action path="/Lookup/LookupTree" type="org.springframework.web.struts.DelegatingActionProxy"
+              name="lookupTreeForm" scope="request" validate="false" parameter="method">
+            <forward name="tree" path="/PMmodule/lookup/LookupTree.jsp" />
+        </action>
+        <action path="/PMmodule/Admin/SysAdmin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
+               <forward name="admin" path="page.admin.home"/>
+               </action>
+               <action path="/PMmodule/Admin/RoleManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="secroleForm" scope="request" validate="false">
+            <forward name="list" path="page.admin.role.list" />
+            <forward name="edit" path="page.admin.role.edit" />
+            <forward name="functions" path="page.admin.role.functions" />
+        </action>
+        <action path="/PMmodule/Admin/UserManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="secuserForm" scope="request" validate="false">
+            <forward name="list" path="page.admin.user.list" />
+            <forward name="profile" path="page.admin.user.addRoles" />
+            <forward name="edit" path="page.admin.user.edit" />
+            <forward name="addRoles" path="page.admin.user.addRoles" />
+            <forward name="changePassword" path="page.admin.user.changePassword" />
+        </action>
+        <action path="/PMmodule/Admin/UserSearch" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="userSearchForm" scope="request" validate="false">
+            <forward name="list" path="page.admin.user.list" />
+        </action>
+        <action path="/PMmodule/Admin/UnlockAccount" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="userUnlockForm" scope="request" validate="false">
+            <forward name="list" path="page.admin.user.unlocklist" />
+        </action>
         
     </action-mappings>
-    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
+    <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="2M"/>
     <message-resources parameter="oscarResources" />
     <message-resources parameter="HelpResources" key="help" />
     <message-resources parameter="MessageResources_program" key="pmm" />
@@ -1784,5 +1885,8 @@
     </plug-in>
     <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
         <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+    </plug-in>
+    <plug-in className="net.sf.navigator.menu.MenuPlugIn">
+      <set-property property="menuConfig" value="/WEB-INF/menu-config.xml"/>
     </plug-in>
 </struts-config>

@@ -24,10 +24,13 @@ package org.oscarehr.PMmodule.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.quatro.model.LookupCodeValue;
+
 /**
  * This is the object class that relates to the program table. Any customizations belong here.
  */
 public class Program implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
     
@@ -35,14 +38,16 @@ public class Program implements Serializable {
     public static final String BED_TYPE = "Bed";
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
-
+    
 	public static final String PROGRAM_STATUS_ACTIVE = "1";
 	public static final String PROGRAM_STATUS_INACTIVE = "0";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;
+    private boolean userDefined = true;
     private Integer numOfMembers;
+    private Integer numOfIntakes;
     private Integer queueSize;
     private Integer maxAllowed;
     private String type;
@@ -63,6 +68,7 @@ public class Program implements Serializable {
     private Integer intakeProgram;
     private Integer bedProgramLinkId;
     private String manOrWoman;
+    private String genderDesc;
     private boolean transgender;
     private boolean firstNation;
     private boolean bedProgramAffiliated;
@@ -76,11 +82,19 @@ public class Program implements Serializable {
     private int ageMax=200;
     private Integer maximumServiceRestrictionDays;
     private int defaultServiceRestrictionDays=30;
+	private Integer shelterId;
     private int facilityId;
 
-   private String lastUpdateUser;
+    private String facilityDesc;
+    private String orgCd;
+    private Integer capacity_funding = new Integer(0);
+    private Integer capacity_space = new Integer(0);
+    private Integer capacity_actual =new Integer(0);
+    private Integer totalUsedRoom = new Integer(0);
+    private String lastUpdateUser;
     private Date lastUpdateDate;
-   
+    private LookupCodeValue shelter;
+
     public Date getLastUpdateDate() {
 		return lastUpdateDate;
 	}
@@ -96,9 +110,43 @@ public class Program implements Serializable {
 	public void setLastUpdateUser(String lastUpdateUser) {
 		this.lastUpdateUser = lastUpdateUser;
 	}
-    // constructors
+
+    
+    public Integer getCapacity_actual() {
+		return capacity_actual;
+	}
+
+	public void setCapacity_actual(Integer capacity_actual) {
+		this.capacity_actual = capacity_actual;
+	}
+
+	public Integer getCapacity_funding() {
+		return capacity_funding;
+	}
+
+	public void setCapacity_funding(Integer capacity_funding) {
+		this.capacity_funding = capacity_funding;
+	}
+
+	public Integer getCapacity_space() {
+		return capacity_space;
+	}
+
+	public void setCapacity_space(Integer capacity_space) {
+		this.capacity_space = capacity_space;
+	}
+
+	// constructors
     public Program() {
         // no arg constructor for JPA
+    }
+
+    public Integer getShelterId() {
+        return shelterId;
+    }
+
+    public void setShelterId(Integer shelterId) {
+        this.shelterId = shelterId;
     }
 
     public int getFacilityId() {
@@ -109,6 +157,13 @@ public class Program implements Serializable {
         this.facilityId = facilityId;
     }
 
+    public String getOrgCd() {
+        return orgCd;
+    }
+
+    public void setOrgCd(String orgCd) {
+        this.orgCd = orgCd;
+    }
     /**
      * Constructor for primary key
      */
@@ -123,6 +178,7 @@ public class Program implements Serializable {
             String emergencyNumber, String name, boolean holdingTank, String programStatus) {
 
         setId(id);
+        setUserDefined(isUserDefined);
         setMaxAllowed(maxAllowed);
         setAddress(address);
         setPhone(phone);
@@ -135,12 +191,20 @@ public class Program implements Serializable {
         setProgramStatus(programStatus);
     }
 
+    public boolean isUserDefined() {
+        return userDefined;
+    }
+
+    public void setUserDefined(boolean userDefined) {
+        this.userDefined = userDefined;
+    }
+
     public boolean isActive() {
-        return getProgramStatus().equalsIgnoreCase("active");
+        return PROGRAM_STATUS_ACTIVE.equals(programStatus);
     }
 
     public boolean isFull() {
-        return getNumOfMembers() >= getMaxAllowed();
+        return getNumOfMembers().intValue() >= getMaxAllowed().intValue();
     }
 
     public boolean isExternal() {
@@ -169,6 +233,7 @@ public class Program implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
     }
 
     /**
@@ -413,6 +478,19 @@ public class Program implements Serializable {
         return programStatus;
     }
 
+    public String getProgramStatusTxt() {
+        if(programStatus.equals("1"))
+    	  return "Active";
+        else
+      	  return "Inactive";
+    }
+
+    /**
+     * Set the value related to the column: program_status
+     * 
+     * @param programStatus
+     *            the program_status value
+     */
     public void setProgramStatus(String programStatus) {
         this.programStatus = programStatus;
     }
@@ -463,6 +541,14 @@ public class Program implements Serializable {
 
     public void setFirstNation(boolean firstNation) {
         this.firstNation = firstNation;
+    }
+
+    public int getHashCode() {
+        return hashCode;
+    }
+
+    public void setHashCode(int hashCode) {
+        this.hashCode = hashCode;
     }
 
     public boolean isHousing() {
@@ -555,8 +641,60 @@ public class Program implements Serializable {
             else return (this.getId().equals(program.getId()));
         }
     }
-    
+
     public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
-    }    
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString() {
+        return super.toString();
+    }
+
+	public String getFacilityDesc() {
+		return facilityDesc;
+	}
+
+	public void setFacilityDesc(String facilityDesc) {
+		this.facilityDesc = facilityDesc;
+	}
+
+	public Integer getTotalUsedRoom() {
+		return totalUsedRoom;
+	}
+
+	public void setTotalUsedRoom(Integer totalUsedRoom) {
+		this.totalUsedRoom = totalUsedRoom;
+	}
+
+	public Integer getNumOfIntakes() {
+		return numOfIntakes;
+	}
+
+	public void setNumOfIntakes(Integer numOfIntakes) {
+		this.numOfIntakes = numOfIntakes;
+	}
+
+	public String getGenderDesc() {
+		return genderDesc;
+	}
+
+	public void setGenderDesc(String genderDesc) {
+		this.genderDesc = genderDesc;
+	}
+
+	public LookupCodeValue getShelter() {
+		return shelter;
+	}
+
+	public void setShelter(LookupCodeValue shelter) {
+		this.shelter = shelter;
+	}
+    
 }

@@ -20,7 +20,7 @@ public class PhoneNo {
     }
 
 	public String getPhoneNoMain() {
-        StringBuilder phoneNumber = new StringBuilder(20);
+        StringBuffer phoneNumber = new StringBuffer(20);
         String pPhoneNumber = this.phone;
 
         if (!Utility.IsEmpty(pPhoneNumber))
@@ -44,7 +44,7 @@ public class PhoneNo {
     {
         get
         {
-            StringBuilder phoneNumber = new StringBuilder(20);
+            StringBuffer phoneNumber = new StringBuffer(20);
             String pPhoneNumber = this.phone;
 
             if (!Utility.IsEmpty(pPhoneNumber))
@@ -123,7 +123,7 @@ public class PhoneNo {
     
     public String GetPhoneNo(String phoneNo)
     {
-        StringBuilder p = new StringBuilder(20);
+        StringBuffer p = new StringBuffer(20);
         if (!Utility.IsEmpty(phoneNo))
         {
             for (int i = 0; i < phoneNo.length(); i++)
@@ -140,7 +140,7 @@ public class PhoneNo {
     
     public String FormatPhoneNumber()
     {
-        StringBuilder phoneNumber = new StringBuilder(20);
+        StringBuffer phoneNumber = new StringBuffer(20);
         String pPhoneNumber = this.phone;
 
         if (!Utility.IsEmpty(pPhoneNumber))

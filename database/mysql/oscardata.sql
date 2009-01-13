@@ -186,7 +186,7 @@ INSERT INTO ctl_specialinstructions VALUES (26,'Insert in both eyes');
 -- Dumping data for table 'demographic'
 --
 
-INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>','','','','','','','','');
+-- INSERT INTO demographic VALUES (1,'TEST','PATIENT','','','ON','','905-','','','','1998','06','15','','','','AC','2003-06-04','','999998','M','0001-01-01','0001-01-01',NULL,'ON','0001-01-01','<rdohip></rdohip><rd></rd>','','','','','','','','');
 
 --
 -- Dumping data for table 'demographicaccessory'
@@ -1084,7 +1084,7 @@ INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue',
 -- Dumping data for table 'provider'
 --
 
-INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','','');
+INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor','','','','0001-01-01','','','','','','','','1','','','','','','','','',NULL);
 
 --
 -- Dumping data for table 'providerExt'

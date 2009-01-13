@@ -158,6 +158,35 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
+    public List getActiveProviders(String providerNo, Integer shelterId) {
+    	//@SuppressWarnings("unchecked")
+    	String sql;
+    	if (shelterId == null || shelterId.intValue() == 0)
+    		sql = "FROM  Provider p where p.Status='1'" +
+    				" and p.ProviderNo in (select sr.providerNo from Secuserrole sr " +
+    				" where sr.orgcd in (select o.code from LstOrgcd o, Secuserrole srb " +
+    				" where o.codecsv  like '%' || srb.orgcd || ',%' and srb.providerNo =?))" + 
+    				" ORDER BY p.LastName";
+    	else
+    		sql = "FROM  Provider p where p.Status='1'" +
+			" and p.ProviderNo in (select sr.providerNo from Secuserrole sr " +
+			" where sr.orgcd in (select o.code from LstOrgcd o, Secuserrole srb " +
+			" where o.codecsv like '%S" + shelterId.toString()+ ",%' and o.codecsv like '%' || srb.orgcd || ',%' and srb.providerNo =?))" + 
+			" ORDER BY p.LastName";
+    	
+    	ArrayList paramList = new ArrayList();
+    	paramList.add(providerNo);
+
+    	Object params[] = paramList.toArray(new Object[paramList.size()]);
+    	
+    	List rs = getHibernateTemplate().find(sql,params);
+
+		if (log.isDebugEnabled()) {
+			log.debug("getProviders: # of results=" + rs.size());
+		}
+		return rs;
+	}
+
 	public List<Provider> search(String name) {
 		boolean isOracle = OscarProperties.getInstance().getDbType().equals(
 				"oracle");
@@ -195,7 +224,7 @@ public class ProviderDao extends HibernateDaoSupport {
 	
 	public List getShelterIds(String provider_no)
 	{
-//	    return(SqlUtils.selectIntList("select facility_id from secuserrole where provider_no='"+provider_no+'\''));
+//	    return(SqlUtils.selectIntList("select facility_id from secUserRole where provider_no='"+provider_no+'\''));
 		/*
 		String sql = "select distinct substr(codetree,18,7) as shelter_id from lst_orgcd" ;
 		sql += " where code in (select orgcd from secuserrole where provider_no=?)";

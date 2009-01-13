@@ -6414,6 +6414,12 @@ CREATE TABLE provider (
   comments text,
   provider_activity char(3) default NULL,
   practitionerNo varchar(20),
+  `init` varchar(10) default NULL,
+  `job_title` varchar(100) default NULL,
+  `email` varchar(60) default NULL,
+  `title` varchar(20) default NULL,
+  `lastUpdateUser` varchar(6) default NULL,
+  `lastUpdateDate` date default NULL,
   PRIMARY KEY  (provider_no)
 );
 
@@ -7254,7 +7260,9 @@ CREATE TABLE demographic_merged(
     id INT(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
     demographic_no INT(10) NOT NULL,
     merged_to INT(10) NOT NULL,
-    deleted INT(1) NOT NULL DEFAULT 0
+    deleted INT(1) NOT NULL DEFAULT 0,
+    `lastUpdateUser` varchar(6) default NULL,
+    `lastUpdateDate` date default NULL
 );
 
 CREATE INDEX dem_merged ON demographic_merged (demographic_no, merged_to, deleted);

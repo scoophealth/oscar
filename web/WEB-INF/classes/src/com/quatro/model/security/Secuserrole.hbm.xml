@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.quatro.model.security.Secuserrole" table="secUserRole">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" precision="22" scale="0" />
+            <generator class="native" />
+        </id>
+        <property name="providerNo" type="java.lang.String">
+            <column name="provider_no" length="6" not-null="true" />
+        </property>
+        <property name="roleName" type="java.lang.String">
+            <column name="role_name" length="30" not-null="true" />
+        </property>
+        <property name="orgcd" type="java.lang.String">
+            <column name="orgcd" length="80" />
+        </property>
+        <property name="activeyn" type="java.lang.Integer">
+            <column name="activeyn" precision="1" scale="0" />
+        </property>
+        <property name="roleName_desc" formula="(select r.description from secRole r where r.role_Name=role_Name)"></property>
+	    <!-- 
+	    <property name="providerName" formula="(select concat(p.last_name, '\, ', p.first_name) from provider p where p.provider_no=provider_no)"></property>
+	    -->
+	    <property name="providerLName" formula="(select p.last_name from provider p where p.provider_no=provider_no)"></property> 
+	    <property name="providerFName" formula="(select p.first_name from provider p where p.provider_no=provider_no)"></property> 
+	    <property name="lastUpdateDate" column="lastupdatedate"></property>
+		<property name="lastUpdateUser" column="lastupdateuser"></property>
+    </class>
+</hibernate-mapping>
