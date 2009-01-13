@@ -24,7 +24,6 @@ package org.oscarehr.common.dao;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.HnrDataValidation;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +39,7 @@ public class HnrDataValidationDao extends AbstractDao {
 	 * @param clientId can not be null
 	 * @param type can not be null
 	 */
-	public HnrDataValidation findMostCurrentByFacilityIdClientIdType(Integer facilityId, Integer clientId, ClientLink.Type type) {
+	public HnrDataValidation findMostCurrentByFacilityIdClientIdType(Integer facilityId, Integer clientId, HnrDataValidation.Type type) {
 		// build sql string
 		StringBuilder sqlCommand = new StringBuilder();
 		sqlCommand.append("select x from HnrDataValidation x where x.facilityId=?1 and x.clientId=?2 and x.validationType=?3 order by x.created desc");

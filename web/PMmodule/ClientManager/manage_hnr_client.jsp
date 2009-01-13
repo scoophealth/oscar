@@ -30,13 +30,13 @@
 	<tr>
 		<td class="genericTableHeader">Picture</td>
 		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getLocalClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
-		<td style="vertical-align:middle;border-right:solid black 1px"><input type="checkbox" name="validatePicture" />Validated</td>
+		<td style="vertical-align:middle;text-align:center;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getPictureValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getPictureValidationActionString()%>Picture&demographicId=<%=currentDemographicId%>'" /></td>
 		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getHnrClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">First Name</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
-		<td rowspan="11" style="vertical-align:middle;border-top:solid black 1px;border-right:solid black 1px"><input type="checkbox" name="validateHcInfo" />Validated</td>
+		<td rowspan="11" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
@@ -92,7 +92,7 @@
 	<tr>
 		<td class="genericTableHeader">Gender</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
-		<td rowspan="2" style="vertical-align:middle;border-top:solid black 1px;border-right:solid black 1px"><input type="checkbox" name="validateOther" />Validated</td>
+		<td rowspan="2" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=manageHnrClient.getRemoteGender()%></td>
 	</tr>
 	<tr>
@@ -104,6 +104,7 @@
 
 <br />
 
-<input type="button" value="Send validated local data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR data to local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Back to client summary" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
+<input type="button" value="Send validated local data To HNR" onclick="document.location='manage_hnr_client_action.jsp?action=copyLocalValidatedToHnr&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Copy HNR data to local" <%=hnrClient==null?"disabled=\"disabled\"":""%> onclick="document.location='manage_hnr_client_action.jsp?action=copyHnrToLocal&demographicId=<%=currentDemographicId%>'" /><input type="button" value="Back to client summary" onclick="document.location='<%="../ClientManager.do?id="+currentDemographicId%>'" />
+
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

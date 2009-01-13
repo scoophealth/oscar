@@ -10,9 +10,11 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.HnrDataValidationDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.HnrDataValidation;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
@@ -22,11 +24,15 @@ public class ManageHnrClient {
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
+	private static HnrDataValidationDao hnrDataValidationDao = (HnrDataValidationDao) SpringUtils.getBean("hnrDataValidationDao");
 
 	private Demographic demographic = null;
 	private ClientImage clientImage = null;
 	private ClientLink clientLink = null;
 	private org.oscarehr.hnr.ws.client.Client hnrClient = null;
+	private boolean pictureValidated = false;
+	private boolean hcInfoValidated = false;
+	private boolean otherValidated = false;
 
 	public ManageHnrClient(Facility currentFacility, Provider currentProvider, Integer demographicId) {
 		demographic = demographicDao.getDemographicById(demographicId);
@@ -45,6 +51,15 @@ public class ManageHnrClient {
 				logger.error("Unexpected error", e);
 			}
 		}
+
+		HnrDataValidation tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.PICTURE);
+		pictureValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(clientImage.getImage_data()));
+
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.HC_INFO);
+		hcInfoValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getHcInfoValidationBytes(demographic)));
+
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.OTHER);
+		otherValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getOtherInfoValidationBytes(demographic)));
 	}
 
 	public Demographic getDemographic() {
@@ -123,5 +138,32 @@ public class ManageHnrClient {
 		}
 
 		return (gender);
+	}
+
+	/**
+	 * The actionString is the inverse of the current state.
+	 * i.e. if the picture is currently validated, then the allowable action is to "invalidate" it .
+	 */
+	public String getPictureValidationActionString() {
+		if (pictureValidated) return("invalidate");
+		else return("validate");
+	}
+
+	/**
+	 * The actionString is the inverse of the current state.
+	 * i.e. if the picture is currently validated, then the allowable action is to "invalidate" it .
+	 */
+	public String getHcInfoValidationActionString() {
+		if (hcInfoValidated) return("invalidate");
+		else return("validate");
+	}
+
+	/**
+	 * The actionString is the inverse of the current state.
+	 * i.e. if the picture is currently validated, then the allowable action is to "invalidate" it .
+	 */
+	public String getOtherInfoValidationActionString() {
+		if (otherValidated) return("invalidate");
+		else return("validate");
 	}
 }

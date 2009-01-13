@@ -37,17 +37,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * This object is to help support tracking which fields in the demographic object have been 
- * marked as "valid" by an end user. The original intent is because only "validated" information
- * is allowed to be sent to the HNR and part of the scope of work was to track 
- * who validated which fields and when. To keep track of what is validated and to help nullify the
- * validation upon change of data, we're going to use a CRC32 on the data being validated. The reason
- * is because there's currently no reliable way of hooking into when some of this data is updated
- * so short of making a copy of all the data when validation occurs... this seemed like the only 
- * other reasonable alternative. 
+ * This object is to help support tracking which fields in the demographic object have been marked as "valid" by an end user. The original intent is because only "validated" information is allowed to be sent to the HNR and part of the scope of work was to
+ * track who validated which fields and when. To keep track of what is validated and to help nullify the validation upon change of data, we're going to use a CRC32 on the data being validated. The reason is because there's currently no reliable way of
+ * hooking into when some of this data is updated so short of making a copy of all the data when validation occurs... this seemed like the only other reasonable alternative. I know a CRC isn't fool proof but it should be "good enough" in this case. <br />
+ * <br />
+ * Note it takes 2 bits and 2 checks to see if something is valid. 1) the valid=trues 2) the crc must be correct for your current data. <br />
+ * <br />
+ * The reason it takes 2 is because, 1) we can't allow changes to the valid bit after it's set for auditing purposes, we need to know who set it to what. anyone who wants to change anything must create a new record. 2) the crc is to track if the validated
+ * data changed. i.e. if I say the picture is valid, then some one uploads a new one, I need to be able to say only the previous one was caled valid, this one is no longer valid until some one validates it too.
  */
 @Entity
 public class HnrDataValidation {
+
+	private static final char RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR = '\u009C';
 
 	public enum Type {
 		PICTURE, HC_INFO, OTHER
@@ -64,8 +66,8 @@ public class HnrDataValidation {
 	private String validatorProviderNo = null;
 	private boolean valid = false;
 	@Enumerated(EnumType.STRING)
-	private Type validationType=null;
-	private Long validationCrc=null;
+	private Type validationType = null;
+	private long validationCrc = -1;
 
 	public Integer getFacilityId() {
 		return facilityId;
@@ -112,32 +114,45 @@ public class HnrDataValidation {
 	}
 
 	public Type getValidationType() {
-    	return validationType;
-    }
+		return validationType;
+	}
 
 	public void setValidationType(Type validationType) {
-    	this.validationType = validationType;
-    }
+		this.validationType = validationType;
+	}
 
-	public Long getValidationCrc() {
-    	return validationCrc;
-    }
+	public long getValidationCrc() {
+		return validationCrc;
+	}
 
-	public void setValidationCrc(Long validationCrc) {
-    	this.validationCrc = validationCrc;
-    }
+	public void setValidationCrc(long validationCrc) {
+		this.validationCrc = validationCrc;
+	}
 
 	public void setValidationCrc(byte[] b) {
-    	CRC32 crc32=new CRC32();
-    	crc32.update(b);
-    	setValidationCrc(crc32.getValue());
-    }
-	
+		if (b != null) {
+			CRC32 crc32 = new CRC32();
+			crc32.update(b);
+			setValidationCrc(crc32.getValue());
+		} else {
+			setValidationCrc(-1l);
+		}
+	}
+
+	/**
+	 * @return false if b==null
+	 */
 	public boolean isMatchingCrc(byte[] b) {
-    	CRC32 crc32=new CRC32();
-    	crc32.update(b);
-    	
-    	return(crc32.equals(validationCrc));
+		if (b == null) return (false);
+
+		CRC32 crc32 = new CRC32();
+		crc32.update(b);
+
+		return (crc32.getValue()==validationCrc);
+	}
+
+	public boolean isValidAndMatchingCrc(byte[] b) {
+		return (isValid() && isMatchingCrc(b));
 	}
 
 	@PreRemove
@@ -148,5 +163,32 @@ public class HnrDataValidation {
 	@PreUpdate
 	protected void jpa_preventUpdate() {
 		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
+	}
+
+	public static byte[] getHcInfoValidationBytes(Demographic demographic) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(demographic.getFirstName()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getLastName()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getFormattedDob()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getHin()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getHcType()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getVer()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getEffDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getHcRenewDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getProvince()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getCity()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getAddress()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+
+		return (sb.toString().getBytes());
+	}
+
+	public static byte[] getOtherInfoValidationBytes(Demographic demographic) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(demographic.getSex()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getSin()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+
+		return (sb.toString().getBytes());
 	}
 }
