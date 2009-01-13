@@ -1028,18 +1028,20 @@ function changeToView(id) {
         var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
         var printimg = "<img title='Print' id='" + printImg + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
         var input = "<span id='txt" + nId + "'>" + tmp + "<\/span>";
-        
+        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+
         new Insertion.Top(parent, input);
+        new Insertion.Top(parent, editAnchor);            
 
         if( nId.substr(0,1) != "0" ) {
             Element.remove(printImg);
             new Insertion.Top(parent, printimg);
         }
         
-        new Insertion.Top(parent, img);            
+        new Insertion.Top(parent, img);                    
 
         $(parent).style.height = "auto";        
-        Element.observe(parent, 'click', editNote);    
+
     }
     return true;
 }
@@ -1096,6 +1098,7 @@ function minView(e) {
     var dateId = "obs" + nId;
     var content = "c" + nId;
     var date = "d" + nId;    
+    var editAnchor = "edit" + nId;
     
     Event.stop(e);
     var imgs = $(txt).getElementsBySelector("img");
@@ -1106,10 +1109,12 @@ function minView(e) {
         }
     }
 
+    Element.remove(editAnchor);
+
     $(txt).style.overflow = "hidden";
     shrink(txt, 14);
     //$(txt).style.height = divHeight;    c
-    
+        
     var txtId = "txt" + nId;
     var line = $(txtId).innerHTML.substr(0,100);
     line = line.replace(/<br>/g," ");
@@ -1120,9 +1125,15 @@ function minView(e) {
     
     //img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
     //new Insertion.Top(txt, img);
-
+    
+    var print = 'print' + nId;
+    var anchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='xpandView(event); editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+    new Insertion.After(print, anchor);
+    
+    
     img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_down.gif'>";
     new Insertion.Top(txt, img);
+    Element.observe(txt, 'click', xpandView);
 }
 
 var idHeight;
@@ -1147,9 +1158,11 @@ function shrinkImpl(id, minHeight, delta) {
 
 //this func fires only if maximize button is clicked after fullView
 function xpandView(e) {
-    var txt = Event.element(e).parentNode.id;   
-    var img = Event.element(e).id; 
-    var nId = txt.substr(1);
+    var id = Event.element(e).id;
+    var regEx = /\d+/;    
+    var nId = regEx.exec(id);
+    var txt = "n" + nId;   
+    var img = "xpImg" + nId; 
     var content = "c" + nId;
     var date = "d" + nId;    
     
@@ -1163,6 +1176,7 @@ function xpandView(e) {
     $(txt).style.height = 'auto';    
     new Insertion.Top(txt, imgTag);    
     Event.stop(e);
+    Element.stopObserving(txt, 'click', xpandView);
 
 }
 
@@ -1194,9 +1208,11 @@ function fetchNote(nId) {
 //this func fires only if maximize button is clicked
 function fullView(e) {
     var url = ctx + "/CaseManagementView.do";
-    var txt = Event.element(e).parentNode.id;   
-    var img = Event.element(e).id; 
-    var nId = txt.substr(1);
+    var id = Event.element(e).id;
+    var regEx = /\d+/;    
+    var nId = regEx.exec(id);
+    var txt = "n" + nId;
+    var img = "quitImg" + nId;     
     var fullId = "full" + nId;
     var params = "method=viewNote&raw=false&noteId=" + nId;    
     var noteTxtId = "txt" + nId;
@@ -1226,6 +1242,7 @@ function fullView(e) {
     
     $(txt).style.height = 'auto';    
     new Insertion.Top(txt, imgTag);    
+    Element.stopObserving(txt, 'click', fullView);
     Event.stop(e);
 
 }
@@ -1327,23 +1344,10 @@ function editNote(e) {
     var noteHeight;
     var largeFont = 16;        
     var quit = "quitImg";
-    var txt; 
-    var payload;
-    var el;
-   
-    el = Event.element(e);
-    
-    //get id for parent div
-    if( el.id.search(/^n/) > -1 )
-        txt = el.id;
-    else {
-        var level = 0;        
-        while( $(el).up('div',level).id.search(/^n/) == -1 )
-            ++level;
-        
-        txt = $(el).up('div',level).id;        
-    }                              
-    
+    var el = Event.element(e);    
+    var txt = el.parentNode.id; 
+    var payload;    
+
     //if we have an edit textarea already open, close it
     if($(caseNote) !=null && $(caseNote).parentNode.id != $(txt).id) {
         if( !changeToView(caseNote) ) {
@@ -1359,9 +1363,13 @@ function editNote(e) {
     }              
     
     var nId = txt.substr(1); 
+    var editAnchor = 'edit' + nId;
     var date = 'd' + nId;
     var content = 'c' + nId;
     
+    //remove edit anchor
+    Element.remove(editAnchor);
+
     //check for line item displayed when note is minimized
     if( $(date) != null ) {
         Element.remove(date);
