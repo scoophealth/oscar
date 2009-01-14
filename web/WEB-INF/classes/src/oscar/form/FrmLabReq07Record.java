@@ -81,7 +81,7 @@ public class FrmLabReq07Record extends FrmRecord {
         return props;
     }
 
-    public Properties getFormCustRecord(Properties props, int provNo) throws SQLException {
+    public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
         String demoProvider = props.getProperty("demoProvider", "");
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         ResultSet rs = null;
@@ -89,10 +89,10 @@ public class FrmLabReq07Record extends FrmRecord {
 
         if (!demoProvider.equals("")) {
 
-            if (Integer.parseInt(demoProvider) == provNo) {
+            if (demoProvider.equals(provNo) ) {
                 // from provider table
                 sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
-                        + "FROM provider WHERE provider_no = " + provNo;
+                        + "FROM provider WHERE provider_no = '" + provNo + "'";
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
@@ -104,10 +104,10 @@ public class FrmLabReq07Record extends FrmRecord {
                 rs.close();
             } else {
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
-                        + provNo;
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = '"
+                        + provNo + "'";
                 rs = db.GetSQL(sql);
-               
+                
                 String num = "";
                 if (rs.next()) {
                     num = db.getString(rs,"ohip_no");
