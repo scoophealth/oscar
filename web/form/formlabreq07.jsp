@@ -52,7 +52,7 @@
    boolean readOnly = false;
    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
    int formId = Integer.parseInt(request.getParameter("formId"));
-	int provNo = Integer.parseInt((String) session.getAttribute("user"));
+	String provNo = (String) session.getAttribute("user");
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
    java.util.Properties props = rec.getFormRecord(demoNo, formId);
         
@@ -967,7 +967,28 @@ var maxYear=3100;
 
 									</td>
 								</tr>
-
+                                                                
+                                                                <tr>                                                                    
+                                                                    <th colspan="2" class="checkboxLabelTd">Prostate Specific Antigen (PSA)</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="2" class="checkboxLabelTd bottomEndSection">
+                                                                         <span style="float:right; margin-right:5px;">
+                                                                            <input type="checkbox" name="psa_free"
+										<%=props.getProperty("psa_free", "")%>>Free PSA
+                                                                        </span>
+                                                                        <input type="checkbox" name="psa_total"
+										<%=props.getProperty("psa_total", "")%>>Total PSA                                                                       
+                                                                                <p>Specify one below:<br>
+                                                                                    
+                                                                                    <input type="checkbox" name="psa_uninsured"
+                                                                                           <%=props.getProperty("psa_uninsured", "")%>>Screening purposes - Uninsured test<br>
+                                                                                    <input type="checkbox" name="psa_insured"
+                                                                                           <%=props.getProperty("psa_insured", "")%>>Meets OHIP elibility criteria - Insured test
+                                                                                    
+                                                                                </p>
+                                                                    </td>
+                                                                </tr>
 								<tr>
 									<th class="checkboxTd">&nbsp;</th>
 									<th class="checkboxLabelTd">Other Tests - <font
@@ -1022,32 +1043,7 @@ var maxYear=3100;
 									<td class="checkboxLabelTd" colspan="2"><input type="text"
 										style="width: 80%" tabindex="32" name="o_otherTests10"
 										value="<%=props.getProperty("o_otherTests10", "")%>"></td>
-								</tr>
-								<tr>
-									<td class="checkboxLabelTd" colspan="2"><input type="text"
-										style="width: 80%" tabindex="33" name="o_otherTests11"
-										value="<%=props.getProperty("o_otherTests11", "")%>"></td>
-								</tr>
-								<tr>
-									<td class="checkboxLabelTd" colspan="2"><input type="text"
-										style="width: 80%" tabindex="34" name="o_otherTests12"
-										value="<%=props.getProperty("o_otherTests12", "")%>"></td>
-								</tr>
-								<tr>
-									<td class="checkboxLabelTd" colspan="2"><input type="text"
-										style="width: 80%" tabindex="35" name="o_otherTests13"
-										value="<%=props.getProperty("o_otherTests13", "")%>"></td>
-								</tr>
-								<tr>
-									<td class="checkboxLabelTd" colspan="2"><input type="text"
-										style="width: 80%" tabindex="36" name="o_otherTests14"
-										value="<%=props.getProperty("o_otherTests14", "")%>"></td>
-								</tr>
-								<tr>
-									<td class="checkboxLabelTd" colspan="2"><input type="text"
-										style="width: 80%" tabindex="37" name="o_otherTests15"
-										value="<%=props.getProperty("o_otherTests15", "")%>"></td>
-								</tr>
+								</tr>								
 								<tr>
 									<td class="checkboxLabelTd" colspan="2">&nbsp;</td>
 								</tr>
