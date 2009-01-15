@@ -51,6 +51,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -776,9 +777,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
         
         if (verify != null && verify.equalsIgnoreCase("on")) {
-            prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-            String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm", request.getLocale()) + " "
-                    + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + provider.getFormattedName() + "]";
+            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, caseManagementMgr.SIGNATURE_VERIFY);
             
            String n = note.getNote() + "\n" + message;
            note.setNote(n);
@@ -787,11 +786,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
         }
         else if (note.isSigned()) {
-            prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-            //String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm", request.getLocale()) + " "
-            //+ prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + provider.getFormattedName() + "]";
-            String message = caseManagementMgr.getSignature(providerNo, userName, roleName);
-         
+            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, caseManagementMgr.SIGNATURE_SIGNED);         
             
             String n = note.getNote() + "\n" + message;
             note.setNote(n);
