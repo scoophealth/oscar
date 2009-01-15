@@ -47,6 +47,7 @@ import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 
 import com.quatro.service.LookupManager;
@@ -116,18 +117,18 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-
+        int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        String providerNo = ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();
+        
         // UCF
-        request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+        request.getSession().setAttribute("survey_list", surveyManager.getAllForms(currentFacilityId,providerNo));
 
         List<Demographic> localMatches = localSearch(intakeSearchBean);
         intakeSearchBean.setLocalMatches(localMatches);
 
         intakeSearchBean.setSearchPerformed(true);
         request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
-
-        int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
+        
         if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
             createRemoteList(request, intakeSearchBean, currentFacilityId);
         }

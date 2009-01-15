@@ -32,15 +32,17 @@ import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.SurveyDocument;
 
 public interface SurveyManager {
-	public List getAllForms();
-    public List getAllForms(Integer facilityId);
+	//public List getAllForms();
+    //public List getAllForms(Integer facilityId);
+    public List getAllForms(Integer facilityId, String providerNo);
 	public OscarForm getForm(String formId);
 	public void saveFormInstance(OscarFormInstance instance);
 	public void saveFormInstanceTmpsave(OscarFormInstanceTmpsave instance);
 	public OscarFormInstance getLatestForm(String formId, String clientId);
-	public List getForms(String clientId);
-	public List getForms(String formId, String clientId);	
-	public List getFormsByFacility(String clientId, Integer facilityId);	
+	public List getForms(String clientId, Integer facilityId, String providerNo);
+	//public List getForms(String clientId);
+	//public List getForms(String formId, String clientId);	
+	//public List getFormsByFacility(String clientId, Integer facilityId);	
 	public OscarFormInstance getCurrentFormById(String formInstanceId);
 	public List getTmpForms(String tmpInstanceId, String formId, String clientId, String providerId);
 	public List getTmpFormData(String tmpInstanceId);

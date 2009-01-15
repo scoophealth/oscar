@@ -24,6 +24,9 @@
 <%@ include file="/taglibs.jsp"%>
 <script>
 function deleteTeam(id) {
+	if(!confirm("Are you sure you want to delete the team entry?")) {
+		return;
+	}
 	document.programManagerForm.elements['team.id'].value=id;
 	document.programManagerForm.method.value='delete_team';
 	document.programManagerForm.submit();
@@ -54,22 +57,17 @@ function add_team(form) {
 </table>
 </div>
 <!--  show current staff -->
-<display:table class="simple" cellspacing="2" cellpadding="3" id="team"
-	name="teams" export="false" pagesize="0"
-	requestURI="/PMmodule/ProgramManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="team" name="teams" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list"
-		value="No teams are currently defined for this program." />
+	<display:setProperty name="basic.msg.empty_list" value="No teams are currently defined for this program." />
 	<display:column sortable="false" title="">
-		<a onclick="deleteTeam('<c:out value="${team.id}"/>');"
-			href="javascript:void(0);"> Delete </a>
+		<a onclick="deleteTeam('<c:out value="${team.id}"/>');return false;" href="javascript:void(0);"> Delete </a>
 	</display:column>
 	<display:column property="name" sortable="true" title="Name" />
 	<display:column sortable="true" title="Staff">
 		<ul>
 			<c:forEach var="provider" items="${team.providers}">
-				<li><c:out value="${provider.provider.formattedName}" /> (<c:out
-					value="${provider.role.name}" />)</li>
+				<li><c:out value="${provider.provider.formattedName}" /> (<c:out value="${provider.role.name}" />)</li>
 			</c:forEach>
 		</ul>
 	</display:column>
@@ -86,10 +84,9 @@ function add_team(form) {
 	<html:hidden property="team.id" />
 	<tr class="b">
 		<td width="20%">Name:</td>
-		<td><html:text property="team.name" size="50" maxlength="255" /></td>
+		<td><html:text property="team.name" size="50" maxlength="255"/></td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="button" value="Save"
-			onclick="add_team(this.form)" /> <html:cancel /></td>
+		<td colspan="2"><input type="button" value="Save" onclick="add_team(this.form)" /> <html:cancel /></td>
 	</tr>
 </table>

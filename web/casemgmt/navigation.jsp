@@ -22,6 +22,8 @@
 */
 -->
 
+<%-- Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547 --%>
+
 <% long loadPage = System.currentTimeMillis(); %>
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -33,8 +35,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Vector" %>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
     String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
     oscar.oscarEncounter.pageUtil.EctSessionBean bean=null;
@@ -152,194 +153,132 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
     }
 </script>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+    .ControlSelect {
+        font-family: Verdana, Tahoma, Arial, sans-serif;
+        font-size:80%;
+        width:100%;
+    }
+</style>
 <div id="noprint" name="noprint">
-<table style="font: bold small-caps 10pt/ 12pt">
-	<form name="navigationForm" method="get">
-	<% java.util.Date today=new java.util.Date();
+<table style="font:bold small-caps 10pt/12pt">
+<form name="navigationForm" method="get">
+<% java.util.Date today=new java.util.Date();
     String curYear=Integer.toString(today.getYear());
     String curMonth=Integer.toString(today.getMonth());
     String curDay=Integer.toString(today.getDay());
     String Hour=Integer.toString(today.getHours());
     String Min=Integer.toString(today.getMinutes());
     String  eURL ="/oscarEncounter/IncomingEncounter.do?casetoEncounter=true&providerNo="+bean.providerNo+"&appointmentNo="+bean.appointmentNo+"&demographicNo="+bean.demographicNo+"&curProviderNo="+bean.providerNo+"&reason="+java.net.URLEncoder.encode(" ")+"&userName="+java.net.URLEncoder.encode(bean.patientFirstName+" "+bean.patientLastName)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+curYear+"-"+curMonth+"-"+curDay+"&startTime="+Hour+":"+Min+"&status=t";%>
-	<caisirole:SecurityAccess accessName="medical encounter"
-		accessType="access" providerNo="<%=bean.providerNo%>"
-		demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-		<!--
+<caisirole:SecurityAccess accessName="medical encounter" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <!--
     <a href='<%=bsurl%>/oscarSurveillance/CheckSurveillance.do?demographicNo=<%=bean.demographicNo%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>'>Oscar Encounter</a>
     -->
-	</caisirole:SecurityAccess> <!-- tr><td><a href="</td></tr --> <caisi:isModuleLoad
-		moduleName="TORONTO_RFQ" reverse="true">
+</caisirole:SecurityAccess>
+<!-- tr><td><a href="</td></tr -->
 
-		<%--<tr style="background-color:#BBBBBB;"><td>Master</td></tr>--%>
-		<!-- go back to oscar main page -->
-		<!-- <tr><td><a href="../provider/providercontrol.jsp">Oscar Medical</a></td></tr> -->
-		<!-- PMM link here / removed because of navigation concerns! -->
-		<%--<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>--%>
-	</caisi:isModuleLoad>
-	<tr style="background-color: #BBBBBB;">
-		<td>Clinical Modules</td>
-	</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<!-- master -->
-		<caisirole:SecurityAccess accessName="master file" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
-			<nested:equal name="casemgmt_VlCountry" value="BR">
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;">Master</a></td>
-				</tr>
-			</nested:equal>
-			<nested:notEqual name="casemgmt_VlCountry" value="BR">
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;">Master</a></td>
-				</tr>
-			</nested:notEqual>
-		</caisirole:SecurityAccess>
+<%--<tr style="background-color:#BBBBBB;"><td>Master</td></tr>--%>
+<!-- go back to oscar main page -->
+<!-- <tr><td><a href="../provider/providercontrol.jsp">Oscar Medical</a></td></tr> -->
+<!-- PMM link here / removed because of navigation concerns! -->
+<%--<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>--%>
+</caisi:isModuleLoad>
 
-		<caisirole:SecurityAccess accessName="billing" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
-			<!-- billing -->
-			<nested:equal name="casemgmt_VlCountry" value="BR">
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>');return false;">Billing</a></td>
-				</tr>
-			</nested:equal>
-			<nested:notEqual name="casemgmt_VlCountry" value="BR">
-				<% if(bean.status.indexOf('B')==-1) { %>
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/billing.do?billRegion=<%=java.net.URLEncoder.encode(province)%>&billForm=<%=java.net.URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=java.net.URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=Hour+":"+Min%>&demographic_name=<%=java.net.URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&bNewForm=1&status=t');return false;">Billing</a></td>
-				</tr>
-				<%}else{ %>
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="onUnbilled('<%=bsurl%>/billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>');return false;">Billing</a></td>
-				</tr>
-				<%} %>
-			</nested:notEqual>
-		</caisirole:SecurityAccess>
+<tr style="background-color:#BBBBBB;"><td>Clinical Modules</td></tr>
 
-		<caisirole:SecurityAccess accessName="prescription Write"
-			accessType="access" providerNo="<%=bean.providerNo%>"
-			demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<!-- master -->
+<caisirole:SecurityAccess accessName="master file" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <nested:equal name="casemgmt_VlCountry" value="BR">
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;">Master</a></td></tr>
+    </nested:equal>
+    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;">Master</a></td></tr>
+    </nested:notEqual>
+</caisirole:SecurityAccess>
 
-			<!-- prescription -->
-			<nested:notEqual name="casemgmt_VlCountry" value="BR">
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">Prescriptions</a></td>
-				</tr>
-			</nested:notEqual>
-		</caisirole:SecurityAccess>
+<caisirole:SecurityAccess accessName="billing" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <!-- billing -->
+    <nested:equal name="casemgmt_VlCountry" value="BR">
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscar/billing/procedimentoRealizado/init.do?appId=<%=bean.appointmentNo%>');return false;">Billing</a></td></tr>
+    </nested:equal>
+    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+        <% if(bean.status.indexOf('B')==-1) { %>
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/billing.do?billRegion=<%=java.net.URLEncoder.encode(province)%>&billForm=<%=java.net.URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=java.net.URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=Hour+":"+Min%>&demographic_name=<%=java.net.URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&bNewForm=1&status=t');return false;">Billing</a></td></tr>
+        <%}else{ %>
+        <tr><td><a href="javascript:void(0)" onClick="onUnbilled('<%=bsurl%>/billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>');return false;">Billing</a></td></tr>
+        <%} %>
+    </nested:notEqual>
+</caisirole:SecurityAccess>
 
-		<!-- allergies -->
-		<!-- tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarRx/ShowAllergies.jsp?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">Allergies</a></td></tr -->
+<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+
+    <!-- prescription -->
+    <nested:notEqual name="casemgmt_VlCountry" value="BR">
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">Prescriptions</a></td></tr>
+    </nested:notEqual>
+</caisirole:SecurityAccess>
+
+<!-- allergies -->
+<!-- tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarRx/ShowAllergies.jsp?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;">Allergies</a></td></tr -->
 
 
-		<!-- Consultations -->
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=bean.demographicNo%>');return false;">Consultations</a></td>
-		</tr>
+<!-- Consultations -->
+<tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=bean.demographicNo%>');return false;">Consultations</a></td></tr>
 
-		<caisirole:SecurityAccess accessName="immunization"
-			accessType="access" providerNo="<%=bean.providerNo%>"
-			demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-			<!-- IMMUNIZATION -->
-			<oscar:oscarPropertiesCheck property="IMMUNIZATION" value="yes"
-				defaultVal="true">
-				<% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(bean.demographicNo)) { %>
-				<tr>
-					<td><a style="color: red" href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/oscarEncounter/immunization/initSchedule.do');return false;">Immunizations</a></td>
-				</tr>
-				<% } else {%>
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/oscarEncounter/immunization/initSchedule.do');return false;">Immunizations</a></td>
-				</tr>
-				<% } %>
-			</oscar:oscarPropertiesCheck>
-		</caisirole:SecurityAccess>
+<caisirole:SecurityAccess accessName="immunization" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <!-- IMMUNIZATION -->
+    <oscar:oscarPropertiesCheck property="IMMUNIZATION" value="yes" defaultVal="true">
+        <% if (oscar.oscarEncounter.immunization.data.EctImmImmunizationData.hasImmunizations(bean.demographicNo)) { %>
+        <tr><td><a style="color:red" href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/immunization/initSchedule.do');return false;">Immunizations</a></td></tr>
+        <% } else {%>
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/immunization/initSchedule.do');return false;">Immunizations</a></td></tr>
+        <% } %>
+    </oscar:oscarPropertiesCheck>
+</caisirole:SecurityAccess>
 
-		<!-- Prevention -->
-		<caisirole:SecurityAccess accessName="prevention" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
-			<oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
-				<tr>
-					<td><a href="javascript:void(0)"
-						onClick="popupPage('<%=bsurl%>/oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
-					<oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a></td>
-				</tr>
-			</oscar:oscarPropertiesCheck>
-		</caisirole:SecurityAccess>
+<!-- Prevention -->
+<caisirole:SecurityAccess accessName="prevention" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
+        <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
+            <oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a></td></tr>
+    </oscar:oscarPropertiesCheck>
+</caisirole:SecurityAccess>
 
-		<!-- oscarcomm -->
-		<caisirole:SecurityAccess accessName="oscarcomm" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
+<!-- oscarcomm -->
+<caisirole:SecurityAccess accessName="oscarcomm" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
 
-			<%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
-			<tr>
-				<td><a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/oscarEncounter/RemoteAttachments.jsp');return false;">OscarComm</a></td>
-			</tr>
-			<% } else {%>
-			<tr>
-				<td><a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/packageNA.jsp?pkg=oscarComm');return false;">OscarComm</a></td>
-			</tr>
-			<% } %>
-		</caisirole:SecurityAccess>
+    <%  if (oscar.OscarProperties.getInstance().getProperty("oscarcomm","").equals("on")) { %>
+    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/RemoteAttachments.jsp');return false;">OscarComm</a></td></tr>
+    <% } else {%>
+    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/packageNA.jsp?pkg=oscarComm');return false;">OscarComm</a></td></tr>
+    <% } %>
+</caisirole:SecurityAccess>
 
-		<!-- Disease Registry -->
-		<caisirole:SecurityAccess accessName="disease registry"
-			accessType="access" providerNo="<%=bean.providerNo%>"
-			demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+<!-- Disease Registry -->
+<caisirole:SecurityAccess accessName="disease registry" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
 
-			<tr>
-				<td><a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&quickList=');return false;">Disease
-				Registry</a></td>
-			</tr>
-		</caisirole:SecurityAccess>
+    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&quickList=');return false;">Disease Registry</a></td></tr>
+</caisirole:SecurityAccess>
 
-	</caisi:isModuleLoad>
+</caisi:isModuleLoad>
 
-	<!-- add tickler -->
-	<caisirole:SecurityAccess accessName="Write Ticklers"
-		accessType="Action" providerNo="<%=bean.providerNo%>"
-		demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/Tickler.do?method=edit&tickler.demographic_webName=<%=StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() +"," + bean.getPatientFirstName())%>&tickler.demographic_no=<%=bean.demographicNo%>');return false;">Add
-			Tickler</a></td>
-		</tr>
-	</caisirole:SecurityAccess>
+<!-- add tickler -->
+<caisirole:SecurityAccess accessName="Write Ticklers" accessType="Action" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=edit&tickler.demographic_webName=<%=StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() +"," + bean.getPatientFirstName())%>&tickler.demographic_no=<%=bean.demographicNo%>');return false;">Add Tickler</a></td></tr>
+</caisirole:SecurityAccess>
 
-	<caisirole:SecurityAccess accessName="medical form" accessType="access"
-		providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-		programId="<%=pgId%>">
-		<tr style="background-color: #BBBBBB;">
-			<td>Forms</td>
-		</tr>
-		<!-- current forms -->
-		<tr>
-			<td><select name="selectCurrentForms" class="ControlSelect"
-				onChange="javascript:selectBox(this)"
-				onMouseOver="javascript:window.status='View any of <%=bean.patientLastName+","+bean.patientFirstName%>\'s current forms.';return true;">
-				<option value="null" selected>-current forms-</option>
-				<nested:iterate id="cf" name="casemgmt_newFormBeans"
-					type="org.oscarehr.casemgmt.model.Encounterform">
-					<%
+<caisirole:SecurityAccess accessName="medical form" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr style="background-color:#BBBBBB;"><td>Forms</td></tr>
+    <!-- current forms -->
+    <tr><td>
+
+        <select name="selectCurrentForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View any of <%=bean.patientLastName+","+bean.patientFirstName%>\'s current forms.';return true;">
+            <option value="null" selected>-current forms-</option>
+            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.casemgmt.model.Encounterform">
+                <%
                     String table = cf.getFormTable();
                     if(!table.equalsIgnoreCase("")){
                         oscar.oscarEncounter.data.EctFormData.PatientForm[] pforms = new oscar.oscarEncounter.data.EctFormData().getPatientForms(bean.demographicNo, table);
@@ -349,43 +288,37 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
                                     +cf.getFormName()+"&demographic_no="+bean.demographicNo;
                             String label=cf.getFormName()+"&nbsp;Cr:"+pfrm.getCreated()+"&nbsp;Ed:"+pfrm.getEdited();
                 %>
-					<option value="<%= value %>"><%=label%></option>
-					<%
+                <option value="<%= value %>"><%=label%></option>
+                <%
                         }
                     }
-                %>
-				</nested:iterate>
+                %></nested:iterate>
 
-			</select></td>
-		</tr>
+        </select>
+    </td></tr>
 
-		<!-- add new form -->
-		<tr>
-			<td><select name="selectNewForms" class="ControlSelect"
-				onChange="javascript:selectBox(this)"
-				onMouseOver="javascript:window.status='View <%=bean.patientLastName+","+bean.patientFirstName%>\'s new forms list.';return true;">
-				<option value="null" selected>-add new form-</option>
-				<nested:iterate id="cf" name="casemgmt_newFormBeans"
-					type="org.oscarehr.casemgmt.model.Encounterform">
-					<% if (((Integer)cf.getHidden()).intValue()!=0) {
+    <!-- add new form -->
+    <tr><td>
+        <select name="selectNewForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View <%=bean.patientLastName+","+bean.patientFirstName%>\'s new forms list.';return true;">
+            <option value="null" selected>-add new form-</option>
+            <nested:iterate id="cf" name="casemgmt_newFormBeans" type="org.oscarehr.casemgmt.model.Encounterform">
+                <% if (((Integer)cf.getHidden()).intValue()!=0) {
                     String value = session.getAttribute("casemgmt_oscar_baseurl")+"/appointment/"
                             +cf.getFormValue()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo;
                     String label = cf.getFormName();
                 %>
-					<option value="<%= value %>"><%= label %></option>
-					<%} %>
-				</nested:iterate>
-			</select></td>
-		</tr>
+                <option value="<%= value %>"><%= label %></option>
+                <%} %>
+            </nested:iterate>
+        </select>
+    </td></tr>
 
-		<!-- old forms -->
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/oscarEncounter/formlist.jsp?demographic_no=<%=bean.demographicNo%>'); return false;">-old
-			forms-</a></td>
-		</tr>
-	</caisirole:SecurityAccess>
-	<script>
+    <!-- old forms -->
+    <tr><td>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/formlist.jsp?demographic_no=<%=bean.demographicNo%>'); return false;" >-old forms-</a>
+    </td></tr>
+</caisirole:SecurityAccess>
+<script>
     function openSurvey(ctl) {
         var formId = ctl.options[ctl.selectedIndex].value;
         if(formId == 0) {
@@ -399,62 +332,48 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 
     }
 </script>
-	<tr style="background-color: #BBBBBB;">
-		<td>User Created Forms</td>
-	</tr>
-	<tr>
-		<td><input type="hidden" id="formInstanceId" value="0" /></td>
-	</tr>
-	<tr>
-		<td><select property="view.formId" onchange="openSurvey(this);">
-			<option value="0">&nbsp;</option>
-			<c:forEach var="survey" items="${survey_list}">
-				<option value="<c:out value="${survey.formId}"/>"><c:out
-					value="${survey.description}" /></option>
-			</c:forEach>
-		</select></td>
-	</tr>
+<tr style="background-color:#BBBBBB;"><td>User Created Forms</td></tr>
+<tr><td><input type="hidden" id="formInstanceId" value="0" /></td></tr>
+<tr>
+    <td>
+        <select property="view.formId" onchange="openSurvey(this);">
+            <option value="0">&nbsp;</option>
+            <c:forEach var="survey" items="${survey_list}">
+                <option value="<c:out value="${survey.formId}"/>"><c:out value="${survey.description}"/></option>
+            </c:forEach>
+        </select>
+    </td>
+</tr>
 
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<tr style="background-color: #BBBBBB;">
-			<td>oscarMessenger</td>
-		</tr>
-		<!-- select message -->
-		<tr>
-			<td><select name="msgSelect" class="ControlSelect"
-				onchange="javascript:popUpMsg(600,900,this.options[this.selectedIndex].value)">
-				<option value="null" selected>-Select Message-</option>
-				<nested:iterate id="cmb" name="casemgmt_msgBeans"
-					type="org.apache.struts.util.LabelValueBean">
-					<option value="<%= cmb.getValue() %>"><%= cmb.getLabel() %></option>
-				</nested:iterate>
-			</select></td>
-		</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<tr style="background-color:#BBBBBB;"><td>oscarMessenger</td></tr>
+<!-- select message -->
+<tr><td>
+    <select name="msgSelect" class="ControlSelect" onchange="javascript:popUpMsg(600,900,this.options[this.selectedIndex].value)">
+        <option value="null" selected>-Select Message-</option>
+        <nested:iterate id="cmb" name="casemgmt_msgBeans" type="org.apache.struts.util.LabelValueBean">
+            <option value="<%= cmb.getValue() %>"><%= cmb.getLabel() %></option>
+        </nested:iterate>
+    </select>
+</td></tr>
 
-		<!-- all message -->
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&userName=<%=bean.userName%>'); return false;">-All
-			Messages-</a></td>
-		</tr>
-	</caisi:isModuleLoad>
-	<%
+<!-- all message -->
+<tr><td>
+    <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&userName=<%=bean.userName%>'); return false;" >-All Messages-</a>
+</td></tr>
+</caisi:isModuleLoad>
+<%
 	dxResearchBeanHandler dxRes;
 	ArrayList<String> flowsheets;
 	Vector dxCodes;
 %>
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<caisirole:SecurityAccess accessName="measurements"
-			accessType="access" providerNo="<%=bean.providerNo%>"
-			demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-			<tr style="background-color: #BBBBBB;">
-				<td>Case Management Flowsheets</td>
-			</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr style="background-color:#BBBBBB;"><td>Case Management Flowsheets</td></tr>
 
-			<!-- caisi flow sheet -->
-			<tr>
-				<td>
-				<%
+    <!-- caisi flow sheet -->
+    <tr><td>
+        <%
             dxRes = new dxResearchBeanHandler(bean.demographicNo);
             dxCodes = dxRes.getActiveCodeListWithCodingSystem();
             flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
@@ -462,119 +381,93 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
                 MeasurementFlowSheet measurementFlowSheet = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(flowsheet);
                 if (MeasurementHelper.flowSheetRequiresWork(bean.demographicNo, measurementFlowSheet)) {
                 %>* <% }         
-        %> <a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
-				</a><br />
-				<%}%>
-				</td>
-			</tr>
-		</caisirole:SecurityAccess>
+        %>
+        <a href="javascript:void(0)"
+           onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
+        </a><br/>
+        <%}%>        
+    </td></tr>
+</caisirole:SecurityAccess>
 
-		<caisirole:SecurityAccess accessName="measurements"
-			accessType="access" providerNo="<%=bean.providerNo%>"
-			demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-			<tr style="background-color: #BBBBBB;">
-				<td>Measurements</td>
-			</tr>
-			<!-- measurement -->
-			<tr>
-				<td>
-				<%
+<caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr style="background-color:#BBBBBB;"><td>Measurements</td></tr>
+    <!-- measurement -->
+    <tr><td>
+        <%
             dxRes = new dxResearchBeanHandler(bean.demographicNo);
             dxCodes = dxRes.getActiveCodeListWithCodingSystem();
             flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
             for (String flowsheet : flowsheets) {
-        %> <a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
-				</a> <%}%> <select name="measurementGroupSelect" class="ControlSelect"
-					onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
-					<option value="null" selected>-select group-</option>
-					<%
+        %>
+        <a href="javascript:void(0)"
+           onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
+        </a>
+        <%}%>
+
+        <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
+            <option value="null" selected>-select group-</option>
+            <%
                 for(int j=0; j<bean.measurementGroupNames.size(); j++) {
                     String tmp = (String)bean.measurementGroupNames.get(j);
             %>
-					<option value="<%=tmp%>"><%=tmp %></option>
-					<%}%>
-				</select></td>
-			</tr>
+            <option value="<%=tmp%>"><%=tmp %></option>
+            <%}%>
+        </select>
+    </td></tr>
 
-			<!-- old measurements -->
-			<tr>
-				<td><a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do'); return false;">-Old
-				Measurements--</a></td>
-			</tr>
-		</caisirole:SecurityAccess>
-	</caisi:isModuleLoad>
+    <!-- old measurements -->
+    <tr><td>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do'); return false;" >-Old Measurements--</a>
+    </td></tr>
+</caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
-	<tr style="background-color: #BBBBBB;">
-		<td>Clinical Resources</td>
-	</tr>
+<tr style="background-color:#BBBBBB;"><td>Clinical Resources</td></tr>
 
-	<%
+<%
     String pAge = Integer.toString(oscar.util.UtilDateUtilities.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
     oscar.oscarLab.ca.on.CommonLabResultData comLab = new oscar.oscarLab.ca.on.CommonLabResultData();
     java.util.ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
     session.setAttribute("casemgmt_labsbeans",labs);
 %>
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<tr>
-			<td><a href="javascript:void(0)"
-				ONCLICK="popupPage('http://resource.oscarmcmaster.org/oscarResource/');return false;">resource</a><br>
-			</td>
-		</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<tr><td>
+    <a href="javascript:void(0)" ONCLICK ="popupPage('http://resource.oscarmcmaster.org/oscarResource/');return false;">resource</a><br>
+</td></tr>
 
-	</caisi:isModuleLoad>
-	<tr>
-		<td><a href="javascript:void(0)"
-			onClick="popupPage('<%=bsurl%>/dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
-		</td>
-	</tr>
+</caisi:isModuleLoad>
+<tr><td>
+    <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
+</td></tr>
 
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<caisirole:SecurityAccess accessName="eform" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
-			<!-- eform -->
-			<tr>
-				<td><a href="javascript:void(0)"
-					onClick="popupPage('<%=bsurl%>/eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
-				</td>
-			</tr>
-		</caisirole:SecurityAccess>
-	</caisi:isModuleLoad>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<caisirole:SecurityAccess accessName="eform" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <!-- eform -->
+    <tr><td>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
+    </td></tr>
+</caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
-	<caisirole:SecurityAccess accessName="read ticklers"
-		accessType="access" providerNo="<%=bean.providerNo%>"
-		demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/Tickler.do?method=filter&filter.demographic_no=<%=bean.demographicNo%>');return false;">View
-			Tickler</a><br>
-			</td>
-		</tr>
-	</caisirole:SecurityAccess>
+<caisirole:SecurityAccess accessName="read ticklers" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr><td>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/Tickler.do?method=filter&filter.demographic_webName=<%=StringEscapeUtils.escapeJavaScript(bean.getPatientLastName() +"," + bean.getPatientFirstName())%>&filter.demographic_no=<%=bean.demographicNo%>');return false;">View Tickler</a><br>
+    </td></tr>
+</caisirole:SecurityAccess>
 
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<tr>
-			<td><a href="javascript:void(0)"
-				onClick="popupPage('<%=bsurl%>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;">calculators</a><br>
-			</td>
-		</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<tr><td>
+    <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" >calculators</a><br>
+</td></tr>
 
-		<caisirole:SecurityAccess accessName="lab" accessType="access"
-			providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>"
-			programId="<%=pgId%>">
+<caisirole:SecurityAccess accessName="lab" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
 
-			<!-- lab result -->
-			<tr>
-				<td><select name="selectCurrentForms" class="ControlSelect"
-					onChange="javascript:selectBox(this)"
-					onMouseOver="javascript:window.status='View <%=bean.patientFirstName+" "+bean.patientLastName%>\'s lab results'; return true;">
-					<option value="null" selected>-lab results-</option>
-					<nested:iterate id="labrst" name="casemgmt_labsbeans"
-						type="oscar.oscarLab.ca.on.LabResultData">
-						<%
+    <!-- lab result -->
+    <tr><td>
+        <select name="selectCurrentForms" class="ControlSelect" onChange="javascript:selectBox(this)" onMouseOver="javascript:window.status='View <%=bean.patientFirstName+" "+bean.patientLastName%>\'s lab results'; return true;">
+            <option value="null" selected>-lab results-</option>
+            <nested:iterate id="labrst" name="casemgmt_labsbeans" type="oscar.oscarLab.ca.on.LabResultData">
+                <%
 
                     String lablable=labrst.dateTime+""+labrst.discipline;
                     String mdvalue=bsurl+"/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+labrst.segmentID+"&status="+labrst.reportStatus;
@@ -582,56 +475,49 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
                     String otvalue=bsurl+"/lab/CA/BC/labDisplay.jsp?segmentID="+labrst.segmentID+"&providerNo="+bean.providerNo;
                     if (labrst.isMDS()){
                 %>
-						<option value="<%=mdvalue%>"><%=lablable%></option>
-						<% }else {if ( labrst.isCML()){
+                <option value="<%=mdvalue%>"><%=lablable%></option>
+                <% }else {if ( labrst.isCML()){
                 %>
-						<option value="<%=cmvalue%>"><%=lablable%></option>
-						<% }else {%>
-						<option value="<%=otvalue%>"><%=lablable%></option>
-						<% }}%>
-					</nested:iterate>
-				</select> <%session.removeAttribute("casemgmt_labsbeans"); %>
-				</td>
-			</tr>
-		</caisirole:SecurityAccess>
-	</caisi:isModuleLoad>
+                <option value="<%=cmvalue%>" ><%=lablable%></option>
+                <% }else {%>
+                <option value="<%=otvalue%>" ><%=lablable%></option>
+                <% }}%>
+            </nested:iterate>
+        </select>
+        <%session.removeAttribute("casemgmt_labsbeans"); %>
+    </td></tr>
+</caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
-	</form>
+</form>
 
-	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<form name="ksearch" method="get">
-		<tr style="background-color: #BBBBBB;">
-			<td>Internet Resources</td>
-		</tr>
-		<tr>
-			<td>search for ... <br>
-			<input type="text" name="keyword" value=""
-				onkeypress="return grabEnter(event)" /> <br>
-			using ... <br>
-			<select name="channel" class="ControlSelect">
-				<option
-					value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title=">OSCAR
-				search</option>
-				<option value="http://www.google.com/search?q=">Google</option>
-				<option
-					value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term=">Pubmed</option>
-				<option
-					value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER=">Medline
-				Plus</option>
-				<option
-					value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q=">BNF.org</option>
-			</select> <input type="button" name="button" value="Go"
-				onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
-			</td>
-		</tr>
-		</form>
-	</caisi:isModuleLoad>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+<form name="ksearch" method="get">
+    <tr style="background-color:#BBBBBB;"><td>Internet Resources</td></tr>
+    <tr><td>
+        search for ...
+        <br>
+        <input type="text" name="keyword" value=""  onkeypress="return grabEnter(event)"/>
+        <br>
+        using ...
+        <br>
+        <select name="channel" class="ControlSelect">
+            <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title=">OSCAR search</option>
+            <option value="http://www.google.com/search?q=">Google</option>
+            <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term=">Pubmed</option>
+            <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER=">Medline Plus</option>
+            <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q=">BNF.org</option>
+        </select>
+        <input type="button" name="button" value="Go" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
+    </td></tr>
+</form>
+</caisi:isModuleLoad>
 </table>
 </div>
-
-
 <%
-long finLoad = System.currentTimeMillis();
-System.out.println("TOTAL LOAD TIME FOR NAVIGATION:" + (finLoad-loadPage)*.001);
+	long finLoad = System.currentTimeMillis();
+	System.out.println("TOTAL LOAD TIME FOR NAVIGATION:" + (finLoad-loadPage)*.001);
 %>
+
+
 

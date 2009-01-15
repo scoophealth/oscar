@@ -287,7 +287,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				
 		// UCF
 		log.debug("Fetch Survey List");
-		request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId));
+		request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId,providerNo));
 		current = System.currentTimeMillis();
 		log.debug("Fetch Survey List " + String.valueOf(current - start));
 		

@@ -47,9 +47,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.SurveySecurityDao;
 import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -57,6 +56,8 @@ import org.oscarehr.casemgmt.model.Allergy;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.PrescriptDrug;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
@@ -153,6 +154,24 @@ public class SurveyExecuteAction extends DispatchAction {
     public ActionForward survey(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
     	DynaActionForm form = (DynaActionForm) af;
     	String clientId = request.getParameter("clientId");
+    	
+    	SurveyExecuteFormBean formBean = (SurveyExecuteFormBean)form.get("view");
+        SurveySecurityDao securityDao = new SurveySecurityDao();
+        boolean hasAccess = false; 
+        try {
+        	hasAccess = securityDao.checkPrivilege(formBean.getDescription(),(String)request.getSession().getAttribute("user"));
+        }catch(Exception e) {
+        	hasAccess=false;
+        }
+        if(!hasAccess) {
+        	String type = request.getParameter("type");
+        	if (type != null && type.equals("provider")) {
+        		return mapping.findForward("close");	
+        	} else {
+        		return forwardToClientManager(request, mapping, form, clientId);
+        	}
+        }
+        
     	String forwardString = survey_view(mapping, af, request, response);
     	if("close".equals(forwardString))  {
         	return mapping.findForward("close");	

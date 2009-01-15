@@ -1711,7 +1711,7 @@
             <forward name="displayNote" path="/casemgmt/displayNote.jsp"/>
             <forward name="clientHistoryPrintPreview" path="/casemgmt/client_history_printPreview.jsp"/>
         </action>
-        <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
+        <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
             <forward name="list" path="/CaseManagementView.do?method=view" redirect="true" />
             <forward name="listCPPNotes" path="/CaseManagementView.do" redirect="true" />

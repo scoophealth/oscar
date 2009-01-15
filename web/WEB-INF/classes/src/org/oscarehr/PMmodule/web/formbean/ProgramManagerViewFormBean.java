@@ -28,7 +28,7 @@ import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 
 public class ProgramManagerViewFormBean extends ActionForm {
 
-	public static final String[] tabs = { "General", "Staff", "Function User", "Teams", "Clients", "Queue", "Access", "Bed Check" , "Client Status", "Service Restrictions"};
+	public static final String[] tabs = { "General", "Staff", "Teams", "Clients", "Queue", "Access", "Bed Check" , "Client Status", "Service Restrictions"};
 
 	private String tab;
 	private String clientId;

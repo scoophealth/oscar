@@ -125,7 +125,8 @@ public class InfirmBedProgramManager {
         dt = cal.getTime();
         Iterator iter;
 
-        if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByPromgram(programId, dt, defdt).iterator();
+        //if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByPromgram(programId, dt, defdt).iterator();
+        if (archiveView != null && archiveView.equals("true")) iter = demographicDaoT.getArchiveDemographicByProgramOptimized(programId, dt, defdt).iterator();        
         else iter = demographicDaoT.getActiveDemographicByProgram(programId, dt, defdt).iterator();
 
         ArrayList demographicList = new ArrayList();

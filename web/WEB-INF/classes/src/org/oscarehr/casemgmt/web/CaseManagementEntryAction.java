@@ -70,6 +70,9 @@ import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.util.UtilDateUtilities;
 
+/*
+ * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
+ */
 public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     private static Log log = LogFactory.getLog(CaseManagementEntryAction.class);
@@ -770,20 +773,26 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String verify = request.getParameter("verify");
         ResourceBundle prop;
         Date now = new Date();
+        String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
+        
         if (verify != null && verify.equalsIgnoreCase("on")) {
             prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
             String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm", request.getLocale()) + " "
                     + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + provider.getFormattedName() + "]";
-            String n = note.getNote() + "\n" + message;
-            note.setNote(n);
+            
+           String n = note.getNote() + "\n" + message;
+           note.setNote(n);
 
             // only update appt if there is one
             if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
         }
         else if (note.isSigned()) {
             prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-            String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm", request.getLocale()) + " "
-                    + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + provider.getFormattedName() + "]";
+            //String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm", request.getLocale()) + " "
+            //+ prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + provider.getFormattedName() + "]";
+            String message = caseManagementMgr.getSignature(providerNo, userName, roleName);
+         
+            
             String n = note.getNote() + "\n" + message;
             note.setNote(n);
 
@@ -791,7 +800,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
         }
 
-        String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
+        
         /*
          * if provider is a doctor or nurse,get all major and resolved medical issue for demograhhic and append them to CPP medical history
          */
@@ -847,7 +856,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* remember the str written into echart */
         request.getSession().setAttribute("lastSavedNoteString", savedStr);
         caseManagementMgr.getEditors(note);
-        cform.setCaseNote(note);
+        cform.setCaseNote(note); 
 
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
@@ -1584,6 +1593,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             // reset current concern in CPP
             // updateIssueToConcern(cform);
             caseManagementMgr.removeIssueFromCPP(demono, iss);
+        }
+
+        // added by Eugene Petrhin in order to guarantee the DB consistency if user hits Cancel afterwards
+        if (sessionFrm.getCaseNote().getId() != null) {
+        	noteSave(cform, request);
         }
 
         String ajax = request.getParameter("ajax");

@@ -37,6 +37,9 @@ function search_provider(name) {
 }
 
 function deleteFunctionalUser(id) {
+	if(!confirm("Are you sure you want to delete the functional user entry?")) {
+		return;
+	}
 	document.programManagerForm.elements['function.id'].value=id;
 	document.programManagerForm.method.value='delete_function';
 	document.programManagerForm.submit();
@@ -70,46 +73,45 @@ function add_functional_user(form) {
 </table>
 </div>
 <!--  show current staff -->
-<display:table class="simple" cellspacing="2" cellpadding="3"
-	id="functional" name="functional_users" export="false" pagesize="0"
-	requestURI="/PMmodule/ProgramManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="functional" name="functional_users" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list"
-		value="No functional users defined for this program" />
+	<display:setProperty name="basic.msg.empty_list" value="No functional users defined for this program" />
 	<display:column sortable="false" title="">
-		<a
-			onclick="deleteFunctionalUser('<c:out value="${functional.id}"/>');"
-			href="javascript:void(0);"> Delete </a>
+		<a onclick="deleteFunctionalUser('<c:out value="${functional.id}"/>');return false;" href="javascript:void(0);"> Delete </a>
 	</display:column>
-	<display:column property="userType.name" sortable="true"
-		title="Functional User Type" />
-	<display:column property="provider.formattedName" sortable="true"
-		title="Provider Name" />
+	<display:column property="userType.name" sortable="true" title="Functional User Type" />
+	<display:column property="provider.formattedName" sortable="true" title="Provider Name" />
 </display:table>
 <br />
 <br />
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Provider :</td>
-		<td><html:hidden property="function.id" /> <html:hidden
-			property="function.providerNo" /> <%
+		<td>
+			<html:hidden property="function.id" />
+			<html:hidden property="function.providerNo" />
+			<%
 			String providerName = (String) request.getAttribute("providerName");
 			if (providerName == null) {
 				providerName = "";
 			}
-			%> <input type="text" name="providerName" size="30"
-			value="<%=providerName%>" /> <input type="button" value="Search"
-			onclick="search_provider(this.form.providerName.value);" /></td>
+			%>
+			<input type="text" name="providerName" size="30" value="<%=providerName%>" />
+			<input type="button" value="Search" onclick="search_provider(this.form.providerName.value);" />
+		</td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Functional User Type:</td>
-		<td><html:select property="function.userTypeId">
-			<html:options collection="functionalUserTypes" property="id"
-				labelProperty="name" />
-		</html:select></td>
+		<td>
+			<html:select property="function.userTypeId">
+				<html:options collection="functionalUserTypes" property="id" labelProperty="name" />
+			</html:select>
+		</td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="button" value="Save"
-			onclick="add_functional_user(this.form)" /> <html:cancel /></td>
+		<td colspan="2">
+			<input type="button" value="Save" onclick="add_functional_user(this.form)" />
+			<html:cancel />
+		</td>
 	</tr>
 </table>

@@ -36,6 +36,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -174,8 +175,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedCommunityProgramId(clientId),
 				getCurrentServiceProgramIds(clientId), getCurrentExternalProgramId(clientId), facilityId);
 
-		// UCF -- intake accessment : please don't remove the following line
-		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+		// UCF -- intake accessment : please don't remove the following lines
+		List allForms = surveyManager.getAllForms(facilityId,providerNo);
+		request.getSession().setAttribute("survey_list", allForms);
 
 		String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(clientId));
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
@@ -389,8 +391,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		if (("RFQ_admit".equals(saveWhich) || "RFQ_notAdmit".equals(saveWhich)) && oldId != null) {
 			return clientEdit(mapping, form, request, response);
 		}
-		else {
+		else if (request.getAttribute(Globals.ERROR_KEY) != null) {
 			return mapping.findForward(EDIT);
+		}
+		else {
+			return clientEdit(mapping, form, request, response);
 		}
 	}
 

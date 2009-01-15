@@ -52,7 +52,7 @@
 		<filter-class>net.sf.cookierevolver.CRFilter</filter-class>
 		<init-param>
 			<param-name>cr.filter.ignore</param-name>
-			<param-value>/login.do /images/* /lab/CMLlabUpload.do /lab/CA/ON/uploadComplete.jsp /logout.jsp</param-value>
+			<param-value>/login.do /images/* /lab/CMLlabUpload.do /lab/CA/ON/uploadComplete.jsp /logout.jsp /PopulationReport.do</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cr.auth.method</param-name>

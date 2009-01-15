@@ -18,13 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 -->
-<%@ include file="/taglibs.jsp"%>
-<%@ page import="org.oscarehr.PMmodule.model.Intake"%>
-<%@ page
-	import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
-<%@ page import="org.oscarehr.PMmodule.web.ProgramUtils"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ page import="org.oscarehr.util.SessionConstants"%>
+
+<%-- Updated by Eugene Petruhin on 30 dec 2008 while fixing #2456688 --%>
+
+<%@ include file="/taglibs.jsp" %>
+<%@ page import="org.oscarehr.PMmodule.model.Intake" %>
+<%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" %>
+<%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ page import="org.oscarehr.util.SessionConstants" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <%
@@ -39,13 +41,14 @@
     intakeFrmName += intakeFrmVer==null ? " (1)" : " ("+intakeFrmVer+")";
 %>
 
-<%@page import="org.apache.commons.lang.StringUtils"%><html:html
-	xhtml="true" locale="true">
+<%@page import="org.apache.commons.lang.StringUtils"%><html:html xhtml="true" locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Generic Intake Edit</title>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script type="text/javascript">
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+    <title>Generic Intake Edit</title>
+    <style type="text/css">
+        @import "<html:rewrite page="/css/genericIntake.css" />";
+    </style>
+    <script type="text/javascript">
         <!--
         var djConfig = {
             isDebug: false,
@@ -182,295 +185,282 @@
 	}
 	
     </script>
-<script type="text/javascript"
-	src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
-<script type="text/javascript"
-	src="<html:rewrite page="/js/AlphaTextBox.js" />"></script>
-<script type="text/javascript">
+    <script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
+    <script type="text/javascript" src="<html:rewrite page="/js/AlphaTextBox.js" />"></script>
+    <script type="text/javascript">
         <!--
         dojo.require("dojo.widget.*");
         dojo.require("dojo.validate.*");
         // -->
     </script>
-<script type="text/javascript"
-	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
-<script type="text/javascript"
-	src="<html:rewrite page="/js/checkDate.js" />"></script>
-<html:base />
+    <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+    <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js" />"></script>
+    <html:base/>
 </head>
 <body class="edit">
 
-<html:form action="/PMmodule/GenericIntake/Edit"
-	onsubmit="return validateEdit()">
-	<html:hidden property="method" />
-	<input type="hidden" name="currentBedCommunityProgramId_old"
-		value="<%=session.getAttribute("intakeCurrentBedCommunityId")%>" />
-	<input type="hidden" name="intakeType" value="<%=intakeType %>" />
-	<input type="hidden" name="remoteFacilityId"
-		value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
-	<input type="hidden" name="remoteDemographicId"
-		value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
+<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
+<html:hidden property="method"/>
+<input type="hidden" name="currentBedCommunityProgramId_old" value="<%=session.getAttribute("intakeCurrentBedCommunityId")%>" />
+<input type="hidden" name="intakeType" value="<%=intakeType %>" />
+<input type="hidden" name="remoteFacilityId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteFacilityId"))%>" />
+<input type="hidden" name="remoteDemographicId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteDemographicId"))%>" />
 
-	<div id="layoutContainer" dojoType="LayoutContainer"
-		layoutChildPriority="top-bottom" class="intakeLayoutContainer">
-	<div id="topPane" dojoType="ContentPane" layoutAlign="top"
-		class="intakeTopPane"><c:out
-		value="${sessionScope.genericIntakeEditForm.title}" /></div>
-	<div id="clientPane" dojoType="ContentPane" layoutAlign="client"
-		class="intakeChildPane">
+<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
+<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
+    <c:out value="${sessionScope.genericIntakeEditForm.title}"/>
+</div>
+<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
 
-	<div id="clientTable" dojoType="TitlePane" label="Client Information"
-		title="(Fields marked with * are mandatory)"
-		labelNodeClass="intakeSectionLabel"
-		containerNodeClass="intakeSectionContainer">
-	<table class="intakeTable">
-		<tr>
-			<td><label>First Name<br>
-			<html:text property="client.firstName" size="20" maxlength="30" /></label></td>
-			<td><label>Last Name<br>
-			<html:text property="client.lastName" size="20" maxlength="30" /></label></td>
-			<td><label>Gender<br>
-			<html:select property="client.sex">
-				<html:optionsCollection property="genders" value="code"
-					label="description" />
-			</html:select> </label></td>
-			<td>
-			<table>
-				<tr>
-					<td><label>Birth Date<br>
-					<html:select property="client.monthOfBirth">
-						<html:optionsCollection property="months" value="value"
-							label="label" />
-					</html:select> </label></td>
-					<td><label>&nbsp;<br>
-					<html:select property="client.dateOfBirth">
-						<html:optionsCollection property="days" value="value"
-							label="label" />
-					</html:select> </label></td>
-					<td><label>&nbsp;<br>
-					<html:text property="client.yearOfBirth" size="4" maxlength="4" />&nbsp;(YYYY)
-					</label></td>
-				</tr>
-			</table>
+<div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)"
+     labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
+<table class="intakeTable">
+<tr>
+    <td><label>First Name<br><html:text property="client.firstName" size="20"
+                                                                              maxlength="30"/></label></td>
+    <td><label>Last Name<br><html:text property="client.lastName" size="20"
+                                                                             maxlength="30"/></label></td>
+    <td>
+        <label>Gender<br>
+            <html:select property="client.sex">
+                <html:optionsCollection property="genders" value="code" label="description"/>
+            </html:select>
+        </label>
+    </td>
+    <td>
+        <table>
+            <tr>
+                <td>
+                    <label>Birth Date<br>
+                        <html:select property="client.monthOfBirth">
+                            <html:optionsCollection property="months" value="value" label="label"/>
+                        </html:select>
+                    </label>
+                </td>
+                <td>
+                    <label>&nbsp;<br>
+                        <html:select property="client.dateOfBirth">
+                            <html:optionsCollection property="days" value="value" label="label"/>
+                        </html:select>
+                    </label>
+                </td>
+                <td>
+                    <label>&nbsp;<br>
+                        <html:text property="client.yearOfBirth" size="4" maxlength="4"/>&nbsp;(YYYY)
+                    </label>
+                </td>
+            </tr>
+        </table>
 
-			</td>
-		</tr>
-		<tr>
-			<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-				<td><label>Alias<br>
-				<html:text size="40" maxlength="70" property="client.alias" /></label></td>
-			</caisi:isModuleLoad>
+    </td>
+</tr>
+<tr>
+    <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+        <td><label>Alias<br><html:text size="40" maxlength="70" property="client.alias"/></label>
+       </td>
+    </caisi:isModuleLoad>
+    
+	<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">    
+        <td><label>Health Card #<br>
+            <input type="text" size="10" maxlength="10" dojoType="IntegerTextBox" name="client.hin"
+                   value="<bean:write name="genericIntakeEditForm"  property="client.hin"/>"/>
+        </label></td>
+        <td><label>Version<br>
+            <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver"
+                   value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
+        </label></td>    
+	</caisi:isModuleLoad>
+</tr>
 
-			<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
-				<td><label>Health Card #<br>
-				<input type="text" size="10" maxlength="10"
-					dojoType="IntegerTextBox" name="client.hin"
-					value="<bean:write name="genericIntakeEditForm"  property="client.hin"/>" />
-				</label></td>
-				<td><label>Version<br>
-				<input type="text" size="2" maxlength="2" dojoType="AlphaTextBox"
-					name="client.ver"
-					value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>" />
-				</label></td>
-			</caisi:isModuleLoad>
-		</tr>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+    <tr>
+        <td>
+            <label>Email<br>
+                <input type="text" size="20" maxlength="100" dojoType="EmailTextBox" name="client.email"
+                       value="<bean:write name="genericIntakeEditForm"  property="client.email"/>"/>
+            </label></td>
+        <td>
+            <label>Phone #<br>
+                <input type="text" size="20" maxlength="20" dojoType="UsPhoneNumberTextbox" name="client.phone"
+                       value="<bean:write name="genericIntakeEditForm"  property="client.phone"/>"/>
+            </label></td>
+        <td>
+            <label>Secondary Phone #<br>
+                <input type="text" size="20" maxlength="20" dojoType="UsPhoneNumberTextbox" name="client.phone2"
+                       value="<bean:write name="genericIntakeEditForm"  property="client.phone2"/>"/>
+            </label>
+        </td>
+    </tr>
+    <tr>
+        <td><label>Street<br><html:text size="20" maxlength="60" property="client.address"/></label></td>
+        <td><label>City<br><html:text size="20" maxlength="20" property="client.city"/></label></td>
+        <td><label>Province<br>
+            <html:select property="client.province">
+                <html:optionsCollection property="provinces" value="value" label="label"/>
+            </html:select>
+        </label>
+        </td>
+        <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9"/></label></td>
+    </tr>
 
-		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-			<tr>
-				<td><label>Email<br>
-				<input type="text" size="20" maxlength="100" dojoType="EmailTextBox"
-					name="client.email"
-					value="<bean:write name="genericIntakeEditForm"  property="client.email"/>" />
-				</label></td>
-				<td><label>Phone #<br>
-				<input type="text" size="20" maxlength="20"
-					dojoType="UsPhoneNumberTextbox" name="client.phone"
-					value="<bean:write name="genericIntakeEditForm"  property="client.phone"/>" />
-				</label></td>
-				<td><label>Secondary Phone #<br>
-				<input type="text" size="20" maxlength="20"
-					dojoType="UsPhoneNumberTextbox" name="client.phone2"
-					value="<bean:write name="genericIntakeEditForm"  property="client.phone2"/>" />
-				</label></td>
-			</tr>
-			<tr>
-				<td><label>Street<br>
-				<html:text size="20" maxlength="60" property="client.address" /></label></td>
-				<td><label>City<br>
-				<html:text size="20" maxlength="20" property="client.city" /></label></td>
-				<td><label>Province<br>
-				<html:select property="client.province">
-					<html:optionsCollection property="provinces" value="value"
-						label="label" />
-				</html:select> </label></td>
-				<td><label>Postal Code<br>
-				<html:text property="client.postal" size="9" maxlength="9" /></label></td>
-			</tr>
+<c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+    <tr>
+        <td>
+            <a href="javascript:void(0);"
+               onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable=1,scrollbars=1')">
+                <span>Case Management Notes</span>
+            </a>
+        </td>
+    </tr>
+</c:if>
+</caisi:isModuleLoad>
+</table>
+</div>
 
-			<c:if
-				test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
-				<tr>
-					<td><a href="javascript:void(0);"
-						onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable=1,scrollbars=1')">
-					<span>Case Management Notes</span> </a></td>
-				</tr>
-			</c:if>
-		</caisi:isModuleLoad>
-	</table>
-	</div>
+<%if(!Intake.INDEPTH.equalsIgnoreCase(intakeType)) { %>
+<c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
+    <div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel"
+         containerNodeClass="intakeSectionContainer">
+        <logic:messagesPresent>
+            <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+                <html:messages id="error" bundle="pmm">
+                    <tr>
+                        <td class="error"><c:out value="${error}"/></td>
+                    </tr>
+                </html:messages>
+            </table>
+        </logic:messagesPresent>
+        <table class="intakeTable">
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
+                    <td class="intakeBedCommunityProgramCell"><label><c:out
+                            value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}"/></label></td>
+                </c:if>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
+                    <td><label>Service Programs</label></td>
+                </c:if>
+            </tr>
+            <tr>
+				<input type="hidden" name="remoteReferralId" value="<%=StringUtils.trimToEmpty(request.getParameter("remoteReferralId"))%>" />
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
+                    <td class="intakeBedCommunityProgramCell">
+                        <html:select property="bedCommunityProgramId" value='<%=request.getParameter("destinationProgramId")%>' >
+                            <html:optionsCollection property="bedCommunityPrograms" value="value" label="label"/>
+                        </html:select>
+                    </td>
+                </c:if>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
+                    <td>
+                        <c:forEach var="serviceProgram" items="${sessionScope.genericIntakeEditForm.servicePrograms}">
+                            <html-el:multibox property="serviceProgramIds" value="${serviceProgram.value}"/>&nbsp;<c:out
+                                value="${serviceProgram.label}"/><br/>
+                        </c:forEach>
+                    </td>
+                </c:if>
+            </tr>
+        </table>
+    </div>
 
-	<%if(!Intake.INDEPTH.equalsIgnoreCase(intakeType)) { %> <c:if
-		test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
-		<div id="admissionsTable" dojoType="TitlePane"
-			label="Program Admissions" labelNodeClass="intakeSectionLabel"
-			containerNodeClass="intakeSectionContainer"><logic:messagesPresent>
-			<table width="100%" border="0" cellpadding="0" cellspacing="1"
-				bgcolor="#C0C0C0">
-				<html:messages id="error" bundle="pmm">
-					<tr>
-						<td class="error"><c:out value="${error}" /></td>
-					</tr>
-				</html:messages>
-			</table>
-		</logic:messagesPresent>
-		<table class="intakeTable">
-			<tr>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
-					<td class="intakeBedCommunityProgramCell"><label><c:out
-						value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}" /></label></td>
-				</c:if>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
-					<td><label>Service Programs</label></td>
-				</c:if>
-			</tr>
-			<tr>
-				<input type="hidden" name="remoteReferralId"
-					value="<%=StringUtils.trimToEmpty(request.getParameter("remoteReferralId"))%>" />
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
-					<td class="intakeBedCommunityProgramCell"><html:select
-						property="bedCommunityProgramId"
-						value='<%=request.getParameter("destinationProgramId")%>'>
-						<html:optionsCollection property="bedCommunityPrograms"
-							value="value" label="label" />
-					</html:select></td>
-				</c:if>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
-					<td><c:forEach var="serviceProgram"
-						items="${sessionScope.genericIntakeEditForm.servicePrograms}">
-						<html-el:multibox property="serviceProgramIds"
-							value="${serviceProgram.value}" />&nbsp;<c:out
-							value="${serviceProgram.label}" />
-						<br />
-					</c:forEach></td>
-				</c:if>
-			</tr>
-		</table>
-		</div>
+</c:if>
+<%} %>
 
-	</c:if> <%} %> <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-		<div id="admissionsTable" dojoType="TitlePane" label="Intake Location"
-			labelNodeClass="intakeSectionLabel"
-			containerNodeClass="intakeSectionContainer">
-		<table class="intakeTable">
-			<tr>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.programsInDomain}">
-					<td class="intakeBedCommunityProgramCell"><label> <c:out
-						value="${sessionScope.genericIntakeEditForm.programInDomainLabel}" /></label></td>
-				</c:if>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+	<div id="admissionsTable" dojoType="TitlePane" label="Intake Location" labelNodeClass="intakeSectionLabel"
+         containerNodeClass="intakeSectionContainer">
+        <table class="intakeTable">
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.programsInDomain}">
+                    <td class="intakeBedCommunityProgramCell"><label>
+                            <c:out
+                            value="${sessionScope.genericIntakeEditForm.programInDomainLabel}"/></label></td>
+                 </c:if>
 
-			</tr>
-			<tr>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.programsInDomain}">
-					<td class="intakeBedCommunityProgramCell"><html:select
-						property="programInDomainId">
-						<html:optionsCollection property="programsInDomain" value="value"
-							label="label" />
-					</html:select></td>
-				</c:if>
-			</tr>
-		</table>
-		</div>
+            </tr>
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.programsInDomain}">
+                    <td class="intakeBedCommunityProgramCell">
+                        <html:select property="programInDomainId">
+                            <html:optionsCollection property="programsInDomain" value="value" label="label"/>
+                        </html:select>
+                    </td>
+                </c:if>
+            </tr>
+        </table>
+    </div>
 
-		<div id="admissionsTable" dojoType="TitlePane"
-			label="External Referral" labelNodeClass="intakeSectionLabel"
-			containerNodeClass="intakeSectionContainer">
-		<table class="intakeTable">
-			<tr>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
-					<td class="intakeBedCommunityProgramCell"><label><c:out
-						value="${sessionScope.genericIntakeEditForm.externalProgramLabel}" /></label></td>
-				</c:if>
+    <div id="admissionsTable" dojoType="TitlePane" label="External Referral" labelNodeClass="intakeSectionLabel"
+         containerNodeClass="intakeSectionContainer">
+        <table class="intakeTable">
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell"><label><c:out
+                            value="${sessionScope.genericIntakeEditForm.externalProgramLabel}"/></label></td>
+                </c:if>
 
-			</tr>
-			<tr>
-				<c:if
-					test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
-					<td class="intakeBedCommunityProgramCell"><html:select
-						property="externalProgramId">
-						<html:optionsCollection property="externalPrograms" value="value"
-							label="label" />
-					</html:select></td>
-				</c:if>
-			</tr>
-		</table>
-		</div>
-		<br />
+            </tr>
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell">
+                        <html:select property="externalProgramId">
+                            <html:optionsCollection property="externalPrograms" value="value" label="label"/>
+                        </html:select>
+                    </td>
+                </c:if>
+            </tr>
+        </table>
+    </div>
+    <br/>
 
-		<c:if
-			test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
-			<div id="admissionsTable" dojoType="TitlePane"
-				label="Intake Assessment" labelNodeClass="intakeSectionLabel"
-				containerNodeClass="intakeSectionContainer">
-			<table class="intakeTable">
-				<tr>
-					<td><input type="hidden" id="formInstanceId" value="0" /></td>
-				</tr>
-				<tr>
-					<td><select property="form.formId"
-						onchange="openSurvey(this);">
-						<option value="0">&nbsp;</option>
-						<c:forEach var="survey" items="${survey_list}">
-							<option value="<c:out value="${survey.formId}"/>"><c:out
-								value="${survey.description}" /></option>
-						</c:forEach>
-					</select></td>
-				</tr>
-			</table>
-			</div>
-		</c:if>
-	</caisi:isModuleLoad> <br />
+    <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+        <div id="admissionsTable" dojoType="TitlePane" label="Intake Assessment" labelNodeClass="intakeSectionLabel"
+             containerNodeClass="intakeSectionContainer">
+            <table class="intakeTable">
+                <tr>
+                    <td><input type="hidden" id="formInstanceId" value="0"/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select property="form.formId" onchange="openSurvey(this);">
+                            <option value="0">&nbsp;</option>
+                            <c:forEach var="survey" items="${survey_list}">
+                                <option value="<c:out value="${survey.formId}"/>"><c:out
+                                        value="${survey.description}"/></option>
+                            </c:forEach>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </c:if>
+</caisi:isModuleLoad>
 
-	<caisi:intake base="<%=5%>" intake="<%=intake%>" /></div>
-	<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom"
-		class="intakeBottomPane">
-	<table class="intakeTable">
-		<logic:messagesPresent>
-			<html:messages id="error" bundle="pmm">
-				<tr>
-					<td class="error"><c:out value="${error}" /></td>
-				</tr>
-			</html:messages>
-		</logic:messagesPresent>
-		<logic:messagesPresent message="true">
-			<html:messages id="message" message="true" bundle="pmm">
-				<tr>
-					<td class="message"><c:out value="${message}" /></td>
-				</tr>
-			</html:messages>
-		</logic:messagesPresent>
-		<tr>
-			<td><caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-				<html:submit onclick="return saveForm();">Save</html:submit>&nbsp;
-                </caisi:isModuleLoad> <caisi:isModuleLoad moduleName="TORONTO_RFQ"
-				reverse="false">
-				<!--
+<br/>
+
+<caisi:intake base="<%=5%>" intake="<%=intake%>"/>
+</div>
+<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
+    <table class="intakeTable">
+        <logic:messagesPresent>
+            <html:messages id="error" bundle="pmm">
+                <tr>
+                    <td class="error"><c:out value="${error}"/></td>
+                </tr>
+            </html:messages>
+        </logic:messagesPresent>
+        <logic:messagesPresent message="true">
+            <html:messages id="message" message="true" bundle="pmm">
+                <tr>
+                    <td class="message"><c:out value="${message}"/></td>
+                </tr>
+            </html:messages>
+        </logic:messagesPresent>
+        <tr>
+            <td>
+                <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+                    <html:submit onclick="return saveForm();">Save</html:submit>&nbsp;
+                </caisi:isModuleLoad>
+                <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+                    <!--
        				<c:choose>
                         <c:when test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
                             <html:submit onclick="return saveForm();">Save</html:submit>&nbsp;
@@ -480,24 +470,28 @@
                         </c:otherwise>
                     </c:choose>
                     -->
-
-				<html:submit onclick="return save_temp()">Temporary Save</html:submit>&nbsp;
+                    
+                    <html:submit onclick="return save_temp()">Temporary Save</html:submit>&nbsp;
                     <html:submit onclick="return save_admit()">Admit, Sign And Save</html:submit>&nbsp;
                     <html:submit onclick="return save_notAdmit()">Intake Without Admission, Sign And Save</html:submit>
-			</caisi:isModuleLoad> <html:reset>Reset</html:reset></td>
-			<td align="right"><c:choose>
-				<c:when
-					test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
-					<html:submit onclick="clientEdit()">Close</html:submit>
-				</c:when>
-				<c:otherwise>
-					<input type="button" value="Close" onclick="history.go(-1)" />
-				</c:otherwise>
-			</c:choose></td>
-		</tr>
-	</table>
-	</div>
-	</div>
+                </caisi:isModuleLoad>
+                <html:reset>Reset</html:reset>
+            </td>
+            <td align="right">
+                <c:choose>
+                    <c:when test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+                        <html:submit onclick="clientEdit()">Close</html:submit>
+                        <input type="button" value="Back to Search" onclick="history.go(-1)"/>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="button" value="Back to Search" onclick="history.go(-1)"/>
+                    </c:otherwise>
+                </c:choose>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
 </html:form>
 </body>
 </html:html>

@@ -82,6 +82,10 @@ import org.oscarehr.dx.model.DxResearch;
 
 import oscar.OscarProperties;
 
+/*
+ * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
+ * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
+ */
 public class CaseManagementManager {
 
     protected String issueAccessType = "access";
@@ -177,7 +181,7 @@ public class CaseManagementManager {
         String noteHistory = note.getHistory();     
         
         // process noteStr, remove existing signed on string
-        // noteStr = removeSignature(noteStr);
+        //noteStr = removeSignature(noteStr);
         if (note.isSigned())
         {
                 
@@ -188,15 +192,15 @@ public class CaseManagementManager {
         		rolename = "";
         	// if have signiture setting, use signiture as username
         	String tempS = null;
-        	if (providerSignitureDao.isOnSig(cproviderNo))
-        		tempS = providerSignitureDao.getProviderSig(cproviderNo);
+        	//if (providerSignitureDao.isOnSig(cproviderNo))
+        	tempS = providerSignitureDao.getProviderSig(cproviderNo);
         	if (tempS != null && !"".equals(tempS.trim()))
         		userName = tempS;
 
         	if (userName != null && !"".equals(userName.trim()))
         	{
         		noteStr = noteStr + "\n[[Signed on " + dt.format(now) + " "
-        				+ "by " + userName + ", " + rolename + "]]\n";
+        				+ "by " + userName + ", " + rolename + "]]\n" ;
         	} else
         		noteStr = noteStr + "\n[[" + dt.format(now) + "]]\n";
 
@@ -465,7 +469,6 @@ public class CaseManagementManager {
         String ongoing = (cpp.getOngoingConcerns() == null)?"":cpp.getOngoingConcerns();
         ongoing = ongoing + issueName + "\n";
         cpp.setOngoingConcerns(ongoing);
-        cpp.setUpdate_date(new Date());
         caseManagementCPPDAO.saveCPP(cpp);
         echartDAO.updateEchartOngoing(cpp);
 
@@ -496,7 +499,6 @@ public class CaseManagementManager {
             newOngoing = matcher.replaceFirst("");
             
             cpp.setOngoingConcerns(newOngoing);
-            cpp.setUpdate_date(new Date());
             caseManagementCPPDAO.saveCPP(cpp);
             echartDAO.updateEchartOngoing(cpp);
         }
@@ -526,7 +528,6 @@ public class CaseManagementManager {
             description = newIssue.getIssue().getDescription();        
             newOngoing = matcher.replaceFirst(description);
             cpp.setOngoingConcerns(newOngoing);
-            cpp.setUpdate_date(new Date());
             caseManagementCPPDAO.saveCPP(cpp);
             echartDAO.updateEchartOngoing(cpp);
         }                
@@ -547,7 +548,6 @@ public class CaseManagementManager {
         }
         
         cpp.setOngoingConcerns(ongoing);
-        cpp.setUpdate_date(new Date());
         caseManagementCPPDAO.saveCPP(cpp);
         echartDAO.updateEchartOngoing(cpp);
     }
@@ -870,7 +870,7 @@ public class CaseManagementManager {
         for (Iterator iter = notes.iterator(); iter.hasNext();) {
             CaseManagementNote cmNote = (CaseManagementNote)iter.next();
             String noteRole = cmNote.getReporter_caisi_role();
-            String noteRoleName = roleManager.getRole(noteRole).getName();
+            String noteRoleName = roleManager.getRole(noteRole).getName().toLowerCase();
             ProgramAccess pa = null;
             boolean add = false;
 
@@ -946,7 +946,7 @@ public class CaseManagementManager {
 
         for (Iterator iter = paList.iterator(); iter.hasNext();) {
             ProgramAccess pa = (ProgramAccess)iter.next();
-            map.put(pa.getAccessType().getName(), pa);
+            map.put(pa.getAccessType().getName().toLowerCase(), pa);
         }
         return map;
     }
@@ -971,7 +971,7 @@ public class CaseManagementManager {
         List allowableSearchRoles = new ArrayList();
         for (Iterator iter = allRoles.iterator(); iter.hasNext();) {
             Role r = (Role)iter.next();
-            String key = "write " + r.getName() + " issues";
+            String key = "write " + r.getName().toLowerCase() + " issues";
             ProgramAccess pa = (ProgramAccess)paMap.get(key);
             if (pa != null) {
                 if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
@@ -1018,7 +1018,7 @@ public class CaseManagementManager {
         //iterate through the issue list
         for (Iterator iter = issues.iterator(); iter.hasNext();) {
             CaseManagementIssue cmIssue = (CaseManagementIssue)iter.next();
-            String issueRole = cmIssue.getIssue().getRole();
+            String issueRole = cmIssue.getIssue().getRole().toLowerCase();
             ProgramAccess pa = null;
             boolean add = false;
 
@@ -1031,7 +1031,7 @@ public class CaseManagementManager {
                 }
             }
             else {
-                if (issueRole.equals(role.getName())) {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
                     //default
                     cmIssue.setWriteAccess(true);
                     add = true;
@@ -1047,7 +1047,7 @@ public class CaseManagementManager {
                 }
             }
             else {
-                if (issueRole.equals(role.getName())) {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
                     //default
                     add = true;
                 }
@@ -1055,7 +1055,7 @@ public class CaseManagementManager {
 
             //apply defaults
             if (!add) {
-                if (issueRole.equals(role.getName())) {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
                     cmIssue.setWriteAccess(true);
                     add = true;
                 }
@@ -1301,4 +1301,30 @@ public class CaseManagementManager {
     public List<DxResearch> getDxByDemographicNo(String demographicNo) {
     	return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
     }
+    
+    public String getSignature(String cproviderNo, String userName, String roleName){
+    	
+    	SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    	Date now = new Date();
+    	// add the time, signiture and role at the end of note
+    	String rolename="";
+    	rolename= roleName;
+    	if (rolename == null)
+    		rolename = "";
+    	// if have signiture setting, use signiture as username
+    	String tempS = null;
+    	//if (providerSignitureDao.isOnSig(cproviderNo))
+    	tempS = providerSignitureDao.getProviderSig(cproviderNo);
+    	if (tempS != null && !"".equals(tempS.trim()))
+    		userName = tempS;
+
+    	if (userName != null && !"".equals(userName.trim()))
+    	{
+    		return "\n[[Signed on " + dt.format(now) + " "
+    				+ "by " + userName + ", " + rolename + "]]\n" ;
+    	} else
+    		return "\n[[" + dt.format(now) + "]]\n";
+    	
+    }
+    
 }

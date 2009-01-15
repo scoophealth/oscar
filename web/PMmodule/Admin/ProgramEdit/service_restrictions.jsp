@@ -1,6 +1,6 @@
-<%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el"%>
-<%@ page import="org.oscarehr.PMmodule.model.ProgramClientRestriction"%>
-<%@ page import="org.oscarehr.common.model.Provider"%>
+<%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
+<%@ page import="org.oscarehr.PMmodule.model.ProgramClientRestriction" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 <!--
 /*
  *
@@ -47,37 +47,35 @@
 </script>
 
 <div class="tabs" id="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<th title="Service Restrictions">Service Restriction Settings</th>
-	</tr>
-</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th title="Service Restrictions">Service Restriction Settings</th>
+        </tr>
+    </table>
 </div>
-Please define the following parameters control the behaviour of new
-service restrictions for this program.
+Please define the following parameters control the behaviour of new service restrictions for this program.
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Maximum length of service restriction (in days):</td>
-		<td><html:text property="program.maximumServiceRestrictionDays"
-			size="4" maxlength="4" />&nbsp;(empty or zero means no maximum)</td>
+		<td><html:text property="program.maximumServiceRestrictionDays" size="4" maxlength="4"/>&nbsp;(empty or zero means no maximum)</td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Default service restriction length (in days):</td>
-		<td><html:text property="program.defaultServiceRestrictionDays"
-			size="4" maxlength="4" /></td>
+		<td><html:text property="program.defaultServiceRestrictionDays" size="4" maxlength="4"/></td>
 	</tr>
 	<tr>
-		<td colspan="2"><input type="button" value="Save"
-			onclick="return save()" /></td>
+		<td colspan="2">
+			<input type="button" value="Save" onclick="return save()" />
+		</td>
 	</tr>
 </table>
-<br />
+<br/>
 <div class="tabs" id="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<th title="Service Restrictions">Current Service Restrictions</th>
-	</tr>
-</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th title="Service Restrictions">Current Service Restrictions</th>
+        </tr>
+    </table>
 </div>
 <script type="text/javascript">
     function disableRestriction(id) {
@@ -94,75 +92,52 @@ service restrictions for this program.
 </script>
 <html:hidden property="restriction.id" />
 
-<display-el:table class="simple" cellspacing="2" cellpadding="3"
-	id="restriction" name="service_restrictions" export="false"
-	pagesize="0" requestURI="/PMmodule/ProgramManager.do">
-	<display-el:setProperty name="paging.banner.placement" value="bottom" />
-	<display-el:setProperty name="basic.msg.empty_list"
-		value="No service restrictions currently in place for this program." />
+<display-el:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restrictions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+    <display-el:setProperty name="paging.banner.placement" value="bottom" />
+    <display-el:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
 
-	<display-el:column sortable="false">
-		<%
+    <display-el:column sortable="false">
+        <%
             String demographicNo = "" + ((ProgramClientRestriction)pageContext.getAttribute("restriction")).getDemographicNo();
         %>
-		<caisirole:SecurityAccess accessName="Disable service restriction"
-			accessType="access"
-			providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProviderNo()%>'
-			demoNo="<%=demographicNo%>"
-			programId='<%=request.getParameter("id")%>'>
-			<a
-				onclick="disableRestriction('<c:out value="${restriction.id}"/>');"
-				href="javascript:void(0);"> Disable </a>
-		</caisirole:SecurityAccess>
-	</display-el:column>
-	<display-el:column property="id" sortable="true" title="Id" />
-	<display-el:column property="client.formattedName" sortable="true"
-		title="Client" />
-	<display-el:column property="provider.formattedName" sortable="true"
-		title="Restricted By" />
-	<display-el:column property="comments" sortable="true" title="Comments" />
-	<display-el:column property="startDate" sortable="true"
-		title="Start date" />
-	<display-el:column property="endDate" sortable="true" title="End date" />
+        <caisirole:SecurityAccess accessName="Disable service restriction" accessType="access" providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProviderNo()%>' demoNo="<%=demographicNo%>" programId='<%=request.getParameter("id")%>'>
+            <a onclick="disableRestriction('<c:out value="${restriction.id}"/>');return false;" href="javascript:void(0);"> Disable </a>
+        </caisirole:SecurityAccess>
+    </display-el:column>
+    <display-el:column property="id" sortable="true" title="Id" />
+    <display-el:column property="client.formattedName" sortable="true" title="Client" />
+    <display-el:column property="provider.formattedName" sortable="true" title="Restricted By"/>
+    <display-el:column property="comments" sortable="true" title="Comments" />
+    <display-el:column property="startDate" sortable="true" title="Start date" />
+    <display-el:column property="endDate" sortable="true" title="End date" />
 </display-el:table>
 
-<br />
+<br/>
 <div class="tabs" id="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<th title="Service Restrictions">Disabled Service Restrictions</th>
-	</tr>
-</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th title="Service Restrictions">Disabled Service Restrictions</th>
+        </tr>
+    </table>
 </div>
 
-<display-el:table class="simple" cellspacing="2" cellpadding="3"
-	id="restriction" name="disabled_service_restrictions" export="false"
-	pagesize="0" requestURI="/PMmodule/ProgramManager.do">
-	<display-el:setProperty name="paging.banner.placement" value="bottom" />
-	<display-el:setProperty name="basic.msg.empty_list"
-		value="No service restrictions currently in place for this program." />
+<display-el:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="disabled_service_restrictions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+    <display-el:setProperty name="paging.banner.placement" value="bottom" />
+    <display-el:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
 
-	<display-el:column sortable="false">
-		<%
+    <display-el:column sortable="false">
+        <%
             String demographicNo = "" + ((ProgramClientRestriction)pageContext.getAttribute("restriction")).getDemographicNo();
         %>
-		<caisirole:SecurityAccess accessName="Create service restriction"
-			accessType="access"
-			providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProviderNo()%>'
-			demoNo="<%=demographicNo%>"
-			programId='<%=request.getParameter("id")%>'>
-			<a onclick="enableRestriction('<c:out value="${restriction.id}"/>');"
-				href="javascript:void(0);"> Enable </a>
-		</caisirole:SecurityAccess>
-	</display-el:column>
-	<display-el:column property="id" sortable="true" title="Id" />
-	<display-el:column property="client.formattedName" sortable="true"
-		title="Client" />
-	<display-el:column property="provider.formattedName" sortable="true"
-		title="Restricted By" />
-	<display-el:column property="comments" sortable="true" title="Comments" />
-	<display-el:column property="startDate" sortable="true"
-		title="Start date" />
-	<display-el:column property="endDate" sortable="true" title="End date" />
+        <caisirole:SecurityAccess accessName="Create service restriction" accessType="access" providerNo='<%=((Provider)request.getSession().getAttribute("provider")).getProviderNo()%>' demoNo="<%=demographicNo%>" programId='<%=request.getParameter("id")%>'>
+            <a onclick="enableRestriction('<c:out value="${restriction.id}"/>');return false;" href="javascript:void(0);"> Enable </a>
+        </caisirole:SecurityAccess>
+    </display-el:column>
+    <display-el:column property="id" sortable="true" title="Id" />
+    <display-el:column property="client.formattedName" sortable="true" title="Client" />
+    <display-el:column property="provider.formattedName" sortable="true" title="Restricted By"/>
+    <display-el:column property="comments" sortable="true" title="Comments" />
+    <display-el:column property="startDate" sortable="true" title="Start date" />
+    <display-el:column property="endDate" sortable="true" title="End date" />
 </display-el:table>
 

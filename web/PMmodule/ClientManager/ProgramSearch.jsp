@@ -20,7 +20,9 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
- -->
+-->
+
+<%-- Updated by Eugene Petruhin on 10 dec 2008 while fixing #2389527 --%>
 
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -104,8 +106,14 @@ if (!Array.prototype.indexOf)
 			}
 		
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=id;
-			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteFacilityId'].value=null;
-			opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteProgramId'].value=null;
+			var facilityId = opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteFacilityId'];
+			if (facilityId) {
+				facilityId.value=null;
+			}
+			var programId = opener.document.<%=request.getParameter("formName")%>.elements['referral.remoteProgramId'];
+			if (programId) {
+				programId.value=null;
+			}
 			
 			<% if(request.getParameter("submit") != null && request.getParameter("submit").equals("true")) { %>
 				opener.document.<%=request.getParameter("formName")%>.submit();

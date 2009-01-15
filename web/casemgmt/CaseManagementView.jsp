@@ -22,6 +22,8 @@
 */
  -->
 
+<%-- Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061 --%>
+
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
@@ -574,16 +576,15 @@ Progress Note Report View:
 		</c:if>
 &nbsp;|&nbsp;
 <span style="text-decoration: underline; cursor: pointer; color: blue"
-			onclick="window.print();">Print</span>
-		<c:if test="${can_restore}">
-			<c:url
-				value="/CaseManagementEntry.do?method=restore&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-				var="noteURL" />
+			onclick="window.print();">Print</span> <c:if test="${can_restore}">
+					<c:url
+						value="/CaseManagementEntry.do?method=restore&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+						var="noteURL" />
 	&nbsp;|&nbsp;
 	<span style="text-decoration: underline; cursor: pointer; color: blue"
-				onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore
-			Note</span>
-		</c:if>
+						onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore
+					Lost Note</span>
+				</c:if>
 
 		<br />
 		<br />

@@ -115,9 +115,12 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                             }%>
 					<table>
 						<tr>
-							<td><html:hidden property="pharmacyAction"
-								value="<%=request.getParameter("type")%>" /> <html:hidden
-								property="ID" /> <bean:message
+							<td>
+							<%String type = request.getParameter("type"); %>
+                            <html:hidden property="pharmacyAction" value="<%=type%>"/>                                  
+							<html:hidden property="pharmacyAction"
+								value="<%=request.getParameter("type")%>" />
+								 <html:hidden property="ID" /> <bean:message
 								key="ManagePharmacy.txtfld.label.pharmacyName" /> :</td>
 							<td><html:text property="name" /></td>
 						</tr>

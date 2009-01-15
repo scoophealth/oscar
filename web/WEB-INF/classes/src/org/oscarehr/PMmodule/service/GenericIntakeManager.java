@@ -32,6 +32,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.jfree.util.Log;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
@@ -84,7 +85,19 @@ public class GenericIntakeManager {
 
 	public Intake copyRegIntake(Integer clientId, String staffId, Integer facilityId) {
 		//return copyIntake(getQuickIntakeNode(), clientId, null, staffId);
-		return copyIntakeWithId(getLatestRegIntakeNodes(clientId), clientId, null, staffId, facilityId);
+		IntakeNode latestInode = getLatestRegIntakeNodes(clientId);
+		Intake intake = this.genericIntakeDAO.getLatestIntakeByFacility(latestInode, clientId, null, facilityId);
+		if(intake != null) {
+			return copyIntakeWithId(latestInode, clientId, null, staffId, facilityId);
+		} else {
+			List<IntakeNode> previousIntakeNodes = genericIntakeNodeDAO.getPublishedIntakeNodesByName(this.getQuickIntakeNode().getLabel().getLabel());
+			for(IntakeNode in:previousIntakeNodes) {
+				intake = genericIntakeDAO.getLatestIntakeByFacility(in, clientId, null, facilityId);
+				if(intake!=null)
+					return copyOldIntake(latestInode, intake, clientId, null, staffId, facilityId);
+			}			
+		}
+		return null;
 	}
 
 	/**
@@ -132,7 +145,22 @@ public class GenericIntakeManager {
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentQuickIntake(java.lang.Integer)
 	 */
 	public Intake getMostRecentQuickIntakeByFacility(Integer clientId, Integer facilityId) {
-		return genericIntakeDAO.getLatestIntakeByFacility(getQuickIntakeNode(), clientId, null, facilityId);
+		IntakeNode regIntakeNode = getQuickIntakeNode();
+		Intake intake = genericIntakeDAO.getLatestIntakeByFacility(regIntakeNode, clientId, null, facilityId);
+		
+		if(intake == null) {
+			/*search old registration intakes in proper order to make sure we return
+			the latest one*/
+			List<IntakeNode> previousIntakeNodes = genericIntakeNodeDAO.getPublishedIntakeNodesByName(regIntakeNode.getLabel().getLabel());
+			for(IntakeNode in:previousIntakeNodes) {
+				Log.info("searching for intakes for node version: " + in.getForm_version());
+				intake = genericIntakeDAO.getLatestIntakeByFacility(in, clientId, null, facilityId);
+				if(intake!=null)
+					break;
+			}
+		}
+		
+		return intake;
 	}
 
 	public Intake getMostRecentQuickIntake(Integer clientId, Integer facilityId) {
@@ -422,6 +450,30 @@ public class GenericIntakeManager {
 			
 			for (IntakeAnswer answer : source.getAnswers()) {
 				dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(answer.getValue());
+			}
+		}
+
+		return dest;
+	}
+	
+	private Intake copyOldIntake(IntakeNode sourceNode, Intake source, Integer clientId, Integer programId, String staffId, Integer facilityId) {
+		Intake dest=null;
+		IntakeNode destNode = getQuickIntakeNode();
+		
+		if (source != null) {
+			dest = createIntake(destNode,clientId,programId,staffId);
+			
+			for(IntakeAnswer ia:dest.getAnswers()) {
+				if(ia.isAnswerScalar()) {
+					if(ia.getNode().getId().intValue() != ia.getNode().getEq_to_id().intValue()) {
+						try {
+							//System.out.println(ia.getId() + "," + ia.getNode().getIdStr() + "," + ia.getNode().getLabelStr());
+							String value = source.getAnswerMapped(String.valueOf(ia.getNode().getEq_to_id())).getValue();
+							//System.out.println("value=" + value); 
+							ia.setValue(value);
+						}catch(IllegalStateException e) {Log.warn(e);}
+					}
+				}				
 			}
 		}
 

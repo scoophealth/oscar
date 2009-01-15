@@ -22,6 +22,8 @@
 */
  -->
 
+<%-- Updated by Eugene Petruhin on 16 dec 2008 while fixing #2434234 --%>
+
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
@@ -152,7 +154,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 				
 			%>
 			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
-			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo="<%=request.getParameter("providerNo")%>" demoNo="<%=request.getParameter("demographicNo")%>" programId="<%=pId%>">
+			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
 			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
 				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
 			<%} else { %>

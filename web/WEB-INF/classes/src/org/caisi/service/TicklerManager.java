@@ -40,7 +40,9 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 
 import oscar.OscarProperties;
 
-/**
+/*
+ * Updated by Eugene Petruhin on 16 dec 2008 while fixing #2422864 & #2317933 & #2379840
+ * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  */
 public class TicklerManager {
 
@@ -75,10 +77,14 @@ public class TicklerManager {
         ticklerDAO.saveTickler(tickler);
     }
 
+/*
+ * Eugene Petruhin, 12/16/2008: getTicklers() entry without any arguments is no longer available due to security and performance concerns.
+
     public List<Tickler> getTicklers() {
         return ticklerDAO.getTicklers();
     }
 
+*/
    
     public List<Tickler> getTicklers(CustomFilter filter, Integer currentFacilityId,String providerNo,String programId) {
         List<Tickler> results = ticklerDAO.getTicklers(filter);     
@@ -165,7 +171,7 @@ public class TicklerManager {
 	        }
 	        
 	        ProgramProvider pp2 = (ProgramProvider)ppList2.get(0);
-	        String ticklerRole = pp2.getRole().getName();
+	        String ticklerRole = pp2.getRole().getName().toLowerCase();
 	        
 	        ProgramAccess pa = null;        
 	

@@ -30,6 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+/*
+ * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
+ */
 public class CaseManagementCPPDAO extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(CaseManagementCPPDAO.class);
@@ -40,34 +43,31 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
     }
 
     public void saveCPP(CaseManagementCPP cpp) {                        
-        CaseManagementCPP tempcpp = new CaseManagementCPP();
         
         String fhist = cpp.getFamilyHistory() == null?"":cpp.getFamilyHistory();
-        String ongoing = cpp.getOngoingConcerns() == null?"":cpp.getOngoingConcerns();
-        String shist = cpp.getSocialHistory() == null?"":cpp.getSocialHistory();
-        String rem = cpp.getReminders() == null?"":cpp.getReminders();
         String mhist = cpp.getMedicalHistory() == null?"":cpp.getMedicalHistory();
-        String pm = cpp.getPastMedications() == null?"":cpp.getPastMedications();
+        String ongoing = cpp.getOngoingConcerns() == null?"":cpp.getOngoingConcerns();
+        String rem = cpp.getReminders() == null?"":cpp.getReminders();
+        String shist = cpp.getSocialHistory() == null?"":cpp.getSocialHistory();
         String ofnum = cpp.getOtherFileNumber() == null?"":cpp.getOtherFileNumber();
         String ossystem = cpp.getOtherSupportSystems() == null?"":cpp.getOtherSupportSystems();
+        String pm = cpp.getPastMedications() == null?"":cpp.getPastMedications();
         
-        tempcpp.setId(cpp.getId());
-        
-        tempcpp.setDemographic_no(cpp.getDemographic_no());
-        tempcpp.setFamilyHistory(fhist);
-        tempcpp.setMedicalHistory(mhist);
-        tempcpp.setOngoingConcerns(ongoing);
-        tempcpp.setReminders(rem);
-        tempcpp.setSocialHistory(shist);
-        tempcpp.setUpdate_date(new Date());
-        tempcpp.setPrimaryPhysician(cpp.getPrimaryPhysician());
-        tempcpp.setProviderNo(cpp.getProviderNo());
-        tempcpp.setPrimaryCounsellor(cpp.getPrimaryCounsellor());
-        tempcpp.setOtherFileNumber(ofnum);
-        tempcpp.setOtherSupportSystems(ossystem);
-        tempcpp.setPastMedications(pm);         
-        this.getHibernateTemplate().saveOrUpdate(tempcpp);
+        cpp.setFamilyHistory(fhist);
+        cpp.setMedicalHistory(mhist);
+        cpp.setOngoingConcerns(ongoing);
+        cpp.setReminders(rem);
+        cpp.setSocialHistory(shist);
+        cpp.setUpdate_date(new Date());
+        cpp.setOtherFileNumber(ofnum);
+        cpp.setOtherSupportSystems(ossystem);
+        cpp.setPastMedications(pm);         
+
+        if (log.isDebugEnabled()) {
+            log.debug("Saving or updating a CPP: " + cpp);
+        }
+
+        this.getHibernateTemplate().saveOrUpdate(cpp);
         
     }
-
 }

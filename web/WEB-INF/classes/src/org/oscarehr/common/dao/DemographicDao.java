@@ -22,19 +22,26 @@
 
 package org.oscarehr.common.dao;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import javax.persistence.PersistenceException;
 
+import org.hibernate.SQLQuery;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -104,6 +111,39 @@ public class DemographicDao extends HibernateDaoSupport {
         return clients;
     }
 
+    public Set getArchiveDemographicByProgramOptimized(int programId, Date dt, Date defdt) {
+    	Set<Demographic> archivedClients = new TreeSet<Demographic>(new Comparator<Demographic>() {
+    		public int compare(Demographic o1, Demographic o2) {    	
+    			return String.CASE_INSENSITIVE_ORDER.compare(o1.getLastName(), o2.getLastName());
+    		}
+    	});    	
+
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	String sqlQuery = "select distinct d.demographic_no,d.first_name,d.last_name,(select count(*) from admission a where client_id=d.demographic_no and admission_status='current' and program_id="+programId+" and admission_date<='"+sdf.format(dt)+"') as is_active from admission a,demographic d where a.client_id=d.demographic_no and (d.patient_status='AC' or d.patient_status='' or d.patient_status=null) and program_id="+programId;
+    	System.out.println(sqlQuery);
+    	
+    	
+		SQLQuery q = this.getSession().createSQLQuery(sqlQuery);
+		q.addScalar("d.demographic_no");
+		q.addScalar("d.first_name");
+		q.addScalar("d.last_name");
+		q.addScalar("is_active");
+		List results = q.list();
+		
+		Iterator iter = results.iterator();
+		while(iter.hasNext()) {
+			Object[] result = (Object[])iter.next();
+			if(((BigInteger)result[3]).intValue() == 0) {
+				Demographic d = new Demographic();
+				d.setDemographicNo((Integer)result[0]);
+				d.setFirstName((String)result[1]);
+				d.setLastName((String)result[2]);
+				archivedClients.add(d);
+			}
+		}
+		return archivedClients;
+    }
+    
     public List getArchiveDemographicByPromgram(int programId, Date dt, Date defdt) {
         // get duplicated demographic records with the same id ....from this sql
         String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and a.AdmissionStatus=? "

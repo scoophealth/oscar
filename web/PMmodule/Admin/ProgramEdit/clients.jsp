@@ -23,7 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 function assignTeam(id,selectBox) {
 	var team_id = selectBox.options[selectBox.selectedIndex].value;
@@ -52,60 +52,45 @@ function assignStatus(id,selectBox) {
 </table>
 </div>
 <!--  show current clients -->
-<display:table class="simple" cellspacing="2" cellpadding="3"
-	id="admission" name="admissions" export="false" pagesize="0"
-	requestURI="/PMmodule/ProgramManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
-	<display:setProperty name="basic.msg.empty_list"
-		value="No clients currently admitted to this program." />
-
+	<display:setProperty name="basic.msg.empty_list" value="No clients currently admitted to this program." />
+	
 	<display:column sortable="false" title="">
-		<a href="javascript:void(0);return false;"
-			onclick="alert('Please discharge clients from the client manager');">
-		Discharge </a>
+		<a href="javascript:void(0);" onclick="alert('Please discharge clients from the client manager');"> Discharge </a>
 	</display:column>
-	<display:column property="client.formattedName" sortable="true"
-		title="Name" />
-	<display:column property="admissionDate" sortable="true"
-		title="Admission Date" />
+	<display:column property="client.formattedName" sortable="true" title="Name" />
+	<display:column property="admissionDate" sortable="true" title="Admission Date" />
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
-		<display:column property="temporaryAdmission" sortable="true"
-			title="Temporary Admission" />
+		<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
 	</caisi:isModuleLoad>
-	<display:column property="admissionNotes" sortable="true"
-		title="Admission Notes" />
+	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
 	<display:column property="teamName" sortable="true" title="Team" />
-	<display:column sortable="false" title="">
-		<select name="x"
-			onchange="assignTeam('<c:out value="${admission.id}"/>',this);">
+	<display:column sortable="false" title="" >
+		<select name="x" onchange="assignTeam('<c:out value="${admission.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="team" items="${teams}">
 				<c:choose>
 					<c:when test="${team.id == admission.teamId}">
-						<option value="<c:out value="${team.id}"/>" selected><c:out
-							value="${team.name}" /></option>
+						<option value="<c:out value="${team.id}"/>" selected><c:out value="${team.name}" /></option>
 					</c:when>
 					<c:otherwise>
-						<option value="<c:out value="${team.id}"/>"><c:out
-							value="${team.name}" /></option>
+						<option value="<c:out value="${team.id}"/>"><c:out value="${team.name}" /></option>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 		</select>
 	</display:column>
-	<display:column sortable="false" title="Status">
-		<select name="y"
-			onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
+	<display:column sortable="false" title="Status" >
+		<select name="y" onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="status" items="${client_statuses}">
 				<c:choose>
 					<c:when test="${status.id == admission.clientStatusId}">
-						<option value="<c:out value="${status.id}"/>" selected><c:out
-							value="${status.name}" /></option>
+						<option value="<c:out value="${status.id}"/>" selected><c:out value="${status.name}" /></option>
 					</c:when>
 					<c:otherwise>
-						<option value="<c:out value="${status.id}"/>"><c:out
-							value="${status.name}" /></option>
+						<option value="<c:out value="${status.id}"/>"><c:out value="${status.name}" /></option>
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>

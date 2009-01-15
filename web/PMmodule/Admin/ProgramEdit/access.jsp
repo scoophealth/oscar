@@ -25,6 +25,9 @@
 <%@ include file="/taglibs.jsp"%>
 <script>
 	function deleteAccess(id) {
+		if(!confirm("Are you sure you want to delete the access entry?")) {
+			return;
+		}
 		document.programManagerForm.elements['access.id'].value=id;
 		document.programManagerForm.method.value='delete_access';
 		document.programManagerForm.submit();

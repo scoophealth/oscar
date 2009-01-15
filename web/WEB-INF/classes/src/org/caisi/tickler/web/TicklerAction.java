@@ -56,6 +56,10 @@ import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
 
+/*
+ * Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547
+ * Updated by Eugene Petruhin on 19 dec 2008 while fixing #2422864 & #2317933 & #2379840
+ */
 public class TicklerAction extends DispatchAction {
     private static Log log = LogFactory.getLog(TicklerAction.class);
     private TicklerManager ticklerMgr = null;
@@ -114,6 +118,10 @@ public class TicklerAction extends DispatchAction {
 
         
     /* show all ticklers */
+    /*
+     * Eugene Petruhin, 12/16/2008: ticklerMgr.getTicklers() entry without any arguments is no longer available
+     * due to security and performance concerns. Following list() action is not being used so I comment it out. 
+
     public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("list");
         String providerId = (String)request.getSession().getAttribute("user");
@@ -132,6 +140,7 @@ public class TicklerAction extends DispatchAction {
         request.setAttribute("from", getFrom(request));
         return mapping.findForward("list");
     }
+    */
 
     /* show a tickler */
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -139,7 +148,8 @@ public class TicklerAction extends DispatchAction {
         String tickler_id = request.getParameter("id");
         Tickler tickler = ticklerMgr.getTickler(tickler_id);
         request.setAttribute("tickler", tickler);
-        request.setAttribute("providers", providerMgr.getProviders());
+        // only active providers listed in the program stuff can be assigned
+        request.setAttribute("providers", providerMgr.getActiveProviders(null, tickler.getProgram_id().toString()));
         request.setAttribute("from", getFrom(request));
 
         return mapping.findForward("view");
@@ -155,10 +165,13 @@ public class TicklerAction extends DispatchAction {
         //view tickler from CME
         String filter_clientId = filter.getDemographic_no();
         String filter_clientName = filter.getDemographic_webName();
-        if(!"".equals(filter_clientId) && filter_clientId!=null) {
-        	if("".equals(filter_clientName) || filter_clientName==null) {
+        if (filter_clientId != null && !"".equals(filter_clientId)) {
+        	if (filter_clientName == null || "".equals(filter_clientName)) {
         		filter.setDemographic_webName(demographicMgr.getDemographic(filter_clientId).getFormattedName());
         	}
+        } else {
+        	filter_clientName = "";
+        	filter.setDemographic_webName("");
         }
         
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
@@ -231,7 +244,7 @@ public class TicklerAction extends DispatchAction {
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
-        List ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId,programId);
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
@@ -317,7 +330,9 @@ public class TicklerAction extends DispatchAction {
     /* edit a tickler */
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         log.debug("edit");
-        request.setAttribute("providers", providerMgr.getProviders());
+        String programId = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+        request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
+        request.setAttribute("program_name", programMgr.getProgramName(programId));
         request.setAttribute("from", getFrom(request));
         return mapping.findForward("edit");
     }
@@ -393,7 +408,12 @@ public class TicklerAction extends DispatchAction {
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("tickler.saved"));
         saveMessages(request, messages);
 
-        ticklerForm.set("tickler", new Tickler());
+		CustomFilter filter = new CustomFilter();
+        filter.setDemographic_no(tickler.getDemographic_no());
+        filter.setDemographic_webName(tickler.getDemographic_webName());
+        filter.setEnd_date(null);
+		ticklerForm.set("filter", filter);
+		ticklerForm.set("tickler", new Tickler());
         return filter(mapping, form, request, response);
     }
 

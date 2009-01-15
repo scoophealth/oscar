@@ -37,8 +37,9 @@ import org.oscarehr.common.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 
-
-/**
+/*
+ * Updated by Eugene Petruhin on 16 dec 2008 while fixing #2422864 & #2317933 & #2379840
+ * Updated by Eugene Petruhin on 12/18/2008: don't save empty comment and skip updating status & assignee if they are the same 
  */
 public class TicklerDAO extends HibernateDaoSupport {
 
@@ -52,7 +53,7 @@ public class TicklerDAO extends HibernateDaoSupport {
 
     public void addComment(Long tickler_id, String provider, String message) {
         Tickler tickler = this.getTickler(tickler_id);
-        if (tickler != null) {
+        if (tickler != null && message != null && !"".equals(message)) {
             TicklerComment comment = new TicklerComment();
             comment.setTickler_no(tickler_id.longValue());
             comment.setUpdate_date(new Date());
@@ -65,7 +66,7 @@ public class TicklerDAO extends HibernateDaoSupport {
 
     public void reassign(Long tickler_id, String provider, String task_assigned_to) {
         Tickler tickler = this.getTickler(tickler_id);
-        if (tickler != null) {
+        if (tickler != null && !task_assigned_to.equals(tickler.getTask_assigned_to())) {
             String message;
             String former_assignee = tickler.getAssignee().getFormattedName();
             String current_assignee;
@@ -82,10 +83,14 @@ public class TicklerDAO extends HibernateDaoSupport {
         }
     }
 
+/*
+ * Eugene Petruhin, 12/16/2008: getTicklers() entry without any arguments is no longer available due to security and performance concerns.
+
     public List<Tickler> getTicklers() {
         return (List)getHibernateTemplate().find("from Tickler");
     }
 
+*/
     
     public List<Tickler> getTicklers(CustomFilter filter) {
         String tickler_date_order = filter.getSort_order();
@@ -222,7 +227,7 @@ public class TicklerDAO extends HibernateDaoSupport {
     
     private void updateTickler(Long tickler_id, String provider, char status) {
         Tickler tickler = this.getTickler(tickler_id);
-        if (tickler != null) {
+        if (tickler != null && status != tickler.getStatus()) {
             tickler.setStatus(status);
             TicklerUpdate update = new TicklerUpdate();
             update.setProviderNo(provider);

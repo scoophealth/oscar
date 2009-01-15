@@ -1,18 +1,17 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@page
-	import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ include file="/taglibs.jsp"%>
+<%@page import="java.util.*,org.oscarehr.PMmodule.dao.*,org.oscarehr.PMmodule.service.*,org.oscarehr.PMmodule.model.*,org.springframework.web.context.support.*,org.springframework.web.context.*" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ include file="/taglibs.jsp" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Edit Intake</title>
-<script type="text/javascript">
+    <head>
+	    <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Edit Intake</title>
+        <script type="text/javascript">
             function add(id,nodeTemplateId,parentId,pos,psize){
                var eURL = "AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize;
                popup('230','330',eURL,'intakeAdd');
@@ -68,10 +67,11 @@
 	    	}
 	    
 	    </script>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="javascript" type="text/javascript"
-	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
-<script type="text/javascript">
+        <style type="text/css">
+            @import "<html:rewrite page="/css/genericIntake.css"/>";
+        </style>
+        <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>" ></script>
+        <script type="text/javascript">
         <!--
         var djConfig = {
             isDebug: false,
@@ -93,7 +93,7 @@
                 return;
             }
             var id = document.getElementById('formInstanceId').value;
-            var url = '/oscar_rfq/PMmodule/Forms/SurveyExecute.do?method=survey&type=provider&formId=' + formId + '&formInstanceId=' + id + '&clientId=' + 10;
+            var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>?method=survey&type=provider&formId=' + formId + '&formInstanceId=' + id + '&clientId=' + 10;
             ctl.selectedIndex = 0;
             popupPage(url);
         }
@@ -105,25 +105,23 @@
             window.open(page, "", windowprops);
         }
         </script>
-
-<script type="text/javascript" src="/oscar_rfq/dojoAjax/dojo.js"></script>
-<script type="text/javascript" src="/oscar_rfq/js/AlphaTextBox.js"></script>
-<script type="text/javascript">
+        
+        <script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js"/>"></script>
+        <script type="text/javascript" src="<html:rewrite page="/js/AlphaTextBox.js"/>"></script>
+        <script type="text/javascript">
         <!--
         dojo.require("dojo.widget.*");
         dojo.require("dojo.validate.*");
         // -->
         </script>
-<script type="text/javascript"
-	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
-<script type="text/javascript"
-	src="<html:rewrite page="/js/checkDate.js"/>"></script>
-
-
-</head>
-<body>
-<form>
-<%
+        <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+        <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js"/>"></script>
+        
+        
+    </head>
+    <body>
+        <form>
+        <%
         
         WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
@@ -133,15 +131,21 @@
         int iNum = Integer.parseInt(id);
 	
         List<IntakeNode> lis = genericIntakeManager.getIntakeNodes();
-        if (lis != null){ %> <select>
-	<% for (IntakeNode i : lis) {
+        if (lis != null){ %>
+        <script>
+			function change_form(value) {
+				location.href='EditIntake.jsp?id=' + value;
+			}
+        </script>
+	<select onchange="change_form(this.options[this.selectedIndex].value)">
+                    <% for (IntakeNode i : lis) {
 			   String frmLabel = i.getForm_version()!=null ? i.getLabelStr()+" ("+i.getForm_version()+")" : i.getLabelStr();
 			   if (i.getPublish_date()!=null) frmLabel += " PUBLISHED " +i.getPublishDateStr()+ " BY " +i.getPublish_by();
 			   %>
-	<option <%=i.getId()==iNum?"selected":""%>
-		onclick="location.href='EditIntake.jsp?id=<%=i.getId()%>'"><%=frmLabel%></option>
-	<% } %>
-</select> <%}
+	    <option <%=i.getId()==iNum?"selected":""%> value="<%=i.getId()%>"><%=frmLabel%></option>
+                    <% } %>
+	</select>
+	<%}
 	if (session.getAttribute("publisher")==null) session.setAttribute("publisher", request.getParameter("pub"));
 	
 	IntakeNode iNode = (IntakeNode) session.getAttribute("intakeNode");
@@ -170,8 +174,8 @@
     out.write("<p>&nbsp;</p>");
     out.write(" <input type=\"button\" value=\"Close\" onclick=\"window.close();\" />");
         %>
-</form>
-</body>
+        </form>
+    </body>
 </html>
 
 <%!
@@ -337,6 +341,7 @@ int getFrmVersion(String frmLabel, List<IntakeNode> iList) {
     for (int i=0; i<iList.size(); i++) {
 		String iLabel = iList.get(i).getLabelStr().trim();
 		if (iLabel.equals(frmLabel.trim())) {
+			if(iList.get(i).getForm_version() == null) continue;
 			int tmp = iList.get(i).getForm_version().intValue();
 			if(tmp > max_form_version) max_form_version=tmp;		
 		}

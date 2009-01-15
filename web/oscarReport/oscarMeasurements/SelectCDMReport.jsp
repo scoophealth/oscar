@@ -44,6 +44,15 @@
     function set(target) {
          document.forms[0].forward.value=target;
     };
+
+    function checkGroup() {
+		var cdmGroupSelect = document.forms[0].elements['value(CDMgroup)'];
+		if(cdmGroupSelect.options.length == 0) {
+			alert('A Measurement Group is required for this type of report');
+			return;
+		} 
+		document.forms[0].submit();
+    }
 </script>
 
 </head>
@@ -92,7 +101,7 @@
 							<td width="120" class="fieldBox"><input type="button"
 								name="button"
 								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
-								onclick="set('patientWhoMetGuideline');submit();" /></td>
+								onclick="set('patientWhoMetGuideline');submit();checkGroup();" /></td>
 						</tr>
 						<tr>
 							<td width="450" class="fieldBox"><bean:message
@@ -101,7 +110,7 @@
 							<td width="120" class="fieldBox"><input type="button"
 								name="button"
 								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
-								onclick="set('patientInAbnormalRange');submit();" /></td>
+								onclick="set('patientInAbnormalRange');submit();checkGroup();" /></td>
 						</tr>
 						<tr>
 							<td width="450" class="fieldBox"><bean:message
@@ -110,7 +119,7 @@
 							<td width="120" class="fieldBox"><input type="button"
 								name="button"
 								value="<bean:message key="oscarReport.CDMReport.btnContinue"/>"
-								onclick="set('freqencyOfReleventTests');submit();" /></td>
+								onclick="set('freqencyOfReleventTests');submit();checkGroup();" /></td>
 						</tr>
 					</table>
 					</td>

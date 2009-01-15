@@ -152,9 +152,12 @@ public class Intake implements Serializable {
 		return ids;
 	}
 	
+	/*
+	 * Added the eq_to_id check for getting mapped answers from older versions.
+	 */
 	public IntakeAnswer getAnswerMapped(String key) {
 		for (IntakeAnswer answer : getAnswers()) {
-			if (answer.getNode().getIdStr().equals(key)) {
+			if (answer.getNode().getIdStr().equals(key) || String.valueOf(answer.getNode().getEq_to_id()).equals(key) ) {
 				return answer;
 			}
 		}

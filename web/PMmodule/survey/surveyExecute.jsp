@@ -21,18 +21,16 @@
 * Toronto, Ontario, Canada 
 */
  -->
+<%@ include file="/taglibs.jsp" %>
 
-<%@ include file="/taglibs.jsp"%>
 <html:html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Oscar Forms</title>
-<c:set var="ctx" value="${pageContext.request.contextPath}"
-	scope="request" />
-
-<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/execute.css"
-	type="text/css">
-<script>
+	<head>
+		<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+		<title>Oscar Forms</title>
+		<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+		
+		<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/execute.css" type="text/css">
+		<script>
 			function clickTab(name) {
 				 if(!validateForm(document.surveyExecuteForm,document.surveyExecuteForm.elements['view.tab'].value,false)) {
                                         return;
@@ -64,106 +62,99 @@
 				setTimer();	
 			}
 		</script>
-<script type="text/javascript"
-	src="<c:out value="${ctx}"/>/jsCalendar/calendar.js"></script>
-<script type="text/javascript"
-	src="<c:out value="${ctx}"/>/jsCalendar/lang/calendar-en.js"></script>
-<script type="text/javascript"
-	src="<c:out value="${ctx}"/>/jsCalendar/calendar-setup.js"></script>
-<c:if test="${not empty sessionScope.validation_file}">
-	<script type="text/javascript"
-		src="<c:out value="${ctx}"/>/survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
-</c:if>
-<link rel="stylesheet" type="text/css"
-	href="<c:out value="${ctx}"/>/jsCalendar/skins/aqua/theme.css">
+		<script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar.js"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/lang/calendar-en.js"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar-setup.js"></script>
+        <c:if test="${not empty sessionScope.validation_file}">
+	        <script type="text/javascript" src="<c:out value="${ctx}"/>/survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
+	    </c:if>
+        <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/jsCalendar/skins/aqua/theme.css">
 
-<c:if test="${empty sessionScope.validation_file}">
-	<script>
+		<c:if test="${empty sessionScope.validation_file}">
+		<script>
 			function validateForm(form,tab,submit) {
 				return true;
 			}
-		</script>
-</c:if>
+		</script>		
+		</c:if>
+		        
+ 	</head>	
+	
+	<body onload="init()">
+	
+		<%@ include file="/common/messages.jsp"%>
+		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value,true);">
+		<html:hidden property="view.tab"/>
+		<html:hidden property="view.id"/>
+		<html:hidden property="view.admissionId"/>
+		<input type="hidden" name="method" value="save_survey"/>
+		<input type="hidden" name="type" value="<c:out value="${type}"/>"/>
+		
+		<br/>
 
-</head>
-
-<body onload="init()">
-
-<%@ include file="/common/messages.jsp"%>
-<html:form action="/PMmodule/Forms/SurveyExecute"
-	onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value,true);">
-	<html:hidden property="view.tab" />
-	<html:hidden property="view.id" />
-	<html:hidden property="view.admissionId" />
-	<input type="hidden" name="method" value="save_survey" />
-	<input type="hidden" name="type" value="<c:out value="${type}"/>" />
-
-	<br />
-
-	<div class="tabs" id="tabs">
-	<table cellpadding="0" cellspacing="0" border="0">
-		<tr>
-
-			<c:forEach var="tab" items="${tabs}">
+		<div class="tabs" id="tabs">
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+		
+		<c:forEach var="tab" items="${tabs}">
 				<c:choose>
 					<c:when test="${tab eq currentTab}">
-						<td style="background-color: #555;"><c:out value="${tab}" /></td>
+						<td style="background-color: #555;"><c:out value="${tab}"/></td>
 					</c:when>
 					<c:otherwise>
-						<td><a style="" href="javascript:void(0)"
-							onclick="javascript:clickTab('<c:out value="${tab}"/>');return false;"><c:out
-							value="${tab}" /></a></td>
+						<td><a style="" href="javascript:void(0)" onclick="javascript:clickTab('<c:out value="${tab}"/>');return false;"><c:out value="${tab}"/></a></td>
 					</c:otherwise>
 				</c:choose>
-			</c:forEach>
+		</c:forEach>
 		</tr>
 	</table>
 	</div>
-
+	
 	<c:if test="${requestScope.introduction != null}">
 		<p>
-		<pre>
-				<c:out value="${introduction.text }" />
+			<pre>
+				<c:out value="${introduction.text }"/>
 			</pre>
 		</p>
 	</c:if>
-
-	<br />
-	<table border="0" width="100%" cellspacing="2" cellpadding="2">
+		
+		<br/>
+		<table border="0" width="100%" cellspacing="2" cellpadding="2">
 		<c:forEach var="qcontainer" items="${page.QContainerArray}">
 			<tr>
 				<c:choose>
 					<c:when test="${qcontainer.question != null}">
-						<c:set var="sectionId" value="0" scope="request" />
-						<c:set var="question" value="${qcontainer.question}"
-							scope="request" />
-						<jsp:include page="question.jsp" />
+						<c:set var="sectionId" value="0" scope="request"/>		
+						<c:set var="question" value="${qcontainer.question}" scope="request"/>
+						<jsp:include page="question.jsp"/>
 					</c:when>
 					<c:otherwise>
-						<c:set var="section" value="${qcontainer.section}" scope="request" />
-						<jsp:include page="section.jsp" />
+						<c:set var="section" value="${qcontainer.section}" scope="request"/>
+						<jsp:include page="section.jsp"/>
 					</c:otherwise>
 				</c:choose>
 			</tr>
 		</c:forEach>
 	</table>
-	<br />
+	<br/>
 	<c:if test="${requestScope.closing != null}">
 		<p>
-		<pre>
-				<c:out value="${closing.text }" />
+			<pre>
+				<c:out value="${closing.text }"/>
 			</pre>
 		</p>
-	</c:if>
-	<br />
+	</c:if>	
+	<br/>
 	<table width="50%">
-		<tr>
-			<td colspan="2"><input type="submit" value="Temporary Save"
-				onclick="this.form.method.value='tmpsave_survey'; return true;" /> <html:submit
-				value="Save" /> <html:cancel value="Cancel" /></td>
-		</tr>
-	</table>
-
-</html:form>
-</body>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="Temporary Save" onclick="this.form.method.value='tmpsave_survey'; return true;"/>
+					<html:submit value="Save"/>
+					<html:cancel value="Cancel"/>					
+				</td>
+			</tr>
+		</table>
+		
+		</html:form>
+	</body>
 </html:html>

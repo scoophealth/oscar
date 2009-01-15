@@ -22,7 +22,7 @@
 	<p><b>no client in this program.</b></p>
 	<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
 	<b>You are in Case Management View! </b>
-	<!-- &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a> -->
+	&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
 	<%} else {%>
 	<b>You are in the archive view ! </b>&nbsp; <a
 		href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to
@@ -38,7 +38,7 @@
 		<tr>
 			<td>
 			<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-			<b>You are in Case Management View! </b> <!-- &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a> -->
+			<b>You are in Case Management View! </b> &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
 			<%} else {%> <b>You are in Archive View ! </b>&nbsp; <a
 				href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back
 			to Case Management View</a> <%} %>
@@ -60,12 +60,14 @@
 java.util.Date apptime=new java.util.Date();
 int demographic_no = (new Integer(de.getValue())).intValue();
 String demographic_name=de.getLabel();
-param[0]=curProvider_no[nProvider];
-param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
+//param[0]=curProvider_no[nProvider];
+//param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 //rs = apptMainBean.queryResults(param, strsearchappointmentday);
 //System.out.println(param[0]+"::"+param[1]+"::"+rs);
 //original oscar code for demographic table
-
+%>
+<c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">
+<%
 paramTickler[0]=new DBPreparedHandlerParam(String.valueOf(demographic_no));
 paramTickler[1]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(strDate)); //year+"-"+month+"-"+day;//e.g."2001-02-02";
 //rsTickler = null;
@@ -77,12 +79,14 @@ while (rsTickler.next()){
     tickler_no = rsTickler.getString("tickler_no");
     tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
 }
+%></c:if><%
 //((java.sql.Statement)rss[1]).close();
 
 
 rsDemo = null;
 ver = "";
 roster = "";
+/*
 Object[] rss = apptMainBean.queryResultsCaisi(demographic_no, "search_demograph");
 rsDemo = (java.sql.ResultSet) rss[0];
 if(rsDemo.next()){
@@ -99,12 +103,14 @@ if(rsDemo.next()){
 	  }
 }
 ((java.sql.Statement)rss[1]).close();
+*/
 rsDemo = null;
 
 study_no = new StringBuffer("");
 study_link = new StringBuffer("");
 studyDescription = new StringBuffer("");
 rsStudy = null;
+/*
 rss = apptMainBean.queryResultsCaisi(demographic_no, "search_studycount");
 rsStudy = (java.sql.ResultSet) rss[0];
 int numStudy = 0;
@@ -125,6 +131,7 @@ if (numStudy == 1) {
     studyDescription = new StringBuffer("Form Studies");
 }
 ((java.sql.Statement)rss[1]).close();
+*/
 rsStudy=null;
 
 String reason ="";
