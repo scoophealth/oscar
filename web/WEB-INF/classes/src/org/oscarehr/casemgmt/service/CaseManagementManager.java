@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,11 +83,15 @@ import org.oscarehr.dx.model.DxResearch;
 
 import oscar.OscarProperties;
 
+
 /*
  * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
  */
 public class CaseManagementManager {
+    
+    public final int SIGNATURE_SIGNED = 1;
+    public final int SIGNATURE_VERIFY = 2;
 
     protected String issueAccessType = "access";
     protected CaseManagementNoteDAO caseManagementNoteDAO;
@@ -1302,9 +1307,9 @@ public class CaseManagementManager {
     	return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
     }
     
-    public String getSignature(String cproviderNo, String userName, String roleName){
+    public String getSignature(String cproviderNo, String userName, String roleName, int type){
     	
-    	SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    	SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy H:mm");
     	Date now = new Date();
     	// add the time, signiture and role at the end of note
     	String rolename="";
@@ -1318,12 +1323,27 @@ public class CaseManagementManager {
     	if (tempS != null && !"".equals(tempS.trim()))
     		userName = tempS;
 
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+        String signature;
     	if (userName != null && !"".equals(userName.trim()))
     	{
-    		return "\n[[Signed on " + dt.format(now) + " "
-    				+ "by " + userName + ", " + rolename + "]]\n" ;
-    	} else
-    		return "\n[[" + dt.format(now) + "]]\n";
+            if( type == this.SIGNATURE_SIGNED ) {
+    		signature = props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + dt.format(now) + " "
+    				+ props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + ", " + rolename + "]\n" ;
+                
+            }
+            else if( type == this.SIGNATURE_VERIFY ) {
+                signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + dt.format(now) + " "
+                    + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + ", " + rolename + "]";
+            }
+            else {
+                signature = "[Unknown Signature Type Requested]";
+            }
+    	} else {
+    		signature = "\n[" + dt.format(now) + "]\n";
+        }
+        
+        return signature;
     	
     }
     
