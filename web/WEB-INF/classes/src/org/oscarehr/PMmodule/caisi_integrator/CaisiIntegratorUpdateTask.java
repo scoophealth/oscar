@@ -293,10 +293,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		CachedDemographic cachedDemographic = new CachedDemographic();
 
 		// set consent info
-		IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
-		if (consent != null) {
-			BeanUtils.copyProperties(cachedDemographic, consent);
-		}
+//		IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
+//		if (consent != null) {
+//			BeanUtils.copyProperties(cachedDemographic, consent);
+//		}
 
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);

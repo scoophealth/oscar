@@ -361,14 +361,6 @@ public class ClientManagerAction extends BaseAction {
 		request.getSession().setAttribute("demographicId", demographic.getDemographicNo());
 
 		// --- consent status ---
-		IntegratorConsent integratorConsent = integratorConsentDao.findLatestByFacilityAndDemographic(facilityId, demographic.getDemographicNo());
-		String consentText = "Have not asked client yet.";
-		if (integratorConsent != null) {
-			if (integratorConsent.isConsentToAll()) consentText = "Consented to all";
-			else if (integratorConsent.isConsentToNone()) consentText = "Consented to none";
-			else consentText = "Consented to some";
-		}
-		request.getSession().setAttribute("integratorConsent", consentText);
 		request.getSession().setAttribute("allowQuickConsent", facility.isAllowQuickConsent());
 
 		return mapping.findForward("edit");
