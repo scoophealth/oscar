@@ -34,6 +34,7 @@ public class ReportFactory {
     public static final String SQL_TYPE = "sql";
     public static final String UnusedMinutes = "unusedminutes";
     public static final String ThirdAppt = "thirdAppt";
+    public static final String INR = "inr";
     
     /** Creates a new instance of ReportFactory */
     public ReportFactory() {
@@ -49,6 +50,9 @@ public class ReportFactory {
         }
         else if( type.equalsIgnoreCase(ThirdAppt) ) {
             return new ThirdApptTimeReporter();
+        }
+        else if( type.equalsIgnoreCase(INR) ) {
+            return new INRReporter();
         }
         else
             return null;
