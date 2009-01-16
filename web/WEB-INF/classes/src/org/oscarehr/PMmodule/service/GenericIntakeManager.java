@@ -145,10 +145,10 @@ public class GenericIntakeManager {
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentQuickIntake(java.lang.Integer)
 	 */
 	public Intake getMostRecentQuickIntakeByFacility(Integer clientId, Integer facilityId) {
-		IntakeNode regIntakeNode = getQuickIntakeNode();
+		IntakeNode regIntakeNode = getQuickIntakeNode();		
 		Intake intake = genericIntakeDAO.getLatestIntakeByFacility(regIntakeNode, clientId, null, facilityId);
 		
-		if(intake == null) {
+		if(intake == null && regIntakeNode.getLabel() != null) {
 			/*search old registration intakes in proper order to make sure we return
 			the latest one*/
 			List<IntakeNode> previousIntakeNodes = genericIntakeNodeDAO.getPublishedIntakeNodesByName(regIntakeNode.getLabel().getLabel());
