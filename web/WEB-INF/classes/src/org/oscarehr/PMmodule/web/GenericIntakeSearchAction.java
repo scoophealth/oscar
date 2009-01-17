@@ -19,6 +19,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 
+import com.quatro.model.LookupCodeValue;
 import com.quatro.service.LookupManager;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
@@ -78,7 +80,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     @Override
     protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
+        request.setAttribute("genders", getGenders());
         return mapping.findForward(FORWARD_SEARCH_FORM);
     }
 
@@ -127,7 +129,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         intakeSearchBean.setLocalMatches(localMatches);
 
         intakeSearchBean.setSearchPerformed(true);
-        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
+        request.setAttribute("genders", getGenders());
         
         if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
             createRemoteList(request, intakeSearchBean, currentFacilityId);
@@ -269,7 +271,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         
         addDestinationProgramId(request, parameters);
         
-        request.setAttribute("genders", lookupManager.LoadCodeList("GEN", true, null, null));
+        request.setAttribute("genders", getGenders());
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
@@ -319,4 +321,21 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
 
+    public static List<LookupCodeValue> getGenders() {
+    	List<LookupCodeValue> genders = new ArrayList<LookupCodeValue>();
+    	LookupCodeValue lv1 = new LookupCodeValue();
+    	lv1.setCode("M");
+    	lv1.setDescription("Male");
+    	genders.add(lv1);
+    	LookupCodeValue lv2 = new LookupCodeValue();
+    	lv2.setCode("F");
+    	lv2.setDescription("Female");
+    	genders.add(lv2);
+    	LookupCodeValue lv3 = new LookupCodeValue();
+    	lv3.setCode("T");
+    	lv3.setDescription("Transgender");
+    	genders.add(lv3);
+    	
+    	return genders;
+    }
 }

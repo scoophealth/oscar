@@ -97,7 +97,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-		List genders = lookupManager.LoadCodeList("GEN", true, null, null);
+		List genders = GenericIntakeSearchAction.getGenders();
 		formBean.setGenders(genders);
 		// end of change
 
@@ -136,7 +136,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-		List genders = lookupManager.LoadCodeList("GEN", true, null, null);
+		List genders = GenericIntakeSearchAction.getGenders();
 		formBean.setGenders(genders);
 		// end of change
 
