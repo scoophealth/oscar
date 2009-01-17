@@ -90,7 +90,11 @@ public class GenericIntakeManager {
 		if(intake != null) {
 			return copyIntakeWithId(latestInode, clientId, null, staffId, facilityId);
 		} else {
-			List<IntakeNode> previousIntakeNodes = genericIntakeNodeDAO.getPublishedIntakeNodesByName(this.getQuickIntakeNode().getLabel().getLabel());
+			IntakeNode qin = this.getQuickIntakeNode();
+			if(qin.getLabel() == null) {
+				return null;
+			}
+			List<IntakeNode> previousIntakeNodes = genericIntakeNodeDAO.getPublishedIntakeNodesByName(qin.getLabel().getLabel());
 			for(IntakeNode in:previousIntakeNodes) {
 				intake = genericIntakeDAO.getLatestIntakeByFacility(in, clientId, null, facilityId);
 				if(intake!=null)
