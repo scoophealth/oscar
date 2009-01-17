@@ -335,6 +335,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     	lv3.setCode("T");
     	lv3.setDescription("Transgender");
     	genders.add(lv3);
+    	LookupCodeValue lv4 = new LookupCodeValue();
+    	lv4.setCode("O");
+    	lv4.setDescription("Other");
+    	genders.add(lv4);
     	
     	return genders;
     }
