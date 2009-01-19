@@ -58,6 +58,27 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
 
+	private static final List<LookupCodeValue> genders = new ArrayList<LookupCodeValue>();
+
+	static {
+    	LookupCodeValue lv1 = new LookupCodeValue();
+    	lv1.setCode("M");
+    	lv1.setDescription("Male");
+    	genders.add(lv1);
+    	LookupCodeValue lv2 = new LookupCodeValue();
+    	lv2.setCode("F");
+    	lv2.setDescription("Female");
+    	genders.add(lv2);
+    	LookupCodeValue lv3 = new LookupCodeValue();
+    	lv3.setCode("T");
+    	lv3.setDescription("Transgender");
+    	genders.add(lv3);
+    	LookupCodeValue lv4 = new LookupCodeValue();
+    	lv4.setCode("O");
+    	lv4.setDescription("Other");
+    	genders.add(lv4);
+	}
+
     // Forwards
     private static final String FORWARD_SEARCH_FORM = "searchForm";
     private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
@@ -322,24 +343,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     public static List<LookupCodeValue> getGenders() {
-    	List<LookupCodeValue> genders = new ArrayList<LookupCodeValue>();
-    	LookupCodeValue lv1 = new LookupCodeValue();
-    	lv1.setCode("M");
-    	lv1.setDescription("Male");
-    	genders.add(lv1);
-    	LookupCodeValue lv2 = new LookupCodeValue();
-    	lv2.setCode("F");
-    	lv2.setDescription("Female");
-    	genders.add(lv2);
-    	LookupCodeValue lv3 = new LookupCodeValue();
-    	lv3.setCode("T");
-    	lv3.setDescription("Transgender");
-    	genders.add(lv3);
-    	LookupCodeValue lv4 = new LookupCodeValue();
-    	lv4.setCode("O");
-    	lv4.setDescription("Other");
-    	genders.add(lv4);
-    	
     	return genders;
     }
 }
