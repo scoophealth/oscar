@@ -24,21 +24,22 @@ public class IntegratorConsent {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Integer id=null;
 	/** This is the facility which is creating this record, i.e. the facility of the provider making this change. */
-	private int facilityId;
-	private int demographicId;
+	private int facilityId=-1;
+	private int demographicId=-1;
 	private String providerNo = null;
 	private Date createdDate = new Date();
 
 	/** This is the facilityId on the integrator - for which these consents apply. */
 	private Integer integratorFacilityId = null;
-	private boolean restrictConsentToHic = false;
 
+	private boolean consentToHealthNumberRegistry = false;
+	
+	private boolean restrictConsentToHic = false;
 	private boolean consentToSearches = false;
 	private boolean consentToBasicPersonalData = false;
 	private boolean consentToMentalHealthData = false;
-	private boolean consentToHealthNumberRegistry = false;
 
 	private String formVersion=null;
 	private String printedFormLocation = null;

@@ -52,6 +52,7 @@ import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.client.ConsentParameters;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
@@ -279,6 +280,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			try {
 				pushDemographic(facility, service, demographicId);
+				// yikes, we have a privacy leak here. If the service crashes while uploading the consent, the demographic information is already sent. Oh well, we'll have to address this later, possibly by making this transactional ws calls.  
+				pushDemographicConsent(facility, service, demographicId);
 				pushDemographicIssues(facility, service, demographicId);
 				pushDemographicImages(facility, service, demographicId);
 				pushDemographicPreventions(facility, service, demographicId);
@@ -291,12 +294,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
 		CachedDemographic cachedDemographic = new CachedDemographic();
-
-		// set consent info
-//		IntegratorConsent consent = integratorConsentDao.findLatestByFacilityAndDemographic(facility.getId(), demographicId);
-//		if (consent != null) {
-//			BeanUtils.copyProperties(cachedDemographic, consent);
-//		}
 
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
@@ -320,6 +317,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// send the request
 		service.setCachedDemographic(cachedDemographic);
 	}
+
+	private void pushDemographicConsent(Facility facility, DemographicWs service, Integer demographicId) throws MalformedURLException {
+
+		// get a list of all remove facilities
+		// for each remote facility get the latest consent
+		// then send the latest consent to the integrator
+		List<CachedFacility> remoteFacilities=caisiIntegratorManager.getRemoteFacilities(facility.getId());
+		for (CachedFacility remoteFacility : remoteFacilities)
+		{
+			IntegratorConsent consent=integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), demographicId, remoteFacility.getIntegratorFacilityId());
+			if (consent!=null)
+			{
+				ConsentParameters consentParameters=new ConsentParameters();
+// need to copy over consent bits here
+				service.setCachedDemographicConsent(consentParameters);			
+			}
+		}
+    }
 
 	private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
