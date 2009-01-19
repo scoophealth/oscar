@@ -18,17 +18,28 @@
 
 <h3>Manage Consent</h3>
 
+<h4>Legend</h4>
+<div style="font-size:smaller">
+	<ul>
+		<li>Health number registry : allow the selected agency to send health number information to the health number registry</li>
+		<li>Restrict To HIC's : allows the checked permissions only if the agency is an HIC</li>
+		<li>Searches : allows the selected agency to see this client in searches</li>
+		<li>Basic personal data : allow the selected agency to send person data to other agencies</li>
+		<li>Mental health data : allow the selected agency to send mental health data to other agencies</li>
+	</ul>
+</div>
+
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
 	<table class="genericTable">
 		<tr>
 			<td class="genericTableHeader"></td>
-			<td class="genericTableHeader" style="text-align:center">Restrict<br/>To HICs</td>
-			<td class="genericTableHeader" style="text-align:center">Allow<br />Searches</td>
-			<td class="genericTableHeader" style="text-align:center">Allow<br />Basic Personal Data</td>
-			<td class="genericTableHeader" style="text-align:center">Allow<br />Mental Health Data</td>
-			<td class="genericTableHeader" style="text-align:center">Allow<br />Health Number Registry</td>
+			<td class="genericTableHeader" style="text-align:center">Allow sending to<br />health number registry</td>
+			<td class="genericTableHeader" style="text-align:center">Restrict<br/>to HICs</td>
+			<td class="genericTableHeader" style="text-align:center">Allow retrieving<br />for searches</td>
+			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />basic personal data</td>
+			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />mental health data</td>
 		</tr>
 		<%
 			for (CachedFacility cachedFacility : manageConsent.getAllRemoteFacilities())
@@ -37,11 +48,11 @@
 				%>
 					<tr>
 						<td class="genericTableHeader"><%=cachedFacility.getName()%></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hnr" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.personal" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"personal")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.mental" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"mental")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hnr" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>
 					</tr>
 				<%
 			}
