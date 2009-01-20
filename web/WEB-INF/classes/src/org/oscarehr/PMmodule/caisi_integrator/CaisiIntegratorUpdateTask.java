@@ -263,14 +263,28 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-
-			pushDemographic(facility, service, demographicId);
-			// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
-			pushDemographicConsent(facility, service, demographicId);
-			pushDemographicIssues(facility, service, demographicId);
-			pushDemographicImages(facility, service, demographicId);
-			pushDemographicPreventions(facility, service, demographicId);
-			pushDemographicNotes(facility, service, demographicId);
+			
+			try 
+			{
+				pushDemographic(facility, service, demographicId);
+				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
+				pushDemographicConsent(facility, service, demographicId);
+				pushDemographicIssues(facility, service, demographicId);
+				pushDemographicImages(facility, service, demographicId);
+				pushDemographicPreventions(facility, service, demographicId);
+				pushDemographicNotes(facility, service, demographicId);
+			} 
+			catch(IllegalArgumentException iae)
+			{
+				// continue processing demographics if date values in current demographic are bad
+				// all other errors thrown by the above methods should indicate a failure in the service 
+				// connection at large -- continuing to process not possible
+				// need some way of notification here.
+				logger.error("Error updating demographic, continuing with Demographic batch", iae);
+			}
+			catch (Exception e) {
+				logger.error("Unexpected error.", e);
+			}
 		}
 	}
 
