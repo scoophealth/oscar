@@ -21,7 +21,7 @@ public class ManageConsentAction {
 
 	private HashMap<Integer,IntegratorConsent> consents=new HashMap<Integer,IntegratorConsent>();
 	
-	public ManageConsentAction(Facility facility, Provider provider, int clientId) throws MalformedURLException
+	public ManageConsentAction(Facility facility, Provider provider, Integer clientId) throws MalformedURLException
 	{
 		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(facility.getId()))
 		{

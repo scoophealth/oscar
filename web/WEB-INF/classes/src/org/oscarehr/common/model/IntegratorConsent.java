@@ -26,8 +26,8 @@ public class IntegratorConsent {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id=null;
 	/** This is the facility which is creating this record, i.e. the facility of the provider making this change. */
-	private int facilityId=-1;
-	private int demographicId=-1;
+	private Integer facilityId=-1;
+	private Integer demographicId=-1;
 	private String providerNo = null;
 	private Date createdDate = new Date();
 
@@ -45,19 +45,19 @@ public class IntegratorConsent {
 	private String printedFormLocation = null;
 	private boolean refusedToSign = false;
 
-	public int getFacilityId() {
+	public Integer getFacilityId() {
 		return facilityId;
 	}
 
-	public void setFacilityId(int facilityId) {
+	public void setFacilityId(Integer facilityId) {
 		this.facilityId = facilityId;
 	}
 
-	public int getDemographicId() {
+	public Integer getDemographicId() {
 		return demographicId;
 	}
 
-	public void setDemographicId(int demographicId) {
+	public void setDemographicId(Integer demographicId) {
 		this.demographicId = demographicId;
 	}
 

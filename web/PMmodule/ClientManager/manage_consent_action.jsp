@@ -8,7 +8,7 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
-	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
+	Integer currentDemographicId=new Integer(request.getParameter("demographicId"));
 	Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 	Provider provider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 
