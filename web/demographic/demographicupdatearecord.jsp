@@ -1,5 +1,5 @@
 <%@ page
-	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*"
+	import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*, oscar.log.*"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -398,6 +398,9 @@
 --%> <%  
     //response.sendRedirect("demographiccontrol.jsp?demographic_no=" + request.getParameter("demographic_no") + "&displaymode=edit&dboperation=search_detail");
     //response.sendRedirect("search.jsp");
+    String ip = request.getRemoteAddr();
+    String user = (String)session.getAttribute("user");
+    LogAction.addALog(user,LogConst.UPDATE,LogConst.CON_DEMOGRAPHIC,request.getParameter("demographic_no"),ip);
   } else {
 %>
 <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>
