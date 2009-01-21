@@ -52,13 +52,7 @@
 		UPDATE demographic RECORD</font></th>
 	</tr>
 </table>
-<%
-  //check to see if new case management is request
-ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
-boolean newCaseManagement = false;
-
-if( users != null && users.size() > 0 )
-    newCaseManagement = true; 
+<%  
 
   ResultSet rs = null;
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
@@ -252,24 +246,7 @@ if( users != null && users.size() > 0 )
     }
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
-      //propagate demographic to caisi admission table
-      if( newCaseManagement ) {
-        oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
-        String progId = program.getProgram(request.getParameter("provider_no"));
-        if( progId.equals("0") ) {                
-            ResultSet rsProg = apptMainBean.queryResults("OSCAR", "search_program");
-            if( rsProg.next() )
-                progId = rsProg.getString("id");
-
-            rsProg.close();
-        }
-        String[] caisiParam = new String[3];
-        caisiParam[0] = request.getParameter("provider_no");
-        caisiParam[1] = progId;
-        caisiParam[2] = request.getParameter("demographic_no");
-        apptMainBean.queryExecuteUpdate(caisiParam, "update_admission");
-      }
+  if (rowsAffected ==1) {      
     //find the democust record for update
     try{  
     DemographicNameAgeString nameAgeString  = DemographicNameAgeString.getInstance();
