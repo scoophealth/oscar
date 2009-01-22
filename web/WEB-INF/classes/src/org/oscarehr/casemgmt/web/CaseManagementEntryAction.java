@@ -51,8 +51,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -62,9 +60,11 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 
+import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -73,6 +73,7 @@ import oscar.util.UtilDateUtilities;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
+ * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
  */
 public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
@@ -641,9 +642,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             cpp.setDemographic_no(demo);
         }
 
-        String caisiLoaded = (String) request.getSession().getAttribute("caisiLoaded");
-        boolean inCaisi = false;
-        if (caisiLoaded != null && caisiLoaded.equalsIgnoreCase("true")) inCaisi = true;
+        boolean inCaisi = OscarProperties.getInstance().isCaisiLoaded();
 
         String lastSavedNoteString = (String) request.getSession().getAttribute("lastSavedNoteString");
 
@@ -652,11 +651,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
 
-	//bug fix - encounter type was not being updated.
+        //bug fix - encounter type was not being updated.
         String encounterType = request.getParameter("caseNote.encounter_type");
-	if(encounterType != null) {
+        if (encounterType != null) {
 	        note.setEncounter_type(encounterType);
-	}
+        }
 
         String sign = (String) request.getParameter("sign");
         String includeIssue = (String) request.getParameter("includeIssue");
@@ -1583,8 +1582,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         cform.setIssueCheckList(caseIssueList);
         sessionFrm.setIssueCheckList(caseIssueList);
         
-        String inCaisi = (String) request.getSession().getAttribute("caisiLoaded");
-        if (inCaisi != null && inCaisi.equalsIgnoreCase("true") && iss != null) {
+        if (OscarProperties.getInstance().isCaisiLoaded() && iss != null) {
             // reset current concern in CPP
             // updateIssueToConcern(cform);
             caseManagementMgr.removeIssueFromCPP(demono, iss);
@@ -1632,8 +1630,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         iss.add(oldList[ind.intValue()].getIssue());
         caseManagementMgr.saveAndUpdateCaseIssues(iss);
 
-        String inCaisi = (String) request.getSession().getAttribute("caisiLoaded");
-        if (inCaisi != null && inCaisi.equalsIgnoreCase("true")) {
+        if (OscarProperties.getInstance().isCaisiLoaded()) {
             String providerNo = this.getProviderNo(request);
 
             // get access right

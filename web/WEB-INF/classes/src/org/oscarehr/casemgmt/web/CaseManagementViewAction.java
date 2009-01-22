@@ -62,8 +62,12 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.SessionConstants;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
+/*
+ * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
+ */
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
@@ -237,9 +241,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("teamName", teamName);
 
-		String caisiLoaded = (String) request.getSession().getAttribute("caisiLoaded");
-
-		if (caisiLoaded != null && caisiLoaded.equalsIgnoreCase("true")) {
+		if (OscarProperties.getInstance().isCaisiLoaded()) {
 
 			log.debug("Get program providers");
 			List teamMembers = new ArrayList();

@@ -27,26 +27,34 @@ package oscar;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Properties;
-
-//import com.ibm.io.file.exception.FileNotFoundException;
+import java.util.Set;
 
 /*
- * This class is an interface with the file WEB-INF/classes
- * It is a singleton class. Do not instaciate it, use the method getInstance().
- * Every time that the properties file changes, tomcat must be restarted.
+ * Updated by Eugene Petruhin on 21 jan 2009 while fixing missing "New Note" link
+ * New isPropertyActive() function is introduced and everybody is encouraged to use it
+ */
+/**
+ * This class will hold OSCAR & CAISI properties.
+ * It is a singleton class. Do not instantiate it, use the method getInstance().
+ * Every time the properties file changes, tomcat must be restarted.
  */
 public class OscarProperties extends Properties {
 
-	public static void readFromFile(String url, Properties p) throws IOException {
-		InputStream is = OscarProperties.class.getResourceAsStream(url);
-		if (is == null) is = new FileInputStream(url);
+	private static final long serialVersionUID = -5965807410049845132L;
+	private static OscarProperties oscarProperties = new OscarProperties();
+	private static boolean loaded = false;
+	private static final Set<String> activeMarkers = new HashSet<String>(Arrays.asList(new String[] {"true", "yes", "on"}));
 
+	static {
 		try {
-			p.load(is);
-		} finally {
-			is.close();
+			readFromFile("/oscar_mcmaster.properties", oscarProperties);
+		} catch (IOException e) {
+			// don't use a logger here or your asking for trouble, it's a static initialiser
+			e.printStackTrace();
 		}
 	}
 
@@ -57,17 +65,16 @@ public class OscarProperties extends Properties {
 		return oscarProperties;
 	}
 
-	static OscarProperties oscarProperties = new OscarProperties();
-	static {
+	private static void readFromFile(String url, Properties p) throws IOException {
+		InputStream is = OscarProperties.class.getResourceAsStream(url);
+		if (is == null) is = new FileInputStream(url);
+
 		try {
-			readFromFile("/oscar_mcmaster.properties", oscarProperties);
-		} catch (IOException e) {
-			// don't use a logger here or your asking for trouble, it's a static initialiser
-			e.printStackTrace();
+			p.load(is);
+		} finally {
+			is.close();
 		}
 	}
-
-	static boolean loaded = false;
 
 	/* If cant find the file, inform and continue */
 	/*
@@ -78,13 +85,17 @@ public class OscarProperties extends Properties {
 	 * 
 	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); e.printStackTrace(); } } //OscarProperties - end
 	 */
+
 	/* Do not use this constructor. Use getInstance instead */
 	private OscarProperties() {
 		System.out.println("OSCAR PROPS CONSTRUCTOR");
 	}
 
 	/**
-	 * Will check the properties to see if that property is set and if its set to the value. If it is method returns true if not method returns false
+	 * Will check the properties to see if that property is set and if it's set to the given value.
+	 * If it is method returns true if not method returns false.
+	 * 
+	 * This method was improved to ensure positive response on any "true", "yes" or "on" property value.
 	 * 
 	 * @param key
 	 *            key of property
@@ -93,12 +104,25 @@ public class OscarProperties extends Properties {
 	 * @return boolean
 	 */
 	public boolean getBooleanProperty(String key, String val) {
-		boolean prop = false;
-		String propertyValue = getProperty(key);
-		if (propertyValue != null && propertyValue.equalsIgnoreCase(val)) {
-			prop = true;
+		// if we're checking for positive value, any "active" one will do
+		if (val != null && activeMarkers.contains(val.toLowerCase())) {
+			return isPropertyActive(key);
 		}
-		return prop;
+
+		return getProperty(key, "").equalsIgnoreCase(val);
+	}
+
+	/**
+	 * Will check the properties to see if that property is set and if it's set to "true", "yes" or "on" value.
+	 * If it is method returns true if not method returns false.
+	 * 
+	 * @param key
+	 *            key of property
+	 * @return boolean
+	 *            whether the property is active
+	 */
+	public boolean isPropertyActive(String key) {
+		return activeMarkers.contains(getProperty(key, "").toLowerCase());
 	}
 
 	public void loader(InputStream propertyStream) {
@@ -126,53 +150,61 @@ public class OscarProperties extends Properties {
 		}
 	}
 
-	/**
-	 * Comma delimited spring configuration modules Options: Caisi,Indivo Caisi - Required to run the Caisi Shelter Management System Indivo - Indivo PHR record. Required for integration with Indivo.
+	/*
+	 * Comma delimited spring configuration modules
+	 * Options:  Caisi,Indivo
+	 * Caisi  - Required to run the Caisi Shelter Management System
+	 * Indivo - Indivo PHR record. Required for integration with Indivo.
 	 */
-	public final String ModuleNames = "ModuleNames";
 
-	public Date getStartTime() {
-		String str = getProperty("OSCAR_START_TIME");
+	/*
+	 * not being used - commenting out
+	public final String ModuleNames = "ModuleNames";
+	*/  
+
+	public Date getStartTime(){
+		String str  = getProperty("OSCAR_START_TIME");
 		Date ret = null;
 		try {
 			ret = new Date(Long.parseLong(str));
-		} catch (Exception e) {/* No Date Found */
-		}
+		} catch (Exception e){/*No Date Found*/}
 		return ret;
 	}
 
 	public boolean isTorontoRFQ() {
-		return getBooleanProperty("TORONTO_RFQ", "yes") || getBooleanProperty("TORONTO_RFQ", "true");
+		return isPropertyActive("TORONTO_RFQ");
 	}
-
-	public boolean isProviderNoAuto() {
-		return getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "yes") || getBooleanProperty("AUTO_GENERATE_PROVIDER_NO", "true");
-	}
-
-	public boolean isSiteSecured() {
-		return getBooleanProperty("security_site_control", "yes") || getBooleanProperty("security_site_control", "true");
+     
+    public boolean isProviderNoAuto() {
+		return isPropertyActive("AUTO_GENERATE_PROVIDER_NO");
 	}
 
 	public boolean isPINEncripted() {
-		return getBooleanProperty("IS_PIN_ENCRYPTED", "yes") || getBooleanProperty("IS_PIN_ENCRYPTED", "true");
+		return isPropertyActive("IS_PIN_ENCRYPTED");
+	}
+
+	public boolean isSiteSecured() {
+		return isPropertyActive("security_site_control");
 	}
 
 	public boolean isAdminOptionOn() {
-		return getBooleanProperty("with_admin_option", "yes") || getBooleanProperty("with_admin_option", "true");
+		return isPropertyActive("with_admin_option");
 	}
 
 	public boolean isLogAccessClient() {
-		return getBooleanProperty("log_accesses_of_client", "yes") || getBooleanProperty("log_accesses_of_client", "true");
+		return isPropertyActive("log_accesses_of_client");
 	}
 
 	public boolean isLogAccessProgram() {
-		return getBooleanProperty("log_accesses_of_program", "yes") || getBooleanProperty("log_accesses_of_program", "true");
+		return isPropertyActive("log_accesses_of_program");
 	}
 
 	public boolean isAccountLockingEnabled() {
-		String val = getProperty("ENABLE_ACCOUNT_LOCKING");
-		if (val == null) return false;
-		return val.toUpperCase().startsWith("Y") || val.toUpperCase().startsWith("T");
+		return isPropertyActive("ENABLE_ACCOUNT_LOCKING");
+	}
+
+	public boolean isCaisiLoaded() {
+		return isPropertyActive("caisi");
 	}
 
 	public String getDbType() {
