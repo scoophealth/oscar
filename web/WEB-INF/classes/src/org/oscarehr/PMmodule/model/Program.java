@@ -39,8 +39,8 @@ public class Program implements Serializable {
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
     
-	public static final String PROGRAM_STATUS_ACTIVE = "1";
-	public static final String PROGRAM_STATUS_INACTIVE = "0";
+	public static final String PROGRAM_STATUS_ACTIVE = "active";
+	public static final String PROGRAM_STATUS_INACTIVE = "inactive";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
 
@@ -476,13 +476,6 @@ public class Program implements Serializable {
 
     public String getProgramStatus() {
         return programStatus;
-    }
-
-    public String getProgramStatusTxt() {
-        if(programStatus.equals("1"))
-    	  return "Active";
-        else
-      	  return "Inactive";
     }
 
     /**

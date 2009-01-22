@@ -239,7 +239,7 @@ public class ProgramManagerViewAction extends BaseAction {
             List<Program> batchAdmissionPrograms = new ArrayList<Program>();
 
             for (Program bedProgram : programManager.getBedPrograms()) {
-                if (bedProgram.isAllowBatchAdmission() && bedProgram.getProgramStatusTxt().equalsIgnoreCase("active")) {
+                if (bedProgram.isAllowBatchAdmission() && bedProgram.isActive()) {
                     batchAdmissionPrograms.add(bedProgram);
                 }
             }
@@ -249,7 +249,7 @@ public class ProgramManagerViewAction extends BaseAction {
             servicePrograms = programManager.getServicePrograms();
             for (Object serviceProgram1 : servicePrograms) {
                 Program sp = (Program) serviceProgram1;
-                if (sp.isAllowBatchAdmission() && sp.getProgramStatus().equals("active")) {
+                if (sp.isAllowBatchAdmission() && sp.isActive()) {
                     batchAdmissionServicePrograms.add(sp);
                 }
             }

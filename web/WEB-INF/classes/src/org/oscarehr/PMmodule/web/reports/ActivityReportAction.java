@@ -97,7 +97,7 @@ public class ActivityReportAction extends DispatchAction {
 			Program p = (Program)iter.next();
 			
 			//Don't report inactive program
-			if("inactive".equalsIgnoreCase(p.getProgramStatusTxt())) {
+			if(!p.isActive()) {
 				continue;
 			}
 			searchBean.setProgramId(p.getId());
