@@ -239,7 +239,7 @@ public class ProgramManagerViewAction extends BaseAction {
             List<Program> batchAdmissionPrograms = new ArrayList<Program>();
 
             for (Program bedProgram : programManager.getBedPrograms()) {
-                if (bedProgram.isAllowBatchAdmission() && bedProgram.getProgramStatus().equals("active")) {
+                if (bedProgram.isAllowBatchAdmission() && bedProgram.getProgramStatusTxt().equalsIgnoreCase("active")) {
                     batchAdmissionPrograms.add(bedProgram);
                 }
             }

@@ -107,7 +107,7 @@ public class InfirmBedProgramManager {
                 
                 if (facilityId!=null && program.getFacilityId()!=facilityId.intValue()) continue;
                 
-                if (program.getProgramStatus() != null && program.getProgramStatus().equals("active")) pList.add(new LabelValueBean(program.getName(), program.getId().toString()));
+                if (program.getProgramStatusTxt() != null && program.getProgramStatusTxt().equalsIgnoreCase("active")) pList.add(new LabelValueBean(program.getName(), program.getId().toString()));
             }
         }
         return pList;

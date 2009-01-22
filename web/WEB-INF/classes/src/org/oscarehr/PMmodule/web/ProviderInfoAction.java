@@ -74,7 +74,7 @@ public class ProviderInfoAction extends BaseAction {
         for (ProgramProvider programProvider : providerManager.getProgramDomainByFacility(providerNo, new Integer(facilityId1))) {
             Program program = programManager.getProgram(programProvider.getProgramId());
 
-            if (program.getProgramStatus().equals("active")) {
+            if (program.getProgramStatusTxt().equalsIgnoreCase("active")) {
                 programProvider.setProgram(program);
                 programDomain.add(programProvider);
             }
