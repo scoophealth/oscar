@@ -400,7 +400,7 @@
             ArrayList privatedocs = new ArrayList();
             Integer currentFacilityId = (Integer) session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             String viewstatus = "active";
-            privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus. currentFacilityId);
+            privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus, currentFacilityId);
 
             categories.add(privatedocs);
             categoryKeys.add(moduleName + "'s Private Documents");
@@ -500,9 +500,13 @@
 
 						<script type="text/javascript">       <%-- testDemocomp2.jsp    --%>
     new Ajax.Autocompleter("autocompletedemo<%=curdoc.getDocId()%>", "autocomplete_choices<%=curdoc.getDocId()%>", "../demographic/SearchDemographic.do", {minChars: 3, afterUpdateElement: saveDemoId});
-</script></td>
-					</tr>
-					<%--
+
+</script>
+                                                          
+                                                          </td>
+                                                      </tr>
+                                                      
+
                                                       <tr>
                                                           <td valign="top">Flag Provider: </td>
                                                           <td> 
@@ -515,35 +519,28 @@
                                                           <div id="providerList"></div>
                                                           </td>
                                                       </tr>
-                                                      --%>
 
-					<tr>
-						<td><bean:message key="dms.documentReport.msgCreator" />:</td>
-						<td><%=curdoc.getCreatorName()%></td>
-					</tr>
+                                                                                                                
+                                            
+                                                      <tr>
+                                                          <td><bean:message key="dms.documentReport.msgCreator"/>:</td>
+                                                          <td><%=curdoc.getCreatorName()%></td>
+                                                      </tr>
+                                                        
+                                                      <tr>
+                                                          <td colspan="2" align="right"><input tabindex="<%=tabindex++ %>" type="submit" name="save" value="Save" /></td>
+                                                      </tr>   
+                                                  </table>
 
-					<tr>
-						<td colspan="2" align="right"><input
-							tabindex="<%=tabindex++ %>" type="submit" name="save"
-							value="Save" /></td>
-					</tr>
-				</table>
+                                                </form>
+                                            </fieldset>      
+                                      
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    </div>
+                                    <%}
 
-				</form>
-				</fieldset>
-
-
-
-
-
-
-
-
-				</td>
-			</tr>
-		</table>
-		</div>
-		<%}
                                     if (category.size() == 0) {%>
 		<table>
 			<tr>
