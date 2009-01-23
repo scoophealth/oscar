@@ -144,7 +144,7 @@
 
 	<tr>
 		<td><input type="checkbox" name="consent" value="HIC_ALL"
-			<%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%> />I,
+			<%=integratorConsent.isConsentToAllButRestrictToHic()?"checked=\"checked\"":""%> />I,
 		<b><%=currentDemographic.getFormattedName()%></b>, do not permit any
 		non-health providing programs to record, send and use my personal
 		information for the purposes above.</td>
