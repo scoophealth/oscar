@@ -832,6 +832,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
     thisForm.setLastRefillDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
+    if (thisForm.getLastRefillDate().isEmpty()) thisForm.setLastRefillDate("yyyy-mm-dd");
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
     thisForm.setSpecial(rx.getSpecial());
@@ -1224,7 +1225,7 @@ int i;
 				    &nbsp;
                                     No Subs:<html:checkbox property="nosubs" onchange="javascript:writeScriptDisplay();" />
 				    &nbsp;
-				    Last Refill Date:<html:text property="lastRefillDate" />
+				    Last Refill Date:<html:text property="lastRefillDate" onfocus="javascript:lastRefillDate.value='';" />
                                 </td>
                             </tr>
 			    <tr>
