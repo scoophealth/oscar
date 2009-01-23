@@ -268,9 +268,10 @@
 
             Hashtable h = new Hashtable();
             EctMeasurementTypesBean mtypeBean = mFlowsheet.getMeasurementInfo(measure);
-
-            h.put("name",mtypeBean.getTypeDisplayName());
-            h.put("desc",mtypeBean.getTypeDesc());
+			if(mtypeBean!=null) {
+	            h.put("name",mtypeBean.getTypeDisplayName());
+	            h.put("desc",mtypeBean.getTypeDesc());
+			}
             String prevName = (String) h.get("name");
             //Collection aalist = mi.getMeasurementData(measure);
             ArrayList alist = mi.getMeasurementData(measure);
