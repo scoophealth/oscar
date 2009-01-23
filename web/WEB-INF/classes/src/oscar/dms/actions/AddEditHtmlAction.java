@@ -120,6 +120,6 @@ public class AddEditHtmlAction extends Action {
     }
     
     private boolean filled(String s) {
-	return (s!=null && s.trim().length()>0);
+	return (s!=null && s.trim().length()>0));
     }
 }
