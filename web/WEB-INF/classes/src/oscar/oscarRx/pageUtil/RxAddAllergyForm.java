@@ -37,7 +37,7 @@ public final class RxAddAllergyForm extends ActionForm {
     String reactionDescription = null;
     String name =null;
     String type = null;
-    
+    String startDate = null;
     String ageOfOnset = null;
     String severityOfReaction = null;
     String onSetOfReaction = null;
@@ -93,6 +93,14 @@ public final class RxAddAllergyForm extends ActionForm {
 
         return errors;
 
+    }
+    
+    public String getStartDate() {
+	return startDate;
+    }
+    
+    public void setStartDate(String startDate) {
+	this.startDate = startDate;
     }
     
         /**

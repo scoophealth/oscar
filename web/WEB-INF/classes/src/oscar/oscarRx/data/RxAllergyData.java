@@ -47,6 +47,7 @@ public class RxAllergyData {
         int AGCCS;
         int TYPECODE;
         String reaction;
+	java.util.Date startDate = null;
         String ageOfOnset = null;
         String severityOfReaction = null;
         String onSetOfReaction = null;
@@ -187,6 +188,15 @@ public class RxAllergyData {
             return s;
         }
         
+	
+	public java.util.Date getStartDate() {
+	    return startDate;
+	}
+	
+	public void setStartDate(java.util.Date startDate) {
+	    this.startDate = startDate;
+	}
+	
         /**
          * Getter for property ageOfOnset.
          * @return Value of property ageOfOnset.
@@ -194,15 +204,7 @@ public class RxAllergyData {
         public java.lang.String getAgeOfOnset() {
            return ageOfOnset;
         }
-        
-        
-   
-    
-   
-                        
-       
-        
-        
+	
         /**
          * Setter for property ageOfOnset.
          * @param ageOfOnset New value of property ageOfOnset.

@@ -35,7 +35,8 @@ public final class RxAddReactionForm extends ActionForm {
 
 
    String reactionDescription = null;
-   String name =null;           
+   String name = null;
+   java.util.Date startDate = null;
    String ageOfOnset = null;
    String severityOfReaction = null;
    String onSetOfReaction = null;
@@ -85,6 +86,14 @@ public final class RxAddReactionForm extends ActionForm {
 
         return errors;
 
+    }
+    
+    public java.util.Date getStartDate() {
+	return startDate;
+    }
+    
+    public void setStartDate(java.util.Date startDate) {
+	this.startDate = startDate;
     }
     
     /**
