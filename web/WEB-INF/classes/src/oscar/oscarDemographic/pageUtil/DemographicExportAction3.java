@@ -1464,7 +1464,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     boolean filled(String s) {
-	return (s!=null && !s.trim().isEmpty());
+	return (s!=null && s.trim().length()>0);
     }
     
     String filledOrEmpty(String nullOrTextlessStr) {

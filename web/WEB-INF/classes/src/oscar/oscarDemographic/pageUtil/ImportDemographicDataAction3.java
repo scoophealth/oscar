@@ -1320,7 +1320,7 @@ public class ImportDemographicDataAction3 extends Action {
     }
     
     boolean filled(String s) {
-	return (s!=null && !s.trim().isEmpty());
+	return (s!=null && s.trim().length()>0);
     }
     
     String filledOrEmpty(String nullOrTextlessStr) {

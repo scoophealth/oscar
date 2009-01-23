@@ -95,7 +95,7 @@ public class AddEditHtmlAction extends Action {
 	String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
 	String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
 
-	if (reviewerId.isEmpty() && fm.getReviewDoc()) {
+	if (!filled(reviewerId) && fm.getReviewDoc()) {
 	    reviewerId = (String)request.getSession().getAttribute("user");
 	    reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
 	}
@@ -120,6 +120,6 @@ public class AddEditHtmlAction extends Action {
     }
     
     private boolean filled(String s) {
-	return (s!=null && !s.trim().isEmpty());
+	return (s!=null && s.trim().length()>0);
     }
 }

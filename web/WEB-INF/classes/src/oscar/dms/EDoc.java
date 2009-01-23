@@ -217,7 +217,7 @@ public class EDoc extends TagObject implements Comparable {
     public void setDocPublic(String docPublic) {
         if (docPublic.equalsIgnoreCase("checked"))
             this.docPublic = "1";
-        else if ((docPublic == null || docPublic.isEmpty())) 
+        else if ((docPublic == null || docPublic.length() == 0))) 
             this.docPublic = "0";
         else 
             this.docPublic = docPublic;

@@ -268,7 +268,7 @@ public class EDocUtil extends SqlUtilBaseS {
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
             resultDocs = documentFacilityFiltering(currentFacilityId, resultDocs);
         }
-
+	
         return resultDocs;
     }
 
@@ -281,11 +281,11 @@ public class EDocUtil extends SqlUtilBaseS {
 		"FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
         // if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
-            if ((docType == null) || (docType.equals("all")) || (docType.isEmpty())) sql = sql + " AND d.public1=1";
+            if (docType==null || docType.equals("all") || docType.length()==0) sql = sql + " AND d.public1=1";
             else sql = sql + " AND d.public1=1 AND d.doctype='" + docType + "'";
         }
         else {
-            if ((docType == null) || (docType.equals("all")) || (docType.isEmpty())) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
+            if (docType==null || docType.equals("all") || docType.length()==0) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
             else sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0 AND d.doctype='" + docType + "'";
         }
         
