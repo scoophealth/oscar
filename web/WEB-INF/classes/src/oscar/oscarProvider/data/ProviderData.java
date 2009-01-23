@@ -572,7 +572,7 @@ public class ProviderData {
     public String getNewExtProviderNo() throws SQLException {
 	String providerNo = null;
 	
-	String sql = "select max(provider_no) from provider where provider_no like 'E%'";
+	String sql = "select max(provider_no) from provider where provider_no like '-%'";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	ResultSet rs = db.GetSQL(sql);
 	if (rs.next()) providerNo = db.getString(rs,1);
@@ -581,9 +581,9 @@ public class ProviderData {
 	
 	if (providerNo!=null && !providerNo.trim().equals("")) {
 	    int lastPN = Integer.parseInt(providerNo.substring(1)) + 1;
-	    providerNo = "E" + fillUp(String.valueOf(lastPN), 5, '0');
+	    providerNo = "-" + fillUp(String.valueOf(lastPN), 5, '0');
 	} else {
-	    providerNo = "E00001";
+	    providerNo = "-00001";
 	}
 	return providerNo;
     }
