@@ -36,6 +36,7 @@ CREATE TABLE allergies (
   reaction text,
   drugref_id varchar(100) default NULL,
   archived char(1) default '0',
+  start_date date default NULL,
   age_of_onset char(4) default '0',
   severity_of_reaction char(1) default '0',
   onset_of_reaction char(1) default '0', 
@@ -546,6 +547,8 @@ CREATE TABLE document (
   contenttype varchar(60) NOT NULL default '',
   public1 int(1) NOT NULL default '0',
   observationdate date default NULL,
+  reviewer varchar(30) default '',
+  reviewdatetime datetime default NULL,
   PRIMARY KEY  (document_no)
 ) ;
 
@@ -7982,3 +7985,21 @@ CREATE TABLE `oscar_annotations` (
   PRIMARY KEY  (`id`)
 );
 
+
+CREATE TABLE `casemgmt_note_link` (
+  `id` int(10) NOT NULL auto_increment,
+  `table_name` int(6) NOT NULL,
+  `table_id` int(10) NOT NULL,
+  `note_id` int(10) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+
+CREATE TABLE `casemgmt_note_ext` (
+  `id` int(10) NOT NULL auto_increment,
+  `note_id` int(10) NOT NULL,
+  `key_val` varchar(64) NOT NULL,
+  `value` text,
+  `date_value` date,
+  PRIMARY KEY (`id`)
+);

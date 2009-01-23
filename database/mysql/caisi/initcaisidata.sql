@@ -76,15 +76,15 @@ INSERT INTO issue (code,description,role,update_date) values('CTCMM17000','Respi
 INSERT INTO issue (code,description,role,update_date) values('CTCMM18000','Counselling Support','counsellor',Now());
 INSERT INTO issue (code,description,role,update_date) values('CTCMM19000','Recovery/Healing','counsellor',Now());
 INSERT INTO issue (code,description,role,update_date) values('CTCMM20000','Wellness Program','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM21000','Medication','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM22000','Hygiene/Clothing','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM23000','Increase Community Supports','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM24000','Discharge Planning','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM25000','Re- Admission Update','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM26000','Drug Card','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM27000','Suicidal Tendencies','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM28000','Incident Report','counsellor',Now());
-insert into issue (code,description,role,update_date) values('CTCMM29000','Immigration','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM21000','Medication','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM22000','Hygiene/Clothing','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM23000','Increase Community Supports','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM24000','Discharge Planning','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM25000','Re- Admission Update','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM26000','Drug Card','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM27000','Suicidal Tendencies','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM28000','Incident Report','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date) values('CTCMM29000','Immigration','counsellor',Now());
 
 INSERT INTO issue (code,description,role,update_date) values('ICSW100','program-client conflict','CSW',Now());
 INSERT INTO issue (code,description,role,update_date) values('ICSW200','difficulties with hygeine','CSW',Now());
@@ -817,12 +817,5 @@ insert into issue (`code`,`description`,`role`,`update_date`) Values('SocHistory
 insert into issue (`code`,`description`,`role`,`update_date`) Values('MedHistory','Medical History as part of cpp', 'nurse', now());
 insert into issue (`code`,`description`,`role`,`update_date`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now());
 insert into issue (`code`,`description`,`role`,`update_date`) Values('Reminders','Reminders as part of cpp', 'nurse', now());
-
-
-
-
-
-
-
-
+insert into issue (`code`,`description`,`role`,`update_date`) Values('FamHistory','Family History as part of cpp', 'nurse', now());
 
