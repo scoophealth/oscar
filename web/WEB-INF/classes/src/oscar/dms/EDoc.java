@@ -44,6 +44,8 @@ public class EDoc extends TagObject implements Comparable {
     private String docPublic = "0";
     private String contentType = "";
     private String observationDate = "";
+    private String reviewerId = "";
+    private String reviewDateTime = null;
     private String indivoIdx = null;
     private boolean indivoRegistered = false;
     
@@ -51,7 +53,7 @@ public class EDoc extends TagObject implements Comparable {
     public EDoc() {
     }
     
-    public EDoc(String description, String type, String fileName, String html, String creatorId, char status, String observationDate, String module, String moduleId) {
+    public EDoc(String description, String type, String fileName, String html, String creatorId, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId) {
         this.setDescription(description.trim());
         this.setType(type.trim());
         this.setFileName(fileName.trim());
@@ -61,6 +63,8 @@ public class EDoc extends TagObject implements Comparable {
         this.setModule(module.trim());
         this.setModuleId(moduleId.trim());
         this.setObservationDate(observationDate);
+	this.setReviewerId(reviewerId);
+	this.setReviewDateTime(reviewDateTime);
         preliminaryProcessing();
     }
     
@@ -213,7 +217,7 @@ public class EDoc extends TagObject implements Comparable {
     public void setDocPublic(String docPublic) {
         if (docPublic.equalsIgnoreCase("checked"))
             this.docPublic = "1";
-        else if ((docPublic == null || docPublic.equals(""))) 
+        else if ((docPublic == null || docPublic.isEmpty())) 
             this.docPublic = "0";
         else 
             this.docPublic = docPublic;
@@ -274,5 +278,19 @@ public class EDoc extends TagObject implements Comparable {
         this.dateTimeStampAsDate = dateTimeStampAsDate;
     }
     
+    public String getReviewerId() {
+	return reviewerId;
+    }
     
+    public void setReviewerId(String reviewerId) {
+	this.reviewerId = reviewerId;
+    }
+    
+    public String getReviewDateTime() {
+	return reviewDateTime;
+    }
+    
+    public void setReviewDateTime(String reviewDateTime) {
+	this.reviewDateTime = reviewDateTime;
+    }
 }
