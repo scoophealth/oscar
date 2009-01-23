@@ -594,7 +594,7 @@ public class ImportDemographicDataAction2 extends Action {
 			    appendLine(errorImport,"Note: Allergies Severity [No Reaction] imported as [Mild] ("+(i+1)+")");
 			}
 		    }
-		    boolean b = new RxAllergyImport().Save(demoNo, entryDate, description, typeCode, reaction, ""/*startDate*/, severity, drugrefId);
+		    Long allergyId = new RxAllergyImport().Save(demoNo, entryDate, description, typeCode, reaction, ""/*startDate*/, severity, drugrefId);
 		}
 		
 		
