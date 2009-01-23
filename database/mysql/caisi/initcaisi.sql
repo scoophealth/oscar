@@ -2344,7 +2344,7 @@ create table app_lookuptable
 create table app_lookuptable_fields
 (
   tableid     VARCHAR(10) not null,
-  fieldname   VARCHAR(20) not null,
+  fieldname   VARCHAR(30) not null,
   fielddesc   VARCHAR(40),
   edityn      VARCHAR(1),
   fieldtype   VARCHAR(1),

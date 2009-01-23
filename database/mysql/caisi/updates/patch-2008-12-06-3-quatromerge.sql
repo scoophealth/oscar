@@ -1,3 +1,6 @@
+ alter table app_lookuptable_fields modify fieldname varchar(30);
+
+
 delete from app_lookuptable;
 
 LOCK TABLES `app_lookuptable` WRITE;
