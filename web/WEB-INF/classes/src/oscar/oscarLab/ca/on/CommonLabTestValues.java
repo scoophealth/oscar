@@ -585,7 +585,7 @@ public class CommonLabTestValues {
     public ArrayList findValuesForDemographic(String demographicNo){
         ArrayList labList = new ArrayList();
         
-        String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.accession_num, lpp.collection_date " +
+        String sql = "select p.lab_no , p.lab_type, ltr.id, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.accession_num, lpp.collection_date " +
                 "from patientLabRouting p , labTestResults ltr, labPatientPhysicianInfo lpp " +
                 " where p.lab_type = 'CML' " +
                 " and p.demographic_no = '"+demographicNo+"' " +
@@ -597,6 +597,7 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
+		Integer id = rs.getInt("id");
                 String testNam = db.getString(rs,"test_name")==null ? "" : db.getString(rs,"test_name");
                 String abn = db.getString(rs,"abn")==null ? "" : db.getString(rs,"abn");
                 String result = db.getString(rs,"result")==null ? "" : db.getString(rs,"result");
@@ -612,6 +613,7 @@ public class CommonLabTestValues {
                 logger.info("This went in "+db.getString(rs,"collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(db.getString(rs,"collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
 		
 		Hashtable h = new Hashtable();
+		h.put("id", id);
                 h.put("testName", testNam);
                 h.put("abn",abn);
                 h.put("result",result);
