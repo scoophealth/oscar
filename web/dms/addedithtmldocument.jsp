@@ -78,8 +78,8 @@ if (request.getAttribute("linkhtmlerrors") != null) {
     linkhtmlerrors = (Hashtable) request.getAttribute("linkhtmlerrors");
 }
 
-   String lastUpdate = "";
-   String fileName = "";
+   String lastUpdate = "", fileName = "";
+   boolean oldDoc = true;
    AddEditDocumentForm formdata = new AddEditDocumentForm();
 if (request.getAttribute("completedForm") != null) {
     formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
@@ -93,6 +93,8 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
     formdata.setObservationDate(currentDoc.getObservationDate());
+    formdata.setReviewerId(currentDoc.getReviewerId());
+    formdata.setReviewDateTime(currentDoc.getReviewDateTime());
     formdata.setHtml(UtilMisc.htmlEscape(currentDoc.getHtml()));
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
@@ -104,6 +106,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocCreator(user_no);
     formdata.setObservationDate(UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"));
     lastUpdate = "--";
+    oldDoc = false;
 }
 ArrayList doctypes = EDocUtil.getDoctypes(module);
 %>
@@ -143,12 +146,16 @@ ArrayList doctypes = EDocUtil.getDoctypes(module);
             }
             function submitUpload(object) {
                 object.Submit.disabled = true;
-                if (!validDate("observationDate")) {
+		var ans = true;
+		if (object.reviewerId.value!="") {
+		    ans = confirm("Re-submitting this HTML will remove reviewer information. Confirm?");
+		}
+                if (ans && !validDate("observationDate")) {
                     alert("Invalid Date: must be in format yyyy/mm/dd");
-                    object.Submit.disabled = false;
-                    return false;
+                    ans = false;
                 }
-                return true;
+		object.Submit.disabled = false;
+                return ans;
             }
             function checkDefaultValue(object) {
               //selectBoxType = object.form.docType
@@ -165,6 +172,11 @@ ArrayList doctypes = EDocUtil.getDoctypes(module);
                    theForm.docDesc.select();
               }
             }
+	    function reviewed(ths) {
+		thisForm = ths.form;
+		thisForm.reviewDoc.value = true;
+		thisForm.submit();
+	    }
         </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
@@ -178,13 +190,17 @@ ArrayList doctypes = EDocUtil.getDoctypes(module);
 	enctype="multipart/form-data" styleClass="form"
 	onsubmit="return submitUpload(this);">
 	<input type="hidden" name="function"
-		value="<%=formdata.getFunction()%>" size="20">
+		value="<%=formdata.getFunction()%>" size="20" />
 	<input type="hidden" name="functionId"
-		value="<%=formdata.getFunctionId()%>" size="20">
-	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
-	<input type="hidden" name="mode" value="<%=mode%>">
+		value="<%=formdata.getFunctionId()%>" size="20" />
+	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20" />
+	<input type="hidden" name="mode" value="<%=mode%>" />
 	<input type="hidden" name="docCreator"
-		value="<%=formdata.getDocCreator()%>">
+		value="<%=formdata.getDocCreator()%>" />
+	<input type="hidden" name="reviewerId" value="<%=formdata.getReviewerId()%>" />
+	<input type="hidden" name="reviewDateTime" value="<%=formdata.getReviewDateTime()%>" />
+	<input type="hidden" name="reviewDoc" value="false" />
+	
 	<table width="100%" height="100%" class="layouttable">
 		<tr>
 			<td width="180px">Type:</td>
@@ -228,12 +244,24 @@ ArrayList doctypes = EDocUtil.getDoctypes(module);
 			<td><input type="checkbox" name="docPublic"
 				<%=formdata.getDocPublic() + " "%> value="checked"></td>
 		</tr>
-		<%}%>
+		<% }
+		if (oldDoc) { %>
 		<tr>
-			<td valign="top">Html:</td>
+			<td colspan="2">
+			    <% if (formdata.getReviewerId()!=null && !formdata.getReviewerId().equals("")) { %>
+			    Reviewed: &nbsp; <%=EDocUtil.getModuleName("provider", formdata.getReviewerId())%>
+			    &nbsp; [<%=formdata.getReviewDateTime()%>]
+			    <% } else { %>
+			    <input type="button" value="Reviewed" title="Click to set Reviewed" onclick="reviewed(this);" />
+			    <% } %>
+			</td>
+		</tr>
+		<% } %>
+		<tr>
+			<td>Html:</td>
 			<td>&nbsp;</td>
 		</tr>
-		<tr style="height: 100%;">
+		<tr>
 			<td colspan="2"><textarea name="html"
 				<% if (linkhtmlerrors.containsKey("uploaderror")) {%>
 				class="warning" <%}%> wrap="off" style="width: 98%; height: 200px;"><%=formdata.getHtml()%></textarea></td>

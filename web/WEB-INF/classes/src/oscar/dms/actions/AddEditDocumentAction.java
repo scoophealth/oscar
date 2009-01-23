@@ -44,6 +44,7 @@ import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.util.UtilDateUtilities;
 
 public class AddEditDocumentAction extends DispatchAction {
         
@@ -55,7 +56,7 @@ public class AddEditDocumentAction extends DispatchAction {
         FormFile docFile = fm.getFiledata();
         
          String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "demographic", "-1");
+            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
             newDoc.setDocPublic("0");
             fileName = newDoc.getFileName();
             //save local file;
@@ -81,7 +82,7 @@ public class AddEditDocumentAction extends DispatchAction {
         Hashtable errors = new Hashtable();
         FormFile docFile = fm.getDocFile();
             String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "demographic", "-1");
+            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user") , 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
             newDoc.setDocPublic("0");
             fileName = newDoc.getFileName();
             //save local file;
@@ -99,8 +100,6 @@ public class AddEditDocumentAction extends DispatchAction {
     }
     
     public ActionForward unspecified(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response){
-       System.out.println("IN UNSPECIFIED");
-        
         return execute2(mapping, form,request, response);
     }
     
@@ -149,7 +148,7 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             FormFile docFile = fm.getDocFile();
             String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), 'A', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
             newDoc.setDocPublic(fm.getDocPublic());
             fileName = newDoc.getFileName();
             //save local file;
@@ -189,8 +188,14 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             FormFile docFile = fm.getDocFile();
             String fileName = docFile.getFileName();
-
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), 'A', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+	    String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
+	    String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
+	    
+	    if (reviewerId.isEmpty() && fm.getReviewDoc()) {
+		reviewerId = (String)request.getSession().getAttribute("user");
+		reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
+	    }
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             newDoc.setDocId(fm.getMode());
             newDoc.setDocPublic(fm.getDocPublic());
             fileName = newDoc.getFileName();
@@ -203,7 +208,7 @@ public class AddEditDocumentAction extends DispatchAction {
                 errors.put("uploaderror", "dms.error.uploadError");
                 throw new FileNotFoundException();
             }
-            EDocUtil.editDocumentSQL(newDoc);
+            EDocUtil.editDocumentSQL(newDoc, fm.getReviewDoc());
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_DOCUMENT, newDoc.getDocId(), request.getRemoteAddr());
         } catch (Exception e) {
             request.setAttribute("docerrors", errors);
@@ -225,4 +230,7 @@ public class AddEditDocumentAction extends DispatchAction {
         }
     }
     
+    private boolean filled(String s) {
+	return (s!=null && !s.trim().isEmpty());
+    }
 }

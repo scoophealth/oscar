@@ -71,7 +71,7 @@ if (request.getAttribute("docerrors") != null) {
 if (request.getAttribute("completedForm") != null) {
     formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
     lastUpdate = EDocUtil.getDmsDateTime();
-} else if (editDocumentNo != null) {
+} else if (editDocumentNo != null && !editDocumentNo.equals("")) {
     EDoc currentDoc = EDocUtil.getDoc(editDocumentNo);
     formdata.setFunction(currentDoc.getModule());
     formdata.setFunctionId(currentDoc.getModuleId());
@@ -80,6 +80,8 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
     formdata.setObservationDate(currentDoc.getObservationDate());
+    formdata.setReviewerId(currentDoc.getReviewerId());
+    formdata.setReviewDateTime(currentDoc.getReviewDateTime());
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
 }
@@ -121,13 +123,22 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
             }
             function submitUpload(object) {
                 object.Submit.disabled = true;
-                if (!validDate("observationDate")) {
+		var ans = true;
+		if (object.reviewerId.value!="") {
+		    ans = confirm("Updating this document will remove reviewer information. Confirm?");
+		}
+                if (ans && !validDate("observationDate")) {
                     alert("Invalid Date: must be in format yyyy/mm/dd");
-                    object.Submit.disabled = false;
-                    return false;
+                    ans = false;
                 }
-                return true;
+		object.Submit.disabled = false;
+                return ans;
             }
+	    function reviewed(ths) {
+		thisForm = ths.form;
+		thisForm.reviewDoc.value = true;
+		thisForm.submit();
+	    }
         </script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
@@ -140,11 +151,14 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 <% } %> <html:form action="/dms/addEditDocument" method="POST"
 	enctype="multipart/form-data" onsubmit="return submitUpload(this);">
 	<input type="hidden" name="function"
-		value="<%=formdata.getFunction()%>" size="20">
+		value="<%=formdata.getFunction()%>" size="20" />
 	<input type="hidden" name="functionId"
-		value="<%=formdata.getFunctionId()%>" size="20">
-	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
-	<input type="hidden" name="mode" value="<%=editDocumentNo%>">
+		value="<%=formdata.getFunctionId()%>" size="20" />
+	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20" />
+	<input type="hidden" name="mode" value="<%=editDocumentNo%>" />
+	<input type="hidden" name="reviewerId" value="<%=formdata.getReviewerId()%>" />
+	<input type="hidden" name="reviewDateTime" value="<%=formdata.getReviewDateTime()%>" />
+	<input type="hidden" name="reviewDoc" value="false" />
 	<table class="layouttable">
 		<tr>
 			<td>Type:</td>
@@ -195,14 +209,31 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 			<div style="width: 300px; overflow: hidden; text-overflow: ellipsis;"><%=fileName%></div>
 		</tr>
 		<tr>
-			<td>File: <font class="comment">blank to keep file</font></td>
+			    <td>File: <font class="comment">(blank to keep file)</font></td>
 			<td><input type="file" name="docFile" size="20"
 				<% if (docerrors.containsKey("uploaderror")) {%> class="warning"
 				<%}%>></td>
 		</tr>
+		<tr>
+		    <td colspan=2>
+			<% if (formdata.getReviewerId()!=null && !formdata.getReviewerId().equals("")) { %>
+			Reviewed: &nbsp; <%=EDocUtil.getModuleName("provider", formdata.getReviewerId())%>
+			&nbsp; [<%=formdata.getReviewDateTime()%>]
+			<% } else { %>
+			<input type="button" value="Reviewed" title="Click to set Reviewed" onclick="reviewed(this);" />
+			<% } %>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan=2>
+			<p>&nbsp;</p>
+			<center>
+			<input type="submit" name="Submit" value="Update">
+			<input type="button" value="Cancel" onclick="window.close();">
+			</center>
+		    </td>
+		</tr>
 	</table>
-	<center><input type="submit" name="Submit" value="Update"><input
-		type="button" value="Cancel" onclick="window.close();"></center>
 </html:form> <script type="text/javascript">
                Calendar.setup( { inputField : "observationDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "obsdate", singleClick : true, step : 1 } );
            </script></div>

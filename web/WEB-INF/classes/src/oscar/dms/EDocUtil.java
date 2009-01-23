@@ -63,6 +63,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public static final boolean UNATTACHED = false;
 
     public static final String DMS_DATE_FORMAT = "yyyy/MM/dd";
+    public static final String REVIEW_DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
     private static ProgramManager programManager = (ProgramManager) SpringUtils.getBean("programManager");
 
@@ -114,7 +115,7 @@ public class EDocUtil extends SqlUtilBaseS {
         param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
 
-        java.sql.Timestamp od1 = new java.sql.Timestamp( newDocument.getDateTimeStampAsDate().getTime());
+        java.sql.Timestamp od1 = new java.sql.Timestamp(newDocument.getDateTimeStampAsDate().getTime());
         param[counter++] = new DBPreparedHandlerParam(od1);
           
         param[counter++] = new DBPreparedHandlerParam(String.valueOf(newDocument.getStatus()));
@@ -151,32 +152,38 @@ public class EDocUtil extends SqlUtilBaseS {
         runSQL(sql);
     }
 
-    public static void editDocumentSQL(EDoc newDocument) {
+    public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
         String doctype = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType());
         String docDescription = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription());
         String docFileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName());
         String html = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getHtml());
-        System.out.println("obs date: " + newDocument.getObservationDate());
-
-        /*
-         * String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime='" + getDmsDateTime() + "', public1='" + newDocument.getDocPublic() + "', observationdate='" + newDocument.getObservationDate() +
-         * "', docxml='" + html + "'"; if (docFileName.length() > 0) { editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'"; } editDocSql = editDocSql + " WHERE document_no=" +
-         * newDocument.getDocId(); System.out.println("doceditSQL: " + editDocSql); runSQL(editDocSql);
-         */
-        String editDocSql = "UPDATE document SET doctype='" + doctype + "', docdesc='" + docDescription + "', updatedatetime=?, public1='" + newDocument.getDocPublic() + "', observationdate=?, docxml='" + html + "'";
+	
+	String editDocSql = "UPDATE document " +
+		"SET doctype='" + doctype + "', " +
+		"docdesc='" + docDescription + "', " +
+		"public1='" + newDocument.getDocPublic() + "', " +
+		"docxml='" + html + "'";
+	if (doReview) {
+	    editDocSql += ", reviewer='" + newDocument.getReviewerId() + "', " +
+		    "reviewdatetime='" + newDocument.getReviewDateTime() + "'";
+	} else {
+	    editDocSql += ", reviewer=NULL, reviewdatetime=NULL, observationdate=?, updatedatetime=?";
+	}
         if (docFileName.length() > 0) {
             editDocSql = editDocSql + ", docfilename='" + docFileName + "', contenttype='" + newDocument.getContentType() + "'";
         }
         editDocSql = editDocSql + " WHERE document_no=" + newDocument.getDocId();
 
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
-        java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
-        param[0] = new DBPreparedHandlerParam(od1);
-        java.sql.Date od2 = MyDateFormat.getSysDate(newDocument.getObservationDate());
-        param[1] = new DBPreparedHandlerParam(od2);
-        System.out.println("doceditSQL: " + editDocSql);
-        runPreparedSql(editDocSql, param);
-
+	if (doReview) {
+	    runSQL(editDocSql);
+	} else {
+	    DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
+	    java.sql.Date od1 = MyDateFormat.getSysDate(newDocument.getObservationDate());
+	    param[0] = new DBPreparedHandlerParam(od1);
+	    java.sql.Timestamp od2 = new java.sql.Timestamp(new Date().getTime());
+	    param[1] = new DBPreparedHandlerParam(od2);
+	    runPreparedSql(editDocSql, param);
+	}
     }
 
     public static void indivoRegister(EDoc doc) {
@@ -201,11 +208,11 @@ public class EDocUtil extends SqlUtilBaseS {
      * Fetches all consult docs attached to specific consultation
      */
     public static ArrayList listDocs(String demoNo, String consultationId, boolean attached, Integer currentFacilityId) {
-        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype FROM document d, ctl_document c "
+        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
                 + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
 
-        String attachQuery = "SELECT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype FROM document d, consultdocs cd WHERE d.document_no = cd.document_no AND " + "cd.requestId = "
-                + consultationId + " AND cd.doctype = 'D' AND cd.deleted IS NULL";
+        String attachQuery = "SELECT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, consultdocs cd " +
+		"WHERE d.document_no = cd.document_no AND " + "cd.requestId = "+consultationId+" AND cd.doctype = 'D' AND cd.deleted IS NULL";
 
         ArrayList resultDocs = new ArrayList();
         ArrayList attachedDocs = new ArrayList();
@@ -224,6 +231,8 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
+		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
                 attachedDocs.add(currentdoc);
             }
             rs.close();
@@ -242,6 +251,8 @@ public class EDocUtil extends SqlUtilBaseS {
                     currentdoc.setType(rsGetString(rs, "doctype"));
                     currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                     currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+		    currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
+		    currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
 
                     if (!attachedDocs.contains(currentdoc)) resultDocs.add(currentdoc);
                 }
@@ -266,15 +277,15 @@ public class EDocUtil extends SqlUtilBaseS {
         // docType = null or = "all" to show all doctypes
         // select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
         // sql base (prefix) to avoid repetition in the if-statements
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='"
-                + module + "'";
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime " +
+		"FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
         // if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
-            if ((docType == null) || (docType.equals("all")) || (docType.equals(""))) sql = sql + " AND d.public1=1";
+            if ((docType == null) || (docType.equals("all")) || (docType.isEmpty())) sql = sql + " AND d.public1=1";
             else sql = sql + " AND d.public1=1 AND d.doctype='" + docType + "'";
         }
         else {
-            if ((docType == null) || (docType.equals("all")) || (docType.equals(""))) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
+            if ((docType == null) || (docType.equals("all")) || (docType.isEmpty())) sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0";
             else sql = sql + " AND c.module_id='" + moduleid + "' AND d.public1=0 AND d.doctype='" + docType + "'";
         }
         
@@ -305,6 +316,8 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
+		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
@@ -348,6 +361,8 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
+		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
@@ -399,6 +414,8 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setDocPublic(rsGetString(rs, "public1"));
                 currentdoc.setObservationDate(rs.getDate("observationdate"));
+		currentdoc.setReviewerId(rsGetString(rs, "reviewer"));
+		currentdoc.setReviewDateTime(rsGetString(rs, "reviewdatetime"));
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));

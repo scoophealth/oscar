@@ -37,12 +37,14 @@ import org.apache.struts.action.ActionRedirect;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
+import oscar.util.UtilDateUtilities;
 
 public class AddEditHtmlAction extends Action {
     
     /** Creates a new instance of AddLinkAction */
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
+	
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         Hashtable errors = new Hashtable();
         String fileName = "";
@@ -88,21 +90,28 @@ public class AddEditHtmlAction extends Action {
             fileName = "link";
         } else if (fm.getMode().equals("addHtml")) {
             fileName = "html";
-        } else {
-        }
+	}
+	
+	String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
+	String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
+
+	if (reviewerId.isEmpty() && fm.getReviewDoc()) {
+	    reviewerId = (String)request.getSession().getAttribute("user");
+	    reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
+	}
         EDoc currentDoc;
         System.out.println("mode: " + fm.getMode());
         if (fm.getMode().indexOf("add") != -1) {
-            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
             EDocUtil.addDocumentSQL(currentDoc);
         } else {
-            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), fm.getFunction(), fm.getFunctionId());
+            currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setDocId(fm.getMode());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
-            EDocUtil.editDocumentSQL(currentDoc);
+            EDocUtil.editDocumentSQL(currentDoc, fm.getReviewDoc());
         }
         ActionRedirect redirect = new ActionRedirect(mapping.findForward("success"));
         redirect.addParameter("function", request.getParameter("function"));
@@ -110,4 +119,7 @@ public class AddEditHtmlAction extends Action {
         return redirect;
     }
     
+    private boolean filled(String s) {
+	return (s!=null && !s.trim().isEmpty());
+    }
 }
