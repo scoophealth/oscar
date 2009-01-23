@@ -103,9 +103,15 @@ String allergyId = (String) request.getAttribute("allergyId");
 								property="name" value="<%=name%>" /> <html:hidden
 								property="type" value="<%=type%>" /></td>
 						</tr>
-
+						
 						<tr valign="center">
+							<td colspan="2">Start Date: <html:text
+								property="startDate" size="10" maxlength="10"/>
+							    (yyyy-mm-dd OR yyyy-mm OR yyyy)</td>
 
+						</tr>
+						
+						<tr valign="center">
 							<td colspan="2">Age Of Onset: <html:text
 								property="ageOfOnset" size="4" maxlength="4" /></td>
 
