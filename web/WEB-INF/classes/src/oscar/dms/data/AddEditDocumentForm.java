@@ -38,6 +38,9 @@ public class AddEditDocumentForm extends ActionForm {
     private String docPublic = "";
     private String mode = "";
     private String observationDate = "";
+    private String reviewerId = "";
+    private String reviewDateTime = "";
+    private boolean reviewDoc = false;
     private String html = "";
     
     public AddEditDocumentForm() {
@@ -114,7 +117,31 @@ public class AddEditDocumentForm extends ActionForm {
     public void setObservationDate(String observationDate) {
         this.observationDate = observationDate;
     }
-
+    
+    public String getReviewerId() {
+	return reviewerId;
+    }
+    
+    public void setReviewerId(String reviewerId) {
+	this.reviewerId = reviewerId;
+    }
+    
+    public String getReviewDateTime() {
+	return reviewDateTime;
+    }
+    
+    public void setReviewDateTime(String reviewDateTime) {
+	this.reviewDateTime = reviewDateTime;
+    }
+    
+    public boolean getReviewDoc() {
+	return reviewDoc;
+    }
+    
+    public void setReviewDoc(boolean reviewDoc) {
+	this.reviewDoc = reviewDoc;
+    }
+    
     public String getHtml() {
         return html;
     }
