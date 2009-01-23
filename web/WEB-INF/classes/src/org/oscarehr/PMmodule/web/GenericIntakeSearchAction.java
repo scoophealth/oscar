@@ -54,6 +54,9 @@ import org.oscarehr.util.SessionConstants;
 import com.quatro.model.LookupCodeValue;
 import com.quatro.service.LookupManager;
 
+/*
+ * Updated by Eugene Petruhin on 14 jan 2009 while fixing #2493947
+ */
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
@@ -249,7 +252,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
             XMLGregorianCalendar soapCal=cachedDemographic.getBirthDate();
-            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), null, null, null, cachedDemographic.getHin(), null, true);
+            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), cachedDemographic.getGender(), null, null, null, cachedDemographic.getHin(), null, true);
             demographic.setBirthDay(soapCal.toGregorianCalendar());
             demographic.setCity(cachedDemographic.getCity());
             demographic.setProvince(cachedDemographic.getProvince());
@@ -275,8 +278,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
-        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(),
-                intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
+        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getGender(),
+                intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(),
+                intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
     }
 
     protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {

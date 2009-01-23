@@ -91,7 +91,7 @@ public class Demographic implements Serializable {
 		AC, IN, DE, IC, ID, MO, FI
 	}
 
-	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver, boolean applyDefaultBirthDate) {
+	public static Demographic create(String firstName, String lastName, String gender, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver, boolean applyDefaultBirthDate) {
 		Demographic demographic = new Demographic();
 
 		demographic.setFirstName(firstName);
@@ -109,7 +109,7 @@ public class Demographic implements Serializable {
 		demographic.setPatientStatus(DEFAULT_PATIENT_STATUS);
 		demographic.setPin(StringUtils.EMPTY);
 		demographic.setRosterStatus(StringUtils.EMPTY);
-		demographic.setSex(DEFAULT_SEX);
+		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
 
 		demographic.setDateJoined(DateTimeFormatUtils.getToday());
 		demographic.setEffDate(DateTimeFormatUtils.getToday());

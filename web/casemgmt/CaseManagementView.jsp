@@ -23,6 +23,7 @@
  -->
 
 <%-- Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061 --%>
+<%-- Updated by Eugene Petruhin on 15 jan 2009 while fixing #2510692 --%>
 
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
@@ -35,6 +36,8 @@
 <%@ page import="org.apache.log4j.Logger"%>
 <%
 	response.setHeader("Cache-Control", "no-cache");
+	Logger logger = Logger.getLogger("CaseManagementView.jsp");
+	java.util.List noteList = (java.util.List) request.getAttribute("Notes");
 %>
 
 <html:form action="/CaseManagementView" method="get">
@@ -44,55 +47,80 @@
 	<html:hidden property="cpp.id" />
 	<html:hidden property="hideActiveIssue" />
 	<input type="hidden" name="issue_code" value="" />
-
-
 	<input type="hidden" name="method" value="view" />
 
-	<%
-		Logger logger = Logger.getLogger("CaseManagementView.jsp");
-	%>
 	<script>
 
 	function trimAll(sString)
 	{
 		while (sString.substring(0,1) == ' ')
 		{
-		sString = sString.substring(1, sString.length);
+			sString = sString.substring(1, sString.length);
 		}
 		while (sString.substring(sString.length-1, sString.length) == ' ')
 		{
-		sString = sString.substring(0,sString.length-1);
+			sString = sString.substring(0,sString.length-1);
 		}
 		return sString;
 	}
 
-	//filter for provider - will work for other dropdowns as well
-	function filter (term, _id, cellNr){
+	// filter for provider - will work for other dropdowns as well
+<%
+	if (!"detailed".equals(request.getParameter("note_view"))) {
+%>
+	function filter(term, _id, cellNr) {
 		
-		var suche = term.toLowerCase();
-		suche = trimAll(suche);
+		var suche = trimAll(term.toLowerCase());
 		//alert(suche.length + suche  + _id);
-
 		var table = document.getElementById(_id);
 
-		if(suche.length < 2){
+		if ("all" == suche) {
 			for (var r = 1; r < table.rows.length; r++)
 				table.rows[r].style.display = '';
 			return;
 		}
 
-		
-		var ele;
-		for (var r = 1; r < table.rows.length; r++){
-			ele = table.rows[r].cells[cellNr].innerHTML.replace(/<[^>]+>/g,"");
+		for (var r = 1; r < table.rows.length; r++) {
+			var ele = table.rows[r].cells[cellNr].innerHTML.replace(/<[^>]+>/g,"");
 			
-			if (ele.toLowerCase().indexOf(suche)>=0 )
+			if (ele.toLowerCase().indexOf(suche) >= 0 ) {
 				table.rows[r].style.display = '';
-			else table.rows[r].style.display = 'none';
+			} else {
+				table.rows[r].style.display = 'none';
+			}
 		}
 	}
-	
+<%
+	} else {
+%>
+	function filter(term, _id, cellNr) {
+		
+		var suche = trimAll(term.toLowerCase());
+		var noteCount = <%=noteList.size()%>;
+		//alert(suche.length + suche  + _id);
 
+		if ("all" == suche) {
+			for (var r = 1; r <= noteCount; r++) {
+				var table = document.getElementById(_id + r);
+				table.style.display = '';
+			}
+			return;
+		}
+
+		for (var r = 1; r <= noteCount; r++) {
+			var table = document.getElementById(_id + r);
+			var ele = table.rows[0].cells[cellNr-1].innerHTML.replace(/<[^>]+>/g,"");
+			
+			if (ele.toLowerCase().indexOf(suche) >= 0) {
+				table.style.display = '';
+			} else {
+				table.style.display = 'none';
+			}
+		}
+	}
+<%
+	}
+%>
 
 	function clickTab(name) {
 		document.caseManagementViewForm.tab.value=name;
@@ -118,8 +146,7 @@
         window.open(page, "", windowprops);
     }
     
-
-function popupUploadPage(varpage,dn) {
+	function popupUploadPage(varpage,dn) {
         var page = "" + varpage+"?demographicNo="+dn;
         windowprops = "height=500,width=500,location=no,"
           + "scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=50,left=50";
@@ -127,14 +154,13 @@ function popupUploadPage(varpage,dn) {
          popup.focus();
         
     }
-    
-    
-function delay(time){
-string="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/default_img.jpg'";
-setTimeout(string,time);
-}
-    
-</script>
+
+	function delay(time){
+		string="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/default_img.jpg'";
+		setTimeout(string,time);
+	}
+
+	</script>
 
 	<div class="tabs" id="tabs">
 	<%
@@ -275,7 +301,7 @@ setTimeout(string,time);
 					<td align="right" valign="top" nowrap></td>
 					<td><c:forEach var="tm" items="${teamMembers}">
 						<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
-	</c:forEach></td>
+					</c:forEach></td>
 				</tr>
 				<%
 					if (!OscarProperties.getInstance().isTorontoRFQ()) {
@@ -324,7 +350,7 @@ setTimeout(string,time);
 		page='<%="/casemgmt/"
 					+ selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 
-
+	
 
 	<c:if
 		test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
@@ -378,20 +404,21 @@ Progress Note Report View:
 				<td align="right">Provider: <html:select
 					property="filter_provider"
 					onchange="filter(this.options[this.selectedIndex].text, 'test', 2);">
-					<html:option value="">&nbsp;</html:option>
+					<html:option value="">All</html:option>
 					<html:options collection="providers" property="providerNo"
 						labelProperty="formattedName" />
 				</html:select> &nbsp; &nbsp; &nbsp; Sort: <html:select property="note_sort"
 					onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">
-					<html:option value="observation_date_desc">Observation Date Desc</html:option>
-					<html:option value="observation_date_asc">Observation Date Asc</html:option>
+					<html:option value="observation_date_desc">Observation Date - Desc</html:option>
+					<html:option value="observation_date_asc">Observation Date - Asc</html:option>
 					<html:option value="providerName">Provider</html:option>
 					<html:option value="programName">Program</html:option>
 					<html:option value="roleName">Role</html:option>
 				</html:select></td>
 			</tr>
 		</table>
-		<c:if test="${param.note_view!='detailed'}">
+		<c:if
+			test="${param.note_view!='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<tr class="title">
@@ -402,7 +429,6 @@ Progress Note Report View:
 					<td>Program</td>
 					<td>Role</td>
 				</tr>
-
 				<%
 					int index = 0;
 					String bgcolor = "white";
@@ -476,7 +502,8 @@ Progress Note Report View:
 				</c:forEach>
 			</table>
 		</c:if>
-		<c:if test="${param.note_view=='detailed'}">
+		<c:if
+			test="${param.note_view=='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<%
@@ -490,15 +517,12 @@ Progress Note Report View:
 						} else {
 							bgcolor1 = "#EEEEFF";
 						}
-						java.util.List noteList = (java.util.List) request
-								.getAttribute("Notes");
-						String noteId = ((CaseManagementNote) noteList.get(index1 - 1))
-								.getId().toString();
+						String noteId = ((CaseManagementNote) noteList.get(index1 - 1)).getId().toString();
 						request.setAttribute("noteId", noteId);
 					%>
 					<tr>
 						<td>
-						<table width="100%" border="0">
+						<table id="test<%=index1 %>" width="100%" border="0" style="margin-bottom: 5px">
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Provider</td>
 								<td width="93%"><c:out
@@ -560,6 +584,18 @@ Progress Note Report View:
 				</c:forEach>
 			</table>
 		</c:if>
+		<%
+			String filter = request.getParameter("filter_provider");
+			if (filter != null && filter.length() > 0) {
+		%>
+			<script>
+				var els = document.getElementsByName("filter_provider");
+				var el = els[0];
+				filter(el.options[el.selectedIndex].text, 'test', 2);
+			</script>
+		<%
+			}
+		%>
 		<span style="text-decoration: underline; cursor: pointer; color: blue"
 			onclick="document.caseManagementViewForm.note_view.value='summary';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit(); return false;">Summary</span>
 &nbsp;|&nbsp;
@@ -599,8 +635,6 @@ Progress Note Report View:
 			onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New
 		Note</span>
 	</c:if>
-
-
 
 
 </html:form>
