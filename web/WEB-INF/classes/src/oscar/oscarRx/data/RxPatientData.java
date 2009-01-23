@@ -256,6 +256,7 @@ public class RxPatientData {
                rs.getInt("TYPECODE"));
                               
                allergy.getAllergy().setReaction(db.getString(rs,"reaction"));
+	       allergy.getAllergy().setStartDate(rs.getDate("start_date"));
                allergy.getAllergy().setAgeOfOnset(db.getString(rs,"age_of_onset"));
                allergy.getAllergy().setSeverityOfReaction(db.getString(rs,"severity_of_reaction"));
                allergy.getAllergy().setOnSetOfReaction(db.getString(rs,"onset_of_reaction"));
@@ -398,7 +399,7 @@ public class RxPatientData {
             String sql;            
             if (this.getAllergyId() == 0) {               
                sql = "INSERT INTO allergies (demographic_no, entry_date, "               
-               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,age_of_onset,severity_of_reaction,onset_of_reaction) "               
+               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction) "               
                + "VALUES (" + Patient.this.getDemographicNo() + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
                + this.allergy.getDESCRIPTION() + "', "               
@@ -409,6 +410,7 @@ public class RxPatientData {
                + this.allergy.getTYPECODE() + ", '"               
                + this.allergy.getReaction() + "', '"               
                + this.allergy.getPickID() + "', '" 
+	       + oscar.oscarRx.util.RxUtil.DateToString(this.allergy.getStartDate()) + "', '"
                + this.allergy.getAgeOfOnset() + "', '"
                + this.allergy.getSeverityOfReaction() + "', '"
                + this.allergy.getOnSetOfReaction()+"')";
@@ -425,7 +427,7 @@ public class RxPatientData {
                rs.close();               
             } else {
                
-               sql = "UPDATE allergies SET entry_date = '" + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', "               
+               sql = "UPDATE allergies SET entry_date = '" + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', "
                + "DESCRIPTION = '" + allergy.getDESCRIPTION() + "', "               
                + "HICL_SEQNO = " + allergy.getHICL_SEQNO() + ", "               
                + "HIC_SEQNO = " + allergy.getHIC_SEQNO() + ", "               
@@ -434,9 +436,10 @@ public class RxPatientData {
                + "TYPECODE = " + allergy.getTYPECODE() + ", "
                + "reaction = '" + allergy.getReaction() + "', "               
                + "drugref_id = '" + allergy.getPickID() + "' " 
-               + "age_of_onset ='"+allergy.getAgeOfOnset()+"',"
-               + "severity_of_reaction = '"+allergy.getSeverityOfReaction()+"',"
-               + "onset_of_reaction = '"+allergy.getOnSetOfReaction()+"' "               
+	       + "start_date = '" + oscar.oscarRx.util.RxUtil.DateToString(allergy.getStartDate()) + "', "
+               + "age_of_onset ='"+allergy.getAgeOfOnset() + "',"
+               + "severity_of_reaction = '"+allergy.getSeverityOfReaction() + "',"
+               + "onset_of_reaction = '"+allergy.getOnSetOfReaction() + "' "
                + "WHERE allergyid = " + this.getAllergyId();
                
                b = db.RunSQL(sql);               

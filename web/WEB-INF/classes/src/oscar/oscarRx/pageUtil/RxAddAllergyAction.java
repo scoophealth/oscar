@@ -65,10 +65,11 @@ public final class RxAddAllergyAction extends Action {
             String type = request.getParameter("type");
             String description = request.getParameter("reactionDescription");
             
+	    String startDate = request.getParameter("startDate");
             String ageOfOnset = request.getParameter("ageOfOnset");
             String severityOfReaction = request.getParameter("severityOfReaction");
             String onSetOfReaction = request.getParameter("onSetOfReaction");
-
+	    
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             RxAllergyData ald = new RxAllergyData();
             RxAllergyData.Allergy allergy = ald.getAllergy();
@@ -76,6 +77,14 @@ public final class RxAddAllergyAction extends Action {
             allergy.setDESCRIPTION(name);
             allergy.setTYPECODE(Integer.parseInt(type));
             allergy.setReaction(description);
+	    
+	    if (startDate.length()>=8 && getCharOccur(startDate,'-')==2) {
+		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM-dd"));
+	    } else if (startDate.length()>=6 && getCharOccur(startDate,'-')>=1) {
+		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy-MM"));
+	    } else if (startDate.length()>=4) {
+		allergy.setStartDate(oscar.oscarRx.util.RxUtil.StringToDate(startDate, "yyyy"));
+	    }
             allergy.setAgeOfOnset(ageOfOnset);
             allergy.setSeverityOfReaction(severityOfReaction);
             allergy.setOnSetOfReaction(onSetOfReaction);
@@ -86,5 +95,14 @@ public final class RxAddAllergyAction extends Action {
             LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, ""+patient.getDemographicNo(), ip);
 
             return (mapping.findForward("success"));
+    }
+    
+    private int getCharOccur(String str, char ch) {
+	int occurence=0, from=0;
+	while (str.indexOf(ch,from)>=0) {
+	    occurence++;
+	    from = str.indexOf(ch,from)+1;
+	}
+	return occurence;
     }
 }
