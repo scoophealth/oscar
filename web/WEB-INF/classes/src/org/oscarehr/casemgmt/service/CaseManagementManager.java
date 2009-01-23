@@ -53,6 +53,8 @@ import org.oscarehr.casemgmt.dao.ApptDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementCPPDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.dao.EchartDAO;
@@ -67,6 +69,8 @@ import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.EncounterWindow;
@@ -95,6 +99,8 @@ public class CaseManagementManager {
 
     protected String issueAccessType = "access";
     protected CaseManagementNoteDAO caseManagementNoteDAO;
+    protected CaseManagementNoteExtDAO caseManagementNoteExtDAO;
+    protected CaseManagementNoteLinkDAO caseManagementNoteLinkDAO;
     protected CaseManagementIssueDAO caseManagementIssueDAO;
     protected IssueDAO issueDAO;
     protected CaseManagementCPPDAO caseManagementCPPDAO;
@@ -116,7 +122,7 @@ public class CaseManagementManager {
     protected EncounterWindowDAO ectWindowDAO;
     protected UserPropertyDAO userPropertyDAO;
     protected DxResearchDAO dxResearchDAO;
-   
+    
     private boolean enabled;
     
     Log logger = LogFactory.getLog(CaseManagementManager.class);
@@ -178,7 +184,15 @@ public class CaseManagementManager {
     public EncounterWindow getEctWin(String provider) {
         return this.ectWindowDAO.getWindow(provider);
     }
-
+    
+    public void saveNoteExt(CaseManagementNoteExt cExt) {
+	caseManagementNoteExtDAO.save(cExt);
+    }
+    
+    public void saveNoteLink(CaseManagementNoteLink cLink) {
+	caseManagementNoteLinkDAO.save(cLink);
+    }
+    
     public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
     	SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     	Date now = new Date();
@@ -359,11 +373,46 @@ public class CaseManagementManager {
 
     public CaseManagementNote getNote(String note_id) {
         return this.caseManagementNoteDAO.getNote(Long.valueOf(note_id));
-
     }
     
     public CaseManagementNote getMostRecentNote(String uuid) {
         return this.caseManagementNoteDAO.getMostRecentNote(uuid);
+    }
+    
+    public CaseManagementNoteExt getNoteExt(Long id) {
+	return this.caseManagementNoteExtDAO.getNoteExt(id);
+    }
+    
+    public List getExtByNote(Long noteId) {
+	return this.caseManagementNoteExtDAO.getExtByNote(noteId);
+    }
+    
+    public List getExtByKeyVal(String keyVal) {
+	return this.caseManagementNoteExtDAO.getExtByKeyVal(keyVal);
+    }
+    
+    public List getExtByValue(String keyVal, String value) {
+	return this.caseManagementNoteExtDAO.getExtByValue(keyVal, value);
+    }
+
+    public List getExtBeforeDate(String keyVal, Date dateValue) {
+	return this.caseManagementNoteExtDAO.getExtBeforeDate(keyVal, dateValue);
+    }
+
+    public List getExtAfterDate(String keyVal, Date dateValue) {
+	return this.caseManagementNoteExtDAO.getExtAfterDate(keyVal, dateValue);
+    }
+
+    public CaseManagementNoteLink getNoteLink(Long id) {
+	return this.caseManagementNoteLinkDAO.getNoteLink(id);
+    }
+    
+    public List getLinkByNote(Long noteId) {
+	return this.caseManagementNoteLinkDAO.getLinkByNote(noteId);
+    }
+    
+    public List getLinkByTableId(Integer tableName, Long tableId) {
+	return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
     }
 
     public CaseManagementCPP getCPP(String demographic_no) {
@@ -1205,6 +1254,14 @@ public class CaseManagementManager {
 
     public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao) {
         this.caseManagementNoteDAO = dao;
+    }
+
+    public void setCaseManagementNoteExtDAO(CaseManagementNoteExtDAO dao) {
+        this.caseManagementNoteExtDAO = dao;
+    }
+
+    public void setCaseManagementNoteLinkDAO(CaseManagementNoteLinkDAO dao) {
+        this.caseManagementNoteLinkDAO = dao;
     }
 
     public void setCaseManagementIssueDAO(CaseManagementIssueDAO dao) {
