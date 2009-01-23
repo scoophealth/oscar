@@ -33,15 +33,30 @@ import oscar.oscarDB.DBHandler;
 
 public class LabResultImport {
    
-    public void SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId) throws SQLException {
-	boolean b = false;            
+    public Long SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId) throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
 	String sql = "INSERT INTO labTestResults (test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type) VALUES ('"
 		+ testName + "','" + abn + "','" + minimum + "','" + maximum + "','" + result + "','" + units + "','" + description + "','" + location + "','" + ppId + "','C')";
-	db.RunSQL(sql);
-	db.CloseConn();
+	if (db.RunSQL(sql)) {
+	    sql = "SELECT MAX(id) FROM labTestResults WHERE " +
+		    "test_name='"		   + testName	 + "' AND " +
+		    "abn='"			   + abn	 + "' AND " +
+		    "minimum='"			   + minimum	 + "' AND " +
+		    "maximum='"			   + maximum	 + "' AND " +
+		    "result='"			   + result	 + "' AND " +
+		    "units='"			   + units	 + "' AND " +
+		    "description='"		   + description + "' AND " +
+		    "location_id='"		   + location	 + "' AND " +
+		    "labPatientPhysicianInfo_id='" + ppId	 + "' AND " +
+		    "line_type='C'";
+	    ResultSet rs = db.GetSQL(sql);
+	    db.CloseConn();
+	    if (rs.next()) return rs.getLong(1);
+	    else return null;
+	} else {
+	    return null;
+	}
     }
-    
     
     public void SaveLabDesc(String description, String ppId) throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
@@ -55,7 +70,7 @@ public class LabResultImport {
     }
     
     public String saveLabPPInfo(String labReportInfo_id, String accession_num, String firstname, String lastname, String sex, String hin, String birthdate, String phone, String collDate) throws SQLException {
-	int id = 1;
+	Long id = 1L;
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	
 	String sql = "insert into labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, lab_status, service_date, doc_num) values ('"
@@ -63,7 +78,7 @@ public class LabResultImport {
 	db.RunSQL(sql);
 	sql = "select max(id) from labPatientPhysicianInfo";
 	ResultSet rs = db.GetSQL(sql);
-	if (rs.next()) id = rs.getInt(1);
+	if (rs.next()) id = rs.getLong(1);
 	
 	rs.close();
 	db.CloseConn();
@@ -80,13 +95,13 @@ public class LabResultImport {
     }
     
     public String saveLabRI(String location_id, String print_date, String print_time) throws SQLException {
-	int id = 1;
+	Long id = 1L;
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES ('"+location_id+"', '"+print_date+"', '"+print_time+"')";
 	db.RunSQL(sql);
 	sql = "SELECT MAX(id) FROM labReportInformation";
 	ResultSet rs = db.GetSQL(sql);
-	if (rs.next()) id = rs.getInt(1);
+	if (rs.next()) id = rs.getLong(1);
 	
 	rs.close();
 	db.CloseConn();
