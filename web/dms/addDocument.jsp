@@ -285,7 +285,7 @@ Link </a> <a href="javascript:;"
 		value="<%=formdata.getFunctionId()%>" size="20">
 	<input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
 	<input type="hidden" name="observationDate"
-		value=<%=formdata.getObservationDate()%>">
+		value="<%=formdata.getObservationDate()%>">
 	<select name="docType" onchange="checkSel(this)"
 		<% if (linkhtmlerrors.containsKey("typemissing")) {%> class="warning"
 		<%}%>>
