@@ -1,4 +1,4 @@
-ALTER TABLE `allergies` ADD `start_date date` DEFAULT NULL AFTER `archived`;
+ALTER TABLE `allergies` ADD `start_date` date DEFAULT NULL AFTER `archived`;
 
 ALTER TABLE `document` ADD `reviewer` varchar(30) DEFAULT '';
 ALTER TABLE `document` ADD `reviewdatetime` datetime DEFAULT NULL;
