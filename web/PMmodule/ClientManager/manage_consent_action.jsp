@@ -12,7 +12,7 @@
 	Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 	Provider provider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 
-	ManageConsentAction manageConsentAction=new ManageConsentAction(facility, provider, currentDemographicId);
+	ManageConsentAction manageConsentAction=new ManageConsentAction(facility, provider, currentDemographicId, "DETAILED");
 
 	@SuppressWarnings("unchecked")
 	Enumeration<String> e=request.getParameterNames();

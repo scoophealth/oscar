@@ -240,7 +240,7 @@
 	<tr>
 		<td>
 		<p><input type="radio" name="consent" value="HIC_ALL"
-			<%=integratorConsent.isConsentToAllHic()?"checked=\"checked\"":""%>>
+			<%=integratorConsent.isConsentToAllButRestrictToHic()?"checked=\"checked\"":""%>>
 		&nbsp;&nbsp;&nbsp; I, <b><%=currentDemographic.getFormattedName()%></b>,
 		permit only health care providers to record, send and use my personal
 		information for the purposes above.</p>
