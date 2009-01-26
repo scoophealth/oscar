@@ -16,6 +16,11 @@ wcb : left, 204, 187, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
 
 aci : left, 22, 200, 0, BaseFont.HELVETICA, 8, _, 239, 244, 10
 
+copy2clinician : left, 22, 253, 0, BaseFont.ZAPFDINGBATS, 10, \u2713
+copyLname : left, 22, 261, 0, BaseFont.HELVETICA, 8, _, 129, 274, 10
+copyFname : left, 135, 261, 0, BaseFont.HELVETICA, 8, _, 239, 274, 10
+copyAddress : left, 22, 283, 0, BaseFont.HELVETICA, 8, _, 239, 320, 10
+
 clinicianContactUrgent : left, 247, 136, 0, BaseFont.HELVETICA, 10
 
 healthNumber :  left, 242, 165, 0, BaseFont.HELVETICA, 12

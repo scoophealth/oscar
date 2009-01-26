@@ -372,15 +372,32 @@ var maxYear=3100;
                         if (oscarProps.getProperty("clinic_code") != null)
                            out.print(" \n" + oscarProps.getProperty("clinic_code"));
                     } else {
-                        out.print(props.getProperty("aci", ""));
+                        out.print(props.getProperty("aci", "").trim());
                     }
                 %>
 					</textarea></td>
 				</tr>
 				<tr>
 					<td style="height: 15px; vertical-align: top;"><font
-						class="subHeading">Copy to: Clinician/Practitioner</font><br />
-
+						class="subHeading"><input type="checkbox"
+						name="copy2clinician" <%=props.getProperty("copy2clinician", "")%> />Copy to: Clinician/Practitioner</font><br />
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td style="color:grey;">Last Name</td>
+                                                        <td style="color:grey;">First Name</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="text" name="copyLname" value="<%=props.getProperty("copyLname", "")%>"></td>
+                                                        <td><input type="text" name="copyFname" value="<%=props.getProperty("copyFname", "")%>"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="color:grey;">Address</td>
+                                                        <td style="color:grey;">&nbsp;</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2"><textarea name="copyAddress" style="width:100%;"><%=props.getProperty("copyAddress", "")%></textarea></td>
+                                                    </tr>
+                                                </table>
 					</td>
 				</tr>
 			</table>
