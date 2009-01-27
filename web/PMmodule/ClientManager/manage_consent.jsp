@@ -22,7 +22,7 @@
 <div style="font-size:smaller">
 	<ul>
 		<li>Health number registry : allow the selected agency to send health number information to the health number registry</li>
-		<li>Restrict To HIC's : allows the checked permissions only if the agency is an HIC, does not affect health number registry</li>
+		<li>Restrict To HIC's : allows retrieval of data only if the agency retrieving the data is an HIC, does not affect health number registry</li>
 		<li>Searches : allows the selected agency to see this client in searches</li>
 		<li>Basic personal data : allow the selected agency to send person data to other agencies</li>
 		<li>Mental health data : allow the selected agency to send mental health data to other agencies</li>
