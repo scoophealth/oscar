@@ -239,7 +239,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             DemographicTransfer demographicTransfer=demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
             XMLGregorianCalendar soapCal=demographicTransfer.getBirthDate();
-            Demographic demographic = Demographic.create(demographicTransfer.getFirstName(), demographicTransfer.getLastName(), null, null, null, demographicTransfer.getHin(), null, true);
+            Demographic demographic = Demographic.create(demographicTransfer.getFirstName(), demographicTransfer.getLastName(), null, null, null, null, demographicTransfer.getHin(), null, true);
             demographic.setBirthDay(soapCal.toGregorianCalendar());
             demographic.setCity(demographicTransfer.getCity());
             demographic.setProvince(demographicTransfer.getProvince());
@@ -265,8 +265,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
-        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(),
-                intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
+        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getGender(),
+                intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(),
+                intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
     }
 
     protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
