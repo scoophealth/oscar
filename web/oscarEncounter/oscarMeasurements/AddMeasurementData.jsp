@@ -235,7 +235,7 @@ function disableifchecked(ele,nextDate){
 				border="0" /></a> <br>
 
 			<label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label>
-			<% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
+			<% if ( mtypeBean.getValidationName() != null ){ %>
 			<select id="<%= "value(inputValue-" + ctr + ")" %>"
 				name="<%= "value(inputValue-" + ctr + ")" %>">
 				<%if (measurements.length > 1){ %>
@@ -243,6 +243,7 @@ function disableifchecked(ele,nextDate){
 				<%}%>
 				<option value="Yes" <%=sel("Yes", val)%>>Yes</option>
 				<option value="No" <%=sel("No", val)%>>No</option>
+				<option value="NotApplicable" <%=sel("NotApplicable", val)%>>Not Applicable</option>
 			</select> <%}else{%> <input type="text"
 				id="<%= "value(inputValue-" + ctr + ")" %>"
 				name="<%= "value(inputValue-" + ctr + ")" %>" size="5"
