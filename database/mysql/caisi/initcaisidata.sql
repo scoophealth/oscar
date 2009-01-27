@@ -273,6 +273,7 @@ insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values(
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.bedCheck', 'Program - Bed Check',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.clientStatus', 'Program - Client Status',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_pmm_editProgram.serviceRestrictions', 'Program - Service Restrictions',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values ('_pmm.eidtor','Caisi Intake Editor',0);
 
 -- Quatro Group Report
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_reportRunner', 'Report Runner', 0);
@@ -315,6 +316,7 @@ insert into `secObjPrivilege` values('doctor','_pmm_editProgram.access','x',0,99
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.bedCheck','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.clientStatus','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_pmm_editProgram.serviceRestrictions','x',0,999998);
+insert into `secObjPrivilege` values('admin','_pmm.editor','x',0,999998);
 
 INSERT INTO secObjPrivilege (roleUserGroup, objectName, privilege, priority, provider_no)
 	VALUES ('admin', '_reportRunner', 'x', 0, '999998');
