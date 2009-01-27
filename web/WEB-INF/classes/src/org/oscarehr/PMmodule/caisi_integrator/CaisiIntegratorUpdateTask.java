@@ -45,14 +45,13 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicImage;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.ConsentParameters;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
@@ -263,54 +262,58 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-			
-			try 
-			{
+
+			try {
 				pushDemographic(facility, service, demographicId);
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				pushDemographicConsent(facility, service, demographicId);
 				pushDemographicIssues(facility, service, demographicId);
-				pushDemographicImages(facility, service, demographicId);
 				pushDemographicPreventions(facility, service, demographicId);
 				pushDemographicNotes(facility, service, demographicId);
-			} 
-			catch(IllegalArgumentException iae)
-			{
+			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
-				// all other errors thrown by the above methods should indicate a failure in the service 
+				// all other errors thrown by the above methods should indicate a failure in the service
 				// connection at large -- continuing to process not possible
 				// need some way of notification here.
 				logger.error("Error updating demographic, continuing with Demographic batch", iae);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
 			}
 		}
 	}
 
 	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
-		CachedDemographic cachedDemographic = new CachedDemographic();
+		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 
-		BeanUtils.copyProperties(cachedDemographic, demographic);
+		BeanUtils.copyProperties(demographicTransfer, demographic);
 
-		FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
-		facilityDemographicPrimaryKey.setCaisiItemId(demographic.getDemographicNo());
-		cachedDemographic.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
+		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
 
-		GregorianCalendar cal = demographic.getBirthDay();
-		if (cal != null) {
-			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-			cachedDemographic.setBirthDate(soapCal);
+		GregorianCalendar birthDate = demographic.getBirthDay();
+		if (birthDate != null) {
+			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(birthDate);
+			demographicTransfer.setBirthDate(soapCal);
 		}
 
-		cachedDemographic.setHinVersion(demographic.getVer());
-		cachedDemographic.setGender(demographic.getSex());
-		
+		demographicTransfer.setHinVersion(demographic.getVer());
+		demographicTransfer.setGender(demographic.getSex());
+
+		// set image
+		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
+		if (clientImage != null) {
+			demographicTransfer.setPhoto(clientImage.getImage_data());
+
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(clientImage.getUpdate_date());
+			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+			demographicTransfer.setPhotoUpdateDate(soapCal);
+		}
+
 		// send the request
-		service.setCachedDemographic(cachedDemographic);
+		service.setDemographic(demographicTransfer);
 	}
 
 	private void pushDemographicConsent(Facility facility, DemographicWs service, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
@@ -326,13 +329,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
 				consentParameters.setIntegratorFacilityId(consent.getIntegratorFacilityId());
-				consentParameters.setDemographicId(demographicId);
+				consentParameters.setCaisiDemographicId(demographicId);
 				consentParameters.setConsentToHealthNumberRegistry(consent.isConsentToHealthNumberRegistry());
 				consentParameters.setRestrictConsentToHic(consent.isRestrictConsentToHic());
 				consentParameters.setConsentToBasicPersonalData(consent.isConsentToBasicPersonalData());
 				consentParameters.setConsentToMentalHealthData(consent.isConsentToMentalHealthData());
 				consentParameters.setConsentToSearches(consent.isConsentToSearches());
-				
+
 				GregorianCalendar cal = new GregorianCalendar();
 				cal.setTime(consent.getCreatedDate());
 				XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
@@ -341,23 +344,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				service.setCachedDemographicConsent(consentParameters);
 			}
 		}
-	}
-	
-	private void pushDemographicImages(Facility facility, DemographicWs service, Integer demographicId) {
-		logger.debug("pushing demographicImage facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-
-		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
-		if (clientImage == null) return;
-
-		CachedDemographicImage cachedDemographicImage = new CachedDemographicImage();
-
-		FacilityIdIntegerCompositePk facilityDemographicPrimaryKey = new FacilityIdIntegerCompositePk();
-		facilityDemographicPrimaryKey.setCaisiItemId(demographicId);
-
-		cachedDemographicImage.setFacilityIdIntegerCompositePk(facilityDemographicPrimaryKey);
-		cachedDemographicImage.setImage(clientImage.getImage_data());
-
-		service.setCachedDemographicImage(cachedDemographicImage);
 	}
 
 	private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
@@ -445,6 +431,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-// not finished yet
+		// not finished yet
 	}
 }

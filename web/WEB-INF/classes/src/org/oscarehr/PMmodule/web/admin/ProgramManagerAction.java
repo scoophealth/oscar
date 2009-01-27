@@ -60,8 +60,8 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.web.BaseAction;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
@@ -985,9 +985,9 @@ public class ProgramManagerAction extends BaseAction {
 				RemoteQueueEntry remoteQueueEntry = new RemoteQueueEntry();
 				remoteQueueEntry.setReferral(remoteReferral);
 
-				CachedDemographic cachedDemographic = demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
-				if (cachedDemographic != null) {
-					remoteQueueEntry.setClientName(cachedDemographic.getLastName() + ", " + cachedDemographic.getFirstName());
+				DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
+				if (demographicTransfer != null) {
+					remoteQueueEntry.setClientName(demographicTransfer.getLastName() + ", " + demographicTransfer.getFirstName());
 				} else {
 					remoteQueueEntry.setClientName("N/A");
 				}

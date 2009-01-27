@@ -6,7 +6,6 @@
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>

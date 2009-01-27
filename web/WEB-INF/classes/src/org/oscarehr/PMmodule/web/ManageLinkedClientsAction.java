@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.model.ClientLink;
@@ -50,12 +50,14 @@ public class ManageLinkedClientsAction {
 	private void saveCaisiLinkedIds(Facility facility, Provider provider, Integer demographicId) {
 		try {
 			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facility.getId());
-			List<CachedDemographic> tempLinks = demographicWs.getDirectlyLinkedCachedDemographicsByDemographicId(demographicId);
+			List<DemographicTransfer> tempLinks = demographicWs.getDirectlyLinkedDemographicsByDemographicId(demographicId);
 			HashSet<FacilityDemographicPrimaryKey> currentLinks = new HashSet<FacilityDemographicPrimaryKey>();
 
 			// check for removals and populate a hashSet (for later use)
-			for (CachedDemographic cachedDemographic : tempLinks) {
-				FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey(cachedDemographic.getFacilityIdIntegerCompositePk());
+			for (DemographicTransfer demographicTransfer : tempLinks) {
+				FacilityDemographicPrimaryKey pk = new FacilityDemographicPrimaryKey();
+				pk.setFacilityId(demographicTransfer.getIntegratorFacilityId());
+				pk.setDemographicId(demographicTransfer.getCaisiDemographicId());
 				currentLinks.add(pk);
 
 				if (!linkedCaisiIds.contains(pk)) demographicWs.unLinkDemographics(demographicId, pk.getFacilityId(), pk.getDemographicId());

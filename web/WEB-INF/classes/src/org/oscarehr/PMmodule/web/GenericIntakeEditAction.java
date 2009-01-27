@@ -55,8 +55,8 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
-import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
@@ -366,15 +366,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 				// copy image if exists
 				{
-					FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
-					pk.setIntegratorFacilityId(remoteFacilityId);
-					pk.setCaisiItemId(remoteDemographicId);
-					byte[] image = demographicWs.getCachedDemographicImage(pk);
+					DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
 
-					if (image != null) {
+					if (demographicTransfer.getPhoto() != null) {
 						ClientImage clientImage = new ClientImage();
 						clientImage.setDemographic_no(client.getDemographicNo());
-						clientImage.setImage_data(image);
+						clientImage.setImage_data(demographicTransfer.getPhoto());
 						clientImage.setImage_type("jpg");
 						clientImageDAO.saveClientImage(clientImage);
 					}

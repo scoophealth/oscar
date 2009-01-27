@@ -2,8 +2,8 @@
 <%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
 <%@ include file="/common/messages.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographic"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicTransfer"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicTransferScore"%>
 <%@page import="java.util.HashMap"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
@@ -107,27 +107,25 @@
    	<p>The following possible matches were found in the integrated community.</p>
     <display-el:table class="simple" name="requestScope.remoteMatches" id="x">
        	<%
-       		MatchingDemographicScore mdir=(MatchingDemographicScore)pageContext.getAttribute("x");
-       		CachedDemographic cdi=mdir.getCachedDemographic();
-   			int facilityId=cdi.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
+       		MatchingDemographicTransferScore matchingDemographicTransferScore=(MatchingDemographicTransferScore)pageContext.getAttribute("x");
+       		DemographicTransfer demographicTransfer=matchingDemographicTransferScore.getDemographicTransfer();
+   			int facilityId=demographicTransfer.getIntegratorFacilityId();
 			String facilityName=facilitiesNameMap.get(facilityId);
    		%>
         <display-el:setProperty name="paging.banner.placement" value="bottom" />
 
         <display-el:column title="">
-        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=cdi.getFacilityIdIntegerCompositePk().getCaisiItemId()%>)" />
+        	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=demographicTransfer.getCaisiDemographicId()%>)" />
         </display-el:column>
-        <display-el:column title="Facility Name">
-        	<%=facilityName%>
-        </display-el:column>
+        <display-el:column title="Facility Name"><%=facilityName%></display-el:column>
         <display-el:column title="Client Name" >
-        	<c:out value="${x.cachedDemographic.lastName}" />, <c:out value="${x.cachedDemographic.firstName}" />
+        	<c:out value="${x.demographicTransfer.lastName}" />, <c:out value="${x.demographicTransfer.firstName}" />
         </display-el:column>
         <display-el:column title="BirthDate">
-        	<c:out value="${x.cachedDemographic.birthDate.year}" />-<c:out value="${x.cachedDemographic.birthDate.month}" />-<c:out value="${x.cachedDemographic.birthDate.day}" />
+        	<c:out value="${x.demographicTransfer.birthDate.year}" />-<c:out value="${x.demographicTransfer.birthDate.month}" />-<c:out value="${x.demographicTransfer.birthDate.day}" />
         </display-el:column>
-        <display-el:column property="cachedDemographic.gender" title="Gender" />
-        <display-el:column property="cachedDemographic.hin" title="Health Number" />
+        <display-el:column property="demographicTransfer.gender" title="Gender" />
+        <display-el:column property="demographicTransfer.hin" title="Health Number" />
         <display-el:column property="score" title="Matching Score" />
     </display-el:table>
 </c:if>

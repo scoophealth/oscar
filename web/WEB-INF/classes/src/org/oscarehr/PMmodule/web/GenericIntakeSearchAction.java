@@ -40,11 +40,11 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographic;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicParameters;
-import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicScore;
+import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicTransferScore;
 import org.oscarehr.caisi_integrator.ws.client.Referral;
 import org.oscarehr.caisi_integrator.ws.client.ReferralWs;
 import org.oscarehr.common.model.Demographic;
@@ -52,11 +52,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 
 import com.quatro.model.LookupCodeValue;
-import com.quatro.service.LookupManager;
 
-/*
- * Updated by Eugene Petruhin on 14 jan 2009 while fixing #2493947
- */
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
@@ -87,15 +83,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 
     private SurveyManager surveyManager;
-    private LookupManager lookupManager;
     private CaisiIntegratorManager caisiIntegratorManager;
 
     public void setSurveyManager(SurveyManager mgr) {
         this.surveyManager = mgr;
-    }
-
-    public void setLookupManager(LookupManager lookupManager) {
-        this.lookupManager = lookupManager;
     }
 
     public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
@@ -118,17 +109,17 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			Referral remoteReferral=referralWs.getReferral(remoteReferralId);
 
 			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
-			CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
+			DemographicTransfer demographicTransfer=demographicWs.getDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 			
 	        GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-	        intakeSearchBean.setFirstName(cachedDemographic.getFirstName());
-	        intakeSearchBean.setGender(cachedDemographic.getGender());
-	        intakeSearchBean.setHealthCardNumber(cachedDemographic.getHin());
-	        intakeSearchBean.setHealthCardVersion(cachedDemographic.getHinVersion());
-	        intakeSearchBean.setLastName(cachedDemographic.getLastName());
-	        intakeSearchBean.setYearOfBirth(String.valueOf(cachedDemographic.getBirthDate().getYear()));
-	        intakeSearchBean.setMonthOfBirth(String.valueOf(cachedDemographic.getBirthDate().getMonth()));
-	        intakeSearchBean.setDayOfBirth(String.valueOf(cachedDemographic.getBirthDate().getDay()));
+	        intakeSearchBean.setFirstName(demographicTransfer.getFirstName());
+	        intakeSearchBean.setGender(demographicTransfer.getGender());
+	        intakeSearchBean.setHealthCardNumber(demographicTransfer.getHin());
+	        intakeSearchBean.setHealthCardVersion(demographicTransfer.getHinVersion());
+	        intakeSearchBean.setLastName(demographicTransfer.getLastName());
+	        intakeSearchBean.setYearOfBirth(String.valueOf(demographicTransfer.getBirthDate().getYear()));
+	        intakeSearchBean.setMonthOfBirth(String.valueOf(demographicTransfer.getBirthDate().getMonth()));
+	        intakeSearchBean.setDayOfBirth(String.valueOf(demographicTransfer.getBirthDate().getDay()));
         }
 		catch (MalformedURLException e) {
 			LOG.error("Unexpected Error.", e);
@@ -161,7 +152,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
         // if matches found display results, otherwise create local intake
         @SuppressWarnings("unchecked")
-        List<MatchingDemographicScore> remoteMatches=(List<MatchingDemographicScore>) request.getAttribute("remoteMatches");
+        List<MatchingDemographicTransferScore> remoteMatches=(List<MatchingDemographicTransferScore>) request.getAttribute("remoteMatches");
         if (!localMatches.isEmpty() || (remoteMatches!=null && remoteMatches.size()>0)) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         }
@@ -199,14 +190,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		        if (temp != null) soapCal.setDay(Integer.parseInt(temp));
 
 		        soapCal.setTime(0, 0, 0);
+			    parameters.setBirthDate(soapCal);
 		    }
-		    parameters.setBirthDate(soapCal);
 
-		    List<MatchingDemographicScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
-		    if (LOG.isDebugEnabled()) {
-		        for (MatchingDemographicScore r : integratedMatches)
-		            LOG.debug("*** do itegrated search results : " + r.getCachedDemographic() + " : " + r.getScore());
-		    }
+		    List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 		    request.setAttribute("remoteMatches", integratedMatches);
 
 		    List<CachedFacility> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
@@ -249,14 +236,14 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
             int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
-            CachedDemographic cachedDemographic=demographicWs.getCachedDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
+            DemographicTransfer demographicTransfer=demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
-            XMLGregorianCalendar soapCal=cachedDemographic.getBirthDate();
-            Demographic demographic = Demographic.create(cachedDemographic.getFirstName(), cachedDemographic.getLastName(), cachedDemographic.getGender(), null, null, null, cachedDemographic.getHin(), null, true);
+            XMLGregorianCalendar soapCal=demographicTransfer.getBirthDate();
+            Demographic demographic = Demographic.create(demographicTransfer.getFirstName(), demographicTransfer.getLastName(), null, null, null, demographicTransfer.getHin(), null, true);
             demographic.setBirthDay(soapCal.toGregorianCalendar());
-            demographic.setCity(cachedDemographic.getCity());
-            demographic.setProvince(cachedDemographic.getProvince());
-            demographic.setSin(cachedDemographic.getSin());
+            demographic.setCity(demographicTransfer.getCity());
+            demographic.setProvince(demographicTransfer.getProvince());
+            demographic.setSin(demographicTransfer.getSin());
             
             return forwardIntakeEditCreate(mapping, request, demographic);
         }
@@ -278,9 +265,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
-        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getGender(),
-                intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(),
-                intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
+        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(),
+                intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
     }
 
     protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
