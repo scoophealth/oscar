@@ -100,8 +100,10 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 				</td>
 			</tr>
 			<tr>
-				<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty
-					name="patient" property="surname" /></td>
+				<td><b><bean:message key="SearchDrug.nameText" /></b> 
+<jsp:getProperty name="patient" property="surname" />,
+<jsp:getProperty name="patient" property="firstName" />
+</td>
 			</tr>
 			<tr>
 				<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty
