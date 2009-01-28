@@ -209,6 +209,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         start = current;
         
         log.debug("Get Note for editing");
+        
         if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {
             log.debug("NEW NOTE GENERATED");
             request.getSession().setAttribute("newNote", "true");
@@ -280,7 +281,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         current = System.currentTimeMillis();
         log.debug("Get note to edit " + String.valueOf(current-start));
         start = current;
-
+                        
         /*
          * do the restore if(restore != null && restore.booleanValue() == true) { String tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId); if(tmpsavenote != null) { note.setNote(tmpsavenote); }
          *  }
@@ -353,10 +354,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("The End of Edit " + String.valueOf(current - beginning));
         start = current;
         
-        String frmName = "caseManagementEntryForm" + demono;
-        request.getSession().setAttribute(frmName, cform);
-        
-        
+        String frmName = "caseManagementEntryForm" + demono;        
+        request.getSession().setAttribute(frmName, cform);        
         
         ActionForward fwd, finalFwd = null;
         if (chain != null && chain.length() > 0) {
@@ -622,6 +621,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     public long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
 
         // we don't want to save empty notes!        
+        
         String noteTxt = cform.getCaseNote_note();        
         
         if (noteTxt == null || noteTxt.equals("")) return -1;
@@ -629,6 +629,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String demo = getDemographicNo(request);
         String sessionFrmName = "caseManagementEntryForm" + demo;
         CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
+
         CaseManagementNote note = (CaseManagementNote) sessionFrm.getCaseNote();                
         note.setNote(noteTxt);
         
@@ -807,14 +808,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         
         //update password
-        note.setPassword(cform.getCaseNote().getPassword());
-
-        if (note.getPassword() != null && note.getPassword().length() > 0) {
+        String passwd = cform.getCaseNote().getPassword().trim();
+        if( passwd != null && passwd.length() > 0 ) {
+            System.out.println("SETTING PASSWORD '" + passwd + "'");
+            note.setPassword(passwd);
             note.setLocked(true);
         }
-        else {
-            note.setLocked(false);
-        }
+        
+        
 
         int revision;
 
@@ -851,6 +852,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.getSession().setAttribute("lastSavedNoteString", savedStr);
         caseManagementMgr.getEditors(note);
         cform.setCaseNote(note); 
+        
 
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
