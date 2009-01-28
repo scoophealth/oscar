@@ -1036,10 +1036,10 @@ function changeToView(id) {
             func = "noPrivs(event);";
         }
         else {
-            func = "";
+            func = "editNote(event);";
         }
 
-        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
+        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
 
         new Insertion.Top(parent, input);
         new Insertion.Top(parent, editAnchor);            
@@ -1098,10 +1098,10 @@ function completeChangeToView(note,newId) {
         func = "noPrivs(event);";
     }
     else {
-        func = "";
+        func = "editNote(event);";
     }
 
-    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
+    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
 
     new Insertion.Top(parent, input);    
     new Insertion.Top(parent, anchor);
@@ -1155,9 +1155,9 @@ function minView(e) {
         func = "noPrivs(event);";
     }
     else {
-        func = "";
+        func = "editNote(event);";
     }
-    var anchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
+    var anchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
     new Insertion.After(print, anchor);
     
     
@@ -1374,10 +1374,11 @@ function editNote(e) {
     var noteHeight;
     var largeFont = 16;        
     var quit = "quitImg";
-    var el = Event.element(e);    
-    var txt = el.parentNode.id; 
+    var el = Event.element(e);        
     var payload;  
-    var nId = txt.substr(1); 
+    var regEx = /\d+/;    
+    var nId = regEx.exec(el.id);
+    var txt = "n" + nId;    
     var xpandId = "xpImg" + nId;
 
     if( $(xpandId) != null ) {
@@ -1402,10 +1403,11 @@ function editNote(e) {
     }              
     
     
-    var editAnchor = 'edit' + nId;
-    var date = 'd' + nId;
-    var content = 'c' + nId;
+    var editAnchor = "edit" + nId;
+    var date = "d" + nId;
+    var content = "c" + nId;
     
+    console.log("edit Anchor " + editAnchor);
     //remove edit anchor
     Element.remove(editAnchor);
 
@@ -1435,7 +1437,8 @@ function editNote(e) {
     new Insertion.Top(txt, input);                 
     var printimg = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";    
 
-    if( nId.substr(0,1) != "0" )
+    var strNid = "" + nId;
+    if( strNid.substr(0,1) != "0" )
         new Insertion.Top(txt, printimg);
 
     if( $F(isFull) == "true" ) {    
@@ -1457,7 +1460,7 @@ function editNote(e) {
     }
                             
     //we check if we are dealing with a new note or not
-    if( nId.charAt(0) == "0" ) {
+    if( strNid.charAt(0) == "0" ) {
         document.forms["caseManagementEntryForm"].noteId.value = "0";
         document.forms["caseManagementEntryForm"].newNoteIdx.value = nId;
         document.forms["caseManagementEntryForm"].note_edit.value = "new";
