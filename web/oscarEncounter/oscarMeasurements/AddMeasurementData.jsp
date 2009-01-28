@@ -235,7 +235,7 @@ function disableifchecked(ele,nextDate){
 				border="0" /></a> <br>
 
 			<label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label>
-			<% if ( mtypeBean.getValidationName() != null ){ %>
+			<% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
 			<select id="<%= "value(inputValue-" + ctr + ")" %>"
 				name="<%= "value(inputValue-" + ctr + ")" %>">
 				<%if (measurements.length > 1){ %>
