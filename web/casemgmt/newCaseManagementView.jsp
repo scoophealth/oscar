@@ -579,7 +579,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     long time1,time2;
 		    String noteStr;
 		    int length;
-                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "Reminders"};                    
+                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders"};                    
                     
                     /*
                      *  Cycle through notes starting from the most recent and marking them for full inclusion or one line display
@@ -666,21 +666,25 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     
                     //System.out.println("Starting " + note.getId());
 		    time1 = System.currentTimeMillis();
+                    boolean editWarn = !note.isSigned() && !note.getProviderNo().equals(provNo);
                     %>
 		<div id="nc<%=idx%>" class="note"><input type="hidden"
 			id="signed<%=note.getId()%>" value="<%=note.isSigned()%>"> <input
 			type="hidden" id="full<%=note.getId()%>"
 			value="<%=fulltxt || note.getId() == savedId%>"> <input
 			type="hidden" id="bgColour<%=note.getId()%>" value="<%=bgColour%>">
-		<input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
-		<input type="hidden" name="caseNote.demographic_no"
-			value="<%=note.getDemographic_no()%>">
+                        <input type="hidden" id="editWarn<%=note.getId()%>" value="<%=editWarn%>">
+		
 		<div id="n<%=note.getId()%>">
 		<%
                             //display last saved note for editing
                             if( note.getId() == savedId ) {    
                             found = true;
-                            %> <img title="Print"
+                            %>
+                            <%--<input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
+                            <input type="hidden" name="caseNote.demographic_no"
+			value="<%=note.getDemographic_no()%>"> --%>
+                            <img title="Print"
 			id='print<%=note.getId()%>' alt="Toggle Print Note"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px;'
@@ -702,7 +706,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             //else display contents of note for viewing
                             else {
                             
-				if( note.isLocked() ) {
+				if( note.isLocked() ) {                                    
                             %> <span id="txt<%=note.getId()%>"><bean:message
 			key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></span>
 		<%
@@ -714,20 +718,21 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             %> <img title="Minimize Display"
 			id='quitImg<%=note.getId()%>' alt="Minimize Display"
 			onclick="minView(event)"
-			style='float: right; margin-right: 5px; margin-bottom: 3px;'
+			style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
 		<% }else {
                             %> <img title="Maximize Display"
 			id='quitImg<%=note.getId()%>' alt="Maximize Display"
-			onclick="fullView(event)" style='float: right; margin-right: 5px;'
+			onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' />
-		<% } 
+		<% }
+                    
                             %> <img title="Print"
 			id='print<%=note.getId()%>' alt="Toggle Print Note"
 			onclick="togglePrint(<%=note.getId()%>, event)"
-			style='float: right; margin-right: 5px;'
+			style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
-                        <a title="Edit" id="edit<%=note.getId()%>" href="#" onclick="editNote(event); return false;" style='float: right; margin-right: 5px; font-size:8px;'>E</a>
+                        <a title="Edit" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event);":"editNote(event);"%> return false;" style='float:right; margin-right:5px; font-size:8px;'>Edit</a>
 
 		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();
@@ -828,17 +833,14 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     //so we store the ids here and list the event listeners at the end of this script
                     if( note.getId() != savedId ) {
                         
-                        if( note.isSigned() || (!note.isSigned() && note.getProviderNo().equals(provNo))) {
+                        //if( note.isSigned() || (!note.isSigned() && note.getProviderNo().equals(provNo))) {
                             if( note.isLocked() ) { 
                                 lockedNotes.add(note.getId());
                             }
                             else if( !fulltxt) {
                                 unLockedNotes.add(note.getId());
                             }
-                        }
-                        else {
-                            unEditableNotes.add(note.getId());
-                        }
+                        //}
                     }    
                     
     //current = System.currentTimeMillis();
@@ -860,6 +862,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		id="full<%=savedId%>" value="true"> <input type="hidden"
 		id="bgColour<%=savedId%>"
 		value="color:#000000;background-color:#CCCCFF;">
+                <input type="hidden" id="editWarn<%=savedId%>" value="false">
 	<div id="n<%=savedId%>" style="line-height: 1.1em;"><textarea
 		tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea"
 		style="line-height: 1.1em;" name="caseNote_note"
@@ -869,7 +872,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	</div>
 
 	<c:if test="${sessionScope.passwordEnabled=='true'}">
-		<p style='display: none;' id='notePasswd'>Password:&nbsp;<html:password
+		<p style='background-color: #CCCCFF; display: none; margin: 0px;' id='notePasswd'>Password:&nbsp;<html:password
 			property="caseNote.password" /></p>
 	</c:if></div>
 	</div>
@@ -977,15 +980,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
             Element.observe('n<%=num%>', 'click', fullView);
     <%
         }      
-    
-        iterator = unEditableNotes.iterator();
-        while( iterator.hasNext() ) {
-            num = (Long)iterator.next();
-    %>
-            Element.observe('n<%=num%>', 'click', noPrivs);
-    <%
-        }
-    %>   
+    %>         
     
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
