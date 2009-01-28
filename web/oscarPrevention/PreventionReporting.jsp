@@ -379,17 +379,41 @@ function disableifchecked(ele,nextDate){
                   <%}
                     --%> <% if ( firstLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(firstLetter, "demo"); 
-                        %> <a target="_blank"
-	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate
-First Letter</a> <%}%> <% if ( secondLetter.size() > 0 ) { 
+                        %>
+                        <form action="<%=request.getContextPath()%>/report/GenerateLetters.jsp" method="POST" target="_blank">
+                            <input type="hidden" name="message" value="<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">
+                            <input type="hidden" name="followupType" value="<%=followUpType%>">
+                            <input type="hidden" name="followupValue" value="L1">
+                            <%=queryStr%>
+                            <input type="submit" value="Generate First Letter">
+                        </form>
+                         <%}%> <% if ( secondLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(secondLetter, "demo"); 
-                        %> <a target="_blank"
+                        %> 
+                        <form action="<%=request.getContextPath()%>/report/GenerateLetters.jsp" method="POST" target="_blank">
+                            <input type="hidden" name="message" value="<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">
+                            <input type="hidden" name="followupType" value="<%=followUpType%>">
+                            <input type="hidden" name="followupValue" value="L2">
+                            <%=queryStr%>
+                            <input type="submit" value="Generate Second Letter">
+                        </form>
+                        
+                       <%-- <a target="_blank"
 	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate
-Second Letter</a> <%}%> <% if ( refusedLetter.size() > 0 ) { 
+Second Letter</a> --%><%}%> <% if ( refusedLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(refusedLetter, "demo"); 
-                        %> <a target="_blank"
+                        %> 
+                        <form action="<%=request.getContextPath()%>/report/GenerateLetters.jsp" method="POST" target="_blank">
+                            <input type="hidden" name="message" value="<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">
+                            <input type="hidden" name="followupType" value="<%=followUpType%>">
+                            <input type="hidden" name="followupValue" value="L1">
+                            <%=queryStr%>
+                            <input type="submit" value="Generate Refused Letter">
+                        </form>
+                        
+                        <%--<a target="_blank"
 	href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate
-Refused Letter</a> <%}%> <%--
+Refused Letter</a> --%> <%}%> <%--
                   <% if ( phoneCall.size() > 0 ) { 
                         String queryStr = getUrlParamList(phoneCall, "demo");                      
                         %>                        
@@ -409,11 +433,12 @@ Refused Letter</a> <%}%> <%--
         String queryStr = "";
         for (int i = 0; i < list.size(); i++){
             String demo = (String) list.get(i);
-            if (i == 0){
+            queryStr += "<input type='hidden' name='" + paramName + "' value='" + demo + "'>\n";
+            /*if (i == 0){
               queryStr += paramName+"="+demo;
             }else{
               queryStr += "&amp;"+paramName+"="+demo;  
-            }
+            } */
         }
         return queryStr;
   } 
