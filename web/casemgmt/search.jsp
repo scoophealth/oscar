@@ -22,6 +22,8 @@
 */
  -->
 
+<%-- Updated by Eugene Petruhin on 27 jan 2009 while fixing #2510693 --%>
+
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <script>

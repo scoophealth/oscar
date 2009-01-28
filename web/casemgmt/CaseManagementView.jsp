@@ -24,6 +24,7 @@
 
 <%-- Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061 --%>
 <%-- Updated by Eugene Petruhin on 15 jan 2009 while fixing #2510692 --%>
+<%-- Updated by Eugene Petruhin on 27 jan 2009 while fixing #2510693 --%>
 
 <%@ include file="/casemgmt/taglibs.jsp"%>
 
