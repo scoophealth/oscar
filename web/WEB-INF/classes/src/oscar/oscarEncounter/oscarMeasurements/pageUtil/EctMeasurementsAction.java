@@ -169,6 +169,7 @@ public class EctMeasurementsAction extends Action {
                         saveErrors(request, errors);
                         valid = false;
                     }
+                    
                     if(!ectValidation.matchRegExp(regExp, inputValue)){
                         errors.add(inputValueName,
                         new ActionMessage("errors.invalid", inputTypeDisplay));
