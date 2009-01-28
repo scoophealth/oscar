@@ -22,6 +22,7 @@
 */
  -->
 
+<%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ include file="/casemgmt/taglibs.jsp"%>
 <script>
 	function popupNotePage(varpage) {
@@ -39,8 +40,6 @@
     }
     
 </script>
-
-<html:hidden property="note_view" />
 
 <table width="100%" border="0" cellpadding="0" cellspacing="1"
 	bgcolor="#C0C0C0">
@@ -88,18 +87,18 @@
 				style="text-decoration: underline; cursor: pointer; color: blue"
 				onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='search';document.caseManagementViewForm.submit();return false;">Detailed</span>
 			</td>
-			<td align="right">Sort: <html:select property="note_sort"
-				onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">
+			<td align="right">Sort: <html-el:select property="note_sort"
+				onchange="document.caseManagementViewForm.method.value='search';document.caseManagementViewForm.note_view.value='${param.note_view}';document.caseManagementViewForm.submit()">
 				<html:option value="update_date">Date</html:option>
 				<html:option value="providerName">Provider</html:option>
 				<html:option value="programName">Program</html:option>
 				<html:option value="roleName">Role</html:option>
-			</html:select></td>
+			</html-el:select></td>
 		</tr>
 	</table>
 	<c:choose>
 		<c:when
-			test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
+			test="${param.note_view!='detailed'}">
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<tr class="title">
@@ -111,9 +110,9 @@
 					<td>Role</td>
 				</tr>
 
-				<%int index=0; String bgcolor="white"; %>
+		<%int index=0; String bgcolor="white"; %>
 				<c:forEach var="note" items="${search_results}">
-					<%
+		<%
 			if(index++%2!=0) {
 				bgcolor="white";
 			} else {
@@ -132,7 +131,7 @@
 									onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 							</c:when>
 							<c:when
-								test="${note.signed and note.providerNo eq param.providerNo}">
+								test="${note.signed and param.providerNo eq note.providerNo}">
 								<c:url
 									value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 									var="notesURL" />
@@ -180,21 +179,26 @@
 					</tr>
 				</c:forEach>
 			</table>
+
+
 		</c:when>
 		<c:otherwise>
 
 
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
-				<%int index1=0; String bgcolor1="white"; %>
+		<%int index1=0; String bgcolor1="white"; %>
 				<c:forEach var="note" items="${search_results}">
-					<%
+		<%
 			if(index1++%2!=0) {
 				bgcolor1="white";
 			} else {
 				bgcolor1="#EEEEFF";
 			}
 		%>
+				<tr>
+					<td>
+					<table width="100%" border="0" style="margin-bottom: 5px">
 					<tr bgcolor="<%=bgcolor1 %>">
 						<td width="7%">Provider</td>
 						<td width="93%"><c:out
@@ -214,26 +218,26 @@
 						<td width="93%"><c:if
 							test="${(!note.signed) and (sessionScope.readonly=='false')}">
 							<c:url
-								value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+								value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 								var="notesURL" />
 							<input type="button" value="Edit and Sign"
 								onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
 						</c:if> <c:if
-							test="${note.signed and note.provider_no eq param.providerNo}">
+							test="${note.signed and param.providerNo eq note.providerNo}">
 							<c:url
-								value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+								value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 								var="notesURL" />
 							<input type="button" value="Edit This Note"
 								onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
 						</c:if> <c:if test="${note.hasHistory == true}">
 							<c:url
-								value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+								value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 								var="historyURL" />
 							<input type="button" value="Note History"
 								onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
 						</c:if> <c:if test="${note.locked}">
 							<c:url
-								value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}"
+								value="/CaseManagementView.do?method=unlock&noteId=${note.id}"
 								var="lockedURL" />
 							<input type="button" value="Unlock"
 								onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
@@ -251,6 +255,9 @@
 							</c:otherwise>
 						</c:choose></td>
 					</tr>
+					</table>
+					</td>
+				</tr>
 				</c:forEach>
 			</table>
 
@@ -262,11 +269,5 @@
 &nbsp;|&nbsp;
 <span style="text-decoration: underline; cursor: pointer; color: blue"
 		onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='search';document.caseManagementViewForm.submit();return false;">Detailed</span>
-	<br />
-	<br />
-	<c:url
-		value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-		var="noteURL" />
-
 
 </c:if>

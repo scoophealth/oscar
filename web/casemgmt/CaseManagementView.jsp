@@ -91,7 +91,7 @@
 		}
 	}
 <%
-	} else {
+	} else if (noteList != null) {
 %>
 	function filter(term, _id, cellNr) {
 		
@@ -407,14 +407,14 @@ Progress Note Report View:
 					<html:option value="">All</html:option>
 					<html:options collection="providers" property="providerNo"
 						labelProperty="formattedName" />
-				</html:select> &nbsp; &nbsp; &nbsp; Sort: <html:select property="note_sort"
-					onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">
+				</html:select> &nbsp; &nbsp; &nbsp; Sort: <html-el:select property="note_sort"
+					onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.note_view.value='${param.note_view}';document.caseManagementViewForm.submit()">
 					<html:option value="observation_date_desc">Observation Date - Desc</html:option>
 					<html:option value="observation_date_asc">Observation Date - Asc</html:option>
 					<html:option value="providerName">Provider</html:option>
 					<html:option value="programName">Program</html:option>
 					<html:option value="roleName">Role</html:option>
-				</html:select></td>
+				</html-el:select></td>
 			</tr>
 		</table>
 		<c:if
@@ -627,7 +627,7 @@ Progress Note Report View:
 	</c:if>
 
 
-	<c:if test="${empty Notes and sessionScope.readonly=='false'}">
+	<c:if test="${'Current Issues'==selectedTab and empty Notes and sessionScope.readonly=='false'}">
 		<c:url
 			value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 			var="noteURL" />
