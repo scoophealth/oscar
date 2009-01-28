@@ -1259,7 +1259,7 @@ INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Va
 INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 100", "100", "0", "1");
 INSERT INTO validations(name, maxValue, minValue, isNumeric) VALUES ("Numeric Value: 0 to 300", "300", "0", "1");
 INSERT INTO validations(name, regularExp) VALUES ("Blood Pressure","[0-9]{2,3}/{1}[0-9]{2,3}");
-INSERT INTO validations(name, regularExp) VALUES ("Yes/No","YES|yes|Yes|Y|NO|no|No|N|NotAvailable");
+INSERT INTO validations(name, regularExp) VALUES ("Yes/No","YES|yes|Yes|Y|NO|no|No|N|NotApplicable");
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 5', 5, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 4', 4, 1, 1);
 INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1 to 3', 3, 1, 1);
