@@ -44,6 +44,7 @@
         frm = (CaseManagementEntryFormBean)session.getAttribute(caseMgmtEntryFrm);
         pageContext.setAttribute("caseManagementEntryForm", frm);
    }
+   
         
 %>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
@@ -62,7 +63,7 @@
 <nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">
 	<%        
        noteIndex = String.valueOf(frm.getCaseNote().getId());       
-       System.out.println("SETTING noteIndex " + noteIndex);
+       
     %>
 	<div style="background-color: #CCCCFF;"
 		id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
@@ -236,7 +237,7 @@ Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
         var newId = "<nested:write name="ajaxsave" />";  
         var oldDiv;
         var newDiv;
-        var prequel = ["n","sig","signed","full","bgColour","print"];
+        var prequel = ["n","sig","signed","full","bgColour","print", "editWarn"];
 
         for( var idx = 0; idx < prequel.length; ++idx ) {
             oldDiv = prequel[idx] + origId;
@@ -247,7 +248,7 @@ Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
        updatedNoteId = newId;
       
        <%
-            //CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");
+            //CaseManagementEntryFormBean form = (CaseManagementEntryFormBean)request.getAttribute("caseManagementEntryForm");            
             String noteTxt = frm.getCaseNote().getNote();
             noteTxt = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(noteTxt);
        %>
