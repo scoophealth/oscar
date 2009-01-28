@@ -40,6 +40,7 @@ Issue Filter Create Report View:
 	<tr class="title">
 		<td></td>
 		<td>Issue</td>
+		<td>Location</td>
 		<td>Acute</td>
 		<td>Certain</td>
 		<td>Major</td>
@@ -84,6 +85,10 @@ Issue Filter Create Report View:
 				onclick="document.caseManagementViewForm.submit();" /></td>
 			<td bgcolor=<%=priority%>><c:out
 				value="${issue.issue.description }" /></td>
+			<td>
+				<c:if test="${issue.remote=='true'}">remote</c:if>
+				<c:if test="${issue.remote=='false'}">local</c:if>
+			</td>
 			<td><c:if test="${issue.acute=='true'}">acute</c:if> <c:if
 				test="${issue.acute=='false'}">chronic</c:if></td>
 			<td><c:if test="${issue.certain=='true'}">certain</c:if> <c:if
