@@ -272,10 +272,11 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
                   ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds",
+                  ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=Family%20History&cmd=FamHistory",
                   ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
               ];
               
-          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "issues" ];
+          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "FamHistory", "issues" ];
 
           var navbar = "leftNavBar";    
           for( var idx = 0; idx < leftNavBar.length; ++idx ) {
@@ -1012,7 +1013,7 @@ function changeToView(id) {
 
     if( !saving ) {
         if( largeNote(tmp) ) {
-            var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+            var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px; ' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
             new Insertion.Top(parent, btmImg); 
         }
 
@@ -1020,15 +1021,25 @@ function changeToView(id) {
 
         //if we're not restoring a new note display print img
         //if( nId.substr(0,1) != "0" ) {
-        //    img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
+        //    img = "<img title='Print' id='print" + nId + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
         //     new Insertion.Top(parent, img);
        // }
 
         var printImg = "print" + nId;       
-        var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
-        var printimg = "<img title='Print' id='" + printImg + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
+        var img = "<img title='Minimize' id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+        var printimg = "<img title='Print' id='" + printImg + "' alt='Toggle Print Note' onclick='togglePrint(" + nId + ", event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
         var input = "<span id='txt" + nId + "'>" + tmp + "<\/span>";
-        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+
+        var func;
+        var editWarn = "editWarn" + nId;
+        if( $F(editWarn) == "true" ) {
+            func = "noPrivs(event);";
+        }
+        else {
+            func = "";
+        }
+
+        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
 
         new Insertion.Top(parent, input);
         new Insertion.Top(parent, editAnchor);            
@@ -1075,13 +1086,22 @@ function completeChangeToView(note,newId) {
 
     var imgId = "quitImg" + newId;
     var printId = "print" + newId;
-    var img = "<img title='Minimize' id='" + imgId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'/>";
-    var printimg = "<img title='Print' id='" + printId + "' alt='Toggle Print Note' onclick='togglePrint(" + newId + ", event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
+    var img = "<img title='Minimize' id='" + imgId + "' onclick='minView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'/>";
+    var printimg = "<img title='Print' id='" + printId + "' alt='Toggle Print Note' onclick='togglePrint(" + newId + ", event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/printer.png'>";
     if( $(printId) != null ) {        
         Element.remove(printId);
     }
 
-    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+    var func;
+    var editWarn = "editWarn" + newId;
+    if( $F(editWarn) == "true" ) {
+        func = "noPrivs(event);";
+    }
+    else {
+        func = "";
+    }
+
+    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
 
     new Insertion.Top(parent, input);    
     new Insertion.Top(parent, anchor);
@@ -1121,7 +1141,7 @@ function minView(e) {
     var line = $(txtId).innerHTML.substr(0,100);
     line = line.replace(/<br>/g," ");
     var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
-    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:65%;'>" + line + "<\/div>";
+    line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:60%;'>" + line + "<\/div>";
     new Insertion.Top(txt,line);        
     
     
@@ -1129,11 +1149,19 @@ function minView(e) {
     //new Insertion.Top(txt, img);
     
     var print = 'print' + nId;
-    var anchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='xpandView(event); editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>E</a>";
+    var func;
+    var editWarn = "editWarn" + nId;
+    if( $F(editWarn) == "true" ) {
+        func = "noPrivs(event);";
+    }
+    else {
+        func = "";
+    }
+    var anchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " editNote(event); return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
     new Insertion.After(print, anchor);
     
     
-    img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_down.gif'>";
+    img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_down.gif'>";
     new Insertion.Top(txt, img);
     Element.observe(txt, 'click', xpandView);
 }
@@ -1168,7 +1196,7 @@ function xpandView(e) {
     var content = "c" + nId;
     var date = "d" + nId;    
     
-    var imgTag = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+    var imgTag = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
     
     
     Element.remove(img);
@@ -1236,7 +1264,7 @@ function fullView(e) {
                     }
                );
                
-    var imgTag = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+    var imgTag = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px; margin-top: 2px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
     
     
     Element.remove(img);
@@ -1348,7 +1376,16 @@ function editNote(e) {
     var quit = "quitImg";
     var el = Event.element(e);    
     var txt = el.parentNode.id; 
-    var payload;    
+    var payload;  
+    var nId = txt.substr(1); 
+    var xpandId = "xpImg" + nId;
+
+    if( $(xpandId) != null ) {
+        xpandView(e);
+    }
+    else {
+        Event.stop(e);    
+    }
 
     //if we have an edit textarea already open, close it
     if($(caseNote) !=null && $(caseNote).parentNode.id != $(txt).id) {
@@ -1357,14 +1394,14 @@ function editNote(e) {
             return;
         }
     }
-            
+       
     //get rid of minimize and print buttons
-    var nodes = $(txt).getElementsBySelector('img');    
+    var nodes = $(txt).getElementsBySelector('img');      
     for(var i = 0; i < nodes.length; ++i ) {
         nodes[i].remove();        
     }              
     
-    var nId = txt.substr(1); 
+    
     var editAnchor = 'edit' + nId;
     var date = 'd' + nId;
     var content = 'c' + nId;
@@ -1895,8 +1932,8 @@ function newNote(e) {
         passwd = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
     }                
 
-    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "' value='true'>" +
-              "<input type='hidden' id='bgColour" + newNoteIdx + "' value='color:#000000;background-color:#CCCCFF;'>" + input + "<div class='sig' style='display:inline;background-color:red;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
+    var div = "<div id='" + id + "' class='newNote'><input type='hidden' id='signed" + newNoteIdx + "' value='false'><input type='hidden' id='editWarn" + newNoteIdx + "' value='false'><div id='n" + newNoteIdx + "'><input type='hidden' id='full" + newNoteIdx + "' value='true'>" +
+              "<input type='hidden' id='bgColour" + newNoteIdx + "' value='color:#000000;background-color:#CCCCFF;'>" + input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
         
@@ -2432,6 +2469,11 @@ function autoCompleteShowMenuCPP(element, update) {
     }
     
     function noPrivs(e) {
-        Event.stop(e);
-        alert("This note has not been signed by owner.  Select new note to add a note.");
+        
+        if( confirm("This note has not been signed by the owner.  Are you sure you want to continue to edit?") ) {
+            editNote(e);
+        }
+        else {
+            Event.stop(e);
+        }
     }
