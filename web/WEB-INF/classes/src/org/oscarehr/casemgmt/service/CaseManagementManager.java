@@ -1385,7 +1385,7 @@ public class CaseManagementManager {
     	if (userName != null && !"".equals(userName.trim()))
     	{
             if( type == this.SIGNATURE_SIGNED ) {
-    		signature = props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + dt.format(now) + " "
+    		signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + dt.format(now) + " "
     				+ props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + ", " + rolename + "]\n" ;
                 
             }
