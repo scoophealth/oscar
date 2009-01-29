@@ -1406,8 +1406,7 @@ function editNote(e) {
     var editAnchor = "edit" + nId;
     var date = "d" + nId;
     var content = "c" + nId;
-    
-    console.log("edit Anchor " + editAnchor);
+        
     //remove edit anchor
     Element.remove(editAnchor);
 
