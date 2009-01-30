@@ -155,7 +155,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 						<%                             for (int i=0; i<forms.size(); i++) {
                                    Hashtable curhash = (Hashtable) forms.get(i);
 %>
-						<html:option value="<%= (String) curhash.get("fid")%>"><%= (String) curhash.get("formName")%> | <%= (String) curhash.get("formDate")%></html:option>
+						<html:option value='<%= (String) curhash.get("fid")%>'><%= (String) curhash.get("formName")%> | <%= (String) curhash.get("formDate")%></html:option>
 						<% } %>
 					</html:select>
 					<td nowrap><input type="hidden" name="groupName"
