@@ -163,8 +163,7 @@ response.setHeader("Cache-Control", "max-age=60");
 									<table>
 										<tr align="left">
 											<th style="vertical-align: middle" align="left"
-												class="clsHomePageLabels"><html:link
-												action="/PMmodule/Task.do?method=filter">My Tasks</html:link>
+												class="clsHomePageLabels">My Tasks
 											</th>
 										</tr>
 									</table>
