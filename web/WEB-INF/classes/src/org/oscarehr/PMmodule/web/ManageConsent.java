@@ -1,6 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
-import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,37 +19,37 @@ public class ManageConsent {
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 
-	private List<CachedFacility> allRemoteFacilities=null;
-	private HashMap<Integer,IntegratorConsent> currentConsents=new HashMap<Integer,IntegratorConsent>();
-	
-	public ManageConsent(Facility facility, Provider provider, int clientId) throws MalformedURLException
-	{
-		allRemoteFacilities=caisiIntegratorManager.getRemoteFacilities(facility.getId());
-		
-		for (CachedFacility cachedFacility : allRemoteFacilities)
-		{
-			IntegratorConsent consent=integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
-			if (consent!=null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
+	private List<CachedFacility> allRemoteFacilities = new ArrayList<CachedFacility>();
+	private HashMap<Integer, IntegratorConsent> currentConsents = new HashMap<Integer, IntegratorConsent>();
+
+	public ManageConsent(Facility facility, Provider provider, int clientId) {
+		try {
+			allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
+
+			for (CachedFacility cachedFacility : allRemoteFacilities) {
+				IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
+				if (consent != null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
 		}
 	}
-	
-	public List<CachedFacility> getAllRemoteFacilities()
-	{
-		return(allRemoteFacilities);
+
+	public List<CachedFacility> getAllRemoteFacilities() {
+		return (allRemoteFacilities);
 	}
-	
-	public boolean wasPreviouslyChecked(int remoteFacilityId, String consentField)
-	{
-		IntegratorConsent consent=currentConsents.get(remoteFacilityId);
-		if (consent==null) return(false);
-		
-		if ("hic".equals(consentField)) return(consent.isRestrictConsentToHic());
-		else if ("search".equals(consentField)) return(consent.isConsentToSearches());
-		else if ("personal".equals(consentField)) return(consent.isConsentToBasicPersonalData());
-		else if ("mental".equals(consentField)) return(consent.isConsentToMentalHealthData());
-		else if ("hnr".equals(consentField)) return(consent.isConsentToHealthNumberRegistry());
-		else logger.error("unexpected consent bit : "+consentField);
-		
-		return(false);
+
+	public boolean wasPreviouslyChecked(int remoteFacilityId, String consentField) {
+		IntegratorConsent consent = currentConsents.get(remoteFacilityId);
+		if (consent == null) return (false);
+
+		if ("hic".equals(consentField)) return (consent.isRestrictConsentToHic());
+		else if ("search".equals(consentField)) return (consent.isConsentToSearches());
+		else if ("personal".equals(consentField)) return (consent.isConsentToBasicPersonalData());
+		else if ("mental".equals(consentField)) return (consent.isConsentToMentalHealthData());
+		else if ("hnr".equals(consentField)) return (consent.isConsentToHealthNumberRegistry());
+		else logger.error("unexpected consent bit : " + consentField);
+
+		return (false);
 	}
 }
