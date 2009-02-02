@@ -1,3 +1,5 @@
+2009-01-28 : Changed how to edit existing notes in new encounter.  Click on edit link instead of note (Randy)
+             Pass demographic numbers in post of form rather than in url for prevention report(Randy)
 2008-12-31 : client image displays on client summary page (Ted)
 2008-12-07 : First commit for quatro merge
 	     Includes most of the security framework, homepage, ORGtree viewer
