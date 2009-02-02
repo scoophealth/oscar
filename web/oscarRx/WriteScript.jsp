@@ -68,6 +68,7 @@ String quan = "";
 boolean isCustom = true;
 String atcCode = null;
 String regionalIdentifier="";
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <script language=javascript>
@@ -832,7 +833,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
     thisForm.setLastRefillDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
-    if (thisForm.getLastRefillDate().isEmpty()) thisForm.setLastRefillDate("yyyy-mm-dd");
+    if (isEmpty(thisForm.getLastRefillDate())) thisForm.setLastRefillDate("yyyy-mm-dd");
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
     thisForm.setSpecial(rx.getSpecial());
@@ -855,7 +856,6 @@ if(bean.getStashIndex() > -1){ //new way
 
 isCustom = thisForm.getGCN_SEQNO() == 0;
 int drugId = thisForm.getGCN_SEQNO();
-
 %>
 <!--
 DemographicNo:   <%= thisForm.getDemographicNo() %><br>
@@ -922,7 +922,6 @@ oscar.oscarRx.data.RxCodesData.FrequencyCode[] freq = codesData.getFrequencyCode
 String[] spec = codesData.getSpecialInstructions();
 
 int i;
-
 %>
 
 	<script language=javascript>
@@ -1079,7 +1078,7 @@ int i;
 								<html:option value="sqrt">Squirts</html:option>
 								<html:option value="gm">gm</html:option>
 								<html:option value="mg">mg</html:option>
-								<html:option value="micg">ï¿½g</html:option>
+								<html:option value="micg">µg</html:option>
 								<html:option value="drop">Drops</html:option>
 								<html:option value="patc">Patch</html:option>
 								<html:option value="puff">Puffs</html:option>
@@ -1300,15 +1299,20 @@ int i;
 				</tr>
 
 				<tr>
-					<td><!--3a--> </html:form> <input type=button class="ControlPushButton"
-						style="width: 55px" onclick="javascript:submitForm('update');"
-						value="Update" /> <input type=button class="ControlPushButton"
-						style="width: 200px"
-						onclick="javascript:submitForm('updateAddAnother');"
-						value="Update and Get New Drug" /> <input type=button
-						class="ControlPushButton" style="width: 200px"
-						onclick="javascript:submitForm('updateAndPrint');"
-						value="Update, Print and Save" /> <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
+					<td><!--3a--> </html:form>
+					    <table width="100%"><tr><td>
+						<input type=button class="ControlPushButton" style="width: 55px" onclick="javascript:submitForm('update');"	
+						    value="Update" /> 
+						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAddAnother');" 
+						    value="Update and Get New Drug" /> 
+						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAndPrint');" 
+						    value="Update, Print and Save" />
+					    </td>
+					    <td align="right">
+						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>','anwin','width=400,height=250');"
+						    value="Annotation" />
+					    </td></tr></table>
+		     <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
 					<br>
@@ -1453,7 +1457,7 @@ int i;
                 //out.write("calcQtyflag=false;"); 
           }
 
-        if (quan == null || quan.equals("")){ quan = "null"; }
+        if (isEmpty(quan)){ quan = "null"; }
         %>
          
          function customQty(quan) {           
@@ -1535,5 +1539,9 @@ int i;
        String retval = (String) h.get(s);
        if (retval == null) {retval = "Unknown";}
        return retval;
+   }
+   
+   boolean isEmpty(String s) {
+       return (s==null || s.length()==0);
    }
 %>
