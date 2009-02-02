@@ -161,7 +161,7 @@
                     flash_url :  "../share/swfupload_f9.swf", 
                                 
                     file_size_limit : "100 MB",
-                    file_types : "*.*",
+                    file_types : "*.pdf",
                     file_types_description : "All Files",
                     file_upload_limit : 100,
                     file_queue_limit : 0,
@@ -477,7 +477,7 @@
 		</form>
 
 
-
+                <a href="undocumentReport2.jsp">Link Records</a> 
 		</td>
 	</tr>
 	<tr>
