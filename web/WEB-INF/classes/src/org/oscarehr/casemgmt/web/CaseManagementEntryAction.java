@@ -355,6 +355,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         start = current;
         
         String frmName = "caseManagementEntryForm" + demono;        
+        System.out.println("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
         request.getSession().setAttribute(frmName, cform);        
         
         ActionForward fwd, finalFwd = null;
@@ -808,8 +809,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         
         //update password
-        String passwd = cform.getCaseNote().getPassword().trim();
-        if( passwd != null && passwd.length() > 0 ) {
+        String passwd = cform.getCaseNote().getPassword();
+        if( passwd != null && passwd.trim().length() > 0 ) {
             System.out.println("SETTING PASSWORD '" + passwd + "'");
             note.setPassword(passwd);
             note.setLocked(true);
@@ -1936,7 +1937,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String encType = request.getParameter("encType");
            
             if( encType == null || encType.equals("") ) {
-                note.setEncounter_type(bean.encType);
+                note.setEncounter_type("");
             }
             else {
                 note.setEncounter_type(encType);
