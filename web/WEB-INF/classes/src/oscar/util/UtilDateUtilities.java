@@ -80,6 +80,12 @@ public class UtilDateUtilities {
         return GregorianCalendar.getInstance().getTime();
     }
 
+    public static Date  Tomorrow()  {
+       Calendar c =GregorianCalendar.getInstance();
+       c.roll(Calendar.DATE, 1);
+       return c.getTime(); 
+    }
+    
     public static Date calcDate(String s, String s1, String s2)    {
         int i = Integer.parseInt(s);
         int j = Integer.parseInt(s1) - 1;
