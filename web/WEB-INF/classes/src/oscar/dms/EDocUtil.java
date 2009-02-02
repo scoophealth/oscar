@@ -271,6 +271,11 @@ public class EDocUtil extends SqlUtilBaseS {
 	
         return resultDocs;
     }
+    
+    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, Integer currentFacilityId) {
+        return  listDocs( module,  moduleid,  docType,  publicDoc,  sort, "active",  currentFacilityId) ;
+    }
+    
 
     public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus, Integer currentFacilityId) {
         // sort must be not null
@@ -331,6 +336,54 @@ public class EDocUtil extends SqlUtilBaseS {
         }
 
         return resultDocs;
+    }
+    
+    
+    public ArrayList<EDoc> getUnmatchedDocuments(String creator,Date startDate, Date endDate,boolean unmatchedDemographics){
+       ArrayList<EDoc> list = new ArrayList(); 
+       //boolean matchedDemographics = true;
+       String sql= "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and updatedatetime >= ?  and updatedatetime <= ?";
+       if (unmatchedDemographics){
+           sql += " and c.module_id = -1 ";
+       }
+       /*else if (matchedDemographics){
+           sql += " and c.module_id != -1 ";
+       }*/
+       try{
+            java.sql.Date  sDate =  new java.sql.Date(startDate.getTime());
+            java.sql.Date eDate  = new java.sql.Date(endDate.getTime());
+            System.out.println("Creator "+creator+" start "+sDate + " end "+eDate);
+           
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
+            ps.setString(1,creator);
+            ps.setDate(2,new java.sql.Date(startDate.getTime()));
+            ps.setDate(3,new java.sql.Date(endDate.getTime()));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+               System.out.println("DOCFILENAME "+rs.getString("docfilename"));
+                EDoc currentdoc = new EDoc();
+                currentdoc.setModule(rsGetString(rs, "module"));
+                currentdoc.setModuleId(rsGetString(rs, "module_id"));
+                currentdoc.setDocId(rsGetString(rs, "document_no"));
+                currentdoc.setDescription(rsGetString(rs, "docdesc"));
+                currentdoc.setType(rsGetString(rs, "doctype"));
+                currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+                String temp = rsGetString(rs, "program_id");
+                if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
+                currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
+                currentdoc.setFileName(rsGetString(rs, "docfilename"));
+                currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
+                currentdoc.setContentType(rsGetString(rs, "contenttype"));
+                currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+               
+               list.add(currentdoc); 
+            }
+       }catch(Exception e){
+           e.printStackTrace();
+       }
+       //mysql> SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and module_id = -1
+       return list;
     }
 
     private static ArrayList<EDoc> documentFacilityFiltering(Integer currentFacilityId, List<EDoc> eDocs) {
