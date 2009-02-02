@@ -59,6 +59,8 @@ public class IntakeTag extends SimpleTagSupport {
 	}
 
 	void toHtml(StringBuilder builder, int indent, IntakeNode node) {
+		if(node == null)
+			return;
 		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getHtmlAdapter(indent, node, intake);
 
 		builder.append(htmlAdapter.getPreBuilder());

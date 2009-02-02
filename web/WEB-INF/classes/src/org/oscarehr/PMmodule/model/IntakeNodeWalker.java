@@ -69,7 +69,7 @@ public class IntakeNodeWalker implements Serializable {
 		public void execute(Object o) {
 			IntakeNode leaf = (IntakeNode) o;
 
-			if (leaf.getChildren().isEmpty()) {
+			if (leaf != null && leaf.getChildren().isEmpty()) {
 				IntakeNodeWalker leafWalker = new IntakeNodeWalker(leaf);
 				levels.add(leafWalker.getLevel());
 			}
@@ -161,8 +161,10 @@ public class IntakeNodeWalker implements Serializable {
 	}
 
 	private IntakeNode up(IntakeNode node, Closure closure) {
+		//if(node == null)
+		
 		IntakeNode root = node;
-
+		
 		while (root.getParent() != null) {
 			closure.execute(root);
 			root = root.getParent();
@@ -173,8 +175,10 @@ public class IntakeNodeWalker implements Serializable {
 
 	private void down(List<IntakeNode> children, Closure closure) {
 		for (IntakeNode child : children) {
-			closure.execute(child);
-			down(child.getChildren(), closure);
+			if (child != null) {
+				closure.execute(child);
+				down(child.getChildren(), closure);
+			}
 		}
 	}
 
