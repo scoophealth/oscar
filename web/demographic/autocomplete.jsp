@@ -25,7 +25,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <ul>
 	<c:forEach var="l" items="${list}">
-		<li id="<c:out value="${l.demographicNo}"/>"><c:out
-			value="${l.formattedName}" /></li>
+		<li id="<c:out value="${l.demographicNo}"/>"><c:out value="${l.formattedName}" /> (<c:out value="${l.formattedDob}" />)</li>
 	</c:forEach>
 </ul>
