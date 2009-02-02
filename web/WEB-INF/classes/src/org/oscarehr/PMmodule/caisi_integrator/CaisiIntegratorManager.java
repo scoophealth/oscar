@@ -30,6 +30,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
@@ -168,6 +169,16 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
+	public List<CachedDemographicIssue> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
+	{
+		@SuppressWarnings("unchecked")
+		DemographicWs demographicWs = getDemographicWs(facilityId);
+		Object resultsObj = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);
+		List<CachedDemographicIssue> results = (List<CachedDemographicIssue>)resultsObj;
+		// cloned so alterations don't affect the cached data
+		return (new ArrayList<CachedDemographicIssue>(results));
+	}
+	
 	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
