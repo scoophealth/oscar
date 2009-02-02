@@ -108,8 +108,9 @@ public class MeasurementFlowSheet {
         if (measurement != null && obj != null) {
             measurementsFlowSheetInfo.put(measurement, obj);
             //SET UP DS now.
-            if (((Hashtable) obj).get("ds_rules") != null) {
-                addDSForMeasurement(measurement, (String) ((Hashtable) obj).get("ds_rules"));
+            String ds_rules = (String) ((Hashtable) obj).get("ds_rules");
+            if (ds_rules != null && !ds_rules.equals("") ) {                
+                    addDSForMeasurement(measurement, ds_rules);                
             }
         }
     }
