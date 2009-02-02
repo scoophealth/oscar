@@ -44,7 +44,7 @@
         String demographicNo = request.getParameter("demographicNo");
         String sessionFrmName = "caseManagementEntryForm" + demographicNo;
         org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean form=(org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean) session.getAttribute(sessionFrmName);
-        pageContext.setAttribute("caseManagementEntryForm", form);
+        request.setAttribute("caseManagementEntryForm", form);
         
 	int size=form.getIssueCheckList().length;
 	
