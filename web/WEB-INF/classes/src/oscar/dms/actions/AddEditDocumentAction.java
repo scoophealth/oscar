@@ -37,8 +37,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.util.SessionConstants;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
@@ -49,7 +52,7 @@ import oscar.util.UtilDateUtilities;
 public class AddEditDocumentAction extends DispatchAction {
         
     public ActionForward multifast(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
-        System.out.println("IN MULTIFAST content len"+request.getContentLength());
+        System.out.println("IN MULTIFAST content len"+request.getContentLength()+" ---- "+request.getParameter("provider"));
         Hashtable errors = new Hashtable();
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
         
@@ -66,9 +69,23 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             writeLocalFile(docFile, fileName);
             newDoc.setContentType(docFile.getContentType());
+            if (fileName.endsWith(".PDF") || fileName.endsWith(".pdf")){
+                newDoc.setContentType("application/pdf");
+            }
             
             String doc_no = EDocUtil.addDocumentSQL(newDoc);
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+        
+        if (request.getParameter("provider") !=null){ //TODO: THIS NEEDS TO RUN THRU THE  lab forwarding rules!
+            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+            ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
+            String proNo = request.getParameter("provider");
+            providerInboxRoutingDao.addToProviderInbox(proNo,doc_no,"DOC");
+        }
+            
+            
+            
+        
         if (docFile != null){
             System.out.println("Content type "+docFile.getContentType()+" filename "+docFile.getFileName()+"  size: "+docFile.getFileSize());        
         }
