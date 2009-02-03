@@ -10411,6 +10411,7 @@ insert into encounterForm values('Growth Charts', '../form/formGrowthChart.jsp?d
 insert into encounterForm values('AR2005', '../form/formonar.jsp?demographic_no=', 'formONAR', '0');
 insert into encounterForm values('Ovulation', '../form/formovulation.jsp?demographic_no=', 'formovulation', '0');
 INSERT INTO encounterForm (form_name, form_value, form_table, hidden) VALUES ('Lab Req 2007', '../form/formlabreq07.jsp?demographic_no=', 'formLabReq07', 0);
+insert into encounterForm (form_name,form_value,form_table) Values('Antenatal Lab Req','../form/formlabreq07.jsp?labType=AnteNatal&demographic_no=','');
 
 INSERT INTO billing_payment_type (id, payment_type) VALUES (1,'CASH');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (2,'CHEQUE');
