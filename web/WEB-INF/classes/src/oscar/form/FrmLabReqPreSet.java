@@ -33,9 +33,24 @@ public class FrmLabReqPreSet {
                 if (LabType.equals("AR")){
                      ARset(props);
                 }
-
+                else if( LabType.equals("AnteNatal") ) {
+                    AnteNatalSet(props);
+                }
 
                 return props;
+        }
+        
+        static void AnteNatalSet(Properties props) {
+            props.setProperty("b_urinalysis","checked");
+            props.setProperty("h_cbc", "checked");
+            props.setProperty("i_rubella", "checked");
+            props.setProperty("i_prenatal", "checked");
+            props.setProperty("m_urine", "checked");
+            props.setProperty("o_otherTests1", "Hep B s Ag");
+            props.setProperty("o_otherTests2", "VDRL");
+            props.setProperty("o_otherTests3", "HIV");
+            props.setProperty("o_otherTests4", "Varicella titre");
+            props.setProperty("o_otherTests5", "Ferritin");
         }
 
 
