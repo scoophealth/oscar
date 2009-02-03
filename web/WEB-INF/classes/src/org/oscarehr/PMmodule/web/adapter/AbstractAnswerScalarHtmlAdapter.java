@@ -39,6 +39,7 @@ abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter
 	protected StringBuilder startLabel(boolean printLabelBefore) {
 		StringBuilder labelBuilder = new StringBuilder();
 		
+		labelBuilder.append("<td>");
 		labelBuilder.append("<label>");
 		
 		if (printLabelBefore) {
@@ -58,7 +59,7 @@ abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter
 		}
 		
 		labelBuilder.append("</label>");
-		
+		labelBuilder.append("</td>");
 		return labelBuilder;
 	}
 	

@@ -55,6 +55,7 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
 	 */
 	public StringBuilder getPreBuilder() {
+		StringBuilder builder = new StringBuilder();
 		return new StringBuilder();
 	}
 	
