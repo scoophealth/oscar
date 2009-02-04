@@ -22,7 +22,7 @@
 
 	<indicator key="LOW" colour="#9999FF" />
 	<indicator key="HIGH" colour="orange" />
-	<indicator key="HIGH 1" colour="#E00000" />
+	<indicator key="HIGH 1" colour="#E00000" />                    
 
 	<item measurement_type="REBG" display_name="Review Blood Glucose Records"
 		guideline="Fasting or pre-meal glucose level 4-7; 2hrs after meal 5-10"
@@ -99,9 +99,23 @@
 	<item measurement_type="DMSM" display_name="Diabetes Self Management Goals"
 		guideline="Assess and discuss self management targets" graphable="no"
 		value_name="Discussed" possible_answer="Yes" />
+                
+        <item measurement_type="DARB" display_name="ACE AARB Service"
+		guideline="" graphable="no"
+		value_name="Discussed" possible_answer="Yes" />                
+                
+        <item measurement_type="DT1" display_name="Type I" guideline="" value_name="Status"
+            graphable="no"/>
 
+        <item measurement_type="DT2" display_name="Type II" guideline="" value_name="Status"
+            graphable="no"/>
 
-
+        <item measurement_type="DIFB" display_name="Impaired FB" guideline="" value_name="Status"
+            graphable="no"/>            
+            
+        <item measurement_type="DIGT" display_name="Impaired GT" guideline="" value_name="Status"
+            graphable="no"/>                        
+                   
 	<measurement type="REBG" typeDesc="Review Glucose Records"
 		typeDisplayName="Review Blood Glucose Records" measuringInstrc="Reviewed">
 		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
@@ -236,5 +250,31 @@
 		<validationRule nameNumeric="Value: 1.5 to 30.0"
 			minValue="1.5" maxValue="30.0" isNumeric="1" />
 	</measurement>
+
+	<measurement type="DARB" typeDesc="ACE AARB"
+		typeDisplayName="ACE AARB Service" measuringInstrc="Discussed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+        <measurement type="DT1" typeDesc="Diabetes Type 1"
+                typeDisplayName="Type I" measuringInstrc="Status">
+                <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+       </measurement>
+       
+        <measurement type="DT2" typeDesc="Diabetes Type 2"
+                typeDisplayName="Type II" measuringInstrc="Status">
+                <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+       </measurement>
+
+        <measurement type="DIFB" typeDesc="Impaired FB"
+                typeDisplayName="Impaired FB" measuringInstrc="Status">
+                <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+       </measurement>
+       
+        <measurement type="DIGT" typeDesc="Impaired Glucose Tolerance"
+                typeDisplayName="Impaired GT" measuringInstrc="Status">
+                <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+       </measurement>
+        
 
 </flowsheet>
