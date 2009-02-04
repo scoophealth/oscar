@@ -75,7 +75,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		caseForm.setFilter_provider("");
-		request.getSession().setAttribute("patientCppPrintPreview", "false");
+		request.setAttribute("patientCppPrintPreview", "false");
 
 		// prevent null pointer errors as both these variables are required in navigation.jsp
 		request.getSession().setAttribute("casemgmt_newFormBeans", new ArrayList<Object>());
