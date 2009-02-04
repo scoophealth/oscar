@@ -1804,7 +1804,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         HashMap<String,List<CaseManagementNote> >cpp = null; 
         if (request.getParameter("printCPP").equalsIgnoreCase("true")) {
             cpp = new HashMap<String,List<CaseManagementNote> >();
-            String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders"};
+            String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders","FamHistory"};
             for( int j = 0; j < issueCodes.length; ++j ) {
                 List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, issueCodes[j]);
                 String[] issueIds = new String[issues.size()];            
@@ -1982,24 +1982,30 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 text.append(separator);
                 text.append(note.getNote());
                 cpp.setSocialHistory(text.toString());
-                break;            
+                break;
             }else if( code.equals("MedHistory") ) {
                 text.append(cpp.getMedicalHistory());
                 text.append(separator);
                 text.append(note.getNote());
                 cpp.setMedicalHistory(text.toString());
-                break;            
+                break;
             }else if( code.equals("Concerns") ) {
                 text.append(cpp.getOngoingConcerns());
                 text.append(separator);
                 text.append(note.getNote());
                 cpp.setOngoingConcerns(text.toString());
-                break;            
+                break;
             }else if( code.equals("Reminders") ) {
                 text.append(cpp.getReminders());
                 text.append(separator);
                 text.append(note.getNote());
                 cpp.setReminders(text.toString());
+                break;
+            }else if( code.equals("FamHistory") ) {
+                text.append(cpp.getFamilyHistory());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setFamilyHistory(text.toString());
                 break;
             }
         }               
@@ -2014,7 +2020,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
         HashMap<String,Issue> issues = (HashMap<String,Issue>)request.getSession().getAttribute("CPPIssues");
         if( issues == null ) {
-            String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders" };
+            String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory" };
             issues = new HashMap<String,Issue>();
             for( String issue : issueCodes ) {
                 List<Issue> i = caseManagementMgr.getIssueInfoByCode(providerNo, issue);
