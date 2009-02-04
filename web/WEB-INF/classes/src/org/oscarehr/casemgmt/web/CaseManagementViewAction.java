@@ -137,7 +137,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward patientCppPrintPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("patientCPPSave");
 
-		request.getSession().setAttribute("patientCppPrintPreview", "true");
+		request.setAttribute("patientCppPrintPreview", "true");
 		return view(mapping, form, request, response);
 	}
 
@@ -509,9 +509,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		log.debug("VIEW Exiting " + String.valueOf(current - beginning));
 
 		String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
-		String printPreview = (String) request.getSession().getAttribute("patientCppPrintPreview");
+		String printPreview = (String) request.getAttribute("patientCppPrintPreview");
 		if ("true".equals(printPreview)) {
-			request.getSession().setAttribute("patientCppPrintPreview", "false");
+			request.setAttribute("patientCppPrintPreview", "false");
 			return mapping.findForward("clientHistoryPrintPreview");
 		}
 		else {
