@@ -70,9 +70,9 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	protected String getDemographicNo(HttpServletRequest request) {
 		String demono = request.getParameter("demographicNo");
 		if (demono == null || "".equals(demono)) {
-			demono = (String) request.getSession().getAttribute("casemgmt_DemoNo");
+			demono = (String) request.getAttribute("casemgmt_DemoNo");
 		} else {
-			request.getSession().setAttribute("casemgmt_DemoNo", demono);
+			request.setAttribute("casemgmt_DemoNo", demono);
 		}
 		return demono;
 	}
