@@ -129,7 +129,10 @@ public class ProgramManagerViewAction extends BaseAction {
         HttpSession se=request.getSession();
         String providerNo = (String)se.getAttribute("user");
         se.setAttribute("performAdmissions",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",programId)));
-		        
+
+        // check if the user is from program's staff
+        request.setAttribute("userIsProgramProvider", new Boolean(programManager.getProgramProvider(providerNo, programId) != null));
+
         // need the queue to determine which tab to go to first
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);

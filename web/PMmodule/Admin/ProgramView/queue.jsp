@@ -117,13 +117,13 @@
     	%>
 		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			<input type="button" value="Admit"
-				<c:if test="${queue_entry.headClientId != null}">disabled</c:if>
+				<c:if test="${queue_entry.headClientId != null || requestScope.userIsProgramProvider != 'true'}">disabled</c:if>
 				onclick="select_client('<c:out value="${queue_entry.clientId}"/>','<%=action %>','<c:out value="${queue_entry.id}"/>')" />
 		</caisi:isModuleLoad>
 
 		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 			<input type="button" value="Admit"
-				<c:if test="${queue_entry.headClientId != null || sessionScope.performAdmissions !='true'}">disabled</c:if>
+				<c:if test="${queue_entry.headClientId != null || sessionScope.performAdmissions !='true' || requestScope.userIsProgramProvider != 'true'}">disabled</c:if>
 				onclick="select_client('<c:out value="${queue_entry.clientId}"/>','<%=action %>','<c:out value="${queue_entry.id}"/>')" />
 		</caisi:isModuleLoad>
 
@@ -131,13 +131,13 @@
 	<display:column sortable="false">
 		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 			<input type="button" value="Reject"
-				<c:if test="${queue_entry.headClientId != null}">disabled</c:if>
+				<c:if test="${queue_entry.headClientId != null || requestScope.userIsProgramProvider != 'true'}">disabled</c:if>
 				onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
 		</caisi:isModuleLoad>
 
 		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 			<input type="button" value="Reject"
-				<c:if test="${queue_entry.headClientId != null || sessionScope.performAdmissions !='true'}">disabled</c:if>
+				<c:if test="${queue_entry.headClientId != null || sessionScope.performAdmissions !='true' || requestScope.userIsProgramProvider != 'true'}">disabled</c:if>
 				onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
 		</caisi:isModuleLoad>
 	</display:column>
