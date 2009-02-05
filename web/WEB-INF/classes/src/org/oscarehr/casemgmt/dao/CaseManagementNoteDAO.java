@@ -170,7 +170,35 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	 * this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no}); }
 	 */
 
-	public List getNotesByDemographic(String demographic_no, String[] issues) {
+	public List getActiveNotesByDemographic(String demographic_no, String[] issues) {
+		String list = null;
+		String hql;
+		if (issues != null) {
+			if (issues.length > 1) {
+				list = "";
+				for (int x = 0; x < issues.length; x++) {
+					if (x != 0) {
+						list += ",";
+					}
+					list += issues[x];
+				}
+				hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list
+						+ ") and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
+				return this.getHibernateTemplate().find(hql, new Object[] { demographic_no, demographic_no });
+
+			}
+			else if (issues.length == 1) {
+				hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
+				long id = Long.parseLong(issues[0]);
+				return this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no, demographic_no });
+			}
+		}
+
+                return new ArrayList();            
+        }
+        
+        
+        public List getNotesByDemographic(String demographic_no, String[] issues) {
 		String list = null;
 		String hql;
 		if (issues != null) {

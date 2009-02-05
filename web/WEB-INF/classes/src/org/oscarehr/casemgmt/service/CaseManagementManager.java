@@ -278,8 +278,7 @@ public class CaseManagementManager {
         
         return caseManagementNoteDAO.getCPPNotes(demoNo, issueId, staleDate);
             
-    }
-    
+    }        
     
     /*
      *fetch notes for demographic linked with specified issues
@@ -309,6 +308,12 @@ public class CaseManagementManager {
         }
         return notesNoLocked;
         */
+        return notes;
+    }
+    
+    /*Return only those notes with archived set to zero */
+    public List<CaseManagementNote> getActiveNotes(String demographic_no, String[] issues) {
+        List notes = caseManagementNoteDAO.getActiveNotesByDemographic(demographic_no, issues);
         return notes;
     }
 
