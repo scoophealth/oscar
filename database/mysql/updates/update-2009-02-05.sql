@@ -1,0 +1,6 @@
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DMSM", "Diabetes Self Management Goals", "Diabetes Self Management Goals", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DT1", "Type I", "Diabetes Type 1", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DT2", "Type II", "Diabetes Type 2", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIFB", "Impaired FB", "Impaired FB", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIGT", "Impaired GT", "Impaired Glucose Tolerance", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DARB", "ACE AARB", "ACE AARB", "Yes/No", "7");
