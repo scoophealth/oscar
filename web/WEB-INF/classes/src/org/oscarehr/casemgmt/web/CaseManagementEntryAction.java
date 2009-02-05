@@ -413,7 +413,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String providerNo = getProviderNo(request);
             Provider provider = getProvider(request);
             String userName = provider != null?provider.getFullName():"";
-
+            
             String demo = getDemographicNo(request);
                         
             String noteId = request.getParameter("noteId");                                 
@@ -445,6 +445,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if( provider != null )
                 note.setProvider(provider);                        
             
+            String archived = request.getParameter("archived");
+            if( archived == null || archived.equalsIgnoreCase("false") ) {
+                note.setArchived(false);
+            }
+            else {
+                note.setArchived(true);
+            }
+            
+            log.debug("Note archived " + note.isArchived());
             String programId = (String)request.getSession().getAttribute("case_program_id");			
             note.setProgram_no(programId);
                         
@@ -606,6 +615,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             cpp = copyNote2cpp(cpp,note);
             String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
+            log.debug("Saved note " + savedStr);
             caseManagementMgr.saveCPP(cpp, providerNo);
             /* remember the str written into echart */
             request.getSession().setAttribute("lastSavedNoteString", savedStr);
