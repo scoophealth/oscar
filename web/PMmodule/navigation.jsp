@@ -21,6 +21,9 @@
 * Toronto, Ontario, Canada
 */
 -->
+
+<%-- Updated by Eugene Petruhin on 05 feb 2009 while fixing #2493970 --%>
+
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
@@ -60,59 +63,69 @@
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
         var startDate = prompt("Please enter a start date in this format (e.g. 2000-01-01)", dojo.date.format(oneWeekAgo, {selector:'dateOnly', datePattern:'yyyy-MM-dd'}));
-        var endDate = prompt("Please enter the end date in this format (e.g. 2000-12-01)", dojo.date.format(new Date(), {selector:'dateOnly', datePattern:'yyyy-MM-dd'}));
-	var includePast = confirm("Do you want to include past intake forms in your report? ([OK] for yes / [Cancel] for no)");
-
+        if (startDate == null) {
+            return;
+        }
         if (!dojo.validate.isValidDate(startDate, 'YYYY-MM-DD')) {
             alert("'" + startDate + "' is not a valid start date");
-            return false;
+            return;
         }
 
+        var endDate = prompt("Please enter the end date in this format (e.g. 2000-12-01)", dojo.date.format(new Date(), {selector:'dateOnly', datePattern:'yyyy-MM-dd'}));
+        if (endDate == null) {
+            return;
+        }
         if (!dojo.validate.isValidDate(endDate, 'YYYY-MM-DD')) {
             alert("'" + endDate + "' is not a valid end date");
-            return false;
+            return;
         }
 
-        alert("Generating report from " + startDate + " to " + endDate + "." + " " + "Please note: it is normal for the generation process to take up to a few minutes to complete, be patient.");
+        var includePast = confirm("Do you want to include past intake forms in your report? ([OK] for yes / [Cancel] for no)");
+
+        alert("Generating report from " + startDate + " to " + endDate + ". Please note: it is normal for the generation process to take up to a few minutes to complete, be patient.");
 
         var url = '<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'method=report' + '&type=' + type + '&startDate=' + startDate + '&endDate=' + endDate + '&includePast=' + includePast;
         
-		location.href = url;
-        return false;
+        popupPage2(url, "IntakeReport" + type);
     }
 
     function createIntakeCReport1()
     {
-        var startDate = prompt("Please enter the date in this format (e.g. 2006-01-01)", "<%=dateStr%>");
+        var startDate = "";
 
         while (startDate.length != 10 || startDate.substring(4, 5) != "-" || startDate.substring(7, 8) != "-")
         {
             startDate = prompt("Please enter the date in this format (e.g. 2006-01-01)", "<%=dateStr%>");
+            if (startDate == null) {
+                return false;
+            }
         }
 
-        alert('creating report until ' + startDate);
+        alert('Generating report for date ' + startDate);
 
-        location.href = '<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate;
+        popupPage2('<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate, "IntakeCReport");
     }
 
     function createStreetHealthReport()
     {
-        var startDate = prompt("Please enter start date (e.g. 2006-01-01)", "<%=dateStr%>");
+        var startDate = "";
 
         while (startDate.length != 10 || startDate.substring(4, 5) != "-" || startDate.substring(7, 8) != "-")
         {
             startDate = prompt("Please enter start date (e.g. 2006-01-01)", "<%=dateStr%>");
+            if (startDate == null) {
+                return false;
+            }
         }
 
-        alert('creating report until ' + startDate);
+        alert('Generating report for date ' + startDate);
 
-        location.href = '<html:rewrite action="/PMmodule/StreetHealthIntakeReportAction.do"/>?startDate=' + startDate;
+        popupPage2('<html:rewrite action="/PMmodule/StreetHealthIntakeReportAction.do"/>?startDate=' + startDate, "StreetHealthReport");
     }
 
     function popupPage2(varpage, windowname) {
         var page = "" + varpage;
-        windowprops = "height=700,width=1000,location=no,"
-                + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
+        var windowprops = "height=700,width=1000,top=10,left=0,location=yes,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
         var popup = window.open(page, windowname, windowprops);
         if (popup != null) {
             if (popup.opener == null) {
@@ -183,17 +196,15 @@
 	test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
 	<div><span>Reporting Tools</span> <caisi:isModuleLoad
 		moduleName="TORONTO_RFQ" reverse="true">
-		<div><a href="javascript:getIntakeReport('quick')">Registration
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('quick');return false;">Registration
 		Intake Report</a></div>
-		<div><a href="javascript:getIntakeReport('indepth')">Follow-up
+		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up
 		Intake Report</a></div>
 		<caisi:isModuleLoad moduleName="intakec.enabled">
-			<div><a href="javascript:void(0)"
-				onclick="javascript:createIntakeCReport1();return false;">Street
+			<div><a href="javascript:void(0);" onclick="javascript:createIntakeCReport1();return false;">Street
 			Health Mental Health Report</a></div>
 		</caisi:isModuleLoad>
-		<div><html:link
-			action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
+		<div><html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
 		</div>
 		<%--
                 <div>
@@ -202,12 +213,11 @@
                 --%>
 		<div><html:link action="/SurveyManager.do?method=reportForm">User Created Form Report</html:link>
 		</div>
-	</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
-		<div><html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
-		</div>
-	</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="streethealth">
-		<div><a href="javascript:void(0)"
-			onclick="javascript:createStreetHealthReport();return false;">Street
+		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+			<div><html:link action="QuatroReport/ReportList.do">Quatro Report Runner</html:link>
+			</div>
+		</caisi:isModuleLoad> <caisi:isModuleLoad moduleName="streethealth">
+		<div><a href="javascript:void(0);" onclick="javascript:createStreetHealthReport();return false;">Street
 		Health Mental Health Report</a></div>
 	</caisi:isModuleLoad></div>
 </c:if> <c:if
@@ -271,8 +281,7 @@
 	rights="r">
 	<div><span>System Administration</span>
 
-	<div><a HREF="#"
-		ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin
+	<div><a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin
 	Page</a></div>
 	<!--
                    	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
