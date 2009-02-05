@@ -404,11 +404,13 @@ function init() {
                   <input type="hidden" id="reloadUrl" name="reloadUrl" value="">
                   <input type="hidden" id="containerDiv" name="containerDiv" value="">
                   <input type="hidden" id="issueChange" name="issueChange" value="">
+                  <input type="hidden" id="archived" name="archived" value="false">
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
-                  <span style="float:right; margin-right:10px;">                      
-                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
-                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>
+                  <span style="float:right; margin-right:10px;">      
+                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" onclick="$('archived').value='true';" title='<bean:message key="oscarEncounter.Index.btnArchive"/>'>
+                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="$('archived').value='false';" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>                      
                   </span>
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
