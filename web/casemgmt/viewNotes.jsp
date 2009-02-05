@@ -43,7 +43,7 @@
 <div style="clear: left; float: left; width: 90%;">
 <h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a
 	href="#"
-	onclick="return showIssueHistory('<%=request.getAttribute("issueIds")%>');"><c:out
+	onclick="return showIssueHistory('<c:out value="${param.demographicNo}"/>','<%=request.getAttribute("issueIds")%>');"><c:out
 	value="${param.title}" /></a></h3>
 </div>
 <div style="clear: both; height: 63px; overflow: auto;">

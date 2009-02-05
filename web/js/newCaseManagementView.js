@@ -2076,10 +2076,10 @@ function showHistory(noteId, event) {
 /*
  *Pop up window for Showing all notes that have linked to an issue
  */
-function showIssueHistory(issueIds) {
+function showIssueHistory(demoNo, issueIds) {
     var rnd = Math.round(Math.random() * 1000);
     win = "win" + rnd;
-    var url = ctx + "/CaseManagementEntry.do?method=issuehistory&issueIds=" + issueIds;    
+    var url = ctx + "/CaseManagementEntry.do?method=issuehistory&demographicNo=" + demoNo + "&issueIds=" + issueIds;    
     window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");
     return false;    
 }
