@@ -59,7 +59,7 @@
 
 		<property name="password" type="string" column="password" />
 		<property name="locked" type="boolean" column="locked" />
-
+                <property name="archived" type="boolean" column="archived" />
 
 	</class>
 
@@ -75,7 +75,7 @@
 		program_no as {cmn.program_no},
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
-		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -101,7 +101,7 @@
 		program_no as {cmn.program_no},
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
-		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -127,7 +127,7 @@
 		program_no as {cmn.program_no},
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
-		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -151,7 +151,7 @@
 		program_no as {cmn.program_no},
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
-		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked},
+		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},

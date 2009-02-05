@@ -62,6 +62,7 @@ public class CaseManagementNote extends BaseObject {
 
 	private String password;
 	private boolean locked;
+        private boolean archived;
 
 	private int hashCode = Integer.MIN_VALUE;
 
@@ -362,6 +363,14 @@ public class CaseManagementNote extends BaseObject {
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
+        
+        public boolean isArchived() {
+            return archived;
+        }
+        
+        public void setArchived(boolean archived) {
+            this.archived = archived;
+        }
 
 	public void setPassword(String password) {
 		this.password = password;
