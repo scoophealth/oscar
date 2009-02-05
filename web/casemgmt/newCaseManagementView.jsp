@@ -958,8 +958,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
    
     if( found != true ) { %>
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
-   <%}%>
-   
+   <%}
+     else {%>        
+        document.forms["caseManagementEntryForm"].note_edit.value = "existing";
+    <%} %>
     setupNotes();
     Element.observe(caseNote, "keyup", monitorCaseNote); 
     Element.observe(caseNote, 'click', getActiveText);
