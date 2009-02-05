@@ -574,7 +574,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		request.setAttribute("issueIds", StringUtils.join(issueIds, ","));
 
 		// need to apply issue filter
-		notes = caseManagementMgr.getNotes(demoNo, issueIds);
+		notes = caseManagementMgr.getActiveNotes(demoNo, issueIds);
 		notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 
 		log.debug("FETCHED " + notes.size() + " NOTES filtered by " + StringUtils.join(issueIds, ","));
