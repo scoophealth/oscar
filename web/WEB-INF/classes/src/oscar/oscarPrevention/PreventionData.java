@@ -38,13 +38,12 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
@@ -413,8 +412,7 @@ public class PreventionData {
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				XMLGregorianCalendar xmlCal = cachedDemographicPrevention.getPreventionDate();
-				Date preventionDate = xmlCal.toGregorianCalendar().getTime();
+				Date preventionDate = CxfClientUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
 				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
 				pItem.setRemoteEntry(true);
@@ -431,8 +429,7 @@ public class PreventionData {
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-					XMLGregorianCalendar xmlCal = cachedDemographicPrevention.getPreventionDate();
-					Date preventionDate = xmlCal.toGregorianCalendar().getTime();
+					Date preventionDate = CxfClientUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
 					Hashtable h = new Hashtable();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());

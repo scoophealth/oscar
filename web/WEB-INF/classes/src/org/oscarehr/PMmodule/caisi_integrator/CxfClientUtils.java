@@ -1,8 +1,13 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.security.cert.X509Certificate;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.net.ssl.X509TrustManager;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
@@ -50,4 +55,22 @@ public class CxfClientUtils {
 		tslClientParameters.setSecureSocketProtocol("SSLv3");
 		httpConduit.setTlsClientParameters(tslClientParameters);
 	}
+	
+	public static Date toDate(XMLGregorianCalendar cal)
+	{
+		if (cal!=null) return(cal.toGregorianCalendar().getTime());
+		else return(null);
+	}
+	
+	public static XMLGregorianCalendar toXMLGregorianCalendar(Date d) throws DatatypeConfigurationException
+	{
+		if (d==null) return(null);
+		
+		GregorianCalendar cal=new GregorianCalendar();
+		cal.setTime(d);
+		XMLGregorianCalendar soapCal=DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+		
+		return(soapCal);
+	}
+
 }

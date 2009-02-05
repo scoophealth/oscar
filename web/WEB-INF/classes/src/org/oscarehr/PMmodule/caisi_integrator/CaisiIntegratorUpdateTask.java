@@ -305,11 +305,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
 		if (clientImage != null) {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
-
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(clientImage.getUpdate_date());
-			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-			demographicTransfer.setPhotoUpdateDate(soapCal);
+			demographicTransfer.setPhotoUpdateDate(CxfClientUtils.toXMLGregorianCalendar(clientImage.getUpdate_date()));
 		}
 
 		// send the request
@@ -335,11 +331,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentParameters.setConsentToBasicPersonalData(consent.isConsentToBasicPersonalData());
 				consentParameters.setConsentToMentalHealthData(consent.isConsentToMentalHealthData());
 				consentParameters.setConsentToSearches(consent.isConsentToSearches());
-
-				GregorianCalendar cal = new GregorianCalendar();
-				cal.setTime(consent.getCreatedDate());
-				XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-				consentParameters.setCreatedDate(soapCal);
+				consentParameters.setCreatedDate(CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
 
 				service.setCachedDemographicConsent(consentParameters);
 			}
@@ -393,21 +385,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicPrevention.setFacilityPreventionPk(pk);
 			}
 
-			if (localPrevention.getNextDate() != null) {
-				GregorianCalendar localCalendar = new GregorianCalendar();
-				localCalendar.setTimeInMillis(localPrevention.getNextDate().getTime());
-
-				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
-				cachedDemographicPrevention.setNextDate(soapCalendar);
-			}
-
-			if (localPrevention.getPreventionDate() != null) {
-				GregorianCalendar localCalendar = new GregorianCalendar();
-				localCalendar.setTimeInMillis(localPrevention.getPreventionDate().getTime());
-
-				XMLGregorianCalendar soapCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(localCalendar);
-				cachedDemographicPrevention.setPreventionDate(soapCalendar);
-			}
+			cachedDemographicPrevention.setNextDate(CxfClientUtils.toXMLGregorianCalendar(localPrevention.getNextDate()));
+			cachedDemographicPrevention.setPreventionDate(CxfClientUtils.toXMLGregorianCalendar(localPrevention.getPreventionDate()));
 
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
 

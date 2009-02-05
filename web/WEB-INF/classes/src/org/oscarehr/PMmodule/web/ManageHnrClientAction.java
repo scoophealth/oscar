@@ -10,6 +10,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -132,21 +133,8 @@ public class ManageHnrClientAction {
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType());
 				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
-
-				if (demographic.getEffDate() != null) {
-					GregorianCalendar gcal = new GregorianCalendar();
-					gcal.setTime(demographic.getEffDate());
-					XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
-					hnrClient.setHinValidStart(soapCal);
-				}
-
-				if (demographic.getHcRenewDate() != null) {
-					GregorianCalendar gcal = new GregorianCalendar();
-					gcal.setTime(demographic.getHcRenewDate());
-					XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
-					hnrClient.setHinValidEnd(soapCal);
-				}
-
+				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(CxfClientUtils.toXMLGregorianCalendar(demographic.getEffDate()));
+				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(CxfClientUtils.toXMLGregorianCalendar(demographic.getHcRenewDate()));
 				if (demographic.getProvince() != null) hnrClient.setProvince(demographic.getProvince());
 				if (demographic.getAddress() != null) hnrClient.setStreetAddress(demographic.getAddress());
 			}

@@ -238,8 +238,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
             DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
             DemographicTransfer demographicTransfer=demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
             
-            XMLGregorianCalendar soapCal=demographicTransfer.getBirthDate();
             Demographic demographic = Demographic.create(demographicTransfer.getFirstName(), demographicTransfer.getLastName(), null, null, null, null, demographicTransfer.getHin(), null, true);
+            XMLGregorianCalendar soapCal=demographicTransfer.getBirthDate();
             demographic.setBirthDay(soapCal.toGregorianCalendar());
             demographic.setCity(demographicTransfer.getCity());
             demographic.setProvince(demographicTransfer.getProvince());
