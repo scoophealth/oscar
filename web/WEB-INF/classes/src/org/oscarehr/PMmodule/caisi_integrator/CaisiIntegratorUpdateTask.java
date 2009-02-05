@@ -139,7 +139,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 
-			logger.info("CaisiIntegratorUpdateTask finished)");
+			logger.info("CaisiIntegratorUpdateTask finished");
 		}
 	}
 
