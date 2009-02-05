@@ -45,7 +45,12 @@
 		<c:if test="${current[idx] == false}">
 			<div style="color: #FF0000;">REMOVED</div>
 		</c:if>
-	</nested:notEmpty> Documentation Date: <nested:write name="note"
+	</nested:notEmpty>
+        <c:if test="${note.archived == true}">
+                <div style="color: #336633;">ARCHIVED</div>
+        </c:if>
+        
+        Documentation Date: <nested:write name="note"
 		property="observation_date" format="dd-MMM-yyyy H:mm" /><br>
 	<nested:equal name="note" property="signed" value="true"> 
                              Signed by 
