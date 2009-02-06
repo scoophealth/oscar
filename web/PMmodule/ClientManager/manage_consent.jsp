@@ -42,13 +42,22 @@
 			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />mental health data</td>
 		</tr>
 		<%
+			boolean showHNRCheckbox=true;
 			for (CachedFacility cachedFacility : manageConsent.getAllRemoteFacilities())
 			{
 				int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
 				%>
 					<tr>
 						<td class="genericTableHeader"><%=cachedFacility.getName()%></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hnr" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>
+						<%
+							if (showHNRCheckbox)
+							{
+								%>
+									<td class="genericTableData" style="text-align:center;vertical-align:middle" rowspan="<%=manageConsent.getAllRemoteFacilities().size()%>" ><input type="checkbox" name="consent.hnr" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>					
+								<%								
+								showHNRCheckbox=false;
+							}
+						%>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.personal" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"personal")?"checked=\"on\"":""%> /></td>

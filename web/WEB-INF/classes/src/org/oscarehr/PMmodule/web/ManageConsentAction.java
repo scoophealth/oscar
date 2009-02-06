@@ -57,6 +57,13 @@ public class ManageConsentAction {
 		else logger.error("unexpected consent bit : " + s);
 	}
 
+	public void addHnrConsent()
+	{
+		for (IntegratorConsent consent : consents.values()) {
+			consent.setConsentToHealthNumberRegistry(true);
+		}
+	}
+	
 	public void storeAllConsents() {
 		for (IntegratorConsent consent : consents.values()) {
 			integratorConsentDao.persist(consent);

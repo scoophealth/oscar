@@ -14,6 +14,8 @@
 
 	ManageConsentAction manageConsentAction=new ManageConsentAction(facility, provider, currentDemographicId, "DETAILED");
 
+	if ("on".equals(request.getParameter("consent.hnr"))) manageConsentAction.addHnrConsent();
+	
 	@SuppressWarnings("unchecked")
 	Enumeration<String> e=request.getParameterNames();
 	while (e.hasMoreElements())
@@ -22,7 +24,7 @@
 		{
 			String key=e.nextElement();
 			// must check for "on" because some versions of IE submit "off" or ""
-			if (key.startsWith("consent.") && "on".equals(request.getParameter(key))) manageConsentAction.addConsent(key);
+			if (key.startsWith("consent.") && !key.equals("consent.hnr") && "on".equals(request.getParameter(key))) manageConsentAction.addConsent(key);
 		}
 		catch (Exception ex)
 		{

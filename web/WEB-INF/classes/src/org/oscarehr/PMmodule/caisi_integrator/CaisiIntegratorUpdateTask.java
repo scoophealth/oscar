@@ -65,15 +65,18 @@ import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hnr.ws.client.HnrWs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
@@ -97,6 +100,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
+	private ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 
 	// private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
 
@@ -258,18 +262,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-		DemographicWs service = caisiIntegratorManager.getDemographicWs(facility.getId());
+		DemographicWs demogrpahicService = caisiIntegratorManager.getDemographicWs(facility.getId());
+		HnrWs hnrService = caisiIntegratorManager.getHnrWs(facility.getId());
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 			try {
-				pushDemographic(facility, service, demographicId);
+				pushDemographic(facility, demogrpahicService, demographicId);
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
-				pushDemographicConsent(facility, service, demographicId);
-				pushDemographicIssues(facility, service, demographicId);
-				pushDemographicPreventions(facility, service, demographicId);
-				pushDemographicNotes(facility, service, demographicId);
+				pushDemographicConsent(facility, demogrpahicService, hnrService, demographicId);
+				pushDemographicIssues(facility, demogrpahicService, demographicId);
+				pushDemographicPreventions(facility, demogrpahicService, demographicId);
+				pushDemographicNotes(facility, demogrpahicService, demographicId);
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -312,7 +317,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setDemographic(demographicTransfer);
 	}
 
-	private void pushDemographicConsent(Facility facility, DemographicWs service, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
+	private void pushDemographicConsent(Facility facility, DemographicWs demographicService, HnrWs hnrService, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
 
 		// get a list of all remove facilities
 		// for each remote facility get the latest consent
@@ -333,7 +338,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentParameters.setConsentToSearches(consent.isConsentToSearches());
 				consentParameters.setCreatedDate(CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
 
-				service.setCachedDemographicConsent(consentParameters);
+				demographicService.setCachedDemographicConsent(consentParameters);
+				
+				// deal with hnr consent
+				List<ClientLink> clientLinks=clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
+				if (clientLinks.size()>1) logger.warn("HNR link should only be 1 link. Links found :"+clientLinks.size());
+				if (clientLinks.size()>0)
+				{
+					hnrService.setHnrClientHidden("Integrator Update Task", clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
+				}
 			}
 		}
 	}
