@@ -56,40 +56,40 @@ insert into default_role_access (role_id,access_id) values ((select role_id from
 
 
 
-INSERT INTO issue (code,description,role,update_date) values('CTCMM1000','Safety','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM2000','Health','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM3000','Personal ID','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM4000','Financial','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM5000','Legal','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM6000','Housing','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM7000','Education','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM8000','Employment','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM9000','Family','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM10000','Community Support','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM11000','Psycho-social concerns','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM12000','Client feedback / suggestions','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM13000','Physical Health','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM14000','Mental Health','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM15000','Addictions','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM16000','Social Support','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM17000','Respite','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM18000','Counselling Support','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM19000','Recovery/Healing','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM20000','Wellness Program','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM21000','Medication','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM22000','Hygiene/Clothing','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM23000','Increase Community Supports','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM24000','Discharge Planning','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM25000','Re- Admission Update','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM26000','Drug Card','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM27000','Suicidal Tendencies','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM28000','Incident Report','counsellor',Now());
-INSERT INTO issue (code,description,role,update_date) values('CTCMM29000','Immigration','counsellor',Now());
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM1000','Safety','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM2000','Health','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM3000','Personal ID','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM4000','Financial','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM5000','Legal','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM6000','Housing','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM7000','Education','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM8000','Employment','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM9000','Family','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM10000','Community Support','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM11000','Psycho-social concerns','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM12000','Client feedback / suggestions','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM13000','Physical Health','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM14000','Mental Health','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM15000','Addictions','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM16000','Social Support','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM17000','Respite','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM18000','Counselling Support','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM19000','Recovery/Healing','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM20000','Wellness Program','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM21000','Medication','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM22000','Hygiene/Clothing','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM23000','Increase Community Supports','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM24000','Discharge Planning','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM25000','Re- Admission Update','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM26000','Drug Card','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM27000','Suicidal Tendencies','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM28000','Incident Report','counsellor',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('CTCMM29000','Immigration','counsellor',Now(),'userDefined');
 
-INSERT INTO issue (code,description,role,update_date) values('ICSW100','program-client conflict','CSW',Now());
-INSERT INTO issue (code,description,role,update_date) values('ICSW200','difficulties with hygeine','CSW',Now());
-INSERT INTO issue (code,description,role,update_date) values('ICSW300','difficulties with eating','CSW',Now());
-INSERT INTO issue (code,description,role,update_date) values('ICSW301','anorexia, loss of apetite','CSW',Now());
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW100','program-client conflict','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW200','difficulties with hygeine','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW300','difficulties with eating','CSW',Now(),'userDefined');
+INSERT INTO issue (code,description,role,update_date,type) values('ICSW301','anorexia, loss of apetite','CSW',Now(),'userDefined');
 
 -- community programs
 INSERT INTO `program` (id,facilityId,name,description,address,phone,fax,url,email,emergencyNumber,type,location,maxAllowed,holdingTank,allowBatchAdmission,allowBatchDischarge,hic,programStatus,userDefined) VALUES (10001,1,'Subsidized Housing','Subsidized Housing','','','','','','','community','',99999,0,0,0,0,'active',1);
@@ -814,10 +814,10 @@ insert into report_template_org (counter, templateno, orgcd)
 values (200693, 200682, '0');
 
 -- set cpp issues
-insert into issue (`code`,`description`,`role`,`update_date`) Values('OMeds','Other Meds as part of cpp', 'nurse', now());
-insert into issue (`code`,`description`,`role`,`update_date`) Values('SocHistory','Social History as part of cpp', 'nurse', now());
-insert into issue (`code`,`description`,`role`,`update_date`) Values('MedHistory','Medical History as part of cpp', 'nurse', now());
-insert into issue (`code`,`description`,`role`,`update_date`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now());
-insert into issue (`code`,`description`,`role`,`update_date`) Values('Reminders','Reminders as part of cpp', 'nurse', now());
-insert into issue (`code`,`description`,`role`,`update_date`) Values('FamHistory','Family History as part of cpp', 'nurse', now());
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('OMeds','Other Meds as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('SocHistory','Social History as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('MedHistory','Medical History as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Reminders','Reminders as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('FamHistory','Family History as part of cpp', 'nurse', now(), 'userDefined');
 
