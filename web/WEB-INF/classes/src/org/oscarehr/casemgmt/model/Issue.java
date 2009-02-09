@@ -33,6 +33,7 @@ public class Issue extends BaseObject {
 	private String role;
 	private Date update_date;
 	private String priority;
+        private String type;
 
 	public Issue() {
 		update_date = new Date();
@@ -85,6 +86,12 @@ public class Issue extends BaseObject {
 	public void setPriority(String priority) {
 		this.priority = priority;
 	}
+        
+        public String getType() {
+            return type;
+        }
 
-	
+	public void setType(String type) {
+            this.type = type;
+        }
 }
