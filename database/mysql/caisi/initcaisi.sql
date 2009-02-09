@@ -1574,6 +1574,7 @@ CREATE TABLE `issue` (
   `role` varchar(100) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `priority` CHAR(10) DEFAULT NULL,
+  `type` VARCHAR(32) DEFAULT NULL,
   PRIMARY KEY  (`issue_id`),
 	index(code)
 );
