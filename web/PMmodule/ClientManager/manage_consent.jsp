@@ -35,7 +35,7 @@
 	<table class="genericTable">
 		<tr>
 			<td class="genericTableHeader"></td>
-			<td class="genericTableHeader" style="text-align:center">Allow sending to<br />health number registry</td>
+			<td class="genericTableHeader" style="text-align:center">Allow health number registry<br />information to be viewed</td>
 			<td class="genericTableHeader" style="text-align:center">Restrict<br/>to HICs</td>
 			<td class="genericTableHeader" style="text-align:center">Allow retrieving<br />for searches</td>
 			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />basic personal data</td>
