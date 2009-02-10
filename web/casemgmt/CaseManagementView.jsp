@@ -154,7 +154,7 @@
     }
 
 	function delay(time){
-		string="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/default_img.jpg'";
+		string="document.getElementById('ci').src='<%=request.getContextPath()+ClientImage.imagePresentPlaceholderUrl%>'";
 		setTimeout(string,time);
 	}
 
