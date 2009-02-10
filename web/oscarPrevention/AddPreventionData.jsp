@@ -23,14 +23,13 @@
  * Ontario, Canada 
  */
 -->
-<%@page
-	import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
-  
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
   String id = request.getParameter("id");
@@ -85,24 +84,37 @@
   ArrayList providers = ProviderData.getProviderList();  
 %>
 
-
+                         
 <html:html locale="true">
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>oscarPrevention</title>
-<!--I18n-->
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all"
-	href="../share/calendar/calendar.css" title="win2k-cold-1" />
+<title>
+oscarPrevention 
+</title><!--I18n-->
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
+     
+<script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
+<script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
+<script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
 
-<script type="text/javascript" src="../share/calendar/calendar.js"></script>
-<script type="text/javascript"
-	src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+  div.ImmSet { background-color: #ffffff; }
+  div.ImmSet h2 {  }
+  div.ImmSet ul {  }
+  div.ImmSet li {  }
+  div.ImmSet li a { text-decoration:none; color:blue;}
+  div.ImmSet li a:hover { text-decoration:none; color:red; }
+  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
+  
+  
+  ////////
+  div.prevention {  background-color: #999999; }
+  div.prevention fieldset {width:35em; font-weight:bold; }
+  div.prevention legend {font-weight:bold; }
+  
+  ////////
+</style>
 
 <SCRIPT LANGUAGE="JavaScript">
 
@@ -141,7 +153,84 @@ function disableifchecked(ele,nextDate){
 }
 </SCRIPT>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+	table.outline{
+	   margin-top:50px;
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	table.grid{
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	td.gridTitles{
+		border-bottom: 2pt solid #888888;
+		font-weight: bold;
+		text-align: center;
+	}
+        td.gridTitlesWOBottom{
+                font-weight: bold;
+                text-align: center;
+        }
+	td.middleGrid{
+	   border-left: 1pt solid #888888;	   
+	   border-right: 1pt solid #888888;
+           text-align: center;
+	}	
+	
+	
+label{
+float: left;
+width: 120px;
+font-weight: bold;
+}
+
+label.checkbox{
+float: left;
+width: 116px;
+font-weight: bold;
+}
+
+label.fields{
+float: left;
+width: 80px;
+font-weight: bold;
+}
+
+span.labelLook{
+font-weight:bold;
+
+}
+
+input, textarea,select{
+
+//margin-bottom: 5px;
+}
+
+textarea{
+width: 450px;
+height: 100px;
+}
+
+
+.boxes{
+width: 1em;
+}
+
+#submitbutton{
+margin-left: 120px;
+margin-top: 5px;
+width: 90px;
+}
+
+br{
+clear: left;
+}
+</style>
 
 <script type="text/javascript">
   function hideExtraName(ele){ 
@@ -155,34 +244,36 @@ function disableifchecked(ele,nextDate){
        //alert('showing');
     }                       
   }
-</script>
+</script>               
 </head>
 
-<body class="BodyStyle" vlink="#0000FF"
-	onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
+<body class="BodyStyle" vlink="#0000FF" onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
 <!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="100">
-		oscarPrevention</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td><oscar:nameage demographicNo="<%=demographic_no%>" /></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><a
-					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp; <!--               
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn" width="100" >
+               oscarPrevention
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            <oscar:nameage demographicNo="<%=demographic_no%>"/>
+                        </td>
+                        <td  >&nbsp;
+							
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+               &nbsp;
+<!--               
                <%DemographicExt dExt = new DemographicExt();              
                  String inelig = dExt.getValueForDemoKey(demographic_no,prevention+"Inelig");             
                  if (inelig == null) inelig = "";
@@ -192,151 +283,132 @@ function disableifchecked(ele,nextDate){
                  <%}else{%>
                     <a href="setPatientIneligible.jsp?prev=<%=prevention%>&demo=<%=demographic_no%>">Set Patient Ineligible</a>
                  <%}%>
---></td>
-		<td valign="top" class="MainTableRightColumn"><html:form
-			action="/oscarPrevention/AddPrevention">
-			<input type="hidden" name="prevention" value="<%=prevention%>" />
-			<input type="hidden" name="demographic_no"
-				value="<%=demographic_no%>" />
-			<% if ( id != null ) { %>
-			<input type="hidden" name="id" value="<%=id%>" />
-			<input type="hidden" name="layoutType" value="<%=layoutType%>" />
-			<div class="prevention">
-			<fieldset><legend>Summary</legend> <textarea
-				name="summary" readonly><%=summary%></textarea></fieldset>
-			</div>
-			<% } %>
-			<%if (layoutType.equals("injection")) {%>
-			<div class="prevention">
-			<fieldset><legend>Prevention : <%=prevention%></legend>
-			<div style="float: left;"><input name="given" type="radio"
-				value="given" <%=checked(completed,"0")%>>Completed</input><br />
-			<input name="given" type="radio" value="refused"
-				<%=checked(completed,"1")%>>Refused</input><br />
-			<input name="given" type="radio" value="ineligible"
-				<%=checked(completed,"2")%>>Ineligible</input></div>
-			<div style="float: left; margin-left: 30px;"><label
-				for="prevDate" class="fields">Date:</label> <input type="text"
-				name="prevDate" id="prevDate" value="<%=prevDate%>" size="9">
-			<a id="date"><img title="Calendar" src="../images/cal.gif"
-				alt="Calendar" border="0" /></a> <br>
-			<label for="provider" class="fields">Provider:</label> <input
-				type="text" name="providerName" id="providerName"
-				value="<%=providerName%>" /> <select
-				onchange="javascript:hideExtraName(this);" id="providerDrop"
-				name="provider">
-				<%for (int i=0; i < providers.size(); i++) {
+-->
+            </td>
+            <td valign="top" class="MainTableRightColumn">               
+               <html:form action="/oscarPrevention/AddPrevention" >
+               <input type="hidden" name="prevention" value="<%=prevention%>"/>
+               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>              
+               <% if ( id != null ) { %>
+               <input type="hidden" name="id" value="<%=id%>"/>               
+               <input type="hidden" name="layoutType" value="<%=layoutType%>"/>
+	       <div class="prevention">
+		   <fieldset>
+		       <legend>Summary</legend>
+		       <textarea name="summary" readonly><%=summary%></textarea>		   
+		   </fieldset>
+	       </div>
+               <% } %>
+               <%if (layoutType.equals("injection")) {%>
+               <div class="prevention">
+                   <fieldset>
+                      <legend>Prevention : <%=prevention%></legend>
+                         <div style="float:left;">
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
+                         </div>
+                         <div style="float:left;margin-left:30px;">
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/> 
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                                      <%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
-				<option value="<%= h.get("providerNo")%>"
-					<%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %>
-				<%= h.get("firstName") %></option>
-				<%}%>
-				<option value="-1"
-					<%= ( "-1".equals(provider) ? " selected" : "" ) %>>Other</option>
-			</select></div>
-			</fieldset>
-			<fieldset><legend>Result</legend> <label for="location">Location:</label>
-			<input type="text" name="location"
-				value="<%=str(((String)extraData.get("location")),"")%>" /> <br />
-			<label for="route">Route:</label> <input type="text" name="route"
-				value="<%=str(((String)extraData.get("route")),"")%>" /><br />
-			<label for="dose">Dose:</label> <input type="text" name="dose"
-				value="<%=str(((String)extraData.get("dose")),"")%>" /><br />
-			<label for="lot">Lot:</label> <input type="text" name="lot"
-				value="<%=str(((String)extraData.get("lot")),"")%>" /><br />
-			<label for="manufacture">Manufacture:</label> <input type="text"
-				name="manufacture"
-				value="<%=str(((String)extraData.get("manufacture")),"")%>" /><br />
-			</fieldset>
-			<fieldset><legend>Comments</legend> <textarea
-				name="comments"><%=str(((String)extraData.get("comments")),"")%></textarea>
-			</fieldset>
-			</div>
-			<script type="text/javascript">
+                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%}%>                    
+                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
+                                  </select>                                      
+                         </div>
+                   </fieldset>                                                                            
+                   <fieldset >
+                      <legend >Result</legend>
+                         <label for="location">Location:</label> <input type="text" name="location" value="<%=str(((String)extraData.get("location")),"")%>"/> <br/>
+                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>
+			 <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str(((String)extraData.get("dose")),"")%>"/><br/>
+                         <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str(((String)extraData.get("lot")),"")%>"/><br/>
+                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str(((String)extraData.get("manufacture")),"")%>"/><br/>
+                   </fieldset>
+                   <fieldset >
+                      <legend >Comments</legend>                   
+                      <textarea name="comments" ><%=str(((String)extraData.get("comments")),"")%></textarea>                   
+                   </fieldset>                   
+               </div>
+               <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));                                    
                </script>
-			<%}else if(layoutType.equals("PAPMAM")){/*next layout type*/%>
-			<div class="prevention">
-			<fieldset><legend>Prevention : <%=prevention%></legend>
-			<div style="float: left;"><input name="given" type="radio"
-				value="given" <%=checked(completed,"0")%>>Completed</input><br />
-			<input name="given" type="radio" value="refused"
-				<%=checked(completed,"1")%>>Refused</input><br />
-			<input name="given" type="radio" value="ineligible"
-				<%=checked(completed,"2")%>>Ineligible</input><br />
-			</div>
-			<div style="float: left; margin-left: 30px;"><label
-				for="prevDate" class="fields">Date:</label> <input type="text"
-				name="prevDate" id="prevDate" value="<%=prevDate%>" size="9">
-			<a id="date"><img title="Calendar" src="../images/cal.gif"
-				alt="Calendar" border="0" /></a> <br>
-			<label for="provider" class="fields">Provider:</label> <input
-				type="text" name="providerName" id="providerName" /> <select
-				onchange="javascript:hideExtraName(this);" id="providerDrop"
-				name="provider">
-				<%for (int i=0; i < providers.size(); i++) {
+               <%}else if(layoutType.equals("PAPMAM")){/*next layout type*/%>                              
+               <div class="prevention">                                                                          
+                   <fieldset>
+                      <legend>Prevention : <%=prevention%></legend>
+                         <div style="float:left;">                                                                              
+                            <input name="given" type="radio" value="given"   <%=checked(completed,"0")%>  >Completed</input><br/>
+                            <input name="given" type="radio" value="refused" <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input><br/>
+                         </div>
+                         <div style="float:left;margin-left:30px;">
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
+                            <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/> 
+                                  <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">                          
+                                      <%for (int i=0; i < providers.size(); i++) {
                                            Hashtable h = (Hashtable) providers.get(i);%>
-				<option value="<%= h.get("providerNo")%>"
-					<%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %>
-				<%= h.get("firstName") %></option>
-				<%}%>
-				<option value="-1">Other</option>
-			</select></div>
-			</fieldset>
-			<fieldset><legend>Result</legend> <% if (extraData.get("result") == null ){ extraData.put("result","pending");} %>
-			<input type="radio" name="result" value="pending"
-				<%=checked( ((String)extraData.get("result")) ,"pending")%>>Pending</input><br />
-			<input type="radio" name="result" value="normal"
-				<%=checked(((String)extraData.get("result")),"normal")%>>Normal</input><br />
-			<input type="radio" name="result" value="abnormal"
-				<%=checked(((String)extraData.get("result")),"abnormal")%>>Abnormal</input>
-			&nbsp;&nbsp;&nbsp; Reason: <input type="text" name="reason"
-				value="<%=str(((String)extraData.get("reason")),"")%>" /></fieldset>
-			<fieldset><legend>Comments</legend> <textarea
-				name="comments"><%=str(((String)extraData.get("comments")),"")%></textarea>
-			</fieldset>
-			</div>
-			<script type="text/javascript">
+                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%}%>                    
+                                      <option value="-1" >Other</option>
+                                  </select>                                      
+                         </div>
+                   </fieldset>                                                                            
+                   <fieldset >
+                      <legend >Result</legend>
+                      <% if (extraData.get("result") == null ){ extraData.put("result","pending");} %>
+                      <input type="radio" name="result" value="pending" <%=checked( ((String)extraData.get("result")) ,"pending")%> >Pending</input><br/>
+                      <input type="radio" name="result" value="normal"  <%=checked(((String)extraData.get("result")),"normal")%> >Normal</input><br/>
+                      <input type="radio" name="result" value="abnormal" <%=checked(((String)extraData.get("result")),"abnormal")%> >Abnormal</input> &nbsp;&nbsp;&nbsp;  Reason: <input type="text" name="reason" value="<%=str(((String)extraData.get("reason")),"")%>"/>                      
+                   </fieldset>
+                   <fieldset >
+                      <legend >Comments</legend>                   
+                      <textarea name="comments" ><%=str(((String)extraData.get("comments")),"")%></textarea>                   
+                   </fieldset>                   
+               </div>
+               <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));                                    
                </script>
-			<%}%>
-
-
-			<div class="prevention">
-			<fieldset><legend><a
-				onclick="showHideNextDate('nextDateDiv','nextDate','nexerWarn')"
-				href="javascript: function myFunction() {return false; }">Set
-			Next Date</a></legend>
-			<div id="nextDateDiv" style="display: none;">
-			<div><label for="nextDate">Next Date:</label><input
-				type="text" name="nextDate" value="<%=nextDate%>" id="nextDate"
-				size="9"><a id="nextDateCal"><img title="Calendar"
-				src="../images/cal.gif" alt="Calendar" border="0" /></a></div>
-			<div><label for="neverWarn" class="checkbox">Never
-			Remind:</label><input type="checkbox" name="neverWarn" id="neverWarn"
-				value="neverRemind" onchange="disableifchecked(this,'nextDate');"
-				<%=completed(never)%> /> Reason: <input type="text"
-				name="neverReason"
-				value="<%=str(((String)extraData.get("neverReason")),"")%>" /></div>
-			</div>
-			</fieldset>
-			</div>
-			<br />
-			<input type="submit" value="Save">
-			<% if ( id != null ) { %>
-			<input type="submit" name="delete" value="Delete" />
-			<% } %>
-		</html:form></td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn">&nbsp;</td>
-		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
-	</tr>
-</table>
+               <%}%>
+               
+               
+               <div class="prevention">                                                                          
+                   <fieldset>
+                      <legend><a onclick="showHideNextDate('nextDateDiv','nextDate','nexerWarn')" href="javascript: function myFunction() {return false; }"   >Set Next Date</a></legend>
+                        <div id="nextDateDiv" style="display:none;">
+                         <div>
+                            <label for="nextDate" >Next Date:</label><input type="text" name="nextDate"  value="<%=nextDate%>" id="nextDate" size="9"><a id="nextDateCal"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
+                         </div>
+                         <div>
+                            <label for="neverWarn" class="checkbox" >Never Remind:</label><input type="checkbox" name="neverWarn" id="neverWarn" value="neverRemind" onchange="disableifchecked(this,'nextDate');"  <%=completed(never)%>/> Reason: <input type="text" name="neverReason" value="<%=str(((String)extraData.get("neverReason")),"")%>"/>
+                         </div>
+                        </div>
+                   </fieldset>
+               </div>
+               <br/>
+               <input type="submit" value="Save">
+               <% if ( id != null ) { %>
+               <input type="submit" name="delete" value="Delete"/>               
+               <% } %>
+               </html:form>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            &nbsp;
+            </td>
+            <td class="MainTableBottomRowRightColumn" valign="top">
+            &nbsp;
+            </td>
+        </tr>
+    </table>
 <script type="text/javascript">
 Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
-</script>
+</script>    
 </body>
 </html:html>
 <%!
