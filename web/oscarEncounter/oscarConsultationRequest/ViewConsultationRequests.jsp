@@ -24,10 +24,10 @@
  */
 -->
 
-<%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page language="java" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
 
 <%
@@ -71,23 +71,57 @@ ArrayList tickerList = new ArrayList();
 
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="ectViewConsultationRequests.title" />
+<title>
+<bean:message key="ectViewConsultationRequests.title"/>
 </title>
 
 
-<html:base />
+<html:base/>
 
-<link rel="stylesheet" type="text/css" media="all"
-	href="../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" /> 
 <script type="text/javascript" src="../../share/calendar/calendar.js"></script>
-<script type="text/javascript"
-	src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
-<script type="text/javascript"
-	src="../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
+<script type="text/javascript" src="../../share/calendar/calendar-setup.js"></script>
 <!--META HTTP-EQUIV="Refresh" CONTENT="20;"-->
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+td.stat1 {
+
+background-color: #eeeeFF;
+color : black;
+
+
+}
+
+th,td.stat2 {
+
+background-color: #ccccFF;
+color : black;
+
+
+}
+
+td.stat3 {
+
+background-color: #B8B8FF;
+color : black;
+
+
+}
+
+td.stat4 {
+
+background-color: #eeeeff;
+color : black;
+
+}
+
+th.VCRheads {
+background-color: #ddddff;
+color : black;
+}
+
+</style>
 
 
 
@@ -144,107 +178,117 @@ function setOrder(val){
 
 
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<body class="BodyStyle" vlink="#0000FF">
+<body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">Consultation</td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td class="Header" NOWRAP><bean:message
-					key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msfConsReqForTeam" />
-				= <%
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                Consultation
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td class="Header" NOWRAP >
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msfConsReqForTeam"/> = 
+                            <%
                                if (team.equals("-1")){
-                            %> <bean:message
-					key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll" />
-				<% } else { %> <%= team %> <% } %>
-				</td>
-				<td></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr style="vertical-align: top">
-		<td class="MainTableLeftColumn">
-		<table>
-			<tr>
-				<td NOWRAP><a
-					href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')"
-					class="consultButtonsActive"> <bean:message
-					key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists" />
-				</a></td>
-			</tr>
-		</table>
-		</td>
-		<td class="MainTableRightColumn">
-		<table width="100%">
-			<tr>
-				<td style="margin: 0; padding: 0;"><html:form
-					action="/oscarEncounter/ViewConsultation" method="get">
-					<bean:message
-						key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam" />:
+                            %>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgViewAll"/>
+                            <% } else { %>
+                            <%= team %>
+                            <% } %>               
+                        </td>
+                        <td  >
+                        </td>                        
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr style="vertical-align:top">
+            <td class="MainTableLeftColumn">
+                <table>
+                    <tr>
+                        <td NOWRAP>
+                        <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/>
+                        </a>                                                
+                        </td>
+                    </tr>                    
+                </table>
+            </td>
+            <td class="MainTableRightColumn">
+                <table width="100%" >
+                <tr>
+                    <td style="margin: 0; padding: 0;">
+                        <html:form action="/oscarEncounter/ViewConsultation"  method="get">
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam"/>:
                             <select name="sendTo">
-						<option value="-1"><bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll" /></option>
-						<%
+				<option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>
+                                <%
                                    for (int i =0; i < consultUtil.teamVec.size();i++){
                                      String te = (String) consultUtil.teamVec.elementAt(i);
                                      if (te.equals(team)){
                                 %>
-						<option value="<%=te%>" selected><%=te%></option>
-						<%}else{%>
-						<option value="<%=te%>"><%=te%></option>
-						<%}}%>
-					</select>
-					<input type="submit"
-						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>" />
-					<div style="margin: 0; padding: 0;">Start:<html:text
-						property="startDate" size="8" styleId="startDate" /><a id="SCal"><img
-						title="Calendar" src="../../images/cal.gif" alt="Calendar"
-						border="0" /></a> End:<html:text property="endDate" size="8"
-						styleId="endDate" /><a id="ECal"><img title="Calendar"
-						src="../../images/cal.gif" alt="Calendar" border="0" /></a> Include
-					Completed:<html:checkbox property="includeCompleted"
-						value="include" /> Search on Referal Date<html:radio
-						property="searchDate" value="0" titleKey="Search on Referal Date" />
-					Appt. Date<html:radio property="searchDate" value="1"
-						titleKey="Search on Appt. Date" /> <html:hidden
-						property="currentTeam" /> <html:hidden property="orderby" /> <html:hidden
-						property="desc" /></div>
-				</html:form></td>
-			</tr>
-			<tr>
-				<td>
-				<table border="0" width="90%" cellspacing="1"
-					style="border: thin solid #C0C0C0;">
-					<tr>
-						<th align="left" class="VCRheads" width="10%"><a href=#
-							onclick="setOrder('1'); return false;"> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus" />
-						</a></th>
-						<th align="left" class="VCRheads" width="10%">Urgency</th>
+                                    <option value="<%=te%>" selected><%=te%></option>
+                                <%}else{%>
+                                    <option value="<%=te%>"><%=te%></option>
+                                <%}}%>
+                            </select>                            
+                            <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
+                            <div style="margin: 0; padding: 0; ">
+                            Start:<html:text property="startDate" size="8" styleId="startDate"/><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            End:<html:text property="endDate" size="8"   styleId="endDate"/><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            Include Completed:<html:checkbox property="includeCompleted" value="include" />
+                            Search on
+                            Referal Date<html:radio property="searchDate" value="0" titleKey="Search on Referal Date"/>
+                            Appt. Date<html:radio property="searchDate" value="1" titleKey="Search on Appt. Date"/>
+                            <html:hidden property="currentTeam"/>
+                            <html:hidden property="orderby"/>
+                            <html:hidden property="desc"/>
+                            </div>
+                        </html:form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>                    
+                        <table border="0" width="90%" cellspacing="1" style="border: thin solid #C0C0C0;" >
+                            <tr>
+                                <th align="left" class="VCRheads" width="10%">
+                                   <a href=# onclick="setOrder('1'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
+                                   </a>
+                                </th>
+				 <th align="left" class="VCRheads" width="10%">
+					Urgency
+                                </th>
 
-						<th align="left" class="VCRheads" width="75"><a href=#
-							onclick="setOrder('2'); return false;"> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient" />
-						</a></th>
-						<th align="left" class="VCRheads"><a href=#
-							onclick="setOrder('3'); return false;"> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider" />
-						</a></th>
-						<th align="left" class="VCRheads"><a href=#
-							onclick="setOrder('4'); return false;"> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService" />
-						</a></th>
-						<th align="left" class="VCRheads"><a href=#
-							onclick="setOrder('5'); return false;"> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate" />
-						</a></th>
-						<th align="left" class="VCRheads"><a href=#
-							onclick="setOrder('6'); return false;"> Appointment Date </a></th>
-					</tr>
-					<%                              
+                                <th align="left" class="VCRheads" width="75">
+                                   <a href=# onclick="setOrder('2'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('3'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('4'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('5'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('6'); return false;">
+                                   Appointment Date
+                                   </a>
+                                </th>
+                            </tr>
+                        <%                              
                             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
                             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
                             theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
@@ -265,49 +309,68 @@ function setOrder(val){
                                 tickerList.add(demo);
                             }
                         %>
-					<tr>
-						<td class="stat<%=status%>">
-						<% if (status.equals("1")){ %> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND" />
-						<% }else if(status.equals("2")) { %> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSR" />
-						<% }else if(status.equals("3")) { %> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPR" />
-						<% }else if(status.equals("4")) { %> <bean:message
-							key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE" />
-						<% } %>
-						</td>
-						<td class="stat<%=status%>">
-						<% if (urgency.equals("1")){ %>
-						<div style="color: red";>Urgent</div>
-						<% }else if(urgency.equals("2")) { %> Non-Urgent <% }else if(urgency.equals("3")) { %>
-						Return <% } %>
-						</td>
-						<td class="stat<%=status%>"><a
-							href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
-						<%=patient%> </a></td>
-						<td class="stat<%=status%>"><%=provide%></td>
-						<td class="stat<%=status%>"><a
-							href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
-						<%=service%> </a></td>
-						<td class="stat<%=status%>"><%=date%></td>
-						<td class="stat<%=status%>">
-						<% if ( patBook != null && patBook.trim().equals("1") ){%> Patient
-						will book <%}else{%> <%=appt%> <%}%>
-						</td>
-					</tr>
-					<%}%>
-				</table>
-
+                            <tr>
+                                <td class="stat<%=status%>">
+                                    <% if (status.equals("1")){ %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgND"/>      
+                                    <% }else if(status.equals("2")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSR"/>      
+                                    <% }else if(status.equals("3")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPR"/>      
+                                    <% }else if(status.equals("4")) { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
+                                    <% } %>
 				</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn">
-		<% if ( tickerList.size() > 0 ) { 
+                                <td class="stat<%=status%>">
+			            <% if (urgency.equals("1")){ %>
+					<div style="color:red";> Urgent </div>
+                                    <% }else if(urgency.equals("2")) { %>
+					Non-Urgent
+                                    <% }else if(urgency.equals("3")) { %>
+					Return
+                                    <% } %>
+
+
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <%=patient%>
+                                    </a>
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <%=provide%>
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <%=service%>
+                                    </a>
+
+                                </td>
+                                <td class="stat<%=status%>">
+                                    <%=date%>
+                                </td>
+                                <td class="stat<%=status%>">
+                                   <% if ( patBook != null && patBook.trim().equals("1") ){%>
+                                    Patient will book
+                                   <%}else{%> 
+                                   <%=appt%> 
+                                   <%}%>
+                                </td>
+                            </tr>
+                        <%}%>
+                        </table>
+                    
+                    </td>
+                </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+            <% if ( tickerList.size() > 0 ) { 
                   String queryStr = "";
                   for (int i = 0; i < tickerList.size(); i++){
                      String demo = (String) tickerList.get(i);
@@ -316,13 +379,13 @@ function setOrder(val){
                      }else{
                         queryStr += "&demo="+demo;  
                      }
-                   }%> <a target="_blank"
-			href="../../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Patient has Consultation Letter with a status of 'Nothing Done' for over one week","UTF-8")%>">Add
-		Tickler for Consults with ND for more than one week</a> <%}%>
-		</td>
-	</tr>
-</table>
-<script language='javascript'>
+                   }%>                        
+             <a target="_blank" href="../../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Patient has Consultation Letter with a status of 'Nothing Done' for over one week","UTF-8")%>">Add Tickler for Consults with ND for more than one week</a>
+            <%}%>
+            </td>
+        </tr>
+    </table>
+    <script language='javascript'>
        Calendar.setup({inputField:"startDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"SCal",singleClick:true,step:1});          
        Calendar.setup({inputField:"endDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"ECal",singleClick:true,step:1});                      
    </script>
