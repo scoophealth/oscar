@@ -16,6 +16,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.HnrDataValidation;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.ui.servlet.ImageRenderingServlet;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClient {
@@ -72,12 +73,12 @@ public class ManageHnrClient {
 
 	public String getLocalClientImageUrl() {
 		if (clientImage == null) return (ClientImage.imageMissingPlaceholderUrl);
-		else return ("/imageRenderingServlet?source=local_client&clientId=" + demographic.getDemographicNo());
+		else return ("/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId=" + demographic.getDemographicNo());
 	}
 
 	public String getHnrClientImageUrl() {
 		if (hnrClient == null || hnrClient.getImage() == null) return (ClientImage.imageMissingPlaceholderUrl);
-		else return ("/imageRenderingServlet?source=hnr_client&linkingId=" + clientLink.getRemoteLinkId());
+		else return ("/imageRenderingServlet?source="+ImageRenderingServlet.Source.hnr_client.name()+"&linkingId=" + clientLink.getRemoteLinkId());
 	}
 
 	public String getRemoteFormatedBirthDate() {

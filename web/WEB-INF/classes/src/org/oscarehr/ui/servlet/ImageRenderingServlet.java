@@ -30,8 +30,12 @@ import org.oscarehr.util.SpringUtils;
 public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
 	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
-	private CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-	
+	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
+
+	public static enum Source {
+		local_client, hnr_client, integrator_client
+	}
+
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			String source = request.getParameter("source");
@@ -40,24 +44,45 @@ public class ImageRenderingServlet extends HttpServlet {
 			// security checks. There's actually not too much point in having a shared
 			// servlet except to save a little bit of work on registering servlets
 			// and a little processing logic.
-			if ("local_client".equals(source)) {
+			if (Source.local_client.name().equals(source)) {
 				renderLocalClient(request, response);
-			} else if ("hnr_client".equals(source)) {
+			} else if (Source.hnr_client.name().equals(source)) {
 				renderHnrClient(request, response);
+			} else if (Source.integrator_client.name().equals(source)) {
+				renderIntegratorClient(request, response);
 			} else {
 				throw (new IllegalArgumentException("Unknown source type : " + source));
 			}
 		} catch (Exception e) {
-			if (e.getCause() instanceof SocketException)
-			{
-				logger.warn("An error we can't handle that's expected infrequently. "+e.getMessage());
-			}
-			else
-			{
+			if (e.getCause() instanceof SocketException) {
+				logger.warn("An error we can't handle that's expected infrequently. " + e.getMessage());
+			} else {
 				logger.error("Unexpected error. qs=" + request.getQueryString(), e);
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
 		}
+	}
+
+	private void renderIntegratorClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// this expects integratorFacilityId and caisiClientId as a parameter
+
+		// security check
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
+		// get image
+//		Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+//		Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
+//		Integer caisiClientId = Integer.parseInt(request.getParameter("caisiClientId"));
+//		org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
+
+		// not finished yet
+		
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -88,9 +113,9 @@ public class ImageRenderingServlet extends HttpServlet {
 		}
 
 		// get image
-		Facility loggedInFacility=(Facility)session.getAttribute(SessionConstants.CURRENT_FACILITY);
-		Integer linkingId=Integer.parseInt(request.getParameter("linkingId"));
-		org.oscarehr.hnr.ws.client.Client hnrClient=caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
+		Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+		Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
+		org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
 
 		if (hnrClient != null) {
 			renderImage(response, hnrClient.getImage(), "jpeg");

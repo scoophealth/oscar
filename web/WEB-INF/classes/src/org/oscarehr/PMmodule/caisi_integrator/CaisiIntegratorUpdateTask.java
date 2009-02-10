@@ -312,7 +312,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
 			demographicTransfer.setPhotoUpdateDate(CxfClientUtils.toXMLGregorianCalendar(clientImage.getUpdate_date()));
 		}
-
+		
 		// send the request
 		service.setDemographic(demographicTransfer);
 	}

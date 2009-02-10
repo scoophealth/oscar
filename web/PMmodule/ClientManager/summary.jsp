@@ -12,6 +12,7 @@
 <%@page import="org.oscarehr.casemgmt.model.ClientImage"%>
 <%@page import="org.oscarehr.common.dao.IntegratorConsentDao"%>
 <%@page import="org.oscarehr.common.model.IntegratorConsent"%>
+<%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <%@page import="oscar.OscarProperties"%>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
@@ -110,7 +111,7 @@ function openSurvey() {
 		if (clientImage!=null)
 		{
 			imagePlaceholder=ClientImage.imagePresentPlaceholderUrl;
-			imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographic.getDemographicNo();
+			imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographic.getDemographicNo();
 		}
 	%>
 	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />

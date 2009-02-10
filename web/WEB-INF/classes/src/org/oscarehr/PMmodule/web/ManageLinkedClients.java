@@ -32,6 +32,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.hnr.ws.client.MatchingClientParameters;
 import org.oscarehr.hnr.ws.client.MatchingClientScore;
+import org.oscarehr.ui.servlet.ImageRenderingServlet;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageLinkedClients {
@@ -51,6 +52,7 @@ public class ManageLinkedClients {
 		public String gender = "";
 		public String birthDate = "";
 		public String hin = "";
+		public String imageUrl=ClientImage.imageMissingPlaceholderUrl;
 	}
 
 	public static ArrayList<LinkedDemographicHolder> getDemographicsToDisplay(Facility currentFacility, Provider currentProvider, Integer demographicId) {
@@ -68,7 +70,7 @@ public class ManageLinkedClients {
 			addCurrentLinks(results, demographic, currentFacility);
 			addHnrMatches(results, demographic, currentFacility, currentProvider);
 			addHnrLinks(results, demographic, currentFacility, currentProvider);
-
+			
 			ArrayList<LinkedDemographicHolder> sortedResult = getSortedResults(results);
 
 			return (sortedResult);
@@ -80,7 +82,7 @@ public class ManageLinkedClients {
 
 	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException {
 		List<ClientLink> currentLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), demographic.getDemographicNo(), true, ClientLink.Type.HNR);
-
+		
 		// we're only dealing with 1 hnr entry even if there's multiple because there should
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
@@ -106,7 +108,7 @@ public class ManageLinkedClients {
 	private static void addHnrMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic, Facility currentFacility, Provider currentProvider) throws MalformedURLException, DatatypeConfigurationException {
 		MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
 		List<MatchingClientScore> potentialMatches = caisiIntegratorManager.searchHnrForMatchingClients(currentFacility, currentProvider, matchingClientParameters);
-
+		
 		for (MatchingClientScore matchingClientScore : potentialMatches) {
 			String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();
 			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
@@ -132,6 +134,8 @@ public class ManageLinkedClients {
 		integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(hnrClient.getLastName());
 		integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.HNR.name();
 		integratorLinkedDemographicHolder.remoteLinkId = hnrClient.getLinkingId();
+				
+		if (hnrClient.getImage()!=null) integratorLinkedDemographicHolder.imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.hnr_client.name()+"&linkingId=" + hnrClient.getLinkingId();
 	}
 
 	private static MatchingClientParameters getMatchingHnrClientParameters(Demographic demographic) throws DatatypeConfigurationException {
@@ -196,7 +200,7 @@ public class ManageLinkedClients {
 		MatchingDemographicParameters parameters = getMatchingDemographicParameters(demographic);
 		DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacility.getId());
 		List<MatchingDemographicTransferScore> potentialMatches = demographicWs.getMatchingDemographics(parameters);
-
+		
 		if (potentialMatches == null) return;
 
 		for (MatchingDemographicTransferScore matchingDemographicScore : potentialMatches) {
@@ -226,6 +230,8 @@ public class ManageLinkedClients {
 		CachedFacility tempFacility = caisiIntegratorManager.getRemoteFacility(currentFacility.getId(), demographicTransfer.getIntegratorFacilityId());
 		integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.OSCAR_CAISI.name() + '.' + tempFacility.getIntegratorFacilityId();
 		integratorLinkedDemographicHolder.remoteLinkId = demographicTransfer.getCaisiDemographicId();
+		
+		if (demographicTransfer.getPhoto()!=null) integratorLinkedDemographicHolder.imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.integrator_client.name()+"&integratorFacilityId=" + demographicTransfer.getIntegratorFacilityId()+"&caisiDemographicId=" + demographicTransfer.getCaisiDemographicId();
 	}
 
 	private static MatchingDemographicParameters getMatchingDemographicParameters(Demographic demographic) throws DatatypeConfigurationException {
@@ -262,7 +268,7 @@ public class ManageLinkedClients {
 		}
 		else
 		{
-			String imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographicId;
+			String imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographicId;
 			return(imageUrl);
 		}	
 	}
