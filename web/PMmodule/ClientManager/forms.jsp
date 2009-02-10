@@ -218,11 +218,11 @@ New User Created Form:&nbsp;
 			<td><c:out value="${form.formVersion}" /></td>
 			<td><c:out value="${form.provider}" /></td>		
 			<td>
-				<c:if test="${form.formVersion != 'QUICK'}">
+				<c:if test="${form.formVersion != 'DETAILED'}">
 					<a target="_blank" href="ClientManager/view_consent_details.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
 				</c:if>
-				<c:if test="${form.formVersion == 'QUICK'}">
-					<a href="ClientManager/integrator_consent.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
+				<c:if test="${form.formVersion == 'DETAILED'}">
+					<a href="ClientManager/manage_consent.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
 				</c:if>
 			</td>		
 		</tr>

@@ -12,11 +12,15 @@
 	Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 	Provider provider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 
-	ManageConsent manageConsent=new ManageConsent(facility, provider, currentDemographicId);
+	Integer showConsentId=null;
+	String tempString=request.getParameter("consentId");
+	if (tempString!=null) showConsentId=Integer.parseInt(tempString);
+	
+	ManageConsent manageConsent=new ManageConsent(facility, provider, currentDemographicId, showConsentId);
 %>
 
 
-<h3>Manage Consent</h3>
+<h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
 
 <h4>Legend</h4>
 <div style="font-size:smaller">
@@ -68,7 +72,7 @@
 		%>
 	</table>
 		
-	<input type="submit" value="save" /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<input type="submit" value="save" <%=manageConsent.isReadOnly()?"disabled=\"disabled\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

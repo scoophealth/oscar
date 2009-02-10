@@ -21,14 +21,23 @@ public class ManageConsent {
 
 	private List<CachedFacility> allRemoteFacilities = new ArrayList<CachedFacility>();
 	private HashMap<Integer, IntegratorConsent> currentConsents = new HashMap<Integer, IntegratorConsent>();
+	private Integer showConsentId = null;
 
-	public ManageConsent(Facility facility, Provider provider, int clientId) {
+	public ManageConsent(Facility facility, Provider provider, int clientId, Integer showConsentId) {
 		try {
-			allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
 
-			for (CachedFacility cachedFacility : allRemoteFacilities) {
-				IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
+			if (showConsentId != null) {
+				this.showConsentId = showConsentId;
+				IntegratorConsent consent = integratorConsentDao.find(showConsentId);
 				if (consent != null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
+// hrmmm why is this setting to null...				
+			} else {
+				allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
+
+				for (CachedFacility cachedFacility : allRemoteFacilities) {
+					IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
+					if (consent != null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
@@ -51,5 +60,9 @@ public class ManageConsent {
 		else logger.error("unexpected consent bit : " + consentField);
 
 		return (false);
+	}
+
+	public boolean isReadOnly() {
+		return (showConsentId != null);
 	}
 }
