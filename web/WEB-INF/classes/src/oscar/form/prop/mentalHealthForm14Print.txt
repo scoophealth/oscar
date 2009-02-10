@@ -1,0 +1,11 @@
+
+name : left, 120, 100, 0, BaseFont.HELVETICA, 10
+address : left, 120, 130, 0, BaseFont.HELVETICA, 10
+physicianName	: left, 415, 163, 0, BaseFont.HELVETICA, 10
+nameOfFacility	: left, 250, 193, 0, BaseFont.HELVETICA, 10
+clientName		: left, 160, 223, 0, BaseFont.HELVETICA, 10
+clientDOB		: left, 415, 223, 0, BaseFont.HELVETICA, 10
+witness			: left, 120, 268, 0, BaseFont.HELVETICA, 10
+signature		: left, 415, 268, 0, BaseFont.HELVETICA, 10
+relationship	: left, 415, 315, 0, BaseFont.HELVETICA, 10
+signatureDate	: left, 210, 355, 0, BaseFont.HELVETICA, 10

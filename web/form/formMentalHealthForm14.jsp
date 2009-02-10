@@ -1,134 +1,128 @@
-<!-- 
-/**
- * Copyright (C) 2007.
- * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+<%--  
+/*
  * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * <OSCAR TEAM>
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
  */
- -->
-  
+--%>
+
 <%@ page language="java"%>
-<%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*, org.oscarehr.util.*" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="org.springframework.context.*,org.springframework.web.context.support.*" %>
-<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-
-<%
-	String formClass = "MentalHealthForm14";
-	String formLink = "formMentalHealthForm14.jsp";
-	String formLink_printPreview = "formMentalHealthForm14Print.jsp";
-	int programNo = Integer.parseInt((String)request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
-    int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
-    int formId = Integer.parseInt(request.getParameter("formId"));
-	int provNo = Integer.parseInt((String) session.getAttribute("user"));
-	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
-    java.util.Properties props = rec.getFormRecord(demoNo, formId);
-	String project_home = request.getContextPath().substring(1);	
-
-	boolean bView = false;
-	if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
-%>
+<%@ page
+	import="oscar.form.*, oscar.OscarProperties, java.util.Date, oscar.util.UtilDateUtilities"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
-
 <head>
-    <title>Mental Health Form1</title>
-    <link rel="stylesheet" type="text/css" href="arStyle.css">
-    <html:base/>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<title>Laboratory Requisition</title>
+<html:base />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="labReq07Style.css">
+<link rel="stylesheet" type="text/css" media="print" href="print.css">
+<script src="../share/javascript/prototype.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 </head>
 
+<%
+	//String formClass = "LabReq07";
+	//String formLink = "formlabreq07.jsp";
+	String formClass = "MentalHealthForm14";
+	String formLink = "formMentalHealthForm14.jsp";
+	
+   boolean readOnly = false;
+   int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
+   int formId = Integer.parseInt(request.getParameter("formId"));
+	String provNo = (String) session.getAttribute("user");
+	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
+   java.util.Properties props = rec.getFormRecord(demoNo, formId);
+        
+	props = ((FrmMentalHealthForm14Record) rec).getFormCustRecord(props, provNo);
+   OscarProperties oscarProps = OscarProperties.getInstance();
+
+   if (request.getParameter("labType") != null){
+      if (formId == 0 ){
+         String labPreSet = request.getParameter("labType");
+         props = FrmLabReqPreSet.set(labPreSet,props);
+           //System.out.println(props.toString());
+      }
+   }
+   
+   if (request.getParameter("readOnly") != null){
+      readOnly = true;    
+   }
+
+   String patientName = props.getProperty("clientName"," , ");
+   String[] patientNames = patientName.split(",");
+   
+   String[] patientDOB = props.getProperty("clientDOB", " / / ").split("/");
+   request.removeAttribute("submit");
+%>
 
 <script type="text/javascript" language="Javascript">
 
-    function reset() {
-        document.forms[0].target = "apptProviderSearch";
-        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
-	}
-	
-    function onPrint() {
-        document.forms[0].submit.value="print"; //printAR1
-        var ret = checkAllDates();
-        if(ret==true)
-        {
-            //ret = confirm("Do you wish to save this form and view the print preview?");
-            popupFixedPage(660,860,'../provider/notice.htm');
-            document.forms[0].action = "../form/createpdf?__title=&__cfgfile=&__cfgfile=&__template=";
-            document.forms[0].target="planner";
-            document.forms[0].submit();
-            document.forms[0].target="apptProviderSearch";
-        }
-        return ret;
-    }
-    function onPrintPreview() {
-        document.forms[0].submit.value="save";
-        var ret = checkAllDates();   
-        if(ret) {         	
-        	document.forms[0].action = "/<%=project_home%>/form/formname.do" ; 
-        	ret = confirm("Are you sure you want to save this form and see the print preview?");         		
-        }    
-        return ret; 
+var temp;
+temp = "";
+
+
+    function onPrintPDF() {
+         
+        //var ret = checkAllDates();
+        //if(ret==true)
+        //{            
+            temp=document.forms[0].action;         
+            document.forms[0].action = "<rewrite:reWrite jspPage="formname.do?__title=MentalHealthForm14 &__cfgfile=mentalHealthForm14Print&__template=mentalHealthForm14"/>";
+            document.forms[0].submit.value="printall"; 
+            document.forms[0].target="_self";
+        //}
+        //return ret;
+        return true;
     }
     function onSave() {
+        if (temp != "") { document.forms[0].action = temp; }
+        document.forms[0].target="_self";        
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
-        if(ret) {
-            //reset();
-            ret = confirm("Are you sure you want to save this form?");
-        }
         return ret;
     }
-    function onExit() {
-        if(confirm("Are you sure you wish to exit without saving your changes?")==true) {
-            window.close();
-        }
-        return(false);
-    }
+    
     function onSaveExit() {
+        if (temp != "") { document.forms[0].action = temp; }
+        document.forms[0].target="_self";
         document.forms[0].submit.value="exit";
         var ret = checkAllDates();
-        if(ret == true) {
-            //reset();
+        if(ret == true)
+        {
             ret = confirm("Are you sure you wish to save and close this window?");
         }
         return ret;
     }
-    function popupPage(varpage) {
-        windowprops = "height=700,width=960"+
-            ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=60,screenY=60,top=20,left=20";
-        var popup = window.open(varpage, "ar2", windowprops);
-        if (popup.opener == null) {
-            popup.opener = self;
-        }
-    }
-    function popPage(varpage,pageName) {
-        windowprops = "height=700,width=960"+
-            ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=no,screenX=60,screenY=60,top=20,left=20";
-        var popup = window.open(varpage,pageName, windowprops);
-        //if (popup.opener == null) {
-        //    popup.opener = self;
-        //}
-        popup.focus();
-    }
-    function popupFixedPage(vheight,vwidth,varpage) { 
-       var page = "" + varpage;
-       windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
-       var popup=window.open(page, "planner", windowprop);
-    }
+function popupFixedPage(vheight,vwidth,varpage) { 
+  var page = "" + varpage;
+  windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
+  var popup=window.open(page, "planner", windowprop);
+}
 
 /**
  * DHTML date validation script. Courtesy of SmartWebby.com (http://www.smartwebby.com/dhtml/)
@@ -136,7 +130,7 @@
 // Declaring valid date character, minimum year and maximum year
 var dtCh= "/";
 var minYear=1900;
-var maxYear=9900;
+var maxYear=3100;
 
     function isInteger(s){
         var i;
@@ -223,22 +217,28 @@ var maxYear=9900;
             var dateString = dateBox.value;
             if(dateString == "")
             {
-				//alert('dateString'+dateString);
+    //            alert('dateString'+dateString);
                 return true;
             }
             var dt = dateString.split('/');
-            //var y = dt[2];  var m = dt[1];  var d = dt[0];
-            var y = dt[0];  var m = dt[1];  var d = dt[2];
+            if (dt[1] == null) 
+                dt = dateString.split('-');
+            var y = dt[0];
+            var m = dt[1];
+            var d = dt[2];
             var orderString = m + '/' + d + '/' + y;
             var pass = isDate(orderString);
 
             if(pass!=true)
             {
-                alert('Invalid '+pass+' in field ' + dateBox.name);
+                var s = dateBox.name;
+                //alert('Invalid '+pass+' in field ' + s.substring(3));
                 dateBox.focus();
                 return false;
             }
-        }  catch (ex)  {
+        }
+        catch (ex)
+        {
             alert('Catch Invalid Date in field ' + dateBox.name);
             dateBox.focus();
             return false;
@@ -246,67 +246,70 @@ var maxYear=9900;
         return true;
     }
 
-    function checkAllDates() {
+    function checkAllDates()
+    {
         var b = true;
-        if(valDate(document.forms[0].dischargeDate)==false){
+        if (valDate(document.forms[0].b_dateSigned) == false) {
+            alert("The 'Signature Date' field is not valid");
             b = false;
-        } 
-
-		if(valDate(document.forms[0].pg1_eddByDate)==false){
+        }
+        if (valDate(document.forms[0].o_specimenCollectionDate) == false) {
+            alert("The 'Specimen Collection Date' field is not valid");
             b = false;
-        } else if(valDate(document.forms[0].pg1_eddByUs)==false){
-            b = false;
-        } 
-
+         }
         return b;
+
     }
+
+    function popup(link) {
+    windowprops = "height=700, width=960,location=no,"
+    + "scrollbars=yes, menubars=no, toolbars=no, resizable=no, top=0, left=0 titlebar=yes";
+    window.open(link, "_blank", windowprops);
+}
 </script>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<body style="page: doublepage; page-break-after: right">
 <html:form action="/form/formname">
-<input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
-<input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
-<input type="hidden" name="form_class" value="<%=formClass%>" />
 
-<% if (formId > 0) { %>
-<input type="hidden" name="form_link" value="<%=formLink_printPreview%>" />
-<%}else{ %>
-<input type="hidden" name="form_link" value="<%=formLink%>" />
-<%} %>
+	<input type="hidden" name="demographic_no"
+		value="<%= props.getProperty("demographic_no", "0") %>" />
+	<input type="hidden" name="patientLastName"
+		value="<%=patientNames[0].trim()%>" />
+	<input type="hidden" name="patientFirstName"
+		value="<%=patientNames[1].trim()%>" />
+	<input type="hidden" name="patientBirthYear"
+		value="<%=patientDOB[0].trim()%>" />
+	<input type="hidden" name="patientBirthMth"
+		value="<%=patientDOB[1].trim()%>" />
+	<input type="hidden" name="patientBirthDay"
+		value="<%=patientDOB[2].trim()%>" />
+	<input type="hidden" name="ID"
+		value="<%= props.getProperty("ID", "0") %>" />
+	<input type="hidden" name="provider_no"
+		value=<%=request.getParameter("provNo")%> />
+	<input type="hidden" name="formCreated"
+		value="<%= props.getProperty("formCreated", "") %>" />
+	<input type="hidden" name="form_class" value="<%=formClass%>" />
+	<input type="hidden" name="form_link" value="<%=formLink%>" />
+	<input type="hidden" name="provNo"
+		value="<%= request.getParameter("provNo") %>" />
+	<input type="hidden" name="submit" value="exit" />
 
-<input type="hidden" name="formId" value="<%=formId%>" />
-<!--input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
-<input type="hidden" name="provNo" value="<%= request.getParameter("provNo") %>" /-->
-<input type="hidden" name="submit" value="exit"/>
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td nowrap="true">
+			<% if(!readOnly){ %> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <% } %>
+			<input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print Pdf" onclick="javascript:return onPrintPDF();" /></td>
+		</tr>
+	</table>
 
-<!-- 
-<table width="100%" class="Head" class="hidePrint">
- -->
- <table width="100%">
-    <tr width="100%">
-        <td align="left">
-<%
-  if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
-  }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>            
-            <%
-            String appPath = request.getContextPath();            
-            %> 
-            <% if (formId > 0) { %>
-            <input type="submit" value="Print Preview" onclick="javascript:return onPrintPreview();"/>
-            
-            <% } %>
-        </td>
-    </tr>
-</table>
-
-<table width="100%" height="63" border="0">
+	<!-- class="TableWithBorder" -->
+	
+	<table width="100%" height="63" border="0">
   <tr>
     <th width="131" height="59" scope="col"><p>Ministry<br />
       Of<br />
@@ -348,11 +351,11 @@ var maxYear=9900;
   </tr>
   <tr>
     <td>in respect of (name of patient) <label>
-          <input name="clientName" type="text" id="clientName" size="60" maxlength="60" readonly="readonly" value="<%=props.getProperty("clientName","")%>"/>
+          <input name="clientName" type="hidden" id="clientName" size="60" maxlength="60" value="<%=props.getProperty("clientName","")%>"/><%=props.getProperty("clientName","")%>
         </label>
       
     (date of birth, where available) <label>
-        <input name="clientDOB" type="text" id="clientDOB" size="20" maxlength="10" readonly="readonly" value="<%=props.getProperty("clientDOB","")%>"/>
+        <input name="clientDOB" type="hidden" id="clientDOB" size="20" maxlength="10" value="<%=props.getProperty("clientDOB","")%>"/><%=props.getProperty("clientDOB","")%>
       </label>
     </td>
   </tr>
@@ -381,30 +384,27 @@ var maxYear=9900;
     </td>
   </tr>
 </table>
-<p>&nbsp;</p>
-
-<br>
-<table>
-    <tr>
-        <td align="left">
-<%
-  if (!bView) {
-%>
-            <input type="submit" value="Save" onclick="javascript:return onSave();" />
-            <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
-<%
-  }
-%>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <% if (formId > 0) { %>
-            <input type="submit" value="Print Preview" onclick="javascript:return onPrintPreview();"/>
-            <%} %>
-        </td>
-    </tr>
-</table>
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<table class="Head" class="hidePrint">
+		<tr>
+			<td nowrap="true">
+			<% if(!readOnly){ %> <input type="submit" value="Save"
+				onclick="javascript:return onSave();" /> <input type="submit"
+				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <% } %>
+			<input type="submit" value="Exit"
+				onclick="javascript:return onExit();" /> <input type="submit"
+				value="Print Pdf" onclick="javascript:return onPrintPDF();" /></td>
+		</tr>
+	</table>
 
 </html:form>
 </body>
 </html:html>
-

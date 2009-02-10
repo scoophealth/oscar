@@ -23,67 +23,27 @@ import oscar.util.UtilDateUtilities;
 
 public class FrmMentalHealthForm14Record extends FrmRecord {
 		
-	public Properties getMentalHealthForm14Record(int demographicNo, int existingID, int providerNo, int programNo) throws SQLException {
-        Properties props = new Properties();
-        if (existingID <= 0) {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-            
-                
-            String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, CONCAT(address,city,province,postal) AS address FROM demographic WHERE demographic_no = "
-                    + demographicNo;
-            ResultSet rs = db.GetSQL(sql);
-            if (rs.next()) {
-                Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
-                        db.getString(rs,"date_of_birth"));
-                props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
-                        "yyyy/MM/dd"));
-                //props.setProperty("formEdited",
-                // UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd
-                // HH:mm:ss"));
-                props.setProperty("clinetDOB", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
-                props.setProperty("clientName", db.getString(rs,"clientName"));
-                //props.setProperty("address",db.getString(rs,"address"));
-            }
-            rs.close();
-            /*
-            String sql1 = "SELECT CONCAT(CONCAT(last_name,', '),first_name) AS providerName FROM provider WHERE provider_no='"+providerNo+"'";
-            ResultSet rs1 = db.GetSQL(sql1);
-            if(rs1.next()) {
-            	props.setProperty("providerName",rs1.getString("providerName"));
-            }
-            rs1.close();            
-            */
-             
-            db.CloseConn();
-        } else {
-            String sql = "SELECT * FROM formMentalHealthForm14 WHERE demographic_no = " + demographicNo + " AND ID = "
-                    + existingID;
-            props = (new FrmRecordHelp()).getFormRecord(sql);
-        }
-
-        return props;
-    }
-
-	
-	
-	
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
         Properties props = new Properties();
         if (existingID <= 0) {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth FROM demographic WHERE demographic_no = "
+            String demoProvider = "000000";
+            String sql = "SELECT demographic_no, CONCAT(CONCAT(last_name, ', '), first_name) AS clientName, year_of_birth, month_of_birth, date_of_birth, provider_no FROM demographic WHERE demographic_no = "
                     + demographicNo;
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
                 Date dob = UtilDateUtilities.calcDate(db.getString(rs,"year_of_birth"), db.getString(rs,"month_of_birth"),
                         db.getString(rs,"date_of_birth"));
                 props.setProperty("demographic_no", db.getString(rs,"demographic_no"));
-               // props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
-               //         "yyyy/MM/dd"));
+               props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),
+                        "yyyy/MM/dd"));
                 props.setProperty("formEdited",UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd HH:mm:ss"));
                 props.setProperty("clientDOB", UtilDateUtilities.DateToString(dob, "yyyy/MM/dd"));
                 props.setProperty("clientName", db.getString(rs,"clientName"));
+                props.setProperty("demoProvider", db.getString(rs,"provider_no"));
+                
+                demoProvider = db.getString(rs,"provider_no");
+                
             }
             rs.close();
             db.CloseConn();
@@ -92,49 +52,87 @@ public class FrmMentalHealthForm14Record extends FrmRecord {
                     + existingID;
             props = (new FrmRecordHelp()).getFormRecord(sql);
         }
-
-        //props.list(System.out);
+        
         return props;
     }
 
-    public int saveFormRecord(Properties props) throws SQLException {
-        String demographic_no = props.getProperty("demographic_no");
-      
-        String sql = "SELECT * FROM formMentalHealthForm14 WHERE demographic_no=" + demographic_no + " AND ID=0";
+	
+	public Properties getFormCustRecord(Properties props, String provNo) throws SQLException {
+		String demoProvider = props.getProperty("demoProvider", "");
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        ResultSet rs = null;
+        String sql = null;
 
+        if (!demoProvider.equals("")) {
+
+            if (demoProvider.equals(provNo) ) {
+                // from provider table
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
+                        + "FROM provider WHERE provider_no = '" + provNo + "'";
+                rs = db.GetSQL(sql);
+
+                if (rs.next()) {
+                    String num = db.getString(rs,"ohip_no");
+                    props.setProperty("reqProvName", db.getString(rs,"provName"));
+                    props.setProperty("provName", db.getString(rs,"provName"));
+                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                }
+                rs.close();
+            } else {
+                // from provider table
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = '"
+                        + provNo + "'";
+                rs = db.GetSQL(sql);
+                
+                String num = "";
+                if (rs.next()) {
+                    num = db.getString(rs,"ohip_no");
+                    props.setProperty("reqProvName", db.getString(rs,"provName"));                    
+                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                }
+                rs.close();
+
+                // from provider table
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
+                        + demoProvider;
+                rs = db.GetSQL(sql);
+
+                if (rs.next()) {
+                    if( num.equals("") ) {
+                        num = db.getString(rs,"ohip_no");
+                        props.setProperty("practitionerNo", "0000-"+num+"-00");
+                    }
+                    props.setProperty("provName", db.getString(rs,"provName"));
+                    
+                }
+                rs.close();
+            }
+        }     
+        
+
+        db.CloseConn();
+
+        return props;
+    }
+        
+	public int saveFormRecord(Properties props) throws SQLException {
+        String demographic_no = props.getProperty("demographic_no");
+        String sql = "SELECT * FROM formMentalHealthForm14 WHERE demographic_no=" + demographic_no + " AND ID=0";
         return ((new FrmRecordHelp()).saveFormRecord(props, sql));
     }
 
+    public Properties getPrintRecord(int demographicNo, int existingID) throws SQLException {
+        String sql = "SELECT * FROM formMentalHealthForm14 WHERE demographic_no = " + demographicNo + " AND ID = 0";
+        return ((new FrmRecordHelp()).getPrintRecord(sql));
+    }
+
     public String findActionValue(String submit) throws SQLException {
-        if (submit != null && submit.equalsIgnoreCase("print")) {
-            return "print";
-        } else if (submit != null && submit.equalsIgnoreCase("save")) {
-            return "save";
-        } else if (submit != null && submit.equalsIgnoreCase("exit")) {
-            return "exit";
-        } else {
-            return "failure";
-        }
+        return ((new FrmRecordHelp()).findActionValue(submit));
     }
 
     public String createActionURL(String where, String action, String demoId, String formId) throws SQLException {
-        String temp = null;
-
-        if (action.equalsIgnoreCase("print")) {
-            temp = where + "?demoNo=" + demoId + "&formId=" + formId; // + "&study_no=" + studyId +
-                                                                      // "&study_link" + studyLink;
-        } else if (action.equalsIgnoreCase("save")) {
-            temp = where + "?demographic_no=" + demoId + "&formId=" + formId; // "&study_no=" +
-                                                                              // studyId +
-                                                                              // "&study_link" +
-                                                                              // studyLink; //+
-        } else if (action.equalsIgnoreCase("exit")) {
-            temp = where;
-        } else {
-            temp = where;
-        }
-
-        return temp;
+        return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
     }
+	
 
-}
+ }
