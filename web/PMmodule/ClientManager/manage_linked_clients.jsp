@@ -34,6 +34,7 @@
 	<table style="padding-left:20px" class="genericTable">
 		<tr class="genericTableRow">
 			<td class="genericTableHeader">Linked</td>
+			<td class="genericTableHeader">Photo</td>
 			<td class="genericTableHeader">Score</td>
 			<td class="genericTableHeader">Facility</td>
 			<td class="genericTableHeader">Id</td>
@@ -45,7 +46,8 @@
 		</tr>
 		<tr class="genericTableRow" style="background-color:#ccffcc">
 			<td class="genericTableData"></td>
-			<td class="genericTableData"></td>
+			<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+ManageLinkedClients.getLocalImageUrl(currentDemographicId)%>" alt="client_image_<%=currentDemographicId%>" /></td>
+			<td class="genericTableData">100</td>
 			<td class="genericTableData">Current facility</td>
 			<td class="genericTableData"><%=currentDemographicId%></td>
 			<td class="genericTableData"><%=demographic.getLastName()%></td>
@@ -63,6 +65,7 @@
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
 							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> /></td>
+							<td class="genericTableData"></td>
 							<td class="genericTableData"><%=temp.matchingScore%></td>
 							<td class="genericTableData"><%=temp.linkDestination%></td>
 							<td class="genericTableData"><%=temp.remoteLinkId%></td>

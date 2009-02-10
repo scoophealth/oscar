@@ -19,7 +19,6 @@
 	ManageConsent manageConsent=new ManageConsent(facility, provider, currentDemographicId, showConsentId);
 %>
 
-
 <h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
 
 <h4>Legend</h4>

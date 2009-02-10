@@ -104,15 +104,12 @@ function openSurvey() {
 		ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
 		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographic.getDemographicNo());
 
-		String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
-		String imagePresentPlaceholderUrl="/images/default_img.jpg";
-
-		String imagePlaceholder=imageMissingPlaceholderUrl;
-		String imageUrl=imageMissingPlaceholderUrl;
+		String imagePlaceholder=ClientImage.imageMissingPlaceholderUrl;
+		String imageUrl=imagePlaceholder;
 
 		if (clientImage!=null)
 		{
-			imagePlaceholder=imagePresentPlaceholderUrl;
+			imagePlaceholder=ClientImage.imagePresentPlaceholderUrl;
 			imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographic.getDemographicNo();
 		}
 	%>

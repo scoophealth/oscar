@@ -37,8 +37,8 @@
 <%@ page import="org.apache.log4j.Logger"%>
 <%
 	response.setHeader("Cache-Control", "no-cache");
-	Logger logger = Logger.getLogger("CaseManagementView.jsp");
-	java.util.List noteList = (java.util.List) request.getAttribute("Notes");
+	Logger logger=Logger.getLogger("CaseManagementView.jsp");
+	java.util.List noteList=(java.util.List)request.getAttribute("Notes");
 %>
 
 <html:form action="/CaseManagementView" method="get">
@@ -66,9 +66,8 @@
 	}
 
 	// filter for provider - will work for other dropdowns as well
-<%
-	if (!"detailed".equals(request.getParameter("note_view"))) {
-%>
+<%if (!"detailed".equals(request.getParameter("note_view")))
+				{%>
 	function filter(term, _id, cellNr) {
 		
 		var suche = trimAll(term.toLowerCase());
@@ -91,9 +90,9 @@
 			}
 		}
 	}
-<%
-	} else if (noteList != null) {
-%>
+<%}
+				else if (noteList != null)
+				{%>
 	function filter(term, _id, cellNr) {
 		
 		var suche = trimAll(term.toLowerCase());
@@ -119,9 +118,7 @@
 			}
 		}
 	}
-<%
-	}
-%>
+<%}%>
 
 	function clickTab(name) {
 		document.caseManagementViewForm.tab.value=name;
@@ -165,29 +162,29 @@
 
 	<div class="tabs" id="tabs">
 	<%
-		String selectedTab = request.getParameter("tab");
-		if (selectedTab == null || selectedTab.trim().equals("")) {
-			selectedTab = CaseManagementViewFormBean.tabs[0];
-		}
-		pageContext.setAttribute("selectedTab", selectedTab);
+		String selectedTab=request.getParameter("tab");
+			if (selectedTab == null || selectedTab.trim().equals(""))
+			{
+				selectedTab=CaseManagementViewFormBean.tabs[0];
+			}
+			pageContext.setAttribute("selectedTab", selectedTab);
 
-		java.util.List aList = (java.util.List) request
-				.getAttribute("Allergies");
-		boolean allergies = false;
-		if (aList != null) {
-			allergies = aList.size() > 0;
-		}
+			java.util.List aList=(java.util.List)request.getAttribute("Allergies");
+			boolean allergies=false;
+			if (aList != null)
+			{
+				allergies=aList.size() > 0;
+			}
 
-		boolean reminders = false;
-		CaseManagementCPP cpp = (CaseManagementCPP) request
-				.getAttribute("cpp");
-		if (cpp != null && cpp.getReminders() != null) {
-			reminders = cpp.getReminders().length() > 0;
-		}
-		//get programId
-		String pId = (String) session.getAttribute("case_program_id");
-		if (pId == null)
-			pId = "";
+			boolean reminders=false;
+			CaseManagementCPP cpp=(CaseManagementCPP)request.getAttribute("cpp");
+			if (cpp != null && cpp.getReminders() != null)
+			{
+				reminders=cpp.getReminders().length() > 0;
+			}
+			//get programId
+			String pId=(String)session.getAttribute("case_program_id");
+			if (pId == null) pId="";
 	%>
 	<table>
 		<tr>
@@ -195,8 +192,7 @@
 			<th style="font-size: 20" colspan="2" width="80%"><b>Case
 			Management Encounter</b></th>
 			<%
-				WebApplicationContext ctx = WebApplicationContextUtils
-						.getRequiredWebApplicationContext(getServletContext());
+				WebApplicationContext ctx=WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 			%>
 			<th width="12%" align="right" nowrap></th>
 		</tr>
@@ -206,29 +202,27 @@
 
 		<tr>
 			<%
-				for (int x = 0; x < CaseManagementViewFormBean.tabs.length; x++) {
+				for (int x=0; x < CaseManagementViewFormBean.tabs.length; x++)
+					{
 			%>
 			<%
-				if (OscarProperties.getInstance().isTorontoRFQ()) {
-						if (CaseManagementViewFormBean.tabs[x]
-								.equals("Prescriptions")
-								|| CaseManagementViewFormBean.tabs[x]
-										.equals("Allergies")) {
-							continue;
+				if (OscarProperties.getInstance().isTorontoRFQ())
+						{
+							if (CaseManagementViewFormBean.tabs[x].equals("Prescriptions") || CaseManagementViewFormBean.tabs[x].equals("Allergies"))
+							{
+								continue;
+							}
 						}
-					}
-					String extra = "";
-					if ((allergies && CaseManagementViewFormBean.tabs[x]
-							.equals("Allergies"))
-							|| (reminders && CaseManagementViewFormBean.tabs[x]
-									.equals("Reminders"))) {
-						extra = "color:red;";
-					}
+						String extra="";
+						if ((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))
+								|| (reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")))
+						{
+							extra="color:red;";
+						}
 			%>
 			<%
-				if (CaseManagementViewFormBean.tabs[x].equals("Allergies")
-							|| CaseManagementViewFormBean.tabs[x]
-									.equals("Prescriptions")) {
+				if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions"))
+						{
 			%>
 			<caisirole:SecurityAccess accessName="prescription Read"
 				accessType="access"
@@ -236,13 +230,16 @@
 				demoNo='<%=request.getParameter("demographicNo")%>'
 				programId="<%=pId%>">
 				<%
-					if (CaseManagementViewFormBean.tabs[x].equals(selectedTab)) {
+					if (CaseManagementViewFormBean.tabs[x].equals(selectedTab))
+									{
 				%>
 				<td style="background-color: #555;<%=extra%>"><a
 					href="javascript:void(0)"
 					onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x]%>'); return false;"><%=CaseManagementViewFormBean.tabs[x]%></a></td>
 				<%
-					} else {
+					}
+									else
+									{
 				%>
 				<td><a style="<%=extra%>" href="javascript:void(0)"
 					onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x]%>');return false;"><%=CaseManagementViewFormBean.tabs[x]%></a></td>
@@ -251,16 +248,21 @@
 				%>
 			</caisirole:SecurityAccess>
 			<%
-				} else {
+				}
+						else
+						{
 			%>
 			<%
-				if (CaseManagementViewFormBean.tabs[x].equals(selectedTab)) {
+				if (CaseManagementViewFormBean.tabs[x].equals(selectedTab))
+							{
 			%>
 			<td style="background-color: #555;<%=extra%>"><a
 				href="javascript:void(0)"
 				onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x]%>'); return false;"><%=CaseManagementViewFormBean.tabs[x]%></a></td>
 			<%
-				} else {
+				}
+							else
+							{
 			%>
 			<td><a style="<%=extra%>" href="javascript:void(0)"
 				onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x]%>');return false;"><%=CaseManagementViewFormBean.tabs[x]%></a></td>
@@ -305,7 +307,8 @@
 					</c:forEach></td>
 				</tr>
 				<%
-					if (!OscarProperties.getInstance().isTorontoRFQ()) {
+					if (!OscarProperties.getInstance().isTorontoRFQ())
+						{
 				%>
 
 				<tr>
@@ -325,22 +328,16 @@
 			</td>
 			<td>
 			<%
-				String demo = request.getParameter("demographicNo");
+				String demo=request.getParameter("demographicNo");
 			%> <c:choose>
 				<c:when test="${not empty requestScope.image_filename}">
-					<img style="cursor: pointer;" id="ci"
-						src="<c:out value="${ctx}"/>/images/default_img.jpg"
-						alt="id_photo" height="100" title="Click to upload new photo."
-						OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'"
-						OnMouseOut="delay(5000)" window.status='Click to upload new photo'
-						; return
-						true;" onClick="popupUploadPage('<html:rewrite page="/casemgmt/uploadimage.jsp"/>',<%=demo%>);return false;" />
+					<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/><%=ClientImage.imagePresentPlaceholderUrl%>" alt="id_photo" height="100" title="Click to upload new photo."
+						OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" 
+						OnMouseOut="delay(5000)" window.status='Click to upload new photo' ; return	true;"
+						onClick="popupUploadPage('<html:rewrite page="/casemgmt/uploadimage.jsp"/>',<%=demo%>);return false;" />
 				</c:when>
 				<c:otherwise>
-					<img style="cursor: pointer;"
-						src="<c:out value="${ctx}"/>/images/defaultR_img.jpg"
-						alt="No_Id_Photo" height="100" title="Click to upload new photo."
-						OnMouseOver="window.status='Click to upload new photo';return true"
+					<img style="cursor: pointer;" src="<c:out value="${ctx}"/><%=ClientImage.imageMissingPlaceholderUrl%>" alt="No_Id_Photo" height="100" title="Click to upload new photo." OnMouseOver="window.status='Click to upload new photo';return true"
 						onClick="popupUploadPage('uploadimage.jsp',<%=demo%>);return false;" />
 				</c:otherwise>
 			</c:choose></td>
@@ -348,8 +345,7 @@
 		</tr>
 	</table>
 	<jsp:include
-		page='<%="/casemgmt/"
-					+ selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
+		page='<%="/casemgmt/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
 
 	
 
@@ -431,16 +427,19 @@ Progress Note Report View:
 					<td>Role</td>
 				</tr>
 				<%
-					int index = 0;
-					String bgcolor = "white";
+					int index=0;
+								String bgcolor="white";
 				%>
 				<c:forEach var="note" items="${Notes}">
 					<%
-						if (index++ % 2 != 0) {
-							bgcolor = "white";
-						} else {
-							bgcolor = "#EEEEFF";
-						}
+						if (index++ % 2 != 0)
+										{
+											bgcolor="white";
+										}
+										else
+										{
+											bgcolor="#EEEEFF";
+										}
 					%>
 					<tr bgcolor="<%=bgcolor%>" align="center">
 						<td><c:choose>
@@ -508,22 +507,25 @@ Progress Note Report View:
 			<table id="test" width="100%" border="0" cellpadding="0"
 				cellspacing="1" bgcolor="#C0C0C0">
 				<%
-					int index1 = 0;
-					String bgcolor1 = "white";
+					int index1=0;
+								String bgcolor1="white";
 				%>
 				<c:forEach var="note" items="${Notes}">
 					<%
-						if (index1++ % 2 != 0) {
-							bgcolor1 = "white";
-						} else {
-							bgcolor1 = "#EEEEFF";
-						}
-						String noteId = ((CaseManagementNote) noteList.get(index1 - 1)).getId().toString();
-						request.setAttribute("noteId", noteId);
+						if (index1++ % 2 != 0)
+										{
+											bgcolor1="white";
+										}
+										else
+										{
+											bgcolor1="#EEEEFF";
+										}
+										String noteId=((CaseManagementNote)noteList.get(index1 - 1)).getId().toString();
+										request.setAttribute("noteId", noteId);
 					%>
 					<tr>
 						<td>
-						<table id="test<%=index1 %>" width="100%" border="0" style="margin-bottom: 5px">
+						<table id="test<%=index1%>" width="100%" border="0" style="margin-bottom: 5px">
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Provider</td>
 								<td width="93%"><c:out
@@ -586,8 +588,9 @@ Progress Note Report View:
 			</table>
 		</c:if>
 		<%
-			String filter = request.getParameter("filter_provider");
-			if (filter != null && filter.length() > 0) {
+			String filter=request.getParameter("filter_provider");
+					if (filter != null && filter.length() > 0)
+					{
 		%>
 			<script>
 				var els = document.getElementsByName("filter_provider");

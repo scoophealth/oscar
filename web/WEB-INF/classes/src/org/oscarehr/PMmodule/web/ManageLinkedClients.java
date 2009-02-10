@@ -22,6 +22,8 @@ import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicTransferScore;
+import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.ClientLink;
@@ -37,6 +39,7 @@ public class ManageLinkedClients {
 	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+	public static ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
 
 	public static class LinkedDemographicHolder {
 		public int matchingScore = 0;
@@ -249,4 +252,18 @@ public class ManageLinkedClients {
 		return parameters;
 	}
 
+	public static String getLocalImageUrl(int currentDemographicId)
+	{
+		ClientImage clientImage=clientImageDAO.getClientImage(currentDemographicId);
+
+		if (clientImage==null)
+		{
+			return(ClientImage.imageMissingPlaceholderUrl);
+		}
+		else
+		{
+			String imageUrl="/imageRenderingServlet?source=local_client&clientId="+currentDemographicId;
+			return(imageUrl);
+		}	
+	}
 }

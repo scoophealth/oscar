@@ -71,12 +71,12 @@ public class ManageHnrClient {
 	}
 
 	public String getLocalClientImageUrl() {
-		if (clientImage == null) return ("/images/defaultR_img.jpg");
+		if (clientImage == null) return (ClientImage.imageMissingPlaceholderUrl);
 		else return ("/imageRenderingServlet?source=local_client&clientId=" + demographic.getDemographicNo());
 	}
 
 	public String getHnrClientImageUrl() {
-		if (hnrClient == null || hnrClient.getImage() == null) return ("/images/defaultR_img.jpg");
+		if (hnrClient == null || hnrClient.getImage() == null) return (ClientImage.imageMissingPlaceholderUrl);
 		else return ("/imageRenderingServlet?source=hnr_client&linkingId=" + clientLink.getRemoteLinkId());
 	}
 

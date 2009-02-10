@@ -28,6 +28,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.caisi.model.BaseObject;
 
 public class ClientImage extends BaseObject {
+	public static final String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
+	public static final String imagePresentPlaceholderUrl="/images/default_img.jpg";
+	
 	private Long id;
 	private int demographic_no;
 	private String image_type;
