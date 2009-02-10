@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
@@ -29,8 +31,8 @@ import org.oscarehr.util.SpringUtils;
  */
 public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
-	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
-	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
+	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
+	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 
 	public static enum Source {
 		local_client, hnr_client, integrator_client
@@ -63,28 +65,6 @@ public class ImageRenderingServlet extends HttpServlet {
 		}
 	}
 
-	private void renderIntegratorClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// this expects integratorFacilityId and caisiClientId as a parameter
-
-		// security check
-		HttpSession session = request.getSession();
-		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-		if (provider == null) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return;
-		}
-
-		// get image
-//		Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
-//		Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
-//		Integer caisiClientId = Integer.parseInt(request.getParameter("caisiClientId"));
-//		org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
-
-		// not finished yet
-		
-		response.sendError(HttpServletResponse.SC_NOT_FOUND);
-	}
-
 	/**
 	 * This convenience method is only suitable for small images as image is obviously not streamed since it's passed in.
 	 * 
@@ -101,7 +81,37 @@ public class ImageRenderingServlet extends HttpServlet {
 		bos.flush();
 	}
 
-	private void renderHnrClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private static final void renderIntegratorClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// this expects integratorFacilityId and caisiClientId as a parameter
+
+		// security check
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
+		try {
+			// get image
+			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+			Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
+			Integer caisiClientId = Integer.parseInt(request.getParameter("caisiDemographicId"));
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInFacility.getId());
+			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(integratorFacilityId, caisiClientId);
+
+			if (demographicTransfer != null && demographicTransfer.getPhoto() != null) {
+				renderImage(response, demographicTransfer.getPhoto(), "jpeg");
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+		}
+
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	private static final void renderHnrClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects linkingId as a parameter
 
 		// security check
@@ -112,19 +122,24 @@ public class ImageRenderingServlet extends HttpServlet {
 			return;
 		}
 
-		// get image
-		Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
-		Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-		org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
+		try {
+			// get image
+			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
+			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
+			org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
 
-		if (hnrClient != null) {
-			renderImage(response, hnrClient.getImage(), "jpeg");
-		} else {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			if (hnrClient != null && hnrClient.getImage() != null) {
+				renderImage(response, hnrClient.getImage(), "jpeg");
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
 		}
+
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	private void renderLocalClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private static final void renderLocalClient(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// this expects clientId as a parameter
 
 		// security check
@@ -135,13 +150,18 @@ public class ImageRenderingServlet extends HttpServlet {
 			return;
 		}
 
-		// get image
-		org.oscarehr.casemgmt.model.ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
-		if (clientImage != null && "jpg".equals(clientImage.getImage_type())) {
-			renderImage(response, clientImage.getImage_data(), "jpeg");
-		} else {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		try {
+			// get image
+			org.oscarehr.casemgmt.model.ClientImage clientImage = clientImageDAO.getClientImage(Integer.parseInt(request.getParameter("clientId")));
+			if (clientImage != null && "jpg".equals(clientImage.getImage_type())) {
+				renderImage(response, clientImage.getImage_data(), "jpeg");
+				return;
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
 		}
+
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 }
