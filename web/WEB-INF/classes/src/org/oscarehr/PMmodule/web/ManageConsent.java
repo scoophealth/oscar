@@ -28,9 +28,12 @@ public class ManageConsent {
 
 			if (showConsentId != null) {
 				this.showConsentId = showConsentId;
+
 				IntegratorConsent consent = integratorConsentDao.find(showConsentId);
-				if (consent != null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
-// hrmmm why is this setting to null...				
+				if (consent != null) {
+					currentConsents.put(consent.getIntegratorFacilityId(), consent);
+					allRemoteFacilities.add(caisiIntegratorManager.getRemoteFacility(facility.getId(), consent.getIntegratorFacilityId()));
+				}
 			} else {
 				allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
 
