@@ -127,5 +127,12 @@ for(int i=0; i<cfgSet.size(); i++) {
 </td>
 </tr>
 </table>
+</html:form></td>
+	</tr>
+	<tr>
+		<td class="MainTableBottomRowLeftColumn"></td>
+		<td class="MainTableBottomRowRightColumn"></td>
+	</tr>
+</table>
 </body>
 </html>
