@@ -35,9 +35,9 @@ abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 		indent(builder).append("<tr>").append(EOL);
 		beginTag();
 
-		for (int i = 0; i < getDistanceToQuestionLevel() - 1; i++) {
+		//for (int i = 0; i < getDistanceToQuestionLevel() - 1; i++) {
 			indent(builder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
-        }
+        //}
 
 		return builder;
 	}
@@ -50,7 +50,8 @@ abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 	}
 
 	protected StringBuilder startCell(StringBuilder builder) {
-		indent(builder).append("<td class=\"intakeAnswerCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
+		int distance = 1;
+		indent(builder).append("<td class=\"intakeAnswerCell\" colspan=\"").append(distance).append("\">").append(EOL);
 		beginTag();
 		
 		return builder;

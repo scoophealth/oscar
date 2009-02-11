@@ -35,11 +35,11 @@ public class QuestionHtmlAdapter extends AbstractHtmlAdapter {
 		indent(preBuilder).append("<tr>").append(EOL);
 		beginTag();
 		
-		for (int i = 0; i < getDistanceToQuestionLevel(); i++) {
+		//for (int i = 0; i < getDistanceToQuestionLevel(); i++) {
 			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
-        }
+        //}
 		
-		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
+		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"4\"").append("\">").append(EOL);
 		beginTag();
 		
 		indent(preBuilder).append(getLabel()).append(getMandatory()?"<font color=red>*</font>":"").append(EOL);
