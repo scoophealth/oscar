@@ -4,6 +4,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask;
 
+import oscar.OscarProperties;
+
 public class ContextStartupListener implements javax.servlet.ServletContextListener
 {
 	private static final Logger logger = LogManager.getLogger(ContextStartupListener.class);
@@ -13,7 +15,15 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 // need tc6 for this?
 //		logger.info("Server processes starting. context=" + sce.getServletContext().getContextPath());
 
-		CaisiIntegratorUpdateTask.startTask();
+		try {
+	        OscarProperties properties=OscarProperties.getInstance();
+	        String vmstatLoggingPeriod=properties.getProperty("VMSTAT_LOGGING_PERIOD");
+	        VmStat.startContinuousLogging(Long.parseLong(vmstatLoggingPeriod));
+        } catch (Exception e) {
+	        logger.error("Unexpected error.", e);
+        }
+		
+		CaisiIntegratorUpdateTask.startTask();		
 	}
 
 	public void contextDestroyed(javax.servlet.ServletContextEvent sce)
@@ -22,5 +32,6 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 //		logger.info("Server processes stopping. context=" + sce.getServletContext().getContextPath());
 
 		CaisiIntegratorUpdateTask.stopTask();
+		VmStat.stopContinuousLogging();
 	}
 }
