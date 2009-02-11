@@ -104,6 +104,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	// private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
 
+	static{
+		// ensure cxf uses log4j
+		System.setProperty("org.apache.cxf.Logger","org.apache.cxf.common.logging.Log4jLogger");
+	}
+	
 	public static synchronized void startTask() {
 		if (timerTask == null) {
 			int period = 0;
