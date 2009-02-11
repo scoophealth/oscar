@@ -1,0 +1,20 @@
+physicianName 	: left, 200, 98, 0, BaseFont.HELVETICA, 10
+physicianAddress : left, 200, 128, 0, BaseFont.HELVETICA, 10
+telephoneNumber	: left, 206, 163, 0, BaseFont.HELVETICA, 10
+faxNumber		: left, 462, 164, 0, BaseFont.HELVETICA, 10
+onDate			: left, 120, 193, 0, BaseFont.HELVETICA, 10
+clientName		: left, 400, 193, 0, BaseFont.HELVETICA, 10
+clientAddress	: left, 200, 225, 0, BaseFont.HELVETICA, 10
+
+threatened		: left, 97, 393, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+attempted		: left, 97, 411, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+behaved			: left, 97, 429, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+caused			: left, 97, 447, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+shown			: left, 97, 465, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+observation		: left, 97, 514, 0, BaseFont.HELVETICA, 8, _, 573, 584, 18
+facts			: left, 97, 582, 0, BaseFont.HELVETICA, 8, _, 573, 652, 18
+
+harmHimself		: left, 97, 715, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+harmOthers		: left, 97, 733, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+impairment		: left, 97, 749, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
