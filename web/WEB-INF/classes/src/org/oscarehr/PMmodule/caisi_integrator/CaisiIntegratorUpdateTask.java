@@ -139,7 +139,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	public void run() {
-		logger.info("CaisiIntegratorUpdateTask starting");
+		logger.debug("CaisiIntegratorUpdateTask starting");
 
 		try {
 			pushAllFacilities();
@@ -148,7 +148,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 
-			logger.info("CaisiIntegratorUpdateTask finished");
+			logger.debug("CaisiIntegratorUpdateTask finished");
 		}
 	}
 
@@ -170,7 +170,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
-		logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
+		logger.debug("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// check all parameters are present
 		String integratorBaseUrl = facility.getIntegratorUrl();
