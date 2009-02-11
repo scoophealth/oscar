@@ -50,7 +50,7 @@ abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 	}
 
 	protected StringBuilder startCell(StringBuilder builder) {
-		int distance = 1;
+		int distance = 5;
 		indent(builder).append("<td class=\"intakeAnswerCell\" colspan=\"").append(distance).append("\">").append(EOL);
 		beginTag();
 		
