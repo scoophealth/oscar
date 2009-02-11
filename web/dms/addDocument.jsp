@@ -112,7 +112,7 @@ formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>
 <script src="../share/javascript/Oscar.js"
-	type="text/javascript language="JavaScript"></script>
+	type="text/javascript language='JavaScript'"></script>
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
 <script type="text/javascript" src="../share/calendar/calendar.js"></script>
