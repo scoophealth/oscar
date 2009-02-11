@@ -2425,8 +2425,9 @@ create table formMentalHealthForm1(
 	todayDate varchar(20) default NULL,
 	todayTime varchar(8) default NULL,
 	signature varchar(60) default NULL,
-	datetimeOfDetention varchar(50) default NULL,
+	datetimeOfDetention varchar(20) default NULL,
 	signature1 varchar(60) default NULL,
+	datetimeOfDelivered varchar(20) default NULL,
 	signature2 varchar(60) default NULL
 );
 
