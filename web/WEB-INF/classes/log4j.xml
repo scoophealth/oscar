@@ -46,6 +46,14 @@
 		<priority value="WARN" />
 	</category>
 
+	<category name="org.hibernate.cfg">
+		<priority value="WARN" />
+	</category>
+
+	<category name="org.hibernate.ejb.Ejb3Configuration">
+		<priority value="WARN" />
+	</category>
+
 	<category name="org.springframework">
 		<priority value="WARN" />
 	</category>
