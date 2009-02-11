@@ -4,68 +4,51 @@
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. 
- * 
+ * of the License, or (at your option) any later version.
+ *  
  * This program is distributed in the hope that it will be useful, 
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. 
+ * GNU General Public License for more details.
+ * 
  * You should have received a copy of the GNU General Public License 
  * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
  * 
  * This software was written for 
- * MB Software
+ * MB Software, margaritabowl.com
  * Vancouver, B.C., Canada 
  */
 
 package org.oscarehr.util;
 
-import java.io.IOException;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
- * It is highly recommended that vmstat information is logged to 
- * it's own logger and using the simplesingleline formatter.
- * <br /><br />
- * Most use cases will be to either just call logAll() when needed 
- * or call startContinuousLogging().
  */
-public class VMStat
+public class VmStat
 {
-	private static Logger logger=Logger.getLogger(VMStat.class.getName());
+	private static final Logger logger=LogManager.getLogger(VmStat.class);
 	
-	private static Timer timer=null;
+	private static Timer timer=new Timer(VmStat.class.getName(), true);
+	private static TimerTask timerTask=null;
+	private static int counter=0;	
 	
-	public static void useSimpleLogger(String logDir) throws SecurityException, IOException
+	public static synchronized void startContinuousLogging(long logPeriodMilliseconds)
 	{
-		SimpleDateFormat isoDateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		if (timerTask!=null) throw(new IllegalStateException("ContinuousLogging already started."));
 		
-		FileHandler fileHandler=new FileHandler(logDir+"/vmstat_"+isoDateFormatter.format(new Date())+".log");
-		fileHandler.setFormatter(new SimpleSingleLineFormatter());
-		
-		logger.setUseParentHandlers(false);
-		logger.addHandler(fileHandler);
-	}
-	
-	public static void startContinuousLogging(long logPeriodMilliseconds)
-	{
-		if (timer!=null) throw(new IllegalStateException("ContinuousLogging already started."));
-		
-		timer=new Timer(VMStat.class.getName(), true);
-		
-		TimerTask timerTask=new TimerTask()
+		timerTask=new TimerTask()
 		{
 			public void run()
 			{
@@ -75,7 +58,7 @@ public class VMStat
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					logger.error("Unexpected error.", e);
 				}
 			}
 		};
@@ -83,17 +66,35 @@ public class VMStat
 		timer.schedule(timerTask, 0, logPeriodMilliseconds);
 	}
 	
+	public static synchronized void stopContinuousLogging()
+	{
+		if (timerTask!=null)
+		{
+			timerTask.cancel();
+			timerTask=null;
+		}
+	}
+	
 	public static String getMemoryFormat()
 	{
-		return("memoryPoolName,maxAllowed(bytes),currentUsage(bytes)");
+		List<MemoryPoolMXBean> memoryPools=ManagementFactory.getMemoryPoolMXBeans();
+		StringBuilder sb=new StringBuilder();
+		
+		for (MemoryPoolMXBean memoryPool : memoryPools)
+		{
+			if (sb.length()>0) sb.append(',');
+			sb.append(memoryPool.getName());
+			sb.append(".maxAllowed(bytes),");
+			sb.append(memoryPool.getName());
+			sb.append(".currentUsage(bytes)");
+		}		
+		
+		return(sb.toString());
 	}
 	
 	public static String getMemoryInfo(MemoryPoolMXBean memoryPool)
 	{
 		StringBuilder sb=new StringBuilder();
-		
-		sb.append(memoryPool.getName());
-		sb.append(',');
 		
 		MemoryUsage memoryUsage=memoryPool.getUsage();
 
@@ -105,32 +106,29 @@ public class VMStat
 		return(sb.toString());
 	}
 	
-	public static void logMemoryInfo()
+	public static String getMemoryInfo()
 	{
 		List<MemoryPoolMXBean> memoryPools=ManagementFactory.getMemoryPoolMXBeans();
+		StringBuilder sb=new StringBuilder();
 		
 		for (MemoryPoolMXBean memoryPool : memoryPools)
 		{
-			logger.info(getMemoryInfo(memoryPool));
+			if (sb.length()>0) sb.append(',');
+			sb.append(getMemoryInfo(memoryPool));
 		}		
+		
+		return(sb.toString());
 	}
 	
 	public static String getThreadFormat()
 	{
-		return("ThreadInfoName,PeakThreadCount,ThreadCount(includes deamons),DaemonThreadCount");
+		return("PeakThreadCount,ThreadCount(includes deamons),DaemonThreadCount");
 	}
 	
-	public static void logThreadInfo()
-	{
-		logger.info(getThreadInfo());
-	}
-
 	public static String getThreadInfo()
 	{
 		StringBuilder sb=new StringBuilder();
 
-		sb.append("ThreadInfo,");
-		
 		ThreadMXBean threadMXBean=ManagementFactory.getThreadMXBean();
 		sb.append(threadMXBean.getPeakThreadCount());
 		sb.append(',');
@@ -143,15 +141,25 @@ public class VMStat
 	
 	public static String getGCFormat()
 	{
-		return("garbageCollectorName,CollectionTime(ms),CollectionCount");
+		List<GarbageCollectorMXBean> garbageCollectorMXBeans=ManagementFactory.getGarbageCollectorMXBeans();
+		StringBuilder sb=new StringBuilder();
+		
+		for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
+		{
+			if (sb.length()>0) sb.append(',');
+			sb.append(garbageCollectorMXBean.getName());
+			sb.append(".CollectionTime(ms),");
+			sb.append(garbageCollectorMXBean.getName());
+			sb.append(".CollectionCount");
+		}
+
+		return(sb.toString());
 	}
 	
 	public static String getGCInfo(GarbageCollectorMXBean garbageCollectorMXBean)
 	{
 		StringBuilder sb=new StringBuilder();
 
-		sb.append(garbageCollectorMXBean.getName());
-		sb.append(',');
 		sb.append(garbageCollectorMXBean.getCollectionTime());
 		sb.append(',');
 		sb.append(garbageCollectorMXBean.getCollectionCount());
@@ -159,34 +167,39 @@ public class VMStat
 		return(sb.toString());
 	}
 	
-	public static void logGCInfo()
+	public static String getGCInfo()
 	{
 		List<GarbageCollectorMXBean> garbageCollectorMXBeans=ManagementFactory.getGarbageCollectorMXBeans();
+		StringBuilder sb=new StringBuilder();
 		
 		for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
 		{
-			logger.info(getGCInfo(garbageCollectorMXBean));
+			if (sb.length()>0) sb.append(',');
+			sb.append(getGCInfo(garbageCollectorMXBean));
 		}
+		
+		return(sb.toString());
 	}
 	
 	public static void logAll()
 	{
-		logMemoryInfo();
-		logGCInfo();		
-		logThreadInfo();
+		if (counter%10==0) logAllFormat();
+		logAllData();
+		counter++;
+	}
+
+	public static void logAllData()
+	{
+		logger.info("DATA,"+getMemoryInfo()+','+getGCInfo()+','+getThreadInfo());
 	}
 	
 	public static void logAllFormat()
 	{
-		logger.info(getMemoryFormat());
-		logger.info(getGCFormat());
-		logger.info(getThreadFormat());		
+		logger.info("HEADER,"+getMemoryFormat()+','+getGCFormat()+','+getThreadFormat());
 	}
 	
 	public static void main(String... argv) throws Exception
 	{
-		useSimpleLogger("dist");
-		
 		startContinuousLogging(5000);
 		
 		Thread.sleep(60000);
