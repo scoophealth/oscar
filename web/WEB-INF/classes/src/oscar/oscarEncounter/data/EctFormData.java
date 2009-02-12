@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.commons.lang.StringUtils;
+
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
@@ -92,6 +94,13 @@ public class EctFormData {
     }
 
     public PatientForm[] getPatientForms(String demoNo, String table) throws SQLException {
+    	
+    	if(StringUtils.isEmpty(table)){
+    		PatientForm[] ret = {};
+            return ret; 
+    	}
+    		
+    	
         ArrayList forms = new ArrayList();
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -99,6 +108,8 @@ public class EctFormData {
         if ( !table.equals("form") ) {
             String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                         + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
+            
+            System.out.println(sql);
 
             ResultSet rs = db.GetSQL(sql);
 
