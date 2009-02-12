@@ -189,8 +189,16 @@ public class CaseManagementManager {
 	caseManagementNoteExtDAO.save(cExt);
     }
     
+    public void updateNoteExt(CaseManagementNoteExt cExt) {
+	caseManagementNoteExtDAO.update(cExt);
+    }
+    
     public void saveNoteLink(CaseManagementNoteLink cLink) {
 	caseManagementNoteLinkDAO.save(cLink);
+    }
+    
+    public void updateNoteLink(CaseManagementNoteLink cLink) {
+	caseManagementNoteLinkDAO.update(cLink);
     }
     
     public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
@@ -419,7 +427,25 @@ public class CaseManagementManager {
     public List getLinkByTableId(Integer tableName, Long tableId) {
 	return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
     }
-
+    
+    public CaseManagementNoteLink getLatestLinkBytableId(Integer tableName, Long tableId) {
+	List<CaseManagementNoteLink> lcml = getLinkByTableId(tableName, tableId);
+	if (lcml.isEmpty()) return null;
+	else return lcml.get(lcml.size()-1);
+    }
+    
+    public Integer getTableNameByDisplay(String disp) {
+	if (!filled(disp)) return null;
+	Integer tName = CaseManagementNoteLink.CASEMGMTNOTE;
+	
+	if (disp.equals(CaseManagementNoteLink.DISP_ALLERGY)) tName = CaseManagementNoteLink.ALLERGIES;
+	else if (disp.equals(CaseManagementNoteLink.DISP_DOCUMENT)) tName = CaseManagementNoteLink.DOCUMENT;
+	else if (disp.equals(CaseManagementNoteLink.DISP_LABTEST)) tName = CaseManagementNoteLink.LABTEST;
+	else if (disp.equals(CaseManagementNoteLink.DISP_PRESCRIP)) tName = CaseManagementNoteLink.DRUGS;
+	
+	return tName;
+    }
+    
     public CaseManagementCPP getCPP(String demographic_no) {
         return this.caseManagementCPPDAO.getCPP(demographic_no);
     }
@@ -771,7 +797,7 @@ public class CaseManagementManager {
     }
 
     public boolean hasAccessRight(String accessName, String accessType, String providerNo, String demoNo, String pId) {
-        if (accessName == null || accessType == null || pId == null || pId.equals("")) return false;
+        if (accessName == null || accessType == null || !filled(pId)) return false;
         if (new Long(pId).intValue() == 0) pId = null;
         List arList = getAccessRight(providerNo, demoNo, pId);
         for (int i = 0; i < arList.size(); i++) {
@@ -1406,7 +1432,9 @@ public class CaseManagementManager {
         }
         
         return signature;
-    	
     }
     
+    private boolean filled(String s) {
+	return (s!=null && s.trim().length()>0);
+    }
 }
