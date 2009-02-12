@@ -181,25 +181,25 @@ public class ImportDemographicDataAction2 extends Action {
 		if (legalName.getFirstName()!=null) firstName = filledOrEmpty(legalName.getFirstName().getPart());
 	    } else {
 		dataGood = "No";
-		appendLine(errorImport,"No Legal Name");
+		errorImport = appendLine(errorImport,"No Legal Name");
 	    }
 	    String sex = demo.getGender()!=null ? demo.getGender().toString() : "";
 	    if (!filled(sex)) {
 		dataGood = "No";
-		appendLine(errorImport,"No Gender");
+		errorImport = appendLine(errorImport,"No Gender");
 	    }
 	    String birthDate = getDateFullPartial(demo.getDateOfBirth());
 	    if (!filled(birthDate)) {
 		birthDate = "0001-01-01";
 		dataGood = "No";
-		appendLine(errorImport,"No Date Of Birth");
+		errorImport = appendLine(errorImport,"No Date Of Birth");
 	    }
 	    String roster_status = demo.getEnrollmentStatus()!=null ? demo.getEnrollmentStatus().toString() : "";
 	    if	    (roster_status.equals("1")) roster_status = "RO";
 	    else if (roster_status.equals("0")) roster_status = "NR";
 	    else {
 		dataGood = "No";
-		appendLine(errorImport,"No Enrollment Status");
+		errorImport = appendLine(errorImport,"No Enrollment Status");
 	    }
 	    String patient_status = demo.getPersonStatusCode()!=null ? demo.getPersonStatusCode().toString() : "";
 	    if	    (patient_status.equals("A")) patient_status = "AC";
@@ -207,22 +207,22 @@ public class ImportDemographicDataAction2 extends Action {
 	    else if (patient_status.equals("D")) patient_status = "DE";
 	    else {
 		dataGood = "No";
-		appendLine(errorImport,"No Person Status Code");
+		errorImport = appendLine(errorImport,"No Person Status Code");
 	    }
 	    String date_joined = getDateFullPartial(demo.getEnrollmentDate());
 	    String end_date = getDateFullPartial(demo.getEnrollmentTerminationDate());
 	    String sin = filledOrEmpty(demo.getSIN());
 	    String dNote = "";
-	    appendLine(dNote, "SIN: ", sin);
+	    dNote = appendLine(dNote, "SIN: ", sin);
 	    
 	    String chart_no = filledOrEmpty(demo.getChartNumber());
 	    String uvID = filledOrEmpty(demo.getUniqueVendorIdSequence());
 	    if (filled(uvID)) {
 		if (!filled(chart_no)) {
 		    chart_no = uvID;
-		    appendLine(errorImport,"Note: Unique Vendor Id imported as [chart_no]");
+		    errorImport = appendLine(errorImport,"Note: Unique Vendor Id imported as [chart_no]");
 		} else {
-		    appendLine(dNote, "Unique Vendor ID: ", uvID);
+		    dNote = appendLine(dNote, "Unique Vendor ID: ", uvID);
 		}
 	    }
 	    String versionCode="", hin="", hc_type="", eff_date="";
@@ -231,12 +231,12 @@ public class ImportDemographicDataAction2 extends Action {
 		hin = filledOrEmpty(healthCard.getNumber());
 		if (hin.equals("")) {
 		    dataGood = "No";
-		    appendLine(errorImport,"No health card number!");
+		    errorImport = appendLine(errorImport,"No health card number!");
 		}
 		hc_type = healthCard.getProvinceCode()!=null ? healthCard.getProvinceCode().toString() : "";
 		if (hc_type.equals("")) {
 		    dataGood = "No";
-		    appendLine(errorImport,"No Province Code for health card!");
+		    errorImport = appendLine(errorImport,"No Province Code for health card!");
 		}
 		versionCode = filledOrEmpty(healthCard.getVersion());
 		try {
@@ -402,16 +402,16 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<pHistArray.length; i++) {
 		    boolean oscarTimestamp = false;
 		    if (filled(pHistArray[i].getCategorySummaryLine())) {
-			appendLine(socialHist,pHistArray[i].getCategorySummaryLine().trim());
+			socialHist = appendLine(socialHist,pHistArray[i].getCategorySummaryLine().trim());
 			if (socialHist.contains("-----[[") && socialHist.contains("]]-----")) oscarTimestamp = true;
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Personal History ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Personal History ("+(i+1)+")");
 		    }
-		    appendLine(socialHist, getResidual(pHistArray[i].getResidualInfo()));
+		    socialHist = appendLine(socialHist, getResidual(pHistArray[i].getResidualInfo()));
 		    if (!oscarTimestamp) {
 			String dateHeader = "-----[[" + new Date() + "]]-----";
-			appendLine(dateHeader, socialHist);
+			dateHeader = appendLine(dateHeader, socialHist);
 		    }
 		}
 		//FAMILY HISTORY
@@ -419,23 +419,23 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<fHistArray.length; i++) {
 		    boolean oscarTimestamp = false;
 		    if (filled(fHistArray[i].getCategorySummaryLine())) {
-			appendLine(familyHist,fHistArray[i].getCategorySummaryLine().trim());
+			familyHist = appendLine(familyHist,fHistArray[i].getCategorySummaryLine().trim());
 			if (familyHist.contains("-----[[") && familyHist.contains("]]-----")) oscarTimestamp = true;
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Family History ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Family History ("+(i+1)+")");
 		    }
-		    appendLine(familyHist,"Diagnosis Problem Description: ",fHistArray[i].getDiagnosisProblemDescription());
-		    appendLine(familyHist, getCode(fHistArray[i].getDiagnosisCode(),"Diagnosis Code"));
-		    appendLine(familyHist,"Treatment: ",fHistArray[i].getTreatment());
-		    appendLine(familyHist,"Start Date: ",getDateFullPartial(fHistArray[i].getStartDate()));
-		    appendLine(familyHist,"Relationship: ",fHistArray[i].getRelationship());
-		    appendLine(familyHist,"Notes: ",fHistArray[i].getNotes());
-		    if (fHistArray[i].getAgeAtOnset()!=null) appendLine(familyHist,"Age at Onset: ",fHistArray[i].getAgeAtOnset().toString());
-		    appendLine(familyHist, getResidual(fHistArray[i].getResidualInfo()));
+		    familyHist = appendLine(familyHist,"Diagnosis Problem Description: ",fHistArray[i].getDiagnosisProblemDescription());
+		    familyHist = appendLine(familyHist, getCode(fHistArray[i].getDiagnosisCode(),"Diagnosis Code"));
+		    familyHist = appendLine(familyHist,"Treatment: ",fHistArray[i].getTreatment());
+		    familyHist = appendLine(familyHist,"Start Date: ",getDateFullPartial(fHistArray[i].getStartDate()));
+		    familyHist = appendLine(familyHist,"Relationship: ",fHistArray[i].getRelationship());
+		    familyHist = appendLine(familyHist,"Notes: ",fHistArray[i].getNotes());
+		    if (fHistArray[i].getAgeAtOnset()!=null) familyHist = appendLine(familyHist,"Age at Onset: ",fHistArray[i].getAgeAtOnset().toString());
+		    familyHist = appendLine(familyHist, getResidual(fHistArray[i].getResidualInfo()));
 		    if (!oscarTimestamp) {
 			String dateHeader = "-----[[" + new Date() + "]]-----";
-			appendLine(dateHeader, familyHist);
+			dateHeader = appendLine(dateHeader, familyHist);
 		    }
 		}
 		//PAST HEALTH
@@ -443,23 +443,23 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i< pHealth.length; i++) {
 		    boolean oscarTimestamp = false;
 		    if (filled(pHealth[i].getCategorySummaryLine())) {
-			appendLine(medicalHist,pHealth[i].getCategorySummaryLine().trim());
+			medicalHist = appendLine(medicalHist,pHealth[i].getCategorySummaryLine().trim());
 			if (medicalHist.contains("-----[[") && medicalHist.contains("]]-----")) oscarTimestamp = true;
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Past Health ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Past Health ("+(i+1)+")");
 		    }
-		    appendLine(medicalHist,"Past Health Problem: ",pHealth[i].getPastHealthProblemDescriptionOrProcedures());
-		    appendLine(medicalHist, getCode(pHealth[i].getDiagnosisOrProcedureCode(),"Diagnosis/Procedure Code"));
-		    appendLine(medicalHist,"Onset/Event Date: ",getDateFullPartial(pHealth[i].getOnsetOrEventDate()));
-		    appendLine(medicalHist,"Resolved Date: ",getDateFullPartial(pHealth[i].getResolvedDate()));
-		    appendLine(medicalHist,"Resolved ? ",pHealth[i].getResolvedIndicator());
-		    appendLine(medicalHist,"Notes: ",pHealth[i].getNotes());
-		    if (pHealth[i].getMedicalSurgicalFlag()!=null) appendLine(medicalHist,"Medical Surgical Flag: ",pHealth[i].getMedicalSurgicalFlag().toString());
-		    appendLine(medicalHist, getResidual(pHealth[i].getResidualInfo()));
+		    medicalHist = appendLine(medicalHist,"Past Health Problem: ",pHealth[i].getPastHealthProblemDescriptionOrProcedures());
+		    medicalHist = appendLine(medicalHist, getCode(pHealth[i].getDiagnosisOrProcedureCode(),"Diagnosis/Procedure Code"));
+		    medicalHist = appendLine(medicalHist,"Onset/Event Date: ",getDateFullPartial(pHealth[i].getOnsetOrEventDate()));
+		    medicalHist = appendLine(medicalHist,"Resolved Date: ",getDateFullPartial(pHealth[i].getResolvedDate()));
+		    medicalHist = appendLine(medicalHist,"Resolved ? ",pHealth[i].getResolvedIndicator());
+		    medicalHist = appendLine(medicalHist,"Notes: ",pHealth[i].getNotes());
+		    if (pHealth[i].getMedicalSurgicalFlag()!=null) medicalHist = appendLine(medicalHist,"Medical Surgical Flag: ",pHealth[i].getMedicalSurgicalFlag().toString());
+		    medicalHist = appendLine(medicalHist, getResidual(pHealth[i].getResidualInfo()));
 		    if (!oscarTimestamp) {
 			String dateHeader = "-----[[" + new Date() + "]]-----";
-			appendLine(dateHeader, medicalHist);
+			dateHeader = appendLine(dateHeader, medicalHist);
 		    }
 		}
 		//PROBLEM LIST
@@ -467,27 +467,27 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<probList.length; i++) {
 		    boolean oscarTimestamp = false;
 		    if (filled(probList[i].getCategorySummaryLine())) {
-			appendLine(ongConcerns,probList[i].getCategorySummaryLine().trim());
+			ongConcerns = appendLine(ongConcerns,probList[i].getCategorySummaryLine().trim());
 			if (ongConcerns.contains("-----[[") && ongConcerns.contains("]]-----")) oscarTimestamp = true;
 			if (probList[i].getOnsetDate()!=null) {
-			    appendLine(ongConcerns,"Onset Date: ",getDateFullPartial(probList[i].getOnsetDate()));
+			    ongConcerns = appendLine(ongConcerns,"Onset Date: ",getDateFullPartial(probList[i].getOnsetDate()));
 			} else {
 			    dataGood = "No";
-			    appendLine(errorImport,"No Onset Date for Problem List ("+(i+1)+")");
+			    errorImport = appendLine(errorImport,"No Onset Date for Problem List ("+(i+1)+")");
 			}
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Problem List ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Problem List ("+(i+1)+")");
 		    }
-		    appendLine(ongConcerns,"Problem Description: ",probList[i].getProblemDescription());
-		    appendLine(ongConcerns, getCode(probList[i].getDiagnosisCode(),"Diagnosis Code"));
-		    appendLine(ongConcerns,"Problem Status: ",probList[i].getProblemStatus());
-		    appendLine(ongConcerns,"Resolution Date: ",getDateFullPartial(probList[i].getResolutionDate()));
-		    appendLine(ongConcerns,"Notes: ",probList[i].getNotes());
-		    appendLine(ongConcerns, getResidual(probList[i].getResidualInfo()));
+		    ongConcerns = appendLine(ongConcerns,"Problem Description: ",probList[i].getProblemDescription());
+		    ongConcerns = appendLine(ongConcerns, getCode(probList[i].getDiagnosisCode(),"Diagnosis Code"));
+		    ongConcerns = appendLine(ongConcerns,"Problem Status: ",probList[i].getProblemStatus());
+		    ongConcerns = appendLine(ongConcerns,"Resolution Date: ",getDateFullPartial(probList[i].getResolutionDate()));
+		    ongConcerns = appendLine(ongConcerns,"Notes: ",probList[i].getNotes());
+		    ongConcerns = appendLine(ongConcerns, getResidual(probList[i].getResidualInfo()));
 		    if (!oscarTimestamp) {
 			String dateHeader = "-----[[" + new Date() + "]]-----";
-			appendLine(dateHeader, ongConcerns);
+			dateHeader = appendLine(dateHeader, ongConcerns);
 		    }
 	    }
 		//RISK FACTORS
@@ -495,43 +495,43 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<rFactors.length; i++) {
 		    boolean oscarTimestamp = false;
 		    if (filled(rFactors[i].getCategorySummaryLine())) {
-			appendLine(reminders,rFactors[i].getCategorySummaryLine().trim());
+			reminders = appendLine(reminders,rFactors[i].getCategorySummaryLine().trim());
 			if (reminders.contains("-----[[") && reminders.contains("]]-----")) oscarTimestamp = true;
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Risk Factors ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Risk Factors ("+(i+1)+")");
 		    }
-		    if (rFactors[i].getAgeOfOnset()!=null) appendLine(reminders,"Age of Onset: ",rFactors[i].getAgeOfOnset().toString());
-		    appendLine(reminders,"Start Date: ",getDateFullPartial(rFactors[i].getStartDate()));
-		    appendLine(reminders,"End Date: ",getDateFullPartial(rFactors[i].getEndDate()));
-		    appendLine(reminders,"Exposure Details: ",rFactors[i].getExposureDetails());
-		    appendLine(reminders,"Notes: ",rFactors[i].getNotes());
-		    appendLine(reminders,"Risk Factor: ",rFactors[i].getRiskFactor());
-		    appendLine(reminders, getResidual(rFactors[i].getResidualInfo()));
+		    if (rFactors[i].getAgeOfOnset()!=null) reminders = appendLine(reminders,"Age of Onset: ",rFactors[i].getAgeOfOnset().toString());
+		    reminders = appendLine(reminders,"Start Date: ",getDateFullPartial(rFactors[i].getStartDate()));
+		    reminders = appendLine(reminders,"End Date: ",getDateFullPartial(rFactors[i].getEndDate()));
+		    reminders = appendLine(reminders,"Exposure Details: ",rFactors[i].getExposureDetails());
+		    reminders = appendLine(reminders,"Notes: ",rFactors[i].getNotes());
+		    reminders = appendLine(reminders,"Risk Factor: ",rFactors[i].getRiskFactor());
+		    reminders = appendLine(reminders, getResidual(rFactors[i].getResidualInfo()));
 		    if (!oscarTimestamp) {
 			String dateHeader = "-----[[" + new Date() + "]]-----";
-			appendLine(dateHeader, reminders);
+			dateHeader = appendLine(dateHeader, reminders);
 		    }
 		}
 		//CLINICAL NOTES
 		cds.ClinicalNotesDocument.ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
 		for (int i=0; i<cNotes.length; i++) {
-		    appendLine(encounter, cNotes[i].getMyClinicalNotesContent());
+		    encounter = appendLine(encounter, cNotes[i].getMyClinicalNotesContent());
 		    boolean oscarSeparator = encounter.contains("-----------------------------------") ? true : false;
-		    appendLine(encounter,"Note Type: ",cNotes[i].getNoteType());
-		    appendLine(encounter,"Entered DateTime: ",getDateFullPartial(cNotes[i].getEnteredDateTime()));
-		    appendLine(encounter,"Event DateTime: ",getDateFullPartial(cNotes[i].getEventDateTime()));
-		    appendLine(encounter,"Signed DateTime: ",getDateFullPartial(cNotes[i].getSignedDateTime()));
-		    appendLine(encounter,"Signing Physician OHIP Id: ",cNotes[i].getSigningOHIPPhysicianId());
+		    encounter = appendLine(encounter,"Note Type: ",cNotes[i].getNoteType());
+		    encounter = appendLine(encounter,"Entered DateTime: ",getDateFullPartial(cNotes[i].getEnteredDateTime()));
+		    encounter = appendLine(encounter,"Event DateTime: ",getDateFullPartial(cNotes[i].getEventDateTime()));
+		    encounter = appendLine(encounter,"Signed DateTime: ",getDateFullPartial(cNotes[i].getSignedDateTime()));
+		    encounter = appendLine(encounter,"Signing Physician OHIP Id: ",cNotes[i].getSigningOHIPPhysicianId());
 		    
 		    if (cNotes[i].getPrincipalAuthor()!=null) {
 			cds.ClinicalNotesDocument.ClinicalNotes.PrincipalAuthor cpAuthor = cNotes[i].getPrincipalAuthor();
-			appendLine(encounter, "Principal Author -");
+			encounter = appendLine(encounter, "Principal Author -");
 			String[] personName = getPersonName(cpAuthor.getName());
 			String cpaName = filledOrEmpty(personName[0] + " " + personName[1]);
-			appendLine(encounter, "Name: ", cpaName);
-			appendLine(encounter, "OHIP ID: ", cpAuthor.getOHIPPhysicianId());
-			appendLine(encounter, "Function: ", cNotes[i].getPrincipalAuthorFunction());
+			encounter = appendLine(encounter, "Name: ", cpaName);
+			encounter = appendLine(encounter, "OHIP ID: ", cpAuthor.getOHIPPhysicianId());
+			encounter = appendLine(encounter, "Function: ", cNotes[i].getPrincipalAuthorFunction());
 		    }
 		    if (!oscarSeparator) {
 			String separator = "-----------------------------------";
@@ -560,25 +560,25 @@ public class ImportDemographicDataAction2 extends Action {
 			aSummary = aaReactArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Allergies & Adverse Reactions ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Allergies & Adverse Reactions ("+(i+1)+")");
 		    }
 		    
 		    reaction = filledOrEmpty(aaReactArray[i].getReaction());
 		    if (filled(aSummary)) {
-			appendLine(reaction, "Summary: ", aSummary);
-			appendLine(errorImport,"Note: Allergies Summary imported in [reaction] ("+(i+1)+")");
+			reaction = appendLine(reaction, "Summary: ", aSummary);
+			errorImport = appendLine(errorImport,"Note: Allergies Summary imported in [reaction] ("+(i+1)+")");
 		    }
 		    description = filledOrEmpty(aaReactArray[i].getOffendingAgentDescription());
 		    drugrefId   = filledOrEmpty(aaReactArray[i].getCode().getValue());
 		    entryDate   = getDateFullPartial(aaReactArray[i].getRecordedDate());
-		    appendLine(reaction,"Start Date: ",getDateFullPartial(aaReactArray[i].getStartDate()));
-		    appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
-		    appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
-		    appendLine(reaction, getCode(aaReactArray[i].getCode(),"Offending Agent Code"));
-		    appendLine(reaction,"Notes: ",aaReactArray[i].getNotes());
-		    if (aaReactArray[i].getReactionType()!=null) appendLine(reaction,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
-		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
-		    appendLine(reaction, getResidual(aaReactArray[i].getResidualInfo()));
+		    reaction = appendLine(reaction,"Start Date: ",getDateFullPartial(aaReactArray[i].getStartDate()));
+		    reaction = appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
+		    reaction = appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
+		    reaction = appendLine(reaction, getCode(aaReactArray[i].getCode(),"Offending Agent Code"));
+		    reaction = appendLine(reaction,"Notes: ",aaReactArray[i].getNotes());
+		    if (aaReactArray[i].getReactionType()!=null) reaction = appendLine(reaction,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
+		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) reaction = appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
+		    reaction = appendLine(reaction, getResidual(aaReactArray[i].getResidualInfo()));
 		    
 		    if (aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
 			if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.DR) typeCode="13"; //drug
@@ -591,7 +591,7 @@ public class ImportDemographicDataAction2 extends Action {
 			else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.LT) severity="3"; //severe
 			else if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.NO) {
 			    severity="1";
-			    appendLine(errorImport,"Note: Allergies Severity [No Reaction] imported as [Mild] ("+(i+1)+")");
+			    errorImport = appendLine(errorImport,"Note: Allergies Severity [No Reaction] imported as [Mild] ("+(i+1)+")");
 			}
 		    }
 		    Long allergyId = new RxAllergyImport().Save(demoNo, entryDate, description, typeCode, reaction, ""/*startDate*/, severity, drugrefId);
@@ -610,7 +610,7 @@ public class ImportDemographicDataAction2 extends Action {
 			mSummary = medArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Medications & Treatments ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Medications & Treatments ("+(i+1)+")");
 		    }
 		    createDate	  = getDateFullPartial(medArray[i].getPrescriptionWrittenDate());
 		    rxDate	  = getDateFullPartial(medArray[i].getStartDate());
@@ -630,28 +630,28 @@ public class ImportDemographicDataAction2 extends Action {
 			special = medArray[i].getDrugName();
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Drug Name in Medications & Treatments ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Drug Name in Medications & Treatments ("+(i+1)+")");
 		    }
 		    if (filled(mSummary)) {
-			appendLine(special, "Summary: ", mSummary);
-			appendLine(errorImport,"Note: Medications Summary imported in [special] ("+(i+1)+")");
+			special = appendLine(special, "Summary: ", mSummary);
+			errorImport = appendLine(errorImport,"Note: Medications Summary imported in [special] ("+(i+1)+")");
 		    }
-		    appendLine(special, "DIN: ", regionalId);
-		    appendLine(special, "Prescription Instructions: ", medArray[i].getPrescriptionInstructions());
-		    appendLine(special, "Route: ", medArray[i].getRoute());
-		    appendLine(special, "Form: ", medArray[i].getForm());
-		    appendLine(special, "Dosage: ", medArray[i].getDosage());
-		    appendLine(special, "Quantity: ", medArray[i].getQuantity());
-		    appendLine(special, "Last Refill Date: ", getDateFullPartial(medArray[i].getLastRefillDate()));
-		    appendLine(special, "Notes: ", medArray[i].getNotes());
-		    appendLine(special, "Patient Compliance ? ", getYN(medArray[i].getPatientCompliance()));
-		    appendLine(special, "Long Term Medication ? ", getYN(medArray[i].getLongTermMedication()));
-		    appendLine(special, "Past Medication ? ", getYN(medArray[i].getPastMedications()));
-		    appendLine(special, getResidual(medArray[i].getResidualInfo()));
+		    special = appendLine(special, "DIN: ", regionalId);
+		    special = appendLine(special, "Prescription Instructions: ", medArray[i].getPrescriptionInstructions());
+		    special = appendLine(special, "Route: ", medArray[i].getRoute());
+		    special = appendLine(special, "Form: ", medArray[i].getForm());
+		    special = appendLine(special, "Dosage: ", medArray[i].getDosage());
+		    special = appendLine(special, "Quantity: ", medArray[i].getQuantity());
+		    special = appendLine(special, "Last Refill Date: ", getDateFullPartial(medArray[i].getLastRefillDate()));
+		    special = appendLine(special, "Notes: ", medArray[i].getNotes());
+		    special = appendLine(special, "Patient Compliance ? ", getYN(medArray[i].getPatientCompliance()));
+		    special = appendLine(special, "Long Term Medication ? ", getYN(medArray[i].getLongTermMedication()));
+		    special = appendLine(special, "Past Medication ? ", getYN(medArray[i].getPastMedications()));
+		    special = appendLine(special, getResidual(medArray[i].getResidualInfo()));
 		    if (medArray[i].getStrength()!=null) {
 			dosage = filledOrEmpty(medArray[i].getStrength().getAmount());
 			unit = filledOrEmpty(medArray[i].getStrength().getUnitOfMeasure());
-			appendLine(special, "Strength: ", dosage+" "+unit);
+			special = appendLine(special, "Strength: ", dosage+" "+unit);
 		    }
 		    providerNo = "";
 		    if (medArray[i].getPrescribedBy()!=null) {
@@ -677,7 +677,7 @@ public class ImportDemographicDataAction2 extends Action {
 			preventionType = immuArray[i].getImmunizationName();
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Immunization Name ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Immunization Name ("+(i+1)+")");
 		    }
 		    preventionDate = getDateFullPartial(immuArray[i].getDate());
 		    refused = getYN(immuArray[i].getRefusedFlag()).equals("Y") ? "1" : "0";
@@ -687,17 +687,17 @@ public class ImportDemographicDataAction2 extends Action {
 			iSummary = immuArray[i].getCategorySummaryLine().trim();
 		    } else {
 			summaryGood = "No";
-			appendLine(errorImport,"No Summary for Immunizations ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Summary for Immunizations ("+(i+1)+")");
 		    }
-		    appendLine(comments, immuArray[i].getNotes());
+		    comments = appendLine(comments, immuArray[i].getNotes());
 		    if (filled(iSummary)) {
-			appendLine(comments, "Summary", iSummary);
-			appendLine(errorImport,"Note: Immunization Summary imported in [comments] ("+(i+1)+")");
+			comments = appendLine(comments, "Summary", iSummary);
+			errorImport = appendLine(errorImport,"Note: Immunization Summary imported in [comments] ("+(i+1)+")");
 		    }
-		    appendLine(comments, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
-		    appendLine(comments, "Dose: ", immuArray[i].getDose());
-		    appendLine(comments, "Instructions: ", immuArray[i].getInstructions());
-		    appendLine(comments, getResidual(immuArray[i].getResidualInfo()));
+		    comments = appendLine(comments, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
+		    comments = appendLine(comments, "Dose: ", immuArray[i].getDose());
+		    comments = appendLine(comments, "Instructions: ", immuArray[i].getInstructions());
+		    comments = appendLine(comments, getResidual(immuArray[i].getResidualInfo()));
 		    if (filled(comments)) {
 			Hashtable ht = new Hashtable();
 			ht.put("comments", comments);
@@ -739,7 +739,7 @@ public class ImportDemographicDataAction2 extends Action {
 			if (flag.equals(cdsDt.ResultNormalAbnormalFlag.N)) abn = "N";
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Normal/Abnormal Flag for Laboratory Results ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Normal/Abnormal Flag for Laboratory Results ("+(i+1)+")");
 		    }
 		    if (labResultArray[i].getReferenceRange()!=null) {
 			cds.LaboratoryResultsDocument.LaboratoryResults.ReferenceRange ref = labResultArray[i].getReferenceRange();
@@ -761,7 +761,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    } else {
 			dataGood = "No";
 			String errorMsg = "No Collection DateTime for Laboratory Results";
-			appendLine(errorImport, errorMsg);
+			errorImport = appendLine(errorImport, errorMsg);
 			errWarnings.add(errorMsg);
 		    }
 		    LabResultImport lri = new LabResultImport();
@@ -795,7 +795,7 @@ public class ImportDemographicDataAction2 extends Action {
 			appointmentDate = UtilDateUtilities.StringToDate(apptDateStr);
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Appointment Date ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Appointment Date ("+(i+1)+")");
 		    }
 		    if (appArray[i].getAppointmentTime()!=null) {
 			startTime = getCalTime(appArray[i].getAppointmentTime());
@@ -812,13 +812,13 @@ public class ImportDemographicDataAction2 extends Action {
 			}
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Appointment Time ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Appointment Time ("+(i+1)+")");
 		    }
 		    if (filled(appArray[i].getAppointmentNotes())) {
 			notes = appArray[i].getAppointmentNotes();
 		    } else {
 			dataGood = "No";
-			appendLine(errorImport,"No Appointment Notes ("+(i+1)+")");
+			errorImport = appendLine(errorImport,"No Appointment Notes ("+(i+1)+")");
 		    }
 		    if (appArray[i].getAppointmentStatus()!=null) {
 			ApptStatusData asd = new ApptStatusData();
@@ -852,7 +852,7 @@ public class ImportDemographicDataAction2 extends Action {
 			else if (repCt.getTextContent()!=null) b = repCt.getTextContent().getBytes();
 			if (b==null) {
 			    otherGood = "No";
-			    appendLine(errorImport,"No report file in xml ("+(i+1)+")");
+			    errorImport = appendLine(errorImport,"No report file in xml ("+(i+1)+")");
 			} else {
 			    String docFileName = "ImportReport-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+"-"+i;
 			    String docType=null, contentType=null, observationDate=null, updateDateTime=null, docCreator=null;
@@ -862,7 +862,7 @@ public class ImportDemographicDataAction2 extends Action {
 				docFileName += getFileExt(contentType);
 			    } else {
 				dataGood = "No";
-				appendLine(errorImport,"No File Extension & Version for Reports ("+(i+1)+")");
+				errorImport = appendLine(errorImport,"No File Extension & Version for Reports ("+(i+1)+")");
 			    }
 			    String docDesc = docFileName;
 			    String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -884,7 +884,7 @@ public class ImportDemographicDataAction2 extends Action {
 				else docType = "others";
 			    } else {
 				dataGood = "No";
-				appendLine(errorImport,"No Class for Reports ("+(i+1)+")");
+				errorImport = appendLine(errorImport,"No Class for Reports ("+(i+1)+")");
 			    }
 			    if (repR[i].getAuthorPhysician()!=null) {
 				String[] personName = getPersonName(repR[i].getAuthorPhysician());
@@ -1105,9 +1105,9 @@ public class ImportDemographicDataAction2 extends Action {
 	if (dCode==null) return "";
 	
 	String ret = filled(dTitle) ? dTitle+" -" : "";
-	appendLine(ret, "Coding System: ", dCode.getCodingSystem());
-	appendLine(ret, "Description: ",   dCode.getDescription());
-	appendLine(ret, "Value: ",         dCode.getValue());
+	ret = appendLine(ret, "Coding System: ", dCode.getCodingSystem());
+	ret = appendLine(ret, "Description: ",   dCode.getDescription());
+	ret = appendLine(ret, "Value: ",         dCode.getValue());
 	
 	return ret;
     }
@@ -1143,10 +1143,10 @@ public class ImportDemographicDataAction2 extends Action {
 	cdsDt.ResidualInformation.DataElement[] resData = resInfo.getDataElementArray();
 	for (int i=0; i<resData.length; i++) {
 	    if (filled(resData[i].getName())) {
-		appendLine(ret, "Data Name: ",   resData[i].getName());
-		appendLine(ret, "Description: ", resData[i].getDescription());
-		appendLine(ret, "Data Type: ",   resData[i].getDataType());
-		appendLine(ret, "Content: ",     resData[i].getContent());
+		ret = appendLine(ret, "Data Name: ",   resData[i].getName());
+		ret = appendLine(ret, "Description: ", resData[i].getDescription());
+		ret = appendLine(ret, "Data Type: ",   resData[i].getDataType());
+		ret = appendLine(ret, "Content: ",     resData[i].getContent());
 	    }
 	}
 	return ret;
@@ -1169,16 +1169,17 @@ public class ImportDemographicDataAction2 extends Action {
 	return nullOrTextlessStr;
     }
     
-    void appendLine(String baseStr, String addStr) {
-	appendLine(baseStr, "", addStr);
+    String appendLine(String baseStr, String addStr) {
+	return appendLine(baseStr, "", addStr);
     }
     
-    void appendLine(String baseStr, String label, String addStr) {
+    String appendLine(String baseStr, String label, String addStr) {
 	if (filled(baseStr)) {
 	    baseStr += filled(addStr) ? "\n"+label+addStr : "";
 	} else {
 	    baseStr = filledOrEmpty(label+addStr);
 	}
+	return baseStr;
     }
     
     String getInternalString(Element e){
