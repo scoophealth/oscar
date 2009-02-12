@@ -1165,6 +1165,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    <td align="left">
 					<% String title = apptMainBean.getString(rs,"title"); %>
 								<select name="title" onchange="checkTitleSex();">
+                                                                    <option value="" <%=title.equals("")?"selected":""%> >-Not Set-</option>
 								    <option value="MS" <%=title.equals("MS")?"selected":""%> >MS</option>
 								    <option value="MISS" <%=title.equals("MISS")?"selected":""%> >MISS</option>
 								    <option value="MRS" <%=title.equals("MRS")?"selected":""%> >MRS</option>
