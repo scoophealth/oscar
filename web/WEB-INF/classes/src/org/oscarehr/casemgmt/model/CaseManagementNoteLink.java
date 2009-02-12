@@ -34,6 +34,12 @@ public class CaseManagementNoteLink {
 	public static Integer ALLERGIES    = 3;
 	public static Integer LABTEST	   = 4;
 	public static Integer DOCUMENT     = 5;
+	
+	public static String DISP_PRESCRIP = "Prescriptions";
+	public static String DISP_ALLERGY  = "Allergies";
+	public static String DISP_LABTEST  = "Lab Reports";
+	public static String DISP_DOCUMENT = "Documents";
+	
 
 	private Long id;
 	private Integer tableName;
