@@ -56,6 +56,8 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
@@ -620,6 +622,41 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             /* remember the str written into echart */
             request.getSession().setAttribute("lastSavedNoteString", savedStr);
             
+	    /* save extra fields */
+	    CaseManagementNoteExt cme = new CaseManagementNoteExt();
+	    cme.setNoteId(note.getId());
+	    String[] names = {"startDate","resolutionDate","problemStatus","treatment","exposureDetails","relationship"};
+	    String[] keys = {cme.STARTDATE,cme.RESOLUTIONDATE,cme.PROBLEMSTATUS,cme.TREATMENT,cme.EXPOSUREDETAIL,cme.RELATIONSHIP};
+	    for (int i=0; i<names.length; i++) {
+		String val = request.getParameter(names[i]);
+		if (filled(val)) {
+		    cme.setKeyVal(keys[i]);
+		    if (i<2) {
+			cme.setDateValue(val);
+		    } else {
+			if (cme.getDateValue()!=null) cme.setDateValue("");
+			cme.setValue(val);
+		    }
+		    caseManagementMgr.saveNoteExt(cme);
+		}
+	    }
+
+	    /* Save annotation */
+	    HttpSession se = request.getSession();
+	    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(demo+"annoNote"+CaseManagementNoteLink.CASEMGMTNOTE);
+	    if (cmn!=null) {
+		caseManagementMgr.saveNoteSimple(cmn);
+		CaseManagementNoteLink cml = new CaseManagementNoteLink();
+		cml.setTableName(cml.CASEMGMTNOTE);
+		cml.setTableId(note.getId());
+		cml.setNoteId(cmn.getId());
+		caseManagementMgr.saveNoteLink(cml);
+		
+		se.removeAttribute(demo+"annoNote"+cml.CASEMGMTNOTE);
+		se.removeAttribute("anno_display");
+		se.removeAttribute("anno_last_id");
+	    }
+	    
             caseManagementMgr.getEditors(note);
             
             ActionForward forward = mapping.findForward("listCPPNotes");
@@ -1739,7 +1776,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     }
 
     public ActionForward autosave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-
         log.debug("autosave");
 
         String demographicNo = getDemographicNo(request);
@@ -2040,5 +2076,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             request.getSession().setAttribute("CPPIssues", issues);
         }        
         return issues;
+    }
+    
+    boolean filled(String s) {
+	return (s!=null && s.length()>0);
     }
 }
