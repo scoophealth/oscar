@@ -431,18 +431,18 @@ function navBarLoader() {
 }
 
 //display in place editor
-function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl, noteIssues) {    
+function showEdit(e,title, noteId, editors, date, revision, note, url, containerDiv, reloadUrl, noteIssues, noteExts, demoNo) {
     //Event.extend(e);
     //e.stop();
-    
+
     var limit = containerDiv + "threshold";
     var editElem = "showEditNote";
-    var pgHeight = pageHeight();    
+    var pgHeight = pageHeight();
     var coords = Position.page($("topContent"));
     var top = coords[1];
     var right = Math.round(coords[0]/0.66);
-    var height = $("showEditNote").getHeight();    
-    var gutterMargin = 150;            
+    var height = $("showEditNote").getHeight();
+    var gutterMargin = 150;
     
     if( right < gutterMargin )
         right = gutterMargin;
@@ -472,11 +472,14 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     if( noteIssues.length > 0 ) {
         var issueArray = noteIssues.split(";");    
         var idx,rows;
-        for( idx = 0,rows=0; idx < issueArray.length; idx+=2, ++rows ) {
+	var cppDisplay = "";
+        for( idx = 0,rows=0; idx < issueArray.length; idx+=3, ++rows ) {
             if( rows % 2 == 0 )
-                noteIssueUl += "<li><input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+1];
+                noteIssueUl += "<li><input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+2];
             else
-                noteIssueUl += "&nbsp; <input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+1] + "</li>";
+                noteIssueUl += "&nbsp; <input type='checkbox' id='issueId' name='issue_id' checked value='" + issueArray[idx] + "'>" + issueArray[idx+2] + "</li>";
+
+	    if (cppDisplay=="") cppDisplay = getCPP(issueArray[idx+1]);
         }
 
         if( rows % 2 == 0 )
@@ -502,10 +505,76 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     }
     else
         $(editElem).style.display = "table"; 
-        
+
+    //Prepare Annotation Window & Extra Fields
+    var obj={};
+    Element.observe('anno','click', openAnnotation.bindAsEventListener(obj,noteId,cppDisplay,demoNo));
+    prepareExtraFields(cppDisplay,noteExts);
+
     $("noteEditTxt").focus();
     
     return false;
+}
+
+var sochist = "Social History";
+var medhist = "Medical History";
+var famhist = "Family History";
+var concern = "Ongoing Concerns";
+var reminds = "Reminders";
+var omeds   = "Other Meds";
+
+function getCPP(issueCode) {
+    var ret = "";
+    if (issueCode=="SocHistory") ret = sochist;
+    if (issueCode=="MedHistory") ret = medhist;
+    if (issueCode=="FamHistory") ret = famhist;
+    if (issueCode=="Concerns")	 ret = concern;
+    if (issueCode=="Reminders")	 ret = reminds;
+    if (issueCode=="OMeds")	 ret = omeds;
+    return ret;
+}
+
+function prepareExtraFields(cpp,exts) {
+    $("_startDate","_resolutionDate","_problemStatus","_treatment","_exposureDetails","_relationship").invoke("hide");
+    if (cpp==sochist) {
+	$("_startDate","_resolutionDate").invoke("show");
+    }
+    if (cpp==medhist) {
+	$("_startDate","_resolutionDate","_treatment").invoke("show");
+    }
+    if (cpp==famhist) {
+	$("_startDate","_treatment","_relationship").invoke("show");
+    }
+    if (cpp==concern) {
+	$("_startDate","_resolutionDate","_problemStatus").invoke("show");
+    }
+    if (cpp==reminds) {
+	$("_startDate","_resolutionDate","_exposureDetails").invoke("show");
+    }
+
+    $("startDate").value       = "";
+    $("resolutionDate").value  = "";
+    $("problemStatus").value   = "";
+    $("treatment").value       = "";
+    $("exposureDetails").value = "";
+    $("relationship").value    = "";
+
+    var extsArr = exts.split(";");
+    for (var i=0; i<extsArr.length; i+=2) {
+	if (extsArr[i]=="Start Date")	    $("startDate").value = extsArr[i+1];
+	if (extsArr[i]=="Resolution Date")  $("resolutionDate").value = extsArr[i+1];
+	if (extsArr[i]=="Problem Status")   $("problemStatus").value = extsArr[i+1];
+	if (extsArr[i]=="Treatment")	    $("treatment.value") = extsArr[i+1];
+	if (extsArr[i]=="Exposure Details") $("exposureDetails").value = extsArr[i+1];
+	if (extsArr[i]=="Relationship")	    $("relationship").value = extsArr[i+1];
+    }
+}
+
+function openAnnotation() {
+    var data = $A(arguments);
+    var addr = "/oscar/annotation/annotation.jsp?table_id="+data[1]+"&display="+data[2]+"&demo="+data[3];
+    window.open(addr, "anwin", "width=400,height=250");
+    Event.stop(data[0]);
 }
 
 function updateCPPNote() {

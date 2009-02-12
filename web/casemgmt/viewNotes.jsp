@@ -24,12 +24,12 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 --%>
-<% long start = System.currentTimeMillis(); %>
+<%  long start = System.currentTimeMillis(); %>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ include file="/casemgmt/taglibs.jsp"%>
+<%@include file="/casemgmt/taglibs.jsp"%>
 <%@page
-	import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue"%>
+	import="java.util.List, java.util.Set, java.util.Iterator, org.oscarehr.casemgmt.model.CaseManagementIssue, org.oscarehr.casemgmt.model.CaseManagementNoteExt"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
@@ -38,7 +38,7 @@
 <div style="width: 10%; float: right; text-align: center;">
 <h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>"><a
 	href="#" title='Add Item'
-	onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=request.getAttribute("cppIssue")%>');">+</a></h3>
+	onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=request.getAttribute("cppIssue")%>','','<c:out value="${param.demographicNo}"/>');">+</a></h3>
 </div>
 <div style="clear: left; float: left; width: 90%;">
 <h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a
@@ -48,6 +48,7 @@
 </div>
 <div style="clear: both; height: 63px; overflow: auto;">
 <ul style="margin-left: 5px;">
+<% List<CaseManagementNoteExt> noteExts = (List<CaseManagementNoteExt>)request.getAttribute("NoteExts"); %>
 	<nested:iterate indexId="noteIdx" id="note" name="Notes"
 		type="org.oscarehr.casemgmt.model.CaseManagementNote">
 		<% if( noteIdx % 2 == 0 ) { %>
@@ -57,6 +58,7 @@
 		
 		<li class="cpp" style="clear: both; whitespace: nowrap;">
 		<%}
+		String strNoteExts = getNoteExts(note.getId(), noteExts);
                 List<Provider> listEditors = note.getEditors();
                 StringBuffer editors = new StringBuffer();
                 for( Provider p: listEditors) {
@@ -76,7 +78,7 @@
                 Iterator<CaseManagementIssue>iter = setIssues.iterator();
                 while(iter.hasNext()) {
                     iss = iter.next();
-                    strNoteIssues.append(iss.getIssue_id() + ";" + org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(iss.getIssue().getDescription()));
+                    strNoteIssues.append(iss.getIssue_id()+";"+iss.getIssue().getCode()+";"+org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(iss.getIssue().getDescription()));
                     if( iter.hasNext() ) {
                         strNoteIssues.append(";");
                     }
@@ -87,7 +89,7 @@
 			onmouseout="this.className='topLinks'"
 			title="Rev:<nested:write name="note" property="revision"/> - Last update:<nested:write name="note" property="update_date" format="dd-MMM-yyyy"/>"
 			id="listNote<nested:write name="note" property="id"/>" href="#"
-			onclick="showEdit(event, '<c:out value="${param.title}"/>', '<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=strNoteIssues.toString()%>');return false;"><%=htmlNoteTxt%></a>
+			onclick="showEdit(event,'<c:out value="${param.title}"/>','<nested:write name="note" property="id"/>','<%=editors.toString()%>','<nested:write name="note" property="observation_date" format="dd-MMM-yyyy"/>','<nested:write name="note" property="revision"/>','<%=noteTxt%>', '<%=request.getAttribute("addUrl")%><nested:write name="note" property="id"/>', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=strNoteIssues.toString()%>','<%=strNoteExts%>','<c:out value="${param.demographicNo}"/>');return false;"><%=htmlNoteTxt%></a>
 		</span></li>
 	</nested:iterate>
 </ul>
@@ -99,3 +101,20 @@
 <%
     System.out.println("viewNotes loaded " + String.valueOf(System.currentTimeMillis() - start));
  %>
+<%!
+    String getNoteExts(Long noteId, List<CaseManagementNoteExt> lcme) {
+	StringBuffer strcme = new StringBuffer();
+	for (CaseManagementNoteExt cme : lcme) {
+	    if (cme.getNoteId().equals(noteId)) {
+		String key = cme.getKeyVal();
+		String val = cme.getValue();
+		if (key.equals(cme.STARTDATE) || key.equals(cme.RESOLUTIONDATE)) {
+		    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+		}
+		if (strcme.length()>0) strcme.append(";");
+		strcme.append(key + ";" + val);
+	    }
+	}
+	return strcme.toString();
+    }
+%>
