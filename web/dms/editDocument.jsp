@@ -86,6 +86,8 @@ if (request.getAttribute("completedForm") != null) {
     fileName = currentDoc.getFileName();
 }
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
+String annotation_tableid = editDocumentNo;
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -222,6 +224,12 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 			<% } else { %>
 			<input type="button" value="Reviewed" title="Click to set Reviewed" onclick="reviewed(this);" />
 			<% } %>
+		    </td>
+		</tr>
+		<tr>
+		    <td colspan=2>
+			<input type="button" value="Annotation"
+			onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=annotation_tableid%>&demo=<%=moduleid%>','anwin','width=400,height=250');" />
 		    </td>
 		</tr>
 		<tr>

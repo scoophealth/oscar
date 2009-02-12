@@ -37,7 +37,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 <%  RxPharmacyData pharmacyData = new RxPharmacyData();
     RxPharmacyData.Pharmacy pharmacy ;                                  
-    pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));                                  
+    pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
     String prefPharmacy = "";
     if (pharmacy != null){   
 	prefPharmacy = pharmacy.name;                                  
@@ -46,6 +46,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
     String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
     if (drugref_route==null) drugref_route = "";
     String[] d_route = ("Oral,"+drugref_route).split(",");
+    
+    String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <!--  
@@ -330,6 +332,7 @@ function load() {
 								<th align=left><b>Prescription</b></th>
 								<th align=center width="100px"><b>Represcribe</b></th>
 								<th align=center width="100px"><b>Delete</b></th>
+								<th align=center width="20px">&nbsp;</th>
 							</tr>
 
 							<%                                
@@ -371,6 +374,10 @@ function load() {
 									drugId=<%= drug.getDrugId() %> /></td>
 								<td width="100px" align="center"><input type=checkbox
 									name="chkDelete" align="center" drugId=<%= drug.getDrugId() %> />
+								</td>
+								<td width="20px" align="center">
+								    <a href="#" title="Annotation" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
+								    <img src="/oscar/images/notes.gif" border="0"></a>
 								</td>
 							</tr>
 							<%

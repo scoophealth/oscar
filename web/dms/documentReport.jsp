@@ -32,6 +32,8 @@ System.out.println("Role Name " + roleName$);
 String user_no = (String) session.getAttribute("user");
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
+
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -369,7 +371,7 @@ function popup1(height, width, url, windowName){
 					<td><input class="tightCheckbox" type="checkbox"
 						id="pdfCheck<%=i%>"
 						onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" /></td>
-					<td width="50%"><b><a
+					<td width="49%"><b><a
 						href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgDocDesc" /></a></b></td>
 					<td width="10%"><b><a
@@ -383,7 +385,7 @@ function popup1(height, width, url, windowName){
 						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
 						title="Observation Date"><b>Date</b></a></td>
 					<%-- <td width="10%"><b>Status</b></td> --%>
-					<td width="5%">&nbsp;</td>
+					<td width="9%">&nbsp;</td>
 				</tr>
 
 				<%
@@ -423,47 +425,41 @@ function popup1(height, width, url, windowName){
 					<td><%=curdoc.getObservationDate()%></td>
 					<%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
 					<td>
-					<% 
-                                 
-                                 if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
-                                    if( curdoc.getStatus() == 'D' ) {
-                              %> <a
-						href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
+		    <%  if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
+			    if( curdoc.getStatus() == 'D' ) { %>
+					     <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
 						src="<c:out value="${ctx}/images/user-trash.png"/>"
 						title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a>
-					&nbsp; <%    }
-                                    else {
-                              %> <a
-						href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
+		    <%	    } else { %>
+					     <a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
 						src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a>
-					&nbsp; <%      }    
-                                 } else { %> <security:oscarSec
-						roleName="<%=roleName$%>" objectName="_admin,_admin.edocdelete"
-						rights="r">
-						<%if( curdoc.getStatus() == 'D' ) {%>
-						<a
-							href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
+		    <%      }    
+			} else { %>
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.edocdelete" rights="r">
+		    <%	    if( curdoc.getStatus() == 'D' ) {%>
+						     <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
 							src="<c:out value="${ctx}/images/user-trash.png"/>"
 							title="<bean:message key="dms.documentReport.btnUnDelete"/>"></a> &nbsp;
-                                  <%
-                                    } 
-                                    else {
-                                  %>
-						<a
-							href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
+		    <%	    } else { %>
+						     <a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>','<%=StringEscapeUtils.escapeJavaScript(curdoc.getDescription())%>')"><img
 							src="<c:out value="${ctx}/images/clear.png"/>" title="Delete"></a> &nbsp;
-                                  <% } %>
-					</security:oscarSec> <% } %> <% 
-                                if( curdoc.getStatus() != 'D' ) {
-                                    if (curdoc.getStatus() == 'H') { %>
-					<a href="#"
-						onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
-					<% } else { %> <a href="#"
-						onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
-					<% } %> <img height="15px" width="15px"
-						src="<c:out value="${ctx}/images/notepad.gif"/>"
-						title="<bean:message key="dms.documentReport.btnEdit"/>"></a></td>
-					<% } %>
+		    <%	    } %>
+					</security:oscarSec>
+		    <%	}
+			if( curdoc.getStatus() != 'D' ) {
+			    if (curdoc.getStatus() == 'H') { %>
+					<a href="#" onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+		    <%	    } else { %> 
+					<a href="#" onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+		    <%	    } %>
+					<img height="15px" width="15px"
+					     src="<c:out value="${ctx}/images/notepad.gif"/>"
+					     title="<bean:message key="dms.documentReport.btnEdit"/>"></a>
+		    <%	} %>
+					    <a href="#" title="Annotation"
+					       onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=user_no%>','anwin','width=400,height=250');">
+					      <img src="/oscar/images/notes.gif" border="0">
+					    </a></td>
 				</tr>
 
 				<%}
