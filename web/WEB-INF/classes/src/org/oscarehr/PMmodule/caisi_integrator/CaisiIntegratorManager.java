@@ -28,8 +28,6 @@ import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.frontend.ClientProxy;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
@@ -111,8 +109,7 @@ public class CaisiIntegratorManager {
 	}
 
 	private void addAuthenticationInterceptor(Facility facility, Object wsPort) {
-		Client cxfClient = ClientProxy.getClient(wsPort);
-		cxfClient.getOutInterceptors().add(new AuthenticationOutInterceptor(facility.getIntegratorUser(), facility.getIntegratorPassword()));
+		CxfClientUtils.addWSS4JAuthentication(facility.getIntegratorUser(), facility.getIntegratorPassword(), wsPort);
 	}
 
 	private URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {

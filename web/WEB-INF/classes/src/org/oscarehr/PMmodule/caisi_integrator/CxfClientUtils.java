@@ -28,7 +28,7 @@ public class CxfClientUtils {
 		}
 	};
 
-	public static void configureClientConnection(Object wsPort) {
+	protected static void configureClientConnection(Object wsPort) {
 		Client cxfClient = ClientProxy.getClient(wsPort);
 		HTTPConduit httpConduit = (HTTPConduit) cxfClient.getConduit();
 
@@ -54,6 +54,12 @@ public class CxfClientUtils {
 		tslClientParameters.setTrustManagers(tam);
 		tslClientParameters.setSecureSocketProtocol("SSLv3");
 		httpConduit.setTlsClientParameters(tslClientParameters);
+	}
+
+	protected static void addWSS4JAuthentication(String username, String password, Object wsPort)
+	{
+		Client cxfClient=ClientProxy.getClient(wsPort);
+		cxfClient.getOutInterceptors().add(new AuthenticationOutWSS4JInterceptor(username, password));
 	}
 	
 	public static Date toDate(XMLGregorianCalendar cal)
