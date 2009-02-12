@@ -36,6 +36,7 @@
     bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
     
     pageContext.setAttribute("providerNo",bean.providerNo, pageContext.PAGE_SCOPE);
+    org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
 %>
 
 <%--<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
@@ -407,10 +408,25 @@ function init() {
                   <input type="hidden" id="archived" name="archived" value="false">
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
+		  <table>
+		      <tr id="_startDate"><td><%=cme.STARTDATE%>: </td>
+		      <td><input type="text" id="startDate" name="startDate" value=""></td></tr>
+		      <tr id="_resolutionDate"><td><%=cme.RESOLUTIONDATE%>: </td>
+		      <td><input type="text" id="resolutionDate" name="resolutionDate" value=""></td></tr>
+		      <tr id="_problemStatus"><td><%=cme.PROBLEMSTATUS%>: </td>
+		      <td><input type="text" id="problemStatus" name="problemStatus" value=""></td></tr>
+		      <tr id="_treatment"><td><%=cme.TREATMENT%>: </td>
+		      <td><input type="text" id="treatment" name="treatment" value=""></td></tr>
+		      <tr id="_exposureDetails"><td><%=cme.EXPOSUREDETAIL%>: </td>
+		      <td><input type="text" id="exposureDetails" name="exposureDetails" value=""></td></tr>
+		      <tr id="_relationship"><td><%=cme.RELATIONSHIP%>: </td>
+		      <td><input type="text" id="relationship" name="relationship" value=""></td></tr>
+		  </table><br>
                   <span style="float:right; margin-right:10px;">      
-                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" onclick="$('archived').value='true';" title='<bean:message key="oscarEncounter.Index.btnArchive"/>'>
-                      <input style="padding-right:10px;" type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="$('archived').value='false';" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>
-                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;" title='<bean:message key="global.btnExit"/>'>                      
+		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='Annotation' id="anno"> &nbsp; &nbsp;
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" title='<bean:message key="oscarEncounter.Index.btnArchive"/>' onclick="$('archived').value='true';" style="padding-right:10px;">
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
+                      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
                   </span>
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
