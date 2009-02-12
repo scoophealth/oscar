@@ -25,6 +25,7 @@
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_ALLERGY;
 %>
 
 <!--  
@@ -117,7 +118,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					<tr>
 						<td><b>Name:</b> <jsp:getProperty name="patient"
 							property="surname" /></td>
-						<td></td>
+						<td>&nbsp;</td>
 						<td><b>Age:</b> <jsp:getProperty name="patient"
 							property="age" /></td>
 					</tr>
@@ -146,6 +147,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 								<td><b>Severity</b></td>
 								<td><b>Onset of Reaction</b></td>
 								<td><b>Reaction</b></td>
+								<td><b>Start Date</b></td>
+								<td><b>&nbsp;</b></td>
 							</thead>
 							<logic:iterate id="allergy"
 								type="oscar.oscarRx.data.RxPatientData.Patient.Allergy"
@@ -165,7 +168,10 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 										property="allergy.onSetOfReactionDesc" /></td>
 									<td><bean:write name="allergy" property="allergy.reaction" />
 									</td>
-
+									<td><%=allergy.getAllergy().getStartDate()!=null?allergy.getAllergy().getStartDate():""%>
+									</td>
+									<td><a href="#" title="Annotation" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=String.valueOf(allergy.getAllergyId())%>&demo=<jsp:getProperty name="patient" property="demographicNo"/>','anwin','width=400,height=250');"><img src="/oscar/images/notes.gif" border="0"></a>
+									</td>
 								</tr>
 
 							</logic:iterate>
