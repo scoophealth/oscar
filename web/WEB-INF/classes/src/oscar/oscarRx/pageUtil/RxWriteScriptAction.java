@@ -29,12 +29,18 @@ import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -128,9 +134,27 @@ public final class RxWriteScriptAction extends Action {
                 for(i=0; i<bean.getStashSize(); i++){
                     rx = bean.getStashItem(i);
                     rx.Save(scriptId);
+		    
+		    /* Save annotation */
+		    HttpSession se = request.getSession();
+		    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+		    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+		    
+		    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(String.valueOf(rx.getDemographicNo())+"annoNote"+CaseManagementNoteLink.DRUGS);
+		    if (cmn!=null) {
+			cmm.saveNoteSimple(cmn);
+			CaseManagementNoteLink cml = new CaseManagementNoteLink();
+			cml.setTableName(cml.DRUGS);
+			cml.setTableId((long)rx.getDrugId());
+			cml.setNoteId(cmn.getId());
+			cmm.saveNoteLink(cml);
+			
+			se.removeAttribute(String.valueOf(rx.getDemographicNo())+"annoNote"+cml.DRUGS);
+			se.removeAttribute("anno_display");
+			se.removeAttribute("anno_last_id");
+		    }
                     rx = null;
                 }
-                
                                  
                 fwd = "viewScript";
                 String ip = request.getRemoteAddr();
