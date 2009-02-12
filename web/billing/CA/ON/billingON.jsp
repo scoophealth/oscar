@@ -716,23 +716,7 @@ function changeCodeDesc() {
 </head>
 
 <body onload="setfocus();prepareBack();changeCodeDesc();" topmargin="0">
-<div id="Instrdiv" class="demo1">
 
-<table bgcolor='#007FFF' width='99%'>
-	<tr>
-		<th align='right'><a href=#
-			onclick="showHideBox('Instrdiv',0); return false;"><font
-			color="red">X</font></a></th>
-	</tr>
-	<tr>
-		<th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font
-			color="#66FF66">Double clicking any code below will move up to
-		specialist billing.</font><br>
-		&nbsp;</a></th>
-	</tr>
-
-</table>
-</div>
 <div id="Layer1"
 	style="position: absolute; left: 360px; top: 165px; width: 410px; height: 210px; z-index: 1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 <table width="98%" border="0" cellspacing="0" cellpadding="0"
