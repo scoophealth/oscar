@@ -105,6 +105,7 @@ public class EctFormData {
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         
+        try{
         if ( !table.equals("form") ) {
             String sql = "SELECT ID, demographic_no, formCreated, formEdited FROM " + table
                         + " WHERE demographic_no=" + demoNo + " ORDER BY ID DESC";
@@ -129,9 +130,13 @@ public class EctFormData {
                 forms.add(frm);
             }
             rs.close();
+        }}catch(SQLException se){
+        	PatientForm[] ret = {};
+            return ret; 
+        }finally{
+            db.CloseConn();
         }
         
-        db.CloseConn();
 
         PatientForm[] ret = {};
         ret = (PatientForm[])forms.toArray(ret);
