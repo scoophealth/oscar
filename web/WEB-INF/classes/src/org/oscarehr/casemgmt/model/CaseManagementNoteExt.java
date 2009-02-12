@@ -83,6 +83,8 @@ public class CaseManagementNoteExt {
 		setDateValue(UtilDateUtilities.StringToDate(dateValue,"yyyy-MM"));
 	    } else if (dateValue.trim().length()==4) {
 		setDateValue(UtilDateUtilities.StringToDate(dateValue,"yyyy"));
+	    } else {
+		this.dateValue = null;
 	    }
 	}
 }
