@@ -42,13 +42,12 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
+    String demo = request.getParameter("demo");
     String display = request.getParameter("display");
-    String tid = request.getParameter("table_id");
-    Long tableId = filled(tid) ? Long.valueOf(tid) : null;
-    
-    String note = request.getParameter("note");
-    if (note==null) note = "";
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
+    
+    String tid = request.getParameter("table_id");
+    Long tableId = filled(tid) ? Long.valueOf(tid) : 0L;
     
     HttpSession se = request.getSession();
     String user_no = (String) se.getAttribute("user");
@@ -57,28 +56,42 @@
     CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
     
     Integer tableName = cmm.getTableNameByDisplay(display);
-    List <CaseManagementNoteLink> cmll = cmm.getLinkByTableId(tableName, tableId);
+    String note = "";
     
-    for (CaseManagementNoteLink cml : cmll) {
-	String nid = cml.getNoteId().toString();
-	note = cmm.getNote(nid).getNote();
+    CaseManagementNoteLink cml = cmm.getLatestLinkBytableId(tableName, tableId);
+    String last_display = (String)se.getAttribute("anno_display");
+    Long last_id = (Long)se.getAttribute("anno_last_id");
+    if (display.equals(last_display) && tableId.equals(last_id)) {
+	//get note from attribute
+	CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(demo+"annoNote"+tableName);
+	if (cmn!=null) note = cmn.getNote();
+    } else { 
+	//attribute outdated, get note from database
+	se.removeAttribute("anno_display");
+	se.removeAttribute("anno_last_id");
+	if (cml!=null) { //annotation exists
+	    String nid = cml.getNoteId().toString();
+	    note = cmm.getNote(nid).getNote();
+	}
     }
     
     if (saved) {
-	Long nwNoteId = saveCMNote(note, user_no, cmm);
-	if (cmll.size()>0) {
-	    CaseManagementNoteLink cml = cmll.get(0);
-	    if (nwNoteId<0) cml.setTableName(-1);
-	    else cml.setNoteId(nwNoteId);
-	    cmm.updateNoteLink(cml);
-	} else {
-	    if (nwNoteId>0) {
-		CaseManagementNoteLink cml = new CaseManagementNoteLink();
-		cml.setNoteId(nwNoteId);
+	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no);
+	if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
+	    se.setAttribute(demo+"annoNote"+tableName, cmn);
+	    se.setAttribute("anno_display", display);
+	    se.setAttribute("anno_last_id", tableId);
+	} else { //annotated subject exists
+	    cmm.saveNoteSimple(cmn);
+	    if (cml!=null) { //previous annotation exists
+		cml.setNoteId(cmn.getId());
+		cmm.updateNoteLink(cml);
+	    } else { //new annotation
+		cml = new CaseManagementNoteLink();
 		cml.setTableName(tableName);
 		cml.setTableId(tableId);
-		if (tableId!=null) cmm.saveNoteLink(cml);
-		else se.setAttribute("annotationlink", cml);
+		cml.setNoteId(cmn.getId());
+		cmm.saveNoteLink(cml);
 	    }
 	}
 	response.sendRedirect("close.jsp");
@@ -98,6 +111,7 @@
 
 <body bgcolor="#EEEEFF" onload="document.forms[0].note.focus();">
     <form action="annotation.jsp" method="post">
+	<input type="hidden" name="demo" value="<%=demo%>" />
 	<input type="hidden" name="display" value="<%=display%>" />
 	<input type="hidden" name="table_id" value="<%=tid%>" />
 	<input type="hidden" name="saved" />
@@ -120,12 +134,13 @@
 
 
 <%!
-    Long saveCMNote(String note, String provider, CaseManagementManager cmm) {
-	if (!filled(note)) return -1L;
+    CaseManagementNote createCMNote(String note, String demo_no, String provider) {
+	if (!filled(note)) return null;
 	
 	CaseManagementNote cmNote = new CaseManagementNote();
 	    cmNote.setUpdate_date(new Date());
 	    cmNote.setObservation_date(new Date());
+	    cmNote.setDemographic_no(demo_no);
 	    cmNote.setProviderNo(provider);
 	    cmNote.setSigning_provider_no(provider);
 	    cmNote.setSigned(true);
@@ -134,9 +149,8 @@
 	    cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
-	cmm.saveNoteSimple(cmNote);
 	
-	return cmNote.getId();
+	return cmNote;
     }
     
     boolean filled(String s) {
