@@ -69,4 +69,8 @@ public class CaseManagementNoteExtDAO extends HibernateDaoSupport {
 	public void save(CaseManagementNoteExt cExt) {
 	    this.getHibernateTemplate().save(cExt);
 	}
+	
+	public void update(CaseManagementNoteExt cExt) {
+	    this.getHibernateTemplate().update(cExt);
+	}
 }
