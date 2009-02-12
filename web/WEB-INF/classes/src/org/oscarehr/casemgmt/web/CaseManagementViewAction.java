@@ -559,7 +559,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                         if( idx > 0 ) {
                             cppIssues.append(";");
                         }
-                        cppIssues.append(issue.getId() + ";" + issue.getDescription());
+                        cppIssues.append(issue.getId()+";"+issue.getCode()+";"+issue.getDescription());
 			issueIds[idx] = String.valueOf(issue.getId());
                         idx++;
 		}
@@ -591,7 +591,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);
 		this.caseManagementMgr.getEditors(notes);
-
+		
+		List lcme = new ArrayList();
+		for (Object obj : notes) {
+		    CaseManagementNote cmn = (CaseManagementNote)obj;
+		    lcme.addAll(caseManagementMgr.getExtByNote(cmn.getId()));
+		}
+		request.setAttribute("NoteExts", lcme);
+		
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
 		if (noteSort.trim().equalsIgnoreCase("UP"))
@@ -808,7 +815,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
 		HashMap<String, Issue> issues = (HashMap<String, Issue>) request.getSession().getAttribute("CPPIssues");
 		if (issues == null) {
-			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders" };
+			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory" };
 			issues = new HashMap<String, Issue>();
 			for (String issue : issueCodes) {
 				List<Issue> i = caseManagementMgr.getIssueInfoByCode(providerNo, issue);
