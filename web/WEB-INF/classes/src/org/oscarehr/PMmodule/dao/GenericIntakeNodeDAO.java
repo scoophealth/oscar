@@ -97,7 +97,6 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
 
 	public List<IntakeNode> getIntakeNodeByEqToId(Integer iNodeEqToId)
 			throws SQLException {
-		// Ronnie here!
 		if (iNodeEqToId == null) {
 			throw new IllegalArgumentException(
 					"Parameters iNodeEqToId must be non-null");
