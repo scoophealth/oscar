@@ -27,12 +27,18 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionRedirect;
+import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -105,7 +111,26 @@ public class AddEditHtmlAction extends Action {
             currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setContentType("text/html");
             currentDoc.setDocPublic(fm.getDocPublic());
-            EDocUtil.addDocumentSQL(currentDoc);
+            String docId = EDocUtil.addDocumentSQL(currentDoc);
+	    
+	    /* Save annotation */
+	    HttpSession se = request.getSession();
+	    WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+	    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+	    
+	    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(fm.getFunctionId()+"annoNote"+CaseManagementNoteLink.DOCUMENT);
+	    if (cmn!=null) {
+		cmm.saveNoteSimple(cmn);
+		CaseManagementNoteLink cml = new CaseManagementNoteLink();
+		cml.setTableName(cml.DOCUMENT);
+		cml.setTableId(Long.valueOf(docId));
+		cml.setNoteId(cmn.getId());
+		cmm.saveNoteLink(cml);
+		
+		se.removeAttribute(fm.getFunctionId()+"annoNote"+cml.DOCUMENT);
+		se.removeAttribute("anno_display");
+		se.removeAttribute("anno_last_id");
+	    }
         } else {
             currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", fm.getHtml(), fm.getDocCreator(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             currentDoc.setDocId(fm.getMode());
@@ -120,6 +145,6 @@ public class AddEditHtmlAction extends Action {
     }
     
     private boolean filled(String s) {
-	return (s!=null && s.trim().length()>0));
+	return (s!=null && s.trim().length()>0);
     }
 }
