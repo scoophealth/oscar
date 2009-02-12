@@ -12,13 +12,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
  *
- * Ronnie Cheng
  *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
  * Hamilton
- * Ontario, Canada   Creates a new instance of DemographicExportAction
+ * Ontario, Canada
  *
  *
  * PGPEncrypt.java
