@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 
 import org.jfree.util.Log;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -48,14 +47,15 @@ import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.model.ReportStatistic;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class GenericIntakeManager {
 
 	private GenericIntakeNodeDAO genericIntakeNodeDAO;
 	private GenericIntakeDAO genericIntakeDAO;
 	private ProgramDao programDao;
 	private AdmissionDao admissionDao;
-	private ClientDao clientDao;
 
 	public void setGenericIntakeNodeDAO(
 			GenericIntakeNodeDAO genericIntakeNodeDAO) {

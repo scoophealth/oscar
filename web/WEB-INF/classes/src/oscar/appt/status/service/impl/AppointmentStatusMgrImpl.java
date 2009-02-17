@@ -5,6 +5,9 @@
 package oscar.appt.status.service.impl;
 
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import oscar.appt.status.dao.AppointmentStatusDAO;
 import oscar.appt.status.model.AppointmentStatus;
 import oscar.appt.status.service.AppointmentStatusMgr;
@@ -13,6 +16,7 @@ import oscar.appt.status.service.AppointmentStatusMgr;
  *
  * @author toby
  */
+@Transactional
 public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
 
     private AppointmentStatusDAO appointStatusDao = null;

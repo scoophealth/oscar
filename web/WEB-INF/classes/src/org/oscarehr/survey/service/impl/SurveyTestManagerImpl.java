@@ -30,7 +30,9 @@ import org.oscarehr.survey.dao.SurveyTestDAO;
 import org.oscarehr.survey.model.SurveyTestData;
 import org.oscarehr.survey.model.SurveyTestInstance;
 import org.oscarehr.survey.service.SurveyTestManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class SurveyTestManagerImpl implements SurveyTestManager {
 
 	private Log log = LogFactory.getLog(getClass());

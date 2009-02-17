@@ -8,25 +8,20 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
-import org.oscarehr.PMmodule.dao.StreetHealthDao;
-//import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
 import org.oscarehr.common.model.Demographic;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class StreetHealthReportManagerImpl implements StreetHealthReportManager {
 
 	private Log log = LogFactory.getLog(StreetHealthReportManagerImpl.class);
 
 	private ClientDao clientDao;
 	private GenericIntakeManager intakeMgr;
-	private StreetHealthDao streetHealthDao;
-	
-	public void setStreetHealthDao(StreetHealthDao dao) {
-		this.streetHealthDao = dao;
-	}
-	
+		
 	public void setClientDao(ClientDao dao) {
 		this.clientDao = dao;
 	}

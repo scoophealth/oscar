@@ -35,10 +35,12 @@ import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of RoomDemographicManager interface
  */
+@Transactional
 public class RoomDemographicManagerImpl implements RoomDemographicManager {
 
 	private static final Log log = LogFactory.getLog(RoomDemographicManagerImpl.class);

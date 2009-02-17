@@ -24,7 +24,9 @@ package org.oscarehr.PMmodule.service;
 
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.model.Agency;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class AgencyManager {
 	
 	private AgencyDao dao;

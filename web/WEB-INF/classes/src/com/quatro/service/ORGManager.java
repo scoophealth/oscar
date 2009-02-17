@@ -3,9 +3,12 @@ package com.quatro.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.quatro.dao.ORGDao;
 import com.quatro.model.LookupTableDefValue;
 
+@Transactional
 public class ORGManager {
     private ORGDao orgDao=null;
 	

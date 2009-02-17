@@ -30,7 +30,9 @@ import org.oscarehr.common.model.Mortalities;
 import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.common.model.ShelterPopulation;
 import org.oscarehr.common.model.ShelterUsage;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class PopulationReportManager {
 
     private static final int ONE_YEAR = 1;

@@ -22,16 +22,14 @@
 
 package org.oscarehr.survey.service.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.Survey;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.service.SurveyLaunchManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class SurveyLaunchManagerOscar implements SurveyLaunchManager {
-
-	private Log log = LogFactory.getLog(getClass());
 
 	private OscarFormDAO oscarFormDAO;
 	

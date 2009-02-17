@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.service.OscarFormManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OscarFormManagerImpl implements OscarFormManager {
 
 	private OscarFormDAO dao;

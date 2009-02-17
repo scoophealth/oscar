@@ -25,6 +25,8 @@ package com.quatro.service.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.quatro.dao.security.SecProviderDao;
 import com.quatro.dao.security.SecroleDao;
 import com.quatro.dao.security.SecurityDao;
@@ -37,7 +39,7 @@ import com.quatro.web.admin.UserSearchFormBean;
 
 
 
-
+@Transactional
 public class UsersManager {
 
 	private SecroleDao secroleDao;

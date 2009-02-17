@@ -28,7 +28,9 @@ import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.service.RoleManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class RoleManagerImpl implements RoleManager {
 
 	private RoleDAO dao;

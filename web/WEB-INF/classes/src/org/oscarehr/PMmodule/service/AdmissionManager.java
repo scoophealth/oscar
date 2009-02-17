@@ -45,7 +45,9 @@ import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class AdmissionManager {
 
 	private AdmissionDao dao;

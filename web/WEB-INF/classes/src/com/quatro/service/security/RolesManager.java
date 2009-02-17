@@ -25,12 +25,14 @@ package com.quatro.service.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.quatro.dao.security.SecobjprivilegeDao;
 import com.quatro.dao.security.SecroleDao;
 import com.quatro.model.security.Secobjprivilege;
 import com.quatro.model.security.Secrole;
-import com.quatro.model.security.Secuserrole;
 
+@Transactional
 public class RolesManager {
 
 	private SecroleDao secroleDao;

@@ -40,10 +40,12 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of BedDemographicManager interface
  */
+@Transactional
 public class BedDemographicManagerImpl implements BedDemographicManager {
 
 	private static final Log log = LogFactory.getLog(BedDemographicManagerImpl.class);

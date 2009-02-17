@@ -7,6 +7,9 @@ package oscar.oscarRx.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import oscar.oscarRx.dao.RxCloneFavoritesDAO;
 import oscar.oscarRx.model.Favorites;
 import oscar.oscarRx.model.Favoritesprivilege;
@@ -16,6 +19,7 @@ import oscar.oscarRx.service.RxPrescriptionMgr;
  *
  * @author toby
  */
+@Transactional
 public class RxPrescriptionMgrImpl implements RxPrescriptionMgr{
     private RxCloneFavoritesDAO rxCloneDao = null;
 

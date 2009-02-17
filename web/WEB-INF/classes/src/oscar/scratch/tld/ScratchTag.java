@@ -63,7 +63,7 @@ public class ScratchTag extends TagSupport {
 */
     	if(providerNo!=null){
        	    com.quatro.service.ScratchPadManager spm = (com.quatro.service.ScratchPadManager) WebApplicationContextUtils.getWebApplicationContext(
- 	       		pageContext.getServletContext()).getBean("scratchPadManagerTarget");
+ 	       		pageContext.getServletContext()).getBean("scratchPadManager");
  		    scratchFilled= spm.isScratchFilled(providerNo);
     	}
         

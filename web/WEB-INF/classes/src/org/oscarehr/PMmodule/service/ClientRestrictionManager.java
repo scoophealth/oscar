@@ -31,10 +31,12 @@ import org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO;
 import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Manage client restrictions
  */
+@Transactional
 public class ClientRestrictionManager {
 
     private ProgramClientRestrictionDAO programClientRestrictionDAO;

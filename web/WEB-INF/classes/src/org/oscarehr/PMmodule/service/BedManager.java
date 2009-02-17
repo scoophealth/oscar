@@ -40,10 +40,12 @@ import org.oscarehr.PMmodule.model.BedType;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Implementation of BedManager interface
  */
+@Transactional
 public class BedManager {
 
     private static final Log log = LogFactory.getLog(BedManager.class);

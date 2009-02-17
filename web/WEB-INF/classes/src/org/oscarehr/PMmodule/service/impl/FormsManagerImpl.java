@@ -26,7 +26,9 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.dao.FormsDAO;
 import org.oscarehr.PMmodule.service.FormsManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class FormsManagerImpl implements FormsManager {
 
 	private FormsDAO formsDAO;

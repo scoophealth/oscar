@@ -25,7 +25,9 @@ package org.oscarehr.PMmodule.service.impl;
 import org.oscarehr.PMmodule.dao.BedCheckTimeDAO;
 import org.oscarehr.PMmodule.model.BedCheckTime;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class BedCheckTimeManagerImpl implements BedCheckTimeManager {
 	
 	private BedCheckTimeDAO bedCheckTimeDAO;

@@ -34,8 +34,9 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.common.model.Facility;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 public class ProviderManager
 {
 	private ProviderDao dao;

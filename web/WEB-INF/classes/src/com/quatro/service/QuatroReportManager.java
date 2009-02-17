@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.quatro.dao.QuatroReportDao;
 import com.quatro.model.DocTextValue;
 import com.quatro.model.ReportEXValue;
@@ -15,6 +17,7 @@ import com.quatro.model.ReportGroupValue;
 import com.quatro.model.ReportTempValue;
 import com.quatro.model.ReportValue;
 
+@Transactional
 public class QuatroReportManager {
 
     private QuatroReportDao quatroReportDao=null;

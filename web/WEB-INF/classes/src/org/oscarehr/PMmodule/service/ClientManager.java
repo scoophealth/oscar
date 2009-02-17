@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
@@ -36,17 +34,17 @@ import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class ClientManager {
-
-    private static Log log = LogFactory.getLog(ClientManager.class);
 
     private ClientDao dao;
     private ClientReferralDAO referralDAO;

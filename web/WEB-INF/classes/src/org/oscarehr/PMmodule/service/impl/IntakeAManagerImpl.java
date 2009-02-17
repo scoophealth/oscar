@@ -33,7 +33,9 @@ import org.oscarehr.PMmodule.dao.IntakeADao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.IntakeAManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAManager {
 	
 	private static Log log = LogFactory.getLog(IntakeAManagerImpl.class);

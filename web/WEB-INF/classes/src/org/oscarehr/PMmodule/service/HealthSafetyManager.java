@@ -22,14 +22,12 @@
 
 package org.oscarehr.PMmodule.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.HealthSafetyDao;
 import org.oscarehr.PMmodule.model.HealthSafety;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 public class HealthSafetyManager {
-    private static Log log = LogFactory.getLog(HealthSafetyManager.class);
     
     private HealthSafetyDao healthSafetyDao=null;
 

@@ -32,7 +32,9 @@ import org.oscarehr.PMmodule.dao.IntakeCDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakec;
 import org.oscarehr.PMmodule.service.IntakeCManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCManager {
 
 	private IntakeCDao intakeDao;

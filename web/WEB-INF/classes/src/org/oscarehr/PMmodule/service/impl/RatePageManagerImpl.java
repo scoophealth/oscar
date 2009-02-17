@@ -29,7 +29,9 @@ import org.oscarehr.PMmodule.dao.RatePageDao;
 import org.oscarehr.PMmodule.model.RatePage;
 import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.web.RatingView;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class RatePageManagerImpl implements RatePageManager {
 	private RatePageDao rateDao;
 

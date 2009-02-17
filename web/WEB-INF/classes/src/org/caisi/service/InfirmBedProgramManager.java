@@ -29,27 +29,26 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.BedProgramDao;
-import org.oscarehr.common.dao.DemographicDao;
 import org.caisi.dao.ProviderDefaultProgramDao;
 import org.caisi.model.ProviderDefaultProgram;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;
     private DemographicDao demographicDaoT;
     private ProgramProviderDAO programProviderDAOT;
     private ProviderDefaultProgramDao providerDefaultProgramDao;
     private ProgramDao programDao;
-
-    private static Logger logger = Logger.getLogger(InfirmBedProgramManager.class);
 
     @Required
     public void setBedProgramDao(BedProgramDao dao) {

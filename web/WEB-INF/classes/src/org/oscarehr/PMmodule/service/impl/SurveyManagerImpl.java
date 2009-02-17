@@ -45,7 +45,9 @@ import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource {
 
 	Log log = LogFactory.getLog(SurveyManagerImpl.class);

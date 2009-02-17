@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
@@ -47,17 +45,13 @@ import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramSignature;
-import org.oscarehr.PMmodule.web.formbean.StaffForm;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
-import com.quatro.dao.LookupDao;
-import com.quatro.dao.ORGDao;
-import com.quatro.dao.security.SecuserroleDao;
 
+@Transactional
 public class ProgramManager {
-
-    private static Log log = LogFactory.getLog(ProgramManager.class);
 
     private ProgramDao programDao;
     private ProgramProviderDAO programProviderDAO;
@@ -68,9 +62,6 @@ public class ProgramManager {
     private DefaultRoleAccessDAO defaultRoleAccessDAO;
     private ProgramClientStatusDAO clientStatusDAO;
     private ProgramSignatureDao programSignatureDao;
-    private LookupDao lookupDao;
-    private SecuserroleDao secuserroleDao;
-    private ORGDao orgDao;
 
     private boolean enabled;
 
@@ -120,10 +111,6 @@ public class ProgramManager {
 
     public void setProgramClientStatusDAO(ProgramClientStatusDAO dao) {
         this.clientStatusDAO = dao;
-    }
-
-    public void setLookupDao(LookupDao dao) {
-        this.lookupDao = dao;
     }
 
     public Program getProgram(String programId) {
@@ -501,12 +488,4 @@ public class ProgramManager {
         	return false;
         }
     }
-
-	public void setSecuserroleDao(SecuserroleDao secuserroleDao) {
-		this.secuserroleDao = secuserroleDao;
-	}
-
-	public void setOrgDao(ORGDao orgDao) {
-		this.orgDao = orgDao;
-	}
 }

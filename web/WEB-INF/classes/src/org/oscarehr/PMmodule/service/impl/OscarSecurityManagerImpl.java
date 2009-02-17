@@ -26,7 +26,9 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.service.OscarSecurityManager;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class OscarSecurityManagerImpl implements OscarSecurityManager {
 
 	private OscarSecurityDAO dao;

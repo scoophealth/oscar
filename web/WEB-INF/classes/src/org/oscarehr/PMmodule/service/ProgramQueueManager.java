@@ -29,7 +29,9 @@ import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.ProgramQueueDao;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class ProgramQueueManager
 {
 	private ProgramQueueDao dao;

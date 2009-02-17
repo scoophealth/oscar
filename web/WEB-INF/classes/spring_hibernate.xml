@@ -72,13 +72,4 @@
 		</property>
 	</bean>
 
-	<bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true" lazy-init="default" autowire="default" dependency-check="default">
-		<property name="transactionManager" ref="txManager" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-
 </beans>

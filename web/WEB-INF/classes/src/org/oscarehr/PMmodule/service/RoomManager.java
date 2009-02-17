@@ -39,10 +39,12 @@ import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Management of rooms
  */
+@Transactional
 public class RoomManager {
 
     private static final Log log = LogFactory.getLog(RoomManager.class);
