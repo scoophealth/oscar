@@ -281,6 +281,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographicIssues(facility, programsInFacility, demogrpahicService, demographicId);
 				pushDemographicPreventions(facility, demogrpahicService, demographicId);
 				pushDemographicNotes(facility, demogrpahicService, demographicId);
+				pushDemographicDrugs(facility, demogrpahicService, demographicId);
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -444,4 +445,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		// not finished yet
 	}
+
+	private void pushDemographicDrugs(Facility facility, DemographicWs demogrpahicService, Integer demographicId) {
+		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		
+		// not finished yet
+    }
+
 }
