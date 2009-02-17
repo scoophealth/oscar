@@ -269,7 +269,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		DemographicWs demogrpahicService = caisiIntegratorManager.getDemographicWs(facility.getId());
 		HnrWs hnrService = caisiIntegratorManager.getHnrWs(facility.getId());
-
+		List<Program> programsInFacility=programDao.getProgramsByFacilityId(facility.getId());
+		
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
@@ -277,7 +278,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographic(facility, demogrpahicService, demographicId);
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				pushDemographicConsent(facility, demogrpahicService, hnrService, demographicId);
-				pushDemographicIssues(facility, demogrpahicService, demographicId);
+				pushDemographicIssues(facility, programsInFacility, demogrpahicService, demographicId);
 				pushDemographicPreventions(facility, demogrpahicService, demographicId);
 				pushDemographicNotes(facility, demogrpahicService, demographicId);
 			} catch (IllegalArgumentException iae) {
@@ -356,7 +357,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographicIssues(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
+	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
@@ -364,6 +365,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+			// don't send issue if it is not in our facility.
+			if (!isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
+			
 			Issue issue = caseManagementIssue.getIssue();
 			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
 
@@ -381,6 +385,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedDemographicIssues(issues);
 	}
 
+	private boolean isProgramIdInProgramList(List<Program> programList, int programId)
+	{
+		for (Program p : programList)
+		{
+			if (p.getId().intValue()==programId) return(true);
+		}
+		
+		return(false);
+	}
+	
 	private void pushDemographicPreventions(Facility facility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
