@@ -26,9 +26,11 @@ import java.util.List;
 
 import org.caisi.model.CustomFilter;
 import org.oscarehr.casemgmt.dao.TicklerDAO;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  */
+@Transactional
 public class TicklerManager {
 
     private TicklerDAO ticklerDAO = null;

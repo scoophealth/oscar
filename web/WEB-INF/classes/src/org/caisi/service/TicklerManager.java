@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
 
@@ -44,6 +45,7 @@ import oscar.OscarProperties;
  * Updated by Eugene Petruhin on 16 dec 2008 while fixing #2422864 & #2317933 & #2379840
  * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  */
+@Transactional
 public class TicklerManager {
 
     private TicklerDAO ticklerDAO = null;

@@ -49,7 +49,7 @@ public class TicklerTag extends TagSupport {
    public int doStartTag() throws JspException    {
 	    if(providerNo!=null){
 	       org.caisi.service.TicklerManager tcm = (org.caisi.service.TicklerManager) WebApplicationContextUtils.getWebApplicationContext(
-     		 pageContext.getServletContext()).getBean("ticklerManagerTargetT");
+     		 pageContext.getServletContext()).getBean("ticklerManagerT");
 	       
 	       numNewLabs= tcm.getActiveTicklerCount(providerNo);
 	    }  

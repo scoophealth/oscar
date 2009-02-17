@@ -24,9 +24,11 @@ package org.caisi.service;
 
 import org.caisi.dao.EChartDAO;
 import org.caisi.model.EChart;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  */
+@Transactional
 public class EChartManager {
 
     private EChartDAO chartDAO = null;

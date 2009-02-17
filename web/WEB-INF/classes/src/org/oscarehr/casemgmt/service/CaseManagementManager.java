@@ -84,6 +84,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
+import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
 
@@ -92,6 +93,7 @@ import oscar.OscarProperties;
  * Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538
  * Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061
  */
+@Transactional
 public class CaseManagementManager {
     
     public final int SIGNATURE_SIGNED = 1;

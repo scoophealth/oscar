@@ -19,13 +19,36 @@
 
 package org.oscarehr.common.dao;
 
-import org.oscarehr.common.model.Drug2;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.oscarehr.common.model.Drug;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class Drug2Dao extends AbstractDao {
+public class DrugDao extends AbstractDao {
 
-	public Drug2 find(Integer id) {
-		return (entityManager.find(Drug2.class, id));
+	public Drug find(Integer id) {
+		return (entityManager.find(Drug.class, id));
+	}
+
+	/**
+	 * @param archived can be null for both archived and non archived entries
+	 */
+	public List<Drug> findActiveOrderByDate(Integer demographicId, Boolean archived) {
+		// build sql string
+		String sqlCommand="select x from Drug x where x.demographicId=?1 "+(archived==null?"":"and x.archived=?2")+" order by x.rxDate desc, x.id desc";
+		
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (archived!=null) query.setParameter(2, archived);
+		
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+
+		return(results);
 	}
 }

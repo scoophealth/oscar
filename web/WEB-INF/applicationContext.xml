@@ -129,19 +129,7 @@
 			<bean class="org.oscarehr.PMmodule.service.AgencyManager" autowire="byName" />
 		</property>
 	</bean>
-
-	<bean id="facilityMessageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="default" dependency-check="default">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="facilityMessageManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="facilityMessageManagerTarget" class="org.caisi.service.FacilityMessageManager" lazy-init="default" autowire="default" dependency-check="default">
+	<bean id="facilityMessageManager" class="org.caisi.service.FacilityMessageManager" lazy-init="default" autowire="default" dependency-check="default">
 		<property name="facilityMessageDAO" ref="facilityMessageDAO" />
 	</bean>
 
@@ -183,16 +171,7 @@
 			<bean class="org.oscarehr.PMmodule.service.BedManager" autowire="byName" />
 		</property>
 	</bean>
-	<bean id="caseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="caseManagementManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="caseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager">
+ 	<bean id="caseManagementManager" class="org.oscarehr.casemgmt.service.CaseManagementManager">
 		<property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO" />
 		<property name="caseManagementNoteExtDAO" ref="CaseManagementNoteExtDAO" />
 		<property name="caseManagementNoteLinkDAO" ref="CaseManagementNoteLinkDAO" />
@@ -227,30 +206,10 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="ticklerManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName">
+	<bean id="ticklerManager" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName">
 
 	</bean>
-	<bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="ClientImageManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.ClientImageManager" autowire="byName">
-		<property name="clientImageDAO" ref="clientImageDAO" />
-	</bean>
+	<bean id="ClientImageManager" class="org.oscarehr.casemgmt.service.ClientImageManager" autowire="byName" />
 	<bean id="oscarSurveyManager" parent="baseTransactionProxy">
 		<property name="target">
 			<bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl">
@@ -279,9 +238,6 @@
 			</bean>
 		</property>
 	</bean>
-	<!--
-		<bean id="topazManager" parent="baseTransactionProxy"> <property name="target"> <bean class="com.quatro.service.TopazManager"> <property name="topazDao" ref="topazDao"/> </bean> </property> </bean>
-	-->
 	<bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager" autowire="byName" />
 	<bean id="infirmBedProgramManager" parent="baseTransactionProxy">
 		<property name="target">
@@ -293,67 +249,21 @@
 	</bean>
 
 	<!-- TicklerPlus managers -->
-	<bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="ticklerManagerTargetT" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="ticklerManagerTargetT" class="org.caisi.service.TicklerManager">
+	<bean id="ticklerManagerT" class="org.caisi.service.TicklerManager">
 		<property name="ticklerDAO" ref="ticklerDAOT" />
 		<property name="customFilterDAO" ref="customFilterDAOT" />
 		<property name="programManager" ref="programManager" />
 		<property name="caseManagementManager" ref="caseManagementManager" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
 	</bean>
-
-	<bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="demographicManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="demographicManagerTarget" class="org.caisi.service.DemographicManagerTickler">
+ 	<bean id="demographicManager" class="org.caisi.service.DemographicManagerTickler">
 		<property name="demographicDao" ref="demographicDaoT" />
 	</bean>
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
-	<bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="consultationManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="consultationManagerTarget" class="org.caisi.service.ConsultationManager">
+	<bean id="consultationManager" class="org.caisi.service.ConsultationManager">
 		<property name="consultationDAO" ref="consultationDAOT" />
 	</bean>
-	<bean id="chartManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="chartManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="chartManagerTarget" class="org.caisi.service.EChartManager">
+	<bean id="chartManager" class="org.caisi.service.EChartManager">
 		<property name="chartDAO" ref="chartDAOT" />
 	</bean>
 	<bean id="providerManager" parent="baseTransactionProxy">
@@ -410,17 +320,7 @@
             <bean class="com.quatro.service.security.UsersManager" autowire="byName"/>
         </property>
     </bean>
-
-	<bean id="onCallManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="onCallManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="onCallManagerTarget" class="org.oscarehr.casemgmt.service.OnCallManager">
+	<bean id="onCallManager" class="org.oscarehr.casemgmt.service.OnCallManager">
 		<property name="onCallDao" ref="OnCallDAO" />
 	</bean>
 	<bean id="RxPrescriptionMgr" parent="baseTransactionProxy">

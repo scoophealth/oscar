@@ -27,8 +27,9 @@ import java.util.List;
 
 import org.caisi.dao.FacilityMessageDAO;
 import org.caisi.model.FacilityMessage;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Transactional
 public class FacilityMessageManager {
 
 	private FacilityMessageDAO dao = null;	

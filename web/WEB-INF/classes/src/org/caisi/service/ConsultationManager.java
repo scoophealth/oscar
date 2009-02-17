@@ -27,9 +27,11 @@ import java.util.List;
 
 import org.caisi.dao.ConsultationDAO;
 import org.caisi.model.Consultation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  */
+@Transactional
 public class ConsultationManager {
 
     private ConsultationDAO consultationDAO = null;

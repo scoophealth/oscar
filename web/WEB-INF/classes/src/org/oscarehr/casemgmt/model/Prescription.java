@@ -34,7 +34,6 @@ public class Prescription extends BaseObject {
 	private Date date_printed;
 	private String dates_reprinted;
 	private String textView;
-	private Drug drug;
 	
 	
 	public Date getDate_prescribed() {
@@ -79,11 +78,4 @@ public class Prescription extends BaseObject {
 	public void setTextView(String textView) {
 		this.textView = textView;
 	}
-	public Drug getDrug() {
-		return drug;
-	}
-	public void setDrug(Drug drug) {
-		this.drug = drug;
-	}
-	
 }

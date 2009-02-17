@@ -44,30 +44,8 @@
 
 
 	<!-- managers  -->
-	<bean id="issueAdminManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="default" dependency-check="default">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="issueAdminManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="remove*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="issueAdminManagerTarget" class="org.caisi.service.IssueAdminManager" autowire="byName" />
-	<bean id="caisiRoleManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="default" dependency-check="default">
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="target" ref="caisiRoleManagerTarget" />
-		<property name="transactionAttributes">
-			<props>
-				<prop key="save*">PROPAGATION_REQUIRED</prop>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="caisiRoleManagerTarget" class="org.caisi.service.CaisiRoleManager" autowire="byName" />
-
+	<bean id="issueAdminManager" class="org.caisi.service.IssueAdminManager" autowire="byName" />
+	<bean id="caisiRoleManager" class="org.caisi.service.CaisiRoleManager" autowire="byName" />
 
 	<bean id="bedCheckTimeManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
 		<property name="target">

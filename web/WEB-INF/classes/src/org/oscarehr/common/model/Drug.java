@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "drugs")
-public class Drug2 implements Serializable {
+public class Drug implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,6 +41,8 @@ public class Drug2 implements Serializable {
 	@Column(name = "GCN_SEQNO")
 	private int gcnSeqNo = 0;
 
+	private String customName=null;
+	
 	@Column(name = "takemin")
 	private float takeMin = 0;
 
@@ -171,6 +173,14 @@ public class Drug2 implements Serializable {
 	public void setGcnSeqNo(int gcnSeqNo) {
 		this.gcnSeqNo = gcnSeqNo;
 	}
+
+	public String getCustomName() {
+    	return customName;
+    }
+
+	public void setCustomName(String customName) {
+    	this.customName = customName;
+    }
 
 	public float getTakeMin() {
 		return takeMin;
@@ -396,7 +406,7 @@ public class Drug2 implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Drug2 drug = (Drug2) o;
+		Drug drug = (Drug) o;
 
 		if (id != null ? !id.equals(drug.id) : drug.id != null) return false;
 
