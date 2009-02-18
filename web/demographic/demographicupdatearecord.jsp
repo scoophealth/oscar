@@ -165,6 +165,7 @@
           
           sbDate = new StringBuffer();
           reqTmp = request.getParameter("hc_renew_date_year");
+          
           if( reqTmp == null || reqTmp.trim().equals("") )
               sbDate.append("0001");
           else
@@ -179,14 +180,14 @@
           
           sbDate.append("-");
           
-          reqTmp = request.getParameter("hc_renew__date_date");
+          reqTmp = request.getParameter("hc_renew_date_date");          
           if( reqTmp == null || reqTmp.trim().equals("") )
               sbDate.append("01");
           else
               sbDate.append(reqTmp.trim());
           
 	  dtparam[3]=MyDateFormat.getSysDate(sbDate.toString());
- 
+ System.out.println("DATE '" + sbDate.toString() + "'");
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
 
   //DemographicExt
