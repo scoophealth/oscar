@@ -204,7 +204,7 @@
 		<property name="caseManagementManager" ref="caseManagementManager" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
 	</bean>
- 	<bean id="demographicManager" class="org.caisi.service.DemographicManagerTickler">
+ 	<bean id="demographicManagerT" class="org.caisi.service.DemographicManagerTickler">
 		<property name="demographicDao" ref="demographicDaoT" />
 	</bean>
 	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton" />
