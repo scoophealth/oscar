@@ -211,7 +211,7 @@
 	<bean id="consultationManager" class="org.caisi.service.ConsultationManager">
 		<property name="consultationDAO" ref="consultationDAOT" />
 	</bean>
-	<bean id="chartManager" class="org.caisi.service.EChartManager">
+	<bean id="chartManagerT" class="org.caisi.service.EChartManager">
 		<property name="chartDAO" ref="chartDAOT" />
 	</bean>
 	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager">
