@@ -68,7 +68,7 @@ public class Drug implements Serializable {
 	private String drugForm = null;
 	@Column(name = "create_date")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate = null;
+	private Date createDate = new Date();
 	private String dosage = null;
 	@Column(name = "custom_instructions")
 	private boolean customInstructions;
