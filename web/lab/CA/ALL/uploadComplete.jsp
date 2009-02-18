@@ -1,6 +1,4 @@
-<%@page contentType="text/xml"%><%@page
-	import="javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*"%>
-<%
+<%@page contentType="text/xml"%><%@page import="javax.xml.parsers.*, org.w3c.dom.*, oscar.util.*"%><%
 
 
 /*
