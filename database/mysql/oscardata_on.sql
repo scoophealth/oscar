@@ -10800,3 +10800,4 @@ insert into billing_on_errorCode values ('MC','Maximum of 2 patient case confere
 insert into billing_on_errorCode values ('MN','Maximum number of sessions has been reached') ON DUPLICATE KEY UPDATE description='Maximum number of sessions has been reached';
 insert into billing_on_errorCode values ('MS','Maximum allowable for sleep studies in a 12-month period by one physician has been reached') ON DUPLICATE KEY UPDATE description='Maximum allowable for sleep studies in a 12-month period by one physician has been reached';
 insert into billing_on_errorCode values ('MX','Maximum of 2artroscopy “R” codes with E595 has been reached ') ON DUPLICATE KEY UPDATE description='Maximum of 2artroscopy “R” codes with E595 has been reached';
+insert into billing_on_errorCode values ('I8', 'Confirmation not received');
