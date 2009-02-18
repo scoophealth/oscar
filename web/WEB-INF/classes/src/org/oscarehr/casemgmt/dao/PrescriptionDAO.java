@@ -38,7 +38,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
 	private DrugDao drugDao = null;
 	
-	public void setDrug2Dao(DrugDao drugDao) {
+	public void setDrugDao(DrugDao drugDao) {
     	this.drugDao = drugDao;
     }
 
@@ -48,7 +48,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
 	public List<PrescriptDrug> getUniquePrescriptions(String demographic_no) {
 
-    	List<Drug> rs=drugDao.findActiveOrderByDate(new Integer(demographic_no), false);
+		List<Drug> rs=drugDao.findActiveOrderByDate(new Integer(demographic_no), false);
     	List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
         for (Drug ob : rs)
         {
