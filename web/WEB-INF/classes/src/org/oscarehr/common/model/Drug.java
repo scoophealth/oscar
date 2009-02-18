@@ -20,109 +20,64 @@ public class Drug implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "drugid")
 	private Integer id = null;
-
 	@Column(name = "provider_no")
 	private String provider_no = null;
-
 	@Column(name = "demographic_no")
 	private Integer demographicId = null;
-
 	@Column(name = "rx_date")
 	@Temporal(TemporalType.DATE)
 	private Date rxDate = new Date();
-
 	@Column(name = "end_date")
 	@Temporal(TemporalType.DATE)
 	private Date endDate = null;
-
 	@Column(name = "BN")
 	private String bn = null;
-
 	@Column(name = "GCN_SEQNO")
 	private int gcnSeqNo = 0;
-
 	private String customName=null;
-	
 	@Column(name = "takemin")
 	private float takeMin = 0;
-
 	@Column(name = "takemax")
 	private float takeMax = 0;
-
 	@Column(name = "freqcode")
 	private String freqCode = null;
-
-	@Column(name = "duration")
 	private String duration = null;
-
 	@Column(name = "durunit")
 	private String durUnit = null;
-
-	@Column(name = "quantity")
 	private String quantity = null;
-
-	@Column(name = "repeat")
 	private int repeat = 0;
-
 	@Column(name = "last_refill_date")
 	@Temporal(TemporalType.DATE)
 	private Date lastRefillDate = null;
-
 	@Column(name = "nosubs")
 	private boolean noSubs;
-
-	@Column(name = "prn")
 	private boolean prn;
-
-	@Column(name = "special")
 	private String special = null;
-
-	@Column(name = "archived")
 	private boolean archived;
-
 	@Column(name = "GN")
 	private String gn = null;
-
 	@Column(name = "ATC")
 	private String atc = null;
-
 	@Column(name = "script_no")
 	private int scriptNo = 0;
-
 	@Column(name = "regional_identifier")
 	private String regionalIdentifier = null;
-
-	@Column(name = "unit")
 	private String unit = null;
-
-	@Column(name = "method")
 	private String method = null;
-
-	@Column(name = "route")
 	private String route = null;
-
 	@Column(name = "drug_form")
 	private String drugForm = null;
-
 	@Column(name = "create_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate = null;
-
-	@Column(name = "dosage")
 	private String dosage = null;
-
 	@Column(name = "custom_instructions")
 	private boolean customInstructions;
-
-	@Column(name = "unitName")
 	private String unitName = null;
-
 	@Column(name = "long_term")
 	private boolean longTerm;
-
 	@Column(name = "past_med")
 	private boolean pastMed;
-
 	@Column(name = "patient_compliance")
 	private boolean patientCompliance;
 
