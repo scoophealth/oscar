@@ -74,11 +74,11 @@ public class Drug implements Serializable {
 	private boolean customInstructions;
 	private String unitName = null;
 	@Column(name = "long_term")
-	private boolean longTerm;
+	private Boolean longTerm;
 	@Column(name = "past_med")
-	private boolean pastMed;
+	private Boolean pastMed;
 	@Column(name = "patient_compliance")
-	private boolean patientCompliance;
+	private Boolean patientCompliance;
 
 	public String getProvider_no() {
 		return provider_no;
@@ -328,29 +328,31 @@ public class Drug implements Serializable {
 		this.unitName = unitName;
 	}
 
-	public boolean isLongTerm() {
-		return longTerm;
-	}
 
-	public void setLongTerm(boolean longTerm) {
-		this.longTerm = longTerm;
-	}
 
-	public boolean isPastMed() {
-		return pastMed;
-	}
+	public Boolean getLongTerm() {
+    	return longTerm;
+    }
 
-	public void setPastMed(boolean pastMed) {
-		this.pastMed = pastMed;
-	}
+	public void setLongTerm(Boolean longTerm) {
+    	this.longTerm = longTerm;
+    }
 
-	public boolean isPatientCompliance() {
-		return patientCompliance;
-	}
+	public Boolean getPastMed() {
+    	return pastMed;
+    }
 
-	public void setPatientCompliance(boolean patientCompliance) {
-		this.patientCompliance = patientCompliance;
-	}
+	public void setPastMed(Boolean pastMed) {
+    	this.pastMed = pastMed;
+    }
+
+	public Boolean getPatientCompliance() {
+    	return patientCompliance;
+    }
+
+	public void setPatientCompliance(Boolean patientCompliance) {
+    	this.patientCompliance = patientCompliance;
+    }
 
 	public Integer getId() {
 		return id;

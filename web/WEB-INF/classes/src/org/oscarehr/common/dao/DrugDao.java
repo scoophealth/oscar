@@ -36,7 +36,7 @@ public class DrugDao extends AbstractDao {
 	/**
 	 * @param archived can be null for both archived and non archived entries
 	 */
-	public List<Drug> findActiveOrderByDate(Integer demographicId, Boolean archived) {
+	public List<Drug> findByDemographicIdOrderByDate(Integer demographicId, Boolean archived) {
 		// build sql string
 		String sqlCommand="select x from Drug x where x.demographicId=?1 "+(archived==null?"":"and x.archived=?2")+" order by x.rxDate desc, x.id desc";
 		

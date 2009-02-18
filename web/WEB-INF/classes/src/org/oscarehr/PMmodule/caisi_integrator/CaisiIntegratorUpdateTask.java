@@ -45,6 +45,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
@@ -67,11 +68,13 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
@@ -101,14 +104,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
+	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
 
 	// private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
 
-	static{
+	static {
 		// ensure cxf uses log4j
-		System.setProperty("org.apache.cxf.Logger","org.apache.cxf.common.logging.Log4jLogger");
+		System.setProperty("org.apache.cxf.Logger", "org.apache.cxf.common.logging.Log4jLogger");
 	}
-	
+
 	public static synchronized void startTask() {
 		if (timerTask == null) {
 			int period = 0;
@@ -269,8 +273,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		DemographicWs demogrpahicService = caisiIntegratorManager.getDemographicWs(facility.getId());
 		HnrWs hnrService = caisiIntegratorManager.getHnrWs(facility.getId());
-		List<Program> programsInFacility=programDao.getProgramsByFacilityId(facility.getId());
-		
+		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
+		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
+
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
@@ -279,9 +284,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
 				pushDemographicConsent(facility, demogrpahicService, hnrService, demographicId);
 				pushDemographicIssues(facility, programsInFacility, demogrpahicService, demographicId);
-				pushDemographicPreventions(facility, demogrpahicService, demographicId);
+				pushDemographicPreventions(facility, providerIdsInFacility, demogrpahicService, demographicId);
 				pushDemographicNotes(facility, demogrpahicService, demographicId);
-				pushDemographicDrugs(facility, demogrpahicService, demographicId);
+				pushDemographicDrugs(facility, providerIdsInFacility, demogrpahicService, demographicId);
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -319,7 +324,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
 			demographicTransfer.setPhotoUpdateDate(CxfClientUtils.toXMLGregorianCalendar(clientImage.getUpdate_date()));
 		}
-		
+
 		// send the request
 		service.setDemographic(demographicTransfer);
 	}
@@ -346,12 +351,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentParameters.setCreatedDate(CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
 
 				demographicService.setCachedDemographicConsent(consentParameters);
-				
+
 				// deal with hnr consent
-				List<ClientLink> clientLinks=clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
-				if (clientLinks.size()>1) logger.warn("HNR link should only be 1 link. Links found :"+clientLinks.size());
-				if (clientLinks.size()>0)
-				{
+				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
+				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
+				if (clientLinks.size() > 0) {
 					hnrService.setHnrClientHidden("Integrator Update Task", clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
 				}
 			}
@@ -368,7 +372,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
 			// don't send issue if it is not in our facility.
 			if (!isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
-			
+
 			Issue issue = caseManagementIssue.getIssue();
 			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
 
@@ -383,20 +387,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			issues.add(issueTransfer);
 		}
 
-		service.setCachedDemographicIssues(issues);
+		if (issues.size() > 0) service.setCachedDemographicIssues(issues);
 	}
 
-	private boolean isProgramIdInProgramList(List<Program> programList, int programId)
-	{
-		for (Program p : programList)
-		{
-			if (p.getId().intValue()==programId) return(true);
+	private boolean isProgramIdInProgramList(List<Program> programList, int programId) {
+		for (Program p : programList) {
+			if (p.getId().intValue() == programId) return (true);
 		}
-		
-		return(false);
+
+		return (false);
 	}
-	
-	private void pushDemographicPreventions(Facility facility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
+
+	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
@@ -408,6 +410,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// add prevention to array list to send
 		List<Prevention> localPreventions = preventionDao.findNotDeletedByDemographicId(demographicId);
 		for (Prevention localPrevention : localPreventions) {
+			if (!providerIdsInFacility.contains(localPrevention.getCreatorProviderNo())) continue;
+			
 			CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
 			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
 			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
@@ -437,7 +441,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 		}
 
-		service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
+		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
 	}
 
 	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
@@ -446,10 +450,60 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// not finished yet
 	}
 
-	private void pushDemographicDrugs(Facility facility, DemographicWs demogrpahicService, Integer demographicId) {
+	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-		
-		// not finished yet
-    }
+
+		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
+		ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
+		if (drugs != null) {
+			for (Drug drug : drugs) {
+				if (!providerIdsInFacility.contains(drug.getProvider_no())) continue;
+				
+				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
+				
+				cachedDemographicDrug.setArchived(drug.isArchived());
+				cachedDemographicDrug.setAtc(drug.getAtc());
+				cachedDemographicDrug.setBn(drug.getBn());
+				cachedDemographicDrug.setCaisiDemographicId(drug.getDemographicId());
+				cachedDemographicDrug.setCaisiProviderId(drug.getProvider_no());
+				cachedDemographicDrug.setCreateDate(CxfClientUtils.toXMLGregorianCalendar(drug.getCreateDate()));
+				cachedDemographicDrug.setCustomInstructions(drug.isCustomInstructions());
+				cachedDemographicDrug.setCustomName(drug.getCustomName());
+				cachedDemographicDrug.setDosage(drug.getDosage());
+				cachedDemographicDrug.setDrugForm(drug.getDrugForm());
+				cachedDemographicDrug.setDuration(drug.getDuration());
+				cachedDemographicDrug.setDurUnit(drug.getDurUnit());
+				cachedDemographicDrug.setEndDate(CxfClientUtils.toXMLGregorianCalendar(drug.getEndDate()));
+				FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+				pk.setCaisiItemId(drug.getId());
+				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
+				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
+				cachedDemographicDrug.setGcnSeqNo(drug.getGcnSeqNo());
+				cachedDemographicDrug.setGn(drug.getGn());
+				cachedDemographicDrug.setLastRefillDate(CxfClientUtils.toXMLGregorianCalendar(drug.getLastRefillDate()));
+				cachedDemographicDrug.setLongTerm(drug.getLongTerm());
+				cachedDemographicDrug.setMethod(drug.getMethod());
+				cachedDemographicDrug.setNoSubs(drug.isNoSubs());
+				cachedDemographicDrug.setPastMed(drug.getPastMed());
+				cachedDemographicDrug.setPatientCompliance(drug.getPatientCompliance());
+				cachedDemographicDrug.setPrn(drug.isPrn());
+				cachedDemographicDrug.setQuantity(drug.getQuantity());
+				cachedDemographicDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
+				cachedDemographicDrug.setRepeats(drug.getRepeat());
+				cachedDemographicDrug.setRoute(drug.getRoute());
+				cachedDemographicDrug.setRxDate(CxfClientUtils.toXMLGregorianCalendar(drug.getRxDate()));
+				cachedDemographicDrug.setScriptNo(drug.getScriptNo());
+				cachedDemographicDrug.setSpecial(drug.getSpecial());
+				cachedDemographicDrug.setTakeMax(drug.getTakeMax());
+				cachedDemographicDrug.setTakeMin(drug.getTakeMin());
+				cachedDemographicDrug.setUnit(drug.getUnit());
+				cachedDemographicDrug.setUnitName(drug.getUnitName());				
+				
+				drugsToSend.add(cachedDemographicDrug);
+			}
+		}
+
+		if (drugsToSend.size() > 0) demogrpahicService.setCachedDemographicDrugs(drugsToSend);
+	}
 
 }

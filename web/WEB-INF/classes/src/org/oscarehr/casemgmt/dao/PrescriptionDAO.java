@@ -48,7 +48,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
 	public List<PrescriptDrug> getUniquePrescriptions(String demographic_no) {
 
-		List<Drug> rs=drugDao.findActiveOrderByDate(new Integer(demographic_no), false);
+		List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), false);
     	List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
         for (Drug ob : rs)
         {
@@ -95,7 +95,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
 	public List<PrescriptDrug> getPrescriptions(String demographic_no) {
 
-    	List<Drug> rs=drugDao.findActiveOrderByDate(new Integer(demographic_no), null);
+    	List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), null);
 		List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
         for (Drug ob : rs)
         {
