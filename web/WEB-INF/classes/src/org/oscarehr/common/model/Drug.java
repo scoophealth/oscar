@@ -20,7 +20,6 @@ public class Drug implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "drugid")
 	private Integer id = null;
-	@Column(name = "provider_no")
 	private String provider_no = null;
 	@Column(name = "demographic_no")
 	private Integer demographicId = null;
