@@ -80,6 +80,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
     formdata.setObservationDate(currentDoc.getObservationDate());
+    formdata.setSource(currentDoc.getSource());
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
     lastUpdate = currentDoc.getDateTimeStamp();
@@ -197,6 +198,11 @@ String annotation_tableid = editDocumentNo;
 		<tr>
 			<td>Date Added/Updated:</td>
 			<td><%=lastUpdate%></td>
+		</tr>
+		<tr>
+			<td>Source:</td>
+			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/>
+			    (Specialist, Hospital, Patient, ...)</td>
 		</tr>
 		<% if (module.equals("provider")) {%>
 		<tr>

@@ -91,6 +91,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocDesc(currentDoc.getDescription());
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
+    formdata.setSource(currentDoc.getSource());
     formdata.setObservationDate(currentDoc.getObservationDate());
     formdata.setReviewerId(currentDoc.getReviewerId());
     formdata.setReviewDateTime(currentDoc.getReviewDateTime());
@@ -231,6 +232,11 @@ String annotation_tableid = editDocumentNo;
 		<tr>
 			<td>Date Added/Updated:</td>
 			<td><%=lastUpdate%></td>
+		</tr>
+		<tr>
+			<td>Source:</td>
+			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/>
+			    (Specialist, Hospital, Patient, ...)</td>
 		</tr>
 		<tr>
 			<td>Observation Date <font class="comment">(yyyy/mm/dd):</font></td>
