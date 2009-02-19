@@ -26,7 +26,7 @@
 		</id>
 		<property name="demographic_no" />
 		<property name="image_type" type="string" />
-		<property name="image_data2" column="image_data" type="string" />
+		<property name="image_contents" column="contents" type="blob" />
 		<property name="update_date" type="java.util.Date" />
 	</class>
 </hibernate-mapping>

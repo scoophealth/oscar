@@ -330,9 +330,10 @@
 			<%
 				String demo=request.getParameter("demographicNo");
 			%> <c:choose>
-				<c:when test="${not empty requestScope.image_filename}">
+				<c:when test="${not empty requestScope.image_exists}">
+					<c:set var="clientId" value="${demographicNo}"></c:set>
 					<img style="cursor: pointer;" id="ci" src="<c:out value="${ctx}"/><%=ClientImage.imagePresentPlaceholderUrl%>" alt="id_photo" height="100" title="Click to upload new photo."
-						OnMouseOver="document.getElementById('ci').src='<c:out value="${ctx}"/>/images/<c:out value="${requestScope.image_filename}"/>'" 
+						OnMouseOver="document.getElementById('ci').src='../imageRenderingServlet?source=local_client&clientId=<c:out value="${clientId}" />'"
 						OnMouseOut="delay(5000)" window.status='Click to upload new photo' ; return	true;"
 						onClick="popupUploadPage('<html:rewrite page="/casemgmt/uploadimage.jsp"/>',<%=demo%>);return false;" />
 				</c:when>

@@ -365,6 +365,7 @@ CREATE TABLE `client_image` (
   `image_type` varchar(255) default NULL,
   `image_data` longtext,
   `update_date` datetime default NULL,
+  `contents` longblob,
   PRIMARY KEY  (`image_id`)
 );
 

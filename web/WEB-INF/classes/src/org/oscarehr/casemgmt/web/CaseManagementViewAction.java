@@ -56,6 +56,7 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
@@ -180,8 +181,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		log.debug("client Image?");
 		// get client image
-		request.setAttribute("image_filename", getImageFilename(demoNo, request));
-
+		ClientImage img = clientImageMgr.getClientImage(Integer.parseInt(demoNo));
+		if(img != null) {
+			request.setAttribute("image_exists", "true");
+		}
+		
 		current = System.currentTimeMillis();
 		log.debug("client image " + String.valueOf(current - start));
 		start = current;

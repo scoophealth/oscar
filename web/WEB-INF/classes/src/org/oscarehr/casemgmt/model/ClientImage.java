@@ -22,10 +22,14 @@
 
 package org.oscarehr.casemgmt.model;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
 import org.caisi.model.BaseObject;
+import org.hibernate.Hibernate;
 
 public class ClientImage extends BaseObject {
 	public static final String imageMissingPlaceholderUrl="/images/defaultR_img.jpg";
@@ -81,19 +85,39 @@ public class ClientImage extends BaseObject {
 		this.update_date = update_date;
 	}
 
-	public String getImage_data2() {
-		if(getImage_data() != null) {
-			String encoded = new String(Base64.encodeBase64(getImage_data()));
-			return encoded;
-		}
-		return null;
+	public Blob getImage_contents() {
+		return Hibernate.createBlob(Base64.encodeBase64(getImage_data()));
 	}
 
-	public void setImage_data2(String image_data) {
-		if(image_data != null) {
-			byte[] decoded = Base64.decodeBase64(image_data.getBytes());
-			setImage_data(decoded);
+	public void setImage_contents(Blob image_contents) {
+		try {
+			this.image_data = Base64.decodeBase64(this.blobToByteArray(image_contents));
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.image_data = null;
 		}
+	}
+
+	private byte[] blobToByteArray(Blob image_contents) throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[4000];
+		InputStream is = null;
+		try {
+			is = image_contents.getBinaryStream();
+			for (;;) {
+				int dataSize = is.read(buf);
+				if (dataSize == -1)
+					break;
+				baos.write(buf, 0, dataSize);
+			}
+		} catch(Exception e) {
+			throw new Exception(e);
+		} finally {
+			if(is != null)
+				is.close();
+		}
+		
+		return baos.toByteArray();
 	}
 
 }
