@@ -51,7 +51,7 @@ public class ManageConsentAction {
 
 		if ("hic".equals(splitTemp[2])) consent.setRestrictConsentToHic(true);
 		else if ("search".equals(splitTemp[2])) consent.setConsentToSearches(true);
-		else if ("personal".equals(splitTemp[2])) consent.setConsentToBasicPersonalData(true);
+		else if ("nonDomain".equals(splitTemp[2])) consent.setConsentToAllNonDomainData(true);
 		else if ("mental".equals(splitTemp[2])) consent.setConsentToMentalHealthData(true);
 		else if ("hnr".equals(splitTemp[2])) consent.setConsentToHealthNumberRegistry(true);
 		else logger.error("unexpected consent bit : " + s);

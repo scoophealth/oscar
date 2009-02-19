@@ -24,10 +24,10 @@ public class IntegratorConsent {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id=null;
+	private Integer id = null;
 	/** This is the facility which is creating this record, i.e. the facility of the provider making this change. */
-	private Integer facilityId=-1;
-	private Integer demographicId=-1;
+	private Integer facilityId = -1;
+	private Integer demographicId = -1;
 	private String providerNo = null;
 	private Date createdDate = new Date();
 
@@ -35,13 +35,13 @@ public class IntegratorConsent {
 	private Integer integratorFacilityId = null;
 
 	private boolean consentToHealthNumberRegistry = false;
-	
+
 	private boolean restrictConsentToHic = false;
 	private boolean consentToSearches = false;
-	private boolean consentToBasicPersonalData = false;
+	private boolean consentToAllNonDomainData = false;
 	private boolean consentToMentalHealthData = false;
 
-	private String formVersion=null;
+	private String formVersion = null;
 	private String printedFormLocation = null;
 	private boolean refusedToSign = false;
 
@@ -93,12 +93,12 @@ public class IntegratorConsent {
 		this.consentToSearches = consentToSearches;
 	}
 
-	public boolean isConsentToBasicPersonalData() {
-		return consentToBasicPersonalData;
+	public boolean isConsentToAllNonDomainData() {
+		return consentToAllNonDomainData;
 	}
 
-	public void setConsentToBasicPersonalData(boolean consentToBasicPersonalData) {
-		this.consentToBasicPersonalData = consentToBasicPersonalData;
+	public void setConsentToAllNonDomainData(boolean consentToAllNonDomainData) {
+		this.consentToAllNonDomainData = consentToAllNonDomainData;
 	}
 
 	public boolean isConsentToMentalHealthData() {
@@ -164,15 +164,15 @@ public class IntegratorConsent {
 	}
 
 	public boolean isConsentToAll() {
-		return (consentToBasicPersonalData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && !restrictConsentToHic);
+		return (consentToAllNonDomainData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && !restrictConsentToHic);
 	}
 
 	public boolean isConsentToAllButRestrictToHic() {
-		return (consentToBasicPersonalData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && restrictConsentToHic);
+		return (consentToAllNonDomainData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && restrictConsentToHic);
 	}
 
 	public boolean isConsentToNone() {
-		return (!consentToBasicPersonalData && !consentToHealthNumberRegistry && !consentToMentalHealthData && !consentToSearches);
+		return (!consentToAllNonDomainData && !consentToHealthNumberRegistry && !consentToMentalHealthData && !consentToSearches);
 	}
 
 	public void setConsentToAll() {
@@ -185,6 +185,6 @@ public class IntegratorConsent {
 	}
 
 	private void setAllConsents(boolean b) {
-		consentToBasicPersonalData = consentToHealthNumberRegistry = consentToMentalHealthData = consentToSearches = b;
+		consentToAllNonDomainData = consentToHealthNumberRegistry = consentToMentalHealthData = consentToSearches = b;
 	}
 }

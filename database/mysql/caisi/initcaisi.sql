@@ -2487,7 +2487,7 @@ create table IntegratorConsent
 	restrictConsentToHic tinyint(1) NOT NULL,
 	
 	consentToSearches tinyint(1) NOT NULL,
-	consentToBasicPersonalData tinyint(1) NOT NULL,
+	consentToAllNonDomainData tinyint(1) NOT NULL,
 	consentToMentalHealthData tinyint(1) NOT NULL,
 	consentToHealthNumberRegistry tinyint(1) NOT NULL,
 

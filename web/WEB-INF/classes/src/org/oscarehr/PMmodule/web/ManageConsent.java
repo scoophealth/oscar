@@ -57,7 +57,7 @@ public class ManageConsent {
 
 		if ("hic".equals(consentField)) return (consent.isRestrictConsentToHic());
 		else if ("search".equals(consentField)) return (consent.isConsentToSearches());
-		else if ("personal".equals(consentField)) return (consent.isConsentToBasicPersonalData());
+		else if ("nonDomain".equals(consentField)) return (consent.isConsentToAllNonDomainData());
 		else if ("mental".equals(consentField)) return (consent.isConsentToMentalHealthData());
 		else if ("hnr".equals(consentField)) return (consent.isConsentToHealthNumberRegistry());
 		else logger.error("unexpected consent bit : " + consentField);

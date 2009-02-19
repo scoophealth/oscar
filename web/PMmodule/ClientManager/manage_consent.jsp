@@ -26,8 +26,8 @@
 	<ul>
 		<li>Health number registry : allow agencies to see this clients health number information in the health number registry</li>
 		<li>Restrict To HIC's : allows retrieval of data only if the agency retrieving the data is an HIC, does not affect health number registry</li>
-		<li>Searches : allows the selected agency to see this client in searches</li>
-		<li>Basic personal data : allow the selected agency to send person data to other agencies</li>
+		<li>Searches : allows the client from this agency to show up in searches</li>
+		<li>All non domain data : allow the selected agency to send any data not covered in the other consent domains</li>
 		<li>Mental health data : allow the selected agency to send mental health data to other agencies</li>
 	</ul>
 </div>
@@ -40,8 +40,8 @@
 			<td class="genericTableHeader"></td>
 			<td class="genericTableHeader" style="text-align:center">Allow health number registry<br />information to be viewed</td>
 			<td class="genericTableHeader" style="text-align:center">Restrict<br/>to HICs</td>
-			<td class="genericTableHeader" style="text-align:center">Allow retrieving<br />for searches</td>
-			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />basic personal data</td>
+			<td class="genericTableHeader" style="text-align:center">Allow to show up<br />in searches</td>
+			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />all non domain data</td>
 			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />mental health data</td>
 		</tr>
 		<%
@@ -63,7 +63,7 @@
 						%>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.personal" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"personal")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.nonDomain" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"nonDomain")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.mental" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"mental")?"checked=\"on\"":""%> /></td>
 					</tr>
 				<%

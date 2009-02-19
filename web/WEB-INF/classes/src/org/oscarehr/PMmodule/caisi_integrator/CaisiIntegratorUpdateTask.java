@@ -345,7 +345,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentParameters.setCaisiDemographicId(demographicId);
 				consentParameters.setConsentToHealthNumberRegistry(consent.isConsentToHealthNumberRegistry());
 				consentParameters.setRestrictConsentToHic(consent.isRestrictConsentToHic());
-				consentParameters.setConsentToBasicPersonalData(consent.isConsentToBasicPersonalData());
+				consentParameters.setConsentToAllNonDomainData(consent.isConsentToAllNonDomainData());
 				consentParameters.setConsentToMentalHealthData(consent.isConsentToMentalHealthData());
 				consentParameters.setConsentToSearches(consent.isConsentToSearches());
 				consentParameters.setCreatedDate(CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));

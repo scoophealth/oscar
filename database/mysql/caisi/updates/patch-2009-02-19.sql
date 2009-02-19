@@ -1,0 +1,1 @@
+alter table IntegratorConsent change consentToBasicPersonalData consentToAllNonDomainData tinyint(1) NOT NULL;
