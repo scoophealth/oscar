@@ -511,6 +511,64 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     Element.observe('anno','click', openAnnotation.bindAsEventListener(obj,noteId,cppDisplay,demoNo));
     prepareExtraFields(cppDisplay,noteExts);
 
+    //Set note position order
+    var elementNum = containerDiv + "num";
+    var numNotes = $F(elementNum);    
+    var positionElement = containerDiv + noteId;
+    var position;
+    if( noteId == "" ) {
+        position = 0;
+    }
+    else {
+        position = $F(positionElement);
+    }    
+
+    var curElem;
+    var numOptions = $("position").length;
+    var max = numNotes > numOptions ? numNotes : numOptions;
+    var optId;
+    var option;
+    var opttxt;
+
+    for( curElem = 0; curElem < max; ++curElem ) {
+
+        optId = "popt" + curElem;
+        if( $(optId) == null ) {
+            option = document.createElement("OPTION");
+            option.id = optId;
+            opttxt = curElem + 1;
+            option.text = "" + opttxt;
+            option.value = curElem;
+            $("position").options.add(option,curElem);
+        }
+
+        if( position == curElem ) {
+            $(optId).selected = true;
+        }
+    }
+
+    if( max == numNotes ) {
+        optId = "popt" + max;
+        if( $(optId) == null ) {
+            option = document.createElement("OPTION");
+            option.id = optId;
+            opttxt = 1 * max + 1;
+            option.text = "" + opttxt;
+            option.value = max;
+            $("position").options.add(option,max);
+        }
+
+    }
+    
+    for( curElem = max - 1; curElem > 0; --curElem ) {
+
+        optId = "popt" + curElem;
+        if( curElem > numNotes ) {
+            Element.remove(optId);
+        }
+    }
+        
+
     $("noteEditTxt").focus();
     
     return false;
@@ -656,7 +714,7 @@ function loadDiv(div,url,limit) {
                                                
                                            }, 
                                 onFailure: function(request) {
-                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status + "<br>" + request.responseText;
                                             }
                             }
 

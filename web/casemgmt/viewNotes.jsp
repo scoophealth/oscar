@@ -51,6 +51,7 @@
 <% List<CaseManagementNoteExt> noteExts = (List<CaseManagementNoteExt>)request.getAttribute("NoteExts"); %>
 	<nested:iterate indexId="noteIdx" id="note" name="Notes"
 		type="org.oscarehr.casemgmt.model.CaseManagementNote">
+                <input type="hidden" id="<c:out value="${param.cmd}"/><nested:write name="note" property="id"/>" value="<nested:write name="noteIdx"/>">
 		<% if( noteIdx % 2 == 0 ) { %>
 		<li class="cpp"
 			style="clear: both; whitespace: nowrap; background-color: #F3F3F3;">
@@ -58,6 +59,7 @@
 		
 		<li class="cpp" style="clear: both; whitespace: nowrap;">
 		<%}
+                
 		String strNoteExts = getNoteExts(note.getId(), noteExts);
                 List<Provider> listEditors = note.getEditors();
                 StringBuffer editors = new StringBuffer();
