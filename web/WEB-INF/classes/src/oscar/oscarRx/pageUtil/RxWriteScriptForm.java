@@ -61,7 +61,8 @@ public final class RxWriteScriptForm extends ActionForm {
     String unit = null;
     String unitName = null;
     String route = null;
-    private String dosage = null;
+    String dosage = null;
+    String outsideProvider = null;
     
     
     public String getAction() {
@@ -433,4 +434,11 @@ public final class RxWriteScriptForm extends ActionForm {
         this.dosage = dosage;
     }
     
+    public String getOutsideProvider() {
+	return outsideProvider;
+    }
+    
+    public void setOutsideProvider(String outsideProvider) {
+	this.outsideProvider = outsideProvider;
+    }
 }

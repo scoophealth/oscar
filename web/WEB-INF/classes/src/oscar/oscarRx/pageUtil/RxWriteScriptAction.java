@@ -110,6 +110,7 @@ public final class RxWriteScriptAction extends Action {
             rx.setRoute(frm.getRoute());
             rx.setCustomInstr(frm.getCustomInstr());
             rx.setDosage(frm.getDosage());
+	    rx.setOutsideProvider(frm.getOutsideProvider());
 	    rx.setLongTerm(frm.getLongTerm());
 	    rx.setPastMed(frm.getPastMed());
 	    rx.setPatientCompliance(frm.getPatientComplianceY(),frm.getPatientComplianceN());
