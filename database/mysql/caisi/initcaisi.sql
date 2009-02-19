@@ -1620,7 +1620,7 @@ CREATE TABLE `program` (
 	defaultServiceRestrictionDays int not null,
 	ageMin int not null default 0,
 	ageMax int not null default 0,
-  `userDefined` int(1) default NULL,
+  `userDefined` int(1) default 1,
   `shelter_id` int(11) default '0',
   `facility_id` int(10) default '0',
   `capacity_funding` int(10) default NULL,
