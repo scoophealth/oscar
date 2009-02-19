@@ -92,6 +92,7 @@ oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPati
 oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
     new oscar.oscarRx.data.RxPrescriptionData().getSimilarPrescriptions(bean.getDemographicNo(), gcn, cn);
 
+String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -157,6 +158,10 @@ oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
 						<% if (! drugs[i].isCustom()) { %> <a
 							href="javascript:ShowDrugInfo('<%= drugs[i].getGenericName() %>');">Info</a>
 						<% } %>
+						</td>
+						<td>
+						    <input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton"
+						     onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drugs[i].getDrugId()%>&demo=<%=drugs[i].getDemographicNo()%>','anwin','width=400,height=250');">
 						</td>
 						<td><html:form action="/oscarRx/rePrescribe">
 							<html:hidden property="drugList"
