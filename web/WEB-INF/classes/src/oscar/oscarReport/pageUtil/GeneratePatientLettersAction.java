@@ -138,7 +138,7 @@ public class GeneratePatientLettersAction extends Action {
                 String module = "demographic";
                 String moduleId = demos[i];
 
-                EDoc newDoc = new EDoc(description, type, fileName, "", providerNo, status, observationDate, "", "", module, moduleId);
+                EDoc newDoc = new EDoc(description, type, fileName, "", providerNo, "", status, observationDate, "", "", module, moduleId);
                 newDoc.setDocPublic("0");
                 newDoc.setContentType("application/pdf");
                 
