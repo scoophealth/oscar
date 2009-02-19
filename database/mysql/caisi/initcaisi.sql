@@ -330,6 +330,7 @@ CREATE TABLE `casemgmt_note` (
   `password` varchar(255) default NULL,
   `locked` char(1) default NULL,
   `archived` boolean default false,
+  `position` int(10) default 0,
   `uuid` char(36) default NULL,
   PRIMARY KEY  (`note_id`),
   KEY `FKA8D537806CCA0FC` (`provider_no`),
