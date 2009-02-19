@@ -479,13 +479,14 @@ public class ProviderData {
                active = "";
             }
             
-            String sql = "select provider_no, first_name, last_name from provider where provider_type='doctor' "+active+" order by last_name , first_name";
+            String sql = "select provider_no, first_name, last_name, ohip_no from provider where provider_type='doctor' "+active+" order by last_name , first_name";
             ResultSet rs = db.GetSQL(sql);            
             while ( rs.next() ) {
                 Hashtable provider = new Hashtable();
                 provider.put("providerNo",db.getString(rs,"provider_no"));
                 provider.put("firstName",db.getString(rs,"first_name"));
                 provider.put("lastName",db.getString(rs,"last_name"));
+		provider.put("ohipNo",db.getString(rs,"ohip_no"));
                 result.add(provider);
             }
             db.CloseConn();            
@@ -580,10 +581,10 @@ public class ProviderData {
 	db.CloseConn();
 	
 	if (providerNo!=null && !providerNo.trim().equals("")) {
-	    int lastPN = Integer.parseInt(providerNo.substring(1)) + 1;
-	    providerNo = "-" + fillUp(String.valueOf(lastPN), 5, '0');
+	    int lastPN = Integer.valueOf(providerNo) - 1;
+	    providerNo = String.valueOf(lastPN);
 	} else {
-	    providerNo = "-00001";
+	    providerNo = "-101";
 	}
 	return providerNo;
     }
@@ -599,10 +600,4 @@ public class ProviderData {
 	}
 	return providerNo;
     }
-    
-     String fillUp(String in, int size, char fill) {
-	size -= in.length();
-	for (int i=0; i<size; i++) in = fill + in;
-	return in;
-    }    
 }
