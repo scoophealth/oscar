@@ -48,6 +48,10 @@
 			<many-to-many column="id"
 				class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
+                <set name="extend" table="casemgmt_note_ext" lazy="false">
+                        <key column="note_id" />
+                        <one-to-many class="org.oscarehr.casemgmt.model.CaseManagementNoteExt"/>
+                </set>
 		<property name="roleName" type="string"
 			formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
 		<property name="programName" type="string"
@@ -60,6 +64,7 @@
 		<property name="password" type="string" column="password" />
 		<property name="locked" type="boolean" column="locked" />
                 <property name="archived" type="boolean" column="archived" />
+                <property name="position" type="integer" column="position" />
 
 	</class>
 
@@ -76,6 +81,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+                position as {cmn.position},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},
@@ -102,6 +108,7 @@
 		reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as
 		{cmn.reporter_program_team}, history as {cmn.history},
 		uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, archived as {cmn.archived},
+                position as {cmn.position},
 		(select r.name from caisi_role r where r.role_id =
 		reporter_caisi_role) as {cmn.roleName},
 		(select p.name from program p where p.id = program_no) as {cmn.programName},

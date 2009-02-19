@@ -54,6 +54,7 @@ public class CaseManagementNote extends BaseObject {
 	private String history;
 	private Provider provider;
 	private Set issues = new HashSet();
+        private Set extend = new HashSet();
 	private List editors = new ArrayList();
 	private String roleName;
 	private String programName;
@@ -65,6 +66,7 @@ public class CaseManagementNote extends BaseObject {
         private boolean archived;
 
 	private int hashCode = Integer.MIN_VALUE;
+        private int position = 0;
 
 	public boolean equals(Object obj) {
 		if (null == obj) return false;
@@ -207,6 +209,14 @@ public class CaseManagementNote extends BaseObject {
 	public void setIssues(Set issues) {
 		this.issues = issues;
 	}
+        
+        public Set getExtend() {
+            return extend;
+        }
+        
+        public void setExtend(Set extend) {
+            this.extend = extend;
+        }
 
 	public List getEditors() {
 		return this.editors;
@@ -342,6 +352,8 @@ public class CaseManagementNote extends BaseObject {
 			return note2.getObservation_date().compareTo(note1.getObservation_date());
 		}
 	};
+        
+        
 
 	public boolean getHasHistory() {
 		if (getHistory() != null) {
@@ -396,4 +408,12 @@ public class CaseManagementNote extends BaseObject {
 		}
 		return status;
 	}
+        
+        public int getPosition() {
+            return position;
+        }
+        
+        public void setPosition(int position) {
+            this.position = position;
+        }
 }
