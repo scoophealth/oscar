@@ -34,6 +34,7 @@
 <%@page	import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
 <%@page	import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
 <%@page	import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
+<%@page import="oscar.oscarEncounter.data.EctProgram"%>
 <%@page import="java.util.Date, java.util.List"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -76,7 +77,8 @@
     }
     
     if (saved) {
-	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no);
+	String prog_no = new EctProgram(se).getProgram(user_no);
+	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no, prog_no);
 	if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
 	    se.setAttribute(demo+"annoNote"+tableName, cmn);
 	    se.setAttribute("anno_display", display);
@@ -134,7 +136,7 @@
 
 
 <%!
-    CaseManagementNote createCMNote(String note, String demo_no, String provider) {
+    CaseManagementNote createCMNote(String note, String demo_no, String provider, String program_no) {
 	if (!filled(note)) return null;
 	
 	CaseManagementNote cmNote = new CaseManagementNote();
@@ -145,7 +147,7 @@
 	    cmNote.setSigning_provider_no(provider);
 	    cmNote.setSigned(true);
 	    cmNote.setHistory("");
-	    cmNote.setProgram_no("10015");  //dummy program no for program "OSCAR"
+	    cmNote.setProgram_no(program_no);
 	    cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
 	    cmNote.setReporter_program_team("0");
 	    cmNote.setNote(note);
