@@ -73,6 +73,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 
 <script language=javascript>
 
+    var frm = document.forms.RxWriteScriptForm;
     var freqMin;
     var freqMax;
     var orig = null;
@@ -82,8 +83,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     var calcQtyflag = true;
 
     function takeChg(){
-        var frm = document.forms.RxWriteScriptForm;
-
         if(frm.take.value != 'Other'){
             frm.takeOther.style.display = 'none';
             frm.takeOther.value = frm.take.value;
@@ -130,10 +129,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
 
     function submitForm(action){
-        
-        var frm = document.forms.RxWriteScriptForm;
-        
-        
         if(frm.repeat.value.length < 1 || isNaN(parseInt(frm.repeat.value))){
             frm.repeat.value = 0;
         }
@@ -149,7 +144,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function changeDuration(){
-       var frm = document.forms.RxWriteScriptForm;
        var freqId = frm.frequencyCode.selectedIndex;
        
        var dailyMin = freqMin[freqId];
@@ -201,7 +195,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
 
     function calcQuantity(){       
-        var frm = document.forms.RxWriteScriptForm;        
         var takeMax = frm.takeMax.value;
         
         var dailyMax = freqMax[frm.frequencyCode.selectedIndex];
@@ -221,8 +214,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function calcQty(){
-        var frm = document.forms.RxWriteScriptForm;
-
         var takeMin = frm.takeMin.value;
         var takeMax = frm.takeMax.value;
         var freqId = frm.frequencyCode.selectedIndex;
@@ -280,8 +271,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
 
     function useQtyMax(){
-        var frm = document.forms.RxWriteScriptForm;
-
         frm.quantity.value = frm.sugQtyMax.value;
         
         writeScriptDisplay();
@@ -291,7 +280,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function replaceScriptDisplay(){
-       var frm = document.forms.RxWriteScriptForm;       
        var orig = frm.special.value;       
        var nameRegExp = /.*\n/i;
        var a = nameRegExp.exec(orig);
@@ -443,7 +431,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function removePRNifNeeded(str){
-       var frm = document.forms.RxWriteScriptForm;
        var retval = str;
        if (frm.prn.checked == false){
           retval = str.replace(/PRN /,"");
@@ -452,7 +439,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }   
     
     function removeNoSubsifNeeded(str){
-       var frm = document.forms.RxWriteScriptForm;
        var retval = str;
        if (frm.nosubs.checked == false){
           retval = str.replace(/No Subs/,"");
@@ -461,7 +447,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }   
     function getPRN(str){
        var retval = "";
-       var frm = document.forms.RxWriteScriptForm;
        if (frm.prn.checked){//is PRN CHECKED?
           var prnFindRegExp = /PRN/; 
           var p = prnFindRegExp.exec(str);
@@ -474,7 +459,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 
     function getNoSubs(str){
        var retval = "";
-       var frm = document.forms.RxWriteScriptForm;
        if (frm.nosubs.checked){//is NOSUB CHECKED?
           var noSubFindRegExp = /No Subs/; 
           var p = noSubFindRegExp.exec(str);
@@ -486,7 +470,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function getTakeValue(){
-       var frm = document.forms.RxWriteScriptForm;
        var retval = "";
        if(frm.take.value != 'Other'){
           retval = frm.take.value;
@@ -497,7 +480,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function getDurationValue(){
-       var frm = document.forms.RxWriteScriptForm;
        var retval = "";
        if(frm.cmbDuration.value == 'Other'){
           retval = frm.txtDuration.value;            
@@ -508,7 +490,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function getDurationUnit(){
-       var frm = document.forms.RxWriteScriptForm;
        var retval = "";
        switch(frm.durationUnit.value){
           case 'D':{
@@ -528,7 +509,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function checkPatientCompliance(pc) {
-	var frm = document.forms.RxWriteScriptForm;
 	if (pc=="Y") {
 	    if (frm.patientComplianceY.checked) frm.patientComplianceN.checked = false;
 	} else if (pc=="N") {
@@ -540,12 +520,11 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     function writeScriptDisplay(){  
   //      alert ("f"+first);
   
-    var disabled = document.forms.RxWriteScriptForm.customInstr.checked;
+    var disabled = frm.customInstr.checked;
     
     if( !disabled ) {
         if (first == false){      
             
-            var frm = document.forms.RxWriteScriptForm;
             var frm2 = document.forms.RxWriteScriptForm;
 
             var orig2 = frm.special.value;
@@ -622,7 +601,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function addLuCode(codeToAdd){
-        var frm = document.forms.RxWriteScriptForm;
         var txt = frm.special.value;
         frm.special.value =  txt  + "LU Code: " +codeToAdd;
     }
@@ -685,11 +663,27 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     
     function pageLoad() {
         calcQty();
-        var txtQty = document.forms.RxWriteScriptForm.quantity;
+        var txtQty = frm.quantity;
         if( txtQty.restrict ) alert("YES");
         txtQty.restrict = "0-9";
+	
+	prepareOutsideProvider();
     }
     
+    function prepareOutsideProvider() {
+	if (frm.outsideProvider.value.length>0) $('ocheck').checked=true;
+	showHideOutsideProvider();
+    }
+    
+    function showHideOutsideProvider() {
+	if ($('ocheck').checked) {
+	    $('otext').show();
+	    frm.outsideProvider.focus();
+	} else {
+	    frm.outsideProvider.value = "";
+	    $('otext').hide();
+	}
+    }
 </script>
 
 
@@ -848,6 +842,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
     thisForm.setCustomInstr(rx.getCustomInstr());
+    thisForm.setOutsideProvider(rx.getOutsideProvider());
     
     System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
@@ -1237,7 +1232,7 @@ int i;
 			    </tr>
                             <tr>
                                 <td colspan=4>
-                                    Special Instructions:&nbsp;<html:checkbox property="customInstr" />Custom Instructions
+                                    Special Instructions: &nbsp; &nbsp; &nbsp; &nbsp; <html:checkbox property="customInstr" />Custom Instructions
                                     <script language=javascript>
                                         function cmdSpecial_click(){
                                             var frm = document.forms.RxWriteScriptForm;
@@ -1293,6 +1288,13 @@ int i;
 							</table>
 							</td>
 
+						</tr>
+						<tr>
+						    <td colspan="5">
+							Prescribed by Outside Provider: 
+							<span id="otext"><html:text property="outsideProvider" /></span>
+							<input type="checkbox" id="ocheck" onclick="javascript:showHideOutsideProvider();" />
+						    </td>
 						</tr>
 					</table>
 					</td>

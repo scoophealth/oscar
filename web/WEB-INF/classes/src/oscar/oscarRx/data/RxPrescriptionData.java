@@ -86,6 +86,7 @@ public class RxPrescriptionData {
 		prescription.setLongTerm(rs.getBoolean("long_term"));
 		prescription.setPastMed(rs.getBoolean("past_med"));
 		prescription.setPatientCompliance(rs.getInt("patient_compliance"));
+		prescription.setOutsideProvider(db.getString(rs,"outside_provider"));
             }
             rs.close();            
             
@@ -172,6 +173,7 @@ public class RxPrescriptionData {
 	prescription.setLongTerm(rePrescribe.getLongTerm());
 	prescription.setPastMed(rePrescribe.getPastMed());
 	prescription.setPatientCompliance(rePrescribe.getPatientCompliance());
+	prescription.setOutsideProvider(rePrescribe.getOutsideProvider());
 	
         return prescription;
     }
@@ -230,6 +232,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProvider(db.getString(rs,"outside_provider"));
                 lst.add(p);
             }
             
@@ -302,6 +305,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProvider(db.getString(rs,"outside_provider"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");                
                 if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
@@ -374,6 +378,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProvider(db.getString(rs,"outside_provider"));
                 p.setPrintDate(rs.getDate("date_printed"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");
@@ -447,6 +452,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProvider(db.getString(rs,"outside_provider"));
                 lst.add(p);
             }
             
@@ -555,6 +561,7 @@ public class RxPrescriptionData {
 		    p.setLongTerm(rs.getBoolean("long_term"));
 		    p.setPastMed(rs.getBoolean("past_med"));
 		    p.setPatientCompliance(rs.getInt("patient_compliance"));
+		    p.setOutsideProvider(db.getString(rs,"outside_provider"));
                     
                     if( myOscarEnabled ) {
                         String tmp = indivoSql.replaceFirst("\\?", db.getString(rs,"drugid"));
@@ -646,6 +653,7 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProvider(db.getString(rs,"outside_provider"));
                 lst.add(p);
             }
             
@@ -900,6 +908,7 @@ public class Prescription {
     String route = null;
     String drugForm = null;
     String dosage = null;
+    String outsideProvider = null;
     boolean custom = false;
     private String indivoIdx = null;        //indivo document index for this prescription
     private boolean registerIndivo = false;
@@ -1274,6 +1283,14 @@ public class Prescription {
         return this.special;
     }
     
+    public String getOutsideProvider() {
+	return this.outsideProvider;
+    }
+    
+    public void setOutsideProvider(String outsideProvider) {
+	this.outsideProvider = outsideProvider;
+    }
+    
     public void setSpecial(String RHS) {
         if(RHS != null) {
             if(! RHS.equals("null")) {
@@ -1578,6 +1595,7 @@ public class Prescription {
                 + "nosubs = " + this.getNosubsInt() + " AND "
                 + "prn = " + this.getPrnInt() + " AND "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "' AND "
+		+ "outside_provider = '" + this.getOutsideProvider() + "' AND "
                 + "custom_instructions = " + this.getCustomInstr() + " AND "
 		+ "long_term = " + this.getLongTerm() + " AND "
 		+ "past_med = " + this.getPastMed() + " AND "
@@ -1601,8 +1619,8 @@ public class Prescription {
                     + "rx_date, end_date, BN, GCN_SEQNO, customName, "
                     + "takemin, takemax, freqcode, duration, durunit, quantity, "
                     + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, "
-		    + "regional_identifier, unit, method, route, drug_form, create_date, custom_instructions, "
-		    + "dosage, unitName, long_term, past_med, patient_compliance) "
+		    + "regional_identifier, unit, method, route, drug_form, create_date, outside_provider, "
+		    + "custom_instructions, dosage, unitName, long_term, past_med, patient_compliance) "
                     + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '"
                     + RxUtil.DateToString(this.getRxDate()) + "', '"
                     + RxUtil.DateToString(this.getEndDate()) + "', '"
@@ -1614,8 +1632,9 @@ public class Prescription {
                     + this.getRepeat() + ", '" + RxUtil.DateToString(this.getLastRefillDate())+ "', "
 		    + this.getNosubsInt() + ", " + this.getPrnInt() + ", '"
                     + RxUtil.replace(this.getSpecial(), "'", "") + "','"+this.getGenericName()+"','"+scriptId+"', '"
-                    + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"+this.getMethod()+"','"
-                    + this.getRoute()+"','"+this.getDrugForm()+"',now(),"+ this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+"', "
+                    + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"
+		    + this.getMethod()+"','"+this.getRoute()+"','"+this.getDrugForm()+"',now(),'"+this.getOutsideProvider()+"', "
+		    + this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+"', "
 		    + this.getLongTerm()+", "+this.getPastMed()+", "+this.getPatientCompliance()+")";
                     
                     db.RunSQL(sql);
@@ -1660,7 +1679,8 @@ public class Prescription {
                 + "method = '"+this.getMethod()+"', "
                 + "route = '"+this.getRoute()+"', "
                 + "drug_form = '"+this.getDrugForm()+"', "
-                + "dosage = '"+this.getDosage()+"', "        
+                + "dosage = '"+this.getDosage()+"', "
+		+ "outside_provider = '"+this.getOutsideProvider()+"', "
                 + "custom_instructions = " + this.getCustomInstr()+", " 
                 + "unitName = '" + this.getUnitName() + "', "
 		+ "long_term = " + this.getLongTerm() + ", "
