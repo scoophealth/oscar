@@ -87,6 +87,19 @@ public class EDocUtil extends SqlUtilBaseS {
         return moduleName;
     }
 
+    public static String getProviderInfo(String fieldName, String providerNo) {
+        String sql = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
+        ResultSet rs = getSQL(sql);
+        String info = "";
+        try {
+            if (rs.next()) info = rs.getString(fieldName);
+        }
+        catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return info;
+    }
+
     public static ArrayList getDoctypes(String module) {
         String sql = "SELECT * FROM ctl_doctype WHERE (status = 'A' OR status='H') AND module = '" + module + "'";
         ResultSet rs = getSQL(sql);
@@ -161,6 +174,7 @@ public class EDocUtil extends SqlUtilBaseS {
 	String editDocSql = "UPDATE document " +
 		"SET doctype='" + doctype + "', " +
 		"docdesc='" + docDescription + "', " +
+		"source='" + newDocument.getSource() + "', " +
 		"public1='" + newDocument.getDocPublic() + "', " +
 		"docxml='" + html + "'";
 	if (doReview) {
@@ -463,6 +477,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDescription(rsGetString(rs, "docdesc"));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setSource(rsGetString(rs, "source"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setDocPublic(rsGetString(rs, "public1"));
@@ -551,7 +566,11 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
-        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate) values (?,?,?,?,?,'A',?,0,?)";
+	return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, null, null);
+    }
+    
+    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String reviewer, String reviewDateTime) throws SQLException {
+        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime) values (?,?,?,?,?,'A',?,0,?,?,?)";
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
         int key = 0;
 
@@ -566,6 +585,8 @@ public class EDocUtil extends SqlUtilBaseS {
         add_record.setString(5, updateDateTime);
         add_record.setString(6, contentType);
         add_record.setString(7, observationDate);
+	add_record.setString(8, reviewer);
+	add_record.setString(9, reviewDateTime);
 
         add_record.executeUpdate();
         ResultSet rs = add_record.getGeneratedKeys();
