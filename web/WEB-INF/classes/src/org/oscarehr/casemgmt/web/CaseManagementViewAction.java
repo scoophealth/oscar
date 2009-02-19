@@ -370,7 +370,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// apply role based access
 			// if(request.getSession().getAttribute("archiveView")!="true")
 			log.debug("Filter Notes");
-			notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);
+                                                
+			notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);                        
 			current = System.currentTimeMillis();
 			log.debug("FILTER NOTES " + String.valueOf(current - start));
 			start = current;
@@ -392,7 +393,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			current = System.currentTimeMillis();
 			log.debug("FILTER NOTES PROVIDER " + String.valueOf(current - start));
 			start = current;
-
+                        
 			request.setAttribute("providers", providers);
 
 			// apply if we are filtering on role
@@ -404,7 +405,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			current = System.currentTimeMillis();
 			log.debug("Filter on Role " + String.valueOf(current - start));
 			start = current;
-
+                        
 			log.debug("Pop notes with editors");
 			this.caseManagementMgr.getEditors(notes);
 			current = System.currentTimeMillis();
@@ -598,13 +599,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		    lcme.addAll(caseManagementMgr.getExtByNote(cmn.getId()));
 		}
 		request.setAttribute("NoteExts", lcme);
-		
+                request.setAttribute("Notes", notes);
+		/*
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
 		if (noteSort.trim().equalsIgnoreCase("UP"))
 			request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
 		else
 			request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
+                 */
 
 		return mapping.findForward("listNotes");
 	}
