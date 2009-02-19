@@ -64,12 +64,14 @@ public class ImportExportMeasurements {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+type+"' LIMIT 1";
 	ResultSet rs = db.GetSQL(sql);
-	
-	String mi = "";
-	if (rs.next()) mi = rs.getString("measuringInstruction");
-	
-	sql = "INSERT INTO measurements (demographicNo,type,providerNo,dataField,dateObserved,dateEntered,measuringInstruction) VALUES (" +
-		demoNo + ",'" + type + "','" + providerNo + "','" + dataField + "','" + dateObserved + "','" + new Date() + "','" + mi + "')";
+	String mi = rs.next() ? rs.getString("measuringInstruction") : "";
+	saveMeasurements(type, demoNo, providerNo, dataField, mi, dateObserved);
+    }
+    
+    public static void saveMeasurements(String type, String demoNo, String providerNo, String dataField, String measuringInstruction, Date dateObserved) throws SQLException {
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered) VALUES (" +
+		    demoNo + ",'" + type.toUpperCase() + "','" + providerNo + "','" + dataField + "','" + measuringInstruction + "','" + dateObserved + "','" + new Date() + "')";
 	db.RunSQL(sql);
     }
     
