@@ -211,7 +211,7 @@ public class CaseManagementManager {
         
         // process noteStr, remove existing signed on string
         //noteStr = removeSignature(noteStr);
-        if (note.isSigned())
+        /*if (note.isSigned())
         {
                 
         	// add the time, signiture and role at the end of note
@@ -229,7 +229,7 @@ public class CaseManagementManager {
         	if (userName != null && !"".equals(userName.trim()))
         	{
         		noteStr = noteStr + "\n[[Signed on " + dt.format(now) + " "
-        				+ "by " + userName + ", " + rolename + "]]\n" ;
+        				+ "by " + userName + "]]\n" ;
         	} else
         		noteStr = noteStr + "\n[[" + dt.format(now) + "]]\n";
 
@@ -1192,6 +1192,10 @@ public class CaseManagementManager {
         return results;
     }
     
+    public void updateNote(CaseManagementNote note) {
+        this.caseManagementNoteDAO.updateNote(note);
+    }
+    
     public void saveNoteSimple(CaseManagementNote note) {
         this.caseManagementNoteDAO.saveNote(note);
     }
@@ -1419,12 +1423,12 @@ public class CaseManagementManager {
     	{
             if( type == this.SIGNATURE_SIGNED ) {
     		signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + dt.format(now) + " "
-    				+ props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + ", " + rolename + "]\n" ;
+    				+ props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName +  "]\n" ;
                 
             }
             else if( type == this.SIGNATURE_VERIFY ) {
                 signature = "[" + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + dt.format(now) + " "
-                    + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName + ", " + rolename + "]";
+                    + props.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + userName +  "]";
             }
             else {
                 signature = "[Unknown Signature Type Requested]";
