@@ -33,7 +33,8 @@
 
 <%
     oscar.oscarEncounter.pageUtil.EctSessionBean bean = null;
-    bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+    String beanName = "casemgmt_oscar_bean" + (String) request.getAttribute("demographicNo");
+    bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute(beanName);
     
     pageContext.setAttribute("providerNo",bean.providerNo, pageContext.PAGE_SCOPE);
     org.oscarehr.casemgmt.model.CaseManagementNoteExt cme = new org.oscarehr.casemgmt.model.CaseManagementNoteExt();
@@ -428,11 +429,13 @@ function init() {
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
                   </span>
+                  <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position">                        
+                  </select> 
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                       <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" name="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
                   </div>
-                  Assign Issues&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
+                  <bean:message key="oscarEncounter.Index.assnIssue"/>&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
                  
                   <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
                   
