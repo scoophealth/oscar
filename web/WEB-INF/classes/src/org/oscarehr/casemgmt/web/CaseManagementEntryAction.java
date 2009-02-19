@@ -506,6 +506,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             StringBuffer issueNames = new StringBuffer();
             int j;
             
+            //we need the defining issue as originally passed in
+            String reloadQuery = request.getParameter("reloadUrl");
+            String[] params = reloadQuery.split("&");
+            String cppStrIssue = "";
+            for( int p = 0; p < params.length; ++p ) {
+                String[] keyVal = params[p].split("=");
+                if( keyVal[0].equalsIgnoreCase("issue_code") ) {
+                    cppStrIssue = keyVal[1];
+                    break;
+                }
+            }
+                        
+            boolean removed = false;
+            
             //we've removed all issues so record that
             if( issue_id == null ) {
                 while( iter.hasNext() ) {
@@ -514,6 +528,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 }
                 strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
                 note.setNote(strNote);
+                removed = true;
             }
             else {
                 //check to see if we have removed any issues
@@ -529,13 +544,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
                     if( !issueExists ) {
                         issueNames.append(cIssue.getIssue().getDescription() + "\n");
+                        if( cIssue.getIssue().getCode().equalsIgnoreCase(cppStrIssue)) {
+                            removed = true;
+                        }
                     }
                 }
 
                 //if we have removed an issue add it to message body
                 if( issueNames.length() > 0 ) {
                     strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
-                    note.setNote(strNote);
+                    note.setNote(strNote);                    
                 }
 
                 for( int idx = 0; idx < issue_id.length; ++idx ) {
@@ -563,6 +581,72 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             note.setIssues(issueSet);
             
+            //now we can update the order of the notes if necessary
+            //if the note has been removed or archived we move notes up in the order
+            //else we check if position has changed and move the note down
+            int position = -1;
+            int newPos = Integer.parseInt(request.getParameter("position"));
+            List<Issue> cppIssue = caseManagementMgr.getIssueInfoByCode(providerNo, cppStrIssue);
+            String[] strIssueId = {String.valueOf(cppIssue.get(0).getId())};
+            List<CaseManagementNote>curCPPNotes = this.caseManagementMgr.getActiveNotes(demo, strIssueId);
+            CaseManagementNote curNote;
+            long nId = Long.parseLong(noteId);
+            int numNotes = curCPPNotes.size();
+            //Alas we have to cycle through to make sure an ordering has been set
+            //this is for legacy data
+            for( int idx = 1; idx < curCPPNotes.size(); ++idx ) {
+                curNote = curCPPNotes.get(idx);
+                if( curNote.getPosition() == 0 ) {
+                    curNote.setPosition(idx);
+                    
+                    if( curNote.getId() == nId ) {
+                        note.setPosition(idx);
+                    }
+                    
+                    this.caseManagementMgr.updateNote(curNote);                                        
+                } 
+            }                        
+                        
+            if( removed || note.isArchived() ) {
+                position = note.getPosition();
+                for( CaseManagementNote c : curCPPNotes) {
+                    if( c.getId() == nId ) {
+                        continue;
+                    }                    
+                    else if( position < c.getPosition() ) {                       
+                       newPos = c.getPosition() - 1; 
+                       c.setPosition(newPos);
+                       this.caseManagementMgr.updateNote(c);
+                    }                    
+                }
+            }            
+            else if( (newPos != note.getPosition() && !( newPos == numNotes && note.getPosition() == (numNotes-1))) || newNote ) {
+                for( CaseManagementNote c : curCPPNotes) {
+                    if( c.getId() != nId ) {
+                        if( newNote && c.getPosition() >= newPos ) {
+                            position = c.getPosition() + 1; 
+                            c.setPosition(position);
+                            this.caseManagementMgr.updateNote(c);
+                        }                        
+                        else if( (!newNote && newPos < note.getPosition()) && c.getPosition() >= newPos && c.getPosition() < note.getPosition()) {                        
+                            position = c.getPosition() + 1; 
+                            c.setPosition(position);
+                            this.caseManagementMgr.updateNote(c);
+                        }
+                        else if( (!newNote && newPos > note.getPosition()) && c.getPosition() <= newPos && c.getPosition() > note.getPosition() ) {
+                            position = c.getPosition() - 1; 
+                            c.setPosition(position);
+                            this.caseManagementMgr.updateNote(c);                            
+                        }
+                        
+                    }
+                }
+                
+                if( newPos == numNotes && !newNote) {
+                    --newPos;
+                }
+                note.setPosition(newPos);
+            }
             
             /*
              *Remove linked issue(s) and insert message into note
@@ -660,8 +744,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             caseManagementMgr.getEditors(note);
             
             ActionForward forward = mapping.findForward("listCPPNotes");
-            StringBuffer path = new StringBuffer(forward.getPath());
-            String reloadQuery = request.getParameter("reloadUrl");
+            StringBuffer path = new StringBuffer(forward.getPath());            
             path.append("?" + reloadQuery);
             return new ActionForward(path.toString());
         }
@@ -857,8 +940,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         //update password
         String passwd = cform.getCaseNote().getPassword();
-        if( passwd != null && passwd.trim().length() > 0 ) {
-            System.out.println("SETTING PASSWORD '" + passwd + "'");
+        if( passwd != null && passwd.trim().length() > 0 ) {            
             note.setPassword(passwd);
             note.setLocked(true);
         }
