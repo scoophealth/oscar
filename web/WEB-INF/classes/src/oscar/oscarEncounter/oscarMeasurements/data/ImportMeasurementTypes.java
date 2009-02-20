@@ -70,7 +70,7 @@ public class ImportMeasurementTypes {
     
     public void importMeasurements(Element root){
            EctFindMeasurementTypeUtil fmtu = new EctFindMeasurementTypeUtil();
-           
+           boolean measurementReInitNeeded = false;
            //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
            List meas = root.getChildren("measurement");
            
@@ -96,12 +96,17 @@ public class ImportMeasurementTypes {
                if(!fmtu.measurementTypeKeyIsFound(mtb)){
                   log.debug("Needed to add"+mtb.getType());
                   fmtu.addMeasurementType(mtb, "");
+                  measurementReInitNeeded = true;
                }else{
                   log.debug("Didn't Need to add"+mtb.getType());
                }
                //TODO: check about isTrue
                
-           }           
+           }  
+           if(measurementReInitNeeded){
+                MeasurementTypes.getInstance().reInit();
+           }
+           //return measurementReInitNeeded;
     }
     
 }
