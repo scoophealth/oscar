@@ -91,6 +91,17 @@ public class ExportMeasurementType {
         }
     }
     
+    
+    public Element exportElement (EctMeasurementTypesBean mtb){
+        Element measurement = createXMLMeasurement(mtb.getType(),mtb.getTypeDesc(),mtb.getTypeDisplayName(),mtb.getMeasuringInstrc());
+        Vector validationRules = mtb.getValidationRules();
+        
+        EctValidationsBeanHandler valBeanHandler = new EctValidationsBeanHandler();
+        EctValidationsBean v = valBeanHandler.getValidation(mtb.getValidationName());//(EctValidationsBean) validationRules.get(i);
+        measurement.addContent(createXMLValidation(v.getName(),v.getMaxValue(),v.getMinValue(),v.getIsDate(),v.getIsNumeric(),v.getRegularExp(),v.getMaxLength(),v.getMinLength()));
+        
+        return measurement;      
+    }
     public String export (EctMeasurementTypesBean mtb){
         Element measurement = createXMLMeasurement(mtb.getType(),mtb.getTypeDesc(),mtb.getTypeDisplayName(),mtb.getMeasuringInstrc());
         Vector validationRules = mtb.getValidationRules();
