@@ -1,5 +1,6 @@
 
 <%-- Updated by Eugene Petruhin on 18 dec 2008 while fixing #2422864 & #2317933 & #2379840 --%>
+<%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
 	<%@include file="/ticklerPlus/header.jsp"%>
 	
@@ -20,11 +21,10 @@
 	<script type="text/javascript" src="../js/checkDate.js"></script>
 	<script type="text/javascript">
 		function check_tickler_service_date() {
-			var serviceDate = document.ticklerForm.elements['tickler.serviceDate'].value;
-			return check_date(serviceDate);
+			return check_date('tickler.serviceDate');
 		}
 
-<%--		
+<%--
 		function search_demographic() {
 			var popup = window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
 		

@@ -1,3 +1,6 @@
+
+<%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
+
 <%@ include file="/taglibs.jsp"%>
 <%@ page
 	import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*"%>
@@ -31,6 +34,14 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
 <script>
+		// date picker variables
+		var readOnly = false;
+		var win = null;
+		var timerId = 0;
+		var isDateValid = true;
+		var doOnBlur = true;
+		var deferSubmit = false;
+
 		function openBrWindow(theURL,winName,features) { 
 		  window.open(theURL,winName,features);
 		}
@@ -62,11 +73,12 @@
 			    }
 			}
 		}
-	</script>
+</script>
 <table border="0" cellspacing="0" cellpadding="1" width="100%"
 	bgcolor="#CCCCFF">
 	<tr class="subject">
-		<th width="20%"></th>
-		<th colspan="2" width="80%">TicklerPlus</th>
-		<th width="20%" align="right" nowrap></th>
+		<th width="30%"></th>
+		<th width="30%" align="center">TicklerPlus</th>
+		<th width="30%"></th>
+		<th width="10%"></th>
 	</tr>

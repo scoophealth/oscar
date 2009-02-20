@@ -2,8 +2,8 @@
 <%-- Updated by Eugene Petruhin on 11 dec 2008 while fixing #2356548 & #2393547 --%>
 <%-- Updated by Eugene Petruhin on 19 dec 2008 while fixing #2422864 & #2317933 & #2379840 --%>
 <%-- Updated by Eugene Petruhin on 22 dec 2008 while fixing #2455143 --%>
+<%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
-<%@ include file="/taglibs.jsp" %>
 <%@ include file="/ticklerPlus/header.jsp"%>
 
 <%@ page import="java.util.Calendar"%>
@@ -67,7 +67,7 @@
 		var startDate = document.ticklerForm.elements['filter.startDate'].value;
 		var endDate = document.ticklerForm.elements['filter.endDate'].value;
 		
-		if(check_date(startDate) && check_date(endDate)) {
+		if(check_date('filter.startDate') && check_date('filter.endDate')) {
 		  
 		  var sArray1=startDate.split("-");
 		  var sArray2=endDate.split("-");
@@ -136,12 +136,12 @@
         }
         
         function showClearButton() {
-            var cb = $('clear_button');
+            var cb = document.getElementById('clear_button');
             
             if (document.ticklerForm.elements['filter.demographic_webName'].value=="") {
-                cb.hide();
+                cb.style.display = 'none';
             } else {
-                cb.show();
+                cb.style.display = '';
             }
         }
         
@@ -244,13 +244,13 @@
 			onclick="return checkTicklerDate();" /></td>
 		<td colspan="3"><a id="pre_print" href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' target="_pre_print">Print Preview</a> </td>
 	</tr>
+</table>
 
+<br/>
+<%@ include file="/ticklerPlus/messages.jsp"%>
 
-	<br />
-	<%@ include file="/ticklerPlus/messages.jsp"%>
-	<br />
-	<table width="100%" border="0" cellpadding="0" cellspacing="1"
-		bgcolor="#C0C0C0" id="ticklersTbl" >
+<table width="100%" border="0" cellpadding="0" cellspacing="1"
+	bgcolor="#C0C0C0" id="ticklersTbl" >
 		<tr class="title">
 			<th></th>
 			<th></th>
@@ -374,9 +374,9 @@
 		<tr>
 			<td colspan="9"><%=((java.util.List) session.getAttribute("ticklers")).size()%> ticklers found.</td>
 		</tr>
-	</table>
+</table>
 
-	<table>
+<table>
 		<!-- 
 		<tr>
 			<td colspan="2"><a href="#" onclick="CheckAll(document.ticklerForm);return false;">Check All</a>&nbsp;<a href="#" onclick="ClearAll(document.ticklerForm);return false;">Clear All</a></td>
@@ -390,7 +390,8 @@
 				onclick="batch_operation('delete');" /></td>	
 				
 		</tr>
-	</table>
+</table>
+
 </html:form>
 
 <%if ((request.getParameter("from") == null) || (!request.getParameter("from").equals("CaseMgmt"))) { %>

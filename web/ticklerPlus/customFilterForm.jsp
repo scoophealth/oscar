@@ -1,3 +1,6 @@
+
+<%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
+
 <%@ include file="/ticklerPlus/header.jsp"%>
 
 <%@ page import="java.util.*"%>
@@ -25,18 +28,10 @@
     			}
     			popup.focus();
   			}	
-			
 		}
-		
+
 		function check_custom_filter_date() {
-			var startDate = document.customFilterForm.elements['filter.startDate'].value;
-			var endDate = document.customFilterForm.elements['filter.endDate'].value;
-			
-			if(check_date(startDate) && check_date(endDate)) {				
-				return true;
-			} else {
-				return false;
-			}	
+			return check_date('filter.startDate') && check_date('filter.endDate');
 		}
 		
 		function validateCustomFilterForm(form) {

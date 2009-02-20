@@ -101,10 +101,8 @@ function setInvalid(checkedDateObj)
 }
 function check_date(checkedDateName) 
 {	
-	//eg. checkedDate = '21-09-2007'
 	// Regular expression used to check if date is in correct format
-   	//var pattern = new RegExp([0-3][0-9]-0|1[0-9]-19|20[0-9]{2});
-   	//pattern = /^(\d{1,2})(\/|-)(\d{1,2})(\/|-)(\d{4})$/;	 //'21-09-2007'
+   	// pattern = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/;	 //'2007-09-21'
    	
    	if(readOnly==true) return true;
    	var checkedDateObj = document.getElementsByName(checkedDateName)[0];
@@ -113,7 +111,7 @@ function check_date(checkedDateName)
    	   return true;
     }
     
-   	if(checkedDate.length!=10){
+   	if(checkedDate.length<8 || checkedDate.length>10){
    		setInvalid(checkedDateObj);
        	return false;
     }
@@ -122,6 +120,9 @@ function check_date(checkedDateName)
 	if(checkedDate.match(pattern))
 	{
       	var date_array = checkedDate.split('/');
+      	if (date_array.length == 1) {
+      		date_array = checkedDate.split('-');
+      	}
       	var year = date_array[0];
       	// Attention! Javascript consider months in the range 0 - 11      	
       	var month = date_array[1] - 1;      		
