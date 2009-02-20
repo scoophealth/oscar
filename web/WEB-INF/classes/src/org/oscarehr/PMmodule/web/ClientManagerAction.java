@@ -1164,7 +1164,10 @@ public class ClientManagerAction extends BaseAction {
 			boolean doRefer = true;
 			ProgramProvider program = (ProgramProvider) programDomain.get(0);
 			// refer/admin client to service program associated with this user
+			Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+			
 			ClientReferral referral = new ClientReferral();
+			referral.setFacilityId(facilityId);
 			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(program.getProgramId().longValue());
