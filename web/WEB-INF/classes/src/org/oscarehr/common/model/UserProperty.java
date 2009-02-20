@@ -35,6 +35,8 @@ public class UserProperty implements Serializable {
     
     public final static String STALE_NOTEDATE = "cme_note_date";
     public final static String MYDRUGREF_ID = "mydrugref_id";
+    public final static String ONTARIO_MD_USERNAME = "ontario_md_username";
+    public final static String ONTARIO_MD_PASSWORD = "ontario_md_password";
     public final static String CONSULTATION_TIME_PERIOD_WARNING = "consultation_time_period_warning";
     public final static String CONSULTATION_TEAM_WARNING = "consultation_team_warning";
     public final static String WORKLOAD_MANAGEMENT = "workload_management";
