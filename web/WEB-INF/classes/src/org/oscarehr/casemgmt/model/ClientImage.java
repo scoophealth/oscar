@@ -90,11 +90,13 @@ public class ClientImage extends BaseObject {
 	}
 
 	public void setImage_contents(Blob image_contents) {
-		try {
-			this.image_data = Base64.decodeBase64(this.blobToByteArray(image_contents));
-		} catch (Exception e) {
-			e.printStackTrace();
-			this.image_data = null;
+		if(image_contents != null) {
+			try {
+				this.image_data = Base64.decodeBase64(this.blobToByteArray(image_contents));
+			} catch (Exception e) {
+				e.printStackTrace();
+				this.image_data = null;
+			}
 		}
 	}
 
