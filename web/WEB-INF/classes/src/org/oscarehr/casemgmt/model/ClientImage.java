@@ -86,6 +86,9 @@ public class ClientImage extends BaseObject {
 	}
 
 	public Blob getImage_contents() {
+		if(image_data == null) {
+			return null;
+		}
 		return Hibernate.createBlob(Base64.encodeBase64(getImage_data()));
 	}
 
