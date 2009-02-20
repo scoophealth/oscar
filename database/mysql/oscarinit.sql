@@ -541,6 +541,7 @@ CREATE TABLE document (
   docxml text,
   docfilename varchar(255) NOT NULL default '',
   doccreator varchar(30) NOT NULL default '',
+  source varchar(60) default NULL,
   program_id int,
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',
@@ -606,6 +607,7 @@ CREATE TABLE drugs (
   long_term boolean,
   past_med boolean,
   patient_compliance tinyint(1),
+  outside_provider varchar(100),
   PRIMARY KEY  (drugid)
 ) ;
 
