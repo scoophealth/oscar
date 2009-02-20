@@ -1032,6 +1032,8 @@ INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringI
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIFB", "Impaired FB", "Impaired FB", "Yes/No", "7");
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DIGT", "Impaired GT", "Impaired Glucose Tolerance", "Yes/No", "7");
 INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("DARB", "ACE AARB", "ACE AARB", "Yes/No", "7");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("POSK", "Packs of Cigarettes per day", "Smoking", "Packs per day", "12");
+INSERT INTO measurementType (type, typeDisplayName,  typeDescription, measuringInstruction, validation) VALUES("HYPE", "Hypoglycemic Episodes", "Number of Hypoglycemic Episodes", "0 to 2500", "18");
 
 --
 -- Dumping data for table 'measurementCSSLocation'
