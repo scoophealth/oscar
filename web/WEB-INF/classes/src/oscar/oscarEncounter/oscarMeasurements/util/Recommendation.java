@@ -26,6 +26,7 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
@@ -38,16 +39,16 @@ import org.jdom.Element;
 public class Recommendation {
     private static final Log log = LogFactory.getLog(Recommendation.class);
     
-    private String monthrange = null;
     private String strength = null;
     private String text = null;
+    private List<RecommendationCondition> recommendationCondition = new ArrayList();
     
     private String ruleName = null;
     private String measurement =  null;
     
     
     public String toString(){
-         return "monthrange "+monthrange+" strength "+strength+" text "+text+" ruleName "+ruleName+" measurement "+measurement;
+         return " strength "+strength+" text "+text+" ruleName "+ruleName+" measurement "+measurement;
     }
     
     public Recommendation(){
@@ -55,26 +56,38 @@ public class Recommendation {
     }
     
     public Recommendation(Element recowarn){
-        monthrange = recowarn.getAttributeValue("monthrange");
+        //monthrange = recowarn.getAttributeValue("monthrange");
         strength = recowarn.getAttributeValue("strength") ;
-        text = recowarn.getText();
+        text = recowarn.getAttributeValue("message");
+        List<Element> cond = recowarn.getChildren("condition");
+        for(Element ele:cond){
+            recommendationCondition.add(new RecommendationCondition(ele));   
+        }
         
     }
     
     public Recommendation(String measurement,String monthrange, String strength,String text){
         this.measurement = measurement;
-        this.monthrange = monthrange;
+        RecommendationCondition rec = new RecommendationCondition();
+        rec.setType("monthrange");
+        rec.setValue(monthrange);
+        recommendationCondition.add(rec);
         this.strength = strength;
         this.text = text;
     }
     
     public Recommendation(Element recowarn,String ruleName, String measurement){
-        monthrange = recowarn.getAttributeValue("monthrange");
+        //monthrange = recowarn.getAttributeValue("monthrange");
         strength = recowarn.getAttributeValue("strength") ;
-        text = recowarn.getText();
+        text = recowarn.getAttributeValue("message");
         
         this.ruleName = ruleName;
         this.measurement = measurement;
+        
+        List<Element> cond = recowarn.getChildren("condition");
+        for(Element ele:cond){
+            recommendationCondition.add(new RecommendationCondition(ele));   
+        }
         
     }
     
@@ -86,7 +99,7 @@ public class Recommendation {
         
         log.debug("LOADING RULES - getRuleBaseElement"+measurement);
         ArrayList list = new ArrayList();
-        String toParse = monthrange;
+        //String toParse = monthrange;
         String consequenceType = "Recommendation";
         if( strength != null){
             if ("warning".equals(strength)){
@@ -97,48 +110,15 @@ public class Recommendation {
         
         String NUMMONTHS = "\"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\"";
         
-                
-            if (toParse.indexOf("-") != -1 && toParse.indexOf("-") != 0 ){ //between style
-                String[] betweenVals = toParse.split("-");
-                if (betweenVals.length == 2 ){
-                    //int lower = Integer.parseInt(betweenVals[0]);
-                    //int upper = Integer.parseInt(betweenVals[1]);
-                    list.add(new DSCondition("getLastDateRecordedInMonths", measurement, ">=", betweenVals[0]));
-                    list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "<=", betweenVals[1]));
-                    if (text == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
-                    }
-                } 
-
-            }else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
-                toParse = toParse.replaceFirst("&gt;","");
-                toParse = toParse.replaceFirst(">","");
-                
-                int gt = Integer.parseInt(toParse);
-                
-                list.add(new DSCondition("getLastDateRecordedInMonths", measurement, ">", ""+gt));  
-                if ( text == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
-                }
-            }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
-                toParse = toParse.replaceFirst("&lt;","");
-                toParse = toParse.replaceFirst("<","");
-                
-                int lt = Integer.parseInt(toParse);           
-                list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "<=", ""+lt));
-                if ( text == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
-                    }
-                
-            }else if (!toParse.equals("")){ // less than style
-                int eq = Integer.parseInt(toParse); 
-                list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "==", ""+eq));
-                if ( text == null){
-                         consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+"\" hasn'taaaaa been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\";";
-                    }
-            }
         
-        if ( text != null){
+        for(RecommendationCondition cond: getRecommendationCondition()){
+             cond.getRuleBaseElement(list,measurement);
+        }
+        
+        ////////88888
+        if (text == null || text.trim().equals("")){
+             consequence ="m.add"+consequenceType+"(\""+measurement+"\",\""+measurement+" hasn't been reviewed in \"+m.getLastDateRecordedInMonths(\""+measurement+"\")+\" months\");";
+        }else if( text != null){
             String txt = text;
             log.debug("TRY TO REPLACE $NUMMONTHS:"+txt.indexOf("$NUMMONTHS")+" WITH "+NUMMONTHS+  " "+txt);
             
@@ -154,13 +134,13 @@ public class Recommendation {
         return ruleElement;
     }
 
-    public String getMonthrange() {
-        return monthrange;
-    }
-
-    public void setMonthrange(String monthrange) {
-        this.monthrange = monthrange;
-    }
+//    public String getMonthrange() {
+//        return monthrange;
+//    }
+//
+//    public void setMonthrange(String monthrange) {
+//        this.monthrange = monthrange;
+//    }
 
     public String getStrength() {
         return strength;
@@ -181,15 +161,28 @@ public class Recommendation {
     
     public Element getFlowsheetXML(){
         Element e = new Element("recommendation");
-            e.setAttribute("monthrange",monthrange);
+        //    e.setAttribute("monthrange",monthrange);
          if (strength != null){
             e.setAttribute("strength",strength) ;
          }
          if (text != null){
-            e.setText(text);
+             e.setAttribute("message",text) ;
+         }
+        
+         log.debug("Number of Conditions "+getRecommendationCondition().size());
+         for(RecommendationCondition cond : getRecommendationCondition() ){
+             e.addContent(cond.getFlowsheetXML());//a cond.getFlowsheetXML();
          }
        
          return e;
+    }
+
+    public List<RecommendationCondition> getRecommendationCondition() {
+        return recommendationCondition;
+    }
+
+    public void setRecommendationCondition(List<RecommendationCondition> recommendationCondition) {
+        this.recommendationCondition = recommendationCondition;
     }
 
 }

@@ -316,13 +316,39 @@ div.recommendations li{
                     if (dsR != null) {
                         for (Recommendation e : dsR) { count++; 
                         %>     
-                            Month Range: <input type="text" name="monthrange<%=count%>" value="<%=e.getMonthrange()%>"/>  
                             Strength:   <select name="strength<%=count%>">
-                                <option value="recommendation"     >Recommendation</option>
-                                <option value="warning">Warning</option>
-                                </select>
-                                Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />
-
+                                            <option value="recommendation"     >Recommendation</option>
+                                            <option value="warning">Warning</option>
+                                        </select>
+                            Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />    
+                                
+                               <ul style="list-style-type: none;" >
+                               <%
+                               List<RecommendationCondition> conds = e.getRecommendationCondition() ;
+                               int condCount = 0;
+                               for(RecommendationCondition cond:conds){condCount++;%>
+                                 
+                               <li><select name="type<%=count%>c<%=condCount%>" >   
+                                        <option value="monthrange"        <%=s("monthrange", cond.getType())%>     >Month Range</option>
+                                        <option value="lastValueAsInt"    <%=s("lastValueAsInt",cond.getType())%>  >Last Int Value </option>   
+                                   </select>
+                                   
+                                   Param: <input type="text" name="param<%=count%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
+                                   Value: <input type="text" name="value<%=count%>c<%=condCount%>" value="<%=cond.getValue()%>" />
+                               </li>
+                                 
+                               <%} condCount++;%>
+                              
+                               <li><select name="type<%=count%>c<%=condCount%>" >   
+                                        <option value="monthrange"         >Month Range</option>
+                                        <option value="lastValueAsInt"     >Last Int Value </option>   
+                                   </select>
+                                   
+                                   Param: <input type="text" name="param<%=count%>c<%=condCount%>"  />
+                                   Value: <input type="text" name="value<%=count%>c<%=condCount%>"  />
+                               </li>
+                               </ul>
+                                    
                             <br/> 
                         <%  
                         }
@@ -330,13 +356,29 @@ div.recommendations li{
                     count++;
                     %>
                                        
-                    Month Range: <input type="text" name="monthrange<%=count%>"/>  
+                    NEW<br>
                     Strength:   <select name="strength<%=count%>">
-                        <option value="recommendation">Recommendation</option>
-                        <option value="warning">Warning</option>
-                    </select>
-                    Text: <input type="text" name="text<%=count%>" length="100"/>
-                    
+                                    <option value="recommendation"     >Recommendation</option>
+                                    <option value="warning">Warning</option>
+                                </select>
+                                Text: <input type="text" name="text<%=count%>" length="100"   />    
+                                
+                               <ul style="list-style-type: none;" >
+                             
+                              
+                               <li><select name="type<%=count%>c1" >   
+                                        <option value="monthrange"         >Month Range</option>
+                                        <option value="lastValueAsInt"     >Last Int Value </option>   
+                                   </select>
+                                   
+                                   Param: <input type="text" name="param<%=count%>c1"  />
+                                   Value: <input type="text" name="value<%=count%>c1"  />
+                               </li>
+                               </ul>
+
+
+
+
                     <br/> 
                 </div>    
                 
@@ -369,9 +411,9 @@ div.recommendations li{
                                    Value: <input type="text" name="value<%=targetCount%>c<%=condCount%>" value="<%=cond.getValue()%>" />
                                </li>
                                  
-                               <%}%>
+                               <%}condCount++;%>
                                
-                               <li><select name="type<%=targetCount%>c1"> 
+                               <li><select name="type<%=targetCount%>c<%=condCount%>"> 
                                        <option value="-1">Not Set</option>
                                         <option value="getDataAsDouble"       >Number Value</option>
                                         <option value="isMale"              > Is Male </option>
@@ -380,8 +422,8 @@ div.recommendations li{
                                         <option value="isDataEqualTo"       >  String </option>
                                    </select>
                                    
-                                   Param: <input type="text" name="param<%=targetCount%>c1" value="" />
-                                   Value: <input type="text" name="value<%=targetCount%>c1" value="" />
+                                   Param: <input type="text" name="param<%=targetCount%>c<%=condCount%>" value="" />
+                                   Value: <input type="text" name="value<%=targetCount%>c<%=condCount%>" value="" />
                                </li>
                                
                                
