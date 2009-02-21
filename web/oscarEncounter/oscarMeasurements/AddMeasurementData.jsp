@@ -24,6 +24,9 @@
  */
 -->
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -34,14 +37,21 @@
   String id = request.getParameter("id");
   String measurement = request.getParameter("measurement");
   String[] measurements = request.getParameterValues("measurement");
+  String temp = request.getParameter("template");
   
- 
+  
+  
+  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+  FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+  MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
+
+    
+          
+  List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
+  MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
+
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
   
-  MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
-  
-  String temp = request.getParameter("template");
-  MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp);
   
   Hashtable existingPrevention = null;
   
