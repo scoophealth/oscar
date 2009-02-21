@@ -27,6 +27,9 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -39,6 +42,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic_no = request.getParameter("demographic_no");
+    String providerNo = (String) session.getAttribute("user");
 
     //PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
     //ArrayList prevList = pdc.getPreventions();
@@ -49,35 +53,37 @@
     Prevention p = pd.getPrevention(demographic_no);
 
     System.out.println("Getting preventions took  "+ (System.currentTimeMillis() - startTimeToGetP) );
-
     boolean dsProblems = false;
 
+    String temp = request.getParameter("template");
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+            
+    FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+    List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
+    
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
-    String temp = request.getParameter("template");
-    MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp);
+    
+    MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
+    
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
-    ArrayList measurements = mFlowsheet.getMeasurementList();
+    List<String> measurementLs = mFlowsheet.getMeasurementList();
+    ArrayList<String> measurements = new ArrayList(measurementLs);
     long startTimeToGetM = System.currentTimeMillis();
-    
-      //for (int i =0; i < measurements.size(); i++){
-      //     String measurement = (String) measurements.get(i);
-      //     System.out.println(":*:measurement= "+measurement);
-      //}
-    
+     
+    System.out.println("Measurements size "+measurements.size());
     mi.getMeasurements(measurements);
     System.out.println("Getting measurements  took  "+ (System.currentTimeMillis() - startTimeToGetM) );
 
     mFlowsheet.getMessages(mi);
 
-
     ArrayList recList = mi.getList();
+    System.out.println("RECLIST "+recList.size());
     
-     //for (int i =0; i < recList.size(); i++){
-     //      String measurement = (String) recList.get(i);
-     //      System.out.println("-------surement= "+measurement);
-     // }
+    for(Object rec: recList){
+        System.out.println("REF : "+rec);
+    }
     
     mFlowsheet.sortToCurrentOrder(recList);
     StringBuffer recListBuffer = new StringBuffer();
@@ -87,24 +93,15 @@
 
 
     String flowSheet = mFlowsheet.getDisplayName();
-
-    ArrayList warnings = mi.getWarnings();
-
-    ArrayList recomendations = mi.getRecommendations();
-
+    ArrayList<String> warnings = mi.getWarnings();
+    ArrayList<String> recomendations = mi.getRecommendations();
     System.out.println(" warnings "+mi.getWarnings().size());
-
     System.out.println(" recommendations "+mi.getRecommendations().size());
-
     ArrayList comments = new ArrayList();
 
 %>
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
 <html:html locale="true">
 
 <head>
@@ -209,7 +206,7 @@ div.leftBox li {
 div.headPrevention {
     position:relative;
     float:left;
-    width:11em;
+    width:12em;
     height:2.9em;
 }
 
@@ -301,6 +298,7 @@ div.recommendations li{
             <tr>
                 <td >
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
+                    <!-- shhh, im a secret.  No really don't use it. I think i might change it a bit before it's released. a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a --> 
                 </td>
                 <td  >&nbsp;
 
@@ -361,17 +359,11 @@ div.recommendations li{
             </div>
         </div>
     </security:oscarSec>
-
-
     <% } %>
 <div>
-
-             <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
-
+   <input type="button" class="DoNotPrint" value="Print" onclick="javascript:window.print()">
 </div>
 </td>
-
-
 
 <td valign="top" class="MainTableRightColumn">    
 <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
@@ -379,12 +371,10 @@ div.recommendations li{
     <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
     <a href="#" onclick="Element.toggle('recomList'); return false;" style="font-size:x-small;" >show/hide</a>
     <ul id="recomList" style="display:none;">
-        <% for (int i = 0 ;i < warnings.size(); i++){
-            String warn = (String) warnings.get(i);%>
+        <% for (String warn : warnings){ %>
         <li style="color: red;"><%=warn%></li>
         <%}%>
-        <% for (int i = 0 ;i < recomendations.size(); i++){
-            String warn = (String) recomendations.get(i);%>
+        <% for (String warn : recomendations ){%>
         <li style="color: black;"><%=warn%></li>
         <%}%>
         <!--li style="color: red;">6 month TD overdue</li>
@@ -402,25 +392,37 @@ div.recommendations li{
 --%>
 <div >
 <%
+    EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
     long startTimeToLoopAndPrint = System.currentTimeMillis();
-    for (int i = 0 ; i < measurements.size(); i++){
-        String measure = (String) measurements.get(i);
-
+    for (String measure:measurements){
         Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measure);
+        FlowSheetItem item =  mFlowsheet.getFlowSheetItem(measure);
+        System.out.println(">>>>"+item.getItemName()+" "+item.isHide());
+        
+        String hidden= "";
+        if (item.isHide()){
+            hidden= "display:none;";
+        }
 
         if (h2.get("measurement_type") != null ){
-
-
             Hashtable h = new Hashtable();
-            EctMeasurementTypesBean mtypeBean = mFlowsheet.getMeasurementInfo(measure);
+            EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measure);//mFlowsheet.getMeasurementInfo(measure);
 
             if(mtypeBean!=null) {
                 h.put("name",mtypeBean.getTypeDisplayName());
                 h.put("desc",mtypeBean.getTypeDesc());
+                
+                System.err.println("mType ="+mtypeBean.getTypeDisplayName()+" hashtable value "+h.get("name"));
+                if (!mtypeBean.getTypeDisplayName().equals(""+h.get("name"))){
+                    System.err.println("\n\n\n\n\n\n");
+                    System.err.println("!!!!mType ="+mtypeBean.getTypeDisplayName()+" hashtable value "+h.get("name"));
+                    System.out.println("DESC "+h.get("desc"));
+                }
+                
             }
             String prevName = (String) h.get("name");
             //Collection aalist = mi.getMeasurementData(measure);
-            ArrayList alist = mi.getMeasurementData(measure);
+            ArrayList<EctMeasurementsDataBean> alist = mi.getMeasurementData(measure);
             //ArrayList alist =  new ArrayList(aalist);//pd.getPreventionData((String)h.get("name"), demographic_no);
             String extraColour = "";
             if(mi.hasRecommendation(measure)){
@@ -434,7 +436,7 @@ div.recommendations li{
             //graphable="no"
             //value_name="Answer"
 %>
-<div class="preventionSection"  style="overflow: auto; " nowrap>
+<div class="preventionSection"  style="overflow: auto;<%=hidden%>" nowrap>
     <div class="headPrevention">
 
         <p <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
@@ -452,9 +454,9 @@ div.recommendations li{
 
         </p>
     </div>
-    <%
-        for (int k = 0; k < alist.size(); k++){
-            EctMeasurementsDataBean mdb = (EctMeasurementsDataBean) alist.get(k);
+    <%  int k = 0;
+        for (EctMeasurementsDataBean mdb:alist){
+            k++;
             mFlowsheet.runRulesForMeasurement(mdb);
             Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
             hdata.put("age",mdb.getDataField());
@@ -500,7 +502,7 @@ div.recommendations li{
 %>
 
 
-<div class="preventionSection"  >
+<div class="preventionSection" style="<%=hidden%>" >
     <div class="headPrevention">
         <p title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]">
             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'../../oscarPrevention/AddPreventionData.jsp?prevention=<%= response.encodeURL( prevType) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( prevType.hashCode() ) %>')">
@@ -601,4 +603,14 @@ div.recommendations li{
         }
         return ret;
     }
+    
+    
+    public void printOutStringLists(List<String> measurements){
+       for (String measurement : measurements){
+          System.out.println(":*:measurement= "+measurement);
+       }
+    }
+    
+    
+    
 %>
