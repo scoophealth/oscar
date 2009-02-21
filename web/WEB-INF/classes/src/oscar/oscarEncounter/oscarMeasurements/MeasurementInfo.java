@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -101,7 +102,7 @@ public class MeasurementInfo {
     }
     
     
-    public void getMeasurements(ArrayList list){
+    public void getMeasurements(List<String> list){
         for (int i =0; i < list.size(); i++){
            String measurement = (String) list.get(i);
            EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demographicNo, measurement);
