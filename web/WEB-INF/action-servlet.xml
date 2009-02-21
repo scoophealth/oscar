@@ -18,6 +18,12 @@
 	<bean name="/dms/ManageDocument" class="org.oscarehr.document.web.ManageDocumentAction">
 		<property name="documentDAO" ref="documentDAO" />
 	</bean>
+        
+        <bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
+		<property name="flowSheetCustomizerDAO" ref="flowSheetCustomizerDAO" />
+	</bean>
+
+
 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
 	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">

@@ -218,6 +218,7 @@
         </form-bean>
         <form-bean name="setProviderNoteStaleDateForm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="dateProperty" type="org.oscarehr.common.model.UserProperty" />
+            <form-property name="dateProperty2" type="org.oscarehr.common.model.UserProperty" />
         </form-bean>        
         <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1800,6 +1801,9 @@
         </action>
         
         
+        <action path="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="success" path="/oscarEncounter/oscarMeasurements/adminFlowsheet/EditFlowsheet.jsp" />
+        </action>
         
         <action path="/dms/ManageDocument" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
            <forward name="success" path="/dms/undocument.jsp"/>
