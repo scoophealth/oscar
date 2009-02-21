@@ -49,6 +49,7 @@ import oscar.oscarEncounter.oscarMeasurements.FlowSheetItem;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.oscarMeasurements.util.Recommendation;
+import oscar.oscarEncounter.oscarMeasurements.util.RecommendationCondition;
 import oscar.oscarEncounter.oscarMeasurements.util.TargetColour;
 import oscar.oscarEncounter.oscarMeasurements.util.TargetCondition;
 
@@ -159,19 +160,63 @@ public class FlowSheetCustomAction extends DispatchAction {
 
             Enumeration<String> en = request.getParameterNames();
 
-            List ds = new ArrayList();
+            ///List ds = new ArrayList();
             List<TargetColour> targets = new ArrayList();
+            List<Recommendation> recommendations = new ArrayList();
             while (en.hasMoreElements()) {
                 String s = en.nextElement();
-                if (s.startsWith("monthrange")) {
-                    String extrachar = s.replaceAll("monthrange", "").trim();
+                if (s.startsWith("strength")) {
+                    String extrachar = s.replaceAll("strength", "").trim();
                     log2.debug("EXTRA CAH " + extrachar);
-                    String mRange = request.getParameter("monthrange" + extrachar);
-                    String strn = request.getParameter("strength" + extrachar);
-                    String dsText = request.getParameter("text" + extrachar);
-                    if (!mRange.trim().equals("")){
-                       ds.add(new Recommendation("" + h.get("measurement_type"), mRange, strn, dsText));
+                    boolean go = true;
+                    Recommendation rec = new Recommendation();
+                    rec.setStrength(request.getParameter(s));
+                    int targetCount = 1;
+                    rec.setText(request.getParameter("text"+extrachar));
+                    List<RecommendationCondition> conds = new ArrayList();
+                    while(go){
+                        String type = request.getParameter("type"+extrachar+"c"+targetCount);
+                        if (type != null){
+                            if (!type.equals("-1")){
+                                String param = request.getParameter("param"+extrachar+"c"+targetCount);
+                                String value = request.getParameter("value"+extrachar+"c"+targetCount);
+                                RecommendationCondition cond = new RecommendationCondition();
+                                cond.setType(type);
+                                cond.setParam(param);
+                                cond.setValue(value);
+                                if (value != null && !value.trim().equals("")){
+                                   conds.add(cond);
+                                }
+                            }
+                        }else{
+                            go = false;
+                        }
+                        targetCount++;
                     }
+                    if (conds.size() > 0){
+                        rec.setRecommendationCondition(conds);
+                        recommendations.add(rec);
+                    }
+                    //////
+                    /*  Strength:   <select name="strength<%=count%>">                      
+                        Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />    
+                        <select name="type<%=count%>c<%=condCount%>" >   
+                        Param: <input type="text" name="param<%=count%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
+                        Value: <input type="text" name="value<%=count%>c<%=condCount%>" value="<%=cond.getValue()%>" />
+                    */           
+                    //////
+                    
+                    
+                    
+                    
+                    
+                    
+//                    String mRange = request.getParameter("monthrange" + extrachar);
+//                    String strn = request.getParameter("strength" + extrachar);
+//                    String dsText = request.getParameter("text" + extrachar);
+//                    if (!mRange.trim().equals("")){
+//                       ds.add(new Recommendation("" + h.get("measurement_type"), mRange, strn, dsText));
+//                    }
                 }else if(s.startsWith("col")){
                     String extrachar = s.replaceAll("col", "").trim();
                     log2.debug("EXTRA CHA "+extrachar);
@@ -190,7 +235,9 @@ public class FlowSheetCustomAction extends DispatchAction {
                                 cond.setType(type);
                                 cond.setParam(param);
                                 cond.setValue(value);
-                                conds.add(cond);
+                                if(value !=null && !value.trim().equals("")){
+                                   conds.add(cond);
+                                }
                             }
                         }else{
                             go = false;
@@ -204,7 +251,7 @@ public class FlowSheetCustomAction extends DispatchAction {
                 }
             }
             item.setTargetColour(targets);
-            item.setRecommendations(ds);
+            item.setRecommendations(recommendations);
             
             
             
