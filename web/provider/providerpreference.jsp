@@ -1,20 +1,17 @@
-
 <%
-  
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String provider_name = (String) session.getAttribute("userlastname")+", "+(String) session.getAttribute("userfirstname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
 
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*"
-	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.OscarProperties" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ include file="../admin/dbconnection.jsp" %>
 <!--  
 /*
  * 
@@ -48,13 +45,10 @@ String [][] dbQueries=new String[][] {
 apptMainBean.doConfigure(dbParams,dbQueries);
 %>
 
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="provider.providerpreference.title" /></title>
-</head>
+<head><title><bean:message key="provider.providerpreference.title"/></title></head>
 
 <html:html locale="true">
-<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache" >
 
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
@@ -128,7 +122,16 @@ function checkTypeInAll() {
 	return checkin;
 }
 
-
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
+  var popup=window.open(page, "<bean:message key="provider.providerpreference.titlePopup"/>", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 
 function isNumeric(strString) {
     var validNums = "0123456789";
@@ -152,68 +155,55 @@ function showHideBillPref() {
 
 </script>
 
-<body bgproperties="fixed" onLoad="setfocus();showHideBillPref();"
-	topmargin="0" leftmargin="0" rightmargin="0">
-<FORM NAME="UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp"
-	onSubmit="return(checkTypeInAll())">
-<table border=0 cellspacing=0 cellpadding=0 width="100%">
-	<tr bgcolor="<%=deepcolor%>">
-		<th><font face="Helvetica"><bean:message
-			key="provider.providerpreference.description" /></font></th>
-	</tr>
+<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
+<FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
+<table border=0 cellspacing=0 cellpadding=0 width="100%" >
+  <tr bgcolor="<%=deepcolor%>"> 
+      <th><font face="Helvetica"><bean:message key="provider.providerpreference.description"/></font></th>
+  </tr>
 </table>
 
 
-<table BORDER="0" WIDTH="100%">
-	<tr BGCOLOR="<%=weakcolor%>">
-		<td width="20%">
-		<div align="right"><font face="arial"><bean:message
-			key="provider.preference.formStartHour" />:</font></div>
-		</td>
-		<td width="20%"><INPUT TYPE="TEXT" NAME="start_hour"
-			VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25"
-			HEIGHT="20" border="0" hspace="2" size="8" maxlength="2"> <font
-			size="-2"><bean:message key="provider.preference.hr" /></font></td>
-		<td width="20%">
-		<div align="right"><font face="arial"><bean:message
-			key="provider.preference.formEndHour" /><font size='-2' color='red'>(<=23)</font>
-		:</font></div>
-		</td>
-		<td width="25%"><INPUT TYPE="TEXT" NAME="end_hour"
-			VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20"
-			border="0" hspace="2" size="8" maxlength="2"> <font
-			size="-2"><bean:message key="provider.preference.hr" /></font></td>
-	</tr>
-	<tr BGCOLOR="<%=weakcolor%>">
-		<td width="20%">
-		<div align="right"><font face="arial"><bean:message
-			key="provider.preference.formPeriod" />:</font></div>
-		</td>
-		<td width="20%"><INPUT TYPE="TEXT" NAME="every_min"
-			VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20"
-			border="0" hspace="2" size="8" maxlength="2"> <font
-			size="-2"><bean:message key="provider.preference.min" /></font></td>
-		<td width="20%">
-		<div align="right"><font face="arial"><a href=#
-			onClick="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;">
-		<font size="-2">(<bean:message
-			key="provider.providerpreference.viewedit" />)</font><bean:message
-			key="provider.preference.formGroupNo" /></a>:</font></div>
-		</td>
-		<td width="25%"><INPUT TYPE="TEXT" NAME="mygroup_no"
-			VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="30"
-			HEIGHT="20" border="0" size="12" maxlength="10"></td>
-	</tr>
+        <table BORDER="0" WIDTH="100%">
+          <tr BGCOLOR="<%=weakcolor%>"> 
+            <td width="20%"> 
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formStartHour"/>:</font></div>
+            </td>
+            <td width="20%"> 
+              <INPUT TYPE="TEXT" NAME="start_hour" VALUE='<%=request.getParameter("start_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
+              <font size="-2"><bean:message key="provider.preference.hr"/></font> </td>
+            <td width="20%"> 
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formEndHour"/><font size='-2' color='red'>(<=23)</font> :</font></div>
+            </td>
+            <td width="25%"> 
+              <INPUT TYPE="TEXT" NAME="end_hour" VALUE='<%=request.getParameter("end_hour")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
+              <font size="-2"><bean:message key="provider.preference.hr"/></font></td>
+          </tr>
+          <tr  BGCOLOR="<%=weakcolor%>"> 
+            <td width="20%"> 
+              <div align="right"><font face="arial"><bean:message key="provider.preference.formPeriod"/>:</font></div>
+            </td>
+            <td width="20%"> 
+              <INPUT TYPE="TEXT" NAME="every_min" VALUE='<%=request.getParameter("every_min")%>' WIDTH="25" HEIGHT="20" border="0" hspace="2" size="8" maxlength="2" >
+              <font size="-2"><bean:message key="provider.preference.min"/></font> </td>
+            <td width="20%"> 
+              <div align="right"><font face="arial"><a href=# onClick ="popupPage(360,680,'providercontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall' );return false;"> 
+                <font size="-2">(<bean:message key="provider.providerpreference.viewedit"/>)</font><bean:message key="provider.preference.formGroupNo"/></a>:</font></div>
+            </td>
+            <td width="25%"> 
+              <INPUT TYPE="TEXT" NAME="mygroup_no" VALUE='<%=request.getParameter("mygroup_no")%>' WIDTH="30" HEIGHT="20" border="0" size="12" maxlength="10">
+            </td>
+          </tr>
 	<caisi:isModuleLoad moduleName="ticklerplus">
-		<!-- check box of new-tickler-warnning-windows -->
-		<tr BGCOLOR="<%=weakcolor%>">
-			<td width="20%"></td>
-			<td width="40%">
-			<div align="right"><font face="arial">New Tickler
-			Warning Window:</font></div>
-			</td>
-			<td width="20%">
-			<%  String myCheck1 = "";
+          <!-- check box of new-tickler-warnning-windows -->
+          <tr BGCOLOR="<%=weakcolor%>"> 
+            <td width="20%"> 
+            </td>
+            <td width="40%"> 
+              <div align="right"><font face="arial">New Tickler Warning Window:</font></div>
+            </td>
+            <td width="20%"> 
+             <%  String myCheck1 = "";
              	 String myCheck2 = "";
                  String myValue ="";
                   if((request.getParameter("new_tickler_warning_window")).equals("enabled"))
@@ -223,21 +213,26 @@ function showHideBillPref() {
                   { myCheck1 = "unchecked";
               	  	  myCheck2 = "checked";}
      
-               %> <input type="radio" name="new_tickler_warning_window"
-				value="enabled" <%= myCheck1 %>> Enabled <br>
-			<input type="radio" name="new_tickler_warning_window"
-				value="disabled" <%= myCheck2 %>> Disabled</td>
-			<td width="20%"></td>
-		</tr>
-
-		<!-- check box of the default PMM window -->
-		<tr BGCOLOR="<%=weakcolor%>">
-			<td width="20%"></td>
-			<td width="40%">
-			<div align="right"><font face="arial">Default PMM:</font></div>
-			</td>
-			<td width="20%">
-			<%  String myCheck3 = "";
+               %>
+              
+   				<input type="radio" name="new_tickler_warning_window" value="enabled" <%= myCheck1 %> > Enabled
+				<br>
+				<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %> > Disabled
+   				
+            </td>
+            <td width="20%"> 
+            </td>
+          </tr>
+          
+          <!-- check box of the default PMM window -->
+          <tr BGCOLOR="<%=weakcolor%>"> 
+            <td width="20%"> 
+            </td>
+            <td width="40%"> 
+              <div align="right"><font face="arial">Default PMM:</font></div>
+            </td>
+            <td width="20%"> 
+             <%  String myCheck3 = "";
              	 String myCheck4 = "";                 
                   if((request.getParameter("default_pmm")).equals("enabled"))
                   { myCheck3 = "checked";
@@ -246,143 +241,127 @@ function showHideBillPref() {
                   { myCheck3 = "unchecked";
               	  	  myCheck4 = "checked";}
      
-               %> <input type="radio" name="default_pmm" value="enabled"
-				<%= myCheck3 %>> Enabled <br>
-			<input type="radio" name="default_pmm" value="disabled"
-				<%= myCheck4 %>> Disabled</td>
-			<td width="20%"></td>
-		</tr>
+               %>
+              
+   				<input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %> > Enabled
+				<br>
+				<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %> > Disabled
+   				
+            </td>
+            <td width="20%"> 
+            </td>
+          </tr>
+          
+          
+          
+      </caisi:isModuleLoad>
+      
+              <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=request.getParameter("provider_no")%>'>
+              <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
+              <INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
+              <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
 
-
-
-	</caisi:isModuleLoad>
-
-	<INPUT TYPE="hidden" NAME="provider_no"
-		VALUE='<%=request.getParameter("provider_no")%>'>
-	<INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
-	<INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
-	<INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>
-
-</table>
+        </table>
 
 <table width="100%">
-	<tr bgcolor="<%=deepcolor%>">
-		<TD align="center"><INPUT TYPE="submit"
-			VALUE='<bean:message key="provider.providerpreference.btnSubmit"/>'
-			SIZE="7"> <INPUT TYPE="RESET"
-			VALUE='<bean:message key="global.btnClose"/>'
-			onClick="window.close();"></TD>
-	</tr>
+  <tr bgcolor="<%=deepcolor%>">
+    <TD align="center">
+      <INPUT TYPE="submit" VALUE='<bean:message key="provider.providerpreference.btnSubmit"/>' SIZE="7">
+      <INPUT TYPE = "RESET" VALUE ='<bean:message key="global.btnClose"/>' onClick="window.close();"></TD>
+  </tr>
 </TABLE>
 
 <table width="100%" BGCOLOR="eeeeee">
-	<oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
-		<tr>
-			<TD align="center"><a href=#
-				onClick="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable
-			OSCAR CME UI</a> &nbsp;&nbsp;&nbsp;
-		</tr>
-	</oscar:oscarPropertiesCheck>
-	<tr>
-		<TD align="center"><a href=#
-			onClick="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message
-			key="provider.btnChangePassword" /></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
+     <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
+	<tr> 
+    <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
+  </tr>
+   </oscar:oscarPropertiesCheck>
+  <tr> 
+    <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
    <tr> 
     <TD align="center">  <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting1.jsp?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=URLEncoder.encode(provider_name)%>');return false;" title="Holiday and Schedule Setting" ><bean:message key="provider.btnScheduleSetting"/></a> 
-      &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a-->
-		</td>
-	</tr>
-	<tr>
-		<td bgcolor="#ffffff">&nbsp;</td>
-	</tr>
-	<tr>
-		<td align="center"><a href=#
-			onClick="popupPage(230,860,'providerSignature.jsp');return false;"><bean:message
-			key="provider.btnEditSignature" /></a></td>
-	</tr>
-	<oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no"
-		defaultVal="true">
-		<tr>
-			<td align="center">
-			<% String br = OscarProperties.getInstance().getProperty("billregion");
-   if (br.equals("BC")) { %> <a href=#
-				onClick="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;"><bean:message
-				key="provider.btnBillPreference" /></a> <% } else { %> <a href=#
-				onClick="showHideBillPref();return false;"><bean:message
-				key="provider.btnBillPreference" /></a> <% } %>
-			</td>
-		</tr>
-		<tr>
-			<td align="center">
-			<div id="billingONpref"><bean:message
-				key="provider.labelDefaultBillForm" />: <select
-				name="default_servicetype">
-				<option value="no">-- no --</option>
-				<%  ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_pref_defaultbill");
+      &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a--> </td>
+  </tr>
+  <tr>
+     <td bgcolor="#ffffff">&nbsp;
+        
+     </td>
+  </tr>
+  <tr>
+    <td align="center"><a href=# onClick ="popupPage(230,860,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
+    </td>
+  </tr>
+  <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no" defaultVal="true">
+  <tr>
+    <td align="center">
+<% String br = OscarProperties.getInstance().getProperty("billregion");
+   if (br.equals("BC")) { %>
+	<a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnBillPreference"/></a>
+<% } else { %>
+	<a href=# onClick ="showHideBillPref();return false;"><bean:message key="provider.btnBillPreference"/></a>
+<% } %>
+    </td>
+  </tr>
+  <tr>
+      <td align="center">
+	  <div id="billingONpref">
+          <bean:message key="provider.labelDefaultBillForm"/>: 
+	  <select name="default_servicetype">
+	      <option value="no">-- no --</option>
+<%  ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_pref_defaultbill");
     if (rs.next()) {
         ResultSet rs1 = apptMainBean.queryResults("list_bills_servicetype");
         while (rs1.next()) { %>
-				<option value="<%=rs1.getString("servicetype")%>"
-					<%=rs1.getString("servicetype").equals(apptMainBean.getString(rs,"default_servicetype"))?"selected":""%>>
-				<%=apptMainBean.getString(rs1,"servicetype_name")%></option>
-				<%  }	} 
+	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(apptMainBean.getString(rs,"default_servicetype"))?"selected":""%>>
+		<%=apptMainBean.getString(rs1,"servicetype_name")%>
+	      </option>
+<%  }	} 
     apptMainBean.closePstmtConn(); 
 %>
-			</select></div>
-			</td>
-		</tr>
-
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'providerFax.jsp');return false;"><bean:message
-				key="provider.btnEditFaxNumber" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message
-				key="provider.btnEditColour" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message
-				key="provider.btnEditStaleDate" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=viewMyDrugrefId');return false;"><bean:message
-				key="provider.btnSetmyDrugrefID" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultationRequestCuffOffDate');return false;"><bean:message
-				key="provider.btnSetConsultationCutoffTimePeriod" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultationRequestTeamWarning');return false;"><bean:message
-				key="provider.btnSetConsultationTeam" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=viewWorkLoadManagement');return false;"><bean:message
-				key="provider.btnSetWorkLoadManagement" /></a>
-		</tr>
-		<tr>
-			<td align="center"><a href=#
-				onClick="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultPasteFmt');return false;"><bean:message
-				key="provider.btnSetConsultPasteFmt" /></a>
-		</tr>
-	</oscar:oscarPropertiesCheck>
-	<%
+	  </select>	    
+	  </div>
+      </td>
+  </tr>
+  
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=view&provider_no=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnEditStaleDate"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewMyDrugrefId');return false;"><bean:message key="provider.btnSetmyDrugrefID"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultationRequestCuffOffDate');return false;"><bean:message key="provider.btnSetConsultationCutoffTimePeriod"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultationRequestTeamWarning');return false;"><bean:message key="provider.btnSetConsultationTeam"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewWorkLoadManagement');return false;"><bean:message key="provider.btnSetWorkLoadManagement"/></a></td>
+      </tr>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewConsultPasteFmt');return false;"><bean:message key="provider.btnSetConsultPasteFmt"/></a></td>
+      </tr>
+      <% if(OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
+      <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewOntarioMDId');return false;"><bean:message key="provider.btnSetmyOntarioMD"/></a></td>
+      </tr>
+      <%}%>
+  </oscar:oscarPropertiesCheck>
+  <%
     if( OscarProperties.getInstance().getProperty("MY_OSCAR", "").equalsIgnoreCase("yes") ) {
   %>
-	<tr>
-		<td align="center"><a href=#
-			onClick="popupPage(230,860,'providerIndivoIdSetter.jsp');return false;"><bean:message
-			key="provider.btnSetIndivoId" /></a>
-	</tr>
-	<%             
+        <tr>
+            <td align="center"><a href=# onClick ="popupPage(230,860,'providerIndivoIdSetter.jsp');return false;"><bean:message key="provider.btnSetIndivoId"/></a>
+        </tr>
+  <%             
     }
   %>
 
