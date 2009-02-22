@@ -1,13 +1,13 @@
 <%@ page language="java"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
-<%@ page
-	import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
+<%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
 
 
 <%
@@ -110,7 +110,14 @@ function goDOC(){
 	var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;          
 	popupDrugOfChoice(720,700,docURL);                               
     }
+}    
+
+
+function goOMD(){
+  	var docURL = "../common/OntarioMDRedirect.jsp?keyword=eCPS&params="+document.RxSearchDrugForm.searchString.value;          
+	popupDrugOfChoice(743,817,docURL);                               
 }     
+
 
 function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
     var page = varpage;
@@ -364,7 +371,7 @@ function load() {
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 								<%= drug.getRxDate() %> </a></td>
 								<td><a <%= styleColor%>
-									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 
 
@@ -489,7 +496,11 @@ function load() {
 							<html:text styleId="searchString" property="searchString"
 								size="16" maxlength="16" /></td>
 							<td width=100><a href="javascript:goDOC();">Drug of
-							Choice</a></td>
+							Choice</a>
+                                                        <% if(OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
+                                                        <a href="javascript:goOMD();">OMD Lookup</a>
+                                                        <%}%>
+                                                        </td>
 							<td><oscar:oscarPropertiesCheck
 								property="drugref_route_search" value="on">
 								<bean:message key="SearchDrug.drugSearchRouteLabel" />
