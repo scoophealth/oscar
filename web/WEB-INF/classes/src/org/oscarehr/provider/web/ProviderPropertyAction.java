@@ -196,6 +196,103 @@ public class ProviderPropertyAction extends DispatchAction {
     /////
     
     
+    
+    /*ontario md*/
+    public ActionForward viewOntarioMDId(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+                               
+         DynaActionForm frm = (DynaActionForm)actionform;
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_USERNAME);
+         UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_PASSWORD);
+         
+         if (prop == null){
+             prop = new UserProperty();
+         }
+         
+         if (prop2 == null){
+             prop2 = new UserProperty();
+         }
+         
+         //request.setAttribute("propert",propertyToSet);
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("dateProperty2",prop2);
+         
+         
+         request.setAttribute("providertitle","provider.setOntarioMD.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setOntarioMD.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setOntarioMD.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setOntarioMD.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setOntarioMD.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setOntarioMD.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveOntarioMDId");
+         
+         frm.set("dateProperty", prop);
+         return actionmapping.findForward("gen");
+     }
+
+    
+    public ActionForward saveOntarioMDId(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+         String provider = (String) request.getSession().getAttribute("user");
+         //System.out.println("provider # "+provider);
+         DynaActionForm frm = (DynaActionForm)actionform;
+         UserProperty  UdrugrefId = (UserProperty)frm.get("dateProperty");         
+         String drugrefId = "";
+
+         if (UdrugrefId != null){
+             drugrefId = UdrugrefId.getValue();
+         }   
+         
+         UserProperty prop = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_USERNAME);
+         
+         if (prop ==null){
+             prop = new UserProperty();
+             prop.setName(UserProperty.ONTARIO_MD_USERNAME);
+             prop.setProviderNo(provider);
+         }
+         prop.setValue(drugrefId);
+         
+         this.userPropertyDAO.saveProp(prop);
+         
+         
+         UserProperty  UdrugrefId2 = (UserProperty)frm.get("dateProperty2");         
+         String drugrefId2 = "";
+
+         if (UdrugrefId2 != null){
+             drugrefId2 = UdrugrefId2.getValue();
+         }   
+         
+         UserProperty prop2 = this.userPropertyDAO.getProp(provider, UserProperty.ONTARIO_MD_PASSWORD);
+         
+         if (prop2 ==null){
+             prop2 = new UserProperty();
+             prop2.setName(UserProperty.ONTARIO_MD_PASSWORD);
+             prop2.setProviderNo(provider);
+         }
+         prop2.setValue(drugrefId2);
+         
+         this.userPropertyDAO.saveProp(prop2);
+         
+         
+         request.setAttribute("status", "success");
+         request.setAttribute("dateProperty",prop);
+         request.setAttribute("providertitle","provider.setOntarioMD.title"); //=Set myDrugref ID
+         request.setAttribute("providermsgPrefs","provider.setOntarioMD.msgPrefs"); //=Preferences"); //
+         request.setAttribute("providermsgProvider","provider.setOntarioMD.msgProvider"); //=myDrugref ID
+         request.setAttribute("providermsgEdit","provider.setOntarioMD.msgEdit"); //=Enter your desired login for myDrugref
+         request.setAttribute("providerbtnSubmit","provider.setOntarioMD.btnSubmit"); //=Save
+         request.setAttribute("providermsgSuccess","provider.setOntarioMD.msgSuccess"); //=myDrugref Id saved
+         request.setAttribute("method","saveOntarioMDId");
+         return actionmapping.findForward("gen");
+     }
+    /*ontario md*/
+    
     public ActionForward viewConsultationRequestCuffOffDate(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest request,
