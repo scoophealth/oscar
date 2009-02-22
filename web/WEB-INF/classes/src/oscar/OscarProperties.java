@@ -57,7 +57,7 @@ public class OscarProperties extends Properties {
 			e.printStackTrace();
 		}
 	}
-
+        
 	/**
 	 * @return OscarProperties the instance of OscarProperties
 	 */
@@ -91,6 +91,18 @@ public class OscarProperties extends Properties {
 		System.out.println("OSCAR PROPS CONSTRUCTOR");
 	}
 
+        
+        /*
+         * Check to see if the properties to see if that property exists.
+         */
+        public boolean hasProperty(String key){
+            boolean prop = false;
+            String propertyValue = getProperty(key);
+            if (propertyValue != null) {
+                    prop = true;
+            }
+            return prop;
+        }
 	/**
 	 * Will check the properties to see if that property is set and if it's set to the given value.
 	 * If it is method returns true if not method returns false.
