@@ -107,6 +107,9 @@ if(session.getValue("user") == null)
 			<input type="hidden" name="method" value="<c:out value="${method}"/>">
 			<% if (request.getAttribute("dropOpts") == null) { %>
 			<html:text property="dateProperty.value" />
+                            <%if ( request.getAttribute("dateProperty2") != null ){%>
+                                <html:text property="dateProperty2.value" />
+                            <%}%>
 			<% }else{ %>
 			<html:select property="dateProperty.value">
 				<html:options collection="dropOpts" property="value"
