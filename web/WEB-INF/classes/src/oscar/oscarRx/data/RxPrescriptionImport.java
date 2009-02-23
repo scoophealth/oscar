@@ -1,4 +1,3 @@
-  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -34,6 +33,7 @@ public class RxPrescriptionImport {
     String demographicNo = "";
     String rxDate = "";
     String endDate = "";
+    String writtenDate = "";
     String BN = "";
     int takemin = 0;
     int takemax = 0;
@@ -59,13 +59,14 @@ public class RxPrescriptionImport {
     int patientCompliance = 0;
     
     
-    public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate, String BN, String regionalId, String frequencyCode,
-	    String duration, String quantity, int repeat, String lastRefillDate, String special, String route, String drugForm, String createDate,
-	    String dosage, int takemin, int takemax, String unit, boolean longTerm, boolean pastMed, int patientCompliance, int seq_no) {
+    public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate, String writtenDate, String BN, String regionalId,
+	    String frequencyCode, String duration, String quantity, int repeat, String lastRefillDate, String special, String route, String drugForm,
+	    String createDate, String dosage, int takemin, int takemax, String unit, boolean longTerm, boolean pastMed, int patientCompliance, int seq_no) {
 	this.providerNo = providerNo;
 	this.demographicNo = demographicNo;
 	this.rxDate = rxDate;
 	this.endDate = endDate;
+	this.writtenDate = writtenDate;
 	this.BN = BN;
 	this.takemin = takemin;
 	this.takemax = takemax;
@@ -89,10 +90,11 @@ public class RxPrescriptionImport {
     
     public void Save() throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, BN, takemin, takemax, regional_identifier, " +
-		"freqcode, duration, durunit, quantity, special, route, drug_form, create_date, dosage, unit, `repeat`, " +
-		"last_refill_date, nosubs, prn, archived, GCN_SEQNO, long_term, past_med, patient_compliance, custom_instructions) VALUES ('" +
-		this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + 
+	String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, written_date, BN, " +
+		"takemin, takemax, regional_identifier, freqcode, duration, durunit, quantity, special, " +
+		"route, drug_form, create_date, dosage, unit, `repeat`, last_refill_date, nosubs, prn, " +
+		"archived, GCN_SEQNO, long_term, past_med, patient_compliance, custom_instructions) VALUES ('" +
+		this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + this.writtenDate + "','" +
 		this.BN + "'," + this.takemin + "," + this.takemax + ",'" + this.regionalId + "','" + this.frequencyCode + "','" + this.duration + "','" + 
 		this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + this.route + "','" + this.drugForm + "','" + 
 		this.createDate + "','" + this.dosage + "','" + this.unit + "'," + this.repeat + ",'" + this.lastRefillDate + "'," + 
@@ -109,6 +111,7 @@ public class RxPrescriptionImport {
 		"demographic_no='"	+ this.demographicNo	 + "' AND " +
 		"rx_date='"		+ this.rxDate		 + "' AND " +
 		"end_date='"		+ this.endDate		 + "' AND " +
+		"written_date='"	+ this.writtenDate	 + "' AND " +
 		"BN='"			+ this.BN		 + "' AND " +
 		"takemin="		+ this.takemin		 + " AND "  +
 		"takemax="		+ this.takemax		 + " AND "  +
