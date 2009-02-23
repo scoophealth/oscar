@@ -927,8 +927,8 @@ div.demographicWrapper {
 							<li>Age:<b><%=age%></b> &nbsp; <bean:message
 								key="demographic.demographiceditdemographic.formDOB" />:<b>(<%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)</b>
 							</li>
-							<li>Language: <b><%= apptMainBean.getString(apptMainBean.getString(rs,"preferred_lang"))%></b>
-							<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
+							<li>Language: <b><%= apptMainBean.getString(rs,"official_lang")%></b>
+						<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
                                                         CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
                                                         if  (countryCode != null){
                                                     %> Country Of
@@ -936,7 +936,12 @@ div.demographicWrapper {
                                                     }
                                                 %>
 							</li>
-							<%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
+						<% String sp_lang = apptMainBean.getString(rs,"spoken_lang");
+						   if (sp_lang!=null && sp_lang.length()>0) { %>
+							<li>Spoken Language: <b><%=sp_lang%></b>
+							</li>
+						<% }
+						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
                                               String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS"); 
                                               fieldJSP+= "View.jsp";  
                                             %>
@@ -1182,11 +1187,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    </td>
 							  <td align="right"><b>Language: </b> </td>
 							    <td align="left">
-					<% String lang = apptMainBean.getString(rs,"preferred_lang"); %>
-								<select name="preferred_lang">
+					<% String lang = apptMainBean.getString(rs,"official_lang"); %>
+								<select name="official_lang">
 								    <option value="English" <%=lang.equals("English")?"selected":""%> >English</option>
 								    <option value="French" <%=lang.equals("French")?"selected":""%> >French</option>
 								</select>
+								&nbsp;&nbsp;
+								<b>Spoken: </b>
+								<input name="spoken_lang" size="15" value="<%=apptMainBean.getString(rs,"spoken_lang")%>"/>
 							    </td>
 							</tr>
 							<%

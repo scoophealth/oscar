@@ -407,7 +407,7 @@ function checkTitleSex() {
 </td></tr>
 <tr><td>
 <form method="post" name="adddemographic" action="demographiccontrol.jsp"  onsubmit="return checkFormTypeIn()">
-<table border="1" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
+<table border="0" cellpadding="1" cellspacing="0" width="100%" bgcolor="#EEEEFF">
     <tr>
       <td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formLastName"/><font color="red">:</font> </b></td>
       <td align="left">
@@ -419,6 +419,16 @@ function checkTitleSex() {
       </td>
     </tr>
     <tr>
+	<td align="right"><b>Language<font color="red">:</font></b></td>
+	<td align="left">
+	    <select name="official_lang">
+		<option value="English">English</option>
+		<option value="French">French</option>
+	    </select>
+	    &nbsp;&nbsp;
+	    <b>Spoken:</b>
+	    <input name="spoken_lang" size="15" />
+	</td>
 	<td align="right"><b>Title<font color="red">:</font></b></td>
 	<td align="left">
 	    <select name="title" onchange="checkTitleSex();">
@@ -434,13 +444,6 @@ function checkTitleSex() {
 		<option value="SEN">SEN</option>
 		<option value="SGT">SGT</option>
 		<option value="SR">SR</option>
-	    </select>
-	</td>
-	<td align="right"><b>Language<font color="red">:</font></b></td>
-	<td align="left">
-	    <select name="preferred_lang">
-		<option value="English">English</option>
-		<option value="French">French</option>
 	    </select>
 	</td>
     </tr>
