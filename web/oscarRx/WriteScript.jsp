@@ -62,7 +62,7 @@
 </logic:equal>
 
 <%
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+RxSessionBean bean = (RxSessionBean)pageContext.findAttribute("bean");
 int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
@@ -671,16 +671,17 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
     }
     
     function prepareOutsideProvider() {
-	if (frm.outsideProvider.value.length>0) $('ocheck').checked=true;
+	if (frm.outsideProviderName.value.length>0) $('ocheck').checked=true;
 	showHideOutsideProvider();
     }
     
     function showHideOutsideProvider() {
 	if ($('ocheck').checked) {
 	    $('otext').show();
-	    frm.outsideProvider.focus();
+	    frm.outsideProviderName.focus();
 	} else {
-	    frm.outsideProvider.value = "";
+	    frm.outsideProviderName.value = "";
+	    frm.outsideProviderOhip.value = "";
 	    $('otext').hide();
 	}
     }
@@ -792,17 +793,19 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 
 
 // define current form
-oscar.oscarRx.pageUtil.RxWriteScriptForm thisForm = (oscar.oscarRx.pageUtil.RxWriteScriptForm)request.getAttribute("RxWriteScriptForm");
+RxWriteScriptForm thisForm = (RxWriteScriptForm)request.getAttribute("RxWriteScriptForm");
 
 
 if(bean.getStashIndex() > -1){ //new way
-    oscar.oscarRx.data.RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
-    oscar.oscarRx.data.RxDrugData drugData = new oscar.oscarRx.data.RxDrugData();
+    RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
+    RxDrugData drugData = new RxDrugData();
     thisForm.setDemographicNo(bean.getDemographicNo());
-    thisForm.setRxDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
-    thisForm.setEndDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getEndDate()));
+    thisForm.setRxDate(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd"));
+    thisForm.setEndDate(RxUtil.DateToString(rx.getEndDate(),"yyyy-MM-dd"));
+    thisForm.setWrittenDate(RxUtil.DateToString(rx.getWrittenDate(),"yyyy-MM-dd"));
+    if (thisForm.getWrittenDate().length()==0) thisForm.setWrittenDate(RxUtil.DateToString(RxUtil.Today()));
     try{
-        System.out.println(oscar.oscarRx.util.RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
+        System.out.println(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
     }catch(Exception e){ e.printStackTrace(); }
     if(! rx.isCustom()){
         thisForm.setGenericName(rx.getGenericName());        
@@ -826,7 +829,7 @@ if(bean.getStashIndex() > -1){ //new way
 
     thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
-    thisForm.setLastRefillDate(oscar.oscarRx.util.RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
+    thisForm.setLastRefillDate(RxUtil.DateToString(rx.getLastRefillDate(),"yyyy-MM-dd") );
     if (isEmpty(thisForm.getLastRefillDate())) thisForm.setLastRefillDate("yyyy-mm-dd");
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
@@ -842,7 +845,8 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
     thisForm.setCustomInstr(rx.getCustomInstr());
-    thisForm.setOutsideProvider(rx.getOutsideProvider());
+    thisForm.setOutsideProviderName(rx.getOutsideProviderName());
+    thisForm.setOutsideProviderOhip(rx.getOutsideProviderOhip());
     
     System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
@@ -856,6 +860,7 @@ int drugId = thisForm.getGCN_SEQNO();
 DemographicNo:   <%= thisForm.getDemographicNo() %><br>
 RxDate:          <%= thisForm.getRxDate() %><br>
 EndDate:         <%= thisForm.getEndDate() %><br>
+WrittenDate:     <%= thisForm.getWrittenDate() %><br>
 GenericName:     <%= thisForm.getGenericName() %><br>
 BrandName:       <%= thisForm.getBrandName() %><br>
 GCN_SEQNO:       <%= thisForm.getGCN_SEQNO() %><br>
@@ -874,9 +879,11 @@ Past Med:	 <%= String.valueOf(thisForm.getPastMed()) %><br>
 Patient Complia: <%= String.valueOf(thisForm.getPatientComplianceY()) %><br>
 Dosage:          <%= thisForm.getDosage() %><br>
 Special:         <%= thisForm.getSpecial() %><br>
-ATC:             <%= thisForm.getAtcCode() %>
-regional ident:  <%= thisForm.getRegionalIdentifier() %>
-Custom Instruct: <%=thisForm.getCustomInstr() %>
+ATC:             <%= thisForm.getAtcCode() %><br>
+regional ident:  <%= thisForm.getRegionalIdentifier() %><br>
+Custom Instruct: <%= thisForm.getCustomInstr() %><br>
+Outside ProName: <%= thisForm.getOutsideProviderName() %><br>
+Outside ProOhip: <%= thisForm.getOutsideProviderOhip() %><br>
 
 <% regionalIdentifier = thisForm.getRegionalIdentifier(); %>
 
@@ -884,9 +891,9 @@ Custom Instruct: <%=thisForm.getCustomInstr() %>
 	<%
 
 // set patient info
-oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(thisForm.getDemographicNo());
+RxPatientData.Patient patient = new RxPatientData().getPatient(thisForm.getDemographicNo());
 
-oscar.oscarRx.data.RxDrugData drug = new oscar.oscarRx.data.RxDrugData();
+RxDrugData drug = new RxDrugData();
 
 java.util.ArrayList brands = null;
 java.util.ArrayList forms  = null;
@@ -908,10 +915,10 @@ Vector comps = (Vector) request.getAttribute("components");
         }          
       }
 
-oscar.oscarRx.data.RxCodesData codesData = new oscar.oscarRx.data.RxCodesData();
+RxCodesData codesData = new RxCodesData();
 
 // create freq list
-oscar.oscarRx.data.RxCodesData.FrequencyCode[] freq = codesData.getFrequencyCodes();
+RxCodesData.FrequencyCode[] freq = codesData.getFrequencyCodes();
 
 // create special instructions list
 String[] spec = codesData.getSpecialInstructions();
@@ -1291,11 +1298,15 @@ int i;
 						</tr>
 						<tr>
 						    <td colspan="5">
-							Prescribed by Outside Provider: 
-							<span id="otext"><html:text property="outsideProvider" /></span>
-							<input type="checkbox" id="ocheck" onclick="javascript:showHideOutsideProvider();" />
+							Prescribed by Outside Provider 
+							<input type="checkbox" id="ocheck" onclick="javascript:showHideOutsideProvider();" /> &nbsp;
+							<span id="otext">
+							    <b>Name:</b> <html:text property="outsideProviderName" /> &nbsp;
+							    <b>OHIP No:</b> <html:text property="outsideProviderOhip" />
+							</span>
 						    </td>
 						</tr>
+						<tr><td colspan="5">Prescription Written Date: <html:text property="writtenDate" />
 					</table>
 					</td>
 				</tr>
@@ -1318,8 +1329,8 @@ int i;
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:addWarning();" value="FillWarning" /-->
 					<br>
-					<!-- peice Went Here --> <%//oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
-                          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allerg = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
+					<!-- peice Went Here --> <%//RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) request.getAttribute("ALLERGIES"); 
+                          RxPatientData.Patient.Allergy[] allerg = (RxPatientData.Patient.Allergy[]) bean.getAllergyWarnings(atcCode);
                           if (allerg != null && allerg.length > 0){ 
                             for (int i = 0 ; i < allerg.length; i++){  %>
 					<div
@@ -1386,8 +1397,8 @@ int i;
 								<logic:iterate id="rx" name="bean" property="stash"
 									length="stashSize">
 									<%
-                            oscar.oscarRx.data.RxPrescriptionData.Prescription rx2
-                                = ((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx);
+                            RxPrescriptionData.Prescription rx2
+                                = ((RxPrescriptionData.Prescription)rx);
 
                             if(i==bean.getStashIndex()){ 
                                 %>
