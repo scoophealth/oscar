@@ -28,16 +28,18 @@ import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.lang.time.DateUtils;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.client.CommunityIssueWs;
+import org.oscarehr.caisi_integrator.ws.client.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityWsService;
+import org.oscarehr.caisi_integrator.ws.client.IssueTransfer;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
@@ -166,14 +168,41 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<CachedDemographicIssue> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
+	public List<IssueTransfer> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
 	{
 		@SuppressWarnings("unchecked")
 		DemographicWs demographicWs = getDemographicWs(facilityId);
-		Object resultsObj = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);
-		List<CachedDemographicIssue> results = (List<CachedDemographicIssue>)resultsObj;
+		List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);;
+		
+		// this is done for cached lists
 		// cloned so alterations don't affect the cached data
-		return (new ArrayList<CachedDemographicIssue>(results));
+		return (new ArrayList<IssueTransfer>(results));
+	}
+	
+	public CommunityIssueWs getCommunityIssueWs(int facilityId) throws MalformedURLException {
+		Facility facility = getLocalFacility(facilityId);
+
+		CommunityIssueWsService service = new CommunityIssueWsService(buildURL(facility, "CommunityIssueService"));
+		CommunityIssueWs port = service.getCommunityIssueWsPort();
+
+		CxfClientUtils.configureClientConnection(port);
+		addAuthenticationInterceptor(facility, port);
+
+		return (port);
+	}
+
+	public ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) throws MalformedURLException
+	{
+		Facility facility = facilityDao.find(facilityId);
+		if (facility.isIntegratorEnabled())
+		{
+			CommunityIssueWs communityIssueWs = getCommunityIssueWs(facilityId);
+			return (ArrayList<String>)communityIssueWs.getCommunityIssueCodeList(type);
+		}
+		else 
+		{
+			return null;
+		}
 	}
 	
 	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
