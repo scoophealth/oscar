@@ -35,6 +35,7 @@ public final class RxWriteScriptForm extends ActionForm {
     int demographicNo = 0;
     String rxDate = null;       //cnv to Date
     String endDate = null;      //cnv to Date
+    String writtenDate = null;	//cnv to Date
     String GN = null;
     String BN = null;
     int GCN_SEQNO = 0;
@@ -62,7 +63,8 @@ public final class RxWriteScriptForm extends ActionForm {
     String unitName = null;
     String route = null;
     String dosage = null;
-    String outsideProvider = null;
+    String outsideProviderName = null;
+    String outsideProviderOhip = null;
     
     
     public String getAction() {
@@ -103,6 +105,14 @@ public final class RxWriteScriptForm extends ActionForm {
     
     public void setEndDate(String RHS) {
         this.endDate = RHS;
+    }
+    
+    public String getWrittenDate() {
+        return this.writtenDate;
+    }
+    
+    public void setWrittenDate(String RHS) {
+        this.writtenDate = RHS;
     }
     
     public String getGenericName() {
@@ -296,6 +306,7 @@ public final class RxWriteScriptForm extends ActionForm {
         this.demographicNo = 0;
         this.rxDate = null;
         this.endDate = null;
+	this.writtenDate = null;
         this.BN = null;
         this.GCN_SEQNO = 0;
         this.customName = null;
@@ -316,6 +327,8 @@ public final class RxWriteScriptForm extends ActionForm {
 	this.pastMed = false;
 	this.patientComplianceY = false;
 	this.patientComplianceN = false;
+	this.outsideProviderName = null;
+	this.outsideProviderOhip = null;
     }
     
     
@@ -434,11 +447,19 @@ public final class RxWriteScriptForm extends ActionForm {
         this.dosage = dosage;
     }
     
-    public String getOutsideProvider() {
-	return outsideProvider;
+    public String getOutsideProviderName() {
+	return outsideProviderName;
     }
     
-    public void setOutsideProvider(String outsideProvider) {
-	this.outsideProvider = outsideProvider;
+    public void setOutsideProviderName(String outsideProviderName) {
+	this.outsideProviderName = outsideProviderName;
+    }
+    
+    public String getOutsideProviderOhip() {
+	return outsideProviderOhip;
+    }
+    
+    public void setOutsideProviderOhip(String outsideProviderOhip) {
+	this.outsideProviderOhip = outsideProviderOhip;
     }
 }
