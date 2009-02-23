@@ -320,13 +320,12 @@ public class ImportDemographicDataAction2 extends Action {
 	    
 	    DemographicData dd = new DemographicData();
 	    DemographicExt dExt = new DemographicExt();
-	    demoRes = dd.addDemographic(""/*title*/, lastName, firstName, address, city, province, postalCode, homePhone, workPhone,
-					year_of_birth, month_of_birth, date_of_birth, hin, versionCode, roster_status, patient_status,
-					date_joined, chart_no, ""/*preferred_lang*/, providerNo, sex, 
-					end_date, eff_date, ""/*pcn_indicator*/, hc_type, ""/*hc_renew_date*/,
-					""/*family_doctor*/, email, ""/*pin*/, 
-					""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, 
-					""/*citizenship*/, sin);
+	    demoRes = dd.addDemographic(""/*title*/, lastName, firstName, address, city, province, postalCode,
+			homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode,
+			roster_status, patient_status, date_joined, chart_no, ""/*official_lang*/, ""/*spoken_lang*/,
+			providerNo, sex, end_date, eff_date, ""/*pcn_indicator*/, hc_type, ""/*hc_renew_date*/,
+			""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/,
+			""/*sourceOfIncome*/, ""/*citizenship*/, sin);
 	    demoNo = demoRes.getId();
 	    if (demoNo!=null)
 	    {
@@ -384,7 +383,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    String cDemoNo = dd.getDemoNoByNamePhoneEmail(cFirstName, cLastName, homePhone, workPhone, cEmail);
 		    if (cDemoNo.equals("")) {   //add new demographic
 			demoRes = dd.addDemographic("", cLastName, cFirstName, "", "", "", "", homePhone, workPhone, "0001", "01", "01", "", "",
-						"", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
+						"", "", "", "", "", "", "", "F", "", "", "", "", "", "", cEmail, "", "", "", "", "", "", "");
 			cDemoNo = demoRes.getId();
 			if (!workExt.equals("")) dExt.addKey("", cDemoNo, "wPhoneExt", workExt);
 			if (!homeExt.equals("")) dExt.addKey("", cDemoNo, "hPhoneExt", homeExt);

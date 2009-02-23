@@ -286,14 +286,14 @@ public class DemographicData {
 		    db.getString(rs,"hin"),		db.getString(rs,"ver"),
 		    db.getString(rs,"roster_status"),	db.getString(rs,"patient_status"),
 		    db.getString(rs,"date_joined"),	db.getString(rs,"chart_no"),
-		    db.getString(rs,"preferred_lang"),  db.getString(rs,"provider_no"),
-		    db.getString(rs,"sex"),		db.getString(rs,"end_date"),
-		    db.getString(rs,"eff_date"),	db.getString(rs,"pcn_indicator"),
-		    db.getString(rs,"hc_type"),		db.getString(rs,"hc_renew_date"),
-		    db.getString(rs,"family_doctor"),	db.getString(rs,"alias"),
-		    db.getString(rs,"previousAddress"),	db.getString(rs,"children"),
-		    db.getString(rs,"sourceOfIncome"),	db.getString(rs,"citizenship"),
-		    db.getString(rs,"sin"));
+		    db.getString(rs,"official_lang"),	db.getString(rs,"spoken_lang"),
+		    db.getString(rs,"provider_no"),	db.getString(rs,"sex"),
+		    db.getString(rs,"end_date"),	db.getString(rs,"eff_date"),
+		    db.getString(rs,"pcn_indicator"),	db.getString(rs,"hc_type"),
+		    db.getString(rs,"hc_renew_date"),	db.getString(rs,"family_doctor"),
+		    db.getString(rs,"alias"),		db.getString(rs,"previousAddress"),
+		    db.getString(rs,"children"),	db.getString(rs,"sourceOfIncome"),
+		    db.getString(rs,"citizenship"),	db.getString(rs,"sin"));
             }
             
             rs.close();
@@ -381,7 +381,8 @@ public class DemographicData {
         protected String patient_status;
         protected String date_joined   ;
         protected String chart_no      ;
-	protected String preferred_lang;
+	protected String official_lang ;
+	protected String spoken_lang   ;
         protected String provider_no   ;
         protected String sex           ;
         protected String end_date      ;
@@ -412,11 +413,12 @@ public class DemographicData {
 			      String year_of_birth,  String month_of_birth,  String date_of_birth, 
 		              String hin,	     String ver,	     String roster_status,
 			      String patient_status, String date_joined,     String chart_no,
-			      String preferred_lang, String provider_no,     String sex,
-			      String end_date,	     String eff_date,	     String pcn_indicator,
-			      String hc_type,	     String hc_renew_date,   String family_doctor,
-			      String alias,	     String previousAddress, String children,
-			      String sourceOfIncome, String citizenship,     String sin)
+			      String official_lang,  String spoken_lang,     String provider_no,
+			      String sex,	     String end_date,	     String eff_date,
+			      String pcn_indicator,  String hc_type,	     String hc_renew_date,
+			      String family_doctor,  String alias,	     String previousAddress,
+			      String children,	     String sourceOfIncome,  String citizenship,
+			      String sin)
 	{
             this.demographic_no = DemographicNo;
 	    this.title = title;
@@ -439,7 +441,7 @@ public class DemographicData {
             this.patient_status= patient_status;
             this.date_joined = date_joined;
             this.chart_no = chart_no;
-	    this.preferred_lang = preferred_lang;
+	    this.official_lang = official_lang;
             this.provider_no = provider_no;
             this.sex = sex;
             this.end_date = end_date;
@@ -491,7 +493,8 @@ public class DemographicData {
                     this.patient_status= db.getString(rs,"patient_status");
                     this.date_joined = db.getString(rs,"date_joined");
                     this.chart_no = db.getString(rs,"chart_no");
-		    this.preferred_lang = db.getString(rs,"preferred_lang");
+		    this.official_lang = db.getString(rs,"official_lang");
+		    this.spoken_lang = db.getString(rs,"spoken_lang");
                     this.provider_no = db.getString(rs,"provider_no");
                     this.sex = db.getString(rs,"sex");
                     this.end_date = db.getString(rs,"end_date");
@@ -642,8 +645,11 @@ public class DemographicData {
         public String getChartNo() {
             return chart_no;
         }
-	public String getPreferredLang() {
-	    return preferred_lang;
+	public String getOfficialLang() {
+	    return official_lang;
+	}
+	public String getSpokenLang() {
+	    return spoken_lang;
 	}
         public String getProviderNo() {
             return provider_no;
@@ -822,16 +828,18 @@ public class DemographicData {
     
     
     ////////////////
-    String add_record_string ="insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email,pin,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,patient_status,date_joined,chart_no,preferred_lang,provider_no,sex,end_date,eff_date,pcn_indicator,hc_type,hc_renew_date,family_doctor,alias,previousAddress,children,sourceOfIncome,citizenship,sin) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-    public DemographicAddResult  addDemographic(String title,	       String last_name,     String first_name,
-			 String address,	String city,	       String province,      String postal,
-			 String phone,		String phone2,	       String year_of_birth, String month_of_birth,
-			 String date_of_birth,	String hin,	       String ver,	     String roster_status,
-			 String patient_status, String date_joined,    String chart_no,	     String preferred_lang,
-			 String provider_no,	String sex,	       String end_date,	     String eff_date,
-			 String pcn_indicator,	String hc_type,	       String hc_renew_date, String family_doctor,
-			 String email,		String pin,	       String alias,	     String previousAddress,
-			 String children,	String sourceOfIncome, String citizenship,   String sin)
+    String add_record_string ="insert into demographic (title,last_name,first_name,address,city,province,postal,phone,phone2,email," +
+			      "pin,year_of_birth,month_of_birth,date_of_birth,hin,ver,roster_status,patient_status,date_joined,chart_no," +
+			      "official_lang,spoken_lang,provider_no,sex,end_date,eff_date,pcn_indicator,hc_type,hc_renew_date," +
+			      "family_doctor,alias,previousAddress,children,sourceOfIncome,citizenship,sin) " +
+			      "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    public DemographicAddResult  addDemographic(String title, String last_name, String first_name, String address,
+	    String city, String province, String postal, String phone, String phone2, String year_of_birth,
+	    String month_of_birth, String date_of_birth, String hin, String ver, String roster_status,
+	    String patient_status, String date_joined, String chart_no,	String official_lang, String spoken_lang,
+	    String provider_no, String sex, String end_date, String eff_date, String pcn_indicator, String hc_type,
+	    String hc_renew_date, String family_doctor, String email, String pin, String alias,	String previousAddress,
+	    String children, String sourceOfIncome, String citizenship, String sin)
     {
         boolean duplicateRecord = false;
         DemographicAddResult ret = new DemographicAddResult();
@@ -907,21 +915,22 @@ public class DemographicData {
                add_record.setString(18,patient_status);
                add_record.setString(19,date_joined);
                add_record.setString(20,chart_no);
-	       add_record.setString(21,preferred_lang);
-               add_record.setString(22,provider_no);
-               add_record.setString(23,sex);
-               add_record.setString(24,end_date);
-               add_record.setString(25,eff_date);
-               add_record.setString(26,pcn_indicator);
-               add_record.setString(27,hc_type);
-               add_record.setString(28,hc_renew_date);
-               add_record.setString(29,family_doctor);
-               add_record.setString(30,alias);
-               add_record.setString(31,previousAddress);
-               add_record.setString(32,children);
-               add_record.setString(33,sourceOfIncome);
-               add_record.setString(34,citizenship);
-               add_record.setString(35,sin);
+	       add_record.setString(21,official_lang);
+	       add_record.setString(22,spoken_lang);
+               add_record.setString(23,provider_no);
+               add_record.setString(24,sex);
+               add_record.setString(25,end_date);
+               add_record.setString(26,eff_date);
+               add_record.setString(27,pcn_indicator);
+               add_record.setString(28,hc_type);
+               add_record.setString(29,hc_renew_date);
+               add_record.setString(30,family_doctor);
+               add_record.setString(31,alias);
+               add_record.setString(32,previousAddress);
+               add_record.setString(33,children);
+               add_record.setString(34,sourceOfIncome);
+               add_record.setString(35,citizenship);
+               add_record.setString(36,sin);
                
                String outString = add_record.toString();
                int firstmark = outString.indexOf(':');

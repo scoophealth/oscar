@@ -76,7 +76,7 @@
 	  //param[0]=Integer.parseIntdemographicaddarecord((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
 	  //temp variables for test/set null dates
 	  String year, month, day;
-      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[32];
+      DBPreparedHandlerParam [] param =new DBPreparedHandlerParam[33];
 	  param[0]=new DBPreparedHandlerParam(request.getParameter("last_name"));
 	  param[1]=new DBPreparedHandlerParam(request.getParameter("first_name"));
 	  param[2]=new DBPreparedHandlerParam(request.getParameter("address"));
@@ -172,7 +172,8 @@
           param[28] =new DBPreparedHandlerParam(request.getParameter("newsletter"));     
           param[29] =new DBPreparedHandlerParam(request.getParameter("sin"));
 	  param[30] =new DBPreparedHandlerParam(request.getParameter("title"));
-	  param[31] =new DBPreparedHandlerParam(request.getParameter("preferred_lang"));
+	  param[31] =new DBPreparedHandlerParam(request.getParameter("official_lang"));
+	  param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"))
           
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].getStringValue().trim(); //last name
@@ -266,7 +267,6 @@
        String dem = apptMainBean.getString(rs,"demographic_no");
        DemographicExt dExt = new DemographicExt();
        String proNo = (String) session.getValue("user");
-//     dExt.addKey(proNo,dem,"language",request.getParameter("language"),"" );  **saved in preferred_lang of demographic
        dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
        dExt.addKey(proNo,dem,"wPhoneExt",request.getParameter("wPhoneExt"),"");
        dExt.addKey(proNo,dem,"demo_cell",request.getParameter("cellphone"),"");
