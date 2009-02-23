@@ -61,37 +61,57 @@ else
     updateParent = "true";  
 
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean"%>
-<%@ include file="../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
+<%@ include file="../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
-<%@ include file="dbTicker.jsp"%>
+<%@ include file="dbTicker.jsp" %>
 <%
 GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);   
   
-  %>
-<% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
+  %><% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
    String xml_appointment_date = request.getParameter("xml_appointment_date")==null?MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay):request.getParameter("xml_appointment_date");
 %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="tickler.ticklerAdd.title" /></title>
-<link rel="stylesheet" href="../billing/billing.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
-<meta http-equiv="Pragma" content="no-cache">
-<script language="JavaScript">
+<title><bean:message key="tickler.ticklerAdd.title"/></title>
+<link rel="stylesheet" href="../billing/billing.css" >
+<style type="text/css">
 <!--
-
+.bodytext
+{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-style: bold;
+  line-height: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+-->
+</style>
+      <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
+      <meta http-equiv="Pragma" content="no-cache">
+      <script language="JavaScript">
+<!--
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self; 
+    }
+  }
+}
 function selectprovider(s) {
   if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
   else a = self.location.href;
@@ -204,137 +224,90 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"
-	topmargin="10" onLoad="setfocus()">
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10" onLoad="setfocus()">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#000000">
-		<td height="40" width="10%"></td>
-		<td width="90%" align="left">
-		<p><font face="Verdana, Arial, Helvetica, sans-serif"
-			color="#FFFFFF"><b><font
-			face="Arial, Helvetica, sans-serif" size="4"><bean:message
-			key="tickler.ticklerAdd.msgTickler" /></font></b></font></p>
-		</td>
-	</tr>
+  <tr bgcolor="#000000"> 
+    <td height="40" width="10%"> </td>
+    <td width="90%" align="left"> 
+      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4"><bean:message key="tickler.ticklerAdd.msgTickler"/></font></b></font> 
+      </p>
+    </td>
+  </tr>
 </table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0"
-	bgcolor="#EEEEFF">
-	<form name="ADDAPPT" method="post"
-		action="../appointment/appointmentcontrol.jsp">
-	<tr>
-		<td width="35%"><font color="#003366"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="2"><b><bean:message
-			key="tickler.ticklerAdd.formDemoName" />: </b></font></font></td>
-		<td colspan="2" width="65%">
-		<div align="left"><INPUT TYPE="TEXT" NAME="keyword" size="25"
-			VALUE="<%=bFirstDisp?"":demoName.equals("")?session.getAttribute("appointmentname"):demoName%>">
-		<input type="submit" name="Submit"
-			value="<bean:message key="tickler.ticklerAdd.btnSearch"/>"></div>
-		</td>
-	</tr>
-	<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name">
-	<INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name">
-	<INPUT TYPE="hidden" NAME="originalpage"
-		VALUE="../tickler/ticklerAdd.jsp">
-	<INPUT TYPE="hidden" NAME="limit1" VALUE="0">
-	<INPUT TYPE="hidden" NAME="limit2" VALUE="5">
-	<!--input type="hidden" name="displaymode" value="TicklerSearch" -->
-	<INPUT TYPE="hidden" NAME="displaymode" VALUE="Search ">
+<table width="100%" border="0" cellspacing="0" cellpadding="0"bgcolor="#EEEEFF">
+ <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+<tr> 
+      <td width="35%"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b><bean:message key="tickler.ticklerAdd.formDemoName"/>: </b></font></font></td>
+      <td colspan="2" width="65%">
+<div align="left"><INPUT TYPE="TEXT" NAME="keyword" size="25" VALUE="<%=bFirstDisp?"":demoName.equals("")?session.getAttribute("appointmentname"):demoName%>">
+   	 <input type="submit" name="Submit" value="<bean:message key="tickler.ticklerAdd.btnSearch"/>">
+  </div>
+</td>
+    </tr>
+  <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
+				      <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" >
+				      <INPUT TYPE="hidden" NAME="originalpage" VALUE="../tickler/ticklerAdd.jsp" >
+				      <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
+				      <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
+              <!--input type="hidden" name="displaymode" value="TicklerSearch" -->
+              <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search "> 
 
-	<% ChartNo = bFirstDisp?"":request.getParameter("chart_no")==null?"":request.getParameter("chart_no"); %>
-	<INPUT TYPE="hidden" NAME="appointment_date" VALUE="2002-10-01"
-		WIDTH="25" HEIGHT="20" border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="status" VALUE="t" WIDTH="25" HEIGHT="20"
-		border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="start_time" VALUE="10:45" WIDTH="25"
-		HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
-	<INPUT TYPE="hidden" NAME="type" VALUE="" WIDTH="25" HEIGHT="20"
-		border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="duration" VALUE="15" WIDTH="25" HEIGHT="20"
-		border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="end_time" VALUE="10:59" WIDTH="25"
-		HEIGHT="20" border="0" hspace="2" onChange="checkTimeTypeIn(this)">
+<% ChartNo = bFirstDisp?"":request.getParameter("chart_no")==null?"":request.getParameter("chart_no"); %>
+   <INPUT TYPE="hidden" NAME="appointment_date" VALUE="2002-10-01" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+       <INPUT TYPE="hidden" NAME="status" VALUE="t"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="hidden" NAME="start_time" VALUE="10:45" WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)">
+              <INPUT TYPE="hidden" NAME="type" VALUE="" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="hidden" NAME="duration" VALUE="15" WIDTH="25" HEIGHT="20" border="0" hspace="2" >
+              <INPUT TYPE="hidden" NAME="end_time" VALUE="10:59" WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)">
+       
 
-
-	<input type="hidden" name="demographic_no" readonly value="" width="25"
-		height="20" border="0" hspace="2">
-	<input type="hidden" name="location" tabindex="4" value="" width="25"
-		height="20" border="0" hspace="2">
-	<input type="hidden" name="resources" tabindex="5" value="" width="25"
-		height="20" border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="user_id" readonly VALUE='oscardoc, doctor'
-		WIDTH="25" HEIGHT="20" border="0" hspace="2">
-	<INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
-	<INPUT TYPE="hidden" NAME="createdatetime" readonly
-		VALUE="2002-10-1 17:53:50" WIDTH="25" HEIGHT="20" border="0"
-		hspace="2">
-	<INPUT TYPE="hidden" NAME="provider_no" VALUE="115">
-	<INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
-	<INPUT TYPE="hidden" NAME="remarks" VALUE="">
-	<input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>" />
-	<input type="hidden" name="updateParent" value="<%=updateParent%>" />
-	</form>
+ <input type="hidden" name="demographic_no"  readonly value="" width="25" height="20" border="0" hspace="2">
+         <input type="hidden" name="location"  tabindex="4" value="" width="25" height="20" border="0" hspace="2">
+              <input type="hidden" name="resources"  tabindex="5" value="" width="25" height="20" border="0" hspace="2">
+              <INPUT TYPE="hidden" NAME="user_id" readonly VALUE='oscardoc, doctor' WIDTH="25" HEIGHT="20" border="0" hspace="2">
+     	        <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
+              <INPUT TYPE="hidden" NAME="createdatetime" readonly VALUE="2002-10-1 17:53:50" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+              <INPUT TYPE="hidden" NAME="provider_no" VALUE="115">
+              <INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
+              <INPUT TYPE="hidden" NAME="remarks" VALUE="">
+              <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>"/>
+              <input type="hidden" name="updateParent" value="<%=updateParent%>"/>
+ </form>
 </table>
 <table width="100%" border="0" bgcolor="#EEEEFF">
-	<form name="serviceform" method="post"><input type="hidden"
-		name="parentAjaxId" value="<%=parentAjaxId%>" /> <input type="hidden"
-		name="updateParent" value="<%=updateParent%>" />
-	<tr>
-		<td width="35%">
-		<div align="left"><font color="#003366"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong><bean:message
-			key="tickler.ticklerAdd.formChartNo" />:</strong> </font></font></div>
-		</td>
-		<td colspan="2">
-		<div align="left"><INPUT TYPE="hidden" NAME="demographic_no"
-			VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=ChartNo%></div>
-		</td>
-	</tr>
+  <form name="serviceform" method="post" >
+      <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>"/>
+      <input type="hidden" name="updateParent" value="<%=updateParent%>"/>
+     <tr> 
+      <td width="35%"> <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong><bean:message key="tickler.ticklerAdd.formChartNo"/>:</strong> </font></font></div></td>
+      <td colspan="2"> <div align="left"><INPUT TYPE="hidden" NAME="demographic_no" VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=ChartNo%></div></td>
+    </tr>
 
-	<tr>
-		<td><font color="#003366" size="2"
-			face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message
-			key="tickler.ticklerAdd.formServiceDate" />:</strong></font></td>
-		<td><input type="text" name="xml_appointment_date"
-			value="<%=xml_appointment_date%>"> <font color="#003366"
-			size="1" face="Verdana, Arial, Helvetica, sans-serif"> <a
-			href="#"
-			onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message
-			key="tickler.ticklerAdd.btnCalendarLookup" /></a> &nbsp; &nbsp; <a
-			href="#" onClick="addMonth(6)"><bean:message
-			key="tickler.ticklerAdd.btn6Month" /></a>&nbsp; &nbsp; <a href="#"
-			onClick="addMonth(12)"><bean:message
-			key="tickler.ticklerAdd.btn1Year" /></a></font></td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td height="21" valign="top"><font color="#003366" size="2"
-			face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message
-			key="tickler.ticklerMain.Priority" /></strong></font></td>
-		<td valign="top"><select name="priority"
-			style="font-face: Verdana, Arial, Helvetica, sans-serif">
-			<option
-				value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message
-				key="tickler.ticklerMain.priority.high" />
-			<option
-				value="<bean:message key="tickler.ticklerMain.priority.normal"/>"
-				SELECTED><bean:message
-				key="tickler.ticklerMain.priority.normal" />
-			<option
-				value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message
-				key="tickler.ticklerMain.priority.low" />
-		</select></td>
-		<td>&nbsp;</td>
-	</tr>
+    <tr> 
+      <td><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerAdd.formServiceDate"/>:</strong></font></td>
+      <td><input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>"> 
+        <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif">
+        <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerAdd.btnCalendarLookup"/></a> &nbsp; &nbsp; 
+        <a href="#" onClick="addMonth(6)"><bean:message key="tickler.ticklerAdd.btn6Month"/></a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(12)"><bean:message key="tickler.ticklerAdd.btn1Year"/></a></font> </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr> 
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/></strong></font></td>
+      <td valign="top"> 
+	<select name="priority" style="font-face:Verdana, Arial, Helvetica, sans-serif">
+ 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message key="tickler.ticklerMain.priority.high"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" SELECTED><bean:message key="tickler.ticklerMain.priority.normal"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message key="tickler.ticklerMain.priority.low"/>	
+     	</select>
+      </td>
+      <td>&nbsp;</td>
+    </tr>
 
-	<tr>
-		<td height="21" valign="top"><font color="#003366" size="2"
-			face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message
-			key="tickler.ticklerMain.taskAssignedTo" /></strong></font></td>
-		<td valign="top"><font
-			face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><select
-			name="task_assigned_to">
-			<%  String proFirst="";
+    <tr> 
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/></strong></font></td>
+      <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><select name="task_assigned_to">           
+            <%  String proFirst="";
                 String proLast="";
                 String proOHIP="";
 
@@ -344,41 +317,32 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
                     proLast = rslocal.getString("last_name");
                     proOHIP = rslocal.getString("provider_no"); 
 
-            %>
-			<option value="<%=proOHIP%>"
-				<%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
-			<%
+            %> 
+            <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
+            <%
                 }      
                 apptMainBean.closePstmtConn();
             %>
-		</select></td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
-		<td height="21" valign="top"><font color="#003366" size="2"
-			face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message
-			key="tickler.ticklerAdd.formReminder" />:</strong></font></td>
-		<td valign="top"><textarea
-			style="font-face: Verdana, Arial, Helvetica, sans-serif"
-			name="textarea" cols="50" rows="10"></textarea></td>
-		<td>&nbsp;</td>
-	</tr>
-
-	<INPUT TYPE="hidden" NAME="user_no" VALUE="<%=user_no%>">
-	<tr>
-		<td><input type="button" name="Button"
-			value="<bean:message key="tickler.ticklerAdd.btnCancel"/>"
-			onClick="window.close()"></td>
-		<td><input type="button" name="Button"
-			value="<bean:message key="tickler.ticklerAdd.btnSubmit"/>"
-			onClick="validate(this.form)"></td>
-		<td></td>
-	</tr>
-	</form>
+          </select></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr> 
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerAdd.formReminder"/>:</strong></font></td>
+      <td valign="top"> <textarea style="font-face:Verdana, Arial, Helvetica, sans-serif"name="textarea" cols="50" rows="10"></textarea></td>
+      <td>&nbsp;</td>
+    </tr>
+ 
+     <INPUT TYPE="hidden" NAME="user_no" VALUE="<%=user_no%>">
+    <tr> 
+      <td><input type="button" name="Button" value="<bean:message key="tickler.ticklerAdd.btnCancel"/>" onClick="window.close()"></td>
+      <td><input type="button" name="Button" value="<bean:message key="tickler.ticklerAdd.btnSubmit"/>" onClick="validate(this.form)"></td>
+      <td></td>
+	  </tr>
+  </form>
 </table>
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
-<p>&nbsp;</p>
-<%@ include file="../demographic/zfooterbackclose.jsp"%>
+  <p>&nbsp; </p>
+<%@ include file="../demographic/zfooterbackclose.jsp" %> 
 
 </body>
 </html:html>
