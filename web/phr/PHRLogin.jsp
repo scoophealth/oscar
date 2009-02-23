@@ -8,14 +8,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>JSP Page</title>
-<link rel="stylesheet" href="phr.css" type="text/css"></link>
-</head>
-<body>
-<div class="objectBlue" style="position: absolute; top: 30%; left: 20%;">
-<jsp:include page="AuthInclude.jsp"></jsp:include></div>
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>JSP Page</title>
+        <link rel="stylesheet" href="phr.css" type="text/css"></link>
+    </head>
+    <body>
+        <div class="objectBlue" style="position: absolute; top: 30%; left: 20%;">
+            <jsp:include page="AuthInclude.jsp"></jsp:include>
+        </div>
+    </body>
 </html>

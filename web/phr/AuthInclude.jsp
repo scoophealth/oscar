@@ -14,12 +14,9 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%--
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
 --%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean"
-	prefix="bean"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-html"
-	prefix="html"%>
-<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic"
-	prefix="logic"%>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
 
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
@@ -36,41 +33,71 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
 request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg")); 
 %>
 
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-	<div class="myoscarLoginElementAuth">Status: <b>Logged in as
-	<%=providerName%></b> (<%=phrAuth.getUserId()%>)<br />
-	<form action="../phr/Logout.do" name="phrLogout" method="POST">
-	<input type="hidden" name="forwardto"
-		value="<%=(String) request.getAttribute("forwardto")%>">
-	<center><a href="javascript:;"
-		onclick="document.forms['phrLogout'].submit();">Logout</a></center>
-	</form>
-	</div>
-	<!--<p style="background-color: #E00000"  title="fade=[on] requireclick=[on] header=[Diabetes Med Changes] body=[<span style='color:red'>no DM Med changes have been recorded</span> </br>]">dsfsdfsdfsdfgsdgsdg</p>-->
-</logic:present>
-<logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
-	<div class="myoscarLoginElementNoAuth">
-	<form action="<%=(String) request.getParameter("pathtophr")%>Login.do"
-		name="phrLogin" method="POST">
-	<%request.setAttribute("phrUserLoginErrorMsg", request.getParameter("phrUserLoginErrorMsg"));
+   <style type="text/css">
+        .myoscarLoginElementNoAuth {
+            border: 0;
+            padding-left: 3px;
+            padding-right: 3px;
+            background-color: #f3e9e9;
+            font-size: 12px;
+        }
+        
+        .myoscarLoginElementAuth {
+            border: 0;
+            padding-left: 3px;
+            padding-right: 3px;
+            background-color: #d9ecd8;
+            font-size: 12px;
+        }
+        .moreInfoBoxoverBody{
+            border: 1px solid #9fbbe8;
+            padding: 1px;
+            padding-left: 3px;
+            padding-right: 3px;
+            border-top: 0px;
+            font-size: 10px;
+            background-color: white;
+        }
+        .moreInfoBoxoverHeader{
+            border: 1px solid #9fbbe8;
+            background-color: #e8ecf3;
+            padding: 2px;
+            padding-left: 3px;
+            padding-right: 3px;
+            border-bottom: 0px;
+            font-size: 10px;
+            color: red;
+        }
+   </style>
+   <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
+       <div class="myoscarLoginElementAuth">
+           Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
+           <form action="../phr/Logout.do" name="phrLogout" method="POST">
+               <input type="hidden" name="forwardto" value="<%=(String) request.getAttribute("forwardto")%>">
+               <center><a href="javascript:;" onclick="document.forms['phrLogout'].submit();">Logout</a></center>
+           </form>
+       </div>
+       <!--<p style="background-color: #E00000"  title="fade=[on] requireclick=[on] header=[Diabetes Med Changes] body=[<span style='color:red'>no DM Med changes have been recorded</span> </br>]">dsfsdfsdfsdfgsdgsdg</p>-->
+   </logic:present>
+   <logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
+        <div class="myoscarLoginElementNoAuth">
+            <form action="<%=(String) request.getParameter("pathtophr")%>Login.do" name="phrLogin" method="POST">
+                <%request.setAttribute("phrUserLoginErrorMsg", request.getParameter("phrUserLoginErrorMsg"));
                 request.setAttribute("phrTeAttributechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg"));%>
-	<logic:present name="phrUserLoginErrorMsg">
-		<div class="phrLoginErrorMsg" style="color: red;"><bean:write
-			name="phrUserLoginErrorMsg" /> <logic:present
-			name="phrTechLoginErrorMsg">
-			<a href="javascript:;"
-				title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More
-			Info</a>
-		</logic:present></div>
-	</logic:present> <logic:notPresent name="phrUserLoginErrorMsg">
+                <logic:present name="phrUserLoginErrorMsg">
+                    <div class="phrLoginErrorMsg" style="color: red;"><bean:write name="phrUserLoginErrorMsg"/> 
+                    <logic:present name="phrTechLoginErrorMsg">
+                    <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a>
+                    </logic:present>
+                    </div> 
+                </logic:present>
+                <logic:notPresent name="phrUserLoginErrorMsg">
                     Login Required.  
-                </logic:notPresent> Status: <b>Not logged in</b><br />
-	<%=providerName%> password: <input type="password" id="phrPassword"
-		name="phrPassword" style="font-size: 8px; width: 40px;"> <a
-		href="javascript: document.forms['phrLogin'].submit()">Login</a> <input
-		type="hidden" name="forwardto"
-		value="<%=(String) request.getParameter("forwardto")%>"></form>
-	</div>
-	<script type="text/javascript" src="../../share/javascript/boxover.js"></script>
-</logic:notPresent>
+                </logic:notPresent>
+                Status: <b>Not logged in</b><br/>
+                <%=providerName%> password: <input type="password" id="phrPassword" name="phrPassword" style="font-size: 8px; width: 40px;"> <a href="javascript: document.forms['phrLogin'].submit()">Login</a>
+                <input type="hidden" name="forwardto" value="<%=(String) request.getParameter("forwardto")%>">
+            </form>
+        </div>
+        <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+   </logic:notPresent>
