@@ -659,7 +659,7 @@ public class ImportDemographicDataAction2 extends Action {
 			providerNo = writeProviderData(personName, personOHIP);
 		    }
 		    
-		    RxPrescriptionImport rpi = new RxPrescriptionImport(providerNo,demoNo,rxDate,endDate,BN,regionalId,frequencyCode,duration,quantity,
+		    RxPrescriptionImport rpi = new RxPrescriptionImport(providerNo,demoNo,rxDate,endDate,""/*writtenDate*/,BN,regionalId,frequencyCode,duration,quantity,
 						repeat,""/*lastRefillDate*/,special,route,""/*drugForm*/,createDate,dosage,0/*takemin*/,0/*takemax*/,unit,
 						false/*longTerm*/,false/*pastMed*/,0/*patientCompliance*/,(i+1));
 		    rpi.Save();
