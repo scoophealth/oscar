@@ -91,6 +91,7 @@ public final class RxWriteScriptAction extends Action {
             }
             
             rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(),"yyyy-MM-dd"));
+	    rx.setWrittenDate(RxUtil.StringToDate(frm.getWrittenDate(),"yyyy-MM-dd"));
             rx.setTakeMin(frm.getTakeMinFloat());
             rx.setTakeMax(frm.getTakeMaxFloat());
             rx.setFrequencyCode(frm.getFrequencyCode());
@@ -110,7 +111,8 @@ public final class RxWriteScriptAction extends Action {
             rx.setRoute(frm.getRoute());
             rx.setCustomInstr(frm.getCustomInstr());
             rx.setDosage(frm.getDosage());
-	    rx.setOutsideProvider(frm.getOutsideProvider());
+	    rx.setOutsideProviderName(frm.getOutsideProviderName());
+	    rx.setOutsideProviderOhip(frm.getOutsideProviderOhip());
 	    rx.setLongTerm(frm.getLongTerm());
 	    rx.setPastMed(frm.getPastMed());
 	    rx.setPatientCompliance(frm.getPatientComplianceY(),frm.getPatientComplianceN());

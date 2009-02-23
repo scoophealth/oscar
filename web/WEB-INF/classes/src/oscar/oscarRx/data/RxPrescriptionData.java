@@ -55,9 +55,10 @@ public class RxPrescriptionData {
             if (rs.next()) {
                 prescription = new Prescription(drugId,
 				db.getString(rs,"provider_no"), rs.getInt("demographic_no"));
-                prescription.setRxDate(rs.getDate("rx_date"));
                 prescription.setRxCreatedDate(rs.getDate("create_date"));
+                prescription.setRxDate(rs.getDate("rx_date"));
                 prescription.setEndDate(rs.getDate("end_date"));
+		prescription.setWrittenDate(rs.getDate("written_date"));
                 prescription.setBrandName(db.getString(rs,"BN"));
                 prescription.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 prescription.setCustomName(db.getString(rs,"customName"));
@@ -86,7 +87,8 @@ public class RxPrescriptionData {
 		prescription.setLongTerm(rs.getBoolean("long_term"));
 		prescription.setPastMed(rs.getBoolean("past_med"));
 		prescription.setPatientCompliance(rs.getInt("patient_compliance"));
-		prescription.setOutsideProvider(db.getString(rs,"outside_provider"));
+		prescription.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		prescription.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
             }
             rs.close();            
             
@@ -110,6 +112,7 @@ public class RxPrescriptionData {
         Prescription prescription = new Prescription(0, providerNo, demographicNo);
         
         prescription.setRxDate(RxUtil.Today());
+	prescription.setWrittenDate(RxUtil.Today());
         prescription.setEndDate(null);
         prescription.setBrandName(favorite.getBN());
         prescription.setGCN_SEQNO(favorite.getGCN_SEQNO());
@@ -144,6 +147,7 @@ public class RxPrescriptionData {
         Prescription prescription = new Prescription(0, providerNo, demographicNo);
         
         prescription.setRxDate(RxUtil.Today());
+	prescription.setWrittenDate(RxUtil.Today());
         prescription.setEndDate(null);
         prescription.setBrandName(rePrescribe.getBrandName());
         prescription.setGCN_SEQNO(rePrescribe.getGCN_SEQNO());
@@ -173,7 +177,8 @@ public class RxPrescriptionData {
 	prescription.setLongTerm(rePrescribe.getLongTerm());
 	prescription.setPastMed(rePrescribe.getPastMed());
 	prescription.setPatientCompliance(rePrescribe.getPatientCompliance());
-	prescription.setOutsideProvider(rePrescribe.getOutsideProvider());
+	prescription.setOutsideProviderName(rePrescribe.getOutsideProviderName());
+	prescription.setOutsideProviderOhip(rePrescribe.getOutsideProviderOhip());
 	
         return prescription;
     }
@@ -200,9 +205,10 @@ public class RxPrescriptionData {
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
                 p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 p.setCustomName(db.getString(rs,"customName"));
@@ -232,7 +238,8 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                 lst.add(p);
             }
             
@@ -273,9 +280,10 @@ public class RxPrescriptionData {
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
                 p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 p.setCustomName(db.getString(rs,"customName"));
@@ -305,7 +313,8 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");                
                 if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
@@ -347,9 +356,10 @@ public class RxPrescriptionData {
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
                 p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 p.setCustomName(db.getString(rs,"customName"));
@@ -378,7 +388,8 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                 p.setPrintDate(rs.getDate("date_printed"));
                 
                 datesRePrinted = db.getString(rs,"dates_reprinted");
@@ -421,9 +432,10 @@ public class RxPrescriptionData {
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
                 p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 p.setCustomName(db.getString(rs,"customName"));
@@ -452,7 +464,8 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                 lst.add(p);
             }
             
@@ -530,9 +543,10 @@ public class RxPrescriptionData {
                 
                 if(b) {
                     p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                    p.setRxDate(rs.getDate("rx_date"));
                     p.setRxCreatedDate(rs.getDate("create_date"));
+                    p.setRxDate(rs.getDate("rx_date"));
                     p.setEndDate(rs.getDate("end_date"));
+		    p.setWrittenDate(rs.getDate("written_date"));
                     p.setBrandName(db.getString(rs,"BN"));
                     p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                     p.setCustomName(db.getString(rs,"customName"));
@@ -561,7 +575,8 @@ public class RxPrescriptionData {
 		    p.setLongTerm(rs.getBoolean("long_term"));
 		    p.setPastMed(rs.getBoolean("past_med"));
 		    p.setPatientCompliance(rs.getInt("patient_compliance"));
-		    p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		    p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		    p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                     
                     if( myOscarEnabled ) {
                         String tmp = indivoSql.replaceFirst("\\?", db.getString(rs,"drugid"));
@@ -621,9 +636,10 @@ public class RxPrescriptionData {
             
             while(rs.next()) {
                 p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxDate(rs.getDate("rx_date"));
                 p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
                 p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
                 p.setBrandName(db.getString(rs,"BN"));
                 p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
                 p.setCustomName(db.getString(rs,"customName"));
@@ -653,7 +669,8 @@ public class RxPrescriptionData {
 		p.setLongTerm(rs.getBoolean("long_term"));
 		p.setPastMed(rs.getBoolean("past_med"));
 		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProvider(db.getString(rs,"outside_provider"));
+		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
                 lst.add(p);
             }
             
@@ -783,10 +800,10 @@ public class RxPrescriptionData {
          *  dates_reprinted text,
          *  textView text);
          */
-        String provider_no    = bean.getProviderNo();
-        int demographic_no        = bean.getDemographicNo();
-    String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "yyyy/MM/dd");
-        String date_printed = date_prescribed;
+        String provider_no     = bean.getProviderNo();
+        int demographic_no     = bean.getDemographicNo();
+	String date_prescribed = oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(),"yyyy/MM/dd");
+	String date_printed    = date_prescribed;
         
         StringBuffer textView = new StringBuffer();
         String retval = null;
@@ -822,7 +839,7 @@ public class RxPrescriptionData {
         textView.append(patient.getAddress()+"\n");
         textView.append(patient.getCity()+" "+patient.getPostal()+"\n");
         textView.append(patient.getPhone()+"\n");
-        textView.append(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")+"\n");
+        textView.append(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(),"MMMM d, yyyy")+"\n");
         
         String txt;
         for(int i=0;i<bean.getStashSize();i++){
@@ -870,9 +887,10 @@ public class Prescription {
     int drugId;
     String providerNo;
     int demographicNo;
-    java.util.Date rxDate = null;
     java.util.Date rxCreatedDate = null;
+    java.util.Date rxDate = null;
     java.util.Date endDate = null;
+    java.util.Date writtenDate = null;
     java.util.Date printDate = null;
     
     int numPrints = 0;
@@ -908,7 +926,8 @@ public class Prescription {
     String route = null;
     String drugForm = null;
     String dosage = null;
-    String outsideProvider = null;
+    String outsideProviderName = null;
+    String outsideProviderOhip = null;
     boolean custom = false;
     private String indivoIdx = null;        //indivo document index for this prescription
     private boolean registerIndivo = false;
@@ -1007,6 +1026,14 @@ public class Prescription {
     
     public void setEndDate(java.util.Date RHS) {
         this.endDate = RHS;
+    }
+    
+    public java.util.Date getWrittenDate() {
+        return this.writtenDate;
+    }
+    
+    public void setWrittenDate(java.util.Date RHS) {
+        this.writtenDate = RHS;
     }
     
     public boolean isCurrent() {
@@ -1283,12 +1310,20 @@ public class Prescription {
         return this.special;
     }
     
-    public String getOutsideProvider() {
-	return this.outsideProvider;
+    public String getOutsideProviderName() {
+	return this.outsideProviderName;
     }
     
-    public void setOutsideProvider(String outsideProvider) {
-	this.outsideProvider = outsideProvider;
+    public void setOutsideProviderName(String outsideProviderName) {
+	this.outsideProviderName = outsideProviderName;
+    }
+    
+    public String getOutsideProviderOhip() {
+	return this.outsideProviderOhip;
+    }
+    
+    public void setOutsideProviderOhip(String outsideProviderOhip) {
+	this.outsideProviderOhip = outsideProviderOhip;
     }
     
     public void setSpecial(String RHS) {
@@ -1580,6 +1615,7 @@ public class Prescription {
                 + "demographic_no = " + this.getDemographicNo() + " AND "
                 + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "' AND "
                 + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "' AND "
+                + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "' AND "
                 + "BN = '" + this.getBrandName() + "' AND "
                 + "GCN_SEQNO = " + this.getGCN_SEQNO() + " AND "
                 + "customName = '" + this.getCustomName() + "' AND "
@@ -1595,7 +1631,8 @@ public class Prescription {
                 + "nosubs = " + this.getNosubsInt() + " AND "
                 + "prn = " + this.getPrnInt() + " AND "
                 + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "' AND "
-		+ "outside_provider = '" + this.getOutsideProvider() + "' AND "
+		+ "outside_provider_name = '" + this.getOutsideProviderName() + "' AND "
+		+ "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "' AND "
                 + "custom_instructions = " + this.getCustomInstr() + " AND "
 		+ "long_term = " + this.getLongTerm() + " AND "
 		+ "past_med = " + this.getPastMed() + " AND "
@@ -1616,14 +1653,16 @@ public class Prescription {
                 // if it doesn't already exist add it.
                 if(this.getDrugId() == 0) {
                     sql = "INSERT INTO drugs (provider_no, demographic_no, "
-                    + "rx_date, end_date, BN, GCN_SEQNO, customName, "
+                    + "rx_date, end_date, written_date, BN, GCN_SEQNO, customName, "
                     + "takemin, takemax, freqcode, duration, durunit, quantity, "
                     + "`repeat`, last_refill_date, nosubs, prn, special, GN, script_no, ATC, "
-		    + "regional_identifier, unit, method, route, drug_form, create_date, outside_provider, "
-		    + "custom_instructions, dosage, unitName, long_term, past_med, patient_compliance) "
+		    + "regional_identifier, unit, method, route, drug_form, create_date, "
+		    + "outside_provider_name, outside_provider_ohip, custom_instructions, "
+		    + "dosage, unitName, long_term, past_med, patient_compliance) "
                     + "VALUES ('" + this.getProviderNo() + "', " + this.getDemographicNo() + ", '"
                     + RxUtil.DateToString(this.getRxDate()) + "', '"
                     + RxUtil.DateToString(this.getEndDate()) + "', '"
+                    + RxUtil.DateToString(this.getWrittenDate()) + "', '"
                     + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + this.getGCN_SEQNO()
                     + ", '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', "
                     + this.getTakeMin() + ", " + this.getTakeMax() + ", '"
@@ -1633,7 +1672,8 @@ public class Prescription {
 		    + this.getNosubsInt() + ", " + this.getPrnInt() + ", '"
                     + RxUtil.replace(this.getSpecial(), "'", "") + "','"+this.getGenericName()+"','"+scriptId+"', '"
                     + this.getAtcCode() +"', '"+this.getRegionalIdentifier()+"','"+this.getUnit()+"','"
-		    + this.getMethod()+"','"+this.getRoute()+"','"+this.getDrugForm()+"',now(),'"+this.getOutsideProvider()+"', "
+		    + this.getMethod()+"','"+this.getRoute()+"','"+this.getDrugForm()+"',now(),'"
+		    + this.getOutsideProviderName()+"','"+this.getOutsideProviderOhip()+"', "
 		    + this.getCustomInstr() + ",'"+this.getDosage()+ "', '"+ this.getUnitName()+"', "
 		    + this.getLongTerm()+", "+this.getPastMed()+", "+this.getPatientCompliance()+")";
                     
@@ -1659,6 +1699,7 @@ public class Prescription {
                 + "demographic_no = " + this.getDemographicNo() + ", "
                 + "rx_date = '" + RxUtil.DateToString(this.getRxDate()) + "', "
                 + "end_date = '" + RxUtil.DateToString(this.getEndDate()) + "', "
+                + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', "
                 + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', "
                 + "GCN_SEQNO = " + this.getGCN_SEQNO() + ", "
                 + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', "
@@ -1680,7 +1721,8 @@ public class Prescription {
                 + "route = '"+this.getRoute()+"', "
                 + "drug_form = '"+this.getDrugForm()+"', "
                 + "dosage = '"+this.getDosage()+"', "
-		+ "outside_provider = '"+this.getOutsideProvider()+"', "
+		+ "outside_provider_name = '"+this.getOutsideProviderName()+"', "
+		+ "outside_provider_ohip = '"+this.getOutsideProviderOhip()+"', "
                 + "custom_instructions = " + this.getCustomInstr()+", " 
                 + "unitName = '" + this.getUnitName() + "', "
 		+ "long_term = " + this.getLongTerm() + ", "
