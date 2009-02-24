@@ -39,7 +39,11 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityWsService;
+import org.oscarehr.caisi_integrator.ws.client.HnrWs;
+import org.oscarehr.caisi_integrator.ws.client.HnrWsService;
 import org.oscarehr.caisi_integrator.ws.client.IssueTransfer;
+import org.oscarehr.caisi_integrator.ws.client.MatchingClientParameters;
+import org.oscarehr.caisi_integrator.ws.client.MatchingClientScore;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWsService;
 import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
@@ -49,10 +53,6 @@ import org.oscarehr.caisi_integrator.ws.client.ReferralWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.hnr.ws.client.HnrWs;
-import org.oscarehr.hnr.ws.client.HnrWsService;
-import org.oscarehr.hnr.ws.client.MatchingClientParameters;
-import org.oscarehr.hnr.ws.client.MatchingClientScore;
 import org.oscarehr.util.FacilityProviderSegmentedTimeClearedHashMap;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
 
@@ -86,7 +86,7 @@ public class CaisiIntegratorManager {
 	/**
 	 * This caching mechanism uses the key=hnrClient.linkingId, value=hnrClient. Note for auditing purposes the cache must be segmented by facility and provider.
 	 */
-	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client> hnrClientCache = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.client.Client>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.client.Client> hnrClientCache = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.client.Client>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
@@ -170,7 +170,6 @@ public class CaisiIntegratorManager {
 
 	public List<IssueTransfer> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
 	{
-		@SuppressWarnings("unchecked")
 		DemographicWs demographicWs = getDemographicWs(facilityId);
 		List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);;
 		
@@ -345,8 +344,8 @@ public class CaisiIntegratorManager {
 		return (potentialMatches);
 	}
 
-	public org.oscarehr.hnr.ws.client.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException {
-		org.oscarehr.hnr.ws.client.Client client = hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
+	public org.oscarehr.caisi_integrator.ws.client.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException {
+		org.oscarehr.caisi_integrator.ws.client.Client client = hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
 
 		if (client == null) {
 			HnrWs hnrWs = getHnrWs(facility.getId());
@@ -357,7 +356,7 @@ public class CaisiIntegratorManager {
 		return (client);
 	}
 
-	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.client.Client hnrClient) throws MalformedURLException {
+	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.caisi_integrator.ws.client.Client hnrClient) throws MalformedURLException {
 		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());

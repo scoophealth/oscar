@@ -52,6 +52,14 @@ public class MiscUtils {
 	public static Calendar setToBeginningOfMonth(Calendar cal)
 	{
 		cal.set(Calendar.DAY_OF_MONTH, 1);
+		return(setToBeginningOfDay(cal));
+	}
+
+	/** 
+	 * This method will set the calenders hour/min/sec//milliseconds all to 0. 
+	 */
+	public static Calendar setToBeginningOfDay(Calendar cal)
+	{
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);

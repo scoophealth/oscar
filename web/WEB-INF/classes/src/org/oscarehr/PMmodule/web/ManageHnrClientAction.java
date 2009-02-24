@@ -4,13 +4,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -40,11 +36,16 @@ public class ManageHnrClientAction {
 			// it might be 0 if some one unlinked the client at the same time you are looking at this screen.
 			if (clientLinks.size() > 0) {
 				ClientLink clientLink = clientLinks.get(0);
-				org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
+				org.oscarehr.caisi_integrator.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
 
 				Demographic demographic = demographicDao.getDemographicById(clientId);
 
-				if (hnrClient.getBirthDate() != null) demographic.setBirthDay(hnrClient.getBirthDate().toGregorianCalendar());
+				if (hnrClient.getBirthDate() != null) 
+					{
+					GregorianCalendar cal=new GregorianCalendar();
+					cal.setTime(hnrClient.getBirthDate());
+					demographic.setBirthDay(cal);
+					}
 				if (hnrClient.getCity() != null) demographic.setCity(hnrClient.getCity());
 				if (hnrClient.getFirstName() != null) demographic.setFirstName(hnrClient.getFirstName());
 
@@ -55,8 +56,8 @@ public class ManageHnrClientAction {
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
 				if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
 
-				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart().toGregorianCalendar().getTime());
-				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd().toGregorianCalendar().getTime());
+				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart());
+				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd());
 
 				if (hnrClient.getImage() != null) {
 					ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -95,7 +96,7 @@ public class ManageHnrClientAction {
 			// were ignoring the anomalie of multiple hnr links as it should never really happen though it's theorietically possible due to lack of atomic updates on this table.
 			List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
 
-			org.oscarehr.hnr.ws.client.Client hnrClient = null;
+			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = null;
 			ClientLink clientLink = null;
 
 			// try to retrieve existing linked client to update
@@ -106,7 +107,7 @@ public class ManageHnrClientAction {
 
 			// can be null if there's no existing link or if the data on the hnr has been revoked of consent
 			if (hnrClient == null) {
-				hnrClient = new org.oscarehr.hnr.ws.client.Client();
+				hnrClient = new org.oscarehr.caisi_integrator.ws.client.Client();
 			}
 
 			// copy any non null data to the HNR if it's validated
@@ -120,21 +121,15 @@ public class ManageHnrClientAction {
 			if (hcInfoValidated) {
 				isAtLeastOneThingValidated = true;
 
-				GregorianCalendar cal = demographic.getBirthDay();
-				if (cal != null) {
-					XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-					hnrClient.setBirthDate(soapCal);
-				}
-
+				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
 				if (demographic.getCity() != null) hnrClient.setCity(demographic.getCity());
 				if (demographic.getFirstName() != null) hnrClient.setFirstName(demographic.getFirstName());
 				if (demographic.getLastName() != null) hnrClient.setLastName(demographic.getLastName());
-
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType());
 				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
-				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(CxfClientUtils.toXMLGregorianCalendar(demographic.getEffDate()));
-				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(CxfClientUtils.toXMLGregorianCalendar(demographic.getHcRenewDate()));
+				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(demographic.getEffDate());
+				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(demographic.getHcRenewDate());
 				if (demographic.getProvince() != null) hnrClient.setProvince(demographic.getProvince());
 				if (demographic.getAddress() != null) hnrClient.setStreetAddress(demographic.getAddress());
 			}

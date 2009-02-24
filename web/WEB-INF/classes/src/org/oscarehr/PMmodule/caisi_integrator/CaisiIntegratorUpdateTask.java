@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +34,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -58,6 +55,7 @@ import org.oscarehr.caisi_integrator.ws.client.FacilityIdDemographicIssueComposi
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.client.FacilityWs;
+import org.oscarehr.caisi_integrator.ws.client.HnrWs;
 import org.oscarehr.caisi_integrator.ws.client.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.client.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.client.ProviderWs;
@@ -79,7 +77,6 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.hnr.ws.client.HnrWs;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.SpringUtils;
 
@@ -308,12 +305,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		BeanUtils.copyProperties(demographicTransfer, demographic);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
-
-		GregorianCalendar birthDate = demographic.getBirthDay();
-		if (birthDate != null) {
-			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(birthDate);
-			demographicTransfer.setBirthDate(soapCal);
-		}
+		demographicTransfer.setBirthDate(demographic.getBirthDay().getTime());
 
 		demographicTransfer.setHinVersion(demographic.getVer());
 		demographicTransfer.setGender(demographic.getSex());
@@ -322,7 +314,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
 		if (clientImage != null) {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
-			demographicTransfer.setPhotoUpdateDate(CxfClientUtils.toXMLGregorianCalendar(clientImage.getUpdate_date()));
+			demographicTransfer.setPhotoUpdateDate(clientImage.getUpdate_date());
 		}
 
 		// send the request
@@ -348,7 +340,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				consentParameters.setConsentToAllNonDomainData(consent.isConsentToAllNonDomainData());
 				consentParameters.setConsentToMentalHealthData(consent.isConsentToMentalHealthData());
 				consentParameters.setConsentToSearches(consent.isConsentToSearches());
-				consentParameters.setCreatedDate(CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
+				consentParameters.setCreatedDate(consent.getCreatedDate());
 
 				demographicService.setCachedDemographicConsent(consentParameters);
 
@@ -356,7 +348,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
 				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
 				if (clientLinks.size() > 0) {
-					hnrService.setHnrClientHidden("Integrator Update Task", clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), CxfClientUtils.toXMLGregorianCalendar(consent.getCreatedDate()));
+					hnrService.setHnrClientHidden("Integrator Update Task", clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), consent.getCreatedDate());
 				}
 			}
 		}
@@ -422,8 +414,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicPrevention.setFacilityPreventionPk(pk);
 			}
 
-			cachedDemographicPrevention.setNextDate(CxfClientUtils.toXMLGregorianCalendar(localPrevention.getNextDate()));
-			cachedDemographicPrevention.setPreventionDate(CxfClientUtils.toXMLGregorianCalendar(localPrevention.getPreventionDate()));
+			cachedDemographicPrevention.setNextDate(localPrevention.getNextDate());
+			cachedDemographicPrevention.setPreventionDate(localPrevention.getPreventionDate());
 
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
 
@@ -466,21 +458,21 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDrug.setBn(drug.getBn());
 				cachedDemographicDrug.setCaisiDemographicId(drug.getDemographicId());
 				cachedDemographicDrug.setCaisiProviderId(drug.getProvider_no());
-				cachedDemographicDrug.setCreateDate(CxfClientUtils.toXMLGregorianCalendar(drug.getCreateDate()));
+				cachedDemographicDrug.setCreateDate(drug.getCreateDate());
 				cachedDemographicDrug.setCustomInstructions(drug.isCustomInstructions());
 				cachedDemographicDrug.setCustomName(drug.getCustomName());
 				cachedDemographicDrug.setDosage(drug.getDosage());
 				cachedDemographicDrug.setDrugForm(drug.getDrugForm());
 				cachedDemographicDrug.setDuration(drug.getDuration());
 				cachedDemographicDrug.setDurUnit(drug.getDurUnit());
-				cachedDemographicDrug.setEndDate(CxfClientUtils.toXMLGregorianCalendar(drug.getEndDate()));
+				cachedDemographicDrug.setEndDate(drug.getEndDate());
 				FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 				pk.setCaisiItemId(drug.getId());
 				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
 				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
 				cachedDemographicDrug.setGcnSeqNo(drug.getGcnSeqNo());
 				cachedDemographicDrug.setGn(drug.getGn());
-				cachedDemographicDrug.setLastRefillDate(CxfClientUtils.toXMLGregorianCalendar(drug.getLastRefillDate()));
+				cachedDemographicDrug.setLastRefillDate(drug.getLastRefillDate());
 				cachedDemographicDrug.setLongTerm(drug.getLongTerm());
 				cachedDemographicDrug.setMethod(drug.getMethod());
 				cachedDemographicDrug.setNoSubs(drug.isNoSubs());
@@ -491,7 +483,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
 				cachedDemographicDrug.setRepeats(drug.getRepeat());
 				cachedDemographicDrug.setRoute(drug.getRoute());
-				cachedDemographicDrug.setRxDate(CxfClientUtils.toXMLGregorianCalendar(drug.getRxDate()));
+				cachedDemographicDrug.setRxDate(drug.getRxDate());
 				cachedDemographicDrug.setScriptNo(drug.getScriptNo());
 				cachedDemographicDrug.setSpecial(drug.getSpecial());
 				cachedDemographicDrug.setTakeMax(drug.getTakeMax());

@@ -412,7 +412,7 @@ public class PreventionData {
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				Date preventionDate = CxfClientUtils.toDate(cachedDemographicPrevention.getPreventionDate());
+				Date preventionDate = cachedDemographicPrevention.getPreventionDate();
 
 				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
 				pItem.setRemoteEntry(true);
@@ -429,7 +429,7 @@ public class PreventionData {
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
 				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-					Date preventionDate = CxfClientUtils.toDate(cachedDemographicPrevention.getPreventionDate());
+					Date preventionDate = cachedDemographicPrevention.getPreventionDate();
 
 					Hashtable h = new Hashtable();
 					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
@@ -448,11 +448,11 @@ public class PreventionData {
 					h.put("type", cachedDemographicPrevention.getPreventionType());
 					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
 					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime()));
-					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime());
+					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()));
+					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
 
 					if (demographicDateOfBirth != null) {
-						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, cachedDemographicPrevention.getPreventionDate().toGregorianCalendar().getTime());
+						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, cachedDemographicPrevention.getPreventionDate());
 						h.put("age", age);
 					}
 					else

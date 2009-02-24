@@ -30,7 +30,7 @@ public class ManageHnrClient {
 	private Demographic demographic = null;
 	private ClientImage clientImage = null;
 	private ClientLink clientLink = null;
-	private org.oscarehr.hnr.ws.client.Client hnrClient = null;
+	private org.oscarehr.caisi_integrator.ws.client.Client hnrClient = null;
 	private boolean pictureValidated = false;
 	private boolean hcInfoValidated = false;
 	private boolean otherValidated = false;
@@ -67,7 +67,7 @@ public class ManageHnrClient {
 		return demographic;
 	}
 
-	public org.oscarehr.hnr.ws.client.Client getHnrClient() {
+	public org.oscarehr.caisi_integrator.ws.client.Client getHnrClient() {
 		return hnrClient;
 	}
 
@@ -85,7 +85,7 @@ public class ManageHnrClient {
 		String date = "";
 
 		if (hnrClient != null && hnrClient.getBirthDate() != null) {
-			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate());
 		}
 
 		return (date);
@@ -95,7 +95,7 @@ public class ManageHnrClient {
 		String date = "";
 
 		if (hnrClient != null && hnrClient.getHinValidStart() != null) {
-			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidStart().toGregorianCalendar());
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidStart());
 		}
 
 		return (date);
@@ -105,7 +105,7 @@ public class ManageHnrClient {
 		String date = "";
 
 		if (hnrClient != null && hnrClient.getHinValidEnd() != null) {
-			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidEnd().toGregorianCalendar());
+			date = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getHinValidEnd());
 		}
 
 		return (date);

@@ -126,7 +126,7 @@ public class ImageRenderingServlet extends HttpServlet {
 			// get image
 			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
 			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-			org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
+			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
 
 			if (hnrClient != null && hnrClient.getImage() != null) {
 				renderImage(response, hnrClient.getImage(), "jpeg");

@@ -4,13 +4,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -20,6 +17,8 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.client.MatchingClientParameters;
+import org.oscarehr.caisi_integrator.ws.client.MatchingClientScore;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.client.MatchingDemographicTransferScore;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
@@ -30,8 +29,6 @@ import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.hnr.ws.client.MatchingClientParameters;
-import org.oscarehr.hnr.ws.client.MatchingClientScore;
 import org.oscarehr.ui.servlet.ImageRenderingServlet;
 import org.oscarehr.util.SpringUtils;
 
@@ -87,7 +84,7 @@ public class ManageLinkedClients {
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
 		if (currentLinks.size() >0 ) {
-			org.oscarehr.hnr.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, currentLinks.get(0).getRemoteLinkId());
+			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, currentLinks.get(0).getRemoteLinkId());
 
 			// can be null if client revoked consent or locked data, link still exists but no records are returned.
 			if (hnrClient != null) {
@@ -120,14 +117,14 @@ public class ManageLinkedClients {
 
 			integratorLinkedDemographicHolder.linked = false;
 			integratorLinkedDemographicHolder.matchingScore = matchingClientScore.getScore();
-			org.oscarehr.hnr.ws.client.Client hnrClient = matchingClientScore.getClient();
+			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = matchingClientScore.getClient();
 			copyHnrClientDataToMatchingScorePlaceholder(integratorLinkedDemographicHolder, hnrClient);
 		}
 	}
 
-	private static void copyHnrClientDataToMatchingScorePlaceholder(LinkedDemographicHolder integratorLinkedDemographicHolder, org.oscarehr.hnr.ws.client.Client hnrClient) {
+	private static void copyHnrClientDataToMatchingScorePlaceholder(LinkedDemographicHolder integratorLinkedDemographicHolder, org.oscarehr.caisi_integrator.ws.client.Client hnrClient) {
 		// copy the data to holder entry
-		if (hnrClient.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate().toGregorianCalendar());
+		if (hnrClient.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(hnrClient.getBirthDate());
 		integratorLinkedDemographicHolder.firstName = StringUtils.trimToEmpty(hnrClient.getFirstName());
 		if (hnrClient.getGender() != null) integratorLinkedDemographicHolder.gender = hnrClient.getGender().name();
 		integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(hnrClient.getHin());
@@ -152,12 +149,7 @@ public class ManageLinkedClients {
 		temp = StringUtils.trimToNull(demographic.getHin());
 		parameters.setHin(temp);
 
-		GregorianCalendar cal=demographic.getBirthDay();
-		if (cal!=null)
-		{
-			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-			parameters.setBirthDate(soapCal);
-		}
+		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay().getTime());
 		
 		return parameters;
 	}
@@ -221,7 +213,7 @@ public class ManageLinkedClients {
 
 	private static void copyDemographicTransferDataToScorePlaceholder(Facility currentFacility, DemographicTransfer demographicTransfer, LinkedDemographicHolder integratorLinkedDemographicHolder) throws MalformedURLException {
 		// copy the data to holder entry
-		if (demographicTransfer.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate().toGregorianCalendar());
+		if (demographicTransfer.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
 		integratorLinkedDemographicHolder.firstName = StringUtils.trimToEmpty(demographicTransfer.getFirstName());
 		integratorLinkedDemographicHolder.gender = StringUtils.trimToEmpty(demographicTransfer.getGender());
 		integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(demographicTransfer.getHin());
@@ -248,12 +240,7 @@ public class ManageLinkedClients {
 		temp = StringUtils.trimToNull(demographic.getHin());
 		parameters.setHin(temp);
 
-		GregorianCalendar cal=demographic.getBirthDay();
-		if (cal!=null)
-		{
-			XMLGregorianCalendar soapCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-			parameters.setBirthDate(soapCal);
-		}
+		if (demographic.getBirthDay()!=null) parameters.setBirthDate(demographic.getBirthDay().getTime());
 		
 		return parameters;
 	}
