@@ -344,10 +344,10 @@ public class RxDrugRef {
      }
      
      private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
-        System.out.println("#CALLDRUGREF-"+procedureName);
+        // System.out.println("#CALLDRUGREF-"+procedureName);
          Object object = null;
          try{
-            System.out.println("server_url :"+server_url);
+            // System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
             object = (Object) server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
