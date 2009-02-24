@@ -349,7 +349,7 @@ public class RxDrugRef {
          try{
             // System.out.println("server_url :"+server_url);
             XmlRpcClientLite server = new XmlRpcClientLite(server_url);
-            object = (Object) server.execute(procedureName, params);
+            object = server.execute(procedureName, params);
          }catch (XmlRpcException exception) {
                 
                 System.err.println("JavaClient: XML-RPC Fault #" +
