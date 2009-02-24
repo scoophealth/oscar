@@ -46,7 +46,7 @@ public class LogAction {
         boolean ret = false;
         DBHelp db = new DBHelp();
         String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
-        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
+        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + StringEscapeUtils.escapeSql(contentId) + "','" + ip + "')";
         try {
             ret = db.updateDBRecord(sql, provider_no);
         } catch (SQLException e) {
@@ -60,12 +60,12 @@ public class LogAction {
         boolean ret = false;
         DBHelp db = new DBHelp();
         String sql = "insert into log (dateTime,provider_no,action,content,contentId,ip) values('";
-        sql += dateTime+"','"+provider_no+"','"+action+"','"+StringEscapeUtils.escapeSql(content)+"','"+contentId+"','"+ip+"')";
+        sql += dateTime+"','"+provider_no+"','"+action+"','"+StringEscapeUtils.escapeSql(content)+"','"+StringEscapeUtils.escapeSql(contentId)+"','"+ip+"')";
         try {
             ret = db.updateDBRecord(sql, provider_no);
         } catch (SQLException e) {
             _logger.error("failed to insert into logging table dateTime " + dateTime + ", providerNo " + provider_no
-			  + ", action " + action + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+			  + ", action " + action + ", content " + content + ", contentId " + StringEscapeUtils.escapeSql(contentId) + ", ip " + ip);
         }
         return ret;
     }
