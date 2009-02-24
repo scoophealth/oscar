@@ -37,8 +37,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
@@ -84,8 +84,8 @@ import oscar.OscarProperties;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
-	private static final Log logger = LogFactory.getLog(CaisiIntegratorUpdateTask.class);
-
+	private static final Logger logger = LogManager.getLogger(CaisiIntegratorUpdateTask.class);
+	
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
@@ -162,8 +162,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 					pushAllFacilityData(facility);
 				}
 			} catch (WebServiceException e) {
-				logger.warn("Error connecting to integrator. " + e.getMessage());
-				logger.debug("Error connecting to integrator.", e);
+				if (CxfClientUtils.isConnectionException(e)) {
+					logger.warn("Error connecting to integrator. " + e.getMessage());
+					logger.debug("Error connecting to integrator.", e);
+				} else {
+					logger.error("Unexpected error.", e);
+				}
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
 			}
@@ -403,7 +407,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<Prevention> localPreventions = preventionDao.findNotDeletedByDemographicId(demographicId);
 		for (Prevention localPrevention : localPreventions) {
 			if (!providerIdsInFacility.contains(localPrevention.getCreatorProviderNo())) continue;
-			
+
 			CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
 			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
 			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
@@ -450,9 +454,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (drugs != null) {
 			for (Drug drug : drugs) {
 				if (!providerIdsInFacility.contains(drug.getProvider_no())) continue;
-				
+
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
-				
+
 				cachedDemographicDrug.setArchived(drug.isArchived());
 				cachedDemographicDrug.setAtc(drug.getAtc());
 				cachedDemographicDrug.setBn(drug.getBn());
@@ -466,7 +470,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDrug.setDuration(drug.getDuration());
 				cachedDemographicDrug.setDurUnit(drug.getDurUnit());
 				cachedDemographicDrug.setEndDate(drug.getEndDate());
-				FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setCaisiItemId(drug.getId());
 				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
 				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
@@ -489,8 +493,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDrug.setTakeMax(drug.getTakeMax());
 				cachedDemographicDrug.setTakeMin(drug.getTakeMin());
 				cachedDemographicDrug.setUnit(drug.getUnit());
-				cachedDemographicDrug.setUnitName(drug.getUnitName());				
-				
+				cachedDemographicDrug.setUnitName(drug.getUnitName());
+
 				drugsToSend.add(cachedDemographicDrug);
 			}
 		}

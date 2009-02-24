@@ -1,16 +1,15 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
+import java.net.ConnectException;
 import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.net.ssl.X509TrustManager;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
+import javax.wsdl.WSDLException;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.service.factory.ServiceConstructionException;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
@@ -59,5 +58,24 @@ public class CxfClientUtils {
 	{
 		Client cxfClient=ClientProxy.getClient(wsPort);
 		cxfClient.getOutInterceptors().add(new AuthenticationOutWSS4JInterceptor(username, password));
+	}
+	
+	public static boolean isConnectionException(Throwable t)
+	{
+		if (t!=null)
+		{
+			Throwable cause=t.getCause();
+			if (cause!=null && cause instanceof ServiceConstructionException)
+			{
+				Throwable causeCause=cause.getCause();
+				if (causeCause!=null && causeCause instanceof WSDLException)
+				{
+					Throwable causeCauseCaise=causeCause.getCause();
+					if (causeCauseCaise!=null && causeCauseCaise instanceof ConnectException) return(true);
+				}
+			}
+		}
+		
+		return(false);
 	}
 }
