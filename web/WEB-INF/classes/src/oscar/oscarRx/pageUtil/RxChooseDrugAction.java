@@ -24,7 +24,6 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,6 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.MessageResources;
 
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -48,10 +46,6 @@ public final class RxChooseDrugAction extends Action {
 				 HttpServletRequest request,
 				 HttpServletResponse response)
 	throws IOException, ServletException {
-
-            // Extract attributes we will need
-            Locale locale = getLocale(request);
-            MessageResources messages = getResources(request);
 
             // Setup variables           
             oscar.oscarRx.pageUtil.RxSessionBean bean =
@@ -70,12 +64,11 @@ public final class RxChooseDrugAction extends Action {
                 RxPrescriptionData.Prescription rx =
                         rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
-                String GN     = frm.getGN();
                 String BN     = frm.getBN();
                 String drugId = frm.getDrugId(); 
                 
-                System.out.println("drugID "+drugId);
-                System.out.println("BRAND = "+BN);
+//                System.out.println("drugID "+drugId);
+//                System.out.println("BRAND = "+BN);
 
                 
                     rx.setBrandName(BN);
