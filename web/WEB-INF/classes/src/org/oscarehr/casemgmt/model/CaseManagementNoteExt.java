@@ -27,15 +27,18 @@ import oscar.util.UtilDateUtilities;
 
 public class CaseManagementNoteExt {
 	
-	// Key Value constants
+	// Key Value constants ***All date value key must be in format "XXX Date"
 	public static String STARTDATE	    = "Start Date"	;
 	public static String RESOLUTIONDATE = "Resolution Date"	;
-	public static String DIAGNOSIS	    = "Diagnosis"	;
-	public static String PROBLEMSTATUS  = "Problem Status"	;
+	public static String PROCEDUREDATE  = "Procedure Date"	;
+	
+	public static String AGEATONSET	    = "Age at Onset"	;
 	public static String TREATMENT	    = "Treatment"	;
+	public static String PROBLEMSTATUS  = "Problem Status"	;
 	public static String EXPOSUREDETAIL = "Exposure Details";
 	public static String RELATIONSHIP   = "Relationship"	;
 	
+	//Class fields
 	private Long id;
 	private Long noteId;
 	private String keyVal;
