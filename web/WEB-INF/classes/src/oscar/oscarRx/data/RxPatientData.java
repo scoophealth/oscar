@@ -260,6 +260,7 @@ public class RxPatientData {
                allergy.getAllergy().setAgeOfOnset(db.getString(rs,"age_of_onset"));
                allergy.getAllergy().setSeverityOfReaction(db.getString(rs,"severity_of_reaction"));
                allergy.getAllergy().setOnSetOfReaction(db.getString(rs,"onset_of_reaction"));
+               allergy.getAllergy().setRegionalIdentifier(db.getString(rs,"regional_identifier"));
                
                lst.add(allergy);               
             }            
@@ -399,7 +400,7 @@ public class RxPatientData {
             String sql;            
             if (this.getAllergyId() == 0) {               
                sql = "INSERT INTO allergies (demographic_no, entry_date, "               
-               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction) "               
+               + "DESCRIPTION, HICL_SEQNO, HIC_SEQNO, AGCSP, AGCCS, TYPECODE,reaction,drugref_id,start_date,age_of_onset,severity_of_reaction,onset_of_reaction,regional_identifier) "               
                + "VALUES (" + Patient.this.getDemographicNo() + ", '"               
                + oscar.oscarRx.util.RxUtil.DateToString(this.getEntryDate()) + "', '"               
                + this.allergy.getDESCRIPTION() + "', "               
@@ -413,7 +414,8 @@ public class RxPatientData {
 	       + oscar.oscarRx.util.RxUtil.DateToString(this.allergy.getStartDate()) + "', '"
                + this.allergy.getAgeOfOnset() + "', '"
                + this.allergy.getSeverityOfReaction() + "', '"
-               + this.allergy.getOnSetOfReaction()+"')";
+               + this.allergy.getOnSetOfReaction()+"','"
+               + this.allergy.getRegionalIdentifier()+"')";
                
                b = db.RunSQL(sql);
                

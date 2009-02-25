@@ -51,6 +51,7 @@ public class RxAllergyData {
         String ageOfOnset = null;
         String severityOfReaction = null;
         String onSetOfReaction = null;
+        private String regionalIdentifier = null;
         
         public Allergy(){
         }
@@ -90,7 +91,7 @@ public class RxAllergyData {
             return this.DESCRIPTION;
         }
         
-        
+  
         /**
          * use to create shorten descriptions of alergy.
          *
@@ -268,6 +269,14 @@ public class RxAllergyData {
          */
         public void setOnSetOfReaction(java.lang.String onSetOfReaction) {
            this.onSetOfReaction = onSetOfReaction;
+        }
+
+        public String getRegionalIdentifier() {
+            return regionalIdentifier;
+        }
+
+        public void setRegionalIdentifier(String regionalIdentifier) {
+            this.regionalIdentifier = regionalIdentifier;
         }
         
     }

@@ -40,6 +40,7 @@ import org.apache.struts.util.MessageResources;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarRx.data.RxAllergyData;
+import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPatientData;
 
 
@@ -88,7 +89,17 @@ public final class RxAddAllergyAction extends Action {
             allergy.setAgeOfOnset(ageOfOnset);
             allergy.setSeverityOfReaction(severityOfReaction);
             allergy.setOnSetOfReaction(onSetOfReaction);
-
+            
+            if (type != null && type.equals("13")){          
+                RxDrugData drugData = new RxDrugData();
+                try{
+                RxDrugData.DrugMonograph f = drugData.getDrug(""+id);      
+                allergy.setRegionalIdentifier(f.regionalIdentifier);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            
             patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
             
             String ip = request.getRemoteAddr();
