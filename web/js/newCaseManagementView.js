@@ -272,11 +272,12 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
                   ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds",
+                  ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=Risk%20Factors&cmd=RiskFactors",
                   ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=Family%20History&cmd=FamHistory",
                   ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
               ];
               
-          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "FamHistory", "issues" ];
+          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues" ];
 
           var navbar = "leftNavBar";    
           for( var idx = 0; idx < leftNavBar.length; ++idx ) {
@@ -574,57 +575,73 @@ function showEdit(e,title, noteId, editors, date, revision, note, url, container
     return false;
 }
 
-var sochist = "Social History";
-var medhist = "Medical History";
-var famhist = "Family History";
-var concern = "Ongoing Concerns";
-var reminds = "Reminders";
-var omeds   = "Other Meds";
+var cppIssues = new Array(7);
+var cppNames = new Array(7);
+cppIssues[0] = "SocHistory";
+cppIssues[1] = "MedHistory";
+cppIssues[2] = "FamHistory";
+cppIssues[3] = "Concerns";
+cppIssues[4] = "RiskFactors";
+cppIssues[5] = "Reminders";
+cppIssues[6] = "OMeds";
+cppNames[0] = "Social History";
+cppNames[1] = "Medical History";
+cppNames[2] = "Family History";
+cppNames[3] = "Ongoing Concerns";
+cppNames[4] = "Risk Factors";
+cppNames[5] = "Reminders";
+cppNames[6] = "Other Meds";
 
 function getCPP(issueCode) {
-    var ret = "";
-    if (issueCode=="SocHistory") ret = sochist;
-    if (issueCode=="MedHistory") ret = medhist;
-    if (issueCode=="FamHistory") ret = famhist;
-    if (issueCode=="Concerns")	 ret = concern;
-    if (issueCode=="Reminders")	 ret = reminds;
-    if (issueCode=="OMeds")	 ret = omeds;
-    return ret;
+    for (var i=0; i<cppIssues.length; i++) {
+	if (issueCode==cppIssues[i]) {
+	    return cppNames[i];
+	}
+    }
 }
 
-function prepareExtraFields(cpp,exts) {
-    $("_startDate","_resolutionDate","_problemStatus","_treatment","_exposureDetails","_relationship").invoke("hide");
-    if (cpp==sochist) {
-	$("_startDate","_resolutionDate").invoke("show");
-    }
-    if (cpp==medhist) {
-	$("_startDate","_resolutionDate","_treatment").invoke("show");
-    }
-    if (cpp==famhist) {
-	$("_startDate","_treatment","_relationship").invoke("show");
-    }
-    if (cpp==concern) {
-	$("_startDate","_resolutionDate","_problemStatus").invoke("show");
-    }
-    if (cpp==reminds) {
-	$("_startDate","_resolutionDate","_exposureDetails").invoke("show");
-    }
+var exFields = new Array(8);
+var exKeys = new Array(8);
+exFields[0] = "startdate";
+exFields[1] = "resolutiondate";
+exFields[2] = "proceduredate";
+exFields[3] = "ageatonset";
+exFields[4] = "treatment";
+exFields[5] = "problemstatus";
+exFields[6] = "exposuredetail";
+exFields[7] = "relationship";
+exKeys[0] = "Start Date";
+exKeys[1] = "Resolution Date";
+exKeys[2] = "Procedure Date";
+exKeys[3] = "Age at Onset";
+exKeys[4] = "Treatment";
+exKeys[5] = "Problem Status";
+exKeys[6] = "Exposure Details";
+exKeys[7] = "Relationship";
 
-    $("startDate").value       = "";
-    $("resolutionDate").value  = "";
-    $("problemStatus").value   = "";
-    $("treatment").value       = "";
-    $("exposureDetails").value = "";
-    $("relationship").value    = "";
+function prepareExtraFields(cpp,exts) {
+    var rowIDs = new Array(8);
+    for (var i=2; i<exFields.length; i++) {
+	rowIDs[i] = "_"+exFields[i];
+	$(rowIDs[i]).hide();
+    }
+    if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4]).invoke("show");
+    if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7]).invoke("show");
+    if (cpp==cppNames[3]) $(rowIDs[5]).show();
+    if (cpp==cppNames[4]) $(rowIDs[6]).show();
+
+    for (var i=0; i<exFields.length; i++) {
+	$(exFields[i]).value = "";
+    }
 
     var extsArr = exts.split(";");
     for (var i=0; i<extsArr.length; i+=2) {
-	if (extsArr[i]=="Start Date")	    $("startDate").value = extsArr[i+1];
-	if (extsArr[i]=="Resolution Date")  $("resolutionDate").value = extsArr[i+1];
-	if (extsArr[i]=="Problem Status")   $("problemStatus").value = extsArr[i+1];
-	if (extsArr[i]=="Treatment")	    $("treatment.value") = extsArr[i+1];
-	if (extsArr[i]=="Exposure Details") $("exposureDetails").value = extsArr[i+1];
-	if (extsArr[i]=="Relationship")	    $("relationship").value = extsArr[i+1];
+	for (var j=0; j<exFields.length; j++) {
+	    if (extsArr[i]==exKeys[j]) {
+		$(exFields[j]).value = extsArr[i+1];
+		continue;
+	    }
+	}
     }
 }
 
