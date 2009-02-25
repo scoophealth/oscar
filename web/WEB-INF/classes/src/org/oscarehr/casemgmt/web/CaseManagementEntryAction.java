@@ -709,8 +709,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	    /* save extra fields */
 	    CaseManagementNoteExt cme = new CaseManagementNoteExt();
 	    cme.setNoteId(note.getId());
-	    String[] names = {"startDate","resolutionDate","problemStatus","treatment","exposureDetails","relationship"};
-	    String[] keys = {cme.STARTDATE,cme.RESOLUTIONDATE,cme.PROBLEMSTATUS,cme.TREATMENT,cme.EXPOSUREDETAIL,cme.RELATIONSHIP};
+	    String[] names = {"startdate","resolutiondate","proceduredate","ageatonset","problemstatus","treatment","exposuredetail","relationship"};
+	    String[] keys = {cme.STARTDATE,cme.RESOLUTIONDATE,cme.PROCEDUREDATE,cme.AGEATONSET,cme.PROBLEMSTATUS,cme.TREATMENT,cme.EXPOSUREDETAIL,cme.RELATIONSHIP};
 	    for (int i=0; i<names.length; i++) {
 		String val = request.getParameter(names[i]);
 		if (filled(val)) {
@@ -1932,7 +1932,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         HashMap<String,List<CaseManagementNote> >cpp = null; 
         if (request.getParameter("printCPP").equalsIgnoreCase("true")) {
             cpp = new HashMap<String,List<CaseManagementNote> >();
-            String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders","FamHistory"};
+            String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders","FamHistory","RiskFactors"};
             for( int j = 0; j < issueCodes.length; ++j ) {
                 List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, issueCodes[j]);
                 String[] issueIds = new String[issues.size()];            
@@ -2134,6 +2134,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 text.append(separator);
                 text.append(note.getNote());
                 cpp.setFamilyHistory(text.toString());
+                break;
+            }else if( code.equals("RiskFactors") ) {
+                text.append(cpp.getRiskFactors());
+                text.append(separator);
+                text.append(note.getNote());
+                cpp.setRiskFactors(text.toString());
                 break;
             }
         }               
