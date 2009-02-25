@@ -253,8 +253,8 @@ public class CaseManagementPrintPdf {
         //upperYcoord -= p.leading() * 2f;
         //lworkingYcoord = rworkingYcoord = upperYcoord;
         //ColumnText ct = new ColumnText(cb);
-        String[] headings = {"Social History\n","Other Meds\n", "Medical History\n", "Ongoing Concerns\n", "Reminders\n", "Family History\n"};
-        String[] issueCodes = {"SocHistory","OMeds","MedHistory","Concerns","Reminders","FamHistory"};
+        String[] headings = {"Social History\n","Other Meds\n", "Medical History\n", "Ongoing Concerns\n", "Reminders\n", "Family History\n", "Risk Factors\n"};
+        String[] issueCodes = {"SocHistory","OMeds","MedHistory","Concerns","Reminders","FamHistory","RiskFactors"};
         //String[] content = {cpp.getSocialHistory(), cpp.getFamilyHistory(), cpp.getMedicalHistory(), cpp.getOngoingConcerns(), cpp.getReminders()};
         
         //init column to left side of page

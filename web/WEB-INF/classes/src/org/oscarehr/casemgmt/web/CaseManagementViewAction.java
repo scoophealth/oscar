@@ -822,7 +822,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	protected HashMap getCPPIssues(HttpServletRequest request, String providerNo) {
 		HashMap<String, Issue> issues = (HashMap<String, Issue>) request.getSession().getAttribute("CPPIssues");
 		if (issues == null) {
-			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory" };
+			String[] issueCodes = { "SocHistory", "MedHistory", "Concerns", "Reminders", "FamHistory", "RiskFactors" };
 			issues = new HashMap<String, Issue>();
 			for (String issue : issueCodes) {
 				List<Issue> i = caseManagementMgr.getIssueInfoByCode(providerNo, issue);

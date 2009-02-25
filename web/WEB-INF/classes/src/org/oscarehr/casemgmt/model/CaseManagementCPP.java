@@ -37,6 +37,7 @@ public class CaseManagementCPP extends BaseObject {
 	private String medicalHistory="";
 	private String ongoingConcerns="";
 	private String reminders="";
+	private String riskFactors="";
 	private Date update_date;
 	
 	private String primaryPhysician="";
@@ -74,6 +75,12 @@ public class CaseManagementCPP extends BaseObject {
 	}
 	public void setFamilyHistory(String familyHistory) {
 		this.familyHistory = familyHistory;
+	}
+	public String getRiskFactors() {
+		return riskFactors;
+	}
+	public void setRiskFactors(String riskFactors) {
+		this.riskFactors = riskFactors;
 	}
 	public Long getId() {
 		return id;
