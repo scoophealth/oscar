@@ -75,6 +75,15 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
         }
         return true;
     }
+    
+    function addCustomAllergy(){
+        var name = document.getElementById('searchString').value;
+        if(isEmpty() == true){
+            name = name.toUpperCase();
+            alert(name);
+            window.location="addReaction.do?ID=0&type=0&name="+name;
+        }
+    }
 </script>
 </head>
 <bean:define id="patient"
@@ -182,7 +191,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 				</table>
 				</td>
 			</tr>
-			<tr>
+			<tr> 
 				<td>
 				<div class="DivContentSectionHead"><bean:message
 					key="EditAllergies.section3Title" /></div>
@@ -194,15 +203,19 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 					<table>
 						<tr valign="center">
 							<td>Search:</td>
-							<td><html:text property="searchString" size="16"
-								maxlength="16" /></td>
+                                                        <td><html:text property="searchString" size="16" styleId="searchString" maxlength="16" /></td>
 						</tr>
 						<tr>
 							<td><html:submit property="submit" value="Search"
-								styleClass="ControlPushButton" /></td>
+								styleClass="ControlPushButton" />
+                                                        </td>
 							<td><input type=button class="ControlPushButton"
 								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
-								value="Reset" /></td>
+								value="Reset" />
+                                                             <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
+                                                            
+                                                             
+                                                        </td>
 						</tr>
 					</table>
                       &nbsp;

@@ -62,6 +62,16 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
         }
         return true;
     }
+        
+    function addCustomAllergy(){
+        var name = document.getElementById('searchString').value;
+        if(isEmpty() == true){
+            name = name.toUpperCase();
+            alert(name);
+            window.location="addReaction.do?ID=0&type=0&name="+name;
+        }
+    }
+    
 </script>
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -105,15 +115,17 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					<table>
 						<tr valign="center">
 							<td>Search:</td>
-							<td><html:text property="searchString" size="16"
-								maxlength="16" /></td>
+                                                        <td><html:text property="searchString" size="16" styleId="searchString" maxlength="16" /></td>
 						</tr>
 						<tr>
 							<td><html:submit property="submit" value="Search"
 								styleClass="ControlPushButton" /></td>
 							<td><input type=button class="ControlPushButton"
 								onclick="javascript:document.forms.RxSearchAllergyForm.searchString.value='';document.forms.RxSearchAllergyForm.searchString.focus();"
-								value="Reset" /></td>
+								value="Reset" />
+                                                             <input type=button class="ControlPushButton" onclick="javascript:addCustomAllergy();" value="Custom Allergy" />
+                                                            
+                                                        </td>
 						</tr>
 					</table>
                       &nbsp;
