@@ -814,10 +814,11 @@ insert into report_template_org (counter, templateno, orgcd)
 values (200693, 200682, '0');
 
 -- set cpp issues
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('OMeds','Other Meds as part of cpp', 'nurse', now(), 'userDefined');
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('SocHistory','Social History as part of cpp', 'nurse', now(), 'userDefined');
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('MedHistory','Medical History as part of cpp', 'nurse', now(), 'userDefined');
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now(), 'userDefined');
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Reminders','Reminders as part of cpp', 'nurse', now(), 'userDefined');
-insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('FamHistory','Family History as part of cpp', 'nurse', now(), 'userDefined');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('OMeds','Other Meds as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('SocHistory','Social History as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('MedHistory','Medical History as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Concerns','Ongoing Concerns as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Reminders','Reminders as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('FamHistory','Family History as part of cpp', 'nurse', now(), 'system');
+insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('RiskFactors','Risk Factors as part of cpp', 'nurse', now(), 'system');
 
