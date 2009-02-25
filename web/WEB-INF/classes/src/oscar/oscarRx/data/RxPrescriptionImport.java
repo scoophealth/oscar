@@ -29,113 +29,60 @@ import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
 
 public class RxPrescriptionImport {
-    String providerNo = "";
-    String demographicNo = "";
-    String rxDate = "";
-    String endDate = "";
-    String writtenDate = "";
-    String BN = "";
-    int takemin = 0;
-    int takemax = 0;
-    String regionalId = "";
-    String frequencyCode = "";
-    String duration = "";
-    String durationUnit = "D";
-    String quantity = "";
-    int repeat = 0;
-    String lastRefillDate = "";
-    String special = "";
-    boolean nosubs = false;
-    boolean prn = false;
-    boolean archived = false;
-    String route = "";
-    String drugForm = "";
-    String createDate = "";
-    String dosage = "";
-    String unit = "";
-    int seq_no = 1;
-    boolean longTerm = false;
-    boolean pastMed = false;
-    int patientCompliance = 0;
     
-    
-    public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate, String writtenDate, String BN, String regionalId,
-	    String frequencyCode, String duration, String quantity, int repeat, String lastRefillDate, String special, String route, String drugForm,
-	    String createDate, String dosage, int takemin, int takemax, String unit, boolean longTerm, boolean pastMed, int patientCompliance, int seq_no) {
-	this.providerNo = providerNo;
-	this.demographicNo = demographicNo;
-	this.rxDate = rxDate;
-	this.endDate = endDate;
-	this.writtenDate = writtenDate;
-	this.BN = BN;
-	this.takemin = takemin;
-	this.takemax = takemax;
-	this.regionalId = regionalId;
-	this.frequencyCode = frequencyCode;
-	this.duration = duration;
-	this.quantity = quantity;
-	this.repeat = repeat;
-	this.lastRefillDate = lastRefillDate;
-	this.special = special;
-	this.route = route;
-	this.drugForm = drugForm;
-	this.createDate = createDate;
-	this.dosage = dosage;
-	this.unit = unit;
-	this.seq_no = seq_no;
-	this.longTerm = longTerm;
-	this.pastMed = pastMed;
-	this.patientCompliance = patientCompliance;
-    }
-    
-    public void Save() throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, written_date, BN, " +
-		"takemin, takemax, regional_identifier, freqcode, duration, durunit, quantity, special, " +
-		"route, drug_form, create_date, dosage, unit, `repeat`, last_refill_date, nosubs, prn, " +
-		"archived, GCN_SEQNO, long_term, past_med, patient_compliance, custom_instructions) VALUES ('" +
-		this.providerNo + "','" + this.demographicNo + "','" + this.rxDate + "','" + this.endDate + "','" + this.writtenDate + "','" +
-		this.BN + "'," + this.takemin + "," + this.takemax + ",'" + this.regionalId + "','" + this.frequencyCode + "','" + this.duration + "','" + 
-		this.durationUnit + "','" + this.quantity + "','" + this.special + "','" + this.route + "','" + this.drugForm + "','" + 
-		this.createDate + "','" + this.dosage + "','" + this.unit + "'," + this.repeat + ",'" + this.lastRefillDate + "'," + 
-		this.nosubs + "," + this.prn + "," + this.archived + "," + this.seq_no + "," + this.longTerm + "," + this.pastMed + "," + this.patientCompliance + ",1)";
+    public static Long save(String providerNo, String demographicNo, String rxDate, String endDate, String writtenDate,
+	    String createDate, String BN, String regionalId, String frequencyCode, String duration, String quantity,
+	    int repeat, String lastRefillDate, String special, String route, String drugForm, String dosage,
+	    int takemin, int takemax, String unit, boolean longTerm, boolean pastMed, int patientCompliance,
+	    String outsideProviderName, String outsideProviderOhip, int seq_no) throws SQLException {
+	
+	String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, written_date, create_date, " +
+		"BN, regional_identifier, freqcode, duration, quantity, last_refill_date, special, route, drug_form, " +
+		"dosage, unit, outside_provider_name, outside_provider_ohip, long_term, past_med, patient_compliance, " +
+		"takemin, takemax, `repeat`, GCN_SEQNO, durunit, nosubs, prn, archived, custom_instructions" +
+		") VALUES ('" +
+		providerNo + "','" + demographicNo + "','" + 
+		rxDate + "','" + endDate + "','" + writtenDate + "','" + createDate + "','" + 
+		BN + "','" + regionalId + "','" + frequencyCode + "','" + duration + "','" + 
+		quantity + "','" + lastRefillDate + "','" + special + "','" + route + "','" + 
+		drugForm + "','" + dosage + "','" + unit + "','" + 
+		outsideProviderName + "','" + outsideProviderOhip + "'," + 
+		longTerm + "," + pastMed + "," + patientCompliance + "," + 
+		takemin + "," + takemax + "," + repeat + "," + seq_no + "," + 
+		",'D',false,false,0,1)";
 
-	db.RunSQL(sql);
-	db.CloseConn();
-    }
-    
-    public Long getImportedDrugId() throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "SELECT MAX(drugid) FROM drugs WHERE " +
-		"provider_no='"		+ this.providerNo	 + "' AND " +
-		"demographic_no='"	+ this.demographicNo	 + "' AND " +
-		"rx_date='"		+ this.rxDate		 + "' AND " +
-		"end_date='"		+ this.endDate		 + "' AND " +
-		"written_date='"	+ this.writtenDate	 + "' AND " +
-		"BN='"			+ this.BN		 + "' AND " +
-		"takemin="		+ this.takemin		 + " AND "  +
-		"takemax="		+ this.takemax		 + " AND "  +
-		"regional_identifier='" + this.regionalId	 + "' AND " +
-		"freqcode='"		+ this.frequencyCode	 + "' AND " +
-		"duration='"		+ this.duration		 + "' AND " +
-		"durunit='"		+ this.durationUnit	 + "' AND " +
-		"quantity='"		+ this.quantity		 + "' AND " +
-		"special='"		+ this.special		 + "' AND " +
-		"route='"		+ this.route		 + "' AND " +
-		"drug_form='"		+ this.drugForm		 + "' AND " +
-		"create_date='"		+ this.createDate	 + "' AND " +
-		"dosage='"		+ this.dosage		 + "' AND " +
-		"unit='"		+ this.unit		 + "' AND " +
-		"`repeat`="		+ this.repeat		 + " AND "  +
-		"last_refill_date='"	+ this.lastRefillDate	 + "' AND " +
-		"nosubs="		+ this.nosubs		 + " AND "  +
-		"prn="			+ this.prn		 + " AND "  +
-		"archived="		+ this.archived		 + " AND "  +
-		"GCN_SEQNO="		+ this.seq_no		 + " AND "  +
-		"long_term="		+ this.longTerm		 + " AND "  +
-		"past_med="		+ this.pastMed		 + " AND "  +
-		"patient_compliance="	+ this.patientCompliance + " AND "  +
-		"custom_instructions=1";
+	db.RunSQL(sql);
+	
+	sql = "SELECT MAX(drugid) FROM drugs WHERE " +
+		"provider_no='"		  + providerNo		+ "' AND " +
+		"demographic_no='"	  + demographicNo	+ "' AND " +
+		"rx_date='"		  + rxDate		+ "' AND " +
+		"end_date='"		  + endDate		+ "' AND " +
+		"written_date='"	  + writtenDate		+ "' AND " +
+		"create_date='"		  + createDate		+ "' AND " +
+		"BN='"			  + BN			+ "' AND " +
+		"regional_identifier='"   + regionalId		+ "' AND " +
+		"freqcode='"		  + frequencyCode	+ "' AND " +
+		"duration='"		  + duration		+ "' AND " +
+		"quantity='"		  + quantity		+ "' AND " +
+		"last_refill_date='"	  + lastRefillDate	+ "' AND " +
+		"special='"		  + special		+ "' AND " +
+		"route='"		  + route		+ "' AND " +
+		"drug_form='"		  + drugForm		+ "' AND " +
+		"dosage='"		  + dosage		+ "' AND " +
+		"unit='"		  + unit		+ "' AND " +
+		"outside_provider_name='" + outsideProviderName + "' AND " +
+		"outside_provider_ohip='" + outsideProviderOhip + "' AND " +
+		"long_term="		  + longTerm		+ " AND " +
+		"past_med="		  + pastMed		+ " AND " +
+		"patient_compliance="	  + patientCompliance	+ " AND " +
+		"takemin="		  + takemin		+ " AND " +
+		"takemax="		  + takemax		+ " AND " +
+		"`repeat`="		  + repeat		+ " AND " +
+		"GCN_SEQNO="		  + seq_no		+ " AND " +
+		"durunit='D' AND nosubs=false AND prn=false AND archived=0 AND custom_instructions=1";
+	
 	ResultSet rs = db.GetSQL(sql);
 	db.CloseConn();
 	if (rs.next()) return rs.getLong(1);
