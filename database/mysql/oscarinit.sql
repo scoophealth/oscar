@@ -40,6 +40,7 @@ CREATE TABLE allergies (
   age_of_onset char(4) default '0',
   severity_of_reaction char(1) default '0',
   onset_of_reaction char(1) default '0', 
+  regional_identifier varchar(100),
   PRIMARY KEY  (allergyid)
 ) ;
 
