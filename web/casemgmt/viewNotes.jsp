@@ -109,9 +109,11 @@
 	for (CaseManagementNoteExt cme : lcme) {
 	    if (cme.getNoteId().equals(noteId)) {
 		String key = cme.getKeyVal();
-		String val = cme.getValue();
-		if (key.equals(cme.STARTDATE) || key.equals(cme.RESOLUTIONDATE)) {
+		String val = null;
+		if (key.contains(" Date")) {
 		    val = oscar.util.UtilDateUtilities.DateToString(cme.getDateValue(),"yyyy-MM-dd");
+		} else {
+		    val = cme.getValue();
 		}
 		if (strcme.length()>0) strcme.append(";");
 		strcme.append(key + ";" + val);

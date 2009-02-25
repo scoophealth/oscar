@@ -410,18 +410,22 @@ function init() {
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
 		  <table>
-		      <tr id="_startDate"><td><%=cme.STARTDATE%>: </td>
-		      <td><input type="text" id="startDate" name="startDate" value=""></td></tr>
-		      <tr id="_resolutionDate"><td><%=cme.RESOLUTIONDATE%>: </td>
-		      <td><input type="text" id="resolutionDate" name="resolutionDate" value=""></td></tr>
-		      <tr id="_problemStatus"><td><%=cme.PROBLEMSTATUS%>: </td>
-		      <td><input type="text" id="problemStatus" name="problemStatus" value=""></td></tr>
+		      <tr id="_startdate"><td><%=cme.STARTDATE%>: </td>
+			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DD)</td></tr>
+		      <tr id="_resolutiondate"><td><%=cme.RESOLUTIONDATE%>: </td>
+			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
+		      <tr id="_ageatonset"><td><%=cme.AGEATONSET%>: </td>
+			<td><input type="text" id="ageatonset" name="ageatonset" value="" size="2"></td></tr>
 		      <tr id="_treatment"><td><%=cme.TREATMENT%>: </td>
-		      <td><input type="text" id="treatment" name="treatment" value=""></td></tr>
-		      <tr id="_exposureDetails"><td><%=cme.EXPOSUREDETAIL%>: </td>
-		      <td><input type="text" id="exposureDetails" name="exposureDetails" value=""></td></tr>
+			<td><input type="text" id="treatment" name="treatment" value=""></td></tr>
+		      <tr id="_proceduredate"><td><%=cme.PROCEDUREDATE%>: </td>
+			<td><input type="text" id="proceduredate" name="proceduredate" value="" size="12"> (YYYY-MM-DD)</td></tr>
+		      <tr id="_problemstatus"><td><%=cme.PROBLEMSTATUS%>: </td>
+			<td><input type="text" id="problemstatus" name="problemstatus" value="" size="8"> (active/resolved/...)</td></tr>
+		      <tr id="_exposuredetail"><td><%=cme.EXPOSUREDETAIL%>: </td>
+			<td><input type="text" id="exposuredetail" name="exposuredetail" value=""></td></tr>
 		      <tr id="_relationship"><td><%=cme.RELATIONSHIP%>: </td>
-		      <td><input type="text" id="relationship" name="relationship" value=""></td></tr>
+			<td><input type="text" id="relationship" name="relationship" value=""></td></tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
 		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='Annotation' id="anno"> &nbsp; &nbsp;
