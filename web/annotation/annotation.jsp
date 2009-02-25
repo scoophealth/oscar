@@ -59,7 +59,7 @@
     Integer tableName = cmm.getTableNameByDisplay(display);
     String note = "";
     
-    CaseManagementNoteLink cml = cmm.getLatestLinkBytableId(tableName, tableId);
+    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);
     String last_display = (String)se.getAttribute("anno_display");
     Long last_id = (Long)se.getAttribute("anno_last_id");
     if (display.equals(last_display) && tableId.equals(last_id)) {

@@ -430,7 +430,7 @@ public class CaseManagementManager {
 	return this.caseManagementNoteLinkDAO.getLinkByTableId(tableName, tableId);
     }
     
-    public CaseManagementNoteLink getLatestLinkBytableId(Integer tableName, Long tableId) {
+    public CaseManagementNoteLink getLatestLinkByTableId(Integer tableName, Long tableId) {
 	List<CaseManagementNoteLink> lcml = getLinkByTableId(tableName, tableId);
 	if (lcml.isEmpty()) return null;
 	else return lcml.get(lcml.size()-1);
