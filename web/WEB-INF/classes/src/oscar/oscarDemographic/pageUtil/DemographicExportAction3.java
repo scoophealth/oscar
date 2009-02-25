@@ -459,7 +459,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			encounter = cmn.getNote();
 		    }
 		    
-		    CaseManagementNoteLink cml = cmm.getLatestLinkBytableId(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId());
+		    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId());
 		    if (cml!=null) {
 			CaseManagementNote n = cmm.getNote(cml.getNoteId().toString());
 			annotation = n.getNote();
