@@ -183,7 +183,29 @@ function convert_date(convertedDate) {
 	return newDate;
 }
 
-
+function checkAndValidateDate(dateStr, datePattern) {
+	var matchArray = null;
+	
+	if(datePattern != null && datePattern != "") {
+		matchArray = dateStr.match(datePattern);
+	} else {
+		//default is yyyy-mm-dd
+		var datePat = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/;
+		matchArray = dateStr.match(datePat);
+	}
+	if (matchArray == null) {
+		alert("Please enter the date as yyyy-mm-dd. Your current selection reads: " + dateStr);
+		return false;
+	} else {
+		var dateArr = dateStr.split('-');
+		if(validateDate(dateArr[0], dateArr[1], dateArr[2])) {
+			return true;
+		} else {
+			alert("Invalid Date");
+			return false;
+		}
+	}
+}
 	
 function check_date_format1(dateStr) {
 	//eg. checkedDate = '21-09-2007'

@@ -27,13 +27,29 @@
 <html:html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/checkDate.js"></script>
+<script type="text/javascript">
+	function validateDates() {
+		var sdate = document.getElementById('sdate').value;
+		var edate = document.getElementById('edate').value;
+		if(checkAndValidateDate(sdate)) {
+			if(checkAndValidateDate(edate)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+</script>
 <title>Program Activity Report Generator</title>
 </head>
 
 <body>
 <Br />
 <br />
-<html:form action="/PMmodule/Reports/ProgramActivityReport">
+<html:form action="/PMmodule/Reports/ProgramActivityReport" onsubmit="return validateDates();">
 	<input type="hidden" name="method" value="generate" />
 	<div id="projecthome" class="app"><br />
 	<div class="h4">
@@ -43,12 +59,12 @@
 	<table border="0" cellspacing="2" cellpadding="3">
 		<tr>
 			<th>Start Date</th>
-			<td><html:text property="form.startDate" size="15" />
+			<td><html:text styleId="sdate" property="form.startDate" size="15" />
 			(yyyy-mm-dd)</td>
 		</tr>
 		<tr>
 			<th>End Date</th>
-			<td><html:text property="form.endDate" size="15" />
+			<td><html:text styleId="edate" property="form.endDate" size="15" />
 			(yyyy-mm-dd)</td>
 		</tr>
 		<!-- 
