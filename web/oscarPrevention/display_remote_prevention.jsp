@@ -65,11 +65,11 @@
 			</tr>
 			<tr>
 				<td class="tableLabel">Prevention Date</td>
-				<td class="tableData"><%=DateFormatUtils.ISO_DATE_FORMAT.format(remotePrevention.getPreventionDate().toGregorianCalendar())%></td>
+				<td class="tableData"><%=DateFormatUtils.ISO_DATE_FORMAT.format(remotePrevention.getPreventionDate())%></td>
 			</tr>
 			<tr>
 				<td class="tableLabel">Next Prevention Date</td>
-				<td class="tableData"><%=remotePrevention.getNextDate()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(remotePrevention.getNextDate().toGregorianCalendar()):""%></td>
+				<td class="tableData"><%=remotePrevention.getNextDate()!=null?DateFormatUtils.ISO_DATE_FORMAT.format(remotePrevention.getNextDate()):""%></td>
 			</tr>
 			<%
 				CachedDemographicPrevention.Attributes attributes=remotePrevention.getAttributes();
