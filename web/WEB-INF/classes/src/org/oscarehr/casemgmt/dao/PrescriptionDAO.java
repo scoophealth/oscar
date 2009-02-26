@@ -22,10 +22,7 @@
 
 package org.oscarehr.casemgmt.dao;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.oscarehr.casemgmt.model.Prescription;
@@ -58,15 +55,10 @@ public class PrescriptionDAO extends HibernateDaoSupport {
             pd.setBN(ob.getBn());
             pd.setGCN_SEQNO(ob.getGcnSeqNo());
             pd.setCustomName(ob.getCustomName());
+            pd.setRegionalIdentifier(ob.getRegionalIdentifier());
 
             pd.setEnd_date(ob.getEndDate());
             pd.setDrug_achived(false);
-            Calendar calendar = new GregorianCalendar();
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-            Timestamp today = new Timestamp(calendar.getTimeInMillis());
-            today.setNanos(0);
-            if (today.compareTo(ob.getEndDate()) <= 0) pd.setExpired(false);
-            else pd.setExpired(true);
 
             boolean b = true;
             for (int i = 0; i < rt.size(); i++) {
@@ -107,17 +99,10 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 			pd.setBN(ob.getBn());
 			pd.setGCN_SEQNO(ob.getGcnSeqNo());
 			pd.setCustomName(ob.getCustomName());
-
-			Calendar calendar = new GregorianCalendar();
-			calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			Timestamp today = new Timestamp(calendar.getTimeInMillis());
-			today.setNanos(0);
-			if (today.compareTo(ob.getEndDate()) <= 0) pd.setExpired(false);
-			else pd.setExpired(true);
+            pd.setRegionalIdentifier(ob.getRegionalIdentifier());
 			rt.add(pd);
 		}
 		return rt;
 
 	}
-
 }

@@ -1,97 +1,116 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+ * 
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 
 package org.oscarehr.casemgmt.web;
 
 import java.util.Date;
 
-public class PrescriptDrug
-{
+public class PrescriptDrug {
 	private Date date_prescribed;
 	private String drug_special;
 	private Date end_date;
-	private boolean isExpired;
 	private boolean drug_achived;
 	private String BN;
 	private Integer GCN_SEQNO;
 	private String customName;
-	
-	public Date getDate_prescribed()
-	{
+	private String regionalIdentifier=null;
+	private boolean fromIntegrator = false;
+
+	public String getRegionalIdentifier() {
+    	return regionalIdentifier;
+    }
+
+	public void setRegionalIdentifier(String regionalIdentifier) {
+    	this.regionalIdentifier = regionalIdentifier;
+    }
+
+	public boolean isFromIntegrator() {
+		return fromIntegrator;
+	}
+
+	public void setFromIntegrator(boolean fromIntegrator) {
+		this.fromIntegrator = fromIntegrator;
+	}
+
+	public Date getDate_prescribed() {
 		return date_prescribed;
 	}
-	public void setDate_prescribed(Date date_prescribed)
-	{
+
+	public void setDate_prescribed(Date date_prescribed) {
 		this.date_prescribed = date_prescribed;
 	}
-	public String getDrug_special()
-	{
+
+	public String getDrug_special() {
 		return drug_special;
 	}
-	public void setDrug_special(String drug_special)
-	{
+
+	public void setDrug_special(String drug_special) {
 		this.drug_special = drug_special;
 	}
-	public boolean isExpired()
-	{
-		return isExpired;
+
+	public boolean isExpired() {
+		if (end_date==null) return(false);
+		
+		return((new Date()).after(end_date));
 	}
-	public void setExpired(boolean isExpired)
-	{
-		this.isExpired = isExpired;
-	}
-	public Date getEnd_date()
-	{
+
+	public Date getEnd_date() {
 		return end_date;
 	}
-	public void setEnd_date(Date end_date)
-	{
+
+	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
 	}
+
 	public boolean isDrug_achived() {
 		return drug_achived;
 	}
+
 	public void setDrug_achived(boolean drug_achived) {
 		this.drug_achived = drug_achived;
 	}
+
 	public String getBN() {
 		return BN;
 	}
+
 	public void setBN(String bn) {
 		BN = bn;
 	}
+
 	public String getCustomName() {
 		return customName;
 	}
+
 	public void setCustomName(String customName) {
 		this.customName = customName;
 	}
+
 	public Integer getGCN_SEQNO() {
 		return GCN_SEQNO;
 	}
+
 	public void setGCN_SEQNO(Integer gcn_seqno) {
 		GCN_SEQNO = gcn_seqno;
 	}
-	
-	
 
 }
