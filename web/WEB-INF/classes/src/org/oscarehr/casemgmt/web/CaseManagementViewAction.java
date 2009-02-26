@@ -579,7 +579,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					}
 				}
 			}
-		} catch (MalformedURLException e) {
+		} catch (Exception e) {
 			log.error("Unexpected error.", e);
 		}
 	}
