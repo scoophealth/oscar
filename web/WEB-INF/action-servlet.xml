@@ -114,12 +114,7 @@
 	</bean>
 	<!--  CASE MANAGEMENT -->
 	<bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false" autowire="byName">
-		<property name="caseManagementManager" ref="caseManagementManager" />
-		<property name="ticklerManager" ref="ticklerManager" />
 		<property name="clientImageManager" ref="ClientImageManager" />
-		<property name="roleManager" ref="roleManager" />
-		<property name="programManager" ref="programManager" />
-		<property name="admissionManager" ref="admissionManager" />
 		<property name="surveyManager" ref="oscarSurveyManager" />
 	</bean>
 	<bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
