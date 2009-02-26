@@ -33,7 +33,7 @@ public class Issue extends BaseObject {
 	private String role;
 	private Date update_date;
 	private String priority;
-        private String type;
+    private String type;
 
 	public Issue() {
 		update_date = new Date();
