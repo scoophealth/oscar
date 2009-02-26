@@ -553,7 +553,7 @@ public class ImportDemographicDataAction2 extends Action {
 		//ALLERGIES & ADVERSE REACTIONS
 		cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions[] aaReactArray = patientRec.getAllergiesAndAdverseReactionsArray();
 		for (int i=0; i<aaReactArray.length; i++) {
-		    String description="", drugrefId="", reaction="", severity="", entryDate="", typeCode="";
+		    String description="", regionalId="", reaction="", severity="", entryDate="", typeCode="";
 		    String aSummary = "";
 		    if (filled(aaReactArray[i].getCategorySummaryLine())) {
 			aSummary = aaReactArray[i].getCategorySummaryLine().trim();
@@ -568,7 +568,7 @@ public class ImportDemographicDataAction2 extends Action {
 			errorImport = appendLine(errorImport,"Note: Allergies Summary imported in [reaction] ("+(i+1)+")");
 		    }
 		    description = filledOrEmpty(aaReactArray[i].getOffendingAgentDescription());
-		    drugrefId   = filledOrEmpty(aaReactArray[i].getCode().getValue());
+		    regionalId   = filledOrEmpty(aaReactArray[i].getCode().getValue());
 		    entryDate   = getDateFullPartial(aaReactArray[i].getRecordedDate());
 		    reaction = appendLine(reaction,"Start Date: ",getDateFullPartial(aaReactArray[i].getStartDate()));
 		    reaction = appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
@@ -593,7 +593,7 @@ public class ImportDemographicDataAction2 extends Action {
 			    errorImport = appendLine(errorImport,"Note: Allergies Severity [No Reaction] imported as [Mild] ("+(i+1)+")");
 			}
 		    }
-		    Long allergyId = new RxAllergyImport().Save(demoNo, entryDate, description, typeCode, reaction, ""/*startDate*/, severity, drugrefId);
+		    Long allergyId = RxAllergyImport.save(demoNo, entryDate, description, typeCode, reaction, ""/*startDate*/, severity, regionalId);
 		}
 		
 		
@@ -659,10 +659,10 @@ public class ImportDemographicDataAction2 extends Action {
 			providerNo = writeProviderData(personName, personOHIP);
 		    }
 		    
-		    RxPrescriptionImport rpi = new RxPrescriptionImport(providerNo,demoNo,rxDate,endDate,""/*writtenDate*/,BN,regionalId,frequencyCode,duration,quantity,
-						repeat,""/*lastRefillDate*/,special,route,""/*drugForm*/,createDate,dosage,0/*takemin*/,0/*takemax*/,unit,
-						false/*longTerm*/,false/*pastMed*/,0/*patientCompliance*/,(i+1));
-		    rpi.Save();
+		    RxPrescriptionImport.save(providerNo,demoNo,rxDate,endDate,""/*writtenDate*/,createDate,
+			BN,regionalId,frequencyCode,duration,quantity,repeat,""/*lastRefillDate*/,special,route,
+			""/*drugForm*/,dosage,0/*takemin*/,0/*takemax*/,unit,false/*longTerm*/,false/*pastMed*/,
+			0/*patientCompliance*/,""/*outsiderName*/,""/*outsiderOhip*/,(i+1));
 		}
 
 
