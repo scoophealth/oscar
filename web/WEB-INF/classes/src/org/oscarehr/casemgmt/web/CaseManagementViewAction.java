@@ -552,26 +552,18 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		try {
 			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
-			List<CachedDemographicDrug> drugs=demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
-			
-			for (CachedDemographicDrug cachedDrug : drugs)
-			{
-				if (viewAll)
-				{
+			List<CachedDemographicDrug> drugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+
+			for (CachedDemographicDrug cachedDrug : drugs) {
+				if (viewAll) {
 					prescriptions.add(getPrescriptDrug(cachedDrug));
-				}
-				else
-				{
+				} else {
 					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
-					PrescriptDrug pd=containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
-					if (pd==null)
-					{
+					PrescriptDrug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
+					if (pd == null) {
 						prescriptions.add(getPrescriptDrug(cachedDrug));
-					}
-					else
-					{
-						if (pd.getDate_prescribed().before(cachedDrug.getRxDate()))
-						{
+					} else {
+						if (pd.getDate_prescribed().before(cachedDrug.getRxDate())) {
 							prescriptions.remove(pd);
 							prescriptions.add(getPrescriptDrug(cachedDrug));
 						}
