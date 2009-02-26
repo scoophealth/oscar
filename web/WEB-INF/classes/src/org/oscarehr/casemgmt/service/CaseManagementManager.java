@@ -78,6 +78,7 @@ import org.oscarehr.casemgmt.model.HashAuditImpl;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
 import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
@@ -456,7 +457,7 @@ public class CaseManagementManager {
         return this.allergyDAO.getAllergies(demographic_no);
     }
 
-    public List getPrescriptions(String demographic_no, boolean all) {
+    public List<PrescriptDrug> getPrescriptions(String demographic_no, boolean all) {
         if (all) {
             return this.prescriptionDAO.getPrescriptions(demographic_no);
         }
