@@ -22,9 +22,6 @@
 
 package org.oscarehr.casemgmt.model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import oscar.oscarDB.DBHandler;
 
 public class CaseManagementNoteLink {
 	
