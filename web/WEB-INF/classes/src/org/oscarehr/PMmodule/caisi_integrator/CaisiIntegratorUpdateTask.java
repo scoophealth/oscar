@@ -474,7 +474,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pk.setCaisiItemId(drug.getId());
 				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
 				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
-				cachedDemographicDrug.setGcnSeqNo(drug.getGcnSeqNo());
 				cachedDemographicDrug.setGn(drug.getGn());
 				cachedDemographicDrug.setLastRefillDate(drug.getLastRefillDate());
 				cachedDemographicDrug.setLongTerm(drug.getLongTerm());
