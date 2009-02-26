@@ -462,13 +462,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		/* get prescriptions */
 		if (tab.equals("Prescriptions")) {
-			List prescriptions = null;
+			List<PrescriptDrug> prescriptions = null;
 			if (caseForm.getPrescipt_view().equals("all")) {
 				prescriptions = this.caseManagementMgr.getPrescriptions(this.getDemographicNo(request), true);
 			}
 			else {
 				prescriptions = this.caseManagementMgr.getPrescriptions(this.getDemographicNo(request), false);
 			}
+			
+			
+			
 			request.setAttribute("Prescriptions", prescriptions);
 
 			// Setup RX bean start
