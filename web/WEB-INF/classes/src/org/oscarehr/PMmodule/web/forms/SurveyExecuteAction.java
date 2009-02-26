@@ -642,10 +642,9 @@ public class SurveyExecuteAction extends DispatchAction {
         System.out.println("CaisObject=" + caisiObject);
 
         if (caisiObject.equals("Current Medications")) {
-            List meds = cmeManager.getPrescriptions(demographic_no, true);
+            List<PrescriptDrug> meds = cmeManager.getPrescriptions(demographic_no, true);
             StringBuffer str = new StringBuffer();
-            for (Iterator iter = meds.iterator(); iter.hasNext();) {
-                PrescriptDrug med = (PrescriptDrug) iter.next();
+            for (PrescriptDrug med : meds) {
                 str.append(med.getDrug_special().replaceAll("\r\n", " ")).append("\r\n");
             }
             data.getValues().put(key, str.toString());
