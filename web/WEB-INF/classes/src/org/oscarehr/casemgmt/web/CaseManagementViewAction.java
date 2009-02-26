@@ -24,6 +24,7 @@ package org.oscarehr.casemgmt.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,9 +49,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -72,6 +76,11 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
+	private CaisiIntegratorManager caisiIntegratorManager=null;
+	
+	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
+    	this.caisiIntegratorManager = caisiIntegratorManager;
+    }
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
@@ -463,14 +472,18 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		/* get prescriptions */
 		if (tab.equals("Prescriptions")) {
 			List<PrescriptDrug> prescriptions = null;
-			if (caseForm.getPrescipt_view().equals("all")) {
-				prescriptions = this.caseManagementMgr.getPrescriptions(this.getDemographicNo(request), true);
+			boolean viewAll=caseForm.getPrescipt_view().equals("all");
+			String demographicId=getDemographicNo(request);
+			if (viewAll) {
+				prescriptions = this.caseManagementMgr.getPrescriptions(demographicId, true);
 			}
 			else {
-				prescriptions = this.caseManagementMgr.getPrescriptions(this.getDemographicNo(request), false);
+				prescriptions = this.caseManagementMgr.getPrescriptions(demographicId, false);
 			}
 			
-			
+			if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)){
+				addIntegratorDrugs(prescriptions, viewAll, currentFacilityId, Integer.parseInt(demographicId));
+			}
 			
 			request.setAttribute("Prescriptions", prescriptions);
 
@@ -531,6 +544,71 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
+	private void addIntegratorDrugs(List<PrescriptDrug> prescriptions, boolean viewAll, int currentFacilityId, int demographicId) {
+
+		if (prescriptions == null) {
+			log.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
+			return;
+		}
+
+		try {
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			List<CachedDemographicDrug> drugs=demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
+			
+			for (CachedDemographicDrug cachedDrug : drugs)
+			{
+				if (viewAll)
+				{
+					prescriptions.add(getPrescriptDrug(cachedDrug));
+				}
+				else
+				{
+					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
+					PrescriptDrug pd=containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
+					if (pd==null)
+					{
+						prescriptions.add(getPrescriptDrug(cachedDrug));
+					}
+					else
+					{
+						if (pd.getDate_prescribed().before(cachedDrug.getRxDate()))
+						{
+							prescriptions.remove(pd);
+							prescriptions.add(getPrescriptDrug(cachedDrug));
+						}
+					}
+				}
+			}
+		} catch (MalformedURLException e) {
+			log.error("Unexpected error.", e);
+		}
+	}
+
+	private PrescriptDrug getPrescriptDrug(CachedDemographicDrug cachedDrug) {
+		PrescriptDrug pd=new PrescriptDrug();
+
+		pd.setBN(cachedDrug.getBn());
+		pd.setCustomName(cachedDrug.getCustomName());
+		pd.setDate_prescribed(cachedDrug.getRxDate());
+		pd.setDrug_achived(cachedDrug.isArchived());
+		pd.setDrug_special(cachedDrug.getSpecial());
+		pd.setEnd_date(cachedDrug.getEndDate());
+		pd.setFromIntegrator(true);
+		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
+		
+		return(pd);
+    }
+
+	private static PrescriptDrug containsPrescriptDrug(List<PrescriptDrug> prescriptions, String regionalIdentifier)
+	{
+		for (PrescriptDrug prescriptDrug : prescriptions)
+		{
+			if (regionalIdentifier.equals(prescriptDrug.getRegionalIdentifier())) return(prescriptDrug);
+		}
+		
+		return(null);
+	}
+	
 	public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String nId = request.getParameter("noteId");
 		CaseManagementNote note = this.caseManagementMgr.getNote(nId);
