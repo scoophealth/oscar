@@ -64,8 +64,9 @@ public class AppointmentStatusMgrImpl implements AppointmentStatusMgr {
         appointStatusDao.modifyStatus(8, "Costumized 3", "#897DF8");
         appointStatusDao.modifyStatus(9, "Costumized 4", "#897DF8");
         appointStatusDao.modifyStatus(10, "Costumized 5", "#897DF8");
-        appointStatusDao.modifyStatus(11, "No Show", "#cccccc");
-        appointStatusDao.modifyStatus(12, "Cancelled", "#999999");
-        appointStatusDao.modifyStatus(13, "Billed", "#3ea4e1");
+        appointStatusDao.modifyStatus(11, "Costumized 6", "#897DF8");
+        appointStatusDao.modifyStatus(12, "No Show", "#cccccc");
+        appointStatusDao.modifyStatus(13, "Cancelled", "#999999");
+        appointStatusDao.modifyStatus(14, "Billed", "#3ea4e1");
     }
 }
