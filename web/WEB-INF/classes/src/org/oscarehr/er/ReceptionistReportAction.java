@@ -43,6 +43,7 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.casemgmt.web.PrescriptDrug;
 
 public class ReceptionistReportAction extends DispatchAction {
 	private static Log log = LogFactory.getLog(ReceptionistReportAction.class);
@@ -138,7 +139,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		List issues = this.caseManagementManager.getActiveIssues(getProviderNo(request),clientId);
 		request.setAttribute("issues",issues);
 		
-		List prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
+		List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
 		request.setAttribute("prescriptions",prescriptions);
 		
 		List allergies = this.caseManagementManager.getAllergies(clientId);
