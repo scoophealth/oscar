@@ -178,8 +178,8 @@ public class ImportDemographicDataAction3 extends Action {
 	    cdsDt.PersonNameStandard.LegalName legalName = demo.getNames().getLegalName();
 	    String lastName="", firstName="";
 	    if (legalName!=null) {
-		if (legalName.getLastName()!=null) lastName = filledOrEmpty(legalName.getLastName().getPart());
-		if (legalName.getFirstName()!=null) firstName = filledOrEmpty(legalName.getFirstName().getPart());
+		if (legalName.getLastName()!=null) lastName = noNull(legalName.getLastName().getPart());
+		if (legalName.getFirstName()!=null) firstName = noNull(legalName.getFirstName().getPart());
 	    } else {
 		dataGood = "No";
 		errorImport = appendLine(errorImport,"No Legal Name");
@@ -214,16 +214,16 @@ public class ImportDemographicDataAction3 extends Action {
 	    }
 	    String date_joined = getDateFullPartial(demo.getEnrollmentDate());
 	    String end_date = getDateFullPartial(demo.getEnrollmentTerminationDate());
-	    String sin = filledOrEmpty(demo.getSIN());
+	    String sin = noNull(demo.getSIN());
 	    String dNote = "";
 	    dNote = appendLine(dNote, "SIN: ", sin);
 	    
-	    String chart_no = filledOrEmpty(demo.getChartNumber());
-	    String official_lang = filledOrEmpty(demo.getPreferredOfficialLanguage().toString());
+	    String chart_no = noNull(demo.getChartNumber());
+	    String official_lang = noNull(demo.getPreferredOfficialLanguage().toString());
 	    official_lang = official_lang.equals("ENG") ? "English" : official_lang;
 	    official_lang = official_lang.equals("FRE") ? "French" : official_lang;
-	    String spoken_lang = filledOrEmpty(demo.getPreferredSpokenLanguage());
-	    String uvID = filledOrEmpty(demo.getUniqueVendorIdSequence());
+	    String spoken_lang = noNull(demo.getPreferredSpokenLanguage());
+	    String uvID = noNull(demo.getUniqueVendorIdSequence());
 	    if (filled(uvID)) {
 		if (!filled(chart_no)) {
 		    chart_no = uvID;
@@ -235,7 +235,7 @@ public class ImportDemographicDataAction3 extends Action {
 	    String versionCode="", hin="", hc_type="", eff_date="";
 	    cdsDt.HealthCard healthCard = demo.getHealthCard();
 	    if (healthCard!=null) {
-		hin = filledOrEmpty(healthCard.getNumber());
+		hin = noNull(healthCard.getNumber());
 		if (hin.equals("")) {
 		    dataGood = "No";
 		    errorImport = appendLine(errorImport,"No health card number!");
@@ -245,7 +245,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    dataGood = "No";
 		    errorImport = appendLine(errorImport,"No Province Code for health card!");
 		}
-		versionCode = filledOrEmpty(healthCard.getVersion());
+		versionCode = noNull(healthCard.getVersion());
 		eff_date = getCalDate(healthCard.getExpirydate());
 		if (eff_date.equals("")) {
 		    String errMsg = "Error! Invalid health card expiry date!";
@@ -262,11 +262,11 @@ public class ImportDemographicDataAction3 extends Action {
 		    } else {
 			cdsDt.AddressStructured addrStr = addr.getStructured();
 			if (addrStr!=null) {
-			    address = filledOrEmpty(addrStr.getLine1()) + filledOrEmpty(addrStr.getLine2()) + filledOrEmpty(addrStr.getLine3());
-			    city = filledOrEmpty(addrStr.getCity());
-			    province = filledOrEmpty(addrStr.getCountrySubdivisionCode());
+			    address = noNull(addrStr.getLine1()) + noNull(addrStr.getLine2()) + noNull(addrStr.getLine3());
+			    city = noNull(addrStr.getCity());
+			    province = noNull(addrStr.getCountrySubdivisionCode());
 			    cdsDt.PostalZipCode postalZip = addrStr.getPostalZipCode();
-			    if (postalZip!=null) postalCode = filledOrEmpty(postalZip.getPostalCode());
+			    if (postalZip!=null) postalCode = noNull(postalZip.getPostalCode());
 			}
 		    }	    
 		}
@@ -311,7 +311,7 @@ public class ImportDemographicDataAction3 extends Action {
 		else if (filled(workPhone)) patientPhone = workPhone+" "+workExt;
 		else if (filled(cellPhone)) patientPhone = cellPhone;
 	    }
-	    String email = filledOrEmpty(demo.getEmail());
+	    String email = noNull(demo.getEmail());
 	    
 	    String primaryPhysician = "";
 	    if (demo.getPrimaryPhysician()!=null) {
@@ -350,7 +350,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    String[] contactName = getPersonName(contt[i].getName());
 		    String cFirstName = contactName[0];
 		    String cLastName  = contactName[1];
-		    String cEmail = filledOrEmpty(contt[i].getEmailAddress());
+		    String cEmail = noNull(contt[i].getEmailAddress());
 
 		    pn = contt[i].getPhoneNumberArray();
 		    workPhone=""; workExt=""; homePhone=""; homeExt=""; cellPhone=""; ext="";
@@ -656,7 +656,7 @@ public class ImportDemographicDataAction3 extends Action {
 		//ALLERGIES & ADVERSE REACTIONS
 		cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions[] aaReactArray = patientRec.getAllergiesAndAdverseReactionsArray();
 		for (int i=0; i<aaReactArray.length; i++) {
-		    String description="", drugrefId="", reaction="", severity="", entryDate="", startDate="", typeCode="";
+		    String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="";
 		    String aSummary = "";
 		    if (filled(aaReactArray[i].getCategorySummaryLine())) {
 			aSummary = aaReactArray[i].getCategorySummaryLine().trim();
@@ -665,15 +665,15 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = appendLine(errorImport,"No Summary for Allergies & Adverse Reactions ("+(i+1)+")");
 		    }
 		    
-		    reaction = filledOrEmpty(aaReactArray[i].getReaction());
+		    reaction = noNull(aaReactArray[i].getReaction());
 		    if (filled(aSummary)) {
 			reaction = appendLine(reaction, "Summary: ", aSummary);
 			errorImport = appendLine(errorImport,"Note: Allergies Summary imported in [reaction] ("+(i+1)+")");
 		    }
-		    description = filledOrEmpty(aaReactArray[i].getOffendingAgentDescription());
-		    drugrefId   = filledOrEmpty(aaReactArray[i].getCode().getValue());
-		    entryDate   = getDateFullPartial(aaReactArray[i].getRecordedDate());
-		    startDate   = getDateFullPartial(aaReactArray[i].getStartDate());
+		    description = noNull(aaReactArray[i].getOffendingAgentDescription());
+		    entryDate = getDateFullPartial(aaReactArray[i].getRecordedDate());
+		    startDate = getDateFullPartial(aaReactArray[i].getStartDate());
+		    if (aaReactArray[i].getCode()!=null) regionalId = noNull(aaReactArray[i].getCode().getValue());
 		    reaction = appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
 		    reaction = appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
 		    reaction = appendLine(reaction, getCode(aaReactArray[i].getCode(),"Offending Agent Code"));
@@ -695,7 +695,7 @@ public class ImportDemographicDataAction3 extends Action {
 			    errorImport = appendLine(errorImport,"Note: Allergies Severity [No Reaction] imported as [Mild] ("+(i+1)+")");
 			}
 		    }
-		    Long allergyId = new RxAllergyImport().Save(demoNo, entryDate, description, typeCode, reaction, startDate, severity, drugrefId);
+		    Long allergyId = RxAllergyImport.save(demoNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId);
 		    
 		    cmNote.setNote(aaReactArray[i].getNotes());
 		    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId, cmm);
@@ -723,12 +723,12 @@ public class ImportDemographicDataAction3 extends Action {
 		    rxDate	   = getDateFullPartial(medArray[i].getStartDate());
 		    endDate	   = getDateFullPartial(medArray[i].getEndDate());
 		    lastRefillDate = getDateFullPartial(medArray[i].getLastRefillDate());
-		    regionalId	   = filledOrEmpty(medArray[i].getDrugIdentificationNumber());
-		    frequencyCode  = filledOrEmpty(medArray[i].getFrequency());
-		    quantity	   = filledOrEmpty(medArray[i].getQuantity());
-		    duration	   = filledOrEmpty(medArray[i].getDuration());
-		    route	   = filledOrEmpty(medArray[i].getRoute());
-		    drugForm	   = filledOrEmpty(medArray[i].getForm());
+		    regionalId	   = noNull(medArray[i].getDrugIdentificationNumber());
+		    frequencyCode  = noNull(medArray[i].getFrequency());
+		    quantity	   = noNull(medArray[i].getQuantity());
+		    duration	   = noNull(medArray[i].getDuration());
+		    route	   = noNull(medArray[i].getRoute());
+		    drugForm	   = noNull(medArray[i].getForm());
 		    longTerm	   = getYN(medArray[i].getLongTermMedication())=="Y";
 		    pastMed	   = getYN(medArray[i].getPastMedications())=="Y";
 		    
@@ -777,22 +777,28 @@ public class ImportDemographicDataAction3 extends Action {
 			unit = dose.substring(sep2+1,sep3);
 		    }
 		    if (medArray[i].getStrength()!=null) {
-			dosage = filledOrEmpty(medArray[i].getStrength().getAmount())+" "+filledOrEmpty(medArray[i].getStrength().getUnitOfMeasure());
+			dosage = noNull(medArray[i].getStrength().getAmount())+" "+noNull(medArray[i].getStrength().getUnitOfMeasure());
 			special = appendLine(special, "Strength: ", dosage);
 		    }
-		    String prescribedBy = "";
+		    String prescribedBy="", outsiderName="", outsiderOhip="";
 		    if (medArray[i].getPrescribedBy()!=null) {
 			String[] personName = getPersonName(medArray[i].getPrescribedBy().getName());
 			String personOHIP = medArray[i].getPrescribedBy().getOHIPPhysicianId();
-			prescribedBy = writeProviderData(personName, personOHIP);
+			String providerNo = getProviderNoByOhip(personOHIP);
+			if (filled(providerNo) && Integer.valueOf(providerNo)>0) {
+			    prescribedBy = providerNo;
+			} else { //outsider provider
+			    outsiderName = personName[1] + ", " + personName[0];
+			    outsiderOhip = personOHIP;
+			}
 		    }
 		    
-		    RxPrescriptionImport rpi = new RxPrescriptionImport(prescribedBy,demoNo,rxDate,endDate,writtenDate,BN,regionalId,frequencyCode,duration,quantity,
-						repeat,lastRefillDate,special,route,drugForm,createDate,dosage,takemin,takemax,unit,longTerm,pastMed,patientCompliance,(i+1));
-		    rpi.Save();
+		    Long drugId = RxPrescriptionImport.save(prescribedBy,demoNo,rxDate,endDate,writtenDate,createDate,
+			    BN,regionalId,frequencyCode,duration,quantity,repeat,lastRefillDate,special,route,drugForm,
+			    dosage,takemin,takemax,unit,longTerm,pastMed,patientCompliance,outsiderName,outsiderOhip,(i+1));
 		    
 		    cmNote.setNote(medArray[i].getNotes());
-		    saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, rpi.getImportedDrugId(), cmm);
+		    saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, drugId, cmm);
 		}
 
 
@@ -865,7 +871,7 @@ public class ImportDemographicDataAction3 extends Action {
 		String ppId="";
 		for (int i=0; i<labResultArray.length; i++) {
 		    String testName="", abn="", minimum="", maximum="", result="", unit="", description="", location="", accession_num="", coll_date="";
-		    testName = filledOrEmpty(labResultArray[i].getTestName());
+		    testName = noNull(labResultArray[i].getTestName());
 		    if (labResultArray[i].getResultNormalAbnormalFlag()!=null) {
 			cdsDt.ResultNormalAbnormalFlag.Enum flag = labResultArray[i].getResultNormalAbnormalFlag();
 			if (flag.equals(cdsDt.ResultNormalAbnormalFlag.Y)) abn = "Y";
@@ -876,17 +882,17 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		    if (labResultArray[i].getReferenceRange()!=null) {
 			cds.LaboratoryResultsDocument.LaboratoryResults.ReferenceRange ref = labResultArray[i].getReferenceRange();
-			maximum = filledOrEmpty(ref.getHighLimit());
-			minimum = filledOrEmpty(ref.getLowLimit());
-			if (!filled(maximum) && !filled(minimum)) minimum = filledOrEmpty(ref.getReferenceRangeText());
+			maximum = noNull(ref.getHighLimit());
+			minimum = noNull(ref.getLowLimit());
+			if (!filled(maximum) && !filled(minimum)) minimum = noNull(ref.getReferenceRangeText());
 		    }
 		    if (labResultArray[i].getResult()!=null) {
-			result = filledOrEmpty(labResultArray[i].getResult().getValue());
-			unit = filledOrEmpty(labResultArray[i].getResult().getUnitOfMeasure());
+			result = noNull(labResultArray[i].getResult().getValue());
+			unit = noNull(labResultArray[i].getResult().getUnitOfMeasure());
 		    }   
-		    description   = filledOrEmpty(labResultArray[i].getNotesFromLab());
-		    location	  = filledOrEmpty(labResultArray[i].getLaboratoryName());
-		    accession_num = filledOrEmpty(labResultArray[i].getAccessionNumber());
+		    description   = noNull(labResultArray[i].getNotesFromLab());
+		    location	  = noNull(labResultArray[i].getLaboratoryName());
+		    accession_num = noNull(labResultArray[i].getAccessionNumber());
 		    
 		    coll_date = getDateFullPartial(labResultArray[i].getCollectionDateTime());
 		    if (filled(coll_date)) {
@@ -967,7 +973,7 @@ public class ImportDemographicDataAction3 extends Action {
 			    }
 			}
 		    }
-		    reason = filledOrEmpty(appArray[i].getAppointmentPurpose());
+		    reason = noNull(appArray[i].getAppointmentPurpose());
 		    if (appArray[i].getProvider()!=null) {
 			String[] personName = getPersonName(appArray[i].getProvider().getName());
 			String personOHIP = appArray[i].getProvider().getOHIPPhysicianId();
@@ -1116,25 +1122,25 @@ public class ImportDemographicDataAction3 extends Action {
 		    cdsDt.Height[] heights = ce.getHeightArray();
 		    for (cdsDt.Height ht : heights) {
 			Date dateObserved = ht.getDate().getTime();
-			String dataField = filledOrEmpty(ht.getHeight());
+			String dataField = noNull(ht.getHeight());
 			ImportExportMeasurements.saveMeasurements("HT", demoNo, proNum, dataField, dateObserved);
 		    }
 		    cdsDt.Weight[] weights = ce.getWeightArray();
 		    for (cdsDt.Weight wt : weights) {
 			Date dateObserved = wt.getDate().getTime();
-			String dataField = filledOrEmpty(wt.getWeight());
+			String dataField = noNull(wt.getWeight());
 			ImportExportMeasurements.saveMeasurements("WT", demoNo, proNum, dataField, "in kg", dateObserved);
 		    }
 		    cdsDt.WaistCircumference[] waists = ce.getWaistCircumferenceArray();
 		    for (cdsDt.WaistCircumference wc : waists) {
 			Date dateObserved = wc.getDate().getTime();
-			String dataField = filledOrEmpty(wc.getWaistCircumference());
+			String dataField = noNull(wc.getWaistCircumference());
 			ImportExportMeasurements.saveMeasurements("WAIS", demoNo, proNum, dataField, dateObserved);
 		    }
 		    cdsDt.BloodPressure[] bloodp = ce.getBloodPressureArray();
 		    for (cdsDt.BloodPressure bp : bloodp) {
 			Date dateObserved = bp.getDate().getTime();
-			String dataField = filledOrEmpty(bp.getSystolicBP())+"/"+filledOrEmpty(bp.getDiastolicBP());
+			String dataField = noNull(bp.getSystolicBP())+"/"+noNull(bp.getDiastolicBP());
 			ImportExportMeasurements.saveMeasurements("BP", demoNo, proNum, dataField, dateObserved);
 		    }
 		    cdsDt.SmokingPacks[] smokp = ce.getSmokingPacksArray();
@@ -1336,36 +1342,35 @@ public class ImportDemographicDataAction3 extends Action {
     
     String[] getPersonName(cdsDt.PersonNameSimple person) {
 	String[] name = new String[2];
-	if (person==null) {
-	    name[0] = "";
-	    name[1] = "";
-	} else {	
-	    name[0] = filledOrEmpty(person.getFirstName());
-	    name[1] = filledOrEmpty(person.getLastName());
+	if (person!=null) {
+	    name[0] = noNull(person.getFirstName());
+	    name[1] = noNull(person.getLastName());
 	}
 	return name;
     }
     
     String[] getPersonName(cdsDt.PersonNameSimpleWithMiddleName person) {
 	String[] name = new String[2];
-	if (person==null) {
-	    name[0] = "";
-	    name[1] = "";
-	} else {	
-	    name[0] = filledOrEmpty(person.getFirstName());
-	    name[1] = filledOrEmpty(person.getLastName());
+	if (person!=null) {
+	    name[0] = noNull(person.getFirstName())+" "+noNull(person.getMiddleName());
+	    name[1] = noNull(person.getLastName());
 	}
 	return name;
     }
     
     String writeProviderData(String[] name, String ohip) throws SQLException {
-	String providerNo = "";
-	ProviderData pd = new ProviderData();
-	if (filled(ohip)) providerNo = filledOrEmpty(pd.getProviderNoByOhip(ohip));
+	String providerNo = getProviderNoByOhip(ohip);
 	if (!filled(providerNo)) {   //this is a new provider
+	    ProviderData pd = new ProviderData();
 	    providerNo = pd.getNewExtProviderNo();
-	    pd.addProvider(providerNo, name[0], name[1], filledOrEmpty(ohip));
+	    pd.addProvider(providerNo, name[0], name[1], noNull(ohip));
 	}
+	return providerNo;
+    }
+    
+    String getProviderNoByOhip(String ohip) throws SQLException {
+	String providerNo = "";
+	if (filled(ohip)) providerNo = new ProviderData().getProviderNoByOhip(ohip);
 	return providerNo;
     }
     
@@ -1424,11 +1429,8 @@ public class ImportDemographicDataAction3 extends Action {
 	return (s!=null && s.trim().length()>0);
     }
     
-    String filledOrEmpty(String nullOrTextlessStr) {
-	if (!filled(nullOrTextlessStr)) {
-	    nullOrTextlessStr = "";
-	}
-	return nullOrTextlessStr;
+    String noNull(String maybeNullText) {
+	return filled(maybeNullText) ? maybeNullText : "";
     }
     
     String appendLine(String baseStr, String addStr) {
@@ -1439,7 +1441,7 @@ public class ImportDemographicDataAction3 extends Action {
 	if (filled(baseStr)) {
 	    baseStr += filled(addStr) ? "\n"+label+addStr : "";
 	} else {
-	    baseStr = filledOrEmpty(label+addStr);
+	    baseStr = noNull(label+addStr);
 	}
 	return baseStr;
     }
