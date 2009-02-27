@@ -26,6 +26,10 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
@@ -148,17 +152,19 @@ public class EctValidation{
     public boolean isDate(String inputValue){
 
         boolean validation = true;
-        String datePattern1 = "yyyy-mm-dd";
-        String datePattern2 = "yyyy-m-d";  
-        String datePattern3 = "yyyy-mm-d";   
-        String datePattern4 = "yyyy-m-dd";   
-        org.apache.commons.validator.GenericValidator gValidator = new org.apache.commons.validator.GenericValidator();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
         
-        
-        if(!gValidator.isDate(inputValue, datePattern1, false) || !gValidator.isDate(inputValue, datePattern2, false) ||
-           !gValidator.isDate(inputValue, datePattern3, false) || !gValidator.isDate(inputValue, datePattern4, false)){                                                 
-            validation=false;
-        }
+        try {
+			Date d = sdf.parse(inputValue);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			if(c.get(Calendar.YEAR) > 9999) { // to prevent date parsing of more than 4-digit year
+				validation = false;
+			}
+		} catch (ParseException e) {
+			validation = false;
+		}
                
         return validation;
     }
