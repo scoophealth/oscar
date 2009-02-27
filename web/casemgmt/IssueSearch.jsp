@@ -75,26 +75,42 @@ function backToNote(from)
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 	<tr class="title">
 		<td></td>
+		<td>Issue Location</td>
 		<td>Issue Code</td>
 		<td>Issue Description</td>
 		<td>Issue Role</td>
 	</tr>
 
+<%-- table contents --%>
 
 <nested:iterate indexId="ind" id="newIssueCheckList" property="newIssueCheckList" type="org.oscarehr.casemgmt.web.CheckIssueBoxBean">
-<tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>" align="center">
-<td><nested:checkbox indexed="true" name="newIssueCheckList" property="checked"></nested:checkbox>
-<td><nested:write name="newIssueCheckList" property="issue.code"/></td>
-<logic:equal name="newIssueCheckList" property="issue.priority" value="allergy">
-	<td bgcolor="yellow"><nested:write name="newIssueCheckList" property="issue.description"/></td>
-</logic:equal>
-<logic:notEqual name="newIssueCheckList" property="issue.priority" value="allergy">
-	<td><nested:write name="newIssueCheckList" property="issue.description"/></td>
-</logic:notEqual>
-<td><nested:write name="newIssueCheckList" property="issue.role"/></td>
-</tr>
+	<tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>" align="center">
+		<td><nested:checkbox indexed="true" name="newIssueCheckList" property="checked"></nested:checkbox>
+		<td>
+			<logic:equal name="newIssueCheckList" property="communityString" value="false">
+					Local
+			</logic:equal>
+			<logic:notEqual name="newIssueCheckList" property="communityString" value="false">
+					Community
+			</logic:notEqual>
+		</td>
+		<td><nested:write name="newIssueCheckList" property="issue.code"/></td>
+		<logic:equal name="newIssueCheckList" property="issue.priority" value="allergy">
+			<td bgcolor="yellow">
+				<nested:write name="newIssueCheckList" property="issue.description"/>
+			</td>
+		</logic:equal>
+		<logic:notEqual name="newIssueCheckList" property="issue.priority" value="allergy">
+			<td>
+				<nested:write name="newIssueCheckList" property="issue.description"/>
+			</td>
+		</logic:notEqual>
+		<td><nested:write name="newIssueCheckList" property="issue.role"/></td>
+	</tr>
 </nested:iterate>
+
 </table>
+
 <br>
 <nested:submit value="add checked issue" onclick="this.form.method.value='issueAdd';"/>
 

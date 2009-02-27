@@ -35,14 +35,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.model.Provider;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -137,6 +138,17 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	protected void SetChecked(CheckBoxBean[] checkedlist, int id) {
 		for (int i = 0; i < checkedlist.length; i++)
 		{
+			if ((checkedlist[i].getCommunityIssue() == null || !checkedlist[i].getCommunityIssue().isRemote()) &&(checkedlist[i].getIssue().getId().intValue() == id))
+			{
+				checkedlist[i].setChecked("on");
+				break;
+			}
+		}
+	}
+	
+	protected void SetCheckedForCommunityIssues(CheckBoxBean[] checkedlist, int id) {
+		for (int i = 0; i < checkedlist.length; i++)
+		{
 			if (checkedlist[i].getIssue().getId().intValue() == id)
 			{
 				checkedlist[i].setChecked("on");
@@ -144,6 +156,8 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 			}
 		}
 	}
+
+	
 
 	protected boolean inCheckList(Long id, int[] list)	{
 		boolean ret = false;
@@ -253,6 +267,35 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
 		return cIssue;
         }
+        
+    protected CaseManagementCommunityIssue newIssueToCCIssue(String demoNo, Issue iss, Integer programId) 
+    {
+       	CaseManagementCommunityIssue cIssue = new CaseManagementCommunityIssue();
+		// cIssue.setActive(true);
+		cIssue.setAcute(false);
+		cIssue.setCertain(false);
+		cIssue.setDemographic_no(demoNo);
+	
+		cIssue.setIssue_id(iss.getId().longValue());
+	
+		cIssue.setIssue(iss);
+		cIssue.setMajor(false);
+		// cIssue.setMedical_diagnosis(true);
+		cIssue.setNotes(new HashSet());
+		cIssue.setResolved(false);
+		String issueType = iss.getRole();
+		cIssue.setType(issueType);
+		cIssue.setUpdate_date(new Date());
+		cIssue.setWriteAccess(true);
+		cIssue.setProgram_id(programId);
+		// add it to database
+		List uList = new ArrayList();
+		uList.add(cIssue);
+		caseManagementMgr.saveAndUpdateCaseIssues(uList);
+		// add new issues to ongoing concern
+		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
+		return cIssue;
+    }
 
 	/**
 	 * @param programId is optional, can be null for none.

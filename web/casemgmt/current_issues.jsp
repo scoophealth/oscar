@@ -39,6 +39,7 @@ Issue Filter Create Report View:
 	bgcolor="#C0C0C0">
 	<tr class="title">
 		<td></td>
+		<td>Code</td>
 		<td>Issue</td>
 		<td>Location</td>
 		<td>Acute</td>
@@ -62,16 +63,16 @@ Issue Filter Create Report View:
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<%
 				String checked="";
-				CaseManagementIssue issue = (CaseManagementIssue)pageContext.getAttribute("issue");
+				CaseManagementCommunityIssue issue = (CaseManagementCommunityIssue)pageContext.getAttribute("issue");
 				if(issue == null) {
 					System.out.println("issue=null");	
 				}
-				String issue_id = String.valueOf(issue.getIssue_id());
-				
+				String checkboxID = String.valueOf(issue.getCheckboxID());
+				// remote issues have no ID
 				String set_issues[] = (String[])request.getAttribute("checked_issues");
 				if(set_issues != null) {
 					for(int x=0;x<set_issues.length;x++) {
-						if(set_issues[x].equals(issue_id)) {
+						if(set_issues[x].equals(checkboxID)) {
 							checked="CHECKED";
 						}
 					}
@@ -80,13 +81,14 @@ Issue Filter Create Report View:
 				if("allergy".equals(issue.getIssue().getPriority()))
 					priority="yellow";
 			%>
-			<td><input type="checkbox" name="check_issue"
-				value="<c:out value="${issue.issue_id}"/>" <%=checked %>
-				onclick="document.caseManagementViewForm.submit();" /></td>
+			<td>
+				<input type="checkbox" name="check_issue" value="<c:out value="${issue.checkboxID}"/>" <%=checked %> onclick="document.caseManagementViewForm.submit();" />
+			</td>
+			<td><c:out value="${issue.issue.code}" /></td>
 			<td bgcolor=<%=priority%>><c:out
 				value="${issue.issue.description }" /></td>
 			<td>
-				<c:if test="${issue.remote=='true'}">remote</c:if>
+				<c:if test="${issue.remote=='true'}"><c:out value="${issue.facilityName }" /></c:if>
 				<c:if test="${issue.remote=='false'}">local</c:if>
 			</td>
 			<td><c:if test="${issue.acute=='true'}">acute</c:if> <c:if

@@ -29,10 +29,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -67,6 +67,7 @@ import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -692,7 +693,12 @@ public class CaseManagementManager {
         */
     }
     
-    
+    /**
+     * Analyzes the issues attached to each note belonging to the supplied Demographic, searching for the supplied issue ID.  This method searches local issues only.
+     * @param issid the desired issue ID to find
+     * @param demoNo the desired demographic ID to find issues for
+     * @return true if some note for this demographic is attached to this issue, false otherwise
+     */
     public boolean haveIssue(Long issid, String demoNo) {
         List allNotes = caseManagementNoteDAO.getNotesByDemographic(demoNo);
         Iterator itr = allNotes.iterator();
@@ -1028,7 +1034,6 @@ public class CaseManagementManager {
         return result;
     }
 
-    //private Map convertProgramAccessListToMap(List paList) {
     public Map convertProgramAccessListToMap(List paList) {
         Map map = new HashMap();
 
@@ -1039,8 +1044,14 @@ public class CaseManagementManager {
         return map;
     }
 
+    /**
+     * 
+     * @param providerNo
+     * @param programId
+     * @param search
+     * @return
+     */
     public List searchIssues(String providerNo, String programId, String search) {
-        //get Role
         //Get Role - if no ProgramProvider record found, show no issues.
         List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
         if (ppList == null || ppList.isEmpty()) {
@@ -1049,7 +1060,7 @@ public class CaseManagementManager {
         ProgramProvider pp = (ProgramProvider)ppList.get(0);
         Role role = pp.getRole();
 
-        //get program accesses
+        //get program accesses... program allows either all roles or not all roles (does this mean no roles?)
         List paList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
         Map paMap = convertProgramAccessListToMap(paList);
 
@@ -1083,6 +1094,14 @@ public class CaseManagementManager {
         return issList;
     }
 
+    /**
+     * Filters a list of CaseManagementIssue objects based on role.
+     * @param issues
+     * @param providerNo
+     * @param programId
+     * @param currentFacilityId
+     * @return
+     */
     public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String providerNo, String programId, Integer currentFacilityId) {
         List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
@@ -1162,6 +1181,111 @@ public class CaseManagementManager {
 
         return filteredIssues;
     }
+    
+    /**
+     * Filters a list of CaseManagementIssue objects based on role.
+     * @param issues
+     * @param providerNo
+     * @param programId
+     * @param currentFacilityId
+     * @return
+     */
+    public List<CaseManagementCommunityIssue> filterCommunityIssues(List<CaseManagementCommunityIssue> issues, String providerNo, String programId, Integer currentFacilityId) {
+        List<CaseManagementCommunityIssue> filteredIssues = new ArrayList<CaseManagementCommunityIssue>();
+
+        if (issues.isEmpty()) {
+            return issues;
+        }
+
+        //Get Role - if no ProgramProvider record found, show no issues.
+        List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+        if (ppList == null || ppList.isEmpty()) {
+            return new ArrayList();
+        }
+
+        ProgramProvider pp = (ProgramProvider)ppList.get(0);
+        Role role = pp.getRole();
+
+        //Load up access list from program
+        List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+        Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+
+        //iterate through the issue list
+        for (Iterator iter = issues.iterator(); iter.hasNext();) {
+            CaseManagementCommunityIssue cmIssue = (CaseManagementCommunityIssue)iter.next();
+            String issueRole = cmIssue.getIssue().getRole().toLowerCase();
+            ProgramAccess pa = null;
+            boolean add = false;
+
+            //write
+            pa = (ProgramAccess)programAccessMap.get("write " + issueRole + " issues");
+            if (pa != null) {
+                if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+                    cmIssue.setWriteAccess(true);
+                    add = true;
+                }
+            }
+            else {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
+                    //default
+                    cmIssue.setWriteAccess(true);
+                    add = true;
+                }
+            }
+            pa = null;
+            //read
+            pa = (ProgramAccess)programAccessMap.get("read " + issueRole + " issues");
+            if (pa != null) {
+                if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+                    //filteredIssues.add(cmIssue);
+                    add = true;
+                }
+            }
+            else {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
+                    //default
+                    add = true;
+                }
+            }
+
+            //apply defaults
+            if (!add) {
+                if (issueRole.equalsIgnoreCase(role.getName())) {
+                    cmIssue.setWriteAccess(true);
+                    add = true;
+                }
+            }
+
+            //did it pass the test?
+            if (add) {
+                filteredIssues.add(cmIssue);
+            }
+        }
+        
+        // filter issues based on facility
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+            filteredIssues = communityIssuesFacilityFiltering(currentFacilityId, filteredIssues);
+        }
+
+        return filteredIssues;
+    }
+    
+    public List<CaseManagementCommunityIssue> addRemoteIssueRoles(List<CaseManagementCommunityIssue> issues)
+    {
+    	ArrayList<CaseManagementCommunityIssue> filtered = new ArrayList<CaseManagementCommunityIssue>();
+    	
+    	for(CaseManagementCommunityIssue issue: issues)
+    	{
+    		Issue localIssue = issueDAO.findIssueByCode(issue.getIssue().getCode());
+    		if(localIssue != null)
+    		{
+    			issue.getIssue().setRole(localIssue.getRole());
+    			filtered.add(issue);
+    		}
+    	}
+    	
+    	return filtered;
+    }
 
     private List<CaseManagementIssue> issuesFacilityFiltering(Integer currentFacilityId, List<CaseManagementIssue> issues) {
         ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
@@ -1175,6 +1299,18 @@ public class CaseManagementManager {
         return results;
     }
 
+    private List<CaseManagementCommunityIssue> communityIssuesFacilityFiltering(Integer currentFacilityId, List<CaseManagementCommunityIssue> issues) {
+        ArrayList<CaseManagementCommunityIssue> results = new ArrayList<CaseManagementCommunityIssue>();
+
+        for (CaseManagementCommunityIssue caseManagementIssue : issues) {
+            Integer programId = caseManagementIssue.getProgram_id();
+            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) 
+            	results.add(caseManagementIssue);
+        }
+
+        return results;
+    }
+    
     private List<CaseManagementNote> notesFacilityFiltering(Integer currentFacilityId, List<CaseManagementNote> notes) {
 
         ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();

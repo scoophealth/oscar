@@ -28,11 +28,13 @@ import java.util.List;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.caisi.model.Role;
+import org.jboss.logging.Logger;
 import org.oscarehr.casemgmt.model.Issue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class IssueDAO extends HibernateDaoSupport {
-
+	private Logger log = Logger.getLogger(this.getClass());
+	
     public Issue getIssue(Long id) {
         return (Issue)this.getHibernateTemplate().get(Issue.class, id);
     }
@@ -82,7 +84,7 @@ public class IssueDAO extends HibernateDaoSupport {
         search = "%" + search + "%";
         search = search.toLowerCase();
         String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?) and i.role in (" + roleList + ")";
-        System.out.println(sql);
+        log.info(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
 
     }
@@ -91,7 +93,28 @@ public class IssueDAO extends HibernateDaoSupport {
         search = "%" + search + "%";
         search = search.toLowerCase();
         String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?)";
-        System.out.println(sql);
+        log.info(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
+    }
+    
+    /**
+     * Retrieves a list of Issue codes that have a type matching what is configured in oscar_mcmaster.properties as COMMUNITY_ISSUE_CODETYPE,
+     * or an empty list if this property is not found.
+     * @param type
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public List<String> getLocalCodesByCommunityType(String type)
+    {
+    	List<String> codes;
+    	if(type == null || type.equals(""))
+    	{
+    		codes = new ArrayList<String>();
+    	}
+    	else
+    	{
+    		codes = (List<String>)this.getHibernateTemplate().find("FROM Issue i WHERE i.type = ?", new Object[] {type.toLowerCase()});
+    	}
+    	return codes;
     }
 }

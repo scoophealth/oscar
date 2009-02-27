@@ -321,52 +321,53 @@ if (pId==null) pId="";
 				%>
 				<%
 				org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
-				boolean writeAccess = cbb.getIssue().isWriteAccess();
-				boolean disabled = !writeAccess;
+				boolean writeAccess = cbb.getCommunityIssue().isWriteAccess();
+				boolean disabled = cbb.getCommunityIssue().isRemote() ? true : !writeAccess;
 				%>
 				<td>
-					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=disabled%>"></nested:checkbox>
+					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%= cbb.getCommunityIssue().isRemote() ? false : disabled %>"></nested:checkbox>
 				</td>
-								
-					<logic:equal name="issueCheckList" property="issue.issue.priority" value="allergy">
+					<logic:equal name="issueCheckList" property="communityIssue.issue.priority" value="allergy">
 						<td bgcolor="yellow">
-							<nested:write name="issueCheckList"	property="issue.issue.description" />
+							<nested:write name="issueCheckList"	property="communityIssue.issue.description" />
 						</td>
 					</logic:equal>
-					<logic:notEqual name="issueCheckList" property="issue.issue.priority" value="allergy">
+					<logic:notEqual name="issueCheckList" property="communityIssue.issue.priority" value="allergy">
 						<td>
-							<nested:write name="issueCheckList"	property="issue.issue.description" />
+							<nested:write name="issueCheckList"	property="communityIssue.issue.description" /> 
 						</td>
 					</logic:notEqual>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.acute" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="communityIssue.acute" disabled="<%=disabled%>">
 						<html:option value="true">acute</html:option>
 						<html:option value="false">chronic</html:option>
 					</nested:select>	
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList" property="issue.certain"  disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList" property="communityIssue.certain"  disabled="<%=disabled%>">
 						<html:option value="true">certain</html:option>
 						<html:option value="false">uncertain</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.major" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="communityIssue.major" disabled="<%=disabled%>">
 						<html:option value="true">major</html:option>
 						<html:option value="false">not major</html:option>
 					</nested:select>
 				</td>				
 				<td>
 					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
-					 <nested:select indexed="true" name="issueCheckList" property="issue.resolved"  disabled="<%=disabled%>">										 	
+					 <nested:select indexed="true" name="issueCheckList" property="communityIssue.resolved"  disabled="<%=disabled%>">										 	
 						<html:option value="true">resolved</html:option>
 						<html:option value="false">unresolved</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:text indexed="true" name="issueCheckList" property="issue.type" disabled="<%=disabled%>"/>
+					<nested:text indexed="true" name="issueCheckList" property="communityIssue.type" disabled="<%=disabled%>"/>
 				</td>
-				<td><nested:equal name="issueCheckList" property="used"
+				<td>
+<% if (!cbb.getCommunityIssue().isRemote()){ %>
+				<nested:equal name="issueCheckList" property="used"
 					value="false">
 					<%submitString = "this.form.method.value='issueDelete';";
 			submitString = submitString + "this.form.deleteId.value=" + "'"
@@ -381,9 +382,14 @@ if (pId==null) pId="";
 					+ ind.intValue() + "';";
 			%>					
 					<input type="submit" value="Change Issue" onclick="<%=submitString%>">
+<%}
+else{%>
+					Active Community Issue
+<%}%>
 				</td>
 			</tr>
 		</nested:iterate>
+
 	</table>
 	<br>
 	<br>

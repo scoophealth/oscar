@@ -55,16 +55,21 @@ import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.casemgmt.service.CommunityIssueManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -76,6 +81,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
 	private CaisiIntegratorManager caisiIntegratorManager=null;
+	private FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 	
 	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
     	this.caisiIntegratorManager = caisiIntegratorManager;
@@ -312,6 +318,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		start = current;
 		if (tab.equals("Current Issues")) {
 			List<CaseManagementIssue> issues = null;
+			/*
 			if (!caseForm.getHideActiveIssue().equals("true")) {
 				log.debug("Get Issues");
 				issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
@@ -326,18 +333,38 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				log.debug("Get Active Issues " + String.valueOf(current - start));
 				start = current;
 			}
-			/*
-			 * if(request.getSession().getAttribute("archiveView")!="true") request.setAttribute("Issues",caseManagementMgr.filterIssues(issues,providerNo,programId)); else
-			 * request.setAttribute("Issues",issues);
-			 */
-			log.debug("Filter Issues");
-			issues = caseManagementMgr.filterIssues(issues, providerNo, programId, currentFacilityId);
+			
+			// remote issues
+			List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
+			// check facility integrator status
+			Facility currentFacility = facilityDao.find(currentFacilityId);
+			if(currentFacility.isIntegratorEnabled())
+			{
+				// get remote issues
+				CaisiIntegratorManager ciMan = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
+				remoteIssues = ciMan.getRemoteIssues(currentFacilityId, Integer.valueOf(demoNo));
+			}
+			
+			// combine local and remote
+			log.debug("Combine local and remote");
+			List<CaseManagementCommunityIssue> communityIssues = caseManagementMgr.combineLocalAndRemoteIssues(issues, remoteIssues);
+			
 			current = System.currentTimeMillis();
 			log.debug("FILTER ISSUES " + String.valueOf(current - start));
 			start = current;
-
-			request.setAttribute("Issues", issues);
-
+ 
+			log.debug("Filter Issues");
+			communityIssues = caseManagementMgr.filterCommunityIssues(communityIssues, providerNo, programId, currentFacilityId);
+			current = System.currentTimeMillis();
+			log.debug("FILTER ISSUES " + String.valueOf(current - start));
+			request.setAttribute("Issues", communityIssues);
+					
+			start = current;
+			*/
+			Facility currentFacility = facilityDao.find(currentFacilityId);
+			List<CaseManagementCommunityIssue> communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, currentFacilityId, currentFacility.isIntegratorEnabled(), Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+			request.setAttribute("Issues", communityIssues);
+			
 			/* PROGRESS NOTES */
 			List<CaseManagementNote> notes = null;
 
@@ -349,18 +376,32 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			log.debug("Get stale note date " + String.valueOf(current - start));
 			start = current;
 
+			// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
 			String[] checked_issues = request.getParameterValues("check_issue");
-			if (checked_issues != null && checked_issues[0].trim().length() > 0) {
+			if (checked_issues != null && checked_issues[0].trim().length() > 0) { // something is checked
 				// need to apply a filter
 				log.debug("Get Notes with checked issues");
 				request.setAttribute("checked_issues", checked_issues);
-				notes = caseManagementMgr.getNotes(demoNo, checked_issues);
+				// construct an array of checked issues by ID
+				String[] checked_issueIDs = new String[checked_issues.length];
+				for(int i=0;i<checked_issues.length;i++)
+				{
+					for(CaseManagementCommunityIssue issue: communityIssues)
+					{
+						if(issue.getCheckboxID().equals(checked_issues[i]))
+						{
+							checked_issueIDs[i] = Long.toString(issue.getIssue_id());
+							continue;
+						}
+					}
+				}
+				notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 				notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 				current = System.currentTimeMillis();
 				log.debug("Get Notes with checked issues " + String.valueOf(current - start));
 				start = current;
 			}
-			else {
+			else { // nothing is checked
 				log.debug("Get Notes");
 				notes = caseManagementMgr.getNotes(demoNo);
 				notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));

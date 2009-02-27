@@ -31,6 +31,8 @@ public class CheckIssueBoxBean implements Serializable
 {
 	private boolean isChecked = false;
 	private Issue issue = new Issue();
+	private boolean community = false;
+	private String communityString = Boolean.toString(community);
 	
 	public boolean isChecked()
 	{
@@ -48,7 +50,16 @@ public class CheckIssueBoxBean implements Serializable
 	{
 		this.issue = issue;
 	}
-
+	public boolean getCommunity() {
+		return community;
+	}
+	public void setCommunity(boolean isCommunity) {
+		this.community = isCommunity;
+		this.communityString = Boolean.toString(isCommunity);
+	}
+	public String getCommunityString() {
+		return communityString;
+	}
 	
 
 }

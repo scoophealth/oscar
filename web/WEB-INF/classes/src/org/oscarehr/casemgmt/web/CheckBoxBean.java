@@ -23,13 +23,18 @@
 package org.oscarehr.casemgmt.web;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.jfree.util.Log;
+import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 
 public class CheckBoxBean implements Serializable
 {
 	private String checked = "off";
 	private CaseManagementIssue issue = new CaseManagementIssue();
+	private CaseManagementCommunityIssue communityIssue = new CaseManagementCommunityIssue();
 	private boolean isUsed = false;
 	
 	
@@ -40,6 +45,14 @@ public class CheckBoxBean implements Serializable
 	public void setIssue(CaseManagementIssue issue)
 	{
 		this.issue = issue;
+		try
+		{
+			BeanUtils.copyProperties(this.communityIssue, this.issue);
+		}
+		catch(Exception e)
+		{
+			Log.warn("Error encountered copying issue to CaseManagementCommunityIssue bean, further errors may occur", e);
+		}
 	}
 	
 	public boolean isUsed()
@@ -58,6 +71,12 @@ public class CheckBoxBean implements Serializable
 	public void setChecked(String checked)
 	{
 		this.checked = checked;
+	}
+	public CaseManagementCommunityIssue getCommunityIssue() {
+		return communityIssue;
+	}
+	public void setCommunityIssue(CaseManagementCommunityIssue communityIssue) {
+		this.communityIssue = communityIssue;
 	}
 	
 

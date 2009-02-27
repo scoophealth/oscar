@@ -46,7 +46,7 @@
 <html:base />
 <title>Case Management</title>
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta http-equiv="refresh" content="300;">
+<!-- <meta http-equiv="refresh" content="300;"> -->
 <script type="text/javascript" language=javascript>
     </script>
 </head>
@@ -54,12 +54,8 @@
 <table border="0" width="100%" cellspacing="5">
 	<tbody>
 		<tr>
-
-
-			<td width="22%" valign="top"><tiles:insert
-				attribute="navigation" /></td>
+			<td width="22%" valign="top"><tiles:insert attribute="navigation" /></td>
 			<td width="78%" valign="top"><tiles:insert attribute="body" /></td>
-
 		</tr>
 	</tbody>
 </table>

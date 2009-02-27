@@ -53,6 +53,7 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected AdmissionManager admissionMgr;
 	protected SurveyManager surveyMgr;
 	
+	
 	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
 	}
