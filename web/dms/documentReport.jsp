@@ -381,11 +381,11 @@ function popup1(height, width, url, windowName){
 					<td width="15%"><b><a
 						href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgCreator" /></a></b></td>
-					<td width="10%"><a
+					<td width="8%"><a
 						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
 						title="Observation Date"><b>Date</b></a></td>
 					<%-- <td width="10%"><b>Status</b></td> --%>
-					<td width="9%">&nbsp;</td>
+					<td width="11%">&nbsp;</td>
 				</tr>
 
 				<%
@@ -424,7 +424,7 @@ function popup1(height, width, url, windowName){
 					<td><%=curdoc.getCreatorName()%></td>
 					<td><%=curdoc.getObservationDate()%></td>
 					<%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
-					<td>
+					<td valign="top">
 		    <%  if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
 			    if( curdoc.getStatus() == 'D' ) { %>
 					     <a href="documentReport.jsp?undelDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>&viewstatus=<%=viewstatus%>"><img
@@ -457,9 +457,13 @@ function popup1(height, width, url, windowName){
 					     title="<bean:message key="dms.documentReport.btnEdit"/>"></a>
 		    <%	} %>
 					    <a href="#" title="Annotation"
-					       onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=user_no%>','anwin','width=400,height=250');">
-					      <img src="/oscar/images/notes.gif" border="0">
-					    </a></td>
+					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=user_no%>','anwin','width=400,height=250');">
+					      <img src="../images/notes.gif" border="0">
+					    </a>
+                                            
+                                            &nbsp;<a href="javascript:void(0);" title="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=curdoc.getDocId()%>&demographic_no=<%=moduleid%>','tickler')">T</a>
+                                  
+                                            </td>
 				</tr>
 
 				<%}
