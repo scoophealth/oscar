@@ -225,7 +225,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
                                     <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
                                     <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=demographicID%>','tickler')"/>
+                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= request.getParameter("segmentID")%>&demographic_no=<%=demographicID%>','tickler')"/>
                                     <% } %>
                                     <% if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart%>                            
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
