@@ -271,7 +271,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
               <INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
               <INPUT TYPE="hidden" NAME="remarks" VALUE="">
               <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>"/>
-              <input type="hidden" name="updateParent" value="<%=updateParent%>"/>
+              <input type="hidden" name="updateParent" value="<%=updateParent%>"/> 
  </form>
 </table>
 <table width="100%" border="0" bgcolor="#EEEEFF">
@@ -323,7 +323,11 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
                 }      
                 apptMainBean.closePstmtConn();
             %>
-          </select></td>
+          </select>
+          
+           <input type="hidden" name="docType" value="<%=request.getParameter("docType")%>"/>
+           <input type="hidden" name="docId" value="<%=request.getParameter("docId")%>"/>
+      </td>
       <td>&nbsp;</td>
     </tr>
     <tr> 
@@ -331,7 +335,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
       <td valign="top"> <textarea style="font-face:Verdana, Arial, Helvetica, sans-serif"name="textarea" cols="50" rows="10"></textarea></td>
       <td>&nbsp;</td>
     </tr>
- 
+        
      <INPUT TYPE="hidden" NAME="user_no" VALUE="<%=user_no%>">
     <tr> 
       <td><input type="button" name="Button" value="<bean:message key="tickler.ticklerAdd.btnCancel"/>" onClick="window.close()"></td>
