@@ -23,20 +23,21 @@
  * Ontario, Canada 
  */
 -->
-
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>                                
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,org.caisi.model.*,org.caisi.dao.*,oscar.util.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"  %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbTicker.jsp" %>
 <% 
 
-GregorianCalendar now=new GregorianCalendar();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
+//GregorianCalendar now=new GregorianCalendar();
+//  int curYear = now.get(Calendar.YEAR);
+//  int curMonth = (now.get(Calendar.MONTH)+1);
+//  int curDay = now.get(Calendar.DAY_OF_MONTH);
   
-  String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
+ // String nowDate = String.valueOf(curYear)+"/"+String.valueOf(curMonth) + "/" + String.valueOf(curDay)+ " " +now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE) + ":"+now.get(Calendar.SECOND);
 
 String module="", module_id="", doctype="", docdesc="", docxml="", doccreator="", docdate="", docfilename="", docpriority="", docassigned="";
 module_id = request.getParameter("demographic_no");
@@ -45,25 +46,52 @@ docdate = request.getParameter("xml_appointment_date");
 docfilename =request.getParameter("textarea");
 docpriority =request.getParameter("priority");
 docassigned =request.getParameter("task_assigned_to");
+
+String docType =request.getParameter("docType");
+String docId = request.getParameter("docId");
+
+    
              
-             
-
-
-    String[] param =new String[8];
-	  param[0]=module_id;
-	  param[1]=docfilename;
-	  param[2]="A";
-	  param[3]=nowDate;
-	  param[4]=docdate;
-	  param[5]=doccreator;
-	  param[6]=docpriority;
-	  param[7]=docassigned;
-
- int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_tickler");
+Tickler tickler = new Tickler();
+    tickler.setDemographic_no(module_id);
+    tickler.setStatus('A');
+    tickler.setUpdate_date(new java.util.Date());
+    tickler.setPriority(docpriority);
+    tickler.setTask_assigned_to(docassigned);
+    tickler.setCreator(doccreator);
+    tickler.setMessage(docfilename);
+    tickler.setService_date(UtilDateUtilities.StringToDate(docdate));
+    
+  
+   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+   TicklerDAO ticklerDAO = (TicklerDAO) ctx.getBean("ticklerDAOT");
+   ticklerDAO.saveTickler(tickler);
+    
+   System.out.println("get Tickler ID == "+tickler.getTickler_no()+" >>>>>>>> "+docType+" ======== "+docId);
+   
+   if (docType != null && docId != null && !docType.trim().equals("") && !docId.trim().equals("")){
+       
+      long ticklerNo = tickler.getTickler_no();
+      if (ticklerNo > 0){
+      TicklerLink tLink = new TicklerLink();      
+         tLink.setTableId(Long.parseLong(docId));
+         tLink.setTableName(docType);
+         tLink.setTicklerNo(ticklerNo);
+         TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
+         ticklerLinkDAO.save(tLink);
+      }else{
+          System.out.println("LESS THAN");
+      }
+   }else{
+       System.out.println("Whaa happened???");
+   }
+ 
+   boolean rowsAffected = true;
+ 
 String parentAjaxId = request.getParameter("parentAjaxId");
 String updateParent = request.getParameter("updateParent");
 
-if (rowsAffected == 1){
+if (rowsAffected ){
 %>
 <script LANGUAGE="JavaScript">
       
