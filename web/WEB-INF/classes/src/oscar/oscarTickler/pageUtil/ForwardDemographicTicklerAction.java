@@ -55,6 +55,14 @@ public class ForwardDemographicTicklerAction extends Action {
           Hashtable h = DemographicNameAgeString.getInstance().getNameAgeSexHashtable(demoNo);
           request.setAttribute("demographic_no", demoNo);
           request.setAttribute("demoName", ""+h.get("lastName")+", "+h.get("firstName"));
+          
+          String docType = request.getParameter("docType");
+          String docId = request.getParameter("docId");
+          
+          request.setAttribute("docType", docType);
+          request.setAttribute("docId", docId);
+          
+          
        }
        return mapping.findForward("success");   
     }     
