@@ -88,6 +88,8 @@
 	<bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
         <bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
+        <bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
+        
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
