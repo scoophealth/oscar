@@ -27,6 +27,8 @@ package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
 /**
@@ -44,6 +46,8 @@ import org.jdom.Element;
  * @author jaygallagher
  */
 public class TargetColour {
+    private static final Log log = LogFactory.getLog(TargetColour.class);
+    
     private String additionConsequence = null;
     private String indicationColor = null;
     private List<TargetCondition> targetConditions = new ArrayList();
@@ -83,6 +87,8 @@ public class TargetColour {
         if (getAdditionConsequence() != null){
             consequence+=getAdditionConsequence();
         }
+        
+        log.debug("ruleName"+ruleName+" cond size "+getTargetConditions().size()+" list size "+list.size());
     
         RuleBaseCreator rcb = new RuleBaseCreator();
         Element ruleElement = rcb.getRule(ruleName, "oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper", list,  consequence) ;
