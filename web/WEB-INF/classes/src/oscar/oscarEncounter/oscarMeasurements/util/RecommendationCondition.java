@@ -93,7 +93,7 @@ public class RecommendationCondition {
             }else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
                 toParse = toParse.replaceFirst("&gt;","");
                 toParse = toParse.replaceFirst(">","");
-                int gt = Integer.parseInt(toParse);
+                int gt = Integer.parseInt(toParse.trim());
                 list.add(new DSCondition("getLastDateRecordedInMonths", param, ">", ""+gt));  
                
             }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
@@ -103,7 +103,7 @@ public class RecommendationCondition {
                 int lt = Integer.parseInt(toParse);           
                 list.add(new DSCondition("getLastDateRecordedInMonths", param, "<=", ""+lt));
             }else if (!toParse.equals("")){ // less than style
-                int eq = Integer.parseInt(toParse); 
+                int eq = Integer.parseInt(toParse.trim()); 
                 list.add(new DSCondition("getLastDateRecordedInMonths", param, "==", ""+eq));
             }
         }else if ("lastValueAsInt".equals(type)){
