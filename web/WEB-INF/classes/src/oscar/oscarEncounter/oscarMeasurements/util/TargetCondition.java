@@ -72,7 +72,7 @@ public class TargetCondition {
     }
     
     public void getRuleBaseElement(ArrayList list){
-        
+        log.debug("creating rules for "+type+" List contains "+list.size()+ " value "+value);
         
         if ("getDataAsDouble".equals(type)){
             String toParse = value;
@@ -104,13 +104,13 @@ public class TargetCondition {
             ///---
           
         }else if ("isMale".equals(type)){
-            if (value == null ){
+            if (value == null || value.equalsIgnoreCase("true")){
                 list.add(new DSCondition("isMale", "", "==", "true"));
             }
             //        list.add(new DSCondition("getLastDateRecordedInMonths", measurement, "<=", betweenVals[1]));
             
         }else if ("isFemale".equals(type)){
-            if (value == null ){
+            if (value == null || value.equalsIgnoreCase("true") ){
                 list.add(new DSCondition("isFemale", "", "==", "true"));
             }
         }else if ("getNumberFromSplit".equals(type)){
