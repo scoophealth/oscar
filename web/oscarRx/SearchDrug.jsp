@@ -383,8 +383,8 @@ function load() {
 									name="chkDelete" align="center" drugId=<%= drug.getDrugId() %> />
 								</td>
 								<td width="20px" align="center">
-								    <a href="#" title="Annotation" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
-								    <img src="/oscar/images/notes.gif" border="0"></a>
+								    <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
+								    <img src="../images/notes.gif" border="0"></a>
 								</td>
 							</tr>
 							<%
