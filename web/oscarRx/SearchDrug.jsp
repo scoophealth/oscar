@@ -355,6 +355,16 @@ function load() {
                                 for(int i=0; i<prescribedDrugs.length; i++) {
                                     oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                                     String styleColor = "";
+                                    
+                                   if (request.getParameter("status")!=null ){  //TODO: Redo this in a better way
+                                        String stat = request.getParameter("status");
+                                        if (stat != null && stat.equals("active") && !drug.isCurrent() ) {
+                                            continue;
+                                        }else if(stat != null && stat.equals("inactive") && drug.isCurrent() ) {
+                                            continue;
+                                        }
+                                    }
+                                    
                                     if(drug.isCurrent() == true && drug.isArchived() ){
 					styleColor="style=\"color:red;text-decoration: line-through;\"";  
                                     }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
@@ -397,9 +407,23 @@ function load() {
 						<table width="100%" cellspacing=0 cellpadding=0>
 							<tr>
 								<td align=left>
-								<% if(showall) { %> <a href="SearchDrug.jsp">Show Current</a> <% } else { %>
-								<a href="SearchDrug.jsp?show=all">Show All</a> <% } %>
-								</td>
+								<% 
+                                                                 String show = "&show=all";
+                                                                if(showall) { %> 
+                                                                    <a href="SearchDrug.jsp">Show Current</a> 
+                                                                <% } else { 
+                                                                     show ="";%>
+                                                                    <a href="SearchDrug.jsp?show=all">Show All</a> 
+                                                                <% } %>
+								&nbsp;&nbsp;&nbsp;
+                                                                <a href="SearchDrug.jsp?status=active<%=show%>">Active</a>
+                                                                -
+                                                                <a href="SearchDrug.jsp?status=inactive<%=show%>">Inactive</a>
+                                                                -
+                                                                <a href="SearchDrug.jsp?status=all<%=show%>">All</a>
+                                                                
+
+                                                                </td>
 								<td align=right><span style="width: 350px; align: right">
 								<input type=button name="cmdAllergies"
 									value="View / Edit Allergies" class="ControlPushButton"
