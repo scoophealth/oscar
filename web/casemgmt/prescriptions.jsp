@@ -59,7 +59,7 @@ Prescriptions
 		</c:if>
 		<td bgcolor="white">
 			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>'>
-				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?gcn=<c:out value="${prescription.GCN_SEQNO}"/>&cn=<c:out value="${prescription.customName}"/>" >
+				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?gcn=<c:out value="${prescription.GCN_SEQNO}"/>&cn=<c:out value="${prescription.customName}"/>&remoteFacilityId=<c:out value="${prescription.remoteFacilityId}"/>&remoteDrugId=<c:out value="${prescription.remoteDrugId}"/>" >
 					<c:out value="${prescription.drug_special}"/>
 				</a>
 			</caisirole:SecurityAccess>
@@ -71,11 +71,11 @@ Prescriptions
 		
 		<c:if test="${isIntegratorEnabled}">
 			<td bgcolor="white">
-				<c:if test="${empty prescription.fromRemoteFacilityName}">
+				<c:if test="${empty prescription.remoteFacilityName}">
 					local
 				</c:if>
-				<c:if test="${not empty prescription.fromRemoteFacilityName}">
-					<c:out value="${prescription.fromRemoteFacilityName}"/>
+				<c:if test="${not empty prescription.remoteFacilityName}">
+					<c:out value="${prescription.remoteFacilityName}"/>
 				</c:if>
 			</td>
 		</c:if>

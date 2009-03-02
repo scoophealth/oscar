@@ -32,24 +32,42 @@ public class PrescriptDrug {
 	private String BN;
 	private Integer GCN_SEQNO;
 	private String customName;
-	private String regionalIdentifier=null;
-	private String fromRemoteFacilityName = null;
+	private String regionalIdentifier = null;
+	private String remoteFacilityName = null;
+	private int remoteFacilityId = -1;
+	private int remoteDrugId = -1;
 
 	public String getRegionalIdentifier() {
-    	return regionalIdentifier;
-    }
+		return regionalIdentifier;
+	}
+
+	public int getRemoteFacilityId() {
+		return remoteFacilityId;
+	}
+
+	public void setRemoteFacilityId(int remoteFacilityId) {
+		this.remoteFacilityId = remoteFacilityId;
+	}
+
+	public int getRemoteDrugId() {
+		return remoteDrugId;
+	}
+
+	public void setRemoteDrugId(int remoteDrugId) {
+		this.remoteDrugId = remoteDrugId;
+	}
 
 	public void setRegionalIdentifier(String regionalIdentifier) {
-    	this.regionalIdentifier = regionalIdentifier;
-    }
+		this.regionalIdentifier = regionalIdentifier;
+	}
 
-	public String getFromRemoteFacilityName() {
-    	return fromRemoteFacilityName;
-    }
+	public String getRemoteFacilityName() {
+		return remoteFacilityName;
+	}
 
-	public void setFromRemoteFacilityName(String fromRemoteFacilityName) {
-    	this.fromRemoteFacilityName = fromRemoteFacilityName;
-    }
+	public void setRemoteFacilityName(String remoteFacilityName) {
+		this.remoteFacilityName = remoteFacilityName;
+	}
 
 	public Date getDate_prescribed() {
 		return date_prescribed;
@@ -68,9 +86,9 @@ public class PrescriptDrug {
 	}
 
 	public boolean isExpired() {
-		if (end_date==null) return(false);
-		
-		return((new Date()).after(end_date));
+		if (end_date == null) return (false);
+
+		return ((new Date()).after(end_date));
 	}
 
 	public Date getEnd_date() {
