@@ -29,6 +29,8 @@
 package oscar.oscarReport.ClinicalReports;
 
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -36,6 +38,8 @@ import java.util.List;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+
+import oscar.OscarProperties;
 
 /**
  *
@@ -145,9 +149,27 @@ public class ClinicalReportManager {
             
             String[] flowsheetsArray = {"oscar/oscarReport/ClinicalReports/ClinicalReports.xml"
                                         };             
+            
+            OscarProperties properties = OscarProperties.getInstance();
+            String userConfigFilePath = (String)properties.get("CLINICAL_REPORT_CONFIG_FILE");            
+            boolean userConfigLoaded = false;
 
-            for ( int i = 0; i < flowsheetsArray.length;i++){        
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);
+            for ( int i = 0; i < flowsheetsArray.length;i++){  
+                InputStream is = null;
+                
+                if( userConfigFilePath != null && !userConfigLoaded ) {
+                    try {
+                        is = new FileInputStream(userConfigFilePath);
+                        userConfigLoaded = true;                    
+                    } catch( FileNotFoundException ex ) {
+                        ex.printStackTrace();
+                        is = null;
+                    }
+                }                                
+                
+                if( is == null ) {
+                    is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);                
+                }
 
                 try{              
                     SAXBuilder parser = new SAXBuilder();
