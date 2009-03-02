@@ -34,6 +34,9 @@ Prescriptions
 <tr class="title">
 	<td>Start Date</td>
 	<td>Prescription Details</td>
+	<c:if test="${isIntegratorEnabled}">
+		<td>Location Prescribed</td>
+	</c:if>
 </tr>
 <c:forEach var="prescription" items="${Prescriptions}">
 	<tr>
@@ -54,20 +57,28 @@ Prescriptions
 		<c:if test="${!prescription.expired && !prescription.drug_achived}">
 		<%styleColor="style=\"color:red;\"";%>
 		</c:if>
-		<td bgcolor="white" >
-		
-		<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>'>
-			<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?gcn=<c:out value="${prescription.GCN_SEQNO}"/>&cn=<c:out value="${prescription.customName}"/>" >
-				<c:out value="${prescription.drug_special}"/>
-			</a>
-		</caisirole:SecurityAccess>
-		
-		<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>' reverse="true">
-			<span <%= styleColor%> ><c:out value="${prescription.drug_special}"/></span>
-		</caisirole:SecurityAccess>
-		
-		
+		<td bgcolor="white">
+			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>'>
+				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?gcn=<c:out value="${prescription.GCN_SEQNO}"/>&cn=<c:out value="${prescription.customName}"/>" >
+					<c:out value="${prescription.drug_special}"/>
+				</a>
+			</caisirole:SecurityAccess>
+			
+			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>' reverse="true">
+				<span <%= styleColor%> ><c:out value="${prescription.drug_special}"/></span>
+			</caisirole:SecurityAccess>
 		</td>
+		
+		<c:if test="${isIntegratorEnabled}">
+			<td bgcolor="white">
+				<c:if test="${empty prescription.fromRemoteFacilityName}">
+					local
+				</c:if>
+				<c:if test="${not empty prescription.fromRemoteFacilityName}">
+					<c:out value="${prescription.fromRemoteFacilityName}"/>
+				</c:if>
+			</td>
+		</c:if>
 	</tr>
 </c:forEach>
 </table>

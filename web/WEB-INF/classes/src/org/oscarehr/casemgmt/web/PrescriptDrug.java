@@ -33,7 +33,7 @@ public class PrescriptDrug {
 	private Integer GCN_SEQNO;
 	private String customName;
 	private String regionalIdentifier=null;
-	private boolean fromIntegrator = false;
+	private String fromRemoteFacilityName = null;
 
 	public String getRegionalIdentifier() {
     	return regionalIdentifier;
@@ -43,13 +43,13 @@ public class PrescriptDrug {
     	this.regionalIdentifier = regionalIdentifier;
     }
 
-	public boolean isFromIntegrator() {
-		return fromIntegrator;
-	}
+	public String getFromRemoteFacilityName() {
+    	return fromRemoteFacilityName;
+    }
 
-	public void setFromIntegrator(boolean fromIntegrator) {
-		this.fromIntegrator = fromIntegrator;
-	}
+	public void setFromRemoteFacilityName(String fromRemoteFacilityName) {
+    	this.fromRemoteFacilityName = fromRemoteFacilityName;
+    }
 
 	public Date getDate_prescribed() {
 		return date_prescribed;
