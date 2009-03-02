@@ -32,25 +32,24 @@ import java.util.Set;
 import org.caisi.model.BaseObject;
 
 public class CaseManagementIssue extends BaseObject {
-	private Long id;
-	private String demographic_no;
-	private long issue_id;
-	private boolean acute;
-	//private boolean medical_diagnosis;
-	private boolean certain;
-	private boolean major;
-	//private boolean active;
-	private boolean resolved;
-	private boolean remote = false;
-	private String type;
-	private Date update_date;
-	private Set notes = new HashSet();
-	private Issue issue;
-	private Integer program_id=null;
+	protected Long id;
+	protected String demographic_no;
+	protected long issue_id;
+	protected boolean acute;
+	//protected boolean medical_diagnosis;
+	protected boolean certain;
+	protected boolean major;
+	//protected boolean active;
+	protected boolean resolved;
+	protected String type;
+	protected Date update_date;
+	protected Set notes = new HashSet();
+	protected Issue issue;
+	protected Integer program_id=null;
 	
-	private boolean writeAccess;
+	protected boolean writeAccess;
 	
-	private int hashCode = Integer.MIN_VALUE;
+	protected int hashCode = Integer.MIN_VALUE;
 	
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
@@ -163,15 +162,7 @@ public class CaseManagementIssue extends BaseObject {
 	public void setResolved(boolean resolved) {
 		this.resolved = resolved;
 	}
-	public boolean isRemote() {
-		return remote;
-	}
-
-	public void setRemote(boolean remote) {
-		this.remote = remote;
-	}
-
-
+	
 	public String getType() {
 		return type;
 	}
