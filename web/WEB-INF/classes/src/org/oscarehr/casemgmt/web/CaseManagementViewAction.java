@@ -622,7 +622,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private PrescriptDrug getPrescriptDrug(int currentFacilityId, CachedDemographicDrug cachedDrug) throws MalformedURLException {
 		PrescriptDrug pd=new PrescriptDrug();
 
-		pd.setBN(cachedDrug.getBn());
+		pd.setBN(cachedDrug.getBrandName());
 		pd.setCustomName(cachedDrug.getCustomName());
 		pd.setDate_prescribed(cachedDrug.getRxDate());
 		pd.setDrug_achived(cachedDrug.isArchived());

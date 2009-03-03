@@ -52,7 +52,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
         	PrescriptDrug pd = new PrescriptDrug();
             pd.setDate_prescribed(ob.getRxDate());
             pd.setDrug_special(ob.getSpecial());
-            pd.setBN(ob.getBn());
+            pd.setBN(ob.getBrandName());
             pd.setGCN_SEQNO(ob.getGcnSeqNo());
             pd.setCustomName(ob.getCustomName());
             pd.setRegionalIdentifier(ob.getRegionalIdentifier());
@@ -96,7 +96,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 			pd.setDrug_special(ob.getSpecial());
 			pd.setEnd_date(ob.getEndDate());
 			pd.setDrug_achived(ob.isArchived());
-			pd.setBN(ob.getBn());
+			pd.setBN(ob.getBrandName());
 			pd.setGCN_SEQNO(ob.getGcnSeqNo());
 			pd.setCustomName(ob.getCustomName());
             pd.setRegionalIdentifier(ob.getRegionalIdentifier());

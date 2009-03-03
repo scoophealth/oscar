@@ -38,17 +38,34 @@ public class DrugDao extends AbstractDao {
 	 */
 	public List<Drug> findByDemographicIdOrderByDate(Integer demographicId, Boolean archived) {
 		// build sql string
-		String sqlCommand="select x from Drug x where x.demographicId=?1 "+(archived==null?"":"and x.archived=?2")+" order by x.rxDate desc, x.id desc";
-		
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.rxDate desc, x.id desc";
+
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
-		if (archived!=null) query.setParameter(2, archived);
-		
+		if (archived != null) query.setParameter(2, archived);
+
 		// run query
 		@SuppressWarnings("unchecked")
 		List<Drug> results = query.getResultList();
 
-		return(results);
+		return (results);
+	}
+
+	public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, int gcnSeqNo, String customName) {
+		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and x.gcnSeqNo=?2 " + (gcnSeqNo == 0 ? "and x.customName=?3" : "") + " order by x.rxDate desc, x.id desc";
+
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, gcnSeqNo);
+		if (gcnSeqNo == 0) query.setParameter(3, customName);
+
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+
+		return (results);
 	}
 }

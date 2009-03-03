@@ -453,15 +453,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
 		if (drugs != null) {
 			for (Drug drug : drugs) {
-				if (!providerIdsInFacility.contains(drug.getProvider_no())) continue;
+				if (!providerIdsInFacility.contains(drug.getProviderNo())) continue;
 
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
 
 				cachedDemographicDrug.setArchived(drug.isArchived());
 				cachedDemographicDrug.setAtc(drug.getAtc());
-				cachedDemographicDrug.setBn(drug.getBn());
+				cachedDemographicDrug.setBrandName(drug.getBrandName());
 				cachedDemographicDrug.setCaisiDemographicId(drug.getDemographicId());
-				cachedDemographicDrug.setCaisiProviderId(drug.getProvider_no());
+				cachedDemographicDrug.setCaisiProviderId(drug.getProviderNo());
 				cachedDemographicDrug.setCreateDate(drug.getCreateDate());
 				cachedDemographicDrug.setCustomInstructions(drug.isCustomInstructions());
 				cachedDemographicDrug.setCustomName(drug.getCustomName());
@@ -474,7 +474,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pk.setCaisiItemId(drug.getId());
 				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
 				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
-				cachedDemographicDrug.setGn(drug.getGn());
+				cachedDemographicDrug.setGenericName(drug.getGenericName());
 				cachedDemographicDrug.setLastRefillDate(drug.getLastRefillDate());
 				cachedDemographicDrug.setLongTerm(drug.getLongTerm());
 				cachedDemographicDrug.setMethod(drug.getMethod());

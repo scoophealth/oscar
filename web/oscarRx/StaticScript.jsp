@@ -31,7 +31,12 @@
 -->
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.DrugDao"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.common.model.Drug"%>
+<%@page import="oscar.oscarRx.data.RxPrescriptionData"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="StaticScript.title" /></title>
@@ -111,8 +116,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 <%
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
 
-oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
-    new oscar.oscarRx.data.RxPrescriptionData().getSimilarPrescriptions(bean.getDemographicNo(), gcn, cn);
+DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
+List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
 
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
@@ -153,48 +158,47 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 			</tr>
 			<tr>
 				<td>
-				<table cellspacing=6 cellpadding=0>
+				<table cellspacing="6" cellpadding="0">
 					<tr style="height: 20px">
 						<th align="left"><b>Provider</b></th>
 						<th align="left"><b>Start Date</b></th>
 						<th align="left"><b>End Date</b></th>
 						<th align="left"><b>Prescription Details</b></th>
-						<th colspan=2></th>
+						<th colspan="2"></th>
 					</tr>
 					<%
-                    for(int i=0; i<drugs.length; i++){
+                    for (Drug drug : drugs)
+                    {	
                         oscar.oscarRx.data.RxProviderData.Provider prov =
-                            new oscar.oscarRx.data.RxProviderData().getProvider(drugs[i].getProviderNo());
+                            new oscar.oscarRx.data.RxProviderData().getProvider(drug.getProviderNo());
                         String arch = "";
-                        System.out.println(drugs[i].isArchived());
-                        if (drugs[i].isArchived()){
+                        if (drug.isArchived()){
                            arch = "text-decoration: line-through;";
                         } 
                         %>
 					<tr style="height:20px;<%=arch%>">
 						<td><%= prov.getFirstName() %> <%= prov.getSurname() %></td>
-						<td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getRxDate()) %></td>
-						<td><%= oscar.oscarRx.util.RxUtil.DateToString(drugs[i].getEndDate()) %></td>
-						<td><%= drugs[i].getFullOutLine().replaceAll(";"," ") %></td>
+						<td><%= oscar.oscarRx.util.RxUtil.DateToString(drug.getRxDate()) %></td>
+						<td><%= oscar.oscarRx.util.RxUtil.DateToString(drug.getEndDate()) %></td>
+						<td><%= RxPrescriptionData.getFullOutLine(drug).replaceAll(";"," ") %></td>
 						<td>
-						<% if (! drugs[i].isCustom()) { %> <a
-							href="javascript:ShowDrugInfo('<%= drugs[i].getGenericName() %>');">Info</a>
+						<% if (! RxPrescriptionData.isCustom(drug)) { %> <a
+							href="javascript:ShowDrugInfo('<%= drug.getGenericName() %>');">Info</a>
 						<% } %>
 						</td>
 						<td>
 						    <input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton"
-						     onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drugs[i].getDrugId()%>&demo=<%=drugs[i].getDemographicNo()%>','anwin','width=400,height=250');">
+						     onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getId()%>&demo=<%=drug.getDemographicId()%>','anwin','width=400,height=250');">
 						</td>
 						<td><html:form action="/oscarRx/rePrescribe">
 							<html:hidden property="drugList"
-								value="<%= String.valueOf(drugs[i].getDrugId()) %>" />
+								value="<%= String.valueOf(drug.getId()) %>" />
 							<input type="hidden" name="method" value="represcribe">
 							<html:submit style="width:100px" styleClass="ControlPushButton"
 								value="Re-prescribe" />
-						</html:form> <input type="button" align=top value="Add to Favorites"
+						</html:form> <input type="button" align="top" value="Add to Favorites"
 							style="width: 100px" class="ControlPushButton"
-							onclick="javascript:addFavorite(<%= drugs[i].getDrugId()
-                                    %>, '<%= drugs[i].isCustom() ? drugs[i].getCustomName() : drugs[i].getBrandName()%>');" />
+							onclick="javascript:addFavorite(<%= drug.getId()%>, '<%= RxPrescriptionData.isCustom(drug) ? drug.getCustomName() : drug.getBrandName()%>');" />
 						</td>
 					</tr>
 					<%

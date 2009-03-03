@@ -20,7 +20,8 @@ public class Drug implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "drugid")
 	private Integer id = null;
-	private String provider_no = null;
+	@Column(name = "provider_no")
+	private String providerNo = null;
 	@Column(name = "demographic_no")
 	private Integer demographicId = null;
 	@Column(name = "rx_date")
@@ -29,8 +30,11 @@ public class Drug implements Serializable {
 	@Column(name = "end_date")
 	@Temporal(TemporalType.DATE)
 	private Date endDate = null;
+	@Column(name = "written_date")
+	@Temporal(TemporalType.DATE)
+	private Date writtenDate = null;
 	@Column(name = "BN")
-	private String bn = null;
+	private String brandName = null;
 	@Column(name = "GCN_SEQNO")
 	private int gcnSeqNo = 0;
 	private String customName=null;
@@ -54,7 +58,7 @@ public class Drug implements Serializable {
 	private String special = null;
 	private boolean archived;
 	@Column(name = "GN")
-	private String gn = null;
+	private String genericName = null;
 	@Column(name = "ATC")
 	private String atc = null;
 	@Column(name = "script_no")
@@ -79,14 +83,18 @@ public class Drug implements Serializable {
 	private Boolean pastMed;
 	@Column(name = "patient_compliance")
 	private Boolean patientCompliance;
+	@Column(name = "outside_provider_name")
+	private String outsideProviderName = null;
+	@Column(name = "outside_provider_ohip")
+	private String outsideProviderOhip = null;
 
-	public String getProvider_no() {
-		return provider_no;
-	}
+	public String getProviderNo() {
+    	return providerNo;
+    }
 
-	public void setProvider_no(String provider_no) {
-		this.provider_no = provider_no;
-	}
+	public void setProviderNo(String providerNo) {
+    	this.providerNo = providerNo;
+    }
 
 	public Integer getDemographicId() {
 		return demographicId;
@@ -112,12 +120,12 @@ public class Drug implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public String getBn() {
-		return bn;
+	public String getBrandName() {
+		return brandName;
 	}
 
-	public void setBn(String bn) {
-		this.bn = bn;
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 	public int getGcnSeqNo() {
@@ -232,12 +240,12 @@ public class Drug implements Serializable {
 		this.archived = archived;
 	}
 
-	public String getGn() {
-		return gn;
+	public String getGenericName() {
+		return genericName;
 	}
 
-	public void setGn(String gn) {
-		this.gn = gn;
+	public void setGenericName(String genericName) {
+		this.genericName = genericName;
 	}
 
 	public String getAtc() {
@@ -357,6 +365,30 @@ public class Drug implements Serializable {
 	public Integer getId() {
 		return id;
 	}
+
+	public Date getWrittenDate() {
+    	return writtenDate;
+    }
+
+	public void setWrittenDate(Date writtenDate) {
+    	this.writtenDate = writtenDate;
+    }
+
+	public String getOutsideProviderName() {
+    	return outsideProviderName;
+    }
+
+	public void setOutsideProviderName(String outsideProviderName) {
+    	this.outsideProviderName = outsideProviderName;
+    }
+
+	public String getOutsideProviderOhip() {
+    	return outsideProviderOhip;
+    }
+
+	public void setOutsideProviderOhip(String outsideProviderOhip) {
+    	this.outsideProviderOhip = outsideProviderOhip;
+    }
 
 	public boolean equals(Object o) {
 		if (this == o) return true;

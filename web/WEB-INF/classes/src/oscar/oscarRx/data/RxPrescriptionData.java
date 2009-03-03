@@ -33,14 +33,47 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.util.RxUtil;
-import org.oscarehr.util.DbConnectionFilter;
 
 public class RxPrescriptionData {
+	
+    public static String getFullOutLine(Drug drug){
+        String ret = "";
+        String s = drug.getSpecial();
+        if(s!=null){
+            if(s.length()>0){
+                int i;
+                String[] arr = s.split("\n");
+                for(i=0;i<arr.length; i++){
+                    ret += arr[i].trim();
+                    if(i<arr.length-1){
+                        ret += "; ";
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    public static boolean isCustom(Drug drug) {
+        boolean b = false;
+        
+        if(drug.getCustomName() != null){
+            b = true;
+        }
+        else if(drug.getGcnSeqNo() == 0){
+            b = true;
+        }
+        return b;
+    }
+
+    
     public Prescription getPrescription(int drugId) {
         Prescription prescription = null;
         
@@ -688,86 +721,6 @@ public class RxPrescriptionData {
                     
                     lst.add(p);
                 }
-            }
-            
-            rs.close();
-            
-            arr = (Prescription[])lst.toArray(arr);
-            
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        finally {
-            DbConnectionFilter.releaseThreadLocalDbConnection();
-        }
-        
-        return arr;
-    }
-    
-    public Prescription[] getSimilarPrescriptions(int demographicNo, int GCN_SEQNO, String customName) {
-        Prescription[] arr = {};
-        ArrayList lst = new ArrayList();
-        
-        try {
-            //Get Prescription from database
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
-            String sql;
-            if(GCN_SEQNO!=0) {
-                sql = "SELECT * FROM drugs WHERE  "
-                + "demographic_no = " + demographicNo + " AND "
-                + "GCN_SEQNO = " + GCN_SEQNO + " "
-                + "ORDER BY rx_date DESC, drugId DESC";
-            }
-            else {
-                sql = "SELECT * FROM drugs WHERE  "
-                + "demographic_no = " + demographicNo + " AND "
-                + "GCN_SEQNO = 0 AND customName = '" + customName + "' "
-                + "ORDER BY rx_date DESC, drugId DESC";
-            }
-            
-            Prescription p;            
-            
-            rs = db.GetSQL(sql);
-            
-            while(rs.next()) {
-                p = new Prescription(rs.getInt("drugid"), db.getString(rs,"provider_no"), demographicNo);
-                p.setRxCreatedDate(rs.getDate("create_date"));
-                p.setRxDate(rs.getDate("rx_date"));
-                p.setEndDate(rs.getDate("end_date"));
-		p.setWrittenDate(rs.getDate("written_date"));
-                p.setBrandName(db.getString(rs,"BN"));
-                p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
-                p.setCustomName(db.getString(rs,"customName"));
-                p.setTakeMin(rs.getFloat("takemin"));
-                p.setTakeMax(rs.getFloat("takemax"));
-                p.setFrequencyCode(db.getString(rs,"freqcode"));
-                p.setDuration(db.getString(rs,"duration"));
-                p.setDurationUnit(db.getString(rs,"durunit"));
-                p.setQuantity(db.getString(rs,"quantity"));
-                p.setRepeat(rs.getInt("repeat"));
-		p.setLastRefillDate(rs.getDate("last_refill_date"));
-                p.setNosubs(rs.getInt("nosubs"));
-                p.setPrn(rs.getInt("prn"));
-                p.setArchived(db.getString(rs,"archived"));
-                p.setSpecial(db.getString(rs,"special"));
-                p.setGenericName(db.getString(rs,"GN"));
-                p.setAtcCode(db.getString(rs,"ATC"));
-                p.setScript_no(db.getString(rs,"script_no"));
-                p.setRegionalIdentifier(db.getString(rs,"regional_identifier"));
-                p.setUnit(db.getString(rs,"unit"));
-                p.setUnitName(db.getString(rs,"unitName"));
-                p.setMethod(db.getString(rs,"method"));
-                p.setRoute(db.getString(rs,"route"));
-		p.setDrugForm(db.getString(rs,"drug_form"));
-                p.setCustomInstr(rs.getBoolean("custom_instructions"));
-                p.setDosage(db.getString(rs,"dosage"));
-		p.setLongTerm(rs.getBoolean("long_term"));
-		p.setPastMed(rs.getBoolean("past_med"));
-		p.setPatientCompliance(rs.getInt("patient_compliance"));
-		p.setOutsideProviderName(db.getString(rs,"outside_provider_name"));
-		p.setOutsideProviderOhip(db.getString(rs,"outside_provider_ohip"));
-                lst.add(p);
             }
             
             rs.close();
