@@ -133,7 +133,7 @@
 		<table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 			<tr>
 				<td width="0%" valign="top">
-				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message key="SearchDrug.title" /></a> > <b><bean:message key="StaticScript.title" /></b></div>
+				<div class="DivCCBreadCrumbs"><a href="SearchDrug.jsp"> <bean:message key="SearchDrug.title" /></a> &gt; <b><bean:message key="StaticScript.title" /></b></div>
 				</td>
 			</tr>
 			<!----Start new rows here-->
