@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="DART" type="text" colpos="1" maxsize="6"></field>
+	<field name="SITE_NO" type="text" colpos="7" maxsize="5"></field>
+	<field name="AGENCY_NAME" type="text" colpos="12" maxsize="100"></field>
+	<field name="SUBMISSION_DATE" type="datetime" colpos="112" maxsize="10" dateformat="dd/MM/yyyy"></field>
+</fields>

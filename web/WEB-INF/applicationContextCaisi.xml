@@ -133,6 +133,14 @@
 	</bean>
 
 	<!--  from Quatro end -->
+	
+	<!-- Intake Exporter -->
+	<bean id="abstractIntakeExporter" abstract="true" class="org.oscarehr.PMmodule.exporter.AbstractIntakeExporter" >
+		<property name="genericIntakeManager" ref="genericIntakeManager"></property>
+	</bean>
+	<bean id="intakeExporterAgencyInformation" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformation" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/agencyinformation.xml"></property>
+	</bean>
 
 </beans>
 

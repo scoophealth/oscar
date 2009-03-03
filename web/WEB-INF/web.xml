@@ -235,6 +235,16 @@
 	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class> 
     </servlet> 
     
+    <servlet>
+		<servlet-name>DATISExportTest</servlet-name>
+		<servlet-class>org.oscarehr.PMmodule.exporter.TestServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DATISExportTest</servlet-name>
+		<url-pattern>/PMmodule/export</url-pattern>
+	</servlet-mapping>
+    
     <servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
