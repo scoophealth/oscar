@@ -71,32 +71,31 @@
 
 <%
 	int gcn=-1;
-		String cn=null;
-		int remoteFacilityId=-1;
-		int remoteDrugId=-1;
+	String cn=null;
+	int remoteFacilityId=-1;
+	int remoteDrugId=-1;
 
-		try
-		{
-			gcn=Integer.parseInt(request.getParameter("gcn"));
-			cn=request.getParameter("cn");
-		}
-		catch (Exception e)
-		{
-			// it's okay it might be a remote drug
-		}
+	try
+	{
+		gcn=Integer.parseInt(request.getParameter("gcn"));
+		cn=request.getParameter("cn");
+	}
+	catch (Exception e)
+	{
+		// it's okay it might be a remote drug
+	}
 
-		try
-		{
-			remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
-			remoteDrugId=Integer.parseInt(request.getParameter("remoteDrugId"));
-		}
-		catch (Exception e)
-		{
-			// it's okay it might be a local drug
-		}
+	try
+	{
+		remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
+		remoteDrugId=Integer.parseInt(request.getParameter("remoteDrugId"));
+	}
+	catch (Exception e)
+	{
+		// it's okay it might be a local drug
+	}
 
-		if (gcn == -1 && remoteFacilityId == -1)
-			throw(new IllegalArgumentException("If gcn==-1 then it's not a local drug, if remoteFacilityId==-1 then it's not a remote drug, if it's neither then it's an error..."));
+	if (gcn == -1 && remoteFacilityId == -1) throw(new IllegalArgumentException("If gcn==-1 then it's not a local drug, if remoteFacilityId==-1 then it's not a remote drug, if it's neither then it's an error..."));
 %>
 
 <script language="javascript">
@@ -119,10 +118,10 @@
 <%
 	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
 
-		DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
-		List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
+	DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
+	List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
 
-		String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
+	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
