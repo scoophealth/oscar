@@ -28,6 +28,7 @@ import java.util.List;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
@@ -70,6 +71,7 @@ import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
  */
 public class CaisiIntegratorManager {
 
+	private static Logger log = Logger.getLogger(CaisiIntegratorManager.class);
 	private FacilityDao facilityDao;
 
 	public void setFacilityDao(FacilityDao facilityDao) {
@@ -170,12 +172,20 @@ public class CaisiIntegratorManager {
 
 	public List<IssueTransfer> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
 	{
-		DemographicWs demographicWs = getDemographicWs(facilityId);
-		List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);;
-		
-		// this is done for cached lists
-		// cloned so alterations don't affect the cached data
-		return (new ArrayList<IssueTransfer>(results));
+		try
+		{
+			DemographicWs demographicWs = getDemographicWs(facilityId);
+			List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);;
+			
+			// this is done for cached lists
+			// cloned so alterations don't affect the cached data
+			return (new ArrayList<IssueTransfer>(results));
+		}
+		catch(Exception e) // remote issues unavailable for some reason
+		{
+			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
+			return new ArrayList<IssueTransfer>();
+		}
 	}
 	
 	public CommunityIssueWs getCommunityIssueWs(int facilityId) throws MalformedURLException {
@@ -195,8 +205,16 @@ public class CaisiIntegratorManager {
 		Facility facility = facilityDao.find(facilityId);
 		if (facility.isIntegratorEnabled())
 		{
-			CommunityIssueWs communityIssueWs = getCommunityIssueWs(facilityId);
-			return (ArrayList<String>)communityIssueWs.getCommunityIssueCodeList(type);
+			try
+			{
+				CommunityIssueWs communityIssueWs = getCommunityIssueWs(facilityId);
+				return (ArrayList<String>)communityIssueWs.getCommunityIssueCodeList(type);
+			}
+			catch(Exception e)
+			{
+				log.error("Unable to retrieve community issue code list", e);
+				return null;
+			}
 		}
 		else 
 		{
