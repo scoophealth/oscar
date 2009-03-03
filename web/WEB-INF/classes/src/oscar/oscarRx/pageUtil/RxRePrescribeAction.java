@@ -76,8 +76,12 @@ public final class RxRePrescribeAction extends DispatchAction {
         if( p!= null )
             p.Print();
         
+        String comment = rxData.getScriptComment( script_no);
+       
+        
         request.getSession().setAttribute("tmpBeanRX", beanRX);
         request.setAttribute("rePrint", "true");
+        request.setAttribute("comment",comment);
 
         return mapping.findForward("reprint");        
     }
