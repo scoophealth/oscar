@@ -258,6 +258,102 @@ public class RxPrescriptionData {
     }
     
     
+    //////
+    
+    
+    
+    private Prescription getPrescriptionFromRS(ResultSet rs,int demographicNo) throws SQLException{
+        Prescription p = new Prescription(rs.getInt("drugid"), oscar.Misc.getString(rs,"provider_no"), demographicNo);
+                p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setRxDate(rs.getDate("rx_date"));
+                p.setEndDate(rs.getDate("end_date"));
+		p.setWrittenDate(rs.getDate("written_date"));
+                p.setBrandName(oscar.Misc.getString(rs,"BN"));
+                p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
+                p.setCustomName(oscar.Misc.getString(rs,"customName"));
+                p.setTakeMin(rs.getFloat("takemin"));
+                p.setTakeMax(rs.getFloat("takemax"));
+                p.setFrequencyCode(oscar.Misc.getString(rs,"freqcode"));
+                p.setDuration(oscar.Misc.getString(rs,"duration"));
+                p.setDurationUnit(oscar.Misc.getString(rs,"durunit"));
+                p.setQuantity(oscar.Misc.getString(rs,"quantity"));
+                p.setRepeat(rs.getInt("repeat"));
+		p.setLastRefillDate(rs.getDate("last_refill_date"));
+                p.setNosubs(rs.getInt("nosubs"));
+                p.setPrn(rs.getInt("prn"));
+                p.setSpecial(oscar.Misc.getString(rs,"special"));
+                p.setArchived(oscar.Misc.getString(rs,"archived"));
+                p.setGenericName(oscar.Misc.getString(rs,"GN"));
+                p.setAtcCode(oscar.Misc.getString(rs,"ATC"));
+                p.setScript_no(oscar.Misc.getString(rs,"script_no"));
+                p.setRegionalIdentifier(oscar.Misc.getString(rs,"regional_identifier"));
+                p.setUnit(oscar.Misc.getString(rs,"unit"));
+                p.setUnitName(oscar.Misc.getString(rs,"unitName"));
+                p.setMethod(oscar.Misc.getString(rs,"method"));
+                p.setRoute(oscar.Misc.getString(rs,"route"));
+		p.setDrugForm(oscar.Misc.getString(rs,"drug_form"));
+                p.setCustomInstr(rs.getBoolean("custom_instructions"));
+                p.setDosage(oscar.Misc.getString(rs,"dosage"));
+		p.setLongTerm(rs.getBoolean("long_term"));
+		p.setPastMed(rs.getBoolean("past_med"));
+		p.setPatientCompliance(rs.getInt("patient_compliance"));
+		p.setOutsideProviderName(oscar.Misc.getString(rs,"outside_provider_name"));
+		p.setOutsideProviderOhip(oscar.Misc.getString(rs,"outside_provider_ohip"));
+                
+//                String datesRePrinted = oscar.Misc.getString(rs,"dates_reprinted");                
+//                if( datesRePrinted != null && datesRePrinted.length() > 0 ) {
+//                    p.setNumPrints(datesRePrinted.split(",").length + 1);
+//                }
+//                else {
+//                    p.setNumPrints(1);
+//                }
+                return p;
+        
+    }
+    
+    /*
+     *Limit returned prescriptions to those which have an entry in both drugs and prescription table     
+     */
+    public Prescription[] getPrescriptionScriptsByPatientATC(int demographicNo,String atc) {
+        Prescription[] arr = {};
+        ArrayList lst = new ArrayList();
+        
+        try {
+            //Get Prescription from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT d.*FROM drugs d WHERE  "
+            + "d.demographic_no = " + demographicNo + " and d.ATC = '"+atc+"' "
+            + "ORDER BY rx_date DESC, drugId DESC";
+            
+            Prescription p;
+            String datesRePrinted;
+            
+            rs = db.GetSQL(sql);
+            
+            while(rs.next()) {
+                lst.add(getPrescriptionFromRS(rs,demographicNo));
+            }
+            rs.close();
+            db.getConnection().close();
+            
+            arr = (Prescription[])lst.toArray(arr);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return arr;
+    }    
+    
+    
+    
+    
+    //////
+    
+    
+    
+    
     /*
      *Limit returned prescriptions to those which have an entry in both drugs and prescription table     
      */
@@ -879,8 +975,38 @@ public class RxPrescriptionData {
         return retval;
     }
     
+    public void setScriptComment(String scriptNo, String comment){
+        String sql = "update prescription set rx_comments = '" +StringEscapeUtils.escapeSql(comment)+"' where script_no = "+scriptNo;
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(sql); 
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }        
+        finally{
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+    }
     
     
+     public String getScriptComment(String scriptNo){
+        String ret = null;
+        String sql = "select rx_comments from  prescription where script_no = "+scriptNo;
+        System.out.println("SQL "+sql);
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()){
+               ret = rs.getString("rx_comments");
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }        
+        finally{
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+        return ret;
+    }
     
 //erased an orfin }
 public class Prescription {
