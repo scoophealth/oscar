@@ -100,11 +100,33 @@ if(props.getProperty("clinicSatelliteName") != null) {
         vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>Tel: " + temp5[i] + "<br>Fax: " + temp6[i]);
     }
 }
+String comment = (String) request.getAttribute("comment");
 %>
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
 <script type="text/javascript">
+
+function setComment(){
+    frames['preview'].document.getElementById('additNotes').innerHTML = '<%=comment%>';
+}
+
+
+    
+
+
+function addNotes(){
+    
+    
+    var url = "AddRxComment.jsp";
+    var ran_number=Math.round(Math.random()*1000000);
+    var comment = encodeURIComponent(document.getElementById('additionalNotes').value);
+    var params = "scriptNo=<%=request.getAttribute("scriptId")%>&comment="+comment+"&rand="+ran_number;  //]
+    new Ajax.Request(url, {method: 'post',parameters:params});
+    frames['preview'].document.getElementById('additNotes').innerHTML =  document.getElementById('additionalNotes').value;
+}
+
 
 function printIframe(){
    preview.focus();
@@ -138,13 +160,21 @@ function printPaste2Parent(){
 }
 
 
+
 function addressSelect() {
-	<% if(vecAddressName != null) {
-	    for(int i=0; i<vecAddressName.size(); i++) {%>
-	if(document.getElementById("addressSel").value=="<%=i%>") {
-    	frames['preview'].document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
-    } 
-<% } }%>
+   <% if(vecAddressName != null) {
+         for(int i=0; i<vecAddressName.size(); i++) {%>
+	    if(document.getElementById("addressSel").value=="<%=i%>") {
+    	       frames['preview'].document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
+            } 
+<%       } 
+      }%>
+    
+    <%if (comment != null){ %>
+       setComment();
+    <%}%>
+
+
 }
 
 </script>
@@ -319,6 +349,21 @@ function toggleView(form) {
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:printPaste2Parent();" /></span></td>
 					</tr>
+                                        
+                                        <%if (request.getAttribute("rePrint") == null ){%>
+                                        
+                                        <tr>
+						<td colspan=2 style="font-weight: bold"><span>Additional Notes to add to Rx</span></td>
+					</tr>
+                                        <tr>
+                                                <td width=10px></td>
+                                                <td>
+                                                    <textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
+                                                    <input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>			
+                                                </td>
+                                        </tr>
+                                        
+                                        <%}%>
 					<tr>
 						<td colspan=2 style="font-weight: bold"><span>Drug
 						Information</span></td>
