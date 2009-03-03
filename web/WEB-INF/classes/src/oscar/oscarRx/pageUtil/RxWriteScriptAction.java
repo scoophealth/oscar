@@ -161,6 +161,7 @@ public final class RxWriteScriptAction extends Action {
                                  
                 fwd = "viewScript";
                 String ip = request.getRemoteAddr();
+                request.setAttribute("scriptId",scriptId);
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, ""+bean.getDemographicNo(), ip);
           
             }
