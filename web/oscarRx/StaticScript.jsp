@@ -55,7 +55,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 
-<script language=javascript>
+<script language="javascript">
     function ShowDrugInfo(gn){
         window.open("drugInfo.do?GN=" + escape(gn), "_blank",
             "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
@@ -63,11 +63,35 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 </script>
 
 <%
-int gcn = Integer.parseInt(request.getParameter("gcn"));
-String cn = request.getParameter("cn");
+	int gcn = -1;
+	String cn = null;
+	int remoteFacilityId=-1;
+	int remoteDrugId=-1;
+	
+	try
+	{
+		gcn = Integer.parseInt(request.getParameter("gcn"));
+		cn = request.getParameter("cn");
+	}
+	catch (Exception e)
+	{
+		// it's okay it might be a remote drug
+	}
+	
+	try
+	{
+		remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
+		remoteDrugId = Integer.parseInt(request.getParameter("remoteDrugId"));
+	}
+	catch (Exception e)
+	{
+		// it's okay it might be a local drug
+	}
+	
+	if (gcn==-1 && remoteFacilityId==-1) throw(new IllegalArgumentException("If gcn==-1 then it's not a local drug, if remoteFacilityId==-1 then it's not a remote drug, if it's neither then it's an error..."));
 %>
 
-<script language=javascript>
+<script language="javascript">
     function addFavorite(drugId, brandName){
         var favoriteName = window.prompt('Please enter a name for the Favorite:',
             brandName);
@@ -84,8 +108,6 @@ String cn = request.getParameter("cn");
 
 
 </head>
-<body>
-
 <%
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
 
@@ -169,7 +191,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 							<input type="hidden" name="method" value="represcribe">
 							<html:submit style="width:100px" styleClass="ControlPushButton"
 								value="Re-prescribe" />
-						</html:form> <input type=button align=top value="Add to Favorites"
+						</html:form> <input type="button" align=top value="Add to Favorites"
 							style="width: 100px" class="ControlPushButton"
 							onclick="javascript:addFavorite(<%= drugs[i].getDrugId()
                                     %>, '<%= drugs[i].isCustom() ? drugs[i].getCustomName() : drugs[i].getBrandName()%>');" />
@@ -179,12 +201,12 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
                     }
                     %>
 				</table>
-				<td>
-			<tr>
+				</td>
+			</tr>
 			<tr>
 				<td><br />
 				<br />
-				<input type=button value="Back To Search Drug"
+				<input type="button" value="Back To Search Drug"
 					class="ControlPushButton"
 					onclick="javascript:window.location.href='SearchDrug.jsp';" /></td>
 			</tr>
