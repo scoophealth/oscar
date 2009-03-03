@@ -34,6 +34,7 @@ public class Facility implements Serializable {
     private boolean allowQuickConsent=true;
     private boolean enableIntegratedReferrals=true;
     private boolean enableHealthNumberRegistry=true;
+    private boolean allowSims = true;
     //private String lastUpdateUser;
     //private Date lastUpdateDate;
     
@@ -191,7 +192,15 @@ public class Facility implements Serializable {
     public void setIntegratorLastPushTime(Date integratorLastPushTime) {
         this.integratorLastPushTime = integratorLastPushTime;
     }
-/*
+public boolean isAllowSims() {
+		return allowSims;
+	}
+
+	public void setAllowSims(boolean allowSims) {
+		this.allowSims = allowSims;
+	}
+
+	/*
 	public String getLastUpdateUser() {
 		return lastUpdateUser;
 	}

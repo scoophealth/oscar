@@ -193,6 +193,7 @@ public class FacilityManagerAction extends BaseAction {
 
 		try {
 			facility.setIntegratorEnabled(WebUtils.isChecked(request, "facility.integratorEnabled"));
+			facility.setAllowSims(WebUtils.isChecked(request, "facility.allowSims"));
 			facility.setAllowQuickConsent(WebUtils.isChecked(request, "facility.allowQuickConsent"));
 			facility.setEnableIntegratedReferrals(WebUtils.isChecked(request, "facility.enableIntegratedReferrals"));
 			facility.setEnableHealthNumberRegistry(WebUtils.isChecked(request, "facility.enableHealthNumberRegistry"));
