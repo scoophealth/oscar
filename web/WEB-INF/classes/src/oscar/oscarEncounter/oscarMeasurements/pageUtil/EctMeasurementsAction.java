@@ -44,8 +44,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import org.oscarehr.common.dao.FlowSheetCustomizerDAO;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
+import oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
@@ -61,8 +66,32 @@ public class EctMeasurementsAction extends Action {
         //request.getSession().setAttribute("EctMeasurementsForm", frm);
 
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        //request.getSession().setAttribute("EctSessionBean", bean);
+        
+        
+        String demographicNo = null;
+        String providerNo = (String) session.getAttribute("user");
+        
+        //if form has demo use it since session bean could have been overwritten
+        if( (demographicNo = (String)frm.getValue("demographicNo")) == null ) {
+            if ( bean != null)
+                demographicNo = bean.getDemographicNo();
+        }
+        
+        String template = request.getParameter("template");
+        MeasurementFlowSheet mFlowsheet = null;
+        if (template != null){
+            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
+            FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+            MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
+            List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( template,(String) session.getAttribute("user"),demographicNo);
+            mFlowsheet = templateConfig.getFlowSheet(template,custList);
+        }
+        
+        
+        
+        //request.getSession().setAttribute("EctSessionBean", bean);
+        //TODO replace with a date format call.  Actaully revamp to use hibernate
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
         String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
@@ -75,14 +104,7 @@ public class EctMeasurementsAction extends Action {
         String numType = (String) frm.getValue("numType");
         int iType = Integer.parseInt(numType);
 
-        String demographicNo = null;
-        String providerNo = (String) session.getAttribute("user");
         
-        //if form has demo use it since session bean could have been overwritten
-        if( (demographicNo = (String)frm.getValue("demographicNo")) == null ) {
-            if ( bean != null)
-                demographicNo = bean.getDemographicNo();
-        }
 
         MsgStringQuote str = new MsgStringQuote();
 
@@ -226,7 +248,11 @@ public class EctMeasurementsAction extends Action {
                                 //System.out.println(sql);
                                 db.RunSQL(sql);
                                 //prepare input values for writing to the encounter form
-                                textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
+                                if (mFlowsheet == null){
+                                    textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
+                                }else{
+                                    textOnEncounter += mFlowsheet.getFlowSheetItem(inputType).getDisplayName()+"    "+inputValue + " " +  comments + "\\n";    
+                                }
                             }
                             rs.close();
                         }
