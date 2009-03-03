@@ -1,4 +1,3 @@
-
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
@@ -29,16 +28,12 @@
  */
 -->
 
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="documentBean" class="oscar.DocumentBean"
-	scope="request" />
-<%@ include file="../../../admin/dbconnection.jsp"%>
-<%@ include file="dbBilling.jsp"%>
+ <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" />
+<%@ include file="../../../admin/dbconnection.jsp" %>
+<%@ include file="dbBilling.jsp" %>
 
 <%
   GregorianCalendar now=new GregorianCalendar();
@@ -56,10 +51,9 @@
 
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
-<html:base />
-<link rel="stylesheet" href="../../../billing/billing.css">
+<html:base/>
+<link rel="stylesheet" href="../../../billing/billing.css" >
 <title>Billing Reconcilliation</title>
 
 <script language="JavaScript">
@@ -95,36 +89,37 @@
 </SCRIPT>
 </head>
 
-<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0"
-	marginwidth="0" marginheight="0">
+<body bgcolor="#EBF4F5" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr bgcolor="#486ebd">
-		<th align='LEFT'><input type='button' name='print' value='Print'
-			onClick='window.print()'></th>
-		<th align='CENTER'><font face="Arial, Helvetica, sans-serif"
-			color="#FFFFFF">Billing Reconcilliation </font></th>
-		<th align='RIGHT'><input type='button' name='close' value='Close'
-			onClick='window.close()'></th>
-	</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+   <tr bgcolor="#486ebd">
+      <th align='LEFT'>
+		   <input type='button' name='print' value='Print' onClick='window.print()'>
+      </th>
+      <th align='CENTER'  >
+         <font face="Arial, Helvetica, sans-serif" color="#FFFFFF">Billing Reconcilliation </font>
+      </th>
+      <th align='RIGHT'>
+         <input type='button' name='close' value='Close' onClick='window.close()'>
+      </th>
+   </tr>
 </table>
 
-<table width="100%" border="1" cellspacing="0" cellpadding="0"
-	bgcolor="#EFEFEF">
-	<form>
-	<tr>
-		<td width="5%" height="16">Payment Date</td>
-		<td width="10%" height="16" align="right">Payable</td>
-		<td width="10%" height="16" align="right">Amount Billed</td>
-		<td width="10%" height="16" align="right">Amount Paid</td>
-		<td width="10%" height="16" align="right">Balance Fwd</td>
-		<td width="10%" height="16" align="right">Cheque Amount</td>
-		<td width="10%" height="16" align="right">New Balance</td>
-		<td width="20%" height="16">Action</td>
-		<td width="5%" height="16">Status</td>
-	</tr>
+<table width="100%" border="1" cellspacing="0" cellpadding="0" bgcolor="#EFEFEF">
+   <form>
+     <tr>
+        <td width="5%" height="16">Payment Date </td>
+        <td width="10%" height="16" align="right">Payable </td>
+        <td width="10%" height="16" align="right">Amount Billed</td>
+        <td width="10%" height="16" align="right">Amount Paid</td>
+        <td width="10%" height="16" align="right">Balance Fwd</td>
+        <td width="10%" height="16" align="right">Cheque Amount</td>
+        <td width="10%" height="16" align="right">New Balance</td>
+        <td width="20%" height="16">Action</td>
+        <td width="5%" height="16">Status</td>
+     </tr>
 
-	<%
+  <%
     ResultSet rsdemo;
     rsdemo = null;
     String[] param5 =new String[1];
@@ -144,31 +139,26 @@
         //total = rsdemo.getString("totalamount");
    %>
 
-	<tr>
-		<td><%=paymentdate%></td>
-		<td align="right"><%=payable%></td>
-		<td align="right"><%=moneyFormat(amtbilled)%></td>
-		<td align="right"><%=moneyFormat(amtpaid)%></td>
-		<td align="right"><%=moneyFormat(balancefwd)%></td>
-		<td align="right"><%=moneyFormat(chequeamt)%></td>
-		<td align="right"><%=moneyFormat(newbalance)%></td>
-		<td>&nbsp;&nbsp;Billed( <a
-			href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>"
-			target="_blank">PDF</a>|<a
-			href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>"
-			target="_blank">CSV</a>) | <a
-			href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a>
-		|Summary ( <a
-			href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo="
-			target="_blank">PDF</a>|<a
-			href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo="
-			target="_blank">CSV</a>)</td>
-		<td><%=rsdemo.getString("status")%></td>
-	</tr>
-	<tr>
-		<td colspan="10" bgcolor="#EBF4F5">&nbsp;</td>
-	</tr>
-	<% }%>
+     <tr>
+        <td ><%=paymentdate%>  </td>
+        <td align="right"><%=payable%> </td>
+        <td align="right"><%=moneyFormat(amtbilled)%></td>
+        <td align="right"><%=moneyFormat(amtpaid)%></td>
+        <td align="right"><%=moneyFormat(balancefwd)%></td>
+        <td align="right"><%=moneyFormat(chequeamt)%></td>
+        <td align="right"><%=moneyFormat(newbalance)%></td>
+        <td >&nbsp;&nbsp;
+           Billed( <a href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>" target="_blank">PDF</a>|<a href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREM&rano=<%=raNo%>&selPayee=<%=payeeNo%>" target="_blank">CSV</a>) | 
+           <a href="genTAS00.jsp?rano=<%=raNo%>&proNo=" target="_blank">Detail</a> |
+           <a href="genTAS22.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a> 
+           ( <a href="createBillingReportAction.do?docFormat=pdf&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">PDF</a>|<a href="createBillingReportAction.do?docFormat=csv&repType=REP_MSPREMSUM&rano=<%=raNo%>&proNo=" target="_blank">CSV</a>)
+        </td>
+        <td ><%=rsdemo.getString("status")%></td>
+     </tr>
+     <tr>
+        <td colspan="10" bgcolor="#EBF4F5">&nbsp;</td>
+     </tr>
+ <% }%>
 
 </table>
 
