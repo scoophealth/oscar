@@ -225,6 +225,11 @@ String pracNo = provider.getPractitionerNo();
 					<input type="hidden" name="rx_no_newlines"
 						value="<%= strRxNoNewLines.toString() %>" /></td>
 				</tr>
+                                
+                                <tr valign="bottom">
+					<td colspan="2" id="additNotes"></td>
+                                </tr>
+                                
 
 				<% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
 
