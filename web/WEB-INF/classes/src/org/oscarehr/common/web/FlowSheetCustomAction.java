@@ -144,7 +144,8 @@ public class FlowSheetCustomAction extends DispatchAction {
         String flowsheet = request.getParameter("flowsheet");
         String measurement = request.getParameter("measurement");
         String demographicNo = request.getParameter("demographic");
-
+        
+        log2.debug("UPDATING FOR demographic "+demographicNo);
 
         if (request.getParameter("updater") != null) {
             Hashtable h = new Hashtable();
@@ -226,11 +227,11 @@ public class FlowSheetCustomAction extends DispatchAction {
                     tcolour.setIndicationColor(request.getParameter(s));  
                     List<TargetCondition> conds = new ArrayList();
                     while(go){
-                        String type = request.getParameter("type"+extrachar+"c"+targetCount);
+                        String type = request.getParameter("targettype"+extrachar+"c"+targetCount);
                         if (type != null){
                             if (!type.equals("-1")){
-                                String param = request.getParameter("param"+extrachar+"c"+targetCount);
-                                String value = request.getParameter("value"+extrachar+"c"+targetCount);
+                                String param = request.getParameter("targetparam"+extrachar+"c"+targetCount);
+                                String value = request.getParameter("targetvalue"+extrachar+"c"+targetCount);
                                 TargetCondition cond = new TargetCondition();
                                 cond.setType(type);
                                 cond.setParam(param);
@@ -288,6 +289,9 @@ public class FlowSheetCustomAction extends DispatchAction {
             cust.setAction(cust.UPDATE);
             cust.setPayload(outp.outputString(va));
             cust.setFlowsheet(flowsheet);
+            if(demographicNo != null ){
+               cust.setDemographicNo(demographicNo);
+            }
             cust.setMeasurement(item.getItemName());//THIS THE MEASUREMENT TO SET THIS AFTER!
             cust.setProviderNo((String) request.getSession().getAttribute("user"));
             log2.debug("UPDATE "+cust);
