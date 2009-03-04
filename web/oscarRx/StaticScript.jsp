@@ -38,7 +38,11 @@
 <%@page import="org.oscarehr.common.dao.DrugDao"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.model.Drug"%>
-<%@page import="oscar.oscarRx.data.RxPrescriptionData"%><html:html locale="true">
+<%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="StaticScript.title" /></title>
@@ -72,8 +76,6 @@
 <%
 	int gcn=-1;
 	String cn=null;
-	int remoteFacilityId=-1;
-	int remoteDrugId=-1;
 
 	try
 	{
@@ -85,17 +87,31 @@
 		// it's okay it might be a remote drug
 	}
 
+	CachedDemographicDrug cachedDemographicDrug=null;
 	try
 	{
-		remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
-		remoteDrugId=Integer.parseInt(request.getParameter("remoteDrugId"));
+		int remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
+		int remoteDrugId=Integer.parseInt(request.getParameter("remoteDrugId"));
+
+		if (remoteFacilityId!=-1 && remoteDrugId!=-1)
+		{
+			Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+			CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+			DemographicWs demographicWs=caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			cachedDemographicDrug=demographicWs.getCachedDemographicDrug(remoteFacilityId, remoteDrugId);
+		}
 	}
 	catch (Exception e)
 	{
 		// it's okay it might be a local drug
 	}
 
-	if (gcn == -1 && remoteFacilityId == -1) throw(new IllegalArgumentException("If gcn==-1 then it's not a local drug, if remoteFacilityId==-1 then it's not a remote drug, if it's neither then it's an error..."));
+	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
+
+	DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
+	List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
+		
+	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <script language="javascript">
@@ -115,14 +131,6 @@
 
 
 </head>
-<%
-	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
-
-	DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
-	List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
-
-	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
-%>
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
