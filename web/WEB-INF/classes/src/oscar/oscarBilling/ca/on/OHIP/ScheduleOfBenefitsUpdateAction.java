@@ -30,6 +30,10 @@ package oscar.oscarBilling.ca.on.OHIP;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,12 +61,26 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
          for ( int i = 0 ; i < changes.length; i++){
             System.out.println(changes[i]);            
             String[] change = changes[i].split("\\|");
-            if (change != null && change.length == 4){
+            if (change != null && change.length == 5){
                //change[0] // billing code
                //change[1] // value
                //change[2] //effectiveDate     
                //change[3] //terminactionDate
-               bc.editBillingCodeByServiceCode(change[1], change[0]);
+               //change[4] //description
+                
+                String effDate;
+                if( change[2].equalsIgnoreCase("null") ) {
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat dfmt = new SimpleDateFormat();
+                    dfmt.applyPattern("yyyy-MM-dd");
+                    Date d = c.getTime();
+                    effDate = dfmt.format(d);
+                }
+                else {
+                    effDate = change[2].substring(0,4) + "-" + change[2].substring(4,6) + "-" + change[2].substring(6,8);
+                }
+                
+               bc.insertBillingCode(change[1], change[0], effDate, change[4]);
                Hashtable h = new Hashtable();
                h.put("code",change[0]);
                h.put("value",change[1]);
