@@ -295,7 +295,7 @@ div.recommendations li{
             <input type="hidden" name="method" value="update"/>
             <input type="hidden" name="flowsheet" value="<%=flowsheet%>"/>
             <input type="hidden" name="measurement" value="<%=measurement%>"/>
-            <input type="hidden" name=demographic" value="<%=demographic%>"/>
+            <input type="hidden" name="demographic" value="<%=demographic%>"/>
             <fieldset width="300px">
                <input type="hidden" name="updater" value="yes"/> 
                <input type="hidden" name="prevention_type" value="<%=h2.get("prevention_type")%>"/>
@@ -303,8 +303,8 @@ div.recommendations li{
                 Display Name: <input type="text" name="display_name" value="<%= h2.get("display_name")%>" /><br>
                 Guideline:    <input type="text" name="guideline"   value="<%=h2.get("guideline")%>"   /><br>
                 Graphable: <select name="graphable"   >
-                    <option  value="yes" <%=h2.get("graphable")%> >YES</option>
-                    <option  value="no">NO</option> 
+                    <option  value="yes" <%=sel(""+h2.get("graphable"),"yes")%> >YES</option>
+                    <option  value="no"  <%=sel(""+h2.get("graphable"),"no")%> >NO</option> 
                 </select>><br>
                 Value Name:<input type="text" name="value_name"   value="<%=h2.get("value_name")%>"    /><br>
                 <div>
@@ -317,8 +317,8 @@ div.recommendations li{
                         for (Recommendation e : dsR) { count++; 
                         %>     
                             Strength:   <select name="strength<%=count%>">
-                                            <option value="recommendation"     >Recommendation</option>
-                                            <option value="warning">Warning</option>
+                                            <option value="recommendation" <%=sel(e.getStrength(),"recommendation")%>    >Recommendation</option>
+                                            <option value="warning"        <%=sel(e.getStrength(),"warning")%>>Warning</option>
                                         </select>
                             Text: <input type="text" name="text<%=count%>" length="100"  value="<%=e.getText()%>" />    
                                 
@@ -329,8 +329,8 @@ div.recommendations li{
                                for(RecommendationCondition cond:conds){condCount++;%>
                                  
                                <li><select name="type<%=count%>c<%=condCount%>" >   
-                                        <option value="monthrange"        <%=s("monthrange", cond.getType())%>     >Month Range</option>
-                                        <option value="lastValueAsInt"    <%=s("lastValueAsInt",cond.getType())%>  >Last Int Value </option>   
+                                        <option value="monthrange"        <%=sel("monthrange", cond.getType())%>     >Month Range</option>
+                                        <option value="lastValueAsInt"    <%=sel("lastValueAsInt",cond.getType())%>  >Last Int Value </option>   
                                    </select>
                                    
                                    Param: <input type="text" name="param<%=count%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
@@ -399,21 +399,21 @@ div.recommendations li{
                                int condCount = 0;
                                for(TargetCondition cond:conds){condCount++;%>
                                  
-                               <li><select name="type<%=targetCount%>c<%=condCount%>" >   
-                                   <option value="getDataAsDouble"     <%=s("getDataAsDouble", cond.getType())%>  >Number Value</option>
-                                        <option value="isMale"              <%=s("isMale",cond.getType())%>> Is Male </option>
-                                        <option value="isFemale"            <%=s("isFemale",cond.getType())%>> Is Female </option>
-                                        <option value="getNumberFromSplit"  <%=s("getNumberFromSplit",cond.getType())%>> Number Split </option>
-                                        <option value="isDataEqualTo"       <%=s("isDataEqualTo",cond.getType())%>>  String </option>
+                               <li><select name="targettype<%=targetCount%>c<%=condCount%>" >   
+                                   <option value="getDataAsDouble"     <%=sel("getDataAsDouble", cond.getType())%>  >Number Value</option>
+                                        <option value="isMale"              <%=sel("isMale",cond.getType())%>> Is Male </option>
+                                        <option value="isFemale"            <%=sel("isFemale",cond.getType())%>> Is Female </option>
+                                        <option value="getNumberFromSplit"  <%=sel("getNumberFromSplit",cond.getType())%>> Number Split </option>
+                                        <option value="isDataEqualTo"       <%=sel("isDataEqualTo",cond.getType())%>>  String </option>
                                    </select>
                                    
-                                   Param: <input type="text" name="param<%=targetCount%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
-                                   Value: <input type="text" name="value<%=targetCount%>c<%=condCount%>" value="<%=cond.getValue()%>" />
+                                   Param: <input type="text" name="targetparam<%=targetCount%>c<%=condCount%>" value="<%=s(cond.getParam())%>" />
+                                   Value: <input type="text" name="targetvalue<%=targetCount%>c<%=condCount%>" value="<%=cond.getValue()%>" />
                                </li>
                                  
                                <%}condCount++;%>
                                
-                               <li><select name="type<%=targetCount%>c<%=condCount%>"> 
+                               <li><select name="targettype<%=targetCount%>c<%=condCount%>"> 
                                        <option value="-1">Not Set</option>
                                         <option value="getDataAsDouble"       >Number Value</option>
                                         <option value="isMale"              > Is Male </option>
@@ -422,8 +422,8 @@ div.recommendations li{
                                         <option value="isDataEqualTo"       >  String </option>
                                    </select>
                                    
-                                   Param: <input type="text" name="param<%=targetCount%>c<%=condCount%>" value="" />
-                                   Value: <input type="text" name="value<%=targetCount%>c<%=condCount%>" value="" />
+                                   Param: <input type="text" name="targetparam<%=targetCount%>c<%=condCount%>" value="" />
+                                   Value: <input type="text" name="targetvalue<%=targetCount%>c<%=condCount%>" value="" />
                                </li>
                                
                                
@@ -551,6 +551,14 @@ String s(String s1,String s2){
     }
     return "";
 }
+
+String sel(String s1,String s2){
+    if (s1 != null && s2 != null && s1.equals(s2)){
+        return "selected";
+    }
+    return "";
+}
+
     
     
 %>
