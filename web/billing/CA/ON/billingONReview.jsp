@@ -715,7 +715,7 @@ function onCheckMaster() {
 		</td>
 	</tr>
 <% if (codeValid) {
-        if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
+        if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*|BON.*")) { %>
 	<tr>
 			<td >
 			Billing Notes:<br>
@@ -735,7 +735,7 @@ function onCheckMaster() {
 <%      } 
   }     %>
 <%//
-if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) {
+if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*|BON.*")) {
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
 	
