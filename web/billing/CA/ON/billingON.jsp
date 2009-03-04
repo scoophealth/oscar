@@ -602,7 +602,7 @@ function onClickServiceCode(item) {
 function upCaseCtrl(ctrl) {
 	var n = document.forms[0].xml_billtype.selectedIndex;  
 	var val = document.forms[0].xml_billtype[n].value; 
-	if(val.substring(0,3) == "ODP" || val.substring(0,3) == "WCB") ctrl.value = ctrl.value.toUpperCase();
+	if(val.substring(0,3) == "ODP" || val.substring(0,3) == "WCB" || val.substring(0,3) == "BON") ctrl.value = ctrl.value.toUpperCase();
 }
 
 function changeCut(dropdown) {
@@ -669,11 +669,12 @@ function onChangePrivate() {
 	var val = document.forms[0].xml_billtype[n].value; 
   	if(val.substring(0,3) == "PAT" || val.substring(0,3) == "OCF" || val.substring(0,3) == "ODS" || val.substring(0,3) == "CPP" || val.substring(0,3) == "STD") {
   		self.location.href = "billingON.jsp?curBillForm=<%="PRI"%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
-  	}         
-        else {
-<% if(ctlBillForm.equals("PRI")) {%>  	
+  	} 
+        else if( val.substring(0,3) == "BON") {
+                self.location.href = "billingON.jsp?curBillForm=<%=oscarVariables.getProperty("primary_care_incentive", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
+        }
+        else {  	
                 self.location.href = "billingON.jsp?curBillForm=<%=oscarVariables.getProperty("default_view", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
-<% } %>
   	}
 }
 
@@ -697,7 +698,7 @@ function onHistory() {
 function prepareBack() {
     document.forms[0].services_checked.value = "<%=request.getParameter("services_checked")%>";
     if (document.forms[0].services_checked.value=="null") document.forms[0].services_checked.value = 0;
-    document.forms[0].url_back.value = location.href;   
+    document.forms[0].url_back.value = location.href;    
 }
 
 function refreshServicesChecked(chkd) {
@@ -1021,7 +1022,8 @@ function changeCodeDesc() {
 					    <option value="OCF | " <%=srtBillType.startsWith("OCF")?"selected" : ""%>> -OCF</option>
 					    <option value="ODS | " <%=srtBillType.startsWith("ODS")?"selected" : ""%>> -ODSP</option>
 					    <option value="CPP | Canada Pension Plan" <%=srtBillType.startsWith("CPP")?"selected" : ""%>> -CPP</option>
-					    <option value="STD | Short Term Disability / Long Term Disability" <%=srtBillType.startsWith("STD")?"selected" : ""%>>-STD/LTD</option>                                            
+					    <option value="STD | Short Term Disability / Long Term Disability" <%=srtBillType.startsWith("STD")?"selected" : ""%>>-STD/LTD</option>
+                                            <option value="BON | Bonus Codes" <%=srtBillType.startsWith("BON")?"selected" : ""%>>Bonus Codes</option>
 					</select>
 				    </td>
 				</tr>
