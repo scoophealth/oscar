@@ -57,7 +57,7 @@
      {"delete_bill_detail", "update billingdetail set status='D' where billing_no=?" },  
      {"search_bill_mismatch", "select distinct a.appointment_no, a.appointment_date, a.start_time, d.first_name, d.last_name, p.first_name, p.last_name, b.provider_no, b.billing_no from billing b, appointment a, demographic d, provider p where a.provider_no=? and a.appointment_no=b.appointment_no and a.demographic_no=d.demographic_no and p.provider_no=b.provider_no and b.status<>'B' and b.status<>'D' order by a.appointment_date desc, a.start_time desc;"},  
     {"search_servicecode", "select c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},    
-    {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
+    {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=? and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <=? and b2.service_code = b.service_code)"},
     {"save_bill_record", "insert into billingdetail values('\\N',?,?,?,?,?,?,?,?)"},
     {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"updateapptstatus", "update appointment set status=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},

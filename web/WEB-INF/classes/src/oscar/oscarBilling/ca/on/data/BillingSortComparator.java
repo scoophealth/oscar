@@ -45,11 +45,12 @@ public class BillingSortComparator implements Comparator {
      public int compare(Object obj1, Object obj2) {
          Hashtable h1 = (Hashtable) obj1;
          Hashtable h2 = (Hashtable) obj2;
-
+         String billReferenceDate = (String)h1.get("billReferenceDate");
+         
          JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 
-	 String fee1 = dbObj.getCodeFee((String) h1.get("serviceCode"));
-         String fee2 = dbObj.getCodeFee((String) h2.get("serviceCode"));
+	 String fee1 = dbObj.getCodeFee((String) h1.get("serviceCode"), billReferenceDate);
+         String fee2 = dbObj.getCodeFee((String) h2.get("serviceCode"), billReferenceDate);
 
 	if (fee1 == null && fee2 == null){
              return 0;
