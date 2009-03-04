@@ -109,10 +109,10 @@ public class ScheduleOfBenefits {
             }else{
                if (addChangedCodes){
                   oldfees++;                  
-                  String oldPrice = (String) billingInfo.get("value");                                                              
+                  String oldPrice = (String) billingInfo.get("value");                    
                   double oldDoub = 0.00;
                   try{
-                      Double.parseDouble(oldPrice);
+                      oldDoub = Double.parseDouble(oldPrice);
                   }   catch(Exception e){
                       oldDoub = 0.00;
                   }               
