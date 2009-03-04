@@ -34,27 +34,9 @@ public class PrescriptDrug {
 	private String customName;
 	private String regionalIdentifier = null;
 	private String remoteFacilityName = null;
-	private int remoteFacilityId = -1;
-	private int remoteDrugId = -1;
 
 	public String getRegionalIdentifier() {
 		return regionalIdentifier;
-	}
-
-	public int getRemoteFacilityId() {
-		return remoteFacilityId;
-	}
-
-	public void setRemoteFacilityId(int remoteFacilityId) {
-		this.remoteFacilityId = remoteFacilityId;
-	}
-
-	public int getRemoteDrugId() {
-		return remoteDrugId;
-	}
-
-	public void setRemoteDrugId(int remoteDrugId) {
-		this.remoteDrugId = remoteDrugId;
 	}
 
 	public void setRegionalIdentifier(String regionalIdentifier) {

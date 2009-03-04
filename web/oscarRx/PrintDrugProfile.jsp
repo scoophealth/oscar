@@ -147,11 +147,11 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
                                     %>
 							<tr>
 								<td width=20% valign="top"><a <%= styleColor%>
-									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+									href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 								<%= drug.getRxDate() %> </a></td>
 								<td width=100%><a <%= styleColor%>
-									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+									href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 								<%= drug.getFullOutLine().replaceAll(";"," ") %> </a></td>
 							</tr>

@@ -633,8 +633,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		int remoteFacilityId=cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
-		pd.setRemoteFacilityId(remoteFacilityId);
-		pd.setRemoteDrugId(cachedDrug.getFacilityIdIntegerCompositePk().getCaisiItemId());
 		
 		return(pd);
     }

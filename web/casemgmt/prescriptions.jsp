@@ -59,7 +59,7 @@ Prescriptions
 		</c:if>
 		<td bgcolor="white">
 			<caisirole:SecurityAccess accessName="prescription Write" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId='<%=(String)session.getAttribute("case_program_id")%>'>
-				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?gcn=<c:out value="${prescription.GCN_SEQNO}"/>&cn=<c:out value="${prescription.customName}"/>&remoteFacilityId=<c:out value="${prescription.remoteFacilityId}"/>&remoteDrugId=<c:out value="${prescription.remoteDrugId}"/>" >
+				<a <%= styleColor%> target="_blank" href="../oscarRx/StaticScript.jsp?regionalIdentifier=<c:out value="${prescription.regionalIdentifier}"/>&cn=<c:out value="${prescription.customName}"/>" >
 					<c:out value="${prescription.drug_special}"/>
 				</a>
 			</caisirole:SecurityAccess>

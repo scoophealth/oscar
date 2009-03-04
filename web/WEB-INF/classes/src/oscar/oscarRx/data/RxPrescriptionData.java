@@ -33,7 +33,6 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.oscarehr.common.model.Drug;
 import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.OscarProperties;
@@ -43,13 +42,12 @@ import oscar.oscarRx.util.RxUtil;
 
 public class RxPrescriptionData {
 	
-    public static String getFullOutLine(Drug drug){
+    public static String getFullOutLine(String special){
         String ret = "";
-        String s = drug.getSpecial();
-        if(s!=null){
-            if(s.length()>0){
+        if(special!=null){
+            if(special.length()>0){
                 int i;
-                String[] arr = s.split("\n");
+                String[] arr = special.split("\n");
                 for(i=0;i<arr.length; i++){
                     ret += arr[i].trim();
                     if(i<arr.length-1){
@@ -60,19 +58,6 @@ public class RxPrescriptionData {
         }
         return ret;
     }
-
-    public static boolean isCustom(Drug drug) {
-        boolean b = false;
-        
-        if(drug.getCustomName() != null){
-            b = true;
-        }
-        else if(drug.getGcnSeqNo() == 0){
-            b = true;
-        }
-        return b;
-    }
-
     
     public Prescription getPrescription(int drugId) {
         Prescription prescription = null;

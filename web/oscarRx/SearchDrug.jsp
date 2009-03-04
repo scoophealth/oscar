@@ -377,11 +377,11 @@ function load() {
                                     %>
 							<tr>
 								<td valign="top"><a <%= styleColor%>
-									href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+									href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 								<%= drug.getRxDate() %> </a></td>
 								<td><a <%= styleColor%>
-                                            href="StaticScript.jsp?gcn=<%= drug.getGCN_SEQNO()
+                                            href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
                                             %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
 
 

@@ -42,7 +42,9 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug"%><html:html locale="true">
+<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug"%>
+<%@page import="org.oscarehr.oscarRx.StaticScriptBean"%>
+<%@page import="java.util.ArrayList"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="StaticScript.title" /></title>
@@ -74,43 +76,13 @@
 </script>
 
 <%
-	int gcn=-1;
-	String cn=null;
+	String regionalIdentifier=request.getParameter("regionalIdentifier");
+	String cn=request.getParameter("cn");
+	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
-	try
-	{
-		gcn=Integer.parseInt(request.getParameter("gcn"));
-		cn=request.getParameter("cn");
-	}
-	catch (Exception e)
-	{
-		// it's okay it might be a remote drug
-	}
-
-	CachedDemographicDrug cachedDemographicDrug=null;
-	try
-	{
-		int remoteFacilityId=Integer.parseInt(request.getParameter("remoteFacilityId"));
-		int remoteDrugId=Integer.parseInt(request.getParameter("remoteDrugId"));
-
-		if (remoteFacilityId!=-1 && remoteDrugId!=-1)
-		{
-			Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-			CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-			DemographicWs demographicWs=caisiIntegratorManager.getDemographicWs(currentFacilityId);
-			cachedDemographicDrug=demographicWs.getCachedDemographicDrug(remoteFacilityId, remoteDrugId);
-		}
-	}
-	catch (Exception e)
-	{
-		// it's okay it might be a local drug
-	}
-
+	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentFacilityId, bean.getDemographicNo(), regionalIdentifier, cn);
+	
 	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
-
-	DrugDao drugDao=(DrugDao)SpringUtils.getBean("drugDao");
-	List<Drug> drugs=drugDao.findByDemographicIdSimilarDrugOrderByDate(bean.getDemographicNo(), gcn, cn);
-		
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
@@ -120,7 +92,7 @@
             brandName);
 
         if (favoriteName.length > 0){
-            var s = escape('?gcn=<%=gcn%>&cn=<%=cn%>');
+            var s = escape('?regionalIdentifier=<%=regionalIdentifier%>&cn=<%=cn%>');
 
             window.location.href = 'addFavoriteStaticScript.do?drugId='
                 + escape(drugId) + '&favoriteName=' + escape(favoriteName)
@@ -168,35 +140,51 @@
 						<th colspan="2"></th>
 					</tr>
 					<%
-						for (Drug drug : drugs)
+						for (StaticScriptBean.DrugDisplayData drug : drugs)
 							{
-								oscar.oscarRx.data.RxProviderData.Provider prov=new oscar.oscarRx.data.RxProviderData().getProvider(drug.getProviderNo());
 								String arch="";
-								if (drug.isArchived())
+								if (drug.isArchived)
 								{
 									arch="text-decoration: line-through;";
 								}
 					%>
 					<tr style="height:20px;<%=arch%>">
-						<td><%=prov.getFirstName()%> <%=prov.getSurname()%></td>
-						<td><%=oscar.oscarRx.util.RxUtil.DateToString(drug.getRxDate())%></td>
-						<td><%=oscar.oscarRx.util.RxUtil.DateToString(drug.getEndDate())%></td>
-						<td><%=RxPrescriptionData.getFullOutLine(drug).replaceAll(";", " ")%></td>
+						<td><%=drug.providerName%></td>
+						<td><%=drug.startDate%></td>
+						<td><%=drug.endDate%></td>
+						<td><%=drug.prescriptionDetails%></td>
 						<td>
 						<%
-							if (!RxPrescriptionData.isCustom(drug))
+							if (drug.customName==null)
 									{
-						%> <a href="javascript:ShowDrugInfo('<%=drug.getGenericName()%>');">Info</a> <%
+						%> <a href="javascript:ShowDrugInfo('<%=drug.genericName%>');">Info</a> <%
 							}
 						%>
 						</td>
-						<td><input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton"
-							onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getId()%>&demo=<%=drug.getDemographicId()%>','anwin','width=400,height=250');"></td>
-						<td><html:form action="/oscarRx/rePrescribe">
-							<html:hidden property="drugList" value="<%=String.valueOf(drug.getId())%>" />
-							<input type="hidden" name="method" value="represcribe">
-							<html:submit style="width:100px" styleClass="ControlPushButton" value="Re-prescribe" />
-						</html:form> <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite(<%=drug.getId()%>, '<%=RxPrescriptionData.isCustom(drug)?drug.getCustomName():drug.getBrandName()%>');" /></td>
+						<td>
+							<%
+								if (drug.isLocal)
+								{
+									%>
+										<input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.localDrugId%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
+									<%
+								}
+							%>
+						</td>
+						<td>
+							<%
+								if (drug.isLocal)
+								{
+									%>
+										<html:form action="/oscarRx/rePrescribe">
+											<html:hidden property="drugList" value="<%=drug.localDrugId.toString()%>" />
+											<input type="hidden" name="method" value="represcribe">
+											<html:submit style="width:100px" styleClass="ControlPushButton" value="Re-prescribe" />
+										</html:form> <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite(<%=drug.localDrugId%>, '<%=drug.customName!=null?drug.customName:drug.brandName%>');" />
+									<%
+								}
+							%>
+						</td>
 					</tr>
 					<%
 						}
