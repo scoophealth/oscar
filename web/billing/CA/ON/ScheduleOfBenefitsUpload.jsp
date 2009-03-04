@@ -147,7 +147,7 @@ function checkAll(formId){
                   %>
 				<tr>
 					<td><input type="checkbox" name="change"
-						value="<%=h.get("feeCode")%>|<%=h.get("newprice")%>|<%=h.get("effectiveDate")%>|<%=h.get("terminactionDate")%>" /></td>
+						value="<%=h.get("feeCode")%>|<%=h.get("newprice")%>|<%=h.get("effectiveDate")%>|<%=h.get("terminactionDate")%>|<%=h.get("description")%>" /></td>
 					<td><%=h.get("feeCode")%></td>
 					<td><%=h.get("oldprice")%></td>
 					<td><%=h.get("newprice")%></td>
