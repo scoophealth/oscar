@@ -64,7 +64,10 @@ service_code = service_code.substring(0,5);
    ResultSet rsother = null;  
 
  rsother = null;
- rsother = apptMainBean.queryResults(service_code, "search_servicecode_detail");
+ String[] params = new String[2];
+ params[0] = service_code;
+ params[1] = "now()";
+ rsother = apptMainBean.queryResults(params, "search_servicecode_detail");
  while(rsother.next()){
   service_desc = rsother.getString("description");
   service_code = rsother.getString("service_code");
