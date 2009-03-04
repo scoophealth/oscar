@@ -88,14 +88,17 @@ boolean dupServiceCode = false;
         /////// hack used to order the billing codes
         /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
         /////// But should cause that much of a performance hit. It's generally under 3 items
+        String billReferalDate = request.getParameter("service_date");
         Vector v = new Vector();
         for (int ii = 0 ; ii< vecServiceParam[0].size(); ii++){
             Hashtable h = new Hashtable();
             h.put("serviceCode",vecServiceParam[0].get(ii));
             h.put("serviceUnit",vecServiceParam[1].get(ii));
             h.put("serviceAt",vecServiceParam[2].get(ii));
+            h.put("billReferenceDate", billReferalDate);
             v.add(h);
         }
+                
         Collections.sort(v,new BillingSortComparator());
         
         vecServiceParam[0] = new Vector();
@@ -109,8 +112,9 @@ boolean dupServiceCode = false;
             vecServiceParam[2].add((String) h.get("serviceAt"));
         }
         ///////--------
-	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2]);
-	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);  //LINE CAUSING ERROR
+        
+	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2],billReferalDate);
+	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem,billReferalDate);  //LINE CAUSING ERROR
 
                         
         Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
@@ -367,6 +371,7 @@ window.onload=function(){
 <body topmargin="0" onload="showtotal()">
 
 <form method="post" name="titlesearch" action="billingONSave.jsp" onsubmit="return onSave();">
+    <input type="hidden" name="url_back" value="<%=request.getParameter("url_back")%>">
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
@@ -533,7 +538,7 @@ window.onload=function(){
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
 						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
-                                                gstFlag = gstRep.getGstFlag(codeName);  // Retrieve whether the code has gst involved
+                                                gstFlag = gstRep.getGstFlag(codeName,billReferalDate);  // Retrieve whether the code has gst involved
                                                 if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
                                                     BigDecimal cTotal = new BigDecimal(codeTotal);
                                                     BigDecimal perc = new BigDecimal(percent);
