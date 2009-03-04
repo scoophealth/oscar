@@ -62,6 +62,7 @@ public class BillingCodeData {
    }
    
    public Hashtable fillCodeDataHashtable(ResultSet rs) throws SQLException{
+       System.out.println("fillCode " + c(rs.getString("service_code")) + " " + c(rs.getString("value")));
       Hashtable h = new Hashtable();
        h.put("service_compositecode", c(rs.getString("service_compositecode")));
        h.put("service_code", c(rs.getString("service_code")));
@@ -82,7 +83,7 @@ public class BillingCodeData {
    public Hashtable searchBillingCode(String str){
       Hashtable h = null;
       int count = 0;
-      String sql = "select * from billingservice where service_code like '"+str+"%' ";
+      String sql = "select * from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL(sql);
@@ -106,7 +107,7 @@ public class BillingCodeData {
    ///
    public int searchNumBillingCode(String str){      
       int count = 0;
-      String sql = "select count(*) as coun from billingservice where service_code like '"+str+"%' ";
+      String sql = "select count(*) as coun from billingservice b where b.service_code like '"+str+"%' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code = b.service_code and b2.billingservice_date <= now())";
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL(sql);
@@ -181,14 +182,39 @@ public class BillingCodeData {
    
    
    
-   public boolean editBillingCodeByServiceCode(String val, String codeId){
+   public boolean editBillingCodeByServiceCode(String val, String codeId, String date){
       boolean retval = true;
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
          String str = "update billingservice set "+                      
                       "value =                   '"+StringEscapeUtils.escapeSql(val)  +"' "+
-                      "where service_code = '"+StringEscapeUtils.escapeSql(codeId)+"'";
+                      "where service_code = '"+StringEscapeUtils.escapeSql(codeId)+"' and billingservice_date = '" + date + "'";
+         System.out.println(str);
+         db.RunSQL(str);
+         System.out.println("NOW updated");
+         db.CloseConn();
+      }catch(Exception e1){
+         e1.printStackTrace();
+      }
+      return retval;
+   }
+   
+   public boolean insertBillingCode(String value, String code, String date, String description) {
+      boolean retval = true;
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+
+         String str = "insert into billingservice (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia) Values("+
+                      "''," +                      
+                      "'"+StringEscapeUtils.escapeSql(code)+"'," +
+                      "'"+StringEscapeUtils.escapeSql(description) + "'," + 
+                      "'"+StringEscapeUtils.escapeSql(value)  +"',"+
+                      "''," +
+                      "'"+StringEscapeUtils.escapeSql(date) + "'," + 
+                      "''," +
+                      "'ON'," +
+                      "'00')";
          System.out.println(str);
          db.RunSQL(str);
          System.out.println("NOW updated");
