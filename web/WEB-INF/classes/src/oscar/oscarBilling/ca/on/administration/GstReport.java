@@ -67,9 +67,9 @@ public class GstReport {
         return list;
     }
     
-    public String getGstFlag(String code) throws SQLException{
+    public String getGstFlag(String code, String date) throws SQLException{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        String sql = "SELECT gstFlag from billingservice where service_code ='" + code + "';";
+        String sql = "SELECT b.gstFlag from billingservice b where b.service_code ='" + code + "' and b.billingservice_date = (select max(b2.billingservice_date) from billingservice b2 where b2.service_code ='" + code + "' and b2.billingservice_date <= '" + date + "');";
         ResultSet rs = db.GetSQL(sql);
         String ret = "";
         if( rs.next() ){
