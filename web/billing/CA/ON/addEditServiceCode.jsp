@@ -41,10 +41,12 @@
   int serviceCodeLen = 5;
   String msg = "Type in a service code and search first to see if it is available.";
   String action = "search"; // add/edit
+  String action2 = ""; //add a new record even if code already exists
   //BillingServiceCode serviceCodeObj = new BillingServiceCode();
   Properties	prop  = new Properties();
+  LinkedHashMap codes = new LinkedHashMap();
   BillingONDataHelp dbObj = new BillingONDataHelp();
-  if (request.getParameter("submit") != null && request.getParameter("submit").equals("Save")) {
+  if (request.getParameter("submitFrm") != null && (request.getParameter("submitFrm").equals("Save") || request.getParameter("submitFrm").equalsIgnoreCase("Add Service Code"))) {
     // check the input data
     // if input the perc code,
     String valuePara = request.getParameter("value");
@@ -105,12 +107,13 @@
       	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date) values ('', '";
+			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia) values ('', '";
 			sql += serviceCode + "', '";
 			sql += request.getParameter("description") + "', '";
 			sql += valuePara + "', '";
 			sql += request.getParameter("percentage") + "', '";
-			sql += request.getParameter("billingservice_date") + "' )";
+			sql += request.getParameter("billingservice_date") + "',";
+                        sql += "'','ON','00')";
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "insert into billingperclimit values('";
 				sqlMinMax += serviceCode + "', '";
@@ -141,45 +144,92 @@
     } else {
       msg = "You can <font color='red'>NOT</font> save the service code. Please search the service code first.";
     }
-  } else if (request.getParameter("submit") != null && request.getParameter("submit").equals("Search")) {
+  } else if (request.getParameter("submitFrm") != null && request.getParameter("submitFrm").equals("Search")) {
     // check the input data
     if(request.getParameter("service_code") == null || request.getParameter("service_code").length() != serviceCodeLen) {
       msg = "Please type in a right service code.";
     } else {
-        String serviceCode = request.getParameter("service_code");
-		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'";
+        String serviceCode = request.getParameter("service_code");                
+                
+		String	sql   = "select * from billingservice where service_code='" + serviceCode + "'  order by billingservice_date desc";
 		ResultSet rs = dbObj.searchDBRecord(sql);
                 String tmp;
 System.out.println(sql);
-
-		if (rs.next()) {
-		    prop.setProperty("service_code", serviceCode);
-		    tmp = rs.getString("description") == null ? "" : rs.getString("description");
-                    prop.setProperty("description", tmp);
-                    tmp = rs.getString("value") == null ? "" : rs.getString("value");
-		    prop.setProperty("value", tmp);
-                    tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
-		    prop.setProperty("percentage", tmp);                    
-                    tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
-		    prop.setProperty("billingservice_date", tmp);
-		    msg = "You can edit the service code.";
-		    action = "edit" + serviceCode;
+                int count = 0;
+                
+		while (rs.next()) {
+                    ++count;
+                    codes.put(rs.getString("billingservice_date"), rs.getString("billingservice_no"));
+                    if( count == 1 ) {
+                        prop.setProperty("service_code", serviceCode);
+                        tmp = rs.getString("description") == null ? "" : rs.getString("description");
+                        prop.setProperty("description", tmp);
+                        tmp = rs.getString("value") == null ? "" : rs.getString("value");
+                        prop.setProperty("value", tmp);
+                        tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
+                        prop.setProperty("percentage", tmp);                    
+                        tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
+                        prop.setProperty("billingservice_date", tmp);
+                        msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
+                        action = "edit" + serviceCode;
+                        action2 = "add" + serviceCode;
 
 		    String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
 System.out.println(sqlMinMax);
 			ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
 			if (rs2.next()) {
-		    	prop.setProperty("min", rs2.getString("min"));
-		    	prop.setProperty("max", rs2.getString("max"));
+                            prop.setProperty("min", rs2.getString("min"));
+                            prop.setProperty("max", rs2.getString("max"));
 			}
+                    }
+                }
 
-		} else {
+		if( count == 0 ) {
 		    prop.setProperty("service_code", serviceCode);
 		    msg = "It is a NEW service code. You can add it.";
 		    action = "add" + serviceCode;
 		}
 	}
   }
+  else if( request.getParameter("action") != null && request.getParameter("action").startsWith("single") ) {
+      String serviceCode = request.getParameter("service_code");
+      
+      int serviceNo = Integer.parseInt(request.getParameter("billingservice_no"));
+      String sql = "select * from billingservice where service_code = '" + serviceCode + "'  order by billingservice_date desc";
+      ResultSet rs = dbObj.searchDBRecord(sql);
+      
+      String tmp;
+System.out.println(sql);
+    int count = 0;
+
+    while (rs.next()) {
+        ++count;
+        codes.put(rs.getString("billingservice_date"), rs.getString("billingservice_no"));
+        if( serviceNo == rs.getInt("billingservice_no") ) {
+            prop.setProperty("service_code", serviceCode);
+            tmp = rs.getString("description") == null ? "" : rs.getString("description");
+            prop.setProperty("description", tmp);
+            tmp = rs.getString("value") == null ? "" : rs.getString("value");
+            prop.setProperty("value", tmp);
+            tmp = rs.getString("percentage") == null ? "" : rs.getString("percentage");
+            prop.setProperty("percentage", tmp);                    
+            tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
+            prop.setProperty("billingservice_date", tmp);
+            msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
+            action = "edit" + serviceCode;
+            action2 = "add" + serviceCode;
+
+        String sqlMinMax = "select * from billingperclimit where service_code='" + serviceCode + "'";
+System.out.println(sqlMinMax);
+            ResultSet rs2 = dbObj.searchDBRecord(sqlMinMax);
+            if (rs2.next()) {
+                prop.setProperty("min", rs2.getString("min"));
+                prop.setProperty("max", rs2.getString("max"));
+            }
+        }
+    }      
+  }
+  
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -299,7 +349,13 @@ System.out.println(sqlMinMax);
 	    function upCaseCtrl(ctrl) {
 			ctrl.value = ctrl.value.toUpperCase();
 		}
-	    
+
+                
+                function fetchBillService(billno) {
+                    document.getElementById('action').value="single" + billno;
+                    var frm = document.getElementById("baseurl");
+                    frm.submit();                    
+                }
 //-->
 
       </script>
@@ -319,7 +375,7 @@ System.out.println(sqlMinMax);
 	</tr>
 </table>
 </center>
-<form method="post" name="baseurl" action="addEditServiceCode.jsp">
+<form method="post" id="baseurl" name="baseurl" action="addEditServiceCode.jsp">
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td>&nbsp;</td>
@@ -329,9 +385,29 @@ System.out.println(sqlMinMax);
 		<td><input type="text" name="service_code"
 			value="<%=prop.getProperty("service_code", "")%>" size='4'
 			maxlength='5' onblur="upCaseCtrl(this)" /> (5 letters, e.g. A001A) <input
-			type="submit" name="submit" value="Search"
+			type="submit" name="submitFrm" value="Search"
 			onclick="javascript:return onSearch();"></td>
 	</tr>
+        <%
+            if( codes.size() > 1 ) {
+                Set dates = codes.keySet();
+                Iterator<String> i = dates.iterator();    
+                String date;
+        %>                        
+        <tr>
+            <td align="right"><b>Edit Entry</b></td>
+            <td>
+                <select name="billingservice_no" onchange="fetchBillService(this.options[this.selectedIndex].value);">
+                    <%
+                        while( i.hasNext() ) {
+                            date = i.next();
+                    %>
+                            <option value="<%=codes.get(date)%>" <%=prop.getProperty("billingservice_date", "").equalsIgnoreCase(date) ? "selected" : ""%>><%=date%>
+                       <%}%>
+                </select>
+            </td>
+        </tr>
+        <%}%>
 	<tr>
 		<td align="right"><b>Description</b></td>
 		<td><input type="text" name="description"
@@ -368,10 +444,17 @@ System.out.println(sqlMinMax);
 	</tr>
 	<tr>
 		<td align="center" bgcolor="#CCCCFF" colspan="2"><input
-			type="hidden" name="action" value='<%=action%>'> <input
-			type="submit" name="submit"
+			type="hidden" id="action" name="action" value=''> <input
+			type="submit" name="submitFrm"
 			value="<bean:message key="admin.resourcebaseurl.btnSave"/>"
-			onclick="javascript:return onSave();"> <input type="button"
+			onclick="document.getElementById('action').value='<%=action%>';return onSave();"> 
+                        <%
+                        if( !action2.equals("") ) {
+                        %>                        
+                            <input type="submit" name="submitFrm" value="<bean:message key="admin.resourcebaseurl.btnAdd"/>" 
+                            onclick="document.getElementById('action').value='<%=action2%>';return onSave();">
+                       <%}%>
+                        <input type="button"
 			name="Cancel"
 			value="<bean:message key="admin.resourcebaseurl.btnExit"/>"
 			onClick="window.close()"></td>
