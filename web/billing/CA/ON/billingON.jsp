@@ -51,6 +51,13 @@
 
 			if (visitType.startsWith("00") || visitType.equals(""))	clinicview = "0000";
 			String appt_no = request.getParameter("appointment_no");
+                        String billReferenceDate;
+                        if( appt_no != null && appt_no.compareTo("0") == 0 ) {
+                            billReferenceDate = request.getParameter("service_date")!=null? request.getParameter("service_date"):strToday;
+                        }
+                        else {
+                           billReferenceDate = request.getParameter("appointment_date"); 
+                        }
 			String demoname = request.getParameter("demographic_name");
 			String demo_no = request.getParameter("demographic_no");
 			String apptProvider_no = request.getParameter("apptProvider_no");
@@ -256,7 +263,7 @@
 			//int Count2 = 0;
 
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-					+ ctlBillForm + "' and c.service_group ='" + "Group1" + "' order by c.service_order";
+					+ ctlBillForm + "' and c.service_group ='" + "Group1" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code  ) order by c.service_order";
 			rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
 				propT = new Properties();
@@ -286,7 +293,7 @@
 				}
 			}
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-					+ ctlBillForm + "' and c.service_group ='" + "Group2" + "' order by c.service_order";
+					+ ctlBillForm + "' and c.service_group ='" + "Group2" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
                         rs = dbObj.searchDBRecord(sql);
                         
 			while (rs.next()) {
@@ -314,7 +321,7 @@
                         }   
                         
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
-					+ ctlBillForm + "' and c.service_group ='" + "Group3" + "' order by c.service_order";
+					+ ctlBillForm + "' and c.service_group ='" + "Group3" + "' and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
 			rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
 				propT = new Properties();
@@ -662,9 +669,10 @@ function onChangePrivate() {
 	var val = document.forms[0].xml_billtype[n].value; 
   	if(val.substring(0,3) == "PAT" || val.substring(0,3) == "OCF" || val.substring(0,3) == "ODS" || val.substring(0,3) == "CPP" || val.substring(0,3) == "STD") {
   		self.location.href = "billingON.jsp?curBillForm=<%="PRI"%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
-  	} else {
+  	}         
+        else {
 <% if(ctlBillForm.equals("PRI")) {%>  	
-  		self.location.href = "billingON.jsp?curBillForm=<%=oscarVariables.getProperty("default_view", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
+                self.location.href = "billingON.jsp?curBillForm=<%=oscarVariables.getProperty("default_view", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
 <% } %>
   	}
 }
@@ -689,7 +697,7 @@ function onHistory() {
 function prepareBack() {
     document.forms[0].services_checked.value = "<%=request.getParameter("services_checked")%>";
     if (document.forms[0].services_checked.value=="null") document.forms[0].services_checked.value = 0;
-    document.forms[0].url_back.value = location.href;
+    document.forms[0].url_back.value = location.href;   
 }
 
 function refreshServicesChecked(chkd) {
@@ -714,7 +722,7 @@ function changeCodeDesc() {
 </script>
 </head>
 
-<body onload="setfocus();prepareBack();changeCodeDesc();" topmargin="0">
+<body onload="prepareBack();changeCodeDesc();" topmargin="0">
 <div id="Instrdiv" class="demo1">
 
     <table bgcolor='#007FFF' width='99%'>
@@ -1013,7 +1021,7 @@ function changeCodeDesc() {
 					    <option value="OCF | " <%=srtBillType.startsWith("OCF")?"selected" : ""%>> -OCF</option>
 					    <option value="ODS | " <%=srtBillType.startsWith("ODS")?"selected" : ""%>> -ODSP</option>
 					    <option value="CPP | Canada Pension Plan" <%=srtBillType.startsWith("CPP")?"selected" : ""%>> -CPP</option>
-					    <option value="STD | Short Term Disability / Long Term Disability" <%=srtBillType.startsWith("STD")?"selected" : ""%>>-STD/LTD</option>
+					    <option value="STD | Short Term Disability / Long Term Disability" <%=srtBillType.startsWith("STD")?"selected" : ""%>>-STD/LTD</option>                                            
 					</select>
 				    </td>
 				</tr>
