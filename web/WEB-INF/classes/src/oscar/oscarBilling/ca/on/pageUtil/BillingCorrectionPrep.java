@@ -290,7 +290,7 @@ public class BillingCorrectionPrep {
 				oldObj.setSer_num(getUnit((String) vecUnit.get(i)));
 				oldObj.setFee(getFee((String) vecFee.get(i),
 						getUnit((String) vecUnit.get(i)), (String) vecName
-								.get(i)));
+								.get(i), serviceDate));
 				oldObj.setService_date(serviceDate);
 				oldObj.setDx(sDx);
 				oldObj.setStatus(cStatus);
@@ -327,7 +327,7 @@ public class BillingCorrectionPrep {
                         newObj = new BillingItemData(oldObj);
 			newObj.setService_code(sName);
 			newObj.setSer_num(getUnit(sUnit));
-			newObj.setFee(getFee(sFee, getUnit(sUnit), sName));
+			newObj.setFee(getFee(sFee, getUnit(sUnit), sName, serviceDate));
 			newObj.setService_date(serviceDate);
 			newObj.setDx(sDx);
 			newObj.setStatus(sStatus);
@@ -399,11 +399,11 @@ public class BillingCorrectionPrep {
 		return ret;
 	}
 
-	private String getFee(String fee, String unit, String codeName) {
+	private String getFee(String fee, String unit, String codeName, String billReferenceDate) {
 		String ret = fee;
 		if (fee.length() == 0 || fee.equals(" ")) {
 			JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
-			fee = dbObj.getCodeFee(codeName);
+			fee = dbObj.getCodeFee(codeName,billReferenceDate);
 			// calculate fee
 			BigDecimal bigCodeFee = new BigDecimal(fee);
 			// System.out.println((String) vecUnit.get(i) + "big bigCodeFee: " +

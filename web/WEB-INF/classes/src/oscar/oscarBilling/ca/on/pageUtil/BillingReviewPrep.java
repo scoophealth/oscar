@@ -39,7 +39,7 @@ public class BillingReviewPrep {
 	JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 
 	public Vector getServiceCodeReviewVec(Vector vecCode, Vector vecUnit,
-			Vector vecAt) {
+			Vector vecAt, String billReferalDate) {
 		Vector ret = new Vector();
 		BillingReviewCodeItem codeItem = null;
 
@@ -48,7 +48,7 @@ public class BillingReviewPrep {
 				continue;
 
 			// get fee
-			String fee = dbObj.getCodeFee((String) vecCode.get(i));
+			String fee = dbObj.getCodeFee((String) vecCode.get(i),billReferalDate);
 
 			// judge fee
 			if (fee == null) {
@@ -96,7 +96,7 @@ public class BillingReviewPrep {
 
 	// get perc code item display
 	public Vector getPercCodeReviewVec(Vector vecCode, Vector vecUnit,
-			Vector vecReviewCodeItem) {
+			Vector vecReviewCodeItem, String billReferalDate) {
 		Vector ret = new Vector();
 		// no perc. code  ( perc codes are recognized in the database by having a value of .00, They are not in the vecReviewCodeItem)
 		if (vecCode.size() == vecReviewCodeItem.size())
@@ -122,7 +122,7 @@ public class BillingReviewPrep {
 			}
 			// take perc. code
 			// get fee
-			String fee = dbObj.getPercFee((String) vecCode.get(i));
+			String fee = dbObj.getPercFee((String) vecCode.get(i), billReferalDate);
   
 			if (fee == null) {
 				percItem = new BillingReviewPercItem();
@@ -164,7 +164,7 @@ public class BillingReviewPrep {
 				vecCodeTotal.add(bigFee.toString());
 			}
 			// get min/max fee
-			String[] mFee = dbObj.getPercMinMaxFee((String) vecCode.get(i));
+			String[] mFee = dbObj.getPercMinMaxFee((String) vecCode.get(i),billReferalDate);
 			percItem = new BillingReviewPercItem();
 			percItem.setCodeName((String) vecCode.get(i));
 			percItem.setCodeUnit((String) vecUnit.get(i));
