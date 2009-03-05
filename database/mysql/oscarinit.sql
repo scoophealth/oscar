@@ -5922,6 +5922,20 @@ CREATE TABLE immunizations (
 ) ;
 
 --
+-- Table structure for table `labRequestReportLink`
+--
+
+CREATE TABLE labRequestReportLink (
+  id int(10) NOT NULL auto_increment,
+  request_table varchar(60),
+  request_id int(10),
+  request_date date,
+  report_table varchar(60) NOT NULL,
+  report_id int(10) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+--
 -- Table structure for table `mdsMSH`
 --
 
@@ -7205,9 +7219,8 @@ CREATE TABLE measurementsExt(
 	id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	measurement_id int(10) NOT NULL,
 	keyval varchar(20) NOT NULL,
-	val varchar(20)	NOT NULL,
-	INDEX(measurement_id),
-        INDEX(val)
+	val text NOT NULL,
+	INDEX(measurement_id)
 );
 
 CREATE TABLE measurementMap(
