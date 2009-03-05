@@ -530,11 +530,12 @@ public class JdbcBillingCreateBillingFile {
 	private void updateDemoData(BillingClaimHeader1Data chObj) {
                 // last_name,first_name,dob,hin,ver,hc_type,sex
 		List vecStr = (new JdbcBillingPageUtil()).getPatientCurBillingDemo(chObj.getDemographic_no());
-                String hin = (String) vecStr.get(3);
-                if( hin.equals("") ) {
+                
+                //Bonus Billing (Incentives)? Block out patient data : update with patient data
+                if( chObj.getStatus().equals("I") ) {
                     ch1Obj.setDemographic_name("");
                     ch1Obj.setDob("");
-                    ch1Obj.setHin(hin);
+                    ch1Obj.setHin("");
                     ch1Obj.setVer("");
                     ch1Obj.setProvince("ON");
                     ch1Obj.setSex("");                    
@@ -542,7 +543,7 @@ public class JdbcBillingCreateBillingFile {
                 else {
                     ch1Obj.setDemographic_name(vecStr.get(0) + "," + vecStr.get(1));
                     ch1Obj.setDob((String) vecStr.get(2));
-                    ch1Obj.setHin(hin);
+                    ch1Obj.setHin((String) vecStr.get(3));
                     ch1Obj.setVer((String) vecStr.get(4));
                     ch1Obj.setProvince((String) vecStr.get(5));
                     ch1Obj.setSex((String) vecStr.get(6));
