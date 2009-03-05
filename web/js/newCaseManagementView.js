@@ -628,7 +628,7 @@ function prepareExtraFields(cpp,exts) {
     if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4]).invoke("show");
     if (cpp==cppNames[2]) $(rowIDs[3],rowIDs[4],rowIDs[7]).invoke("show");
     if (cpp==cppNames[3]) $(rowIDs[5]).show();
-    if (cpp==cppNames[4]) $(rowIDs[6]).show();
+    if (cpp==cppNames[4]) $(rowIDs[3],rowIDs[6]).invoke("show");
 
     for (var i=0; i<exFields.length; i++) {
 	$(exFields[i]).value = "";
