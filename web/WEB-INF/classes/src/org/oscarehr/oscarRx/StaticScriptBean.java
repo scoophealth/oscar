@@ -11,6 +11,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.client.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk;
@@ -79,10 +80,12 @@ public class StaticScriptBean {
 		DrugDisplayData drugDisplayData = new DrugDisplayData();
 
 		FacilityIdStringCompositePk remoteProviderPk=new FacilityIdStringCompositePk();
-		remoteProviderPk.setIntegratorFacilityId(remoteDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId());
+		int remoteFacilityId=remoteDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
+		remoteProviderPk.setIntegratorFacilityId(remoteFacilityId);
 		remoteProviderPk.setCaisiItemId(remoteDrug.getCaisiProviderId());
 		CachedProvider cachedProvider=caisiIntegratorManager.getProvider(currentFacilityId, remoteProviderPk);
-		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName();
+		CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, remoteFacilityId);
+		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName()+" @ "+cachedFacility.getName();
 
 		drugDisplayData.startDate = RxUtil.DateToString(remoteDrug.getRxDate());
 
