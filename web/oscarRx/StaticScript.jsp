@@ -55,8 +55,7 @@
 	<logic:redirect href="error.html" />
 </logic:notPresent>
 <logic:present name="RxSessionBean" scope="session">
-	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
-		name="RxSessionBean" scope="session" />
+	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
 	<logic:equal name="bean" property="valid" value="false">
 		<logic:redirect href="error.html" />
 	</logic:equal>
@@ -79,10 +78,11 @@
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
 	String cn=request.getParameter("cn");
 	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
-	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentFacilityId, bean.getDemographicNo(), regionalIdentifier, cn);
+	Integer currentDemographicNo=bean.getDemographicNo();
 	
-	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
+	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentFacilityId, currentDemographicNo, regionalIdentifier, cn);
+	
+	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
@@ -166,7 +166,7 @@
 								if (drug.isLocal)
 								{
 									%>
-										<input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.localDrugId%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
+										<input type="button" value="Annotation" title="Annotation" style="width: 55px" class="ControlPushButton" onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.localDrugId%>&demo=<%=currentDemographicNo%>','anwin','width=400,height=250');">
 									<%
 								}
 							%>
@@ -181,6 +181,22 @@
 											<input type="hidden" name="method" value="represcribe">
 											<html:submit style="width:100px" styleClass="ControlPushButton" value="Re-prescribe" />
 										</html:form> <input type="button" align="top" value="Add to Favorites" style="width: 100px" class="ControlPushButton" onclick="javascript:addFavorite(<%=drug.localDrugId%>, '<%=drug.customName!=null?drug.customName:drug.brandName%>');" />
+									<%
+								}
+								else
+								{
+									%>
+										<form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
+											<input type="hidden" name="demographicNo" value="<%=currentDemographicNo%>" />
+											<%
+												String searchString=drug.brandName;
+												if (searchString==null) searchString=drug.customName;
+												if (searchString==null) searchString=drug.genericName;
+												if (searchString==null) searchString=drug.prescriptionDetails;
+											%>
+											<input type="hidden" name="searchString" value="<%=searchString%>" />
+											<input type="submit" class="ControlPushButton" value="Re-prescribe" />										
+										</form>
 									<%
 								}
 							%>
