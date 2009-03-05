@@ -323,7 +323,6 @@ public class RxDrugData {
     
     public DrugMonograph getDrug(String pKey) throws Exception{
         RxDrugRef d = new RxDrugRef();
-        System.out.println("GOING TO SEARCH WITH THIS KEY "+pKey);
         return new DrugMonograph(d.getDrug(pKey,new Boolean(true)));             
     }
     
