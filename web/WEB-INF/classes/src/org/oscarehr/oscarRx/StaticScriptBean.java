@@ -2,6 +2,7 @@ package org.oscarehr.oscarRx;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
@@ -73,6 +74,7 @@ public class StaticScriptBean {
 		
 		// lists are not defined as ordered, I'm defining this as ordered.
 		ArrayList<DrugDisplayData> values=new ArrayList<DrugDisplayData>(results.values());
+		Collections.reverse(values);
 		return (values);
 	}
 
