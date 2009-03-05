@@ -59,6 +59,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public static final String SORT_CREATOR = "d.doccreator, d.updatedatetime DESC";
     public static final String SORT_OBSERVATIONDATE = "d.observationdate DESC, d.updatedatetime DESC";
     public static final String SORT_CONTENTTYPE = "d.contenttype, d.updatedatetime DESC";
+    public static final String SORT_REVIEWER = "d.reviewer, d.updatedatetime DESC";
     public static final boolean ATTACHED = true;
     public static final boolean UNATTACHED = false;
 
