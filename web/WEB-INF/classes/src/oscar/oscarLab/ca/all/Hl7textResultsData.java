@@ -98,9 +98,13 @@ public class Hl7textResultsData {
                         continue;
                     
                     logger.info("obx("+j+") should be inserted");
-                    String identifier = h.getOBXIdentifier(i, j);
-                    String name = h.getOBXName(i, j);
-                    String abnormal = h.getOBXAbnormalFlag(i, j);
+                    String identifier = h.getOBXIdentifier(i,j);
+                    String name = h.getOBXName(i,j);
+		    String unit = h.getOBXUnits(i,j);
+		    String labname = h.getPatientLocation();
+		    String accession = h.getAccessionNum();
+		    String datetime = h.getTimeStamp(i,j);
+                    String abnormal = h.getOBXAbnormalFlag(i,j);
                     if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
                         abnormal = "A";
                     }else if ( abnormal != null && abnormal.startsWith("L")){
@@ -108,6 +112,11 @@ public class Hl7textResultsData {
                     }else{
                         abnormal = "N";
                     }
+		    String[] refRange = splitRefRange(h.getOBXReferenceRange(i,j));
+		    String comments = "";
+		    for (int l=0; l<h.getOBXCommentCount(i,j); l++) {
+			comments += comments.length()>0 ? "\n"+h.getOBXComment(i,j,l) : h.getOBXComment(i,j,l);
+		    }
                     
                     String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
                     PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -137,7 +146,7 @@ public class Hl7textResultsData {
                     if(rs.next())
                         insertID = db.getString(rs,1);
                     
-                    String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?, ?)";
+                    String measurementExt = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES (?,?,?)";
                     
                     pstmt = conn.prepareStatement(measurementExt);
                     
@@ -148,14 +157,12 @@ public class Hl7textResultsData {
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    
                     logger.info("Inserting into measurementsExt id "+insertID+ " abnormal "+ abnormal);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "abnormal");
                     pstmt.setString(3, abnormal);
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
-                    
                     
                     logger.info("Inserting into measurementsExt id "+insertID+ " identifier "+ identifier);
                     pstmt.setString(1, insertID);
@@ -164,7 +171,6 @@ public class Hl7textResultsData {
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
-                    
                     logger.info("Inserting into measurementsExt id "+insertID+ " name "+ name);
                     pstmt.setString(1, insertID);
                     pstmt.setString(2, "name");
@@ -172,6 +178,71 @@ public class Hl7textResultsData {
                     pstmt.executeUpdate();
                     pstmt.clearParameters();
                     
+                    logger.info("Inserting into measurementsExt id "+insertID+ " labname "+ labname);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "labname");
+                    pstmt.setString(3, labname);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+		    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " accession "+ accession);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "accession");
+                    pstmt.setString(3, accession);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+		    
+                    logger.info("Inserting into measurementsExt id "+insertID+ " datetime "+ datetime);
+                    pstmt.setString(1, insertID);
+                    pstmt.setString(2, "datetime");
+                    pstmt.setString(3, datetime);
+                    pstmt.executeUpdate();
+                    pstmt.clearParameters();
+		    
+		    if (unit!=null && unit.length()>0) {
+			logger.info("Inserting into measurementsExt id "+insertID+ " unit "+ unit);
+			pstmt.setString(1, insertID);
+			pstmt.setString(2, "unit");
+			pstmt.setString(3, unit);
+			pstmt.executeUpdate();
+			pstmt.clearParameters();
+		    }
+		    
+		    if (refRange[0].length()>0) {
+			logger.info("Inserting into measurementsExt id "+insertID+ " range "+ refRange[0]);
+			pstmt.setString(1, insertID);
+			pstmt.setString(2, "range");
+			pstmt.setString(3, refRange[0]);
+			pstmt.executeUpdate();
+			pstmt.clearParameters();
+		    } else {
+			if (refRange[1].length()>0) {
+			    logger.info("Inserting into measurementsExt id "+insertID+ " minimum "+ refRange[1]);
+			    pstmt.setString(1, insertID);
+			    pstmt.setString(2, "minimum");
+			    pstmt.setString(3, refRange[1]);
+			    pstmt.executeUpdate();
+			    pstmt.clearParameters();
+			}
+			if (refRange[2].length()>0) {
+			    logger.info("Inserting into measurementsExt id "+insertID+ " maximum "+ refRange[2]);
+			    pstmt.setString(1, insertID);
+			    pstmt.setString(2, "maximum");
+			    pstmt.setString(3, refRange[2]);
+			    pstmt.executeUpdate();
+			    pstmt.clearParameters();
+			}
+		    }
+		    
+		    if (comments!=null && comments.length()>0) {
+			logger.info("Inserting into measurementsExt id "+insertID+ " comments "+ comments);
+			pstmt.setString(1, insertID);
+			pstmt.setString(2, "comments");
+			pstmt.setString(3, comments);
+			pstmt.executeUpdate();
+			pstmt.clearParameters();
+		    }
+		    
                     pstmt.close();
                     
                 }
@@ -377,4 +448,38 @@ public class Hl7textResultsData {
         return labResults;
     }
     
+    String[] splitRefRange(String refRangeTxt) {
+	refRangeTxt = refRangeTxt.trim();
+	String[] refRange = {"","",""};
+	String numeric = "-. 0123456789";
+	boolean textual = false;
+	if (refRangeTxt==null || refRangeTxt.length()==0) return refRange;
+	
+	for (int i=0; i<refRangeTxt.length(); i++) {
+	    if (!numeric.contains(refRangeTxt.subSequence(i,i+1))) {
+		if (i>0 || (refRangeTxt.charAt(i)!='>' && refRangeTxt.charAt(i)!='<')) {
+		    textual = true;
+		    break;
+		}
+	    }
+	}
+	if (textual) {
+	    refRange[0] = refRangeTxt;
+	} else {
+	    if (refRangeTxt.charAt(0)=='>') {
+		refRange[1] = refRangeTxt.substring(1).trim();
+	    } else if (refRangeTxt.charAt(0)=='<') {
+		refRange[2] = refRangeTxt.substring(1).trim();
+	    } else {
+		String[] tmp = refRangeTxt.split("-");
+		if (tmp.length==2) {
+		    refRange[1] = tmp[0].trim();
+		    refRange[2] = tmp[1].trim();
+		} else {
+		    refRange[0] = refRangeTxt;
+		}
+	    }
+	}
+	return refRange;
+    }
 }
