@@ -292,6 +292,11 @@ public class EDoc extends TagObject implements Comparable {
 	return reviewerId;
     }
     
+    public String getReviewerName() {
+        String reviewerName = EDocUtil.getModuleName("provider", reviewerId);
+        return reviewerName;
+    }
+
     public String getReviewerOhip() {
 	return EDocUtil.getProviderInfo("ohip_no", reviewerId);
     }
