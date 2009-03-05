@@ -30,9 +30,9 @@ public class JdbcBillingReviewImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
-	public String getCodeFee(String val) {
+	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
-		String sql = "select value from billingservice where service_code='" + val + "'";
+		String sql = "select value from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
 
 		// _logger.info("getCodeFee(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
@@ -49,9 +49,9 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
-	public String getPercFee(String val) {
+	public String getPercFee(String val, String billReferalDate) {
 		String retval = null;
-		String sql = "select percentage from billingservice where service_code='" + val + "'";
+		String sql = "select percentage from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
 
 		// _logger.info("getCodeFee(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
@@ -68,9 +68,9 @@ public class JdbcBillingReviewImpl {
 		return retval;
 	}
 
-	public String[] getPercMinMaxFee(String val) {
+	public String[] getPercMinMaxFee(String val, String billReferalDate) {
 		String[] retval = { "", "" };
-		String sql = "select min, max from billingperclimit where service_code='" + val + "'";
+		String sql = "select b.min, b.max from billingperclimit b where b.service_code='" + val + "' and  b.effective_date = (select max(b2.effective_date) from billingperclimit b2 where b2.effective_date <= '" + billReferalDate + "' and b2.service_code = '" + val + "')";
 
 		// _logger.info("getCodeFee(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
