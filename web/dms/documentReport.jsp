@@ -106,6 +106,7 @@ if (sortRequest != null) {
     else if (sortRequest.equals("creator")) sort = EDocUtil.SORT_CREATOR;
     else if (sortRequest.equals("uploaddate")) sort = EDocUtil.SORT_DATE;
     else if (sortRequest.equals("observationdate")) sort = EDocUtil.SORT_OBSERVATIONDATE;
+    else if (sortRequest.equals("reviewer")) sort = EDocUtil.SORT_REVIEWER;
 }
 
 ArrayList doctypes = EDocUtil.getDoctypes(module);
@@ -371,21 +372,25 @@ function popup1(height, width, url, windowName){
 					<td><input class="tightCheckbox" type="checkbox"
 						id="pdfCheck<%=i%>"
 						onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" /></td>
-					<td width="49%"><b><a
+					<td width="40%"><b><a
 						href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgDocDesc" /></a></b></td>
-					<td width="10%"><b><a
-						href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Content</a></b></td>
-					<td width="10%"><b><a
-						href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">Type</a></b></td>
-					<td width="15%"><b><a
+					<td width="8%"><b><a
+						href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
+						    Content</a></b></td>
+					<td width="8%"><b><a
+						href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
+						    Type</a></b></td>
+					<td width="13%"><b><a
 						href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgCreator" /></a></b></td>
-					<td width="8%"><a
+					<td width="10%"><a
 						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
 						title="Observation Date"><b>Date</b></a></td>
-					<%-- <td width="10%"><b>Status</b></td> --%>
-					<td width="11%">&nbsp;</td>
+					<td width="13%"><a
+						href="?sort=reviewer&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
+						    <b>Reviewer</b></td>
+					<td width="8%">&nbsp;</td>
 				</tr>
 
 				<%
@@ -402,6 +407,8 @@ function popup1(height, width, url, windowName){
                         dStatus="html";
                     else 
                         dStatus="active";
+		    String reviewerName = curdoc.getReviewerName();
+		    if (reviewerName.equals("")) reviewerName = "- - -";
             %>
 				<tr>
 					<td>
@@ -423,6 +430,7 @@ function popup1(height, width, url, windowName){
 					<td><%=curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>
 					<td><%=curdoc.getObservationDate()%></td>
+					<td><%=reviewerName%></td>
 					<%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
 					<td valign="top">
 		    <%  if( curdoc.getCreatorId().equalsIgnoreCase(user_no)) {  
