@@ -34,7 +34,7 @@
 <%//
 			String provider = request.getParameter("provider");
 			String mohOffice = request.getParameter("billcenter");
-			String BILLING_STATUS = "(status='O' or status='W')";
+			String BILLING_STATUS = "(status='O' or status='W' or status='I')";
 			int diskId = 0;
                         int headerId = 0;
                         ProviderBillCenter oriBillCenter = new ProviderBillCenter();
