@@ -108,15 +108,41 @@ public class BillingSavePrep {
 		ret.add(aL);
 		return ret;
 	}
+        
+        
 
 	private BillingClaimHeader1Data getClaimHeader1Obj(HttpServletRequest val) {
+                String billtype = val.getParameter("xml_billtype");
+                
 		BillingClaimHeader1Data claim1Header = new BillingClaimHeader1Data();
 
 		claim1Header.setTransc_id(BillingDataHlp.CLAIMHEADER1_TRANSACTIONIDENTIFIER);
 		claim1Header.setRec_id(BillingDataHlp.CLAIMHEADER1_REORDIDENTIFICATION);
-		claim1Header.setHin(val.getParameter("hin"));
-		claim1Header.setVer(val.getParameter("ver"));
-		claim1Header.setDob(val.getParameter("demographic_dob"));
+                
+                if( !billtype.substring(0,3).equals("BON") ) {
+                    claim1Header.setHin(val.getParameter("hin"));
+                    claim1Header.setVer(val.getParameter("ver"));
+                    claim1Header.setDob(val.getParameter("demographic_dob"));
+                    claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
+                    claim1Header.setDemographic_name(val.getParameter("demographic_name"));
+                    String temp[] = getPatientLF(val.getParameter("demographic_name"));
+                    claim1Header.setLast_name(temp[0]);
+                    claim1Header.setFirst_name(temp[1]);
+                    claim1Header.setSex(val.getParameter("sex"));
+                    claim1Header.setProvince(val.getParameter("hc_type"));
+                }
+                else {
+                    claim1Header.setHin("");
+                    claim1Header.setVer("");
+                    claim1Header.setDob("");
+                    claim1Header.setAppointment_no(""); // appointment_no;
+                    claim1Header.setDemographic_name("");                    
+                    claim1Header.setLast_name("");
+                    claim1Header.setFirst_name("");
+                    claim1Header.setSex("");
+                    claim1Header.setProvince("ON");                    
+                }
+                
 		// acc_num - billing no
 		claim1Header.setPay_program(getPayProgram(val.getParameter("xml_billtype"), val.getParameter("hc_type")));
 		claim1Header.setPayee(val.getParameter("payMethod") != null ? val.getParameter("payMethod")
@@ -133,14 +159,7 @@ public class BillingSavePrep {
 
 		claim1Header.setDemographic_no(val.getParameter("demographic_no"));
 		claim1Header.setProviderNo(val.getParameter("xml_provider").substring(0,
-				val.getParameter("xml_provider").indexOf("|")));
-		claim1Header.setAppointment_no(val.getParameter("appointment_no")); // appointment_no;
-		claim1Header.setDemographic_name(val.getParameter("demographic_name"));
-		String temp[] = getPatientLF(val.getParameter("demographic_name"));
-		claim1Header.setLast_name(temp[0]);
-		claim1Header.setFirst_name(temp[1]);
-		claim1Header.setSex(val.getParameter("sex"));
-		claim1Header.setProvince(val.getParameter("hc_type"));
+				val.getParameter("xml_provider").indexOf("|")));		
 
 		claim1Header.setBilling_date(val.getParameter("service_date"));
 		claim1Header.setBilling_time(val.getParameter("start_time"));
@@ -293,7 +312,9 @@ public class BillingSavePrep {
 			ret = BillingDataHlp.CLAIMHEADER1_PAYMENTPROGRAM_PRIVATE;
 		} else if (val.startsWith("ODP")) {
 			ret = hcType.equals("ON") ? "HCP" : "RMB";
-		}
+		} else if (val.startsWith("BON")) {
+                        ret = "HCP";
+                }
 		return ret;
 	}
 
@@ -303,7 +324,9 @@ public class BillingSavePrep {
 			ret = "S";
 		} else if (payProg.startsWith("NOT")) {
 			ret = "N";
-		}
+		} else if( payProg.startsWith("BON") ) {
+                        ret = "I";
+                }
 		return ret;
 	}
 
