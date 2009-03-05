@@ -56,7 +56,6 @@ public final class RxChooseDrugAction extends Action {
             }
 
             try {
-                RxChooseDrugForm frm = (RxChooseDrugForm)form;
                 RxPrescriptionData rxData = new RxPrescriptionData();
                 RxDrugData drugData = new RxDrugData();
 
@@ -64,12 +63,9 @@ public final class RxChooseDrugAction extends Action {
                 RxPrescriptionData.Prescription rx =
                         rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
-                String BN     = frm.getBN();
-                String drugId = frm.getDrugId(); 
+                String BN     = request.getParameter("BN");
+                String drugId = request.getParameter("drugId"); 
                 
-//                System.out.println("drugID "+drugId);
-//                System.out.println("BRAND = "+BN);
-
                 
                     rx.setBrandName(BN);
                 try{

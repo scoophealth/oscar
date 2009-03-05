@@ -60,7 +60,6 @@
         <form-bean name="msgAttachPDFForm" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFForm" />
         <form-bean name="RxChoosePatientForm" type="oscar.oscarRx.pageUtil.RxChoosePatientForm" />
         <form-bean name="RxSearchDrugForm" type="oscar.oscarRx.pageUtil.RxSearchDrugForm" />
-        <form-bean name="RxChooseDrugForm" type="oscar.oscarRx.pageUtil.RxChooseDrugForm" />
         <form-bean name="RxWriteScriptForm" type="oscar.oscarRx.pageUtil.RxWriteScriptForm" />
         <form-bean name="RxStashForm" type="oscar.oscarRx.pageUtil.RxStashForm" />
         <form-bean name="RxAddFavoriteForm" type="oscar.oscarRx.pageUtil.RxAddFavoriteForm" />
@@ -549,7 +548,7 @@
         <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
         </action>
-        <action input="/oscarRx/ChooseDrug.jsp" name="RxChooseDrugForm" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
+        <action input="/oscarRx/ChooseDrug.jsp" path="/oscarRx/chooseDrug" scope="request" type="oscar.oscarRx.pageUtil.RxChooseDrugAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" path="/oscarRx/viewScript" scope="request" type="oscar.oscarRx.pageUtil.RxViewScriptAction">
