@@ -111,7 +111,7 @@ if(request.getParameter("submit")!=null && request.getParameter("submit").equals
 	//bhObj.setBatch_date(rs.getString("batch_date"));
 	
 	dbObj.setBatchHeaderObj(bhObj);
-	dbObj.createBillingFileStr("0", "(status='O' or status='W')");
+	dbObj.createBillingFileStr("0", "(status='O' or status='W' or status='I')");
 
 	htmlValue = "<font color='red'>" + errorMsg + "</font>" + dbObj.getHtmlValue();
 	request.setAttribute("html",htmlValue);
