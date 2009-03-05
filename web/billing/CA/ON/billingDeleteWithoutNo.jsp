@@ -94,7 +94,7 @@ String billNo ="";
 	  BillingCorrectionPrep dbObj = new BillingCorrectionPrep();
 	  List billStatus = dbObj.getBillingNoStatusByAppt(apptNo);
 	  //delete the bill
-	  if(billStatus!=null && billStatus.size()>1 && ((String)billStatus.get(1)).startsWith("B")){
+	  if(billStatus!=null && ((billStatus.size() == 0) || (billStatus.size()>1 && ((String)billStatus.get(1)).startsWith("B")))){
 		  out.println("Sorry, cannot delete billed items.");
 	  } else if(billStatus!=null) {
 		  rowsAffected = dbObj.deleteBilling((String)billStatus.get(0),"D", curUser_no)? 1 : 0;
