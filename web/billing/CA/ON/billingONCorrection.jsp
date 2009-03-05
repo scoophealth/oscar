@@ -190,6 +190,16 @@ function popupPage(vheight,vwidth,varpage) {
     	popup.focus();
     }
 }
+
+function sanityCheck(id) {
+    if( id != "" ) {
+        location.href = "billingON3rdInv.jsp?billingNo=" + id;
+    }
+    else {
+        alert("Please search a valid invoice number");
+    }
+    return false;
+}
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -283,7 +293,7 @@ function popupPage(vheight,vwidth,varpage) {
 	<form name="form1" method="post" action="billingONCorrection.jsp">
 	<tr>
 		<th width="30%" align="left"><a
-			href="billingON3rdInv.jsp?billingNo=<%=nullToEmpty(ch1Obj.getId())%>">
+			href="#" onclick="return sanityCheck('<%=nullToEmpty(ch1Obj.getId())%>');">
 		<bean:message key="billing.billingCorrection.formInvoiceNo" /></a></th>
 		<th width="10%"><input type="text" name="billing_no"
 			value="<%=nullToEmpty(ch1Obj.getId()) %>" maxsize="10"></th>
@@ -435,6 +445,8 @@ if(bFlag) {
 				key="billing.billingCorrection.formBillTypeX" /></option>
 			<option value="D" <%=BillType.equals("D")?"selected":""%>><bean:message
 				key="billing.billingCorrection.formBillTypeD" /></option>
+                        <option value="I" <%=BillType.equals("I")?"selected":""%>><bean:message
+				key="billing.billingCorrection.formBillTypeI" /></option>
 		</select></td>
 		<td width="46%"><b> Pay Program:</b> <input type="hidden"
 			name="xml_payProgram" value="<%=BillDate%>" /><select
