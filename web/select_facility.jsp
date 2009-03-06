@@ -8,8 +8,7 @@
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-<h2>Please select which facility you would like to currently work
-in</h2>
+<h2>Please select which facility you would like to currently work in</h2> 
 <%
 	FacilityDao facilityDao=(FacilityDao)SpringUtils.beanFactory.getBean("facilityDao");
 
@@ -22,9 +21,8 @@ in</h2>
 		{
 			Facility facility=facilityDao.find(facilityId);
 			%>
-	<li><a
-		href='?nextPage=<%=request.getParameter("nextPage")%>&<%=SessionConstants.CURRENT_FACILITY_ID%>=<%=facility.getId()%>'><%=facility.getName()%></a></li>
-	<%
+				<li><a href='?nextPage=<%=request.getParameter("nextPage")%>&<%=SessionConstants.CURRENT_FACILITY_ID%>=<%=facility.getId()%>'><%=facility.getName()%></a></li>
+			<%
 		}
 	%>
 </ul>
