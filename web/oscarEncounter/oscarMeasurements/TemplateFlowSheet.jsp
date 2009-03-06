@@ -1,46 +1,29 @@
 <% long startTime = System.currentTimeMillis(); %>
-<!--
-/*
-*
-* Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License.
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version. *
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
-*
-* <OSCAR TEAM>
-*
-* This software was written for the
-* Department of Family Medicine
-* McMaster Unviersity test2
-* Hamilton
-* Ontario, Canada
-*/
--->
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-
-
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+    <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
+        "You have no right to access this page!"
+        <% response.sendRedirect("../../noRights.html"); %>
+    </security:oscarSec>
+</oscar:oscarPropertiesCheck>
+<%
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
 
@@ -59,6 +42,8 @@
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             
     FlowSheetCustomizerDAO flowSheetCustomizerDAO = (FlowSheetCustomizerDAO) ctx.getBean("flowSheetCustomizerDAO");
+    FlowSheetDrugDAO flowSheetDrugDAO = (FlowSheetDrugDAO) ctx.getBean("flowSheetDrugDAO");
+    
     List custList = flowSheetCustomizerDAO.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),demographic_no);
     
     ////Start
@@ -102,6 +87,34 @@
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<!--
+/*
+*
+* Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
+* <OSCAR TEAM>
+*
+* This software was written for the
+* Department of Family Medicine
+* McMaster Unviersity test2
+* Hamilton
+* Ontario, Canada
+*/
+-->
+
 <html:html locale="true">
 
 <head>
@@ -298,7 +311,17 @@ div.recommendations li{
             <tr>
                 <td >
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
-                    <!-- shhh, im a secret.  No really don't use it. I think i might change it a bit before it's released. a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a --> 
+                    <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
+                    <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
+                    &nbsp;
+                    <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly">Last Only</a>
+                    &nbsp;
+                    <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=outOfRange">Only out of Range</a>
+                    &nbsp;
+                    <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">All</a>
+                    &nbsp;
+                    <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">Custom Print</a>
+                    </oscar:oscarPropertiesCheck>
                 </td>
                 <td  >&nbsp;
 
@@ -348,7 +371,15 @@ div.recommendations li{
                         String styleColor = "";
                         if(arr[i].isCurrent()){
                     %>
-                    <li title="<%=rxD%> - <%=rxP%>"  >- <%= org.apache.commons.lang.StringUtils.abbreviate(rxP,12)%></li>
+                    <li title="<%=rxD%> - <%=rxP%>"> 
+                        <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+                            <a href="FlowSheetDrugAction.do?method=save&flowsheet=<%=temp%>&demographic=<%=demographic_no%>&atcCode=<%=arr[i].getAtcCode()%>">
+                            </oscar:oscarPropertiesCheck>    
+                            - <%= org.apache.commons.lang.StringUtils.abbreviate(rxP, 12)%>
+                            <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+                            </a>
+                        </oscar:oscarPropertiesCheck>
+                    </li>
                     <%  }
                     }%>
                 </ul>
@@ -471,7 +502,13 @@ div.recommendations li{
                 com ="";
             }
             String hider = "";
-            if ( k > 4){
+            
+            int num =4;
+            if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
+                num =1;
+            }
+            
+            if ( k > num){
                 hider = "style=\"display:none;\"";
             }
 
@@ -480,6 +517,11 @@ div.recommendations li{
                 System.out.println("INDICAT: "+mdb.getIndicationColour());
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
             }
+            
+            if (request.getParameter("show") !=null && request.getParameter("show").equals("outOfRange") && indColour.equals("")){
+                hider = "style=\"display:none;\"";
+            }
+            
     %>
     <div class="preventionProcedure" <%=hider%>  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
         <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
@@ -544,6 +586,59 @@ div.recommendations li{
 <%}
     System.out.println("Looping display took  "+ (System.currentTimeMillis() - startTimeToLoopAndPrint) );
 %>
+
+
+
+<%
+
+
+    oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+    oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+    
+    List<FlowSheetDrug> atcCodes = flowSheetDrugDAO.getFlowSheetDrugs(temp,demographic_no);
+    for(FlowSheetDrug fsd : atcCodes){
+            arr = prescriptData.getPrescriptionScriptsByPatientATC(Integer.parseInt(demographic_no),fsd.getAtcCode());   
+     
+%>
+
+<div class="preventionSection"  >
+    <div class="headPrevention">
+        <p title="fade=[on] header=[ddddd] body=[ddddddddsdfsdf]">
+            <!-- a href="javascript: function myFunction() {return false; }"  -->
+                <span title="dd" style="font-weight:bold;"><%=arr[0].getGenericName()%></span>
+            <!-- /a -->
+            &nbsp;
+            <br/>
+        </p>
+    </div>
+    <%
+        out.flush();
+        for (oscar.oscarRx.data.RxPrescriptionData.Prescription pres : arr){
+    %>
+    <div class="preventionProcedure"  onclick="javascript:popup(465,635,'','addPreventionData')" >
+        <p <%=""/*r(hdata.get("refused"))*/%> title="fade=[on] header=[<%=""/*hdata.get("age")*/%> -- Date:<%=""/*hdata.get("prevention_date")*/%>] body=[<%=""/*com*/%>]" ><%=pres.getBrandName()%> <br/>
+            Date: <%=pres.getRxDate()%>
+            <%-- if (comb) {%>
+            <span class="footnote"><%=comments.size()%></span>
+            <%} --%>
+        </p>
+    </div>
+    <%}%>
+</div>
+
+<%}%>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </div>
