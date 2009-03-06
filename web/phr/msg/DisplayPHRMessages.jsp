@@ -63,7 +63,8 @@ if (pageMethod.equals("archive"))
 if (pageMethod.equals("unarchive"))
     pageMethod = "viewArchivedMessages";
     
-    
+request.setAttribute("pageMethod",pageMethod);
+   
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);
@@ -372,12 +373,12 @@ if (pageMethod.equals("unarchive"))
                             &nbsp;
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=0" >
+                            <html-el:link action="/phr/PhrMessage?orderby=0&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                             <html-el:link action="/phr/PhrMessage?orderby=1" >
+                             <html-el:link action="/phr/PhrMessage?orderby=1&method=${pageMethod}" >
                                  <%if (pageMethod.equals("viewSentMessages")) {%>
                                          Recipient
                                  <%} else {%>
@@ -386,12 +387,12 @@ if (pageMethod.equals("unarchive"))
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=2" >
+                            <html-el:link action="/phr/PhrMessage?orderby=2&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/phr/PhrMessage?orderby=3" >
+                            <html-el:link action="/phr/PhrMessage?orderby=3&method=${pageMethod}" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                             </html-el:link>
                         </th>
