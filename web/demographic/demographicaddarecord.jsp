@@ -173,7 +173,7 @@
           param[29] =new DBPreparedHandlerParam(request.getParameter("sin"));
 	  param[30] =new DBPreparedHandlerParam(request.getParameter("title"));
 	  param[31] =new DBPreparedHandlerParam(request.getParameter("official_lang"));
-	  param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"))
+	  param[32] =new DBPreparedHandlerParam(request.getParameter("spoken_lang"));
           
 	String[] paramName =new String[5];
 	  paramName[0]=param[0].getStringValue().trim(); //last name
