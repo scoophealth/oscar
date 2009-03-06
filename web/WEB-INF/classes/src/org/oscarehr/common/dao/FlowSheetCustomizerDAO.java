@@ -48,7 +48,7 @@ public class FlowSheetCustomizerDAO extends HibernateDaoSupport {
     }
 
     public List<FlowSheetCustomization> getFlowSheetCustomizations(String flowsheet,String provider,String demographic){
-        List<FlowSheetCustomization> list = this.getHibernateTemplate().find("from FlowSheetCustomization p where p.archived = 0 and ( ( p.providerNo = ?  and p.demographicNo is null) or (p.providerNo =? and p.demographicNo = ?  ) ) ", new Object[] {provider,provider,demographic});
+        List<FlowSheetCustomization> list = this.getHibernateTemplate().find("from FlowSheetCustomization p where p.flowsheet = ? and p.archived = 0 and ( ( p.providerNo = ?  and p.demographicNo is null) or (p.providerNo =? and p.demographicNo = ?  ) ) ", new Object[] {flowsheet,provider,provider,demographic});
         return list;
     }
 
