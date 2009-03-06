@@ -23,6 +23,10 @@
 		<property name="flowSheetCustomizerDAO" ref="flowSheetCustomizerDAO" />
 	</bean>
 
+        <bean name="/oscarEncounter/oscarMeasurements/FlowSheetDrugAction" class="org.oscarehr.common.web.FlowSheetDrugAction">
+		<property name="flowSheetDrugDAO" ref="flowSheetDrugDAO" />
+	</bean>
+
 
 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
