@@ -87,7 +87,8 @@
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
 	<bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
         <bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
-	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
+	<bean id="flowSheetDrugDAO" class="org.oscarehr.common.dao.FlowSheetDrugDAO" autowire="byName"/>
+        <bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
         <bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
         
 	<!--  configure the scratch pad -->
@@ -117,15 +118,15 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
-                                 <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value -->
+                                <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
                                  
                                  
                     <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/asthmaFlowsheet.xml</value >
-		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/COPDFlowsheet.xml</value>
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/chf.xml</value>
-                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet_1.xml</value>
-	            <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet_1.xml</value -->
+                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
+		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
+                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdChf.xml</value>
+                    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdDiabetesFlowsheet.xml</value>
+	            <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdHypertensionFlowsheet.xml</value -->
 			</list>
 		</property>
 	</bean>
