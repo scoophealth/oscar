@@ -42,7 +42,11 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 	protected String exportData() throws ExportException {
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		StringBuilder buf = new StringBuilder();
+		int counter = 0;
 		for(IntakeAnswer ans : answers) {
+			if(counter == fields.size()) {
+				break;
+			}
 			final String lbl = ans.getNode().getLabelStr();
 			DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
 
@@ -56,10 +60,11 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 				}
 				
 			});
+			
 			if(found != null) {
 				buf.append(found.getName() + " = " + ans.getValue() + "\n");
+				counter++;
 			}
-			
 		}
 		
 		return buf.toString();

@@ -29,6 +29,7 @@ public class DATISField {
 	private int maxSize;
 	private String description;
 	private String dateFormat;
+	private String question;
 	
 	public DATISField() {}
 	
@@ -72,4 +73,13 @@ public class DATISField {
 	public void setDateFormat(String dateFormat) {
 		this.dateFormat = dateFormat;
 	}
+
+	public String getQuestion() {
+		return question;
+	}
+
+	public void setQuestion(String question) {
+		this.question = question;
+	}
+	
 }

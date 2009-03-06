@@ -42,6 +42,7 @@ public abstract class AbstractIntakeExporter {
 	private static final String FIELD_COLPOS = "colpos";
 	private static final String FIELD_TYPE = "type";
 	private static final String FIELD_NAME = "name";
+	private static final String FIELD_QUESTION = "question";
 	
 	private GenericIntakeManager genericIntakeManager;
 	private Integer clientId;
@@ -103,6 +104,10 @@ public abstract class AbstractIntakeExporter {
 					if(null != fieldNode.getAttributes().getNamedItem(FIELD_DATEFORMAT)) {
 						field.setDateFormat(fieldNode.getAttributes().getNamedItem(FIELD_DATEFORMAT).getNodeValue());
 					}
+				}
+				
+				if(null != fieldNode.getAttributes().getNamedItem(FIELD_QUESTION)) {
+					field.setQuestion(fieldNode.getAttributes().getNamedItem(FIELD_QUESTION).getNodeValue());
 				}
 				
 				fields.add(field);

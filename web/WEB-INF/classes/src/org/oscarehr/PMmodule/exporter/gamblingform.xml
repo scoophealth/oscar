@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="CASE_NO" type="text" colpos="1" maxsize="15"></field>
+	<!-- TODO -->
+</fields>

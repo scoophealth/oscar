@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="START_DATE" type="datetime" colpos="1" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="DATIS_SRVTYPE_ID" type="text" colpos="11" maxsize="3"></field>
+	<field name="DURATION" type="number" colpos="14" maxsize="8"></field>
+</fields>

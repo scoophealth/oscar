@@ -24,7 +24,9 @@ package org.oscarehr.PMmodule.exporter;
 public enum DATISType {
 	TEXT("text"),
 	DATETIME("datetime"),
-	INTEGER("integer");
+	NUMBER("number"),
+	INTEGER("integer"),
+	DOUBLE("double");
 	
 	private String value;
 	

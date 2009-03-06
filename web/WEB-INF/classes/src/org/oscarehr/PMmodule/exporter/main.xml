@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fields>
+	<field name="CASE_NO" type="text" colpos="1" maxsize="15"></field>
+	<field name="FIRSTNAME_initial" type="text" colpos="16" maxsize="30"></field>
+	<field name="DOB" type="datetime" colpos="46" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="GENDER_ID" type="text" colpos="56" maxsize="2"></field>
+	<field name="LASTNAME_AT_BIRTH_initial" type="text" colpos="58" maxsize="30"></field>
+	<field name="DATIS_KEY" type="text" colpos="88" maxsize="12"></field>
+	<field name="PREFERRED_LANG_ID" type="text" colpos="100" maxsize="2"></field>
+	<field name="ETHNICITY_ID" type="text" colpos="102" maxsize="3"></field>
+	<field name="ADMISSION_NO" type="integer" colpos="105" maxsize="8"></field>
+	<field name="SITE_NO" type="text" colpos="113" maxsize="5"></field>
+	<field name="ADMISSION_DATE" type="datetime" colpos="118" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="ADMISSION_TIME" type="text" colpos="128" maxsize="5"></field>
+	<field name="COND_SURR_CONTACT_ID" type="text" colpos="133" maxsize="3"></field>
+	<field name="LEGAL_STATUS_ID" type="text" colpos="136" maxsize="3"></field>
+	<field name="YOUNG_OFFENDER" type="text" colpos="139" maxsize="1"></field>
+	<field name="NON_MEDICAL_IDU_ID" type="text" colpos="140" maxsize="3"></field>
+	<field name="REL_STS_ID" type="text" colpos="143" maxsize="3"></field>
+	<field name="EMP_STS_ID" type="text" colpos="146" maxsize="3"></field>
+	<field name="INCOME_SRC_ID" type="text" colpos="149" maxsize="3"></field>
+	<field name="EDUCATION_ID" type="text" colpos="152" maxsize="3"></field>
+	<field name="CLIENT_TYPE_ID" type="text" colpos="155" maxsize="3"></field>
+	<field name="REFERRED_ON" type="datetime" colpos="158" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRAL_SRC_ID1" type="text" colpos="168" maxsize="3"></field>
+	<field name="REFERRAL_SRC_ID2" type="text" colpos="171" maxsize="3"></field>
+	<field name="REFERRAL_AGCY_ID1" type="text" colpos="174" maxsize="12"></field>
+	<field name="REFERRAL_AGCY_ID2" type="text" colpos="186" maxsize="12"></field>
+	<field name="COUNTY_ID" type="text" colpos="198" maxsize="4"></field>
+	<field name="POSTAL_CODE" type="text" colpos="202" maxsize="7"></field>
+	<field name="PPS1_ID" type="text" colpos="209" maxsize="3"></field>
+	<field name="PPS2_ID" type="text" colpos="212" maxsize="3"></field>
+	<field name="PPS3_ID" type="text" colpos="215" maxsize="3"></field>
+	<field name="PPS4_ID" type="text" colpos="218" maxsize="3"></field>
+	<field name="PPS5_ID" type="text" colpos="221" maxsize="3"></field>
+	<field name="PPS1_FREQ_ID" type="text" colpos="224" maxsize="3"></field>
+	<field name="PPS2_FREQ_ID" type="text" colpos="227" maxsize="3"></field>
+	<field name="PPS3_FREQ_ID" type="text" colpos="230" maxsize="3"></field>
+	<field name="PPS4_FREQ_ID" type="text" colpos="233" maxsize="3"></field>
+	<field name="PPS5_FREQ_ID" type="text" colpos="236" maxsize="3"></field>
+	<field name="sub12_None" type="text" colpos="239" maxsize="1"></field>
+	<field name="sub12_alcohol" type="text" colpos="240" maxsize="1"></field>
+	<field name="sub12_cocaine" type="text" colpos="241" maxsize="1"></field>
+	<field name="sub12_Amphet" type="text" colpos="242" maxsize="1"></field>
+	<field name="sub12_cannabis" type="text" colpos="243" maxsize="1"></field>
+	<field name="sub12_benzo" type="text" colpos="244" maxsize="1"></field>
+	<field name="sub12_barbit" type="text" colpos="245" maxsize="1"></field>
+	<field name="sub12_heroin_opium" type="text" colpos="246" maxsize="1"></field>
+	<field name="sub12_presc_op" type="text" colpos="247" maxsize="1"></field>
+	<field name="sub12_otc_codeine" type="text" colpos="248" maxsize="1"></field>
+	<field name="sub12_halluc" type="text" colpos="249" maxsize="1"></field>
+	<field name="sub12_glue_inh" type="text" colpos="250" maxsize="1"></field>
+	<field name="sub12_tobacco" type="text" colpos="251" maxsize="1"></field>
+	<field name="sub12_other_psych" type="text" colpos="252" maxsize="1"></field>
+	<field name="sub12_steroids" type="text" colpos="253" maxsize="1"></field>
+	<field name="sub12_undiff" type="text" colpos="254" maxsize="1"></field>
+	<field name="sub12_crack" type="text" colpos="255" maxsize="1"></field>
+	<field name="sub12_ecstasy" type="text" colpos="256" maxsize="1"></field>
+	<field name="sub12_unknown" type="text" colpos="257" maxsize="1"></field>
+	<field name="sub12_filler1" type="text" colpos="258" maxsize="1"></field>
+	<field name="sub12_filler2" type="text" colpos="259" maxsize="1"></field>
+	<field name="sub12_filler3" type="text" colpos="260" maxsize="1"></field>
+	<field name="sub12_filler4" type="text" colpos="261" maxsize="1"></field>
+	<field name="GAMBLING" type="text" colpos="262" maxsize="1"></field>
+	<field name="TREATMENT_PLAN_ID" type="text" colpos="263" maxsize="3"></field>
+	<field name="G_bingo" type="text" colpos="266" maxsize="1"></field>
+	<field name="G_slot" type="text" colpos="267" maxsize="1"></field>
+	<field name="G_Gaming_machines" type="text" colpos="268" maxsize="1"></field>
+	<field name="G_card_table" type="text" colpos="269" maxsize="1"></field>
+	<field name="G_Illegal" type="text" colpos="270" maxsize="1"></field>
+	<field name="G_horse" type="text" colpos="271" maxsize="1"></field>
+	<field name="G_Sports_betting" type="text" colpos="272" maxsize="1"></field>
+	<field name="G_Lottery" type="text" colpos="273" maxsize="1"></field>
+	<field name="G_scratch" type="text" colpos="274" maxsize="1"></field>
+	<field name="G_Internet" type="text" colpos="275" maxsize="1"></field>
+	<field name="G_stockmarket_realest" type="text" colpos="276" maxsize="1"></field>
+	<field name="G_Betting_games" type="text" colpos="277" maxsize="1"></field>
+	<field name="G_betting_outcomes" type="text" colpos="278" maxsize="1"></field>
+	<field name="G_other" type="text" colpos="279" maxsize="1"></field>
+	<field name="G_none" type="text" colpos="280" maxsize="1"></field>
+	<field name="G_unknown" type="text" colpos="281" maxsize="1"></field>
+	<field name="G_filler1" type="text" colpos="282" maxsize="1"></field>
+	<field name="G_filler2" type="text" colpos="283" maxsize="1"></field>
+	<field name="G_filler3" type="text" colpos="284" maxsize="1"></field>
+	<field name="G_filler4" type="text" colpos="285" maxsize="1"></field>
+	<field name="G_filler5" type="text" colpos="286" maxsize="1"></field>
+	<field name="OVERNIGHT_HOSP" type="integer" colpos="287" maxsize="8"></field>
+	<field name="DIAG_MH_12_MONTHS" type="text" colpos="295" maxsize="1"></field>
+	<field name="DIAG_MH_LIFETIME" type="text" colpos="296" maxsize="1"></field>
+	<field name="HOSP_MH_12_MONTHS" type="text" colpos="297" maxsize="1"></field>
+	<field name="HOSP_MH_LIFETIME" type="text" colpos="298" maxsize="1"></field>
+	<field name="RCV_MH_CURRENT" type="text" colpos="299" maxsize="1"></field>
+	<field name="RCV_MH_12_MONTHS" type="text" colpos="300" maxsize="1"></field>
+	<field name="RCV_MH_LIFETIME" type="text" colpos="301" maxsize="1"></field>
+	<field name="MED_MH_CURRENT" type="text" colpos="302" maxsize="1"></field>
+	<field name="MED_MH_12_MONTHS" type="text" colpos="303" maxsize="1"></field>
+	<field name="MED_MH_LIFETIME" type="text" colpos="304" maxsize="1"></field>
+	<field name="VISUAL" type="text" colpos="305" maxsize="1"></field>
+	<field name="HEARING" type="text" colpos="306" maxsize="1"></field>
+	<field name="MOBILITY" type="text" colpos="307" maxsize="1"></field>
+	<field name="PREGNANT" type="text" colpos="308" maxsize="1"></field>
+	<field name="METHADONE" type="text" colpos="309" maxsize="1"></field>
+	<field name="DISCHARGE_DT" type="datetime" colpos="310" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="DISCHARGE_TM" type="text" colpos="320" maxsize="5"></field>
+	<field name="REASON_TERMINATION_ID" type="text" colpos="325" maxsize="3"></field>
+	<field name="REFERRED1_TO_ST_ID" type="text" colpos="328" maxsize="3"></field>
+	<field name="REFERRED1_ON" type="datetime" colpos="331" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED1_TO_AGCY_ID" type="text" colpos="341" maxsize="12"></field>
+	<field name="REFERRED2_TO_ST_ID" type="text" colpos="353" maxsize="3"></field>
+	<field name="REFERRED2_ON" type="datetime" colpos="356" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED2_TO_AGCY_ID" type="text" colpos="366" maxsize="12"></field>
+	<field name="REFERRED3_TO_ST_ID" type="text" colpos="378" maxsize="3"></field>
+	<field name="REFERRED3_ON" type="datetime" colpos="381" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED3_TO_AGCY_ID" type="text" colpos="391" maxsize="12"></field>
+	<field name="REFERRED4_TO_ST_ID" type="text" colpos="403" maxsize="3"></field>
+	<field name="REFERRED4_ON" type="datetime" colpos="406" maxsize="10" dateformat="dd/MM/yyyy"></field>
+	<field name="REFERRED4_TO_AGCY_ID" type="text" colpos="416" maxsize="12"></field>
+</fields>
