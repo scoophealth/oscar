@@ -50,7 +50,7 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 			final String lbl = ans.getNode().getLabelStr();
 			DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
 
-				@Override
+                           
 				public boolean evaluate(Object arg0) {
 					DATISField field = (DATISField)arg0;
 					if(lbl.startsWith(field.getName())) {
