@@ -141,6 +141,12 @@
 	<bean id="intakeExporterAgencyInformation" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformation" parent="abstractIntakeExporter">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/agencyinformation.xml"></property>
 	</bean>
+	<bean id="intakeExporterListOfPrograms" class="org.oscarehr.PMmodule.exporter.DATISListOfPrograms" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/listofprograms.xml"></property>
+	</bean>
+	<bean id="intakeExporterProgramInformation" class="org.oscarehr.PMmodule.exporter.DATISProgramInformation" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/programinformation.xml"></property>
+	</bean>
 
 </beans>
 

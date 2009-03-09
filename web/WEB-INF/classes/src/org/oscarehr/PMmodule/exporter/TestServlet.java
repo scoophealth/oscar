@@ -25,10 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
@@ -39,20 +36,31 @@ public class TestServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		
 		try {
-			// security check
-			HttpSession session = request.getSession();
-			Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-			if (provider == null) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN);
-				return;
+		
+			AbstractIntakeExporter exporter = null;
+			
+			int fileno = Integer.parseInt(request.getParameter("file"));
+			int clientId = Integer.parseInt(request.getParameter("c"));
+			int facilityId = Integer.parseInt(request.getParameter("f"));
+			
+			switch(fileno) {
+			case 1:
+				exporter = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
+				break;
+			case 2:
+				exporter = (DATISListOfPrograms)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterListOfPrograms");
+				break;
+			case 4:
+				exporter = (DATISProgramInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterProgramInformation");
+				break;
+			default:
+				exporter = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
+				break;
 			}
 			
-			DATISAgencyInformation aiexp = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
-			
-			aiexp.setClientId(Integer.parseInt(request.getParameter("c")));
-			aiexp.setFacilityId(Integer.parseInt(request.getParameter("f")));
-			
-			response.getWriter().print(aiexp.export());
+			exporter.setClientId(clientId);
+			exporter.setFacilityId(facilityId);
+			response.getWriter().print(exporter.export());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

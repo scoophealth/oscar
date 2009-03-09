@@ -29,42 +29,41 @@ import org.apache.commons.collections.Predicate;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class DATISAgencyInformation extends AbstractIntakeExporter {
-
-	private static final String FILE_PREFIX = "Agency Information";
-
-	public DATISAgencyInformation() {
-	}
+public class DATISProgramInformation extends AbstractIntakeExporter {
 	
-	public DATISAgencyInformation(Integer clientId, Integer programId, Integer facilityId) {
+	private static final String FILE_PREFIX = "File4";
+
+	public DATISProgramInformation() {}
+	
+	public DATISProgramInformation(Integer clientId, Integer programId, Integer facilityId) {
 		super.setClientId(clientId);
 		super.setProgramId(programId);
 		super.setFacilityId(facilityId);
 	}
-	
+
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
 		StringBuilder buf = new StringBuilder();
 		
-		IntakeNode agInfoNode = null;
+		IntakeNode file4Node = null;
 		
 		for(IntakeNode inode : intakeNodes) {
 			if(inode.getLabelStr().startsWith(FILE_PREFIX)) {
-				agInfoNode = inode;
+				file4Node = inode;
 				break;
 			}
 		}
-		
-		Set<IntakeAnswer> answers = intake.getAnswers();
 
+		Set<IntakeAnswer> answers = intake.getAnswers();
+		
 		int counter = 0;
 		for(IntakeAnswer ans : answers) {
 			if(counter == fields.size()) {
 				break;
 			}
-			if(ans.getNode().getParent().equals(agInfoNode)) {
-				final String lbl = ans.getNode().getLabelStr();
+			if(ans.getNode().getGrandParent().equals(file4Node)) {
+				final String lbl = ans.getNode().getParent().getLabelStr();
 				DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
 	
 					public boolean evaluate(Object arg0) {

@@ -24,19 +24,17 @@ package org.oscarehr.PMmodule.exporter;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class DATISAgencyInformation extends AbstractIntakeExporter {
+public class DATISListOfPrograms extends AbstractIntakeExporter {
 
-	private static final String FILE_PREFIX = "Agency Information";
-
-	public DATISAgencyInformation() {
+	private static final String FILE_PREFIX = "List of Programs";
+	
+	public DATISListOfPrograms() {
 	}
 	
-	public DATISAgencyInformation(Integer clientId, Integer programId, Integer facilityId) {
+	public DATISListOfPrograms(Integer clientId, Integer programId, Integer facilityId) {
 		super.setClientId(clientId);
 		super.setProgramId(programId);
 		super.setFacilityId(facilityId);
@@ -47,41 +45,33 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
 		StringBuilder buf = new StringBuilder();
 		
-		IntakeNode agInfoNode = null;
+		IntakeNode lstOfProgNode = null;
 		
 		for(IntakeNode inode : intakeNodes) {
 			if(inode.getLabelStr().startsWith(FILE_PREFIX)) {
-				agInfoNode = inode;
+				lstOfProgNode = inode;
 				break;
 			}
 		}
 		
 		Set<IntakeAnswer> answers = intake.getAnswers();
-
-		int counter = 0;
-		for(IntakeAnswer ans : answers) {
-			if(counter == fields.size()) {
-				break;
-			}
-			if(ans.getNode().getParent().equals(agInfoNode)) {
-				final String lbl = ans.getNode().getLabelStr();
-				DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
-	
-					public boolean evaluate(Object arg0) {
-						DATISField field = (DATISField)arg0;
-						if(lbl.startsWith(field.getName())) {
-							return true;
-						}
-						return false;
+		
+		for(DATISField field : fields) {
+			String fieldName = field.getName();
+			String lbl = null;
+			for(IntakeAnswer ans : answers) {
+				if(ans.getNode().getGrandParent().equals(lstOfProgNode) || ans.getNode().getParent().equals(lstOfProgNode)) {	
+					if(fieldName.equalsIgnoreCase("PSC_CODE") || fieldName.equalsIgnoreCase("PROGRAM_TYPE_ID")) {
+						lbl = ans.getNode().getParent().getLabelStr();
+					} else {
+						lbl = ans.getNode().getLabelStr();
 					}
-					
-				});
-				
-				if(found != null) {
-					buf.append(found.getName() + " = " + ans.getValue() + "\n");
-					counter++;
+					if(lbl.startsWith(fieldName)) {
+						buf.append(fieldName + " = " + ans.getValue() + "\n");
+					}
 				}
 			}
+				
 		}
 		
 		return buf.toString();
