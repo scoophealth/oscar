@@ -47,31 +47,32 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
 		List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), false);
     	List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
-        for (Drug ob : rs)
+        for (Drug drug : rs)
         {
-        	PrescriptDrug pd = new PrescriptDrug();
-            pd.setDate_prescribed(ob.getRxDate());
-            pd.setDrug_special(ob.getSpecial());
-            pd.setBN(ob.getBrandName());
-            pd.setGCN_SEQNO(ob.getGcnSeqNo());
-            pd.setCustomName(ob.getCustomName());
-            pd.setRegionalIdentifier(ob.getRegionalIdentifier());
+        	PrescriptDrug prescriptDrug = new PrescriptDrug();
+        	prescriptDrug.setLocalDrugId(drug.getId());
+            prescriptDrug.setDate_prescribed(drug.getRxDate());
+            prescriptDrug.setDrug_special(drug.getSpecial());
+            prescriptDrug.setBN(drug.getBrandName());
+            prescriptDrug.setGCN_SEQNO(drug.getGcnSeqNo());
+            prescriptDrug.setCustomName(drug.getCustomName());
+            prescriptDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
 
-            pd.setEnd_date(ob.getEndDate());
-            pd.setDrug_achived(false);
+            prescriptDrug.setEnd_date(drug.getEndDate());
+            prescriptDrug.setDrug_achived(false);
 
             boolean b = true;
             for (int i = 0; i < rt.size(); i++) {
                 PrescriptDrug p2 = (PrescriptDrug)rt.get(i);
-                if (p2.getGCN_SEQNO().intValue() == pd.getGCN_SEQNO().intValue()) {
+                if (p2.getGCN_SEQNO().intValue() == prescriptDrug.getGCN_SEQNO().intValue()) {
                     if (p2.getGCN_SEQNO().intValue() != 0) // not custom - safe GCN
                     {
                         b = false;
                     }
                     else // custom
                     {
-                        if (p2.getCustomName() != null && pd.getCustomName() != null) {
-                            if (p2.getCustomName().equals(pd.getCustomName())) // same custom
+                        if (p2.getCustomName() != null && prescriptDrug.getCustomName() != null) {
+                            if (p2.getCustomName().equals(prescriptDrug.getCustomName())) // same custom
                             {
                                 b = false;
                             }
@@ -79,7 +80,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
                     }
                 }
             }
-            if (b) rt.add(pd);
+            if (b) rt.add(prescriptDrug);
         }
         return rt;
 
@@ -89,18 +90,19 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
     	List<Drug> rs=drugDao.findByDemographicIdOrderByDate(new Integer(demographic_no), null);
 		List<PrescriptDrug> rt = new ArrayList<PrescriptDrug>();
-        for (Drug ob : rs)
+        for (Drug drug : rs)
         {
-			PrescriptDrug pd = new PrescriptDrug();
-			pd.setDate_prescribed(ob.getRxDate());
-			pd.setDrug_special(ob.getSpecial());
-			pd.setEnd_date(ob.getEndDate());
-			pd.setDrug_achived(ob.isArchived());
-			pd.setBN(ob.getBrandName());
-			pd.setGCN_SEQNO(ob.getGcnSeqNo());
-			pd.setCustomName(ob.getCustomName());
-            pd.setRegionalIdentifier(ob.getRegionalIdentifier());
-			rt.add(pd);
+			PrescriptDrug prescriptDrug = new PrescriptDrug();
+			prescriptDrug.setLocalDrugId(drug.getId());
+			prescriptDrug.setDate_prescribed(drug.getRxDate());
+			prescriptDrug.setDrug_special(drug.getSpecial());
+			prescriptDrug.setEnd_date(drug.getEndDate());
+			prescriptDrug.setDrug_achived(drug.isArchived());
+			prescriptDrug.setBN(drug.getBrandName());
+			prescriptDrug.setGCN_SEQNO(drug.getGcnSeqNo());
+			prescriptDrug.setCustomName(drug.getCustomName());
+            prescriptDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
+			rt.add(prescriptDrug);
 		}
 		return rt;
 

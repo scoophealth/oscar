@@ -3,9 +3,9 @@ package org.oscarehr.oscarRx;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
@@ -30,9 +30,23 @@ public class StaticScriptBean {
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 
 	public static class DrugDisplayData {
+		public static final Comparator<DrugDisplayData> DATE_COMPARATOR = new Comparator<DrugDisplayData>()
+		{
+			public int compare(DrugDisplayData o1, DrugDisplayData o2) {
+				if (o1.dateStartDate.after(o2.dateStartDate)) return(-1);
+				else if (o1.dateStartDate.before(o2.dateStartDate)) return(1);
+				else 
+				{
+					if (o1.isLocal) return(-1);
+					else return(1);
+				}
+			}	
+		};
+
 		public Integer localDrugId = null;
 		public String providerName = null;
 		public String startDate = null;
+		protected Date dateStartDate=null;
 		public String endDate = null;
 		public String prescriptionDetails = null;
 		public String genericName = null;
@@ -46,13 +60,13 @@ public class StaticScriptBean {
 		regionalIdentifier=StringUtils.trimToNull(regionalIdentifier);
 		customName=StringUtils.trimToNull(customName);
 		
-		TreeMap<Date,DrugDisplayData> results = new TreeMap<Date,DrugDisplayData>();
+		ArrayList<DrugDisplayData> results = new ArrayList<DrugDisplayData>();
 
 		// add local drugs
 		List<Drug> drugs = drugDao.findByDemographicIdSimilarDrugOrderByDate(demographicId, regionalIdentifier, customName);
 		for (Drug drug : drugs)
 		{
-			results.put(drug.getRxDate(), getDrugDisplayData(drug));
+			results.add(getDrugDisplayData(drug));
 		}
 		
 		// add remote drugs
@@ -63,19 +77,17 @@ public class StaticScriptBean {
 				for (CachedDemographicDrug remoteDrug : remoteDrugs) {
 					if (regionalIdentifier != null)
 					{
-						if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.put(remoteDrug.getRxDate(), getDrugDisplayData(currentFacilityId, remoteDrug));
+						if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.add(getDrugDisplayData(currentFacilityId, remoteDrug));
 					}
-					else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.put(remoteDrug.getRxDate(), getDrugDisplayData(currentFacilityId, remoteDrug));
+					else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.add(getDrugDisplayData(currentFacilityId, remoteDrug));
 				}
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);
 			}
 		}
 		
-		// lists are not defined as ordered, I'm defining this as ordered.
-		ArrayList<DrugDisplayData> values=new ArrayList<DrugDisplayData>(results.values());
-		Collections.reverse(values);
-		return (values);
+		Collections.sort(results, DrugDisplayData.DATE_COMPARATOR);
+		return (results);
 	}
 
 	private static DrugDisplayData getDrugDisplayData(int currentFacilityId, CachedDemographicDrug remoteDrug) throws MalformedURLException {
@@ -90,6 +102,7 @@ public class StaticScriptBean {
 		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName()+" @ "+cachedFacility.getName();
 
 		drugDisplayData.startDate = RxUtil.DateToString(remoteDrug.getRxDate());
+		drugDisplayData.dateStartDate = remoteDrug.getRxDate();
 
 		drugDisplayData.endDate = RxUtil.DateToString(remoteDrug.getEndDate());
 
@@ -117,6 +130,7 @@ public class StaticScriptBean {
 		drugDisplayData.providerName = prov.getFirstName() + ' ' + prov.getSurname();
 
 		drugDisplayData.startDate = RxUtil.DateToString(drug.getRxDate());
+		drugDisplayData.dateStartDate = drug.getRxDate();
 
 		drugDisplayData.endDate = RxUtil.DateToString(drug.getEndDate());
 

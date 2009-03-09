@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web;
 import java.util.Date;
 
 public class PrescriptDrug {
+	private Integer localDrugId=null;
 	private Date date_prescribed;
 	private String drug_special;
 	private Date end_date;
@@ -34,6 +35,14 @@ public class PrescriptDrug {
 	private String customName;
 	private String regionalIdentifier = null;
 	private String remoteFacilityName = null;
+	
+	public Integer getLocalDrugId() {
+    	return localDrugId;
+    }
+
+	public void setLocalDrugId(Integer localDrugId) {
+    	this.localDrugId = localDrugId;
+    }
 
 	public String getRegionalIdentifier() {
 		return regionalIdentifier;

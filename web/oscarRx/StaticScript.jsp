@@ -195,7 +195,7 @@
 												if (searchString==null) searchString=drug.prescriptionDetails;
 											%>
 											<input type="hidden" name="searchString" value="<%=searchString%>" />
-											<input type="submit" class="ControlPushButton" value="Re-prescribe" />										
+											<input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />										
 										</form>
 									<%
 								}

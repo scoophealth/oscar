@@ -24,7 +24,6 @@ package org.oscarehr.casemgmt.web;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,9 +52,6 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -82,13 +78,9 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
-	private CaisiIntegratorManager caisiIntegratorManager=null;
-	private FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
+	private static CaisiIntegratorManager caisiIntegratorManager= (CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+	private static FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 	
-	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
-    	this.caisiIntegratorManager = caisiIntegratorManager;
-    }
-
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
 		caseForm.setFilter_provider("");
@@ -516,17 +508,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<PrescriptDrug> prescriptions = null;
 			boolean viewAll=caseForm.getPrescipt_view().equals("all");
 			String demographicId=getDemographicNo(request);
-			if (viewAll) {
-				prescriptions = this.caseManagementMgr.getPrescriptions(demographicId, true);
-			}
-			else {
-				prescriptions = this.caseManagementMgr.getPrescriptions(demographicId, false);
-			}
-			
 			if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)){
 				request.setAttribute("isIntegratorEnabled", true);
-				addIntegratorDrugs(prescriptions, viewAll, currentFacilityId, Integer.parseInt(demographicId));
 			}
+			
+			prescriptions = this.caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll, currentFacilityId);
 			
 			request.setAttribute("Prescriptions", prescriptions);
 
@@ -587,65 +573,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	private void addIntegratorDrugs(List<PrescriptDrug> prescriptions, boolean viewAll, int currentFacilityId, int demographicId) {
-
-		if (prescriptions == null) {
-			log.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
-			return;
-		}
-
-		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
-			List<CachedDemographicDrug> drugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
-
-			for (CachedDemographicDrug cachedDrug : drugs) {
-				if (viewAll) {
-					prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
-				} else {
-					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
-					PrescriptDrug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
-					if (pd == null) {
-						prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
-					} else {
-						if (pd.getDate_prescribed().before(cachedDrug.getRxDate())) {
-							prescriptions.remove(pd);
-							prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			log.error("Unexpected error.", e);
-		}
-	}
-
-	private PrescriptDrug getPrescriptDrug(int currentFacilityId, CachedDemographicDrug cachedDrug) throws MalformedURLException {
-		PrescriptDrug pd=new PrescriptDrug();
-
-		pd.setBN(cachedDrug.getBrandName());
-		pd.setCustomName(cachedDrug.getCustomName());
-		pd.setDate_prescribed(cachedDrug.getRxDate());
-		pd.setDrug_achived(cachedDrug.isArchived());
-		pd.setDrug_special(cachedDrug.getSpecial());
-		pd.setEnd_date(cachedDrug.getEndDate());
-		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
-		
-		int remoteFacilityId=cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
-		CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, remoteFacilityId);
-		pd.setRemoteFacilityName(cachedFacility.getName());
-		
-		return(pd);
-    }
-
-	private static PrescriptDrug containsPrescriptDrug(List<PrescriptDrug> prescriptions, String regionalIdentifier)
-	{
-		for (PrescriptDrug prescriptDrug : prescriptions)
-		{
-			if (regionalIdentifier.equals(prescriptDrug.getRegionalIdentifier())) return(prescriptDrug);
-		}
-		
-		return(null);
-	}
 	
 	public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String nId = request.getParameter("noteId");

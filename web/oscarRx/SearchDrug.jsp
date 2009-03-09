@@ -6,20 +6,24 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
+<%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties"%>
 <%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
 
 
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
 	reverse="<%=true%>">
-	<%response.sendRedirect("../noRights.html");%>
+	<%
+		response.sendRedirect("../noRights.html");
+	%>
 </security:oscarSec>
 
-<% response.setHeader("Cache-Control","no-cache");%>
+<%
+	response.setHeader("Cache-Control", "no-cache");
+%>
 <logic:notPresent name="RxSessionBean" scope="session">
 	<logic:redirect href="error.html" />
 </logic:notPresent>
@@ -32,22 +36,24 @@
 </logic:present>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+	oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
 
-<%  RxPharmacyData pharmacyData = new RxPharmacyData();
-    RxPharmacyData.Pharmacy pharmacy ;                                  
-    pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
-    String prefPharmacy = "";
-    if (pharmacy != null){   
-	prefPharmacy = pharmacy.name;                                  
-    }
-    
-    String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
-    if (drugref_route==null) drugref_route = "";
-    String[] d_route = ("Oral,"+drugref_route).split(",");
-    
-    String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
+<%
+	RxPharmacyData pharmacyData = new RxPharmacyData();
+	RxPharmacyData.Pharmacy pharmacy;
+	pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+	String prefPharmacy = "";
+	if (pharmacy != null)
+	{
+		prefPharmacy = pharmacy.name;
+	}
+
+	String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
+	if (drugref_route == null) drugref_route = "";
+	String[] d_route = ("Oral," + drugref_route).split(",");
+
+	String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 %>
 
 <!--  
@@ -77,9 +83,15 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 -->
 
 
-<html:html locale="true">
+
+<%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.casemgmt.web.PrescriptDrug"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%><html:html locale="true">
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="SearchDrug.title" /></title>
 <link rel="stylesheet" type="text/css" href="styles.css">
 
@@ -138,7 +150,7 @@ function customWarning(){
 	+ '\n  *  Drug-Drug Interaction Information'
 	+ '\n  *  Drug Information'
 	+ '\n\nAre you sure you wish to use this feature?')==true) {
-	window.location.href = 'chooseDrug.do?demographicNo=<%= response.encodeURL(Integer.toString(bean.getDemographicNo())) %>';
+	window.location.href = 'chooseDrug.do?demographicNo=<%=response.encodeURL(Integer.toString(bean.getDemographicNo()))%>';
     }
 }
 
@@ -186,9 +198,10 @@ function buildRoute() {
         
         pickRoute = "";
 <oscar:oscarPropertiesCheck property="drugref_route_search" value="on">        
-<% for (int i=0; i<d_route.length; i++) { %>
+<%for (int i = 0; i < d_route.length; i++)
+					{%>
 	if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
-<% } %>
+<%}%>
 	document.forms[2].searchRoute.value = pickRoute;
 </oscar:oscarPropertiesCheck>        
 }
@@ -213,71 +226,51 @@ function load() {
 </head>
 
 <%
-    boolean showall = false;
+	boolean showall = false;
 
-    if(request.getParameter("show")!=null)
-        if(request.getParameter("show").equals("all"))
-            showall = true;
+		if (request.getParameter("show") != null) if (request.getParameter("show").equals("all")) showall = true;
 %>
 
-<bean:define id="patient"
-	type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
+<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="load()">
-<table border="0" cellpadding="0" cellspacing="0"
-	style="border-collapse: collapse" bordercolor="#111111" width="100%"
-	id="AutoNumber1" height="100%">
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
 	<%@ include file="TopLinks.jsp"%><!-- Row One included here-->
 	<tr>
 		<%@ include file="SideLinksEditFavorites.jsp"%><!-- <td></td>Side Bar File --->
-		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%"
-			valign="top"><!--Column Two Row Two-->
-		<table cellpadding="0" cellspacing="2"
-			style="border-collapse: collapse" bordercolor="#111111" width="100%"
-			height="100%">
+		<td width="100%" style="border-left: 2px solid #A9A9A9;" height="100%" valign="top"><!--Column Two Row Two-->
+		<table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%">
 			<tr>
 				<td width="0%" valign="top">
-				<div class="DivCCBreadCrumbs"><b><bean:message
-					key="SearchDrug.title" /></b></div>
+				<div class="DivCCBreadCrumbs"><b><bean:message key="SearchDrug.title" /></b></div>
 				</td>
 			</tr>
 			<!----Start new rows here-->
 			<tr>
 				<td>
-				<div class="DivContentTitle"><bean:message
-					key="SearchDrug.title" /></div>
+					<div class="DivContentTitle"><bean:message key="SearchDrug.title" /></div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<div class="DivContentSectionHead"><bean:message
-					key="SearchDrug.section1Title" /></div>
+					<div class="DivContentSectionHead"><bean:message key="SearchDrug.section1Title" /></div>
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<table>
 					<tr>
-						<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty
-							name="patient" property="firstName" /> <jsp:getProperty
-							name="patient" property="surname" /></td>
+						<td><b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" /></td>
 						<td></td>
-						<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty
-							name="patient" property="age" /></td>
+						<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" /></td>
 						<td></td>
-						<td><b>Prefered Pharmacy :</b> <a
-							href="javascript: function myFunction() {return false; }"
-							onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
+						<td><b>Prefered Pharmacy :</b> <a href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
 					</tr>
 					<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-						<indivo:indivoRegistered
-							demographic="<%=String.valueOf(bean.getDemographicNo())%>"
-							provider="<%=bean.getProviderNo()%>">
+						<indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">
 							<tr>
-								<td colspan="3"><!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>-->
-								<a
-									href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send
-								To PHR</a></td>
+								<td colspan="3"><!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>--> <a
+									href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a></td>
 							</tr>
 						</indivo:indivoRegistered>
 					</oscar:oscarPropertiesCheck>
@@ -287,44 +280,41 @@ function load() {
 
 			<tr>
 				<td>
-				<div class="DivContentSectionHead"><bean:message
-					key="SearchDrug.section2Title" /> (<a
-					href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)
-				&nbsp;&nbsp;(<a href="#"
-					onclick="$('reprint').toggle();return false;">Reprint</a>)</div>
+					<div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>) &nbsp;&nbsp;(<a href="#"
+						onclick="$('reprint').toggle();return false;">Reprint</a>)</div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-				<div
-					style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;"
-					id="reprint">
-				<%
-                           oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
-                           prescribedDrugs = patient.getPrescribedDrugScripts();    //this function only returns drugs which have an entry in prescription and drugs table
-                           String script_no = "";                           
-                           
-                           for(int i=0; i<prescribedDrugs.length; i++) {   
-                               oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
-                                   if(drug.getScript_no() != null &&  script_no.equals(drug.getScript_no())) {                                                                            
-                        %> <br>
-				<div style="float: left; width: 24%; padding-left: 40px;">&nbsp;</div>
-				<a style="float: left;"
-					href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
-				<%
-                                    }                                       
-                                    else {                                                                        
-                         %> <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div
-					style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
-				<div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
-				<a style="float: left;"
-					href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
-				<%                                                                            
-                                    }
-                                    script_no = drug.getScript_no() == null ? "" : drug.getScript_no();
-                             }                           
-                             %>
-				</div>
+					<div style="height: 100px; overflow: auto; background-color: #DCDCDC; border: thin solid green; display: none;" id="reprint">
+					<%
+						oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
+							prescribedDrugs = patient.getPrescribedDrugScripts(); //this function only returns drugs which have an entry in prescription and drugs table
+							String script_no = "";
+
+							for (int i = 0; i < prescribedDrugs.length; i++)
+							{
+								oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
+								if (drug.getScript_no() != null && script_no.equals(drug.getScript_no()))
+								{
+					%> 
+										<br>
+										<div style="float: left; width: 24%; padding-left: 40px;">&nbsp;</div>
+										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a> 
+									<%
+ 										}
+ 												else
+ 												{
+ 									%>
+										<%=i > 0?"<br style='clear:both;'><br style='clear:both;'>":""%><div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getRxDate()%></div>
+										<div style="float: left; width: 12%; padding-left: 20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div>
+										<a style="float: left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a> 
+									<%
+ 										}
+ 												script_no = drug.getScript_no() == null?"":drug.getScript_no();
+ 											}
+ 									%>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -335,110 +325,150 @@ function load() {
 						<div class="Step1Text" style="width: 100%">
 						<table width="100%" cellpadding="3">
 							<tr>
-								<th align=left><b>Rx Date</b></th>
-								<th align=left><b>Prescription</b></th>
-								<th align=center width="100px"><b>Represcribe</b></th>
-								<th align=center width="100px"><b>Delete</b></th>
-								<th align=center width="20px">&nbsp;</th>
+								<th align="left"><b>Rx Date</b></th>
+								<th align="left"><b>Prescription</b></th>
+								<th align="center" width="100px"><b>Represcribe</b></th>
+								<th align="center" width="100px"><b>Delete</b></th>
+								<th align="center" width="20px">&nbsp;</th>
+								<%
+									Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	
+									CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
+									boolean integratorEnabled=caisiIntegratorManager.isIntegratorEnabled(currentFacilityId);
+								
+									if (integratorEnabled)
+									{
+										%>
+											<td align="center">Location<br />Prescribed</td>
+										<%
+									}
+								%>
 							</tr>
 
-							<%                                
+							<%
+								CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+								List<PrescriptDrug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall, currentFacilityId);
 
-                                if(!showall)                                                                    
-                                    prescribedDrugs = patient.getPrescribedDrugsUnique();
-                                else
-                                    prescribedDrugs = patient.getPrescribedDrugs();
+								long now = System.currentTimeMillis();
+								long month = 1000L * 60L * 60L * 24L * 30L;
 
-                                long now = System.currentTimeMillis();
-                                long month = 1000L * 60L * 60L * 24L * 30L;
-                                                                
-                                for(int i=0; i<prescribedDrugs.length; i++) {
-                                    oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
-                                    String styleColor = "";
-                                    
-                                   if (request.getParameter("status")!=null ){  //TODO: Redo this in a better way
-                                        String stat = request.getParameter("status");
-                                        if (stat != null && stat.equals("active") && !drug.isCurrent() ) {
-                                            continue;
-                                        }else if(stat != null && stat.equals("inactive") && drug.isCurrent() ) {
-                                            continue;
-                                        }
-                                    }
-                                    
-                                    if(drug.isCurrent() == true && drug.isArchived() ){
-					styleColor="style=\"color:red;text-decoration: line-through;\"";  
-                                    }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
-                                        styleColor="style=\"color:orange;font-weight:bold;\"";
-                                    }else if (drug.isCurrent() && !drug.isArchived())  {                                        
-                                        styleColor="style=\"color:red;\"";
-				    }else if (!drug.isCurrent() && drug.isArchived()){
-                                        styleColor="style=\"text-decoration: line-through;\"";
-				    }
-                                    %>
+								for (PrescriptDrug prescriptDrug : prescriptDrugs)
+								{
+									String styleColor = "";
+
+									if (request.getParameter("status") != null)
+									{ //TODO: Redo this in a better way
+										String stat = request.getParameter("status");
+										if (stat != null && stat.equals("active") && prescriptDrug.isExpired())
+										{
+											continue;
+										}
+										else if (stat != null && stat.equals("inactive") && !prescriptDrug.isExpired())
+										{
+											continue;
+										}
+									}
+
+									if (!prescriptDrug.isExpired() && prescriptDrug.isDrug_achived())
+									{
+										styleColor = "style=\"color:red;text-decoration: line-through;\"";
+									}
+									else if (!prescriptDrug.isExpired() && (prescriptDrug.getEnd_date().getTime() - now <= month))
+									{
+										styleColor = "style=\"color:orange;font-weight:bold;\"";
+									}
+									else if (!prescriptDrug.isExpired() && !prescriptDrug.isDrug_achived())
+									{
+										styleColor = "style=\"color:red;\"";
+									}
+									else if (prescriptDrug.isExpired() && prescriptDrug.isDrug_achived())
+									{
+										styleColor = "style=\"text-decoration: line-through;\"";
+									}
+							%>
 							<tr>
-								<td valign="top"><a <%= styleColor%>
-									href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
-                                            %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-								<%= drug.getRxDate() %> </a></td>
-								<td><a <%= styleColor%>
-                                            href="StaticScript.jsp?regionalIdentifier=<%= drug.getRegionalIdentifier()
-                                            %>&cn=<%= response.encodeURL(drug.getCustomName()) %>">
-
-
-								<%=drug.getFullOutLine().replaceAll(";"," ")%> </a></td>
-								<td width="100px" align="center"><input type=checkbox
-									name="chkRePrescribe" align="center"
-									drugId=<%= drug.getDrugId() %> /></td>
-								<td width="100px" align="center"><input type=checkbox
-									name="chkDelete" align="center" drugId=<%= drug.getDrugId() %> />
+								<td valign="top"><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=prescriptDrug.getDate_prescribed()%> </a></td>
+								<td><a <%=styleColor%> href="StaticScript.jsp?regionalIdentifier=<%=prescriptDrug.getRegionalIdentifier()%>&cn=<%=response.encodeURL(prescriptDrug.getCustomName())%>"> <%=RxPrescriptionData.getFullOutLine(prescriptDrug.getDrug_special()).replaceAll(";", " ")%>
+								</a></td>
+								<td width="100px" align="center">
+								<%
+									if (prescriptDrug.getRemoteFacilityName()==null)
+									{
+										%>
+											<input type="checkbox" name="chkRePrescribe" align="center" drugId="<%=prescriptDrug.getLocalDrugId()%>" />
+										<%
+									}
+									else
+									{
+										%>
+											<form action="<%=request.getContextPath()%>/oscarRx/searchDrug.do" method="post">
+												<input type="hidden" name="demographicNo" value="<%=patient.getDemographicNo()%>" />
+												<%
+													String searchString=prescriptDrug.getBN();
+													if (searchString==null) searchString=prescriptDrug.getCustomName();
+													if (searchString==null) searchString=prescriptDrug.getRegionalIdentifier();
+													if (searchString==null) searchString=prescriptDrug.getDrug_special();
+												%>
+												<input type="hidden" name="searchString" value="<%=searchString%>" />
+												<input type="submit" class="ControlPushButton" value="Search to Re-prescribe" />										
+											</form>
+										<%
+									}
+								%>
 								</td>
-								<td width="20px" align="center">
-								    <a href="#" title="Annotation" onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=drug.getDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');">
-								    <img src="../images/notes.gif" border="0"></a>
+								<td width="100px" align="center">
+								<%
+									if (prescriptDrug.getRemoteFacilityName()==null)
+									{
+										%>
+											<input type="checkbox" name="chkDelete" align="center" drugId="<%=prescriptDrug.getLocalDrugId()%>" />
+										<%
+									}
+								%>
 								</td>
+								<td width="20px" align="center"><a href="#" title="Annotation"
+									onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=prescriptDrug.getLocalDrugId()%>&demo=<%=bean.getDemographicNo()%>','anwin','width=400,height=250');"> <img src="../images/notes.gif" border="0"></a>
+									</td>
+								<%
+									if (integratorEnabled)
+									{
+										%>
+											<td align="center"><%=prescriptDrug.getRemoteFacilityName()==null?"local":prescriptDrug.getRemoteFacilityName()%></td>
+										<%
+									}
+								%>
 							</tr>
 							<%
-                                }
-                                %>
+								}
+							%>
 						</table>
 
 						</div>
 						<div style="margin-top: 10px; margin-left: 20px; width: 100%">
-						<table width="100%" cellspacing=0 cellpadding=0>
+						<table width="100%" cellspacing="0" cellpadding="0">
 							<tr>
-								<td align=left>
-								<% 
-                                                                 String show = "&show=all";
-                                                                if(showall) { %> 
-                                                                    <a href="SearchDrug.jsp">Show Current</a> 
-                                                                <% } else { 
-                                                                     show ="";%>
-                                                                    <a href="SearchDrug.jsp?show=all">Show All</a> 
-                                                                <% } %>
-								&nbsp;&nbsp;&nbsp;
-                                                                <a href="SearchDrug.jsp?status=active<%=show%>">Active</a>
-                                                                -
-                                                                <a href="SearchDrug.jsp?status=inactive<%=show%>">Inactive</a>
-                                                                -
-                                                                <a href="SearchDrug.jsp?status=all<%=show%>">All</a>
-                                                                
-
-                                                                </td>
-								<td align=right><span style="width: 350px; align: right">
-								<input type=button name="cmdAllergies"
-									value="View / Edit Allergies" class="ControlPushButton"
-									onclick="javascript:window.location.href='ShowAllergies.jsp';"
-									style="width: 100px" /> <input type=button
-									name="cmdRePrescribe" value="Represcribe"
-									class="ControlPushButton" onclick="javascript:RePrescribe();"
-									style="width: 100px" /> <input type=button name="cmdDelete"
-									value="Delete" class="ControlPushButton"
+								<td align="left">
+								<%
+									String show = "&show=all";
+										if (showall)
+										{
+								%> <a href="SearchDrug.jsp">Show Current</a> <%
+ 	}
+ 		else
+ 		{
+ 			show = "";
+ %> <a href="SearchDrug.jsp?show=all">Show All</a> <%
+ 	}
+ %> &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>">Active</a> - <a
+									href="SearchDrug.jsp?status=inactive<%=show%>">Inactive</a> - <a href="SearchDrug.jsp?status=all<%=show%>">All</a></td>
+								<td align="right"><span style="width: 350px; align: right"> <input type="button" name="cmdAllergies" value="View / Edit Allergies" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />
+								<input type="button" name="cmdRePrescribe" value="Represcribe" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" /> <input type="button" name="cmdDelete" value="Delete" class="ControlPushButton"
 									onclick="javascript:Delete();" style="width: 100px" /> </span></td>
 							</tr>
 						</table>
 						</div>
 
-						<script language=javascript>
+						<script language="javascript">
                                 function reprint(drug) {
                                     document.forms[0].drugList.value = drug;
                                     document.forms[0].method.value = "reprint";
@@ -504,45 +534,41 @@ function load() {
 			</tr>
 			<tr>
 				<td>
-				<div class="DivContentSectionHead"><bean:message
-					key="SearchDrug.section3Title" /></div>
+				<div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title" /></div>
 				</td>
 			</tr>
 
 			<tr>
-				<td><html:form action="/oscarRx/searchDrug"
-					focus="searchString" onsubmit="return processData();">
-					<html:hidden property="demographicNo"
-						value="<%= new Integer(patient.getDemographicNo()).toString()%>" />
+				<td><html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return processData();">
+					<html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
 					<table>
 						<tr valign="center">
 							<td><bean:message key="SearchDrug.drugSearchTextBox" /><br>
-							<html:text styleId="searchString" property="searchString"
-								size="16" maxlength="16" /></td>
-							<td width=100><a href="javascript:goDOC();">Drug of
-							Choice</a>
-                                                        <% if(OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>
-                                                        <a href="javascript:goOMD();">OMD Lookup</a>
-                                                        <%}%>
-                                                        </td>
-							<td><oscar:oscarPropertiesCheck
-								property="drugref_route_search" value="on">
+							<html:text styleId="searchString" property="searchString" size="16" maxlength="16" /></td>
+							<td width="100"><a href="javascript:goDOC();">Drug of Choice</a> <%
+ 	if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR"))
+ 			{
+ %> <a href="javascript:goOMD();">OMD Lookup</a> <%
+ 	}
+ %>
+							</td>
+							<td><oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
 								<bean:message key="SearchDrug.drugSearchRouteLabel" />
 								<br>
-								<%  for (int i=0; i<d_route.length; i++) { %>
-								<input type=checkbox name=route <%=i%>
-									value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
-								<%  } %>
+								<%
+									for (int i = 0; i < d_route.length; i++)
+												{
+								%>
+								<input type="checkbox" name="route" <%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
+								<%
+									}
+								%>
 								<html:hidden property="searchRoute" />
 							</oscar:oscarPropertiesCheck></td>
 						</tr>
 						<tr>
-							<td colspan=3><html:submit property="submit" value="Search"
-								styleClass="ControlPushButton" /> &nbsp;&nbsp;&nbsp; <input
-								type=button class="ControlPushButton"
-								onclick="searchString.value='';searchRoute.value='';searchString.focus();"
-								value="Reset" /> <input type=button class="ControlPushButton"
-								onclick="customWarning();" value="Custom Drug" /></td>
+							<td colspan="3"><html:submit property="submit" value="Search" styleClass="ControlPushButton" /> &nbsp;&nbsp;&nbsp; <input type=button class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();"
+								value="Reset" /> <input type="button" class="ControlPushButton" onclick="customWarning();" value="Custom Drug" /></td>
 						</tr>
 					</table>
 				</html:form></td>
@@ -550,7 +576,7 @@ function load() {
 
 			<logic:notEqual name="bean" property="stashSize" value="0">
 				<tr>
-					<td><script language=javascript>
+					<td><script language="javascript">
                             function submitPending(stashId, action){
                                 var frm = document.forms.RxStashForm;
                                 frm.stashId.value = stashId;
@@ -563,38 +589,36 @@ function load() {
 						<html:hidden property="stashId" />
 					</html:form>
 
-					<div class="DivContentSectionHead"><bean:message
-						key="WriteScript.section5Title" /></div>
+					<div class="DivContentSectionHead"><bean:message key="WriteScript.section5Title" /></div>
 					</td>
 				</tr>
 				<tr>
-					<td><script language=javascript>
+					<td><script language="javascript">
                             function ShowDrugInfo(GN){
                                 window.open("drugInfo.do?GN=" + escape(GN), "_blank",
                                     "location=no, menubar=no, toolbar=no, scrollbars=yes, status=yes, resizable=yes");
                             }
                         </script>
-					<table cellspacing=0 cellpadding=5>
-						<% int i=0; %>
-						<logic:iterate id="rx" name="bean" property="stash"
-							length="stashSize">
+						<element>
+						<table cellspacing="0" cellpadding="5">
+						<%
+							int i = 0;
+						%>
+						<logic:iterate id="rx" name="bean" property="stash" length="stashSize">
 							<tr>
-								<td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
-								<td><a href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
-								<td><a href="javascript:submitPending(<%= i%>, 'edit');">
-								<bean:write name="rx" property="rxDisplay" /> </a></td>
-								<td><a
-									href="javascript:ShowDrugInfo('<%= ((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName() %>');">Info</a>
-								</td>
+								<td><a href="javascript:submitPending(<%=i%>, 'edit');">Edit</a></td>
+								<td><a href="javascript:submitPending(<%=i%>, 'delete');">Delete</a></td>
+								<td><a href="javascript:submitPending(<%=i%>, 'edit');"> <bean:write name="rx" property="rxDisplay" /> </a></td>
+								<td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName()%>');">Info</a></td>
 							</tr>
-							<% i++; %>
+							<%
+								i++;
+							%>
 						</logic:iterate>
-					</table>
+					</table></element>
 					<br>
 
-					<input type=button class="ControlPushButton"
-						onclick="javascript:window.location.href='viewScript.do';"
-						value="Save and Print" /></td>
+					<input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="Save and Print" /></td>
 				</tr>
 			</logic:notEqual>
 
@@ -607,10 +631,8 @@ function load() {
 	</tr>
 
 	<tr>
-		<td height="0%"
-			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
-		<td height="0%"
-			style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
+		<td height="0%" style="border-bottom: 2px solid #A9A9A9; border-top: 2px solid #A9A9A9;"></td>
 	</tr>
 
 	<tr>
@@ -618,8 +640,7 @@ function load() {
 	</tr>
 
 	<tr>
-		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
-			colspan="2"></td>
+		<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC" colspan="2"></td>
 	</tr>
 
 </table>
@@ -629,19 +650,17 @@ function load() {
 
 
 
-<% if (pharmacy != null ){ %>
-<div id="Layer1"
-	style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1">
-<!--  This should be changed to automagically fill if this changes often -->
+<%
+	if (pharmacy != null)
+		{
+%>
+<div id="Layer1" style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1"><!--  This should be changed to automagically fill if this changes often -->
 
-<table border="0" cellspacing="1" cellpadding="1" align=center
-	class="hiddenLayer">
+<table border="0" cellspacing="1" cellpadding="1" align="center" class="hiddenLayer">
 	<tr class="LightBG">
 		<td class="wcblayerTitle">&nbsp;</td>
 		<td class="wcblayerTitle">&nbsp;</td>
-		<td class="wcblayerTitle" align="right"><a
-			href="javascript: function myFunction() {return false; }"
-			onclick="hidepic('Layer1');" style="text-decoration: none;">X</a></td>
+		<td class="wcblayerTitle" align="right"><a href="javascript: function myFunction() {return false; }" onclick="hidepic('Layer1');" style="text-decoration: none;">X</a></td>
 	</tr>
 
 	<tr class="LightBG">
@@ -701,7 +720,9 @@ function load() {
 </table>
 
 </div>
-<%}%>
+<%
+	}
+%>
 </body>
 </html:html>
 
