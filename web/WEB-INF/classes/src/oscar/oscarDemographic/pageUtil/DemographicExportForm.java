@@ -36,39 +36,146 @@ import org.apache.struts.action.ActionForm;
  */
 public class DemographicExportForm extends ActionForm {
          
-   String patientSet = null;
-   String mediaType = null;
-   String noOfMedia = null;
-   
-   public DemographicExportForm() {
-   }
-   
-   /**
+    String patientSet = null;
+    String mediaType = null;
+    String noOfMedia = null;
+    
+    boolean exPersonalHistory = true;
+    boolean exFamilyHistory = true;
+    boolean exPastHealth = true;
+    boolean exProblemList = true;
+    boolean exRiskFactors = true;
+    boolean exAllergiesAndAdverseReactions = true;
+    boolean exMedicationsAndTreatments = true;
+    boolean exImmunizations = true;
+    boolean exLaboratoryResults = true;
+    boolean exAppointments = true;
+    boolean exClinicalNotes = true;
+    boolean exReportsReceived = true;
+    boolean exAuditInformation = true;
+    boolean exCareElements = true;
+    
+    public DemographicExportForm() {
+    }
+
+    /**
     * Getter for properties.
     * @return Value of properties.
     */
-   public java.lang.String getPatientSet() {
-      return patientSet;
-   }
-   public java.lang.String getMediaType() {
-       return mediaType;
-   }
-   public java.lang.String getNoOfMedia() {
-       return noOfMedia;
-   }
-   
-   /**
+    public String getPatientSet() {
+        return patientSet;
+    }
+    public String getMediaType() {
+        return mediaType;
+    }
+    public String getNoOfMedia() {
+        return noOfMedia;
+    }
+    public boolean getExPersonalHistory() {
+        return exPersonalHistory;
+    }
+    public boolean getExFamilyHistory() {
+        return exFamilyHistory;
+    }
+    public boolean getExPastHealth() {
+        return exPastHealth;
+    }
+    public boolean getExProblemList() {
+        return exProblemList;
+    }
+    public boolean getExRiskFactors() {
+        return exRiskFactors;
+    }
+    public boolean getExAllergiesAndAdverseReactions() {
+        return exAllergiesAndAdverseReactions;
+    }
+    public boolean getExMedicationsAndTreatments() {
+        return exMedicationsAndTreatments;
+    }
+    public boolean getExImmunizations() {
+        return exImmunizations;
+    }
+    public boolean getExLaboratoryResults() {
+        return exLaboratoryResults;
+    }
+    public boolean getExAppointments() {
+        return exAppointments;
+    }
+    public boolean getExClinicalNotes() {
+        return exClinicalNotes;
+    }
+    public boolean getExReportsReceived() {
+        return exReportsReceived;
+    }
+    public boolean getExAuditInformation() {
+        return exAuditInformation;
+    }
+    public boolean getExCareElements() {
+        return exCareElements;
+    }
+
+    /**
     * Setter for properties
     * @param patientSet New value of properties.
     */
-   public void setPatientSet(java.lang.String patientSet) {
-      this.patientSet = patientSet;
-   }
-   public void setMediaType(java.lang.String mediaType) {
-       this.mediaType = mediaType;
-   }
-   public void setNoOfMedia(java.lang.String noOfMedia) {
-       if (Integer.parseInt(noOfMedia)>0) this.noOfMedia = noOfMedia;
-       else this.noOfMedia = "1";
-   }
+    public void setPatientSet(String patientSet) {
+        this.patientSet = patientSet;
+    }
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+    public void setNoOfMedia(String noOfMedia) {
+        if (isInteger(noOfMedia)) this.noOfMedia = noOfMedia;
+        else this.noOfMedia = "1";
+    }
+    public void setExPersonalHistory(boolean rhs) {
+        this.exPersonalHistory = rhs;
+    }
+    public void setExFamilyHistory(boolean rhs) {
+        this.exFamilyHistory = rhs;
+    }
+    public void setExPastHealth(boolean rhs) {
+        this.exPastHealth = rhs;
+    }
+    public void setExProblemList(boolean rhs) {
+        this.exProblemList = rhs;
+    }
+    public void setExRiskFactors(boolean rhs) {
+        this.exRiskFactors = rhs;
+    }
+    public void setExAllergiesAndAdverseReactions(boolean rhs) {
+        this.exAllergiesAndAdverseReactions = rhs;
+    }
+    public void setExMedicationsAndTreatments(boolean rhs) {
+        this.exMedicationsAndTreatments = rhs;
+    }
+    public void setExImmunizations(boolean rhs) {
+        this.exImmunizations = rhs;
+    }
+    public void setExLaboratoryResults(boolean rhs) {
+        this.exLaboratoryResults = rhs;
+    }
+    public void setExAppointments(boolean rhs) {
+        this.exAppointments = rhs;
+    }
+    public void setExClinicalNotes(boolean rhs) {
+        this.exClinicalNotes = rhs;
+    }
+    public void setExReportsReceived(boolean rhs) {
+        this.exReportsReceived = rhs;
+    }
+    public void setExAuditInformation(boolean rhs) {
+        this.exAuditInformation = rhs;
+    }
+    public void setExCareElements(boolean rhs) {
+        this.exCareElements = rhs;
+    }
+    
+    boolean isInteger(String num) {
+        String numeric = "0123456789";
+        for (int i=0; i<num.length(); i++) {
+            if (!numeric.contains(num.subSequence(i,i+1))) return false;
+        }
+        return true;
+    }
 }

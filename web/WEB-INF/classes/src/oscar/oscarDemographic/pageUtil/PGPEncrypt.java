@@ -48,20 +48,20 @@ public class PGPEncrypt {
     String env;
     String src;
 
-    public PGPEncrypt(String src) throws Exception {
+    public PGPEncrypt(String src, String dir) throws Exception {
 	OscarProperties op = OscarProperties.getInstance();
-	this.dir = op.getProperty("TMP_DIR");
-	if (this.dir==null || this.dir.trim()=="") throw new Exception("Temporary Export Directory (as set in oscar.properties) does not exist!");
+	this.dir = dir;
+	if (!Util.filled(this.dir)) throw new Exception("Working directory does not exist!");
 	this.bin = op.getProperty("PGP_BIN");
-	if (this.bin==null || this.bin.trim()=="") throw new Exception("PGP binary executable (PGP_BIN) not set in oscar.properties!");
+	if (!Util.filled(this.bin)) throw new Exception("PGP binary executable (PGP_BIN) not set in oscar.properties!");
 	this.cmd = op.getProperty("PGP_CMD");
-	if (this.cmd==null || this.cmd.trim()=="") throw new Exception("PGP encryption command (PGP_CMD) not set in oscar.properties!");
+	if (!Util.filled(this.cmd)) throw new Exception("PGP encryption command (PGP_CMD) not set in oscar.properties!");
 	this.key = op.getProperty("PGP_KEY");
-	if (this.key==null || this.key.trim()=="") throw new Exception("PGP encryption key (PGP_KEY) not set in oscar.properties!");
+	if (!Util.filled(this.key)) throw new Exception("PGP encryption key (PGP_KEY) not set in oscar.properties!");
 	this.env = op.getProperty("PGP_ENV");
-	if (this.env==null || this.env.trim()=="") throw new Exception("PGP environment variable (PGP_ENV) not set in oscar.properties!");
+	if (!Util.filled(this.env)) throw new Exception("PGP environment variable (PGP_ENV) not set in oscar.properties!");
 	this.src = src;
-	if (this.src==null || this.src.trim()=="") throw new Exception("Source file not given. Nothing to encrypt!");
+	if (!Util.filled(this.src)) throw new Exception("Source file not given. Nothing to encrypt!");
     }
     
     boolean doEncrypt() throws Exception {
@@ -86,14 +86,14 @@ public class PGPEncrypt {
 	    out.close();	    
 	    
 	    //Remove source file & "done.tmp" - useless by-product of PGP encryption
-	    File done = new File(dir.getPath()+"/done.tmp");
-	    if (!done.delete()) throw new Exception("Error! Cannot remove \"done.tmp\".");
-	    done = new File(dir.getPath()+"/"+this.src);
-	    if (!done.delete()) throw new Exception("Error! Cannot remove non-encrypted source file!");
+	    if (!Util.cleanFile(dir.getPath()+"/done.tmp"))
+                throw new Exception("Error! Cannot remove \"done.tmp\".");
+	    if (!Util.cleanFile(dir.getPath()+"/"+this.src))
+                throw new Exception("Error! Cannot remove source file!");
 	    
 	    return true;
 	} else {	    
-	    System.out.println("Error: " + ecode);
+	    System.out.println("PGP Encryption Error: " + ecode);
 	    InputStream err = proc.getErrorStream();
 	    BufferedReader erdr = new BufferedReader(new InputStreamReader(err));
 	    String line = null;

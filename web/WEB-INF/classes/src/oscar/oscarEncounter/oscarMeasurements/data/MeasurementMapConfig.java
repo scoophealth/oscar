@@ -33,6 +33,17 @@ public class MeasurementMapConfig {
     public MeasurementMapConfig() {
     }
     
+    public String getLoincCodeByIdentCode(String identifier) throws SQLException {
+	if (identifier!=null && identifier.trim().length()>0) {
+	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    String sql = "SELECT loinc_code FROM measurementMap WHERE ident_code="+identifier;
+	    ResultSet rs = db.GetSQL(sql);
+
+	    if (rs.next()) return rs.getString("loinc_code");
+	}
+	return null;
+    }
+    
     public ArrayList getLoincCodes(String searchString){
         searchString = "%"+searchString.replaceAll("\\s", "%")+"%";
         ArrayList ret = new ArrayList();

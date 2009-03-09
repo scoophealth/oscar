@@ -910,7 +910,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	
 	//PGP encrypt zip file (source zip file will be deleted)
-	PGPEncrypt pet = new PGPEncrypt(zipName);
+	PGPEncrypt pet = new PGPEncrypt(zipName,tmpDir);
 	if (!pet.doEncrypt()) throw new Exception("Error encrypting export files!");
 	
 	//Remove the temporary export files

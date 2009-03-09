@@ -14,10 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.apache.log4j.Logger;
 
 import oscar.OscarProperties;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ForwardingRules;
 
 /**
@@ -77,4 +79,22 @@ public class ProviderLabRouting {
         pstmt.close();
     }
     
+    public static Hashtable getInfo(String lab_no) throws SQLException {
+	Hashtable info = new Hashtable();
+	String sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_no+"'";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	ResultSet rs = db.GetSQL(sql);
+	
+	if (rs.next()) {
+	    info.put("lab_no", lab_no);
+	    info.put("provider_no", rs.getString("provider_no"));
+	    info.put("status", rs.getString("status"));
+	    info.put("comment", rs.getString("comment"));
+	    info.put("timestamp", rs.getDate("timestamp"));
+	    info.put("lab_type", rs.getString("lab_type"));
+	    info.put("id", rs.getInt("id"));
+	}
+	db.CloseConn();
+	return info;
+    }
 }

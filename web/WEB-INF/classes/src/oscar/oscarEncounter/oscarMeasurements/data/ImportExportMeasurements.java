@@ -60,6 +60,22 @@ public class ImportExportMeasurements {
 	return measList;
     }
     
+    public static List getLabMeasurements(String demoNo) throws SQLException {
+	List labmList = new ArrayList();
+	
+	List<Measurements> measList = getMeasurements(demoNo);
+	for (Measurements ms : measList) {
+	    List mExt = getMeasurementsExt(ms.getId());
+	    if (!mExt.isEmpty()) {
+		LabMeasurements labm = new LabMeasurements();
+		labm.setMeasure(ms);
+		labm.setExts(mExt);
+		labmList.add(labm);
+	    }
+	}
+	return labmList;
+    }
+    
     public static void saveMeasurements(String type, String demoNo, String providerNo, String dataField, Date dateObserved) throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+type+"' LIMIT 1";
@@ -73,6 +89,25 @@ public class ImportExportMeasurements {
 	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered) VALUES (" +
 		    demoNo + ",'" + type.toUpperCase() + "','" + providerNo + "','" + dataField + "','" + measuringInstruction + "','" + dateObserved + "','" + new Date() + "')";
 	db.RunSQL(sql);
+    }
+    
+    private static List getMeasurementsExt(Long measurementId) throws SQLException {
+	List extsList = new ArrayList();
+	if (measurementId!=null) {
+	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId;
+	    ResultSet rs = db.GetSQL(sql);
+
+	    while (rs.next()) {
+		MeasurementsExt exts = new MeasurementsExt(measurementId);
+		exts.setId(rs.getLong("id"));
+		exts.setMeasurementId(rs.getLong("measurement_id"));
+		exts.setKeyVal(rs.getString("keyval"));
+		exts.setVal(rs.getString("val"));
+		extsList.add(exts);
+	    }
+	}
+	return extsList;
     }
     
     private static boolean filled(String s) {
