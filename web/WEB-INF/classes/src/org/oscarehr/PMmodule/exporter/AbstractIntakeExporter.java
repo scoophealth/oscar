@@ -27,6 +27,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.w3c.dom.Document;
@@ -53,6 +54,8 @@ public abstract class AbstractIntakeExporter {
 	protected Intake intake;
 	protected List<DATISField> fields;
 	
+	private static final Logger log = Logger.getLogger(AbstractIntakeExporter.class);
+	
 	public String export() throws ExportException {
 		initExport();
 		
@@ -65,6 +68,8 @@ public abstract class AbstractIntakeExporter {
 		try {
 			fields = new ArrayList<DATISField>();
 			loadFields(fieldsFile);
+			
+			log.debug("Fields loaded from file " + fieldsFile);
 			
 			intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
 		} catch(Throwable t) {
@@ -92,7 +97,7 @@ public abstract class AbstractIntakeExporter {
 			field = new DATISField();
 			Node fieldNode = nodes.item(i);
 			if(fieldNode.getNodeName().equals(FIELD_FIELD)) {
-				field.setName(fieldNode.getAttributes().getNamedItem(FIELD_NAME).getNodeValue());
+				field.setName(fieldNode.getAttributes().getNamedItem(FIELD_NAME).getNodeValue().toUpperCase());
 				field.setType(fieldNode.getAttributes().getNamedItem(FIELD_TYPE).getNodeValue());
 				field.setColumnPosition(Integer.parseInt(fieldNode.getAttributes().getNamedItem(FIELD_COLPOS).getNodeValue()));
 				field.setMaxSize(Integer.parseInt(fieldNode.getAttributes().getNamedItem(FIELD_MAXSIZE).getNodeValue()));
@@ -107,7 +112,7 @@ public abstract class AbstractIntakeExporter {
 				}
 				
 				if(null != fieldNode.getAttributes().getNamedItem(FIELD_QUESTION)) {
-					field.setQuestion(fieldNode.getAttributes().getNamedItem(FIELD_QUESTION).getNodeValue());
+					field.setQuestion(fieldNode.getAttributes().getNamedItem(FIELD_QUESTION).getNodeValue().toUpperCase());
 				}
 				
 				fields.add(field);

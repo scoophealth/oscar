@@ -24,12 +24,15 @@ package org.oscarehr.PMmodule.exporter;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
 public class DATISNonClientService extends AbstractIntakeExporter {
 
 	private static final String FILE_PREFIX = "File6";
+	
+	private static final Logger log = Logger.getLogger(DATISNonClientService.class);
 	
 	public DATISNonClientService() {}
 	
@@ -60,7 +63,7 @@ public class DATISNonClientService extends AbstractIntakeExporter {
 			String lbl = null;
 			for(IntakeAnswer ans : answers) {
 				if(ans.getNode().getGrandParent().equals(file6Node)) {
-					lbl = ans.getNode().getParent().getLabelStr();
+					lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
 					if(lbl.startsWith(fieldName)) {
 						buf.append(fieldName + " = " + ans.getValue() + "\n");
 					}

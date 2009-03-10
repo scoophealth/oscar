@@ -24,64 +24,53 @@ package org.oscarehr.PMmodule.exporter;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class DATISProgramInformation extends AbstractIntakeExporter {
-	
-	private static final String FILE_PREFIX = "File4";
-	
-	private static final Logger log = Logger.getLogger(DATISProgramInformation.class);
+public class DATISGamingForm extends AbstractIntakeExporter {
 
-	public DATISProgramInformation() {}
+	private static final Logger log = Logger.getLogger(DATISGamingForm.class);
 	
-	public DATISProgramInformation(Integer clientId, Integer programId, Integer facilityId) {
+	private static final String FILE_PREFIX = "File5";
+	
+	public DATISGamingForm() {}
+	
+	public DATISGamingForm(Integer clientId, Integer programId, Integer facilityId) {
 		super.setClientId(clientId);
 		super.setProgramId(programId);
 		super.setFacilityId(facilityId);
 	}
-
+	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
 		StringBuilder buf = new StringBuilder();
 		
-		IntakeNode file4Node = null;
+		IntakeNode file5Node = null;
 		
 		for(IntakeNode inode : intakeNodes) {
-			if(inode.getLabelStr().startsWith(FILE_PREFIX)) {
-				file4Node = inode;
+			if(StringUtils.deleteWhitespace(inode.getLabelStr()).startsWith(FILE_PREFIX)) {
+				file5Node = inode;
 				break;
 			}
 		}
-
+		
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		
-		int counter = 0;
-		for(IntakeAnswer ans : answers) {
-			if(counter == fields.size()) {
-				break;
-			}
-			if(ans.getNode().getGrandParent().equals(file4Node)) {
-				final String lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
-				DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
-	
-					public boolean evaluate(Object arg0) {
-						DATISField field = (DATISField)arg0;
-						if(lbl.startsWith(field.getName())) {
-							return true;
-						}
-						return false;
+		for(DATISField field : fields) {
+			String fieldName = field.getName();
+			String fieldQuestion = field.getQuestion();
+			String lbl = null;
+			for(IntakeAnswer ans : answers) {
+				if(ans.getNode().getGrandParent().equals(file5Node)) {
+					lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
+					lbl = StringUtils.deleteWhitespace(lbl);
+					fieldQuestion = StringUtils.deleteWhitespace(fieldQuestion);
+					if(lbl.equals(fieldQuestion)) {
+						buf.append(fieldName + " = " + ans.getValue() + "\n");
 					}
-					
-				});
-				
-				if(found != null) {
-					buf.append(found.getName() + " = " + ans.getValue() + "\n");
-					counter++;
 				}
 			}
 		}

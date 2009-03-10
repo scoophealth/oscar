@@ -24,12 +24,15 @@ package org.oscarehr.PMmodule.exporter;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
 public class DATISListOfPrograms extends AbstractIntakeExporter {
 
 	private static final String FILE_PREFIX = "List of Programs";
+	
+	private static final Logger log = Logger.getLogger(DATISListOfPrograms.class);
 	
 	public DATISListOfPrograms() {
 	}
@@ -62,9 +65,9 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 			for(IntakeAnswer ans : answers) {
 				if(ans.getNode().getGrandParent().equals(lstOfProgNode) || ans.getNode().getParent().equals(lstOfProgNode)) {	
 					if(fieldName.equalsIgnoreCase("PSC_CODE") || fieldName.equalsIgnoreCase("PROGRAM_TYPE_ID")) {
-						lbl = ans.getNode().getParent().getLabelStr();
+						lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
 					} else {
-						lbl = ans.getNode().getLabelStr();
+						lbl = ans.getNode().getLabelStr().toUpperCase();
 					}
 					if(lbl.startsWith(fieldName)) {
 						buf.append(fieldName + " = " + ans.getValue() + "\n");

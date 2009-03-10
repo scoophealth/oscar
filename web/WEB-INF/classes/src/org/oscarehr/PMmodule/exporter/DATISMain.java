@@ -30,34 +30,37 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class DATISProgramInformation extends AbstractIntakeExporter {
-	
-	private static final String FILE_PREFIX = "File4";
-	
-	private static final Logger log = Logger.getLogger(DATISProgramInformation.class);
+public class DATISMain extends AbstractIntakeExporter {
 
-	public DATISProgramInformation() {}
+	private static final Logger log = Logger.getLogger(DATISMain.class);
 	
-	public DATISProgramInformation(Integer clientId, Integer programId, Integer facilityId) {
+	private static final String FILE_PREFIX_MAIN = "Main";
+	private static final String FILE_PREFIX_GAMBLING = "GAMBLING";
+	
+	public DATISMain() {}
+	
+	public DATISMain(Integer clientId, Integer programId, Integer facilityId) {
 		super.setClientId(clientId);
 		super.setProgramId(programId);
 		super.setFacilityId(facilityId);
 	}
-
+	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
 		StringBuilder buf = new StringBuilder();
 		
-		IntakeNode file4Node = null;
+		IntakeNode mainNode = null;
+		IntakeNode gamblingNode = null;
 		
 		for(IntakeNode inode : intakeNodes) {
-			if(inode.getLabelStr().startsWith(FILE_PREFIX)) {
-				file4Node = inode;
-				break;
+			if(inode.getLabelStr().startsWith(FILE_PREFIX_MAIN)) {
+				mainNode = inode;
+			} else if(inode.getLabelStr().startsWith(FILE_PREFIX_GAMBLING)) {
+				gamblingNode = inode;
 			}
 		}
-
+		
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		
 		int counter = 0;
@@ -65,7 +68,7 @@ public class DATISProgramInformation extends AbstractIntakeExporter {
 			if(counter == fields.size()) {
 				break;
 			}
-			if(ans.getNode().getGrandParent().equals(file4Node)) {
+			if(ans.getNode().getGrandParent().equals(mainNode) || ans.getNode().getGrandParent().equals(gamblingNode)) {
 				final String lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
 				DATISField found = (DATISField)CollectionUtils.find(fields, new Predicate() {
 	
@@ -85,7 +88,7 @@ public class DATISProgramInformation extends AbstractIntakeExporter {
 				}
 			}
 		}
-		
+
 		return buf.toString();
 	}
 
