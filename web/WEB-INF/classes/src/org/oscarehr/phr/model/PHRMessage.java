@@ -267,7 +267,17 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         HashMap m = new HashMap();
         String rawMessageId = msg.getId();
         if (rawMessageId != null){
-           String indexStr = rawMessageId.substring(rawMessageId.lastIndexOf("[")+1, rawMessageId.lastIndexOf("]"));
+           String indexStr =  null;
+           try {
+               if ((rawMessageId.indexOf("[") == -1 || rawMessageId.indexOf("]") == -1) && !rawMessageId.equals("")) {
+                   indexStr = rawMessageId;
+               } else {
+                   indexStr = rawMessageId.substring(rawMessageId.lastIndexOf("[")+1, rawMessageId.lastIndexOf("]"));
+               }
+           } catch (Exception e) {
+               log.error("ERROR: rawMessageId is formatted poorly: " + rawMessageId);
+               e.printStackTrace();
+           }
            m.put(this.MESSAGE_ID,indexStr);
            this.setExts(m);
         }
