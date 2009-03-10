@@ -587,37 +587,39 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
 	for (LabMeasurements labMea : labMeaList) {
 	    String data = labMea.getExtVal("identifier");
-	    String testLoinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
-	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(testLoinc);
+	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
+            if (Util.filled(loinc)) loinc = loinc.trim();
+            if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
+	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(loinc.trim());
 	    if (testName==null) continue;
 	    
 	    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
-	    labResults.setTestName(testName);
+	    labResults.setTestName(testName); //LOINC code
 	    labResults.setLabTestCode(data);
 	    
 	    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
             Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
             collDate.setDateTime(Util.calDate(dateTime));
             if (dateTime==null) {
-                errors.add("Error! No Collection Datetime for Test "+labResults.getTestName()+" for Patient "+demoNo);
+                errors.add("Error! No Collection Datetime for Test "+testName+" for Patient "+demoNo);
             }
             
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
 	    result.setValue(data);
 	    if (!Util.filled(data)) {
-		errors.add("Error! No Result Value for Test "+labResults.getTestName()+" for Patient "+demoNo);
+		errors.add("Error! No Result Value for Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    data = labMea.getExtVal("unit");
 	    result.setUnitOfMeasure(data);
 	    if (!Util.filled(data)) {
-		errors.add("Error! No Unit for Test "+labResults.getTestName()+" for Patient "+demoNo);
+		errors.add("Error! No Unit for Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setLaboratoryName(labMea.getExtVal("labname"));
 	    if (labResults.getLaboratoryName()==null) {
-		errors.add("Error! No Laboratory Name for Test "+labResults.getTestName()+" for Patient "+demoNo);
+		errors.add("Error! No Laboratory Name for Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
@@ -640,13 +642,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 labResults.setNotesFromLab(data);
             }
             
+            String range = labMea.getExtVal("range");
             String min = labMea.getExtVal("minimum");
             String max = labMea.getExtVal("maximum");
-            String range = labMea.getExtVal("range");
             LaboratoryResults.ReferenceRange refRange = LaboratoryResults.ReferenceRange.Factory.newInstance();
-            if (Util.filled(min)) refRange.setLowLimit(min);
-            if (Util.filled(max)) refRange.setHighLimit(min);
             if (Util.filled(range)) refRange.setReferenceRangeText(range);
+            else {
+                if (Util.filled(min)) refRange.setLowLimit(min);
+                if (Util.filled(max)) refRange.setHighLimit(min);
+            }
             if (refRange.getLowLimit()!=null || refRange.getHighLimit()!=null || refRange.getReferenceRangeText()!=null) {
                 labResults.setReferenceRange(refRange);
             }
@@ -660,8 +664,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (Util.filled(info)) labResults.setPhysiciansNotes(info);
 		    info = (String)labRoutingInfo.get("provider_no");
 		    if (Util.filled(info)) {
-			ProviderData pd = new ProviderData(info);
 			LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
+			ProviderData pd = new ProviderData(info);
 			reviewer.setOHIPPhysicianId(pd.getOhip_no());
 			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
 		    }

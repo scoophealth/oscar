@@ -93,6 +93,10 @@ import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.*;
 import oscar.oscarEncounter.oscarMeasurements.data.*;
+import oscar.oscarLab.FileUploadCheck;
+import oscar.oscarLab.Hl7TextMessage;
+import oscar.oscarLab.LabRequestReportLink;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
@@ -953,6 +957,95 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 	    if (exLaboratoryResults) {
 		// LABORATORY RESULTS
+                List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
+                for (LabMeasurements labMea : labMeaList) {
+                    LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
+                    labResults.setLabTestCode(labMea.getExtVal("identifier"));
+                    labResults.setTestName(labMea.getExtVal("name"));
+                    labResults.setTestNameReportedByLab(labMea.getExtVal("name"));
+                    
+                    labResults.setLaboratoryName(labMea.getExtVal("labname"));
+                    if (labResults.getLaboratoryName()==null) {
+                        err.add("Error! No Laboratory Name for Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                    }
+                    
+                    cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
+                    Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
+                    collDate.setDateTime(Util.calDate(dateTime));
+                    if (dateTime==null) {
+                        err.add("Error! No Collection Datetime for Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                    }
+                    
+                    labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
+                    data = Util.noNull(labMea.getExtVal("abnormal"));
+                    if (data=="A") labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
+                    if (data=="N") labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
+                    
+                    data = labMea.getMeasure().getDataField();
+                    if (Util.filled(data)) {
+                        LaboratoryResults.Result result = labResults.addNewResult();
+                        result.setValue(data);
+                        data = labMea.getExtVal("unit");
+                        if (Util.filled(data)) result.setUnitOfMeasure(data);
+                    }
+                    
+                    data = labMea.getExtVal("accession");
+                    if (Util.filled(data)) {
+                        labResults.setAccessionNumber(data);
+                    }
+                    
+                    data = labMea.getExtVal("comments");
+                    if (Util.filled(data)) {
+                        labResults.setNotesFromLab(data);
+                    }
+                    
+                    String range = labMea.getExtVal("range");
+                    String min = labMea.getExtVal("minimum");
+                    String max = labMea.getExtVal("maximum");
+                    LaboratoryResults.ReferenceRange refRange = LaboratoryResults.ReferenceRange.Factory.newInstance();
+                    if (Util.filled(range)) refRange.setReferenceRangeText(range);
+                    else {
+                        if (Util.filled(min)) refRange.setLowLimit(min);
+                        if (Util.filled(max)) refRange.setHighLimit(min);
+                    }
+                    if (refRange.getLowLimit()!=null || refRange.getHighLimit()!=null || refRange.getReferenceRangeText()!=null) {
+                        labResults.setReferenceRange(refRange);
+                    }
+
+                    String lab_no = labMea.getExtVal("lab_no");
+                    if (Util.filled(lab_no)) {
+                        Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);
+                        String info = (String)labRoutingInfo.get("status");
+                        if (Util.filled(info) && info.equals("A")) {
+                            info = (String)labRoutingInfo.get("comment");
+                            if (Util.filled(info)) labResults.setPhysiciansNotes(info);
+                            info = (String)labRoutingInfo.get("provider_no");
+                            if (Util.filled(info)) {
+                                LaboratoryResults.ResultReviewer reviewer = labResults.addNewResultReviewer();
+                                ProviderData pvd = new ProviderData(info);
+                                reviewer.setOHIPPhysicianId(pvd.getOhip_no());
+                                Util.writeNameSimple(reviewer.addNewName(), pvd.getFirst_name(), pvd.getLast_name());
+                            }
+                            Date timestamp = (Date)labRoutingInfo.get("timestamp");
+                            if (timestamp!=null) {
+                                labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(timestamp));
+                            }
+                        }
+
+                        Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
+                        Date reqDate = (Date)link.get("request_date");
+                        if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setDateTime(Util.calDate(reqDate));
+
+                        Long fuc_id = Hl7TextMessage.getFileUploadCheckId(Long.valueOf(lab_no));
+                        if (fuc_id!=null) {
+                            Date recDate = FileUploadCheck.getDatetime(fuc_id);
+                            if (recDate!=null) labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(recDate));
+                        }
+                    }
+                }
+            }
+
+/*
 		ArrayList labs = comLab.findValuesForDemographic(demoNo);
 		for (int l = 0 ; l < labs.size(); l++){
 		    Hashtable h = (Hashtable) labs.get(l);
@@ -1012,8 +1105,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    h = null;
 		}
 		labs = null;
-	    }
-		
+*/
+
 	    if (exAppointments) {
 		// APPOINTMENTS
 		HttpSession session = request.getSession();
