@@ -1878,6 +1878,9 @@
             <forward name="list" path="page.admin.user.unlocklist" />
         </action>
         
+        <action path="/saveWorkView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
+        </action> 
+        
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="8M"/>
     <message-resources parameter="oscarResources" />

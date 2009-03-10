@@ -209,6 +209,14 @@
 	<bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 	</bean>
+        
+        <bean name="/saveWorkView" class="org.oscarehr.provider.web.ProviderViewAction" singleton="false">
+                <property name="userViewDAO" ref="UserViewDAO" />
+        </bean>
+        
+    <bean name="/oscarBilling/batchBillingbyCode" class="oscar.oscarBilling.ca.on.pageUtil.BatchBillingbyCodeAction" singleton="false">
+        <property name="providerMgr" ref="providerManager"/>
+    </bean>
 
 	<!-- Indivo -->
 
