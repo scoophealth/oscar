@@ -70,6 +70,7 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 					fieldQuestion = StringUtils.deleteWhitespace(fieldQuestion);
 					if(lbl.equals(fieldQuestion)) {
 						buf.append(fieldName + " = " + ans.getValue() + "\n");
+						//writeData(buf, ans, field);
 					}
 				}
 			}

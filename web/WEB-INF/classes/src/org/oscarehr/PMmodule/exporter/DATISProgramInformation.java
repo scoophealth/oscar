@@ -81,6 +81,7 @@ public class DATISProgramInformation extends AbstractIntakeExporter {
 				
 				if(found != null) {
 					buf.append(found.getName() + " = " + ans.getValue() + "\n");
+					//writeData(buf, ans, found);
 					counter++;
 				}
 			}

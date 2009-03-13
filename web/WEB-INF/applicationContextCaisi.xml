@@ -144,9 +144,17 @@
 	<bean id="intakeExporterListOfPrograms" class="org.oscarehr.PMmodule.exporter.DATISListOfPrograms" parent="abstractIntakeExporter">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/listofprograms.xml"></property>
 	</bean>
+	<bean id="intakeExporterMain" class="org.oscarehr.PMmodule.exporter.DATISMain" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/main.xml"></property>
+	</bean>
 	<bean id="intakeExporterProgramInformation" class="org.oscarehr.PMmodule.exporter.DATISProgramInformation" parent="abstractIntakeExporter">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/programinformation.xml"></property>
 	</bean>
+	<bean id="intakeExporterGamblingForm" class="org.oscarehr.PMmodule.exporter.DATISGamingForm" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/gamblingform.xml"></property>
+	</bean>
+	<bean id="intakeExporterNonClientService" class="org.oscarehr.PMmodule.exporter.DATISNonClientService" parent="abstractIntakeExporter">
+		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/nonclientservice.xml"></property>
+	</bean>
 
 </beans>
-

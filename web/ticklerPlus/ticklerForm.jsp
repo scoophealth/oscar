@@ -69,7 +69,7 @@
 
 <%@ include file="/common/messages.jsp"%>
 
-<table width="60%" border="0" cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+<table width="90%" border="0" cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 	<html:form action="/Tickler" focus="tickler.demographic_no" onsubmit="return validateTicklerForm(this);">
 	
 		<input type="hidden" name="method" value="save" />

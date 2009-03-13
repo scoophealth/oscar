@@ -27,8 +27,10 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -158,6 +160,19 @@ public abstract class AbstractIntakeExporter {
 
 	public void setFieldsFile(String fieldsFile) {
 		this.fieldsFile = fieldsFile;
+	}
+
+	protected void writeData(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
+		if(found.getType().equals(DATISType.TEXT.getValue())) {
+			buf.append(StringUtils.rightPad(ans.getValue(), found.getMaxSize(), ' '));
+		} else if(found.getType().equals(DATISType.DATETIME.getValue())) {
+			// TODO date validation...
+			buf.append(StringUtils.rightPad(ans.getValue(), found.getMaxSize(), ' '));
+		} else if(found.getType().equals(DATISType.NUMBER.getValue()) || 
+				found.getType().equals(DATISType.INTEGER.getValue()) || 
+				found.getType().equals(DATISType.DOUBLE.getValue())) {
+			buf.append(StringUtils.leftPad(ans.getValue(), found.getMaxSize(), '0'));
+		}
 	}
 	
 }

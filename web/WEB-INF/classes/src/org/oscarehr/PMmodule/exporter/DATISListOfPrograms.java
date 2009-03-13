@@ -71,6 +71,7 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 					}
 					if(lbl.startsWith(fieldName)) {
 						buf.append(fieldName + " = " + ans.getValue() + "\n");
+						//writeData(buf, ans, field);
 					}
 				}
 			}

@@ -3,12 +3,12 @@
          default="dist">
   <property environment="env"/>
 
-  <property name="catalina" location="${env.CATALINA_HOME}" />
+  <property name="catalina" location="C:\Program Files\apache-tomcat-6.0.14\apache-tomcat-6.0.14" />
   <property file="tomcat.properties" />
   <property name="webapp.name" value="oscar"/>
   
   <path id="classpath.path">
-   <fileset dir="${catalina}/common/lib">
+   <fileset dir="${catalina}/lib">
     <include name="*.jar"/>
    </fileset>
    <pathelement location="${classes}"/>
@@ -398,7 +398,7 @@
 
  <taskdef file="tomcatTasks.properties">
     <classpath>
-       <pathelement path="${catalina}/server/lib/catalina-ant.jar"/>
+       <pathelement path="${catalina}/lib/catalina-ant.jar"/>
     </classpath>
  </taskdef>
                                                                                                
