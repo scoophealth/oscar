@@ -42,7 +42,7 @@
    if( frm == null ) {
         System.out.println("No form bean in request - Fetching from session");
         frm = (CaseManagementEntryFormBean)session.getAttribute(caseMgmtEntryFrm);
-        pageContext.setAttribute("caseManagementEntryForm", frm);
+        request.setAttribute("caseManagementEntryForm", frm);
    }
    
         
@@ -154,9 +154,7 @@ Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
 	style="margin: 0px; background-color: #CCCCFF; font-size: 8px; display: none;">
 <b>Reference Issues</b>
 <table id="setIssueList" style="font-size: 8px;">
-	<nested:iterate indexId="ind" id="issueCheckList"
-		property="issueCheckList" name="caseManagementEntryForm"
-		type="org.oscarehr.casemgmt.web.CheckBoxBean">
+	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 		<%
                                 String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
                                 winame = winame.replaceAll("\\s|\\/", "_");
