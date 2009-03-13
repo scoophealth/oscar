@@ -307,25 +307,48 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* set issue checked list */
         
         // get issues for current demographic, based on provider rights
-        //List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
-        List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(providerNo, demono, programId, currentFacilityId, facilityDao.find(currentFacilityId).isIntegratorEnabled(), true);
         
-        current = System.currentTimeMillis();
-        // set issue checked list 
-        CheckBoxBean[] checkedList = new CheckBoxBean[issues.size()];
-        log.debug("Set Checked Issues");
-        for (int i = 0; i < issues.size(); i++) {
-            checkedList[i] = new CheckBoxBean();
-            CaseManagementCommunityIssue iss = (CaseManagementCommunityIssue) issues.get(i);
-            checkedList[i].setCommunityIssue(iss);
-            // this might be a problem
-            if(!iss.isRemote())
-            {
-            	checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
+        
+        Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
+        
+        CheckBoxBean[] checkedList = null;
+        if(useNewCaseMgmt)
+        {
+        	List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), providerNo, programId,currentFacilityId);
+        	checkedList = new CheckBoxBean[issues.size()];
+        	// set issue checked list 
+            log.debug("Set Checked Issues " + String.valueOf(current-start));
+            for (int i = 0; i < issues.size(); i++) {
+                checkedList[i] = new CheckBoxBean();
+                CaseManagementIssue iss = (CaseManagementIssue) issues.get(i);
+                checkedList[i].setIssue(iss);
+                checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
+                current = System.currentTimeMillis();
+                log.debug("Set Checked Issues " + String.valueOf(current-start));
+                start = current;
+            }	
+        }
+        else // retrieve community issues for old CME UI
+        {
+        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(providerNo, demono, programId, currentFacilityId, facilityDao.find(currentFacilityId).isIntegratorEnabled(), true);
+        	checkedList = new CheckBoxBean[issues.size()];
+        	// set issue checked list 
+            log.debug("Set Checked Issues " + String.valueOf(current-start));
+            for (int i = 0; i < issues.size(); i++) {
+                checkedList[i] = new CheckBoxBean();
+                CaseManagementCommunityIssue iss = (CaseManagementCommunityIssue) issues.get(i);
+                checkedList[i].setCommunityIssue(iss);
+                // this might be a problem
+                if(!iss.isRemote())
+                {
+                	checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
+                }
             }
         }
+        current = System.currentTimeMillis();
+        
 
-        log.debug("Set Checked Issues " + String.valueOf(current-start));
+        
         start = current;
         
         Iterator itr = note.getIssues().iterator();
@@ -833,42 +856,67 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         // wherever this is populated, it's not here...
         Set noteSet = new HashSet();
         String ongoing = "";
-        for (int i = 0; i < checkedlist.length; i++) {
-        	if (!checkedlist[i].getCommunityIssue().isResolved()) 
-    		{
-        		ongoing = ongoing + checkedlist[i].getCommunityIssue().getIssue().getDescription() + "\n";
-    		}
-            String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
-            CaseManagementCommunityIssue iss = checkedlist[i].getCommunityIssue();
-            CaseManagementIssue cmi = new CaseManagementIssue();
-            BeanUtils.copyProperties(cmi,iss);
-            
-            if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
-                checkedlist[i].setChecked("on");                                
-                checkedlist[i].setUsed(true);
-                iss.setNotes(noteSet);                 
-                
-                // if we've checked a remote issue, save it locally first.
-                if(iss.isRemote())
-                {
-                	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
-                	new CommunityIssueManager().copyRemoteCommunityIssueToLocal(cmi);
-                	BeanUtils.copyProperties(iss, cmi);
+        Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
+        if(useNewCaseMgmt)
+        {
+        	for (int i = 0; i < checkedlist.length; i++) {
+                if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
+                String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
+                CaseManagementIssue iss = checkedlist[i].getIssue();
+                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
+                    checkedlist[i].setChecked("on");                                
+                    checkedlist[i].setUsed(true);
+                    iss.setNotes(noteSet);                 
+                    issueset.add(checkedlist[i].getIssue());
+                }
+                else {
+                    checkedlist[i].setChecked("off");
+                    checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo));
+                    checkedlist[i].setUsed(false);
                 }
                 
-                issueset.add(cmi);
+                issuelist.add(checkedlist[i].getIssue());
             }
-            else {
-                checkedlist[i].setChecked("off");
-                if(iss.isRemote()) { checkedlist[i].setUsed(false); }
-                else{ checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); }
-                // why is this here?
-                // checkedlist[i].setUsed(false);
-            }
-            // don't try to save a remote issue -- no id.  this should create a copy instead.
-            if(!iss.isRemote())
-            {
-            	issuelist.add(cmi);
+        }
+        else
+        {
+        	for (int i = 0; i < checkedlist.length; i++) {
+            	if (!checkedlist[i].getCommunityIssue().isResolved()) 
+        		{
+            		ongoing = ongoing + checkedlist[i].getCommunityIssue().getIssue().getDescription() + "\n";
+        		}
+                String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
+                CaseManagementCommunityIssue iss = checkedlist[i].getCommunityIssue();
+                CaseManagementIssue cmi = new CaseManagementIssue();
+                BeanUtils.copyProperties(cmi,iss);
+                
+                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
+                    checkedlist[i].setChecked("on");                                
+                    checkedlist[i].setUsed(true);
+                    iss.setNotes(noteSet);                 
+                    
+                    // if we've checked a remote issue, save it locally first.
+                    if(iss.isRemote())
+                    {
+                    	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
+                    	new CommunityIssueManager().copyRemoteCommunityIssueToLocal(cmi);
+                    	BeanUtils.copyProperties(iss, cmi);
+                    }
+                    
+                    issueset.add(cmi);
+                }
+                else {
+                    checkedlist[i].setChecked("off");
+                    if(iss.isRemote()) { checkedlist[i].setUsed(false); }
+                    else{ checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); }
+                    // why is this here?
+                    // checkedlist[i].setUsed(false);
+                }
+                // don't try to save a remote issue -- no id.  this should create a copy instead.
+                if(!iss.isRemote())
+                {
+                	issuelist.add(cmi);
+                }
             }
         }
 

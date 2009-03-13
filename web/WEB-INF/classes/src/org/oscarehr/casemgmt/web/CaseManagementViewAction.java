@@ -159,6 +159,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		long beginning = start;
 		long current = 0;
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
+		String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
+		
 		log.debug("Starting VIEW");
 		String tab = request.getParameter("tab");
 		if (tab == null) {
@@ -310,55 +312,39 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		current = System.currentTimeMillis();
 		log.debug("Prep work " + String.valueOf(current - start));
 		start = current;
-		if (tab.equals("Current Issues")) {
-			List<CaseManagementIssue> issues = null;
-			/*
-			if (!caseForm.getHideActiveIssue().equals("true")) {
-				log.debug("Get Issues");
-				issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
-				current = System.currentTimeMillis();
-				log.debug("Get Issues " + String.valueOf(current - start));
-				start = current;
-			}
-			else {
-				log.debug("Get Active Issues");
-				issues = caseManagementMgr.getActiveIssues(providerNo, this.getDemographicNo(request));
-				current = System.currentTimeMillis();
-				log.debug("Get Active Issues " + String.valueOf(current - start));
-				start = current;
-			}
-			
-			// remote issues
-			List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
-			// check facility integrator status
-			Facility currentFacility = facilityDao.find(currentFacilityId);
-			if(currentFacility.isIntegratorEnabled())
+		if (tab.equals("Current Issues")) 
+		{
+			List<CaseManagementIssue> issues = new ArrayList<CaseManagementIssue>();
+			List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
+			if(useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
 			{
-				// get remote issues
-				CaisiIntegratorManager ciMan = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-				remoteIssues = ciMan.getRemoteIssues(currentFacilityId, Integer.valueOf(demoNo));
+				if (!caseForm.getHideActiveIssue().equals("true")) {
+					log.debug("Get Issues");
+					issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Issues " + String.valueOf(current - start));
+					start = current;
+				}
+				else {
+					log.debug("Get Active Issues");
+					issues = caseManagementMgr.getActiveIssues(providerNo, this.getDemographicNo(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Active Issues " + String.valueOf(current - start));
+					start = current;
+				}
+				log.debug("Filter Issues");
+				issues = caseManagementMgr.filterIssues(issues, providerNo, programId, currentFacilityId);
+				current = System.currentTimeMillis();
+				log.debug("FILTER ISSUES " + String.valueOf(current - start));
+				start = current;
 			}
-			
-			// combine local and remote
-			log.debug("Combine local and remote");
-			List<CaseManagementCommunityIssue> communityIssues = caseManagementMgr.combineLocalAndRemoteIssues(issues, remoteIssues);
-			
-			current = System.currentTimeMillis();
-			log.debug("FILTER ISSUES " + String.valueOf(current - start));
-			start = current;
- 
-			log.debug("Filter Issues");
-			communityIssues = caseManagementMgr.filterCommunityIssues(communityIssues, providerNo, programId, currentFacilityId);
-			current = System.currentTimeMillis();
-			log.debug("FILTER ISSUES " + String.valueOf(current - start));
-			request.setAttribute("Issues", communityIssues);
-					
-			start = current;
-			*/
-			Facility currentFacility = facilityDao.find(currentFacilityId);
-			List<CaseManagementCommunityIssue> communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, currentFacilityId, currentFacility.isIntegratorEnabled(), Boolean.parseBoolean(caseForm.getHideActiveIssue()));
-			request.setAttribute("Issues", communityIssues);
-			
+			else // get community issues for old CME UI
+			{
+				Facility currentFacility = facilityDao.find(currentFacilityId);
+				communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, currentFacilityId, currentFacility.isIntegratorEnabled(), Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+				//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
+				request.setAttribute("Issues", communityIssues);
+			}
 			/* PROGRESS NOTES */
 			List<CaseManagementNote> notes = null;
 
@@ -372,38 +358,62 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
 			String[] checked_issues = request.getParameterValues("check_issue");
-			if (checked_issues != null && checked_issues[0].trim().length() > 0) { // something is checked
-				// need to apply a filter
-				log.debug("Get Notes with checked issues");
-				request.setAttribute("checked_issues", checked_issues);
-				// construct an array of checked issues by ID
-				String[] checked_issueIDs = new String[checked_issues.length];
-				for(int i=0;i<checked_issues.length;i++)
-				{
-					for(CaseManagementCommunityIssue issue: communityIssues)
+			if(useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
+			{
+				if (checked_issues != null && checked_issues[0].trim().length() > 0) {
+					// need to apply a filter
+					log.debug("Get Notes with checked issues");
+					request.setAttribute("checked_issues", checked_issues);
+					notes = caseManagementMgr.getNotes(demoNo, checked_issues);
+					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
+					start = current;
+				}
+				else {
+					log.debug("Get Notes");
+					notes = caseManagementMgr.getNotes(demoNo);
+					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Notes " + String.valueOf(current - start));
+					start = current;
+				}
+			}
+			else // get checked community issues for old CME UI
+			{
+				if (checked_issues != null && checked_issues[0].trim().length() > 0) { // something is checked
+					// need to apply a filter
+					log.debug("Get Notes with checked issues");
+					request.setAttribute("checked_issues", checked_issues);
+					// construct an array of checked issues by ID
+					String[] checked_issueIDs = new String[checked_issues.length];
+					for(int i=0;i<checked_issues.length;i++)
 					{
-						if(issue.getCheckboxID().equals(checked_issues[i]))
+						for(CaseManagementCommunityIssue issue: communityIssues)
 						{
-							checked_issueIDs[i] = Long.toString(issue.getIssue_id());
-							continue;
+							if(issue.getCheckboxID().equals(checked_issues[i]))
+							{
+								checked_issueIDs[i] = Long.toString(issue.getIssue_id());
+								continue;
+							}
 						}
 					}
+					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
+					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
+					start = current;
 				}
-				notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
-				notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
-				current = System.currentTimeMillis();
-				log.debug("Get Notes with checked issues " + String.valueOf(current - start));
-				start = current;
+				else { // nothing is checked
+					log.debug("Get Notes");
+					notes = caseManagementMgr.getNotes(demoNo);
+					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+					current = System.currentTimeMillis();
+					log.debug("Get Notes " + String.valueOf(current - start));
+					start = current;
+				}
 			}
-			else { // nothing is checked
-				log.debug("Get Notes");
-				notes = caseManagementMgr.getNotes(demoNo);
-				notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
-				current = System.currentTimeMillis();
-				log.debug("Get Notes " + String.valueOf(current - start));
-				start = current;
-			}
-
+		
 			log.debug("FETCHED " + notes.size() + " NOTES");
 
 			// copy cpp notes
@@ -558,7 +568,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		current = System.currentTimeMillis();
 		log.debug("VIEW Exiting " + String.valueOf(current - beginning));
 
-		String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
 		String printPreview = (String) request.getAttribute("patientCppPrintPreview");
 		if ("true".equals(printPreview)) {
 			request.setAttribute("patientCppPrintPreview", "false");
