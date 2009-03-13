@@ -107,12 +107,11 @@ MeasurementMapConfig mmc = new MeasurementMapConfig();
 		</td>
 	</tr>
 	<tr>
-		<td valign="middle">
+		<td valign="top">
 		<center>
 		<table width="80%">
 			<tr>
-				<td colspan="2" valign="bottom" class="Header">Map Unmapped
-				Identifier Codes</td>
+				<td colspan="2" valign="bottom" class="Header">Map Unmapped Identifier Codes</td>
 			</tr>
 			<tr>
 				<td class="Cell" width="20%">Select unmapped code:</td>
