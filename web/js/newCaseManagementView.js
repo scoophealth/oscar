@@ -1964,8 +1964,8 @@ function updateIssues(e) {
     else
         ajaxUpdateIssues(args[0], args[1]);
     
-    if( $F("asgnIssues") != "Assign Issues" ) {
-        $("asgnIssues").value="Assign Issues";
+    if( $F("asgnIssues") != "Assign" ) {
+        $("asgnIssues").value="Assign";
         Element.stopObserving('asgnIssues', 'click', changeIssueFunc);
         Element.observe('asgnIssues', 'click', addIssueFunc);
     }
