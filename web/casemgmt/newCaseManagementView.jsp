@@ -47,6 +47,7 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}"
 	scope="request" />
+        
 
 <%
     String demographicNo = request.getParameter("demographicNo");
@@ -79,10 +80,14 @@
     SimpleDateFormat jsfmt = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
     Date dToday = new Date();
     String strToday = jsfmt.format(dToday);
-    
+        
     String frmName = "caseManagementEntryForm" + demographicNo;
     CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);    
-    pageContext.setAttribute("caseManagementEntryForm", cform);
+    
+    if( request.getParameter("caseManagementEntryForm") == null ) {    
+        request.setAttribute("caseManagementEntryForm", cform);
+    }
+    
 %>
 <script type="text/javascript">  
     numNotes = <%=noteSize%>; //How many saved notes do we have?
@@ -493,6 +498,13 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	style="display:inline; margin-top:0; margin-bottom:0;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="includeIssue" value="off" />
+        <html:hidden property="appointmentNo"  value="<%=request.getParameter("appointmentNo")%>" />
+        <html:hidden property="appointmentDate"  value="<%=request.getParameter("appointmentDate")%>" />
+        <html:hidden property="start_time"  value="<%=request.getParameter("start_time")%>" />
+        <html:hidden property="billRegion" value="<%=((String )oscarVariables.getProperty("billregion","")).trim().toUpperCase()%>"/>
+        <html:hidden property="apptProvider" value="<%=request.getParameter("apptProvider")%>"/>
+        <html:hidden property="providerview" value="<%=request.getParameter("providerview")%>"/>
+        <input type="hidden" name="toBill" id="toBill" value="false">
 	<input type="hidden" name="deleteId" value="0">
 	<input type="hidden" name="lineId" value="0">
 	<input type="hidden" name="from" value="casemgmt">
@@ -516,6 +528,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<input type="hidden" name="printCPP" id="printCPP" value="false">
 	<input type="hidden" name="printRx" id="printRx" value="false">
 	<input type="hidden" name="encType" id="encType" value="">
+        
 	<div id="mainContent"
 		style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
 	<span id="issueList"
@@ -904,6 +917,10 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>"
 		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit', '');"
 		title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+        <input tabindex="13" type='image'
+		src="<c:out value="${ctx}/oscarEncounter/graphics/dollar-sign-icon.png"/>"
+		onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].toBill.value='true';Event.stop(event);return savePage('saveAndExit', '');"
+		title='<bean:message key="oscarEncounter.Index.btnBill"/>'>&nbsp;
 	<input tabindex="14" type='image'
 		src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>"
 		onclick="return toggleNotePasswd();"
@@ -922,7 +939,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		title='Display Issues'>&nbsp; <input tabindex="8" type="text"
 		id="issueAutocomplete" name="issueSearch" style="z-index: 2;"
 		onkeypress="return submitIssue(event);" size="25">&nbsp; <input
-		tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
+		tabindex="9" type="button" id="asgnIssues" value="Assign">
 	<span id="busy" style="display: none"><img
 		style="position: absolute;"
 		src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"
@@ -988,7 +1005,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
     var submitIssues = false;
    //AutoCompleter for Issues
     <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
-    var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});
+    var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 3, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});
 
     <%
     int MaxLen = 20;
