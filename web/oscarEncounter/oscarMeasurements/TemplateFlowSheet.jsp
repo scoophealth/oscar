@@ -3,7 +3,7 @@
 <%@page pageEncoding="UTF-8"%>
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetCustomizerDAO,org.oscarehr.common.model.FlowSheetCustomization"%>
 <%@page import="org.oscarehr.common.dao.FlowSheetDrugDAO,org.oscarehr.common.model.FlowSheetDrug"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -442,12 +442,43 @@ div.recommendations li{
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
     <% if (mFlowsheet.isMedical()) {%>
     <div class="leftBox">
-        <h3>&nbsp;Current Patient Dx List  <a class="DoNotPrint"  href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+        <h3>&nbsp;Current Patients Dx List  <a class="DoNotPrint"  href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
         <div class="wrapper" id="dxFullListing"  >
-            <jsp:include page="../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
-                <jsp:param name="demographicNo" value="<%=demographic_no%>"/>
-                <jsp:param name="maxlen" value="15"/>
-            </jsp:include>
+            <ul>
+            <%
+       
+                dxResearchBeanHandler dxResearchBeanHand = new dxResearchBeanHandler(demographic_no);
+                Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();
+   
+                int lim =15;
+                for ( int i = 0; i < patientDx.size(); i++){
+                    dxResearchBean code = (dxResearchBean)patientDx.get(i);  // code.getEnd_date() code.getStart_date()
+                    String desc = code.getDescription();
+                    desc = org.apache.commons.lang.StringUtils.abbreviate(desc,lim) ;
+                    HashMap dxMap = flowSheetDrugDAO.getFlowSheetDxMap( temp, demographic_no);
+                    
+                    String pDx = (String) dxMap.get(code.getType()+""+code.getDxSearchCode());
+      
+            %>
+            <li>
+                <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+                    <% if (pDx == null){ %>
+                     <a href="FlowSheetDrugAction.do?method=dxSave&flowsheet=<%=temp%>&demographic=<%=demographic_no%>&dxCode=<%=code.getDxSearchCode()%>&dxCodeType=<%=code.getType()%>">
+                    <%}else{%>
+                     <span title="<%=code.getDescription()%>"  style="background-color: yellow;">
+                    <%}%>
+                </oscar:oscarPropertiesCheck>    
+                - <%=desc%>
+                <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+                    <% if (pDx == null){ %>
+                     </a>
+                    <%}else{%>
+                     </span>
+                    <%}%>
+                </oscar:oscarPropertiesCheck>
+            </li>
+            <%  }%>
+            </ul>
         </div>
     </div>
 
