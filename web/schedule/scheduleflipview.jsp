@@ -157,6 +157,7 @@ function t(s1,s2,s3,s4,s5,s6) {
   int hour = 0, min = 0;
   
   //find the appts above the schedule
+  Integer numOfAppts;
   param[0]= curProvider_no;
   param[1]= startDate;
   param[2]= cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
@@ -164,6 +165,7 @@ function t(s1,s2,s3,s4,s5,s6) {
   while (rsdemo.next()) { 
   	starttime = Integer.parseInt(rsdemo.getString("start_time").substring(0,2) )*60 + Integer.parseInt(rsdemo.getString("start_time").substring(3,5) );
   	endtime = Integer.parseInt(rsdemo.getString("end_time").substring(0,2) )*60 + Integer.parseInt(rsdemo.getString("end_time").substring(3,5) );
+        
     for(int k=nStartTime*60; k<(nEndTime+1)*60; k+=nStep) {
 	    if(starttime>k) continue;
 	    else {
@@ -172,12 +174,23 @@ function t(s1,s2,s3,s4,s5,s6) {
 	        min = k%60;
           	hourmin = new StringBuffer(rsdemo.getString("appointment_date")+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
 		
-	        if(DateTimeCodeBean.get(hourmin.toString() ) == null) 
-            		DateTimeCodeBean.put(hourmin.toString(), "-");
-          	else if(DateTimeCodeBean.get(hourmin.toString() ).equals("-") ) 
-            		DateTimeCodeBean.put(hourmin.toString(), "||");
-          	else
-            		DateTimeCodeBean.put(hourmin.toString(), "|||");
+	        if(DateTimeCodeBean.get(hourmin.toString() ) == null) {
+            		//DateTimeCodeBean.put(hourmin.toString(), "-");
+                        DateTimeCodeBean.put(hourmin.toString(), 1);
+                }
+                else {
+                    numOfAppts = (Integer)DateTimeCodeBean.get(hourmin.toString());
+                    ++numOfAppts;
+                    DateTimeCodeBean.put(hourmin.toString(),numOfAppts);
+                }
+/*          	else if(DateTimeCodeBean.get(hourmin.toString() ).equals("1") ) {
+            		//DateTimeCodeBean.put(hourmin.toString(), "||");
+                        DateTimeCodeBean.put(hourmin.toString(), "2");
+                }
+          	else {
+            		DateTimeCodeBean.put(hourmin.toString(), "3");
+                }*/
+                 
           		//System.out.println(hourmin.toString()+"*wwwwwww*"+rsdemo.getString("appointment_date")+rsdemo.getString("start_time")+rsdemo.getString("end_time"));
 	        continue;
 		  } else break; //e<=k
@@ -200,11 +213,12 @@ function t(s1,s2,s3,s4,s5,s6) {
     //DateTimeCodeBean.put("description"+rsdemo.getString("code"), rsdemo.getString("description"));
     DateTimeCodeBean.put("duration"+rsdemo.getString("code"), rsdemo.getString("duration"));
     DateTimeCodeBean.put("color"+rsdemo.getString("code"), (rsdemo.getString("color")==null || rsdemo.getString("color").equals(""))?bgcolordef:rsdemo.getString("color") );
+    DateTimeCodeBean.put("bookinglimit" + rsdemo.getString("code"), rsdemo.getString("bookinglimit"));
   } 
   flipviewMainBean.closePstmtConn();
   DateTimeCodeBean.put("color-", "silver");
-  DateTimeCodeBean.put("color||", "gold");
-  DateTimeCodeBean.put("color|||", "red");
+  DateTimeCodeBean.put("color|", "gold");
+  DateTimeCodeBean.put("color||", "red");
 
   cal.add(cal.DATE, -31);
   StringBuffer temp = null;
@@ -228,8 +242,11 @@ function t(s1,s2,s3,s4,s5,s6) {
 		<td align="right" nowrap><a
 			href="<%=request.getParameter("originalpage")%>?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>&view=0&displaymode=day&dboperation=searchappointmentday"><%=outform.format(inform.parse(strTempDate) )%>&nbsp;</a></td>
 		<%
+  String bookinglimit;
+  String scheduleCode;
   //calculate the ratio by the length of timecode
   for(int j=0; j<colscode; j++) {
+        scheduleCode = "";
 	hour = (nStartTime*60 + j*nStep)/60;
 	min = j*nStep%60;
 	/* This appoint will finish one minute before the next appointment
@@ -241,21 +258,44 @@ function t(s1,s2,s3,s4,s5,s6) {
 	  int ratio = (hour*60+min)/nLen;
 	  //System.out.println((hour*60+min)+"  "+nLen +"  "+ratio);
 	  temp = new StringBuffer( ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).substring(ratio,ratio+1) ); //(nStartTime*60*ratio/nStep+j*ratio),(nStartTime*60*ratio/nStep+j*ratio)+1)
+          scheduleCode = temp.toString();          
 	} else temp = new StringBuffer("&nbsp;");
-    hourmin = new StringBuffer(strTempDate+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
+        
+        
+        bookinglimit = (String)DateTimeCodeBean.get("bookinglimit"+scheduleCode);
+        if( bookinglimit == null ) {
+            bookinglimit = "";
+        }
+        String strNumOfAppts = "";
+        int limitDelta = 0;
+        int limit = bookinglimit.length() > 0 ? Integer.parseInt(bookinglimit) : 1;
+        hourmin = new StringBuffer(strTempDate+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
 //System.out.println(hourmin.toString());
 	if(DateTimeCodeBean.get(hourmin.toString() ) != null) {
-	  String aTem = (String) DateTimeCodeBean.get(hourmin.toString()) ;
-  	temp = new StringBuffer( aTem );
+	  numOfAppts = (Integer) DateTimeCodeBean.get(hourmin.toString());
+          strNumOfAppts = String.valueOf(numOfAppts);
+          limitDelta = limit - numOfAppts;
+          if( limitDelta == 0 ) {
+            temp = new StringBuffer("-");
+          }
+          else if( limitDelta == -1 ) {
+            temp = new StringBuffer("|");
+          }
+          else if( limitDelta <= -2 ) {
+            temp = new StringBuffer("||");
+          }
+  	
 //	temp = new StringBuffer("-");
 //System.out.println("temp"+temp);
 	}
+        
+
 %>
 		<td
 			<%=DateTimeCodeBean.get("color"+temp.toString())!=null?("bgcolor="+DateTimeCodeBean.get("color"+temp.toString()) ):""%>
-			title="<%=hour+":"+(min<10?"0":"")+min%>"><a href=#
+                            title="<%=hour+":"+(min<10?"0":"")+min%>"><table style="display:inline; font-size:x-small;"><tr><td rowspan="2" style="vertical-align:middle;"><a href=#
 			onClick="t(<%=cal.get(Calendar.YEAR)%>,<%=cal.get(Calendar.MONTH)+1%>,<%=cal.get(Calendar.DATE)%>,'<%=(hour<10?"0":"")+hour+":"+(min<10?"0":"")+min %>','<%=appointmentTime.get(appointmentTime.HOUR_OF_DAY)%>:<%=appointmentTime.get(appointmentTime.MINUTE)%>','<%=DateTimeCodeBean.get("duration"+temp.toString())%>');return false;">
-		<%=temp.toString()%></a></td>
+                    <%=temp.toString()%></a></td><td title="<bean:message key="schedule.scheduleflipview.msgbookings"/>" style="vertical-align:top; font-size: x-small;"><%=strNumOfAppts%></td></tr><tr><td style="vertical-align:bottom; font-size: x-small;" title="<bean:message key="schedule.scheduleflipview.msgbookinglimit"/>"><%=bookinglimit%></td></tr></table></td>
 		<%
   }
 %>
