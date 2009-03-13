@@ -23,83 +23,109 @@
  */
 package oscar.oscarRx.pageUtil;
 
+import oscar.oscarRx.data.*;
 import java.io.IOException;
-
+import java.util.Locale;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.util.MessageResources;
 
-import oscar.oscarRx.data.RxDrugData;
-import oscar.oscarRx.data.RxPrescriptionData;
+
 
 public final class RxChooseDrugAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-		// Setup variables
-		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-		if (bean == null) {
-			response.sendRedirect("error.html");
-			return null;
-		}
+            System.out.println("RxChooseDrugAction Jackson");
+            // Extract attributes we will need
+            Locale locale = getLocale(request);
+            MessageResources messages = getResources(request);
 
-		try {
-			RxPrescriptionData rxData = new RxPrescriptionData();
-			RxDrugData drugData = new RxDrugData();
+            // Setup variables           
+            oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+            if(bean==null){
+                response.sendRedirect("error.html");
+                return null;
+            }
 
-			// create Prescription
-			RxPrescriptionData.Prescription rx = rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
+            try {
+                
+                RxPrescriptionData rxData = new RxPrescriptionData();
+                RxDrugData drugData = new RxDrugData();
 
-			String BN = request.getParameter("BN");
-			String drugId = request.getParameter("drugId");
+                // create Prescription
+                RxPrescriptionData.Prescription rx =
+                        rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo());
 
-			rx.setBrandName(BN);
-			try {
-				rx.setGCN_SEQNO(Integer.parseInt(drugId));
-				RxDrugData.DrugMonograph f = drugData.getDrug(drugId);
-				String genName = "";
-				genName = f.name;
-				rx.setAtcCode(f.atc);
-				rx.setBrandName(f.product);
+                String GN     = request.getParameter("GN");
+                String BN     = request.getParameter("BN");
+                String drugId = request.getParameter("drugId"); 
+                
+                System.out.println("drugID "+drugId);
+                System.out.println("BRAND = "+BN);
+                    rx.setBrandName(BN);
+                try{
+                    rx.setGCN_SEQNO(Integer.parseInt(drugId));
+                    RxDrugData.DrugMonograph f = drugData.getDrug(drugId);               
+                    String genName = "";
+                    genName = f.name;
+                    rx.setAtcCode(f.atc);
+                    rx.setBrandName(f.product);
+                    
+                    rx.setRegionalIdentifier(f.regionalIdentifier);
+               
+                    request.setAttribute("components", f.components);
+                    String dosage = "";	
+                    for (int c = 0; c < f.components.size();c++){
+                        RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c);                         
+                        if(c == (f.components.size()-1)){
+                           dosage += dc.strength+" "+dc.unit;
+                        }else{
+                           dosage += dc.strength+" "+dc.unit +" / ";
+                        }
+                    }          
+                    rx.setDosage(dosage);
+                    
+                    StringBuffer compString = null;
+                    if (f.components != null){
+                        compString = new StringBuffer();
+                        for (int c = 0; c < f.components.size();c++){
+                            RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c); 
+                            compString.append(dc.name+" "+dc.strength+ " "+dc.unit+" ");              
+                        }          
+                    }
+                    
+                    System.out.println("In here --=-=--=-_--=="+compString+"\n\n\n\n");
+                    if (compString != null){
+                        System.out.println("In here --=-=--=-_--=="+compString.toString());
+                       rx.setGenericName(compString.toString());
+                    }else{
+                       rx.setGenericName(genName);
+                    }
+                }catch(java.lang.NumberFormatException numEx){          // Custom                
+                    rx.setBrandName(null);
+                    rx.setCustomName("");
+                    rx.setGCN_SEQNO(0);
+                }
 
-				rx.setRegionalIdentifier(f.regionalIdentifier);
+                rx.setRxDate(oscar.oscarRx.util.RxUtil.Today());
+                rx.setEndDate(null);
+                rx.setTakeMin(1);
+                rx.setTakeMax(1);
+                rx.setFrequencyCode("OID");
+                rx.setDuration("30");
+                rx.setDurationUnit("D");
 
-				request.setAttribute("components", f.components);
-				String dosage = "";
-				for (int c = 0; c < f.components.size(); c++) {
-					RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c);
-					if (c == (f.components.size() - 1)) {
-						dosage += dc.strength + " " + dc.unit;
-					} else {
-						dosage += dc.strength + " " + dc.unit + " / ";
-					}
-				}
-				rx.setDosage(dosage);
-
-				rx.setGenericName(genName);
-			} catch (java.lang.NumberFormatException numEx) { // Custom
-				rx.setBrandName(null);
-				rx.setCustomName("");
-				rx.setGCN_SEQNO(0);
-			}
-
-			rx.setRxDate(oscar.oscarRx.util.RxUtil.Today());
-			rx.setEndDate(null);
-			rx.setTakeMin(1);
-			rx.setTakeMax(1);
-			rx.setFrequencyCode("OID");
-			rx.setDuration("30");
-			rx.setDurationUnit("D");
-
-			bean.setStashIndex(bean.addStashItem(rx));
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-		}
+                bean.setStashIndex(bean.addStashItem(rx));
+            }
+            catch (Exception e){
+                e.printStackTrace(System.out);
+            }
 
 		return (mapping.findForward("success"));
 	}
