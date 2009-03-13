@@ -6713,6 +6713,7 @@ CREATE TABLE scheduletemplatecode (
   duration char(3) default '',
   color varchar(10) default NULL,
   confirm char(3) NOT NULL default 'No',
+  bookinglimit int NOT NULL default 1,
   KEY code (code)
 ) ;
 
