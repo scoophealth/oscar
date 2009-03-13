@@ -14,6 +14,7 @@ import org.apache.struts.actions.DispatchAction;
 
 import org.oscarehr.common.dao.FlowSheetDrugDAO;
 import org.oscarehr.common.model.FlowSheetDrug;
+import org.oscarehr.common.model.FlowSheetDx;
 
 public class FlowSheetDrugAction extends DispatchAction {
 
@@ -58,4 +59,38 @@ public class FlowSheetDrugAction extends DispatchAction {
         //request.setAttribute("flowsheet", flowsheet);
         return af;
     }
+    
+    
+     public ActionForward dxSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String flowsheet = request.getParameter("flowsheet");
+        String demographicNo = request.getParameter("demographic");
+        String dxCode = request.getParameter("dxCode");
+        String dxType = request.getParameter("dxCodeType");
+
+        FlowSheetDx cust = new FlowSheetDx();
+        cust.setFlowsheet(flowsheet);
+        cust.setDxCode(dxCode);
+        cust.setDxCodeType(dxType);
+        cust.setProviderNo((String) request.getSession().getAttribute("user"));
+        cust.setDemographicNo(Integer.parseInt(demographicNo));
+        cust.setCreateDate(new Date());
+
+        log2.debug("SAVE " + cust);
+
+        flowSheetDrugDAO.save(cust);
+        
+        ActionForward ff = mapping.findForward("success");
+        //ff.setRedirect(true);
+        ActionForward af = new ActionForward(ff.getPath()+"?demographic_no="+demographicNo+"&template="+flowsheet, true);
+        
+
+
+
+        //request.setAttribute("demographic", demographicNo);
+        //request.setAttribute("flowsheet", flowsheet);
+        return af;
+    }
+    
+    
+    
 }
