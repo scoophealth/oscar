@@ -26,6 +26,31 @@
 <%
     String demographic_no = request.getParameter("demographic_no");
     String providerNo = (String) session.getAttribute("user");
+    
+    
+    int numElementsToShow = 4;
+    Date sdate = null;
+    Date edate = null;
+    if ( request.getParameter("numEle") != null ){
+        try{
+            numElementsToShow = Integer.parseInt(request.getParameter("numEle"));
+        }catch(Exception e){}
+    }
+    
+    if (request.getParameter("sdate") != null){
+        try{
+           sdate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("sdate"));
+        }catch(Exception e){sdate =null;}
+    }
+    
+    if(request.getParameter("edate") != null){
+        try{
+           edate = oscar.util.UtilDateUtilities.StringToDate(request.getParameter("edate"));
+        }catch(Exception e){edate = null;}
+    }
+    
+    
+    
 
     //PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
     //ArrayList prevList = pdc.getPreventions();
@@ -141,6 +166,54 @@
 .DoNotPrint {
 	display: none;
 }
+
+.noborder{
+    border: 0px solid #FFF;   
+}
+
+
+
+div.headPrevention {
+    position:relative;
+    margin-left:1px;
+    width:22em;
+    /*height:2.9em;*/
+}
+
+div.headPrevention a:active { color:black; }
+div.headPrevention a:hover { color:black; }
+div.headPrevention a:link { color:black; }
+div.headPrevention a:visited { color:black; }
+</style>
+<style type="text/css" media="screen">
+    .DoNotScreen{ display:none;}
+    
+    div.headPrevention {
+    position:relative;
+    float:left;
+    width:12em;
+    /*height:2.9em;*/
+}
+
+
+div.headPrevention a:active { color:blue; }
+div.headPrevention a:hover { color:blue; }
+div.headPrevention a:link { color:blue; }
+div.headPrevention a:visited { color:blue; }
+
+div.headPrevention p {
+    background: #ddddff;
+    font-family: verdana,tahoma,sans-serif;
+    margin:0;
+
+    padding: 4px 4px;
+    line-height: 1.2;
+/*text-align: justify;*/
+    height:2em;
+    font-family: sans-serif;
+}
+
+
 </style>
 
 <link rel="stylesheet" type="text/css" href="../../share/css/niftyCorners.css" />
@@ -161,6 +234,24 @@
         Rounded("div.leftBox","top","transparent","#CCCCFF","small border #ccccff");
         Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
 
+    }
+    
+    
+   function loadDifferentElements(){
+       console.log("hapy");
+        var numEle = $('numEle').value;
+        var sdate = $('flowsheetStartDate').value;
+        var edate = $('flowsheetEndDate').value;
+        if( !numEle.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle;
+            console.log("one");
+        }else if (!sdate.blank() && !edate.blank()){
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&sdate='+sdate+'&edate='+edate;
+            console.log("two");
+        }else{
+            window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';  
+        }
+        
     }
 </script>
 
@@ -215,7 +306,7 @@ div.leftBox li {
     white-space: nowrap;
 }
 
-
+<%--
 div.headPrevention {
     position:relative;
     float:left;
@@ -234,16 +325,16 @@ div.headPrevention p {
     height:2em;
     font-family: sans-serif;
 }
-
+--%>
 div.headPrevention a {
     text-decoration:none;
 }
-
+<%--
 div.headPrevention a:active { color:blue; }
 div.headPrevention a:hover { color:blue; }
 div.headPrevention a:link { color:blue; }
 div.headPrevention a:visited { color:blue; }
-
+--%>
 
 div.preventionProcedure{
     width:9em;
@@ -312,6 +403,7 @@ div.recommendations li{
                 <td >
                     <oscar:nameage demographicNo="<%=demographic_no%>"/>
                     <oscar:oscarPropertiesCheck property="SPEC3" value="yes"> 
+                    <span class="DoNotPrint">
                     <a href="adminFlowsheet/EditFlowsheet.jsp?flowsheet=<%=temp%>&demographic=<%=demographic_no%>" target="_new">Edit</a>
                     &nbsp;
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&show=lastOnly">Last Only</a>
@@ -321,13 +413,20 @@ div.recommendations li{
                     <a href="TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">All</a>
                     &nbsp;
                     <a href="TemplateFlowSheetPrint.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>">Custom Print</a>
+                    <br>
+                    #Of Elements <input type="text" size="3" id="numEle"/>
+                    
+                    Start Date <input type="text" size="10" id="flowsheetStartDate" />
+                    End Date <input type="text" size="10"id="flowsheetEndDate"/>
+                    <input type="button" value="go" onclick="javascript: loadDifferentElements()"/>
+                    </span>
                     </oscar:oscarPropertiesCheck>
                 </td>
                 <td  >&nbsp;
 
                 </td>
                 <td style="text-align:right">
-                    <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                    <a class="DoNotPrint" href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
                 </td>
             </tr>
         </table>
@@ -336,14 +435,14 @@ div.recommendations li{
 <tr>
 <td class="MainTableLeftColumn" valign="top">
     <% if (recList.size() > 0){ %>
-    <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
+    <a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
         ADD ALL
     </a>
     <%}%>
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
     <% if (mFlowsheet.isMedical()) {%>
     <div class="leftBox">
-        <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+        <h3>&nbsp;Current Patient Dx List  <a class="DoNotPrint"  href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
         <div class="wrapper" id="dxFullListing"  >
             <jsp:include page="../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
                 <jsp:param name="demographicNo" value="<%=demographic_no%>"/>
@@ -354,7 +453,7 @@ div.recommendations li{
 
     <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"  >
         <div class="leftBox">
-            <h3>&nbsp;Current Patient Rx List  <a href="#" onclick="Element.toggle('rxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+            <h3>&nbsp;Current Patient Rx List  <a class="DoNotPrint" href="#" onclick="Element.toggle('rxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
             <div class="wrapper" id="rxFullListing"  >
 
                 <%
@@ -470,17 +569,17 @@ div.recommendations li{
 <div class="preventionSection"  style="overflow: auto;<%=hidden%>" nowrap>
     <div class="headPrevention">
 
-        <p <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
+        <p class="noborder" <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
             <%if(h2.get("graphable") != null && ((String) h2.get("graphable")).equals("yes")){%>
             <%if (alist != null && alist.size() > 1) { %>
-               <img src="img/chart.gif" alt="Plot"  onclick="window.open('../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=<%=measure%>');"/>
+               <img class="DoNotPrint" src="img/chart.gif" alt="Plot"  onclick="window.open('../../oscarEncounter/GraphMeasurements.do?demographic_no=<%=demographic_no%>&type=<%=measure%>');"/>
             <%}else{%>
-               <img src="img/chart.gif" alt="Plot"/>
+               <img class="DoNotPrint" src="img/chart.gif" alt="Plot"/>
             <%}%>
            <%}%>
             <% System.out.println(h2.get("display_name")+ " "+ h2.get("value_name")); %>
-            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
-                <span  style="font-weight:bold;"><%=h2.get("display_name")%></span>
+            <a class="noborder" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                <span  class="noborder" style="font-weight:bold;"><%=h2.get("display_name")%></span>
             </a>
 
         </p>
@@ -503,12 +602,18 @@ div.recommendations li{
             }
             String hider = "";
             
-            int num =4;
+            int num =numElementsToShow;
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
-            
-            if ( k > num){
+            System.out.println("sdate "+sdate+" edate "+edate);
+            if(sdate != null && edate != null){
+                Date itDate = mdb.getDateObservedAsDate();
+                System.out.println("DEBUGDISPLAY"+measure+" "+sdate+" "+edate+" "+itDate);
+                if (itDate.before(sdate) || itDate.after(edate)){
+                        hider = "style=\"display:none\"";
+                }
+            }else if ( k > num){
                 hider = "style=\"display:none;\"";
             }
 
