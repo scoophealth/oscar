@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 
 public class BackupDownload extends GenericDownload {
 
-    private static final String ROLE_BACKUP_ADMIN = "admin";
+    private static final String ROLE_BACKUP_ADMIN = "_admin.backup";
 
     private static final String PROFESSINAL_ADMIN = "admin";
 
