@@ -107,14 +107,15 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
 		</td>
 	</tr>
 	<tr>
-		<td class=Title colspan="2">Mappings</td>
+		<td class=Title colspan="2">Mappings -- 
+                <a href=# onClick="popupOscarConS(300,1000,'viewMeasurementMap.jsp')" class="messengerButtons">View Mapping</a></td>
 	</tr>
 	<tr>
 		<td>
 		<table class=messButtonsA cellspacing=0 cellpadding=3>
 			<tr>
 				<td class="messengerButtonsA" width="200"><a href=#
-					onClick="popupOscarConS(300,1000,'AddMeasurementMap.do')"
+					onClick="popupOscarConS(700,1000,'AddMeasurementMap.do')"
 					class="messengerButtons">Add Measurement Mapping</a></td>
 			</tr>
 		</table>
