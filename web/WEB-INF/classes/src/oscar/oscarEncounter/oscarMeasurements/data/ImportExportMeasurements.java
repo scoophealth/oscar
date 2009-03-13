@@ -91,7 +91,39 @@ public class ImportExportMeasurements {
 	db.RunSQL(sql);
     }
     
-    private static List getMeasurementsExt(Long measurementId) throws SQLException {
+    public static void saveMeasurements(Measurements meas) throws SQLException {
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String sql=null, mi=meas.getMeasuringInstruction();
+        if (!filled(mi)) {
+            sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+meas.getType()+"' LIMIT 1";
+            ResultSet rs = db.GetSQL(sql);
+            mi = rs.next() ? rs.getString("measuringInstruction") : "";
+        }
+	sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered) VALUES (" +
+                meas.getDemographicNo()+",'"+meas.getType()+"','"+meas.getProviderNo()+"','"+meas.getDataField()+"','"+mi+"','"+
+                meas.getDateObserved()+"','"+meas.getDateEntered()+"')";
+	db.RunSQL(sql);
+        
+        sql = "SELECT max(id) FROM measurements WHERE " +
+                "demographicNo = " + meas.getDemographicNo() + " AND " +
+                "type = '" + meas.getType() + "' AND " +
+                "providerNo = '" + meas.getProviderNo() + "' AND " +
+                "dataField = '" + meas.getDataField() + "' AND " +
+                "measuringInstruction = '" + mi + "' AND " +
+                "dateObserved = '" + meas.getDateObserved() + "' AND " +
+                "dateEntered = '" +  meas.getDateEntered() + "'";
+        ResultSet rs = db.GetSQL(sql);
+        if (rs.next()) meas.setId(rs.getLong("id"));
+    }
+    
+    public static void saveMeasurementsExt(MeasurementsExt mExt) throws SQLException {
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String sql = "INSERT INTO measurementsExt (measurement_id,keyval,val) VALUES (" +
+                mExt.getMeasurementId() + ",'" + mExt.getKeyVal() + "','" + mExt.getVal() + "')";
+        db.RunSQL(sql);
+    }
+    
+    public static List getMeasurementsExt(Long measurementId) throws SQLException {
 	List extsList = new ArrayList();
 	if (measurementId!=null) {
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
