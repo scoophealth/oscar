@@ -78,7 +78,9 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 <%
     if(session.getAttribute("user") == null )
         response.sendRedirect("../logout.jsp");
+        
 
+        
 	String curUser_no = (String) session.getAttribute("user");
 	oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
     response.addCookie(cs.GiveMeACookie(oscar.oscarSecurity.CookieSecurity.providerCookie));
@@ -207,9 +209,59 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="../phr/phr.js"></script>
 <script language="JavaScript">
+    
+    
+function showPersonal()  {
+    var url = "<%=request.getContextPath()%>/Provider/showPersonal.do";
 
-
-
+    toggleReason();
+    new Ajax.Request(
+        url,
+        { method: 'post',
+          postBody: "method=toggle"
+        }
+    );
+    
+    return false;
+}
+    
+function getElementsByClass(searchClass,node,tag) {
+	var classElements = new Array();
+	if ( node == null )
+		node = document;
+	if ( tag == null )
+		tag = '*';
+	var els = document.getElementsByTagName(tag);
+	var elsLen = els.length;
+	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+	for (i = 0, j = 0; i < elsLen; i++) {
+		if ( pattern.test(els[i].className) ) {
+			classElements[j] = els[i];
+			j++;
+		}
+	}
+	return classElements;
+}
+<%
+    Boolean showPersonal = (Boolean)session.getAttribute("showPersonal");
+    if( showPersonal == null ) {
+        showPersonal = false;
+    }
+%>
+var display = <%=showPersonal%>;
+function toggleReason() {
+    var reasons = getElementsByClass("reason","span");
+    display = !display;
+    for( var idx = 0; idx < reasons.length; ++idx ) {        
+        
+        if( display ) {
+            reasons[idx].style.display = "inline";
+        }
+        else {
+            reasons[idx].style.display = "none";
+        }
+    }
+}
 
 function confirmPopupPage(height, width, queryString, doConfirm){
    if (doConfirm == "Yes"){
@@ -435,7 +487,11 @@ function phrAsyncGo2() {
         #navlist li:hover { color: #fff; background-color: #486ebd; }
         #navlist li a:hover { color: #fff; background-color: #486ebd; }
         
-        
+        .reason {
+            display: <%=showPersonal ? "inline" : "none"%>;
+            margin-left: 2px;
+            font-style: italic;
+        }
     </style>
 </head>
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
@@ -697,8 +753,9 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<a href='providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a>
 	<% } else { %>
 	<B><bean:message key="global.hello"/>
-	<% out.println( userfirstname+" "+userlastname); %>
-	</b></TD>
+            <% out.println( userfirstname+" "+userlastname); %><a style="vertical-align:super;" href="#" onclick="return showPersonal();" title="<bean:message key="provider.appointmentProviderAdminDay.expandreason"/>">*</a>
+	</b>
+        </TD>
 	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
 <!-- caisi infirmary view extension add ffffffffffff-->
@@ -878,6 +935,8 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 	 			
 	 			rst=apptMainBean.queryResultsCaisi(param, strsearchappointmentday);
    				rs = (ResultSet)rst[0];
+                                
+                                
 
 			    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
             hourCursor = ih/60;
@@ -947,7 +1006,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
                     dob = String.valueOf(intDob);
                     demBday = mob + "-" + dob;
 
-                    if (roster == null || !roster.equalsIgnoreCase("FS")) {
+                    if (roster == null || !(roster.equalsIgnoreCase("FS") || roster.equalsIgnoreCase("NR") || roster.equalsIgnoreCase("PL"))) {
                         roster = "";
                     }
                   }
@@ -1033,17 +1092,19 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <% if (ver!=null && ver!="" && "##".compareTo(ver.toString()) == 0){%><a href="#" title="<bean:message key="provider.appointmentProviderAdminDay.versionMsg"/> <%=UtilMisc.htmlEscape(ver)%>"> <font color="red">*</font><%}%>
 
 <% if (roster!="" && "FS".equalsIgnoreCase(roster)){%> <a href="#" title="<bean:message key="provider.appointmentProviderAdminDay.rosterMsg"/> <%=UtilMisc.htmlEscape(roster)%>"><font color="red">$</font><%}%>
+
+<% if ("NR".equalsIgnoreCase(roster) || "PL".equalsIgnoreCase(roster)){%> <a href="#" title="<bean:message key="provider.appointmentProviderAdminDay.rosterMsg"/> <%=UtilMisc.htmlEscape(roster)%>"><font color="red">#</font><%}%>
 <!-- /security:oscarSec -->
 <% } %>
 <!-- doctor code block -->
 
 <a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
-&nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
+   &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <!-- doctor code block -->
 <% if(bShowEncounterLink) { %>
-<% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+apptMainBean.getString(rs,"appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status;%>
+<% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+apptMainBean.getString(rs,"appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status+ "&providerview=" + curProvider_no[nProvider] + "&user_no=" + curUser_no + "&apptProvider=" + curProvider_no[nProvider];%>
 <a href=# onClick="popupPage(710, 1024,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
@@ -1105,6 +1166,8 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
       	| <img src="../images/cake.gif" height="20"/>
 
       <%}%>
+      <!--Inline display of reason -->
+      <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"><span class="reason"><bean:message key="provider.appointmentProviderAdminDay.Reason"/>:<%=UtilMisc.htmlEscape(reason)%></span></oscar:oscarPropertiesCheck>
       <% } %>
 <% } %>
         		</font></td>
