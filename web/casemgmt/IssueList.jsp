@@ -33,6 +33,6 @@
 <ul>
 	<c:forEach var="issue" items="${issueList}">
 		<li id="<c:out value="${issue.id}"/>"><c:out
-			value="${issue.description}" /></li>
+			value="${issue.code} - ${issue.description}" /></li>
 	</c:forEach>
 </ul>
