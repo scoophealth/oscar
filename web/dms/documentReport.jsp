@@ -372,7 +372,7 @@ function popup1(height, width, url, windowName){
 					<td><input class="tightCheckbox" type="checkbox"
 						id="pdfCheck<%=i%>"
 						onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');" /></td>
-					<td width="40%"><b><a
+					<td width="30%"><b><a
 						href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgDocDesc" /></a></b></td>
 					<td width="8%"><b><a
@@ -381,15 +381,18 @@ function popup1(height, width, url, windowName){
 					<td width="8%"><b><a
 						href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
 						    Type</a></b></td>
-					<td width="13%"><b><a
+					<td width="12%"><b><a
 						href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgCreator" /></a></b></td>
+					<td width="12%"><b><a
+						href="?sort=responsible&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
+						Responsible</a></b></td>
 					<td width="10%"><a
 						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
 						title="Observation Date"><b>Date</b></a></td>
-					<td width="13%"><a
+					<td width="12%"><b><a
 						href="?sort=reviewer&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
-						    <b>Reviewer</b></td>
+						Reviewer</b></a></td>
 					<td width="8%">&nbsp;</td>
 				</tr>
 
@@ -429,6 +432,7 @@ function popup1(height, width, url, windowName){
 					<td><%=contentType%></td>
 					<td><%=curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>
+					<td><%=curdoc.getResponsibleName()%></td>
 					<td><%=curdoc.getObservationDate()%></td>
 					<td><%=reviewerName%></td>
 					<%-- <td><%=curdoc.getStatus() == 'D'? "Deleted" : "Active"%></td> --%>
@@ -458,7 +462,7 @@ function popup1(height, width, url, windowName){
 			    if (curdoc.getStatus() == 'H') { %>
 					<a href="#" onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
 		    <%	    } else { %> 
-					<a href="#" onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+					<a href="#" onclick="popup(350, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
 		    <%	    } %>
 					<img height="15px" width="15px"
 					     src="<c:out value="${ctx}/images/notepad.gif"/>"

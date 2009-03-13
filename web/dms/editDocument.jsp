@@ -36,7 +36,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="page" />
 <%@ page
-	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*"%>
+	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData"%>
 
 
 <%@page contentType="text/html"%>
@@ -79,6 +79,7 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setDocDesc(currentDoc.getDescription());
     formdata.setDocPublic((currentDoc.getDocPublic().equals("1"))?"checked":"");
     formdata.setDocCreator(currentDoc.getCreatorId());
+    formdata.setResponsibleId(currentDoc.getResponsibleId());
     formdata.setObservationDate(currentDoc.getObservationDate());
     formdata.setSource(currentDoc.getSource());
     formdata.setReviewerId(currentDoc.getReviewerId());
@@ -86,6 +87,8 @@ if (request.getAttribute("completedForm") != null) {
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
 }
+
+ArrayList<Hashtable> pdList = new ProviderData().getProviderList();
 ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 String annotation_tableid = editDocumentNo;
@@ -194,6 +197,20 @@ String annotation_tableid = editDocumentNo;
 		<tr>
 			<td>Added By:</td>
 			<td><%=EDocUtil.getModuleName("provider", formdata.getDocCreator())%></td>
+		</tr>
+		<tr>
+			<td>Responsible Provider:</td>
+			<td>
+			    <select name="responsibleId">
+				<option value="">---</option>
+		<% for (Hashtable pd : pdList) {
+			String selected = "";
+			if (formdata.getResponsibleId().equals((String)pd.get("providerNo"))) selected = "selected";
+			%>
+				<option value="<%=pd.get("providerNo")%>" <%=selected%>><%=pd.get("lastName")%>, <%=pd.get("firstName")%></option>
+		<% } %>
+			    </select>
+			</td>
 		</tr>
 		<tr>
 			<td>Date Added/Updated:</td>
