@@ -40,12 +40,13 @@
   {
 	  if (request.getParameter("dboperation").compareTo(" Save ")==0 )
 	  {
-	    String[] param1 = new String[5];
+	    String[] param1 = new String[6];
 	    param1[0] = request.getParameter("code");
 	    param1[1] = request.getParameter("description");
 	    param1[2] = request.getParameter("duration");
 	    param1[3] = request.getParameter("color");
 	    param1[4] = request.getParameter("confirm");
+            param1[5] = request.getParameter("bookinglimit");
 	    rowsAffected = scheduleMainBean.queryExecuteUpdate(request.getParameter("code"), "delete_scheduletemplatecode");
 	    rowsAffected = scheduleMainBean.queryExecuteUpdate(param1, "add_scheduletemplatecode");
 	  }
@@ -65,6 +66,19 @@
 <link rel="stylesheet" href="../web.css" />
 <script language="JavaScript">
 <!--
+
+function validateNum() {
+    var node = document.getElementById("bookinglimit");
+
+    if( isNaN(node.value) ) {
+        alert("<bean:message key="schedule.scheduletemplatecodesetting.msgCheckInput"/>");
+        node.focus();
+        return false;
+    }
+    
+    return true;
+}
+
 function setfocus() {
   this.focus();
   document.addtemplatecode.code.focus();
@@ -135,6 +149,7 @@ function checkInput() {
 			dataBean.setProperty("duration", rsdemo.getString("duration")==null?"":rsdemo.getString("duration") );
 			dataBean.setProperty("color", rsdemo.getString("color")==null?"":rsdemo.getString("color") );
 			dataBean.setProperty("confirm", rsdemo.getString("confirm")==null?"No":rsdemo.getString("confirm") );
+                        dataBean.setProperty("bookinglimit", rsdemo.getString("bookinglimit"));
 		}
 	}
 %>
@@ -176,8 +191,14 @@ function checkInput() {
 				<td><input type="radio" name="confirm" value="Yes"
 					<%=((bEdit && dataBean.getProperty("confirm").equals("Yes"))? "checked" : "")%>>Yes
 				<input type="radio" name="confirm" value="No"
-					<%=(bEdit? (dataBean.getProperty("confirm").equals("N")? "checked" : "") : "checked")%>>No
+					<%=(bEdit? (dataBean.getProperty("confirm").startsWith("N")? "checked" : "") : "checked")%>>No
 				</td>
+			</tr>
+                        <tr bgcolor='ivory'>
+				<td><font color="red"><bean:message
+					key="schedule.scheduletemplatecodesetting.formBookingLimit" />:</font></td>
+				<td><input type="text" id="bookinglimit" name="bookinglimit" size="10"
+					<%=bEdit?("value='"+dataBean.getProperty("bookinglimit")+"'"):"value='1'"%>></td>
 			</tr>
 		</table>
 		<table width="95%" border="0" cellspacing="0" cellpadding="2"
@@ -188,7 +209,7 @@ function checkInput() {
 					onclick="document.forms['addtemplatecode'].dboperation.value='Delete'; document.forms['addtemplatecode'].submit();"
 					value='<bean:message key="schedule.scheduletemplatecodesetting.btnDelete"/>'></td>
 				<td align="right"><input type="button"
-					onclick="document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();"
+					onclick="if( validateNum() ) { document.forms['addtemplatecode'].dboperation.value=' Save '; document.forms['addtemplatecode'].submit();}"
 					value='<bean:message key="schedule.scheduletemplatecodesetting.btnSave"/>'>
 				<input type="button" name="Button"
 					value='<bean:message key="global.btnExit"/>'
@@ -204,8 +225,11 @@ function checkInput() {
 			key="schedule.scheduletemplatecodesetting.msgDuration" /><br>
 		&nbsp; <bean:message
 			key="schedule.scheduletemplatecodesetting.msgColor" /><br>
+                &nbsp; <bean:message
+			key="schedule.scheduletemplatecodesetting.msgBookingLimit" /><br>        
 		&nbsp; <bean:message
-			key="schedule.scheduletemplatecodesetting.msgColorLinks" /></p>
+			key="schedule.scheduletemplatecodesetting.msgColorLinks" />              
+                    </p>
 		</td>
 	</tr>
 </table>
