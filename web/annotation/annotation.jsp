@@ -29,13 +29,13 @@
  */
  
 -->
-<%@page	import="org.springframework.web.context.WebApplicationContext"%>
-<%@page	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
-<%@page	import="org.oscarehr.casemgmt.model.CaseManagementNote"%>
-<%@page	import="org.oscarehr.casemgmt.model.CaseManagementNoteLink"%>
-<%@page	import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
-<%@page import="oscar.oscarEncounter.data.EctProgram"%>
-<%@page import="java.util.Date, java.util.List"%>
+<%@page	import="org.springframework.web.context.WebApplicationContext,
+		org.springframework.web.context.support.WebApplicationContextUtils,
+		org.oscarehr.casemgmt.model.CaseManagementNote,
+		org.oscarehr.casemgmt.model.CaseManagementNoteLink,
+		org.oscarehr.casemgmt.service.CaseManagementManager,
+		oscar.oscarEncounter.data.EctProgram,
+		java.util.Date, java.util.List"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -96,7 +96,7 @@
 		cmm.saveNoteLink(cml);
 	    }
 	}
-	response.sendRedirect("close.jsp");
+	response.sendRedirect("../close.html");
     }
 %>
 
