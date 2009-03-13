@@ -28,84 +28,127 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import oscar.oscarDB.DBHandler;
 
 public class LabResultImport {
    
-    public Long SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-	String sql = "INSERT INTO labTestResults (test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type) VALUES ('"
-		+ testName + "','" + abn + "','" + minimum + "','" + maximum + "','" + result + "','" + units + "','" + description + "','" + location + "','" + ppId + "','C')";
-	if (db.RunSQL(sql)) {
-	    sql = "SELECT MAX(id) FROM labTestResults WHERE " +
-		    "test_name='"		   + testName	 + "' AND " +
-		    "abn='"			   + abn	 + "' AND " +
-		    "minimum='"			   + minimum	 + "' AND " +
-		    "maximum='"			   + maximum	 + "' AND " +
-		    "result='"			   + result	 + "' AND " +
-		    "units='"			   + units	 + "' AND " +
-		    "description='"		   + description + "' AND " +
-		    "location_id='"		   + location	 + "' AND " +
-		    "labPatientPhysicianInfo_id='" + ppId	 + "' AND " +
-		    "line_type='C'";
-	    ResultSet rs = db.GetSQL(sql);
-	    db.CloseConn();
-	    if (rs.next()) return rs.getLong(1);
-	    else return null;
-	} else {
-	    return null;
-	}
-    }
-    
-    public void SaveLabDesc(String description, String ppId) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+    public static void SaveLabDesc(String description, String ppId) throws SQLException {
 	String sql = "INSERT INTO labTestResults (description,  labPatientPhysicianInfo_id, line_type) VALUES (? , ? , 'D')";
-        Connection c = db.GetConnection();
-        PreparedStatement ps = c.prepareStatement(sql);
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        Connection conn = db.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1,description);
         ps.setString(2,ppId);
         ps.executeUpdate();
-	db.CloseConn();
+	ps.close();
+	conn.close();
     }
     
-    public String saveLabPPInfo(String labReportInfo_id, String accession_num, String firstname, String lastname, String sex, String hin, String birthdate, String phone, String collDate) throws SQLException {
-	Long id = 1L;
+    public static String saveLabPatientPhysicianInfo(String labReportInfo_id, String accession_num, String collDate, String firstname, String lastname, String sex, String hin, String birthdate, String phone) throws SQLException {
+	String id = "";
+	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, lab_status)" +
+						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'N')";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, labReportInfo_id);
+	pstmt.setString(2, accession_num);
+	pstmt.setString(3, firstname);
+	pstmt.setString(4, lastname);
+	pstmt.setString(5, sex);
+	pstmt.setString(6, hin);
+	pstmt.setString(7, birthdate);
+	pstmt.setString(8, phone);
+	pstmt.setString(9, collDate);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) id = rs.getString(1);
+	pstmt.close();
+	conn.close();
 	
-	String sql = "insert into labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, lab_status, service_date, doc_num) values ('"
-		+labReportInfo_id+"','"+accession_num+"','"+firstname+"','"+lastname+"','"+sex+"','"+hin+"','"+birthdate+"','"+phone+"','"+collDate+"','N','','')";
-	db.RunSQL(sql);
-	sql = "select max(id) from labPatientPhysicianInfo";
-	ResultSet rs = db.GetSQL(sql);
+	return id;
+    }
+    
+    public static String saveLabReportInfo(String location_id) throws SQLException {
+	String id = "";
+	String sql = "INSERT INTO labReportInformation (location_id) VALUES (?)";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, location_id);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) id = rs.getString(1);
+	pstmt.close();
+	conn.close();
+	
+	return id;
+    }
+    
+    public static String saveLabTestResults(String title, String testName, String abn, String minimum, String maximum, String result, String units, String description, String location, String ppId, String linetype, String last) throws SQLException {
+	String id = "";
+	String sql = "INSERT INTO labTestResults (title, test_name, abn, minimum, maximum, result, units, description, location_id, labPatientPhysicianInfo_id, line_type, last)" +
+					" VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?)";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, title);
+	pstmt.setString(2, testName);
+	pstmt.setString(3, abn);
+	pstmt.setString(4, minimum);
+	pstmt.setString(5, maximum);
+	pstmt.setString(6, result);
+	pstmt.setString(7, units);
+	pstmt.setString(8, description);
+	pstmt.setString(9, location);
+	pstmt.setString(10, ppId);
+	pstmt.setString(11, linetype);
+	pstmt.setString(12, last);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) id = rs.getString(1);
+	pstmt.close();
+	conn.close();
+	
+	return id;
+    }
+    
+    public static Long savePatientLabRouting(String demo_no, String lab_no) throws SQLException {
+	Long id = null;
+	String sql = "INSERT INTO patientLabRouting (demographic_no, lab_no, lab_type) values (?, ?, 'CML')";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, demo_no);
+	pstmt.setString(2, lab_no);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getLong(1);
+	pstmt.close();
+	conn.close();
 	
-	rs.close();
-	db.CloseConn();
-	
-	return String.valueOf(id);
+	return id;
     }
     
-    public void savePatientLR(String demo_no, String lab_no) throws SQLException {
-	boolean b = false;
+    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, Date timestamp) throws SQLException {
+	Long id = null;
+	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "insert into patientLabRouting (demographic_no, lab_no, lab_type) values ('"+demo_no+"', '"+lab_no+"', 'CML')";
-	b = db.RunSQL(sql);
-	db.CloseConn();
-    }
-    
-    public String saveLabRI(String location_id, String print_date, String print_time) throws SQLException {
-	Long id = 1L;
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES ('"+location_id+"', '"+print_date+"', '"+print_time+"')";
-	db.RunSQL(sql);
-	sql = "SELECT MAX(id) FROM labReportInformation";
-	ResultSet rs = db.GetSQL(sql);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, provider_no);
+	pstmt.setString(2, lab_no);
+	pstmt.setString(3, status);
+	pstmt.setString(4, comment);
+	pstmt.setDate(5, (java.sql.Date)timestamp);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getLong(1);
+	pstmt.close();
+	conn.close();
 	
-	rs.close();
-	db.CloseConn();
-	
-	return String.valueOf(id);
+	return id;
     }
 }
