@@ -345,6 +345,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 }
             }
         }
+        /*CheckBoxBean[] checkedList = new CheckBoxBean[issues.size()];
+        log.debug("Set Checked Issues");
+        for (int i = 0; i < issues.size(); i++) {
+            checkedList[i] = new CheckBoxBean();
+            CaseManagementIssue iss = (CaseManagementIssue) issues.get(i);
+            checkedList[i].setIssue(iss);
+            checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
+            current = System.currentTimeMillis();
+            log.debug("Set Checked Issues " + String.valueOf(current-start));
+            start = current;
+        }*/
         current = System.currentTimeMillis();
         
 
@@ -356,6 +367,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             int id = ((CaseManagementIssue) itr.next()).getId().intValue();
             SetChecked(checkedList, id);
         }
+
+        log.debug("Set Checked Issues " + String.valueOf(current-start));
+        start = current;                
 
         cform.setIssueCheckList(checkedList);
 
@@ -1311,6 +1325,46 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             return forward;                
         }
         
+        String toBill = request.getParameter("toBill");
+        if( toBill != null && toBill.equalsIgnoreCase("true") ) {
+            String region = cform.getBillRegion();
+            String appointmentNo = cform.getAppointmentNo();
+            String name = this.getDemoName(demoNo);
+            String date = cform.getAppointmentDate();
+            String start_time = cform.getStart_time();
+            String apptProvider = cform.getApptProvider();
+            String providerview = cform.getProviderview();
+            String defaultView = oscar.OscarProperties.getInstance().getProperty("default_view","");
+            
+            Set setIssues = cform.getCaseNote().getIssues();
+            Iterator iter = setIssues.iterator();
+            StringBuffer dxCodes = new StringBuffer();
+            String strDxCode;
+            int dxNum = 0;
+            while( iter.hasNext() ) {
+                CaseManagementIssue cIssue = (CaseManagementIssue)iter.next();
+                dxCodes.append("&dxCode");
+                strDxCode = String.valueOf(cIssue.getIssue().getCode());
+                if( strDxCode.length() > 3 ) {
+                    strDxCode = strDxCode.substring(0,3);
+                }
+
+                if( dxNum > 0 ) {
+                    dxCodes.append(String.valueOf(dxNum));
+                }
+                
+                dxCodes.append("="+strDxCode);
+                ++dxNum;
+            }
+            
+            String url = "/billing.do?billRegion=" + region + "&billForm=" + defaultView + "&hotclick=&appointment_no=" + appointmentNo + "&demographic_name=" + java.net.URLEncoder.encode(name, "utf-8")  + "&amp;status=t&demographic_no=" + demoNo + "&providerview=" + providerview + "&user_no=" + providerNo + "&apptProvider_no=" + apptProvider + "&appointment_date=" + date + "&start_time=" + start_time + "&bNewForm=1" + dxCodes.toString();
+            System.out.println("BILLING URL " + url);
+            ActionForward forward = new ActionForward();
+            forward.setPath(url);
+            return forward;
+        }
+        
+        
         String chain = request.getParameter("chain");
        
         SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
@@ -1336,11 +1390,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
         
         CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-        String providerNo = getProviderNo(request);               
-        CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
-
+        String providerNo = getProviderNo(request);                       
+                        
+        String programNo = (String) request.getSession().getAttribute("case_program_id");
+        
+        String demo = cform.getDemographicNo();
+        
         try {            
-            this.caseManagementMgr.deleteTmpSave(providerNo, note.getDemographic_no(), note.getProgram_no());
+            System.out.println("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
+            this.caseManagementMgr.deleteTmpSave(providerNo, demo, programNo);
         }
         catch (Throwable e) {
             log.warn(e);
