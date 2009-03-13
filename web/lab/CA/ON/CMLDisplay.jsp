@@ -7,20 +7,23 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
 
-
+String segmentID = request.getParameter("segmentID");
 MDSSegmentData mDSSegmentData = new MDSSegmentData();
 
 CMLLabTest lab = new CMLLabTest();
-lab.populateLab(request.getParameter("segmentID"));
+lab.populateLab(segmentID);
+
+Long reqIDL = LabRequestReportLink.getIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
+String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 
 /*
 String ackStatus = request.getParameter("status");
 if ( request.getParameter("searchProviderNo") == null || request.getParameter("searchProviderNo").equals("") ) {
     ackStatus = "U";
 } */
-//mDSSegmentData.populateMDSSegmentData(request.getParameter("segmentID"));
+//mDSSegmentData.populateMDSSegmentData(segmentID);
 
-//PatientData.Patient pd = new PatientData().getPatient(request.getParameter("segmentID"));
+//PatientData.Patient pd = new PatientData().getPatient(segmentID);
 String AbnFlag = "";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -81,16 +84,21 @@ function popupStart(vheight,vwidth,varpage,windowname) {
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(varpage, windowname, windowprops);
 }
+
+function linkreq(rptId, reqId) {
+    var link = "../../LinkReq.jsp?table=labPatientPhysicianInfo&rptid="+rptId+"&reqid="+reqId;
+    window.open(link, "linkwin", "width=500, height=200");
+}
 </script>
 
 <body>
 <!-- form forwarding of the lab -->
 <form name="reassignForm" method="post" action="Forward.do"><input
 	type="hidden" name="flaggedLabs"
-	value="<%= request.getParameter("segmentID") %>" /> <input
+	value="<%= segmentID %>" /> <input
 	type="hidden" name="selectedProviders" value="" /> <input
 	type="hidden" name="labType" value="CML" /> <input type="hidden"
-	name="labType<%= request.getParameter("segmentID") %>CML"
+	name="labType<%= segmentID %>CML"
 	value="imNotNull" /> <input type="hidden" name="providerNo"
 	value="<%= request.getParameter("providerNo") %>" /></form>
 <form name="acknowledgeForm" method="post"
@@ -104,7 +112,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 			<tr>
 				<td align="left" class="MainTableTopRowRightColumn" width="100%">
 				<input type="hidden" name="segmentID"
-					value="<%= request.getParameter("segmentID") %>" /> <input
+					value="<%= segmentID %>" /> <input
 					type="hidden" name="providerNo"
 					value="<%= request.getParameter("providerNo") %>" /> <input
 					type="hidden" name="status" value="A" /> <input type="hidden"
@@ -127,8 +135,10 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 				<% } %> <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>
 				<input type="button"
 					value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> "
-					onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
-				<% } %> <span class="Field2"><i>Next Appointment: <oscar:nextAppt
+					onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
+				<% } %>
+				<input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
+				<span class="Field2"><i>Next Appointment: <oscar:nextAppt
 					demographicNo="<%=lab.getDemographicNo()%>" /></i></span></td>
 			</tr>
 		</table>
@@ -145,7 +155,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 				<td class="Cell" colspan="2" align="middle">
 				<div class="Field2">Version:&#160;&#160; <%
                                                 for (int i=0; i < multiID.length; i++){
-                                                    if (multiID[i].equals(request.getParameter("segmentID"))){
+                                                    if (multiID[i].equals(segmentID)){
                                                         %>v<%= i+1 %>&#160;<%
                                                     }else{
                                                         if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
@@ -197,7 +207,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 										<% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
 										<a href="javascript:window.close()"> <% } else { // we were called from lab module %>
 										<a
-											href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
+											href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
 										<% } %> <%=lab.pLastName%>, <%=lab.pFirstName%> </a></div>
 										</td>
 									</tr>
@@ -375,7 +385,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 				<%String[] multiID = lab.multiLabId.split(",");
                                     boolean startFlag = false; 
                                     for (int j=multiID.length-1; j >=0; j--){
-                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                        if (multiID[j].equals(segmentID))
                                             startFlag = true;                                                              
                                         if (startFlag){
                                             ArrayList statusArray = lab.getStatusArray(multiID[j]);
@@ -541,7 +551,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 				<% } %> <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>
 				<input type="button"
 					value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> "
-					onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
+					onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
 				<% } %>
 				</td>
 				<td width="50%" valign="center" align="left"><span

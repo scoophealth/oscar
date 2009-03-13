@@ -1,21 +1,28 @@
 <%@ page language="java" errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
-java.sql.*,
-oscar.oscarDB.*,
-oscar.oscarLab.ca.all.*,
-oscar.oscarLab.ca.all.util.*,
-oscar.oscarLab.ca.all.parsers.*,
-oscar.oscarMDS.data.ReportStatus,
-org.apache.commons.codec.binary.Base64" %>
+		 java.sql.*,
+		 oscar.oscarDB.*,
+		 oscar.oscarLab.ca.all.*,
+		 oscar.oscarLab.ca.all.util.*,
+		 oscar.oscarLab.ca.all.parsers.*,
+		 oscar.oscarLab.LabRequestReportLink,
+		 oscar.oscarMDS.data.ReportStatus,
+		 org.apache.commons.codec.binary.Base64" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%
 
+String segmentID = request.getParameter("segmentID");
+String providerNo = request.getParameter("providerNo");
+String searchProviderNo = request.getParameter("searchProviderNo");
 
-//String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+request.getParameter("segmentID")+"';";
-String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+request.getParameter("segmentID")+"';";
+Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
+String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
+
+//String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+segmentID+"';";
+String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+segmentID+"';";
 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 ResultSet rs = db.GetSQL(sql);
 String demographicID = "";
@@ -26,20 +33,20 @@ rs.close();
 
 boolean ackFlag = false;
 AcknowledgementData ackData = new AcknowledgementData();
-ArrayList ackList = ackData.getAcknowledgements(request.getParameter("segmentID"));
+ArrayList ackList = ackData.getAcknowledgements(segmentID);
 if (ackList != null){
     for (int i=0; i < ackList.size(); i++){
         ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-        if ( reportStatus.getProviderNo().equals(request.getParameter("providerNo")) && reportStatus.getStatus().equals("A") ){
+        if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
             ackFlag = true;
             break;
         }
     }
 }
 Factory f = new Factory();
-MessageHandler handler = f.getHandler(request.getParameter("segmentID"));
+MessageHandler handler = f.getHandler(segmentID);
 Hl7textResultsData data = new Hl7textResultsData();
-String multiLabId = data.getMatchingLabs(request.getParameter("segmentID"));
+String multiLabId = data.getMatchingLabs(segmentID);
 
 
 // check for errors printing
@@ -189,7 +196,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
             document.acknowledgeForm.action="PrintPDF.do";
             document.acknowledgeForm.submit();
         }
-
+	
+	function linkreq(rptId, reqId) {
+	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
+	    window.open(link, "linkwin", "width=500, height=200");
+	}
         </script>
         
     </head>    
@@ -197,11 +208,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
     <body>
         <!-- form forwarding of the lab -->
         <form name="reassignForm" method="post" action="Forward.do">
-            <input type="hidden" name="flaggedLabs" value="<%= request.getParameter("segmentID") %>" />
+            <input type="hidden" name="flaggedLabs" value="<%= segmentID %>" />
             <input type="hidden" name="selectedProviders" value="" />
             <input type="hidden" name="labType" value="HL7" />
-            <input type="hidden" name="labType<%= request.getParameter("segmentID") %>HL7" value="imNotNull" />
-            <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>" />
+            <input type="hidden" name="labType<%= segmentID %>HL7" value="imNotNull" />
+            <input type="hidden" name="providerNo" value="<%= providerNo %>" />
         </form>    
         <form name="acknowledgeForm" method="post" action="../../../oscarMDS/UpdateStatus.do">
             
@@ -211,9 +222,9 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         <table width="100%" border="0" cellspacing="0" cellpadding="3">
                             <tr>
                                 <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
-                                    <input type="hidden" name="segmentID" value="<%= request.getParameter("segmentID") %>"/>
+                                    <input type="hidden" name="segmentID" value="<%= segmentID %>"/>
                                     <input type="hidden" name="multiID" value="<%= multiLabId %>" />
-                                    <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>"/>
+                                    <input type="hidden" name="providerNo" value="<%= providerNo %>"/>
                                     <input type="hidden" name="status" value="A"/>
                                     <input type="hidden" name="comment" value=""/>
                                     <input type="hidden" name="labType" value="HL7"/>
@@ -225,11 +236,12 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
                                     <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
                                     <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
-                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= request.getParameter("segmentID")%>&demographic_no=<%=demographicID%>','tickler')"/>
+                                    <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId=<%= segmentID %>&demographic_no=<%=demographicID%>','tickler')"/>
                                     <% } %>
-                                    <% if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart%>                            
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <% if ( searchProviderNo != null ) { // null if we were called from e-chart%>                            
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
+				    <input type="button" value="Req# <%=reqID%>" title="Link to Requisition" onclick="linkreq('<%=segmentID%>','<%=reqID%>');" />
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
@@ -246,13 +258,13 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 Version:&#160;&#160;
                                                 <%
                                                 for (int i=0; i < multiID.length; i++){
-                                                    if (multiID[i].equals(request.getParameter("segmentID"))){
+                                                    if (multiID[i].equals(segmentID)){
                                                         %>v<%= i+1 %>&#160;<%
                                                     }else{
-                                                        if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
-                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        if ( searchProviderNo != null ) { // null if we were called from e-chart
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>&searchProviderNo=<%= searchProviderNo %>">v<%= i+1 %></a>&#160;<%
                                                         }else{
-                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>">v<%= i+1 %></a>&#160;<%
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%= providerNo %>">v<%= i+1 %></a>&#160;<%
                                                         }
                                                     }
                                                 }
@@ -293,10 +305,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     </td>
                                                                     <td nowrap>
                                                                         <div class="FieldData" nowrap="nowrap">
-                                                                            <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart%>
+                                                                            <% if ( searchProviderNo == null ) { // we were called from e-chart%>
                                                                             <a href="javascript:window.close()">
                                                                             <% } else { // we were called from lab module%>
-                                                                            <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                                                            <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                                                                 <% } %>
                                                                                 <%=handler.getPatientName()%>
                                                                             </a>
@@ -502,7 +514,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     boolean startFlag = false;
                                     for (int j=multiID.length-1; j >=0; j--){
                                         ackList = ackData.getAcknowledgements(multiID[j]);                                        
-                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                        if (multiID[j].equals(segmentID))
                                             startFlag = true;                                                              
                                         if (startFlag)
                                             if (ackList.size() > 0){{%>
@@ -674,14 +686,14 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
                                 <td align="left" width="50%">
-                                    <% if ( request.getParameter("providerNo") != null /*&& ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) */) { %>
+                                    <% if ( providerNo != null /*&& ! mDSSegmentData.getAcknowledgedStatus(providerNo) */) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
-                                    <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    <% if ( searchProviderNo != null ) { // we were called from e-chart %>                            
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
                                 </td>
                                 <td width="50%" valign="center" align="left">
