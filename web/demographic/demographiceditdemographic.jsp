@@ -91,9 +91,7 @@ You have no rights to access the data!
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);
-    int curDay = now.get(Calendar.DAY_OF_MONTH);
-    
-    ArrayList<String> patientSets = new DemographicSets().getDemographicSets();
+    int curDay = now.get(Calendar.DAY_OF_MONTH);        
 %>
 
 
@@ -811,6 +809,10 @@ div.demographicWrapper {
 					onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>','msg')">Send
 				a Message</a></td>
 			</tr>
+                        <tr>
+                            <td> <a href="#" onclick="popup(300,300,'demographicCohort.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>', 'cohort'); return false;">Add Patient Set</a>
+                            </td>
+                        </tr>
 			<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<phr:indivoRegistered provider="<%=curProvider_no%>"
 					demographic="<%=demographic_no%>">
@@ -2086,24 +2088,17 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									name="dboperation" value="update_record"> <%
                                   if (vLocale.getCountry().equals("BR")) { %>
 								<input type="hidden" name="dboperation2"
-									value="update_record_ptbr"> <%}%> <input type="button"
+									value="update_record_ptbr"> 
+                                                                        <%}%> 
+                                                                                                                                                
+                                                                        <input type="button"
 									name="Button" value="<bean:message key="global.btnBack" />"
 									onclick="history.go(-1);return false;"> <input
 									type="button" name="Button"
 									value="<bean:message key="global.btnCancel" />"
 									onclick=self.close();>
 								<br><input type="button" value="Export this Demographic"
-									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">
-								<br><input type="button" value="Add to Patient Set:"
-									onclick="addToPatientSet('<%=demographic$%>',patientSets.value);">
-								    <select name="patientSets">
-									<option value="-">---</option>
-							<% for (String setName : patientSets) { %>
-									<option value="<%=setName%>"><%=setName%></option>
-							<% } %>
-								    }
-								    </select>
-									
+									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">																	
 								</td>
 								<td width="30%" align='center' valign="top"><input
 									type="hidden" name="displaymode" value="Update Record">
