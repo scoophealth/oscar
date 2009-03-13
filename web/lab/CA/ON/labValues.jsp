@@ -244,7 +244,14 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 					value=" <bean:message key="global.btnClose"/> "
 					onClick="window.close()"> <input type="button"
 					value=" <bean:message key="global.btnPrint"/> "
-					onClick="window.print()"></td>
+					onClick="window.print()">
+                               <%-- <input type="button" value="Plot" 
+                                onclick="window.open('../../../oscarEncounter/GraphMeasurements.do?method=actualLab&demographic_no=<%=demographicNo%>&labType=<%=labType%>&identifier=<%=identifier%>&testName=<%=testName%>');"/>
+                                --%>        
+                               <input type="button" value="Plot" 
+                                onclick="window.location = 'labValuesGraph.jsp?demographic_no=<%=demographicNo%>&labType=<%=labType%>&identifier=<%=identifier%>&testName=<%=testName%>';"/>
+                
+                                </td>
 			</tr>
 		</table>
 		</td>
