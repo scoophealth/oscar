@@ -301,15 +301,18 @@ div.recommendations li{
             Element va = templateConfig.getExportFlowsheet(mFlowsheet);
            
             List<String> measurements = mFlowsheet.getMeasurementList();
-
+            
             System.out.println("SET HAS MEASUREMENTS" + measurements);
             int count = 0;
             if (measurements != null) {
-                for (String mstring : measurements) { count++;%>
+                for (String mstring : measurements) { 
+                    
+                    count++;%>
             <li>
-                <%=count%> : <%=mstring%>   <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>">edit</a>
-                                            <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>">delete</a>
-            
+                <%=count%> : <span title="<%=mstring%>"><%=mFlowsheet.getFlowSheetItem(mstring).getDisplayName()%></span>
+                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>">edit</a>
+                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%>">delete</a>
+                
             </li>
             <%
                 }
@@ -333,7 +336,7 @@ div.recommendations li{
                 
                 <select name="measurement">
                     <% for (EctMeasurementTypesBean measurementTypes : vec){ %>
-                    <option value="<%=measurementTypes.getType()%>" ><%=measurementTypes.getType()%></option>
+                    <option value="<%=measurementTypes.getType()%>" ><%=measurementTypes.getTypeDisplayName()%> (<%=measurementTypes.getType()%>) </option>
                     <% } %>
                 </select><br>
                 Display Name: <input type="text" name="display_name" /><br>
