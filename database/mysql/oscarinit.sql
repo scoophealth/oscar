@@ -542,6 +542,7 @@ CREATE TABLE document (
   docxml text,
   docfilename varchar(255) NOT NULL default '',
   doccreator varchar(30) NOT NULL default '',
+  responsible varchar(30) NOT NULL default '',
   source varchar(60) default NULL,
   program_id int,
   updatedatetime datetime default NULL,
