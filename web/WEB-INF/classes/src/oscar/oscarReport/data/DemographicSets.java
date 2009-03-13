@@ -145,6 +145,21 @@ public class DemographicSets {
       return retval;
    }
    
+   public ArrayList getDemographicSets(String demoNo) {
+       ArrayList retval = new ArrayList();
+       try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs = db.GetSQL("select distinct set_name from demographicSets where demographic_no = " + demoNo);
+         
+         while (rs.next()){
+            retval.add(db.getString(rs,"set_name"));            
+         }
+         rs.close();
+         db.CloseConn();
+      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
+      return retval;
+   }
+   
    
    public ArrayList getDemographicSets(){
       ArrayList retval = new ArrayList();
