@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 import oscar.oscarDB.DBHandler;
@@ -33,6 +35,113 @@ public class MeasurementMapConfig {
     public MeasurementMapConfig() {
     }
     
+
+    
+    public List<String> getLabTypes(){
+        List ret = new LinkedList();
+        String sql = "select distinct lab_type from measurementMap";
+        try{
+            DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+            Connection conn = db.GetConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            logger.info(sql);  
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                ret.add(db.getString(rs,"lab_type"));
+            }
+            pstmt.close();
+            db.CloseConn();
+        }catch(SQLException e){
+            logger.error("Exception in getLoincCodes", e);
+        }
+        return ret;
+
+    }
+    
+    public List<Hashtable> getMappedCodesFromLoincCodes(String loincCode){
+        List<Hashtable> ret = new LinkedList();
+        String sql = "select * from measurementMap where loinc_code = ?";
+        
+         try{
+            DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+            Connection conn = db.GetConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, loincCode);
+            logger.info(sql);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                Hashtable<String,String> ht = new Hashtable();
+                ht.put("id", getString(db.getString(rs,"id")));
+                ht.put("loinc_code", getString(db.getString(rs,"loinc_code")));
+                ht.put("ident_code", getString(db.getString(rs,"ident_code")));
+                ht.put("name", getString(db.getString(rs,"name")));
+                ht.put("lab_type", getString(db.getString(rs,"lab_type")));
+                ret.add(ht);
+            }
+            
+            pstmt.close();
+            db.CloseConn();
+        }catch(SQLException e){
+            logger.error("Exception in getMeasurementMap", e);
+        }
+        return ret;
+    }
+    
+    
+    public Hashtable<String,Hashtable> getMappedCodesFromLoincCodesHash(String loincCode){
+        Hashtable<String,Hashtable> ret = new Hashtable();
+        String sql = "select * from measurementMap where loinc_code = ?";
+        
+         try{
+            DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+            Connection conn = db.GetConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, loincCode);
+            logger.info(sql);
+            
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                Hashtable<String,String> ht = new Hashtable();
+                ht.put("id", getString(db.getString(rs,"id")));
+                ht.put("loinc_code", getString(db.getString(rs,"loinc_code")));
+                ht.put("ident_code", getString(db.getString(rs,"ident_code")));
+                ht.put("name", getString(db.getString(rs,"name")));
+                ht.put("lab_type", getString(db.getString(rs,"lab_type")));
+                ret.put(getString(db.getString(rs,"lab_type")),ht);
+            }
+            
+            pstmt.close();
+            db.CloseConn();
+        }catch(SQLException e){
+            logger.error("Exception in getMeasurementMap", e);
+        }
+        return ret;
+    }
+    
+    
+    public List<String> getDistinctLoincCodes(){
+        List ret = new LinkedList();
+        String sql = "SELECT DISTINCT loinc_code FROM measurementMap ORDER BY name";
+        
+        try{
+            DBHandler db =  new DBHandler(DBHandler.OSCAR_DATA);
+            Connection conn = db.GetConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            logger.info(sql);  
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                ret.add(db.getString(rs,"loinc_code"));
+            }
+            pstmt.close();
+            db.CloseConn();
+        }catch(SQLException e){
+            logger.error("Exception in getLoincCodes", e);
+        }
+        return ret;
+    }
+    
+
     public String getLoincCodeByIdentCode(String identifier) throws SQLException {
 	if (identifier!=null && identifier.trim().length()>0) {
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
