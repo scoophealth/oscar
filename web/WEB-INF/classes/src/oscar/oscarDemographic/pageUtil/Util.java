@@ -31,12 +31,13 @@ public class Util {
     }
     
     static String appendLine(String baseStr, String label, String addStr) {
-	if (Util.filled(baseStr)) {
-	    baseStr += Util.filled(addStr) ? "\n"+label+addStr : "";
+	String newStr = noNull(baseStr);
+	if (filled(newStr)) {
+	    newStr += filled(addStr) ? "\n"+noNull(label)+addStr : "";
 	} else {
-	    baseStr = Util.noNull(addStr);
+	    newStr += filled(addStr) ? noNull(label)+addStr : "";
 	}
-	return baseStr;
+	return newStr;
     }
     
     static public XmlCalendar calDate(Date inDate) {
@@ -71,6 +72,22 @@ public class Util {
     
     static public String noNull(String maybeNullText) {
 	return filled(maybeNullText) ? maybeNullText : "";
+    }
+    
+    static public cdsDt.HealthCardProvinceCode.Enum setProvinceCode(String provinceCode) {
+	provinceCode = setCountrySubDivCode(provinceCode);
+	if (provinceCode.equals("US")) return cdsDt.HealthCardProvinceCode.X_50; //Not available, temporarily
+	if (provinceCode.equals("non-Canada/US")) return cdsDt.HealthCardProvinceCode.X_90; //Not applicable
+	return cdsDt.HealthCardProvinceCode.Enum.forString(provinceCode);
+    }
+	
+    static public String setCountrySubDivCode(String countrySubDivCode) {
+	countrySubDivCode = countrySubDivCode.trim();
+	if (filled(countrySubDivCode)) {
+	    if (countrySubDivCode.equals("OT")) return "non-Canada/US";
+	    if (!countrySubDivCode.substring(0,2).equals("US")) countrySubDivCode = "CA-"+countrySubDivCode;
+	}
+	return "";
     }
     
     static public void writeNameSimple(cdsDt.PersonNameSimpleWithMiddleName personName, String firstName, String lastName) {

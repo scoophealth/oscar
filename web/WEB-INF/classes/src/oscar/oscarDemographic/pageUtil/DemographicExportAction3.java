@@ -93,14 +93,13 @@ import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.*;
 import oscar.oscarEncounter.oscarMeasurements.data.*;
-import oscar.oscarLab.FileUploadCheck;
-import oscar.oscarLab.Hl7TextMessage;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
@@ -140,15 +139,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     ArrayList list = new ArrayList();
     if (demoNo==null) {
-	Date asofDate = UtilDateUtilities.Today();
-	RptDemographicReportForm frm = new RptDemographicReportForm ();
-	frm.setSavedQuery(setName);
-	RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
-	frm = demoL.queryLoader(frm);
-	frm.addDemoIfNotPresent();
-	frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
-	RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-	list = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+	list = new DemographicSets().getDemographicSet(setName);
+	if (list.isEmpty()) {
+	    Date asofDate = UtilDateUtilities.Today();
+	    RptDemographicReportForm frm = new RptDemographicReportForm ();
+	    frm.setSavedQuery(setName);
+	    RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
+	    frm = demoL.queryLoader(frm);
+	    frm.addDemoIfNotPresent();
+	    frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
+	    RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+	    list = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+	}
     }else{
 	list.add(demoNo);
     }    
@@ -337,7 +339,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (Util.filled(demographic.getJustHIN())) {
 		    cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 		    healthCard.setNumber(demographic.getJustHIN());
-		    healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.CA_ON);
+		    healthCard.setProvinceCode(Util.setProvinceCode(demographic.getHCType()));
+		    if (healthCard.getProvinceCode()==null) {
+			err.add("Error! No Health Card Province Code for Patient "+demoNo);
+		    }
 		    if (Util.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
 		    if (Util.filled(demographic.getEffDate())) {
 			data = demographic.getEffDate();
@@ -353,10 +358,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    cdsDt.AddressStructured address = addr.addNewStructured();
 
 		    addr.setAddressType(cdsDt.AddressType.R);
-		    address.setLine1(demographic.getAddress());		
-		    if (Util.filled(demographic.getCity())) address.setCity(demographic.getCity());
-		    if (Util.filled(demographic.getProvince())) address.setCountrySubdivisionCode(demographic.getProvince());
-		    if (Util.filled(demographic.getPostal())) address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+		    address.setLine1(demographic.getAddress());
+		    if (Util.filled(demographic.getCity()) || Util.filled(demographic.getProvince()) || Util.filled(demographic.getPostal())) {
+			address.setCity(demographic.getCity());
+			address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getProvince()));
+			address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+		    }
 		}
 		if (Util.filled(demographic.getPhone())) {
 		    cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
@@ -691,7 +698,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			}
 			alerts = Util.appendLine(alerts, "----------------------------------------");
 		    }
-		    if (Util.filled(alerts)) demo.setPatientWarningFlags(alerts);
+		}
+		if (Util.filled(alerts)) {
+		    demo.setNoteAboutPatient(alerts);
+		    demo.setPatientWarningFlags("1");
 		}
 		
 	    if (exAllergiesAndAdverseReactions) {
@@ -962,18 +972,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
                     labResults.setLabTestCode(labMea.getExtVal("identifier"));
                     labResults.setTestName(labMea.getExtVal("name"));
-                    labResults.setTestNameReportedByLab(labMea.getExtVal("name"));
                     
                     labResults.setLaboratoryName(labMea.getExtVal("labname"));
                     if (labResults.getLaboratoryName()==null) {
-                        err.add("Error! No Laboratory Name for Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                        err.add("Error! No Laboratory Name for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
                     }
                     
                     cdsDt.DateFullOrPartial collDate = labResults.addNewCollectionDateTime();
                     Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
                     collDate.setDateTime(Util.calDate(dateTime));
                     if (dateTime==null) {
-                        err.add("Error! No Collection Datetime for Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
+                        err.add("Error! No Collection Datetime for Lab Test "+labResults.getLabTestCode()+" for Patient "+demoNo);
                     }
                     
                     labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
@@ -998,7 +1007,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (Util.filled(data)) {
                         labResults.setNotesFromLab(data);
                     }
-                    
                     String range = labMea.getExtVal("range");
                     String min = labMea.getExtVal("minimum");
                     String max = labMea.getExtVal("maximum");
@@ -1011,7 +1019,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     if (refRange.getLowLimit()!=null || refRange.getHighLimit()!=null || refRange.getReferenceRangeText()!=null) {
                         labResults.setReferenceRange(refRange);
                     }
-
+		    
+		    if (labMea.getMeasure().getDateEntered()!=null) {
+			labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(labMea.getMeasure().getDateEntered()));
+		    }
+		    
                     String lab_no = labMea.getExtVal("lab_no");
                     if (Util.filled(lab_no)) {
                         Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);
@@ -1035,12 +1047,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                         Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
                         Date reqDate = (Date)link.get("request_date");
                         if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setDateTime(Util.calDate(reqDate));
-
-                        Long fuc_id = Hl7TextMessage.getFileUploadCheckId(Long.valueOf(lab_no));
-                        if (fuc_id!=null) {
-                            Date recDate = FileUploadCheck.getDatetime(fuc_id);
-                            if (recDate!=null) labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(recDate));
-                        }
                     }
                 }
             }

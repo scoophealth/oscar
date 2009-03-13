@@ -77,6 +77,7 @@ import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
@@ -98,15 +99,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     ArrayList list = new ArrayList();
     if (demoNo==null) {
-	Date asofDate = UtilDateUtilities.Today();
-	RptDemographicReportForm frm = new RptDemographicReportForm ();
-	frm.setSavedQuery(setName);
-	RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
-	frm = demoL.queryLoader(frm);
-	frm.addDemoIfNotPresent();
-	frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
-	RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-	list = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+	list = new DemographicSets().getDemographicSet(setName);
+	if (list.isEmpty()) {
+	    Date asofDate = UtilDateUtilities.Today();
+	    RptDemographicReportForm frm = new RptDemographicReportForm ();
+	    frm.setSavedQuery(setName);
+	    RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
+	    frm = demoL.queryLoader(frm);
+	    frm.addDemoIfNotPresent();
+	    frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
+	    RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+	    list = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+	}
     }else{
 	list.add(demoNo);
     }    

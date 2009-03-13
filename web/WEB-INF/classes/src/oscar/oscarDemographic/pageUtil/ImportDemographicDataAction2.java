@@ -763,16 +763,15 @@ public class ImportDemographicDataAction2 extends Action {
 			errorImport = appendLine(errorImport, errorMsg);
 			errWarnings.add(errorMsg);
 		    }
-		    LabResultImport lri = new LabResultImport();
 		    String print_date = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(coll_date),"yyyyMMdd");
-		    String RIId = lri.saveLabRI(location, print_date, "00:00:00");
-		    ppId = lri.saveLabPPInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, patientPhone, coll_date);
-		    lri.SaveLabTR(testName, abn, minimum, maximum, result, unit, description, location, ppId);
+		    String RIId = LabResultImport.saveLabReportInfo(location);
+		    ppId = LabResultImport.saveLabPatientPhysicianInfo(RIId, accession_num, firstName, lastName, sex, hin, birthDate, patientPhone, coll_date);
+		    LabResultImport.saveLabTestResults(""/*title*/, testName, abn, minimum, maximum, result, unit, description, location, ppId, "C", "Y");
                     String labEverything = getLabDline(labResultArray[i]);
                     if (filled(labEverything)){
-                       lri.SaveLabDesc(labEverything,ppId);
+                       LabResultImport.SaveLabDesc(labEverything,ppId);
                     }
-		    lri.savePatientLR(demoNo, ppId);
+		    LabResultImport.savePatientLabRouting(demoNo, ppId);
 		}
 		
 		
@@ -905,7 +904,7 @@ public class ImportDemographicDataAction2 extends Action {
 				    provData.addProvider(docCreator, personName[0], personName[1], "");
 				}
 			    }
-			    EDocUtil.addDocument(demoNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator);
+			    EDocUtil.addDocument(demoNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator,""/*responsible*/);
 			}
 		    }
 		}

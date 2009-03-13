@@ -548,7 +548,7 @@ public class ProviderData {
     }
     
     public int addProvider(String providerNo, String firstName, String lastName, String ohipNo) throws SQLException {
-	String add_record_string = "insert into provider values (?,?,?,'doctor','','','','','','','',?,'','','','1','','','')";
+	String add_record_string = "insert into provider (provider_no,last_name,first_name,ohip_no,provider_type,status)values (?,?,?,?,'doctor','1')";
 	int key = 0;
 	
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

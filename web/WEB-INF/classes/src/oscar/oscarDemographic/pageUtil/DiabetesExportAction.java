@@ -51,15 +51,13 @@ import org.oscarehr.dx.model.DxResearch;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.oscarDemographic.data.*;
-import oscar.oscarDemographic.pageUtil.DemographicExportAction3;
 import oscar.oscarEncounter.oscarMeasurements.data.*;
-import oscar.oscarLab.FileUploadCheck;
-import oscar.oscarLab.Hl7TextMessage;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
@@ -91,7 +89,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     this.errors = new ArrayList();
     
     //Create Patient List from Patient Set
-    ArrayList patientList = new ArrayList();
+    ArrayList patientList = new DemographicSets().getDemographicSet(setName);
+    /*
     Date asofDate = UtilDateUtilities.Today();
     RptDemographicReportForm frm = new RptDemographicReportForm ();
     frm.setSavedQuery(setName);
@@ -101,6 +100,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     frm.setAsofDate(UtilDateUtilities.DateToString(asofDate));
     RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
     patientList = demoQ.buildQuery(frm,UtilDateUtilities.DateToString(asofDate));
+    */
     
     //Create export files
     String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
@@ -495,7 +495,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 	healthCard.setNumber(data);
 	if (!Util.filled(data)) errors.add("Error! No Health Card Number for Patient "+demoNo);
-	healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.CA_ON);
+	healthCard.setProvinceCode(Util.setProvinceCode(demographic.getProvince()));
+	if (healthCard.getProvinceCode()==null) {
+	    errors.add("Error! No Health Card Province Code for Patient "+demoNo);
+	}
 	if (Util.filled(demographic.getVersionCode())) healthCard.setVersion(demographic.getVersionCode());
 	data = demographic.getEffDate();
 	if (Util.calDate(UtilDateUtilities.StringToDate(data))!=null) {
@@ -511,10 +514,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             cdsDt.Address addr = demo.addNewAddress();		
             cdsDt.AddressStructured address = addr.addNewStructured();
             addr.setAddressType(cdsDt.AddressType.R);
-            address.setLine1(demographic.getAddress());		
-            if (Util.filled(demographic.getCity())) address.setCity(demographic.getCity());
-            if (Util.filled(demographic.getProvince())) address.setCountrySubdivisionCode(demographic.getProvince());
-            if (Util.filled(demographic.getPostal())) address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+            address.setLine1(demographic.getAddress());
+            if (Util.filled(demographic.getCity()) || Util.filled(demographic.getProvince()) || Util.filled(demographic.getPostal())) {
+		address.setCity(demographic.getCity());
+		address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getProvince()));
+		address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+	    }
         }
         
         data = demographic.getEmail();
@@ -601,25 +606,25 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             Date dateTime = UtilDateUtilities.StringToDate(labMea.getExtVal("datetime"),"yyyy-MM-dd HH:mm:ss");
             collDate.setDateTime(Util.calDate(dateTime));
             if (dateTime==null) {
-                errors.add("Error! No Collection Datetime for Test "+testName+" for Patient "+demoNo);
+                errors.add("Error! No Collection Datetime for Lab Test "+testName+" for Patient "+demoNo);
             }
             
 	    data = labMea.getMeasure().getDataField();
 	    LaboratoryResults.Result result = labResults.addNewResult();
 	    result.setValue(data);
 	    if (!Util.filled(data)) {
-		errors.add("Error! No Result Value for Test "+testName+" for Patient "+demoNo);
+		errors.add("Error! No Result Value for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    data = labMea.getExtVal("unit");
 	    result.setUnitOfMeasure(data);
 	    if (!Util.filled(data)) {
-		errors.add("Error! No Unit for Test "+testName+" for Patient "+demoNo);
+		errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setLaboratoryName(labMea.getExtVal("labname"));
 	    if (labResults.getLaboratoryName()==null) {
-		errors.add("Error! No Laboratory Name for Test "+testName+" for Patient "+demoNo);
+		errors.add("Error! No Laboratory Name for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
@@ -655,6 +660,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 labResults.setReferenceRange(refRange);
             }
 	    
+	    if (labMea.getMeasure().getDateEntered()!=null) {
+		labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(labMea.getMeasure().getDateEntered()));
+	    }
+	    
 	    String lab_no = labMea.getExtVal("lab_no");
 	    if (Util.filled(lab_no)) {
 		Hashtable labRoutingInfo = ProviderLabRouting.getInfo(lab_no);
@@ -678,12 +687,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		Hashtable link = LabRequestReportLink.getLinkByReport("hl7TextMessage", Long.valueOf(lab_no));
 		Date reqDate = (Date)link.get("request_date");
 		if (reqDate!=null) labResults.addNewLabRequisitionDateTime().setDateTime(Util.calDate(reqDate));
-		
-		Long fuc_id = Hl7TextMessage.getFileUploadCheckId(Long.valueOf(lab_no));
-		if (fuc_id!=null) {
-		    Date recDate = FileUploadCheck.getDatetime(fuc_id);
-		    if (recDate!=null) labResults.addNewDateTimeResultReceivedByCMS().setDateTime(Util.calDate(recDate));
-		}
 	    }
 	}
     }
@@ -796,7 +799,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    if (dx.getCode().equals("250")) { //diabetes diagnosis
 		
 		//Get diagnosis code
-		diagnosis.setValue("E10.9");  //Type 1 diabetes
+		diagnosis.setValue("E11.9");  //Type 2 diabetes
 		diagnosis.setCodingSystem("ICD10-CA");
 
 		//Get onset date
