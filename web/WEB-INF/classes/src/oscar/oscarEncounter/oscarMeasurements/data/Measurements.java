@@ -33,7 +33,7 @@ import java.util.Date;
 public class Measurements {
     private Long    id;
     private String  type;
-    private Long    demoraphicNo;
+    private Long    demographicNo;
     private String  providerNo;
     private String  dataField;
     private String  measuringInstruction;
@@ -43,7 +43,12 @@ public class Measurements {
     
     /** Creates a new instance of Measurements */
     public Measurements(Long demographicNo) {
-	this.setDemoraphicNo(demographicNo);
+	this.setDemographicNo(demographicNo);
+    }
+    
+    public Measurements(Long demographicNo, String providerNo) {
+        this.setDemographicNo(demographicNo);
+        this.setProviderNo(providerNo);
     }
     
     public Measurements() {}
@@ -64,11 +69,11 @@ public class Measurements {
 	this.type = type;
     }
     
-    public Long getDemoraphicNo() {
-	return this.demoraphicNo;
+    public Long getDemographicNo() {
+	return this.demographicNo;
     }
-    public void setDemoraphicNo(Long demographicNo) {
-	this.demoraphicNo = demographicNo;
+    public void setDemographicNo(Long demographicNo) {
+	this.demographicNo = demographicNo;
     }
     
     public String getProviderNo() {
