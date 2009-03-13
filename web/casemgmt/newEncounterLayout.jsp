@@ -369,9 +369,9 @@ function init() {
         <c:param name="providerNo" value="${providerNo}" />
         <c:param name="all" value="true" />
     </c:url>
-    var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 4, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
+    var issueAutoCompleterCPP = new Ajax.Autocompleter("issueAutocompleteCPP", "issueAutocompleteListCPP", "<c:out value="${issueURLCPP}" />", {minChars: 3, indicator: 'busy2', afterUpdateElement: addIssue2CPP, onShow: autoCompleteShowMenuCPP, onHide: autoCompleteHideMenuCPP});
     
-    strToday = $F("serverDate");
+    strToday = $F("serverDate");        
     
     <nested:notEmpty name="DateError">
         alert("<nested:write name="DateError"/>");
@@ -387,18 +387,19 @@ function init() {
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
-          
+                    
           <div id="leftNavBar" style="display:inline; float:left; width:20%;">
               <tiles:insert attribute="leftNavigation" />
           </div>  
           
           <div id="content" style="display:inline; float:left; width:60%; background-color:#CCCCFF;">
               <tiles:insert attribute="body" />
-          </div>
-          
+          </div>                   
+
           <div id="rightNavBar" style="display:inline; float:right; width:20%; margin-left:-3px;">
               <tiles:insert attribute="rightNavigation" />
-          </div>  
+          </div>            
+          
           
           <!-- hovering divs -->
           <div id="showEditNote" class="showEdContent">
