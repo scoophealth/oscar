@@ -28,6 +28,7 @@ package oscar.oscarEncounter.pageUtil;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +37,11 @@ import org.apache.struts.util.MessageResources;
 
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
+
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.UserProperty;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 
 /**
  *
@@ -62,7 +68,29 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
             theRequests.estConsultationVecByDemographic(bean.demographicNo);
-                    
+            
+            //determine cut off period for highlighting
+            UserPropertyDAO pref = (UserPropertyDAO) WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("UserPropertyDAO");     
+
+            UserProperty up = pref.getProp(bean.providerNo, UserProperty.CONSULTATION_TIME_PERIOD_WARNING);           
+            String timeperiod = null;           
+
+            if ( up != null && up.getValue() != null && !up.getValue().trim().equals("")){
+              timeperiod = up.getValue(); 
+            }
+
+            Calendar cal = Calendar.getInstance();
+            int countback = -1;
+            if (timeperiod != null){
+                   countback = Integer.parseInt(timeperiod);
+                   countback = countback * -1;
+                   cal.add(Calendar.MONTH,countback );
+
+            }
+            cal.add(Calendar.MONTH,countback );
+            Date cutoffDate = cal.getTime();
+            
+            String red = "FF0000";
             String dbFormat = "yyyy-MM-dd";
             String serviceDateStr;
             Date date;
@@ -74,6 +102,9 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                 try {
                     date = (Date)formatter.parse(dateStr);
                     serviceDateStr = DateUtils.getDate(date, dateFormat);
+                    if( date.before(cutoffDate) ) {
+                        item.setColour(red);
+                    }
                 }
                 catch(ParseException ex ) {
                     System.out.println("EctDisplayConsultationAction: Error creating date " + ex.getMessage());
