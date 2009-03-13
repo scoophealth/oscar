@@ -59,7 +59,8 @@ public class AddEditDocumentAction extends DispatchAction {
         FormFile docFile = fm.getFiledata();
         
          String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user"), fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
+	 String user = (String)request.getSession().getAttribute("user");
+            EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
             newDoc.setDocPublic("0");
             fileName = newDoc.getFileName();
             //save local file;
@@ -99,7 +100,8 @@ public class AddEditDocumentAction extends DispatchAction {
         Hashtable errors = new Hashtable();
         FormFile docFile = fm.getDocFile();
             String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc("", "", fileName, "", (String) request.getSession().getAttribute("user"), fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
+	    String user = (String)request.getSession().getAttribute("user");
+            EDoc newDoc = new EDoc("", "", fileName, "", user, user, fm.getSource(), 'A', oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd"), "", "", "demographic", "-1");
             newDoc.setDocPublic("0");
             fileName = newDoc.getFileName();
             //save local file;
@@ -165,7 +167,7 @@ public class AddEditDocumentAction extends DispatchAction {
             }
             FormFile docFile = fm.getDocFile();
             String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
             newDoc.setDocPublic(fm.getDocPublic());
             fileName = newDoc.getFileName();
             //save local file;
@@ -212,7 +214,7 @@ public class AddEditDocumentAction extends DispatchAction {
 		reviewerId = (String)request.getSession().getAttribute("user");
 		reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
 	    }
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             newDoc.setDocId(fm.getMode());
             newDoc.setDocPublic(fm.getDocPublic());
             fileName = newDoc.getFileName();

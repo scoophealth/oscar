@@ -57,6 +57,7 @@ public class EDocUtil extends SqlUtilBaseS {
     public static final String SORT_DESCRIPTION = "d.docdesc, d.updatedatetime DESC";
     public static final String SORT_DOCTYPE = "d.doctype, d.updatedatetime DESC";
     public static final String SORT_CREATOR = "d.doccreator, d.updatedatetime DESC";
+    public static final String SORT_RESPONSIBLE = "d.responsible, d.updatedatetime DESC";
     public static final String SORT_OBSERVATIONDATE = "d.observationdate DESC, d.updatedatetime DESC";
     public static final String SORT_CONTENTTYPE = "d.contenttype, d.updatedatetime DESC";
     public static final String SORT_REVIEWER = "d.reviewer, d.updatedatetime DESC";
@@ -119,14 +120,15 @@ public class EDocUtil extends SqlUtilBaseS {
     }
  
     public static String addDocumentSQL(EDoc newDocument) {
-        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[11];
+        String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?)";
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[12];
         int counter = 0;
         param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getHtml());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getFileName());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getCreatorId());
+	param[counter++] = new DBPreparedHandlerParam(newDocument.getResponsibleId());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getProgramId());
 
         java.sql.Timestamp od1 = new java.sql.Timestamp(newDocument.getDateTimeStampAsDate().getTime());
@@ -177,6 +179,7 @@ public class EDocUtil extends SqlUtilBaseS {
 		"docdesc='" + docDescription + "', " +
 		"source='" + newDocument.getSource() + "', " +
 		"public1='" + newDocument.getDocPublic() + "', " +
+		"responsible='" + newDocument.getResponsibleId() + "', " +
 		"docxml='" + html + "'";
 	if (doReview) {
 	    editDocSql += ", reviewer='" + newDocument.getReviewerId() + "', " +
@@ -223,10 +226,10 @@ public class EDocUtil extends SqlUtilBaseS {
      * Fetches all consult docs attached to specific consultation
      */
     public static ArrayList listDocs(String demoNo, String consultationId, boolean attached, Integer currentFacilityId) {
-        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
+        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
                 + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
 
-        String attachQuery = "SELECT d.document_no, d.doccreator, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, consultdocs cd " +
+        String attachQuery = "SELECT d.document_no, d.doccreator, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, consultdocs cd " +
 		"WHERE d.document_no = cd.document_no AND " + "cd.requestId = "+consultationId+" AND cd.doctype = 'D' AND cd.deleted IS NULL";
 
         ArrayList resultDocs = new ArrayList();
@@ -241,6 +244,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 currentdoc.setType(rsGetString(rs, "doctype"));
@@ -261,6 +265,7 @@ public class EDocUtil extends SqlUtilBaseS {
                     currentdoc.setFileName(rsGetString(rs, "docfilename"));
                     currentdoc.setContentType(rsGetString(rs, "contenttype"));
                     currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		    currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                     String temp = rsGetString(rs, "program_id");
                     if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                     currentdoc.setType(rsGetString(rs, "doctype"));
@@ -297,7 +302,7 @@ public class EDocUtil extends SqlUtilBaseS {
         // docType = null or = "all" to show all doctypes
         // select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
         // sql base (prefix) to avoid repetition in the if-statements
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime " +
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate, d.reviewer, d.reviewdatetime " +
 		"FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='" + module + "'";
         // if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
@@ -329,6 +334,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDescription(rsGetString(rs, "docdesc"));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
@@ -354,10 +360,10 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     
-    public ArrayList<EDoc> getUnmatchedDocuments(String creator,Date startDate, Date endDate,boolean unmatchedDemographics){
+    public ArrayList<EDoc> getUnmatchedDocuments(String creator, String responsible, Date startDate, Date endDate, boolean unmatchedDemographics){
        ArrayList<EDoc> list = new ArrayList(); 
        //boolean matchedDemographics = true;
-       String sql= "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and updatedatetime >= ?  and updatedatetime <= ?";
+       String sql= "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.responsible, d.program_id, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE c.document_no=d.document_no AND c.module='demographic' and doccreator = ? and responsible = ? and updatedatetime >= ?  and updatedatetime <= ?";
        if (unmatchedDemographics){
            sql += " and c.module_id = -1 ";
        }
@@ -372,8 +378,9 @@ public class EDocUtil extends SqlUtilBaseS {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
             ps.setString(1,creator);
-            ps.setDate(2,new java.sql.Date(startDate.getTime()));
-            ps.setDate(3,new java.sql.Date(endDate.getTime()));
+	    ps.setString(2,responsible);
+            ps.setDate(3,new java.sql.Date(startDate.getTime()));
+            ps.setDate(4,new java.sql.Date(endDate.getTime()));
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                System.out.println("DOCFILENAME "+rs.getString("docfilename"));
@@ -384,6 +391,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDescription(rsGetString(rs, "docdesc"));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
@@ -424,6 +432,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
                 String temp = rsGetString(rs, "program_id");
                 if (temp != null && temp.length()>0) currentdoc.setProgramId(Integer.valueOf(temp));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
@@ -478,6 +487,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDescription(rsGetString(rs, "docdesc"));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setResponsibleId(rsGetString(rs, "responsible"));
 		currentdoc.setSource(rsGetString(rs, "source"));
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
@@ -566,12 +576,12 @@ public class EDocUtil extends SqlUtilBaseS {
         return UtilDateUtilities.now();
     }
     
-    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
-	return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, null, null);
+    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible) throws SQLException {
+	return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, responsible, null, null);
     }
     
-    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String reviewer, String reviewDateTime) throws SQLException {
-        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime) values (?,?,?,?,?,'A',?,0,?,?,?)";
+    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
+        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime) values (?,?,?,?,?,?,'A',?,0,?,?,?)";
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
         int key = 0;
 
@@ -583,11 +593,12 @@ public class EDocUtil extends SqlUtilBaseS {
         add_record.setString(2, docDesc);
         add_record.setString(3, docFileName);
         add_record.setString(4, docCreator);
-        add_record.setString(5, updateDateTime);
-        add_record.setString(6, contentType);
-        add_record.setString(7, observationDate);
-	add_record.setString(8, reviewer);
-	add_record.setString(9, reviewDateTime);
+	add_record.setString(5, responsible);
+        add_record.setString(6, updateDateTime);
+        add_record.setString(7, contentType);
+        add_record.setString(8, observationDate);
+	add_record.setString(9, reviewer);
+	add_record.setString(10, reviewDateTime);
 
         add_record.executeUpdate();
         ResultSet rs = add_record.getGeneratedKeys();

@@ -37,6 +37,7 @@ public class EDoc extends TagObject implements Comparable {
     private String fileName = "";
     private String html = "";
     private String creatorId = "";
+    private String responsibleId = "";
     private String source = "";
     private Integer programId=-1;
     private char status;
@@ -54,12 +55,13 @@ public class EDoc extends TagObject implements Comparable {
     public EDoc() {
     }
     
-    public EDoc(String description, String type, String fileName, String html, String creatorId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId) {
+    public EDoc(String description, String type, String fileName, String html, String creatorId, String responsibleId, String source, char status, String observationDate, String reviewerId, String reviewDateTime, String module, String moduleId) {
         this.setDescription(description.trim());
         this.setType(type.trim());
         this.setFileName(fileName.trim());
         this.setHtml(html);
-        this.setCreatorId(creatorId.trim());
+        this.setCreatorId(creatorId);
+	this.setResponsibleId(responsibleId);
 	this.setSource(source);
         this.setStatus(status);
         this.setModule(module.trim());
@@ -193,6 +195,19 @@ public class EDoc extends TagObject implements Comparable {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getResponsibleId() {
+        return responsibleId;
+    }
+    
+    public String getResponsibleName() {
+        String responsibleName = EDocUtil.getModuleName("provider", responsibleId);
+        return responsibleName;
+    }
+
+    public void setResponsibleId(String responsibleId) {
+        this.responsibleId = responsibleId;
     }
 
     public String getSource() {
