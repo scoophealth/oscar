@@ -53,6 +53,12 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	private String caseNote_note;
 	private String caseNote_history;	
 	private String chain;
+        private String appointmentNo;
+        private String appointmentDate;
+        private String startTime;
+        private String billRegion;
+        private String apptProvider;
+        private String providerview;
 	
         private String observation_date;
 	
@@ -260,4 +266,51 @@ public class CaseManagementEntryFormBean extends ActionForm {
 		this.chain = chain;
 	}
 	
+        public String getAppointmentNo() {
+            return appointmentNo;
+        }
+        
+        public void setAppointmentNo(String appointmentNo) {
+            this.appointmentNo = appointmentNo;
+        }
+        
+        public String getAppointmentDate() {
+            return this.appointmentDate;
+        }
+        
+        public void setAppointmentDate(String appointmentDate) {
+            this.appointmentDate = appointmentDate;
+        }
+        
+        public String getStart_time() {
+            return this.startTime;
+        }
+        
+        public void setStart_time(String startTime) {
+            this.startTime = startTime;
+        }
+        
+        public String getBillRegion() {
+            return this.billRegion;
+        }
+        
+        public void setBillRegion(String billRegion) {
+            this.billRegion = billRegion;
+        }
+        
+        public String getApptProvider() {
+            return this.apptProvider;
+        }
+        
+        public void setApptProvider(String apptProvider) {
+            this.apptProvider = apptProvider;
+        }
+        
+        public String getProviderview() {
+            return this.providerview;
+        }
+        
+        public void setProviderview(String providerview) {
+            this.providerview = providerview;
+        }
 }
