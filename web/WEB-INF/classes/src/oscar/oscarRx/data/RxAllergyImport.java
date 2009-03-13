@@ -24,6 +24,8 @@
 
 package oscar.oscarRx.data;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -32,25 +34,26 @@ import oscar.oscarDB.DBHandler;
 public class RxAllergyImport {
    
     public static Long save(String demographicNo, String entryDate, String description, String typeCode, String reaction, String startDate, String severity, String regionalId) throws SQLException {
-	boolean b = false;            
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier) VALUES ('"
-		+ demographicNo + "','" + entryDate + "','" + description + "','" + typeCode + "','" + reaction + "','" + startDate + "','" + severity + "','" + regionalId + "')";
-	db.RunSQL(sql);
+	Long id = null;
+	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, start_date, severity_of_reaction, regional_identifier)" +
+				   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, demographicNo);
+	pstmt.setString(2, entryDate);
+	pstmt.setString(3, description);
+	pstmt.setString(4, typeCode);
+	pstmt.setString(5, reaction);
+	pstmt.setString(6, startDate);
+	pstmt.setString(7, severity);
+	pstmt.setString(8, regionalId);
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) id = rs.getLong(1);
+	pstmt.close();
+	conn.close();
 	
-	sql = "SELECT MAX(allergyid) FROM allergies WHERE " +
-		"demographic_no='"	+ demographicNo	+ "' AND " +
-		"entry_date='"		+ entryDate	+ "' AND " +
-		"DESCRIPTION='"		+ description	+ "' AND " +
-		"TYPECODE='"		+ typeCode	+ "' AND " +
-		"reaction='"		+ reaction	+ "' AND " +
-		"start_date='"		+ startDate	+ "' AND " +
-		"severity_of_reaction='"+ severity	+ "' AND " +
-		"regional_identifier='"	+ regionalId	+ "'";
-	ResultSet rs = db.GetSQL(sql);
-	db.CloseConn();
-	    
-	if (rs.next()) return rs.getLong(1);
-	else return null;
+	return id;
      }
 }
