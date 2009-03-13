@@ -25,9 +25,11 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import org.oscarehr.common.model.FlowSheetCustomization;
 import org.oscarehr.common.model.FlowSheetDrug;
+import org.oscarehr.common.model.FlowSheetDx;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -53,7 +55,25 @@ public class FlowSheetDrugDAO extends HibernateDaoSupport {
         return list;
     }
 
+    public void save(FlowSheetDx dx){
+        this.getHibernateTemplate().saveOrUpdate(dx);
+    }
     
+     public List<FlowSheetDx> getFlowSheetDx(String flowsheet,String demographic){
+        List<FlowSheetDx> list = this.getHibernateTemplate().find("from FlowSheetDx p where p.flowsheet = ? and p.archived = 0 and p.demographicNo = ?   ", new Object[] {flowsheet,Integer.parseInt(demographic)});
+        return list;
+     }
+     
+     public HashMap getFlowSheetDxMap(String flowsheet,String demographic){
+         List<FlowSheetDx> fldx = getFlowSheetDx( flowsheet, demographic);
+         HashMap hm = new HashMap();
+         
+         for (FlowSheetDx fs : fldx){
+             hm.put(fs.getDxCodeType()+fs.getDxCode(), fs.getProviderNo());
+         }
+         return hm;
+         
+     }
     
     
 }
