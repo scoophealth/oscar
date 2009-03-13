@@ -31,7 +31,6 @@ package oscar.oscarLab;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -139,20 +138,5 @@ public class FileUploadCheck {
       System.out.println("returning "+fileUploaded);
       return fileUploaded;
    }
-   
-   public static Date getDatetime(Long id) {
-      Hashtable fileInfo = new Hashtable();
-      try{         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String sql = "select date_time from fileUploadCheck where id = "+id;
-         ResultSet rs = db.GetSQL(sql);
-         db.CloseConn();         
-         if(rs.next()){
-	     return rs.getDate("date_time");
-         }
-      }catch(Exception e){
-         e.printStackTrace();
-      }
-      return null;
-   }
+  
 }
