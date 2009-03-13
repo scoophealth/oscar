@@ -365,7 +365,37 @@ public class RxPrescriptionData {
     }    
     
     
-    
+    public Prescription[] getPrescriptionScriptsByPatientRegionalIdentifier(int demographicNo,String regionalIdentifier) {
+        Prescription[] arr = {};
+        ArrayList lst = new ArrayList();
+        
+        try {
+            //Get Prescription from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT d.*FROM drugs d WHERE  "
+            + "d.demographic_no = " + demographicNo + " and d.regional_identifier = '"+regionalIdentifier+"' "
+            + "ORDER BY rx_date DESC, drugId DESC";
+            
+            Prescription p;
+            
+            
+            rs = db.GetSQL(sql);
+            
+            while(rs.next()) {
+                lst.add(getPrescriptionFromRS(rs,demographicNo));
+            }
+            rs.close();
+            db.getConnection().close();
+            
+            arr = (Prescription[])lst.toArray(arr);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return arr;
+    }    
     
     //////
     
