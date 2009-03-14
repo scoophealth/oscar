@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*"%>
+<%@page  import="oscar.oscarReport.data.DemographicSets, oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -101,17 +101,19 @@ Clinical Reports
     var denominator_fields = new Array ();
     var denom_xtras;
     denominator_fields[denominator_fields.length] = "denominator_provider_no";
+    denominator_fields[1] = "denominator_patientSet";
     
     
     function processExtraFields(t){
        var currentDenom = t.options[t.selectedIndex].value; 
+       console.log(currentDenom);
        //Hide all extra denom fields
        for (  i = 0 ; i < denominator_fields.length; i++) {
           document.getElementById(denominator_fields[i]).style.display = 'none'; 
        }
        try{
            var fields_to_turn_on = denom_xtras[currentDenom];
-
+           console.log("fields to turn on " + fields_to_turn_on[0]);
            //get list of extra 
            for (  i = 0 ; i < fields_to_turn_on.length; i++) {
               document.getElementById(fields_to_turn_on[i]).style.display = ''; 
@@ -212,8 +214,17 @@ Clinical Reports
                                 <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                               <%}%>                    
                            </select>
-                           
-                            
+                            <div id="denominator_patientSet">
+                                <%  
+                                DemographicSets demoSets = new DemographicSets();
+                                ArrayList demoSetList = demoSets.getDemographicSets();
+                                for( int idx = 0; idx < demoSetList.size(); ++idx ) {
+                                %>
+                                <input type="checkbox" name="denominator_patientSet" value="<%=demoSetList.get(idx)%>"><%=demoSetList.get(idx)%><br>
+                                <%
+                                }
+                                %>
+                            </div>
                         </fieldset>
                            <br/>
                        <input type="submit" value="Evaluate"/>
@@ -369,7 +380,6 @@ denom_xtras = new Array();
 <%   }%>
    denom_xtras['<%=key%>']= repVal<%=key%>;
 <% }%>
-
 
 processExtraFields(document.getElementById('denominator'));
 
