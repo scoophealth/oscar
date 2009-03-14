@@ -65,15 +65,25 @@ public class RunClinicalReportAction extends Action {
         System.out.println("numerator "+numeratorId+" denominator "+denominatorId);    
         ClinicalReportManager reports = ClinicalReportManager.getInstance();
     
-        Denominator d = reports.getDenominatorById(denominatorId);
+        Denominator d = reports.getDenominatorById(denominatorId);        
         if (d.hasReplaceableValues()){
             String[] denomReplaceKeys = d.getReplaceableKeys();
             Hashtable h = new Hashtable();
+            String keyValue;
             if ( denomReplaceKeys != null){
                 for (int i = 0; i < denomReplaceKeys.length; i++){
-                    String keyValue = request.getParameter("denominator_"+denomReplaceKeys[i]);
-                    if (keyValue == null) keyValue = "";
-                    h.put(denomReplaceKeys[i],keyValue);                       
+                    String[] keyValues = request.getParameterValues("denominator_"+denomReplaceKeys[i]);
+                    if (keyValues == null) {
+                        keyValue = "";                        
+                    }
+                    if( keyValues.length == 1 ) {
+                        h.put(denomReplaceKeys[i],keyValues[0]);                       
+                    }
+                    else {
+                        for( int idx = 0; idx < keyValues.length; ++idx ) {
+                            h.put(denomReplaceKeys[i] + String.valueOf(idx), keyValues[idx]);
+                        }
+                    }
                 }
             }
             System.out.println("setting replaceable values with a size of "+h.size());
