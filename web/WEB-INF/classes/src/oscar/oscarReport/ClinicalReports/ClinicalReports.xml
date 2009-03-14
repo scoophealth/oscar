@@ -405,7 +405,7 @@ and d.provider_no = '${provider_no}'
 and patient_status = 'AC'
 </Denominator>   
 
-
+<Denominator id="PatientSet" name="Patient Sets" replaceKeys="set_name" type="PatientSetDenominator"></Denominator>
     
 </ClinicalReports>    
     
