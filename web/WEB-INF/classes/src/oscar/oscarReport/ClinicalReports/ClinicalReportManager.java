@@ -231,6 +231,12 @@ public class ClinicalReportManager {
                             sqlD.parseReplaceValues(e.getAttributeValue("replaceKeys"));
                             addDenominator(sqlD);
                        }
+                        else if( type != null && type.equals("PatientSetDenominator")) {
+                            PatientSetDenominator psD = new PatientSetDenominator();
+                            psD.setDenominatorName(e.getAttributeValue("name"));
+                            psD.setId(e.getAttributeValue("id"));
+                            addDenominator(psD);
+                        }
                    } 
                 }catch(Exception e){
                     e.printStackTrace();
