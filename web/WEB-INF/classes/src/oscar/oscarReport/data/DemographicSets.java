@@ -81,6 +81,29 @@ public class DemographicSets {
       return retval;
    }
    
+   public ArrayList getDemographicSet(ArrayList setNames) {
+       ArrayList retval = new ArrayList();
+       StringBuffer strNames = new StringBuffer();
+       
+       for( int idx = 0; idx < setNames.size(); ++idx ) {
+           strNames.append("'" + StringEscapeUtils.escapeSql((String)setNames.get(idx)) + "'");
+           if( idx < (setNames.size()-1)) {
+               strNames.append(",");
+           }
+       }
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs = db.GetSQL("select * from demographicSets where set_name in (" + strNames.toString() + ") group by demographic_no");          
+         
+         while (rs.next()){
+            retval.add(db.getString(rs,"demographic_no"));            
+         }
+         rs.close();
+         db.CloseConn();
+      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
+      return retval;
+   }
+   
    public ArrayList getDemographicSetExt(String setName){      
       ArrayList retval = new ArrayList();
       try{
