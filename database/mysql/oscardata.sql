@@ -1312,6 +1312,7 @@ insert into `secObjectName` (`objectName`) values ('_admin.misc');
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_masterlink', 'Client Master Record',0);
 insert into `secObjectName` (`objectName`) values ('_rx');
 insert into `secObjectName` (`objectName`) values ('_merge');
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_flowsheet','Flow Sheet',0);
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
@@ -1327,6 +1328,8 @@ insert into `secObjPrivilege` values('doctor', '_tasks', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_rx','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
+insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,999998);
+
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
