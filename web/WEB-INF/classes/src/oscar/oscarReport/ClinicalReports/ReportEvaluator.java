@@ -29,9 +29,12 @@
 package oscar.oscarReport.ClinicalReports;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.commons.collections.KeyValue;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarMDS.data.ProviderData;
 
 /**
@@ -52,6 +55,10 @@ public class ReportEvaluator {
     }
     
     public void evaluate(Denominator deno, Numerator numer){
+        evaluate(deno,numer,null);
+    }
+    
+    public void evaluate(Denominator deno, Numerator numer,List<KeyValue> additionalFields){
         denominator = deno;
         numerator = numer;
         List demoList = deno.getDenominatorList();
@@ -64,6 +71,25 @@ public class ReportEvaluator {
             Hashtable h = new Hashtable();
             h.put("_demographic_no",demo);
             h.put("_report_result",new Boolean(bool));
+            
+            if (additionalFields != null){
+                for(KeyValue field:additionalFields){
+                    String key = (String) field.getKey();
+                    String val = (String) field.getValue();
+                    
+                    EctMeasurementsDataBeanHandler ect = new EctMeasurementsDataBeanHandler(demo, val);
+                    Collection v = ect.getMeasurementsDataVector();
+                    //Execute for the value and attach it to the key in the hashtable
+                    //Object obj =  
+                    if(v.iterator().hasNext()){
+                        h.put(key, v.iterator().next());
+                    }
+                    
+                }
+            }
+            
+            
+            
             getReportResultList().add(h);
 //            if (obj != null){
 //                getReportResultList().add(obj);
