@@ -216,6 +216,7 @@ function sanityCheck(id) {
 </table>
 -->
 <%//
+                                JdbcBillingRAImpl raObj = new JdbcBillingRAImpl();
 				BillingCorrectionPrep obj = new BillingCorrectionPrep();
 				List recordObj = null;
 				BillingClaimHeader1Data ch1Obj = new BillingClaimHeader1Data();
@@ -224,6 +225,15 @@ function sanityCheck(id) {
 				// bFlag - fill in data?
 				boolean bFlag = false;
 				String billNo = request.getParameter("billing_no").trim();
+                                String claimNo = request.getParameter("claim_no");
+                                
+                                if( billNo == null || billNo.length() == 0 ) {                                    
+                                    if( claimNo != null && claimNo.length() > 0 ) {
+                                        claimNo = claimNo.trim();
+                                        billNo = raObj.getRABilllingNo4ClaimNo(claimNo);
+                                    }
+                                    
+                                }
 				if (billNo != null && billNo.length() > 0) {
 					bFlag = true;
 				}
@@ -300,6 +310,13 @@ function sanityCheck(id) {
 		<th width="50%" align="left"><bean:message
 			key="billing.billingCorrection.msgLastUpdate" />: <%=nullToEmpty(ch1Obj.getUpdate_datetime())%></th>
 		<th><input type="submit" name="submit" value="Search"></th>
+	</tr>
+        <tr>
+		<th width="30%" align="left">
+                    OHIP Claim No
+		</th>
+		<th style="text-align:left;" colspan="3" width="10%"><input type="text" name="claim_no"
+			value="<%=nullToEmpty(claimNo)%>" maxsize="10"></th>				
 	</tr>
 	</form>
 </table>
