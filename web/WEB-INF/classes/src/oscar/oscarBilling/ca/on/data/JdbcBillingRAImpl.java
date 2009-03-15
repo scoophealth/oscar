@@ -39,7 +39,7 @@ public class JdbcBillingRAImpl {
 		String sql = "insert into radetail values(\\N, " + " " + val.raheader_no + " ," + "'" + val.providerohip_no
 				+ "'," + "'" + val.billing_no + "'," + "'" + val.service_code + "'," + "'" + val.service_count + "',"
 				+ "'" + val.hin + "'," + "'" + val.amountclaim + "'," + "'" + val.amountpay + "'," + "'"
-				+ val.service_date + "'," + "'" + val.error_code + "'," + "'" + val.billtype + "')";
+				+ val.service_date + "'," + "'" + val.error_code + "'," + "'" + val.billtype + "','" + val.claim_no + "')";
 		_logger.info("addOneRADtRecord(sql = " + sql + ")");
 		retval = dbObj.saveBillingRecord(sql);
 
@@ -77,6 +77,7 @@ public class JdbcBillingRAImpl {
 		String balancefwd = "", abf_ca = "", abf_ad = "", abf_re = "", abf_de = "";
 		String transaction = "", trans_code = "", cheque_indicator = "", trans_date = "", trans_amount = "", trans_message = "";
 		String message = "", message_txt = "";
+                String claimno = "";
 		String xml_ra = "";
 
 		int accountno = 0, totalsum = 0, txFlag = 0, recFlag = 0, flag = 0, payFlag = 0, count = 0, tCount = 0, amountPaySum = 0, amountSubmitSum = 0;
@@ -180,6 +181,7 @@ public class JdbcBillingRAImpl {
 				} // ends with "1"
 
 				if (headerCount.compareTo("4") == 0) {
+                                        claimno = nextline.substring(3,14);
 					transactiontype = nextline.substring(14, 15);
 					providerno = nextline.substring(15, 21);
 					specialty = nextline.substring(21, 23);
@@ -218,6 +220,7 @@ public class JdbcBillingRAImpl {
 				}
 
 				if (headerCount.compareTo("5") == 0) {
+                                        claimno = nextline.substring(3,14);
 					transactiontype = nextline.substring(14, 15);
 					servicedate = nextline.substring(15, 23);
 					serviceno = nextline.substring(23, 25);
@@ -269,7 +272,7 @@ public class JdbcBillingRAImpl {
 						// param4[10] = billtype;
 						sql = "insert into radetail values('\\N'," + raNo + ",'" + providerno + "'," + account + ",'"
 								+ servicecode + "','" + serviceno + "','" + newhin + "','" + amountsubmit + "','"
-								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype
+								+ amountpaysign + amountpay + "','" + servicedate + "','" + explain + "','" + billtype + "','" + claimno
 								+ "')";
 						int rowsAffected3 = dbObj.saveBillingRecord(sql);
 						// {"save_radt", "insert into radetail
@@ -478,6 +481,24 @@ public class JdbcBillingRAImpl {
 		}
 		return ret;
 	}
+        
+        public String getRABilllingNo4ClaimNo(String claimno) {
+            String billing_no = "";
+            String sql = "select distinct billing_no from radetail where claim_no = '" + claimno + "'";
+            
+            ResultSet rs = dbObj.searchDBRecord(sql);
+            try {
+                if( rs.next() ) {
+                    billing_no = rs.getString("billing_no");
+                }
+                
+            }
+            catch (SQLException e) {
+                _logger.error("getRABillingNo4ClaimNo(sql = " + sql + ")");
+            }
+            
+            return billing_no;
+        }
 
 	public List getRABillingNo4Code(String id, String codes) {
 		List ret = new Vector();
