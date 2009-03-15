@@ -36,24 +36,24 @@ import org.apache.struts.action.ActionForm;
  */
 public class DemographicExportForm extends ActionForm {
          
-    String patientSet = null;
-    String mediaType = null;
-    String noOfMedia = null;
+    String patientSet;
+    String mediaType;
+    String noOfMedia;
     
-    boolean exPersonalHistory = true;
-    boolean exFamilyHistory = true;
-    boolean exPastHealth = true;
-    boolean exProblemList = true;
-    boolean exRiskFactors = true;
-    boolean exAllergiesAndAdverseReactions = true;
-    boolean exMedicationsAndTreatments = true;
-    boolean exImmunizations = true;
-    boolean exLaboratoryResults = true;
-    boolean exAppointments = true;
-    boolean exClinicalNotes = true;
-    boolean exReportsReceived = true;
-    boolean exAuditInformation = true;
-    boolean exCareElements = true;
+    boolean exPersonalHistory;
+    boolean exFamilyHistory;
+    boolean exPastHealth;
+    boolean exProblemList;
+    boolean exRiskFactors;
+    boolean exAllergiesAndAdverseReactions;
+    boolean exMedicationsAndTreatments;
+    boolean exImmunizations;
+    boolean exLaboratoryResults;
+    boolean exAppointments;
+    boolean exClinicalNotes;
+    boolean exReportsReceived;
+    boolean exAuditInformation;
+    boolean exCareElements;
     
     public DemographicExportForm() {
     }
