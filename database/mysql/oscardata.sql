@@ -1198,27 +1198,27 @@ INSERT INTO scheduleholiday VALUES ('2004-01-01','New Year\'s Day');
 -- Dumping data for table 'scheduletemplatecode'
 --
 
-INSERT INTO scheduletemplatecode VALUES ('A','Academic','',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('B','Behavioral Science','15','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('2','30 Minute Appointment','30','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('3','45 Minute Appointment','45','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('P','Phone time','15','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('M','Monitoring','','EED2EE','N');
-INSERT INTO scheduletemplatecode VALUES ('6','60 Minute Appointment','60','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('C','Chart Audit Rounds','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('R','Rounds','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('E','Study Leave','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('V','Vacation','15','FFF68F','N');
-INSERT INTO scheduletemplatecode VALUES ('G','PBSG Rounds','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('H','Hospital Rounds','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('d','Drug Rep (Chief)','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('U','Urgent','15',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL,'N');
-INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF','N');
-INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F','N');
-INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','N');
+INSERT INTO scheduletemplatecode VALUES ('A','Academic','',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('B','Behavioral Science','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('2','30 Minute Appointment','30','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('3','45 Minute Appointment','45','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('P','Phone time','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('M','Monitoring','','EED2EE','N',1);
+INSERT INTO scheduletemplatecode VALUES ('6','60 Minute Appointment','60','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('C','Chart Audit Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('R','Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('E','Study Leave','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('V','Vacation','15','FFF68F','N',1);
+INSERT INTO scheduletemplatecode VALUES ('G','PBSG Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('H','Hospital Rounds','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('d','Drug Rep (Chief)','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('U','Urgent','15',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('a','Administrative Work','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('t','Travel','',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('m','Meeting','',NULL,'N',1);
+INSERT INTO scheduletemplatecode VALUES ('1','15 Minute Appointment','15','#BFEFFF','N',1);
+INSERT INTO scheduletemplatecode VALUES ('s','Same Day','15','FFF68F','N',1);
+INSERT INTO scheduletemplatecode VALUES ('S','Same Day - R1','30','FFF68F','N',1);
 
 --
 -- Dumping data for table 'security'
