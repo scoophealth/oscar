@@ -130,6 +130,14 @@ public class ClinicalReportManager {
             System.out.println("create new DroolsNumerator object");
             return droolsN;
        }
+       if (type != null && type.equals("DROOLS2")){
+            DroolsNumerator2 droolsN = new DroolsNumerator2();
+            droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
+            droolsN.setId((String) numerHash.get("id"));
+            droolsN.parseReplaceValues((String) numerHash.get("replaceKeys"));
+            System.out.println("create new DroolsNumerator2 object");
+            return droolsN;
+       }
        return null;
     }
     
@@ -216,6 +224,23 @@ public class ClinicalReportManager {
                             
                             addNumerator(droolsN);
                        }
+                       if (type != null && type.equals("DROOLS2")){
+                            DroolsNumerator2 droolsN = new DroolsNumerator2();
+                            droolsN.setNumeratorName(e.getAttributeValue("name"));
+                            droolsN.setId(e.getAttributeValue("id"));
+                            droolsN.setFile(e.getAttributeValue("file"));
+                            droolsN.parseReplaceValues(e.getAttributeValue("replaceKeys"));
+                            Hashtable h = new Hashtable();
+                            h.put("type",type);
+                            h.put("numeratorName",e.getAttributeValue("name"));
+                            h.put("id",e.getAttributeValue("id"));
+                            h.put("replaceKeys",e.getAttributeValue("replaceKeys"));
+                            //h.put("file",e.getAttributeValue("file"));
+                            addNumerator(h,e.getAttributeValue("id"));
+                            
+                            addNumerator(droolsN);
+                       } 
+                       
                    }
 
 
