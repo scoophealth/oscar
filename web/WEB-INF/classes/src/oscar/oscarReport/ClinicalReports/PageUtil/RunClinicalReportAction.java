@@ -32,10 +32,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.KeyValue;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -45,11 +49,6 @@ import oscar.oscarReport.ClinicalReports.ClinicalReportManager;
 import oscar.oscarReport.ClinicalReports.Denominator;
 import oscar.oscarReport.ClinicalReports.Numerator;
 import oscar.oscarReport.ClinicalReports.ReportEvaluator;
-
-/**
- *
- * @author jay
- */
 public class RunClinicalReportAction extends Action {
     
     /** Creates a new instance of RunClinicalReportAction */
@@ -89,9 +88,66 @@ public class RunClinicalReportAction extends Action {
             System.out.println("setting replaceable values with a size of "+h.size());
             d.setReplaceableValues(h);
         }
+        
+        
+        
+        
+        
+       
         Numerator   n = reports.getNumeratorById(numeratorId);
+        System.out.println("n"+n+" "+n.hasReplaceableValues());
+        if (n.hasReplaceableValues()){
+            String[] denomReplaceKeys = n.getReplaceableKeys();
+            Hashtable h = new Hashtable();
+            String keyValue;
+            if ( denomReplaceKeys != null){
+                for (int i = 0; i < denomReplaceKeys.length; i++){
+                    System.out.println("The sought after key would be "+request.getParameterValues("numerator_"+denomReplaceKeys[i]) );
+                    String[] keyValues = request.getParameterValues("numerator_"+denomReplaceKeys[i]);
+                    if (keyValues == null) {
+                        keyValue = "";                        
+                    }
+                    if( keyValues.length == 1 ) {
+                        h.put(denomReplaceKeys[i],keyValues[0]);   
+                        request.setAttribute("numerator_"+denomReplaceKeys[i],request.getParameter("numerator_"+denomReplaceKeys[i]));
+                    }
+                    else {
+                        for( int idx = 0; idx < keyValues.length; ++idx ) {
+                            h.put(denomReplaceKeys[i] + String.valueOf(idx), keyValues[idx]);
+                        }
+                    }
+                }
+            }
+            System.out.println("setting replaceable values with a size of "+h.size());
+            n.setReplaceableValues(h);
+        }
+        
+        
+        
+        
+        List<KeyValue> extraVal = null;
+        for(Object params: request.getParameterMap().keySet()){
+            String requestParam = (String) params;
+            if(requestParam.startsWith("report_measurement") && !request.getParameter(requestParam).equals("-1") ){
+                if(extraVal ==null){
+                    extraVal = new LinkedList();
+                }
+                    KeyValue kv = new org.apache.commons.collections.keyvalue.DefaultKeyValue(requestParam, request.getParameter(requestParam));
+                    extraVal.add(kv);
+                    request.setAttribute(requestParam, request.getParameter(requestParam));
+                 
+            }
+        }
+        
+        
+        request.setAttribute("showfields",request.getParameterValues("showfields"));
+       
+        //Need to change the out put fields here On the JSP use an getDisplay MEthod that checks for instance of.
+        
+        
+        
         ReportEvaluator re  = new ReportEvaluator();
-        re.evaluate(d,n);
+        re.evaluate(d,n,extraVal);
         
         int num = re.getNumeratorCount();
         int denom = re.getDenominatorCount();
@@ -106,7 +162,7 @@ public class RunClinicalReportAction extends Action {
         arrList.add(re);
         request.getSession().setAttribute("ClinicalReports",arrList);
         
-        
+        request.setAttribute("extraValues",extraVal);
         request.setAttribute("name",re.getName());
         request.setAttribute("numerator",Integer.toString(num));
         request.setAttribute("denominator",Integer.toString(denom));
