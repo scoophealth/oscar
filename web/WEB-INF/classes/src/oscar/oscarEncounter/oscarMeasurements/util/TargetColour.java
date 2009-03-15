@@ -135,4 +135,8 @@ public class TargetColour {
         this.targetConditions = targetConditions;
     }
 
+    public void setAdditionConsequence(String additionConsequence) {
+        this.additionConsequence = additionConsequence;
+    }
+
 }
