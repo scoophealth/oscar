@@ -6506,6 +6506,7 @@ CREATE TABLE radetail (
   service_date varchar(12) NOT NULL default '',
   error_code char(2) NOT NULL default '',
   billtype char(3) NOT NULL default '',
+  claim_no varchar(12) not null default '',
   PRIMARY KEY  (radetail_no)
 ) ;
 
