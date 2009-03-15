@@ -164,5 +164,41 @@ public class DroolsNumerator implements Numerator{
         return outputfields;
     }
     
+    String[] replaceKeys = null;
+    Hashtable replaceableValues = null;
+    public String[] getReplaceableKeys(){
+        return replaceKeys;
+    }
     
+    public void parseReplaceValues(String str){
+        if (str != null){
+            try{
+                System.out.println("parsing string "+str);
+                if (str.indexOf(",") != -1){
+                replaceKeys = str.split(",");
+                }else{
+                    replaceKeys =  new String[1];
+                    replaceKeys[0] = str;
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public boolean hasReplaceableValues(){
+        boolean repVal = false;
+        if (replaceKeys != null){
+            repVal = true;
+        }
+        return repVal;
+    }
+
+    public void setReplaceableValues(Hashtable vals) {
+        replaceableValues = vals;
+    }
+
+    public Hashtable getReplaceableValues() {
+        return replaceableValues;
+    }
 }

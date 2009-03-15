@@ -21,5 +21,10 @@ public interface Numerator {
     public String getNumeratorName();
     public Hashtable getOutputValues();
     public String[] getOutputFields();
+    
+    public boolean hasReplaceableValues();
+    public String[] getReplaceableKeys();
+    public void setReplaceableValues(Hashtable vals);
+    public Hashtable getReplaceableValues();
        
 }
