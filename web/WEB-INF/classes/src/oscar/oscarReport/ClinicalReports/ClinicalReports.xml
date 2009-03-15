@@ -8,6 +8,43 @@
 	-->
 
 <ClinicalReports>
+    
+    	<Numerator id="omd1" name="Has A1C" type="SQL" description="Date and value of last A1C value" outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'A1C' order by dateObserved 
+        </Numerator>
+
+        <Numerator id="omd2" name="Patients that use an asthma reliever more than 4 times per week" type="SQL" 
+                   description="Patients who use Asthma reliever more than 4 times per week" outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'ANR' and m.dataField > 4 order by dateObserved 
+        </Numerator>
+        
+        <Numerator id="omd3" name="Patients who have had an ER visit in the last 6 months" type="SQL"
+		description="Number of patient in the denom with at least one a1c test in the last 6months"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'CERV' and m.dataField > 1 and dateObserved > DATE_SUB(now(),INTERVAL 6 Month)    order by dateObserved 
+        </Numerator>
+        
+        <Numerator id="omd4" name="Has Exacerbation plan" type="SQL"
+		description="Patients with an Exacerbation Plan"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'EPR' and m.dataField = 'yes' order by dateObserved 
+        </Numerator>
+    
+    
+        <Numerator id="omd5" name="BMI over 30" type="SQL"
+		description="Patients with a BMI >= 30"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'BMI' and m.dataField >= 30 order by dateObserved 
+        </Numerator>
+    
+    
+    
+    
 	<Numerator id="A1C6" name="Has A1C in last 6 months" type="SQL"
 		description="Number of patient in the denom with at least one a1c test in the last 6months"
 		outputfields="demographicNo,providerNo">
@@ -197,7 +234,10 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
             file="testCD4between200350.drl"/>
  <Numerator id ="cd4gt350" name="CD4 higher than 350" type="DROOLS"  description="Number of patient in the denom with a cd4 higher that 350"
             file="testCD4high350.drl"/>
-            
+        
+  <Numerator id ="customMeas" name="Measurement Values" type="DROOLS2"  description="Number of patient with a selected measurement at a certain value"
+            replaceKeys="measurements,value"/>       
+        
 <!--Numerators
   
 --> 
