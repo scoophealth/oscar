@@ -13,6 +13,15 @@ public class BillingRAData {
 	String service_date;
 	String error_code;
 	String billtype;
+        String claim_no = "";
+        
+        public String getClaim_no() {
+            return this.claim_no;
+        }
+        
+        public void setClaim_no(String claim_no) {
+            this.claim_no = claim_no;
+        }
 	public String getAmountclaim() {
 		return amountclaim;
 	}
