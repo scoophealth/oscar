@@ -7012,7 +7012,8 @@ CREATE TABLE `secObjectName` (
 CREATE TABLE `demographicSets` (
   `demographic_no` int(10) default NULL,
   `set_name` varchar(20) default NULL,
-  `eligibility` char(1) default NULL
+  `eligibility` char(1) default NULL,
+  `archive` char(1) default 0
 ); 
 
 CREATE TABLE demographicQueryFavourites (
