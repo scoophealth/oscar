@@ -142,7 +142,8 @@ function disableifchecked(ele,nextDate){
                    ArrayList list = (ArrayList) request.getAttribute("SET");
                    String setName = (String) request.getAttribute("setname");%>
 		<div><html:form action="/report/SetEligibility">
-			<input type="submit" value="Set Ineligible" /> Check patients to set ineligible and click "Set Ineligible"
+			<input type="submit" value="Set Ineligible" /> Check patients to set ineligible and click "Set Ineligible"<br>
+                        <input type="submit" name="delete" value="Delete"/>Check patients to Delete
                    <input type="hidden" name="setName"
 				value="<%=setName%>" />
 			<table class="ele">
