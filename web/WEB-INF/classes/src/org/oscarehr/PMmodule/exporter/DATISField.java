@@ -24,7 +24,7 @@ package org.oscarehr.PMmodule.exporter;
 public class DATISField {
 
 	private String name;
-	private String type;
+	private DATISType type;
 	private int columnPosition;
 	private int maxSize;
 	private String description;
@@ -42,12 +42,6 @@ public class DATISField {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 	public int getColumnPosition() {
 		return columnPosition;
@@ -80,6 +74,34 @@ public class DATISField {
 
 	public void setQuestion(String question) {
 		this.question = question;
+	}
+
+	public DATISType getType() {
+		return type;
+	}
+
+	public void setType(DATISType type) {
+		this.type = type;
+	}
+	
+	public void setType(String type) {
+		if(type.equalsIgnoreCase(DATISType.TEXT.getValue())) {
+			this.type = DATISType.TEXT;
+		} else if(type.equalsIgnoreCase(DATISType.DATETIME.getValue())) {
+			this.type = DATISType.DATETIME;
+		} else if(type.equalsIgnoreCase(DATISType.DOUBLE.getValue())) {
+			this.type = DATISType.DOUBLE;
+		} else if(type.equalsIgnoreCase(DATISType.INTEGER.getValue())) {
+			this.type = DATISType.INTEGER;
+		} else if(type.equalsIgnoreCase(DATISType.NUMBER.getValue())) {
+			this.type = DATISType.NUMBER;
+		} else if(type.equalsIgnoreCase(DATISType.SELECT_NUMERIC.getValue())) {
+			this.type = DATISType.SELECT_NUMERIC;
+		} else if(type.equalsIgnoreCase(DATISType.SELECT_YN.getValue())) {
+			this.type = DATISType.SELECT_YN;
+		} else if(type.equalsIgnoreCase(DATISType.SELECT_YNU.getValue())) {
+			this.type = DATISType.SELECT_YNU;
+		}
 	}
 	
 }

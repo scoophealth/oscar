@@ -8,7 +8,7 @@
 	<field name="PRG_START_TIME" type="text" colpos="49" maxsize="5"></field>
 	<field name="PRG_END_DATE" type="datetime" colpos="54" maxsize="10"  dateformat="dd/MM/yyyy"></field>
 	<field name="PRG_END_TIME" type="text" colpos="64" maxsize="5"></field>
-	<field name="REASON_DISCHARGE_ID" type="text" colpos="69" maxsize="3"></field>
+	<field name="REASON_DISCHARGE_ID" type="selectnumeric" colpos="69" maxsize="3"></field>
 	<field name="TOTAL_SESSIONS" type="integer" colpos="72" maxsize="8"></field>
 	<field name="TOTAL_HOURS_DS_MANUAL" type="double" colpos="80" maxsize="8"></field>
 	<field name="TOTAL_HOURS_IS_MANUAL" type="double" colpos="88" maxsize="8"></field>

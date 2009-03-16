@@ -65,7 +65,7 @@ public class DATISNonClientService extends AbstractIntakeExporter {
 				if(ans.getNode().getGrandParent().equals(file6Node)) {
 					lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
 					if(lbl.startsWith(fieldName)) {
-						buf.append(fieldName + " = " + ans.getValue() + "\n");
+						writeKeyValue(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}

@@ -70,7 +70,7 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 						lbl = ans.getNode().getLabelStr().toUpperCase();
 					}
 					if(lbl.startsWith(fieldName)) {
-						buf.append(fieldName + " = " + ans.getValue() + "\n");
+						writeKeyValue(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}

@@ -26,7 +26,10 @@ public enum DATISType {
 	DATETIME("datetime"),
 	NUMBER("number"),
 	INTEGER("integer"),
-	DOUBLE("double");
+	DOUBLE("double"),
+	SELECT_NUMERIC("selectnumeric"),
+	SELECT_YN("selectyn"),
+	SELECT_YNU("selectynu");
 	
 	private String value;
 	
@@ -36,5 +39,19 @@ public enum DATISType {
 	
 	public String getValue() {
 		return value;
+	}
+	
+	public static boolean isNumeric(DATISType t) {
+		if(t == null) {
+			return false;
+		}
+		return t.equals(SELECT_NUMERIC) || t.equals(NUMBER) || t.equals(INTEGER);
+	}
+	
+	public static boolean isDecimal(DATISType t) {
+		if(t == null) {
+			return false;
+		}
+		return t.equals(DOUBLE);
 	}
 }

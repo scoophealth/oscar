@@ -107,7 +107,7 @@ public abstract class AbstractIntakeExporter {
 					field.setDescription(fieldNode.getAttributes().getNamedItem(FIELD_DESC).getNodeValue());
 				}
 				
-				if(DATISType.DATETIME.getValue().equalsIgnoreCase(field.getType())) {
+				if(DATISType.DATETIME.equals(field.getType())) {
 					if(null != fieldNode.getAttributes().getNamedItem(FIELD_DATEFORMAT)) {
 						field.setDateFormat(fieldNode.getAttributes().getNamedItem(FIELD_DATEFORMAT).getNodeValue());
 					}
@@ -163,16 +163,39 @@ public abstract class AbstractIntakeExporter {
 	}
 
 	protected void writeData(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
-		if(found.getType().equals(DATISType.TEXT.getValue())) {
-			buf.append(StringUtils.rightPad(ans.getValue(), found.getMaxSize(), ' '));
-		} else if(found.getType().equals(DATISType.DATETIME.getValue())) {
-			// TODO date validation...
-			buf.append(StringUtils.rightPad(ans.getValue(), found.getMaxSize(), ' '));
-		} else if(found.getType().equals(DATISType.NUMBER.getValue()) || 
-				found.getType().equals(DATISType.INTEGER.getValue()) || 
-				found.getType().equals(DATISType.DOUBLE.getValue())) {
-			buf.append(StringUtils.leftPad(ans.getValue(), found.getMaxSize(), '0'));
+		String value = ans.getValue();
+		if(ans.getValue().length() > found.getMaxSize()) {
+			value = ans.getValue().substring(0, found.getMaxSize());
 		}
+		if(found.getType().equals(DATISType.TEXT)) {
+			buf.append(StringUtils.rightPad(value, found.getMaxSize(), ' '));
+		} else if(found.getType().equals(DATISType.DATETIME)) {
+			// TODO date validation...
+			buf.append(StringUtils.rightPad(value, found.getMaxSize(), ' '));
+		} else if(found.getType().equals(DATISType.NUMBER) || 
+				found.getType().equals(DATISType.INTEGER) || 
+				found.getType().equals(DATISType.DOUBLE)) {
+			buf.append(StringUtils.leftPad(value, found.getMaxSize(), '0'));
+		}
+	}
+	
+	protected void writeKeyValue(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
+		String value = ans.getValue();
+		
+		if(value.length() > found.getMaxSize()) {
+			value = value.substring(0, found.getMaxSize());
+		} else {
+			value = StringUtils.rightPad(value, found.getMaxSize(), ' ');
+		}
+		
+		if(DATISType.isNumeric(found.getType())) {
+			if(value.charAt(found.getMaxSize()-1) == '-') {
+				value = value.substring(0, found.getMaxSize() - 1);
+			}
+			value = StringUtils.leftPad(value.trim(), found.getMaxSize(), '0');
+		}
+		
+		buf.append(found.getName() + " = " + value + "\n");
 	}
 	
 }

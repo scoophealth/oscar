@@ -65,11 +65,9 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 			String lbl = null;
 			for(IntakeAnswer ans : answers) {
 				if(ans.getNode().getGrandParent().equals(file5Node)) {
-					lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
-					lbl = StringUtils.deleteWhitespace(lbl);
-					fieldQuestion = StringUtils.deleteWhitespace(fieldQuestion);
-					if(lbl.equals(fieldQuestion)) {
-						buf.append(fieldName + " = " + ans.getValue() + "\n");
+					lbl = ans.getNode().getParent().getLabelStr();
+					if(StringUtils.deleteWhitespace(lbl.toUpperCase()).equals(StringUtils.deleteWhitespace(fieldQuestion.toUpperCase()))) {
+						writeKeyValue(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}

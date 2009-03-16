@@ -83,7 +83,7 @@ public class DATISMain extends AbstractIntakeExporter {
 				});
 				
 				if(found != null) {
-					buf.append(found.getName() + " = " + ans.getValue() + "\n");
+					writeKeyValue(buf, ans, found);
 					//writeData(buf, ans, found);
 					counter++;
 				}

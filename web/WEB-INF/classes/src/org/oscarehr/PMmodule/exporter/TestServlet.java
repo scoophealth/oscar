@@ -33,6 +33,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  */
 public class TestServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 1471337270123160719L;
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		
 		try {
