@@ -1007,7 +1007,7 @@ int i;
                                 </td>
                                 <td colspan=2>                                                                        
                                             <html:hidden property="brandName" />
-                                            <b><%= thisForm.getBrandName() %></b>
+                                            <b  title="<%=thisForm.getRegionalIdentifier()%>"  ><%= thisForm.getBrandName() %></b>
                                             <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">                          
                                             <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->                             
                                             <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,690,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a> 
