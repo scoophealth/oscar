@@ -611,7 +611,8 @@ CREATE TABLE drugs (
   long_term boolean,
   past_med boolean,
   patient_compliance tinyint(1),
-  outside_provider varchar(100),
+  outside_provider_name varchar(100),
+  outside_provider_ohip varchar(20),
   PRIMARY KEY  (drugid)
 ) ;
 
