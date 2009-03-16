@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<flowsheet name="M8" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:250" ds_rules="diab.drl" top_HTML=""  warning_colour="#E00000"
+<flowsheet name="M8" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416" ds_rules="diab.drl" top_HTML=""  warning_colour="#E00000"
 	recommendation_colour="yellow">
     <indicator key="LOW" colour="#9999FF" />
     <indicator key="HIGH" colour="orange" />
