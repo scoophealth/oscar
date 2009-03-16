@@ -580,6 +580,7 @@ CREATE TABLE drugs (
   demographic_no int(10) NOT NULL default '0',
   rx_date date NOT NULL default '0001-01-01',
   end_date date NOT NULL default '0001-01-01',
+  written_date date default '0001-01-01',
   BN varchar(255) default '',
   GCN_SEQNO decimal(10,0) NOT NULL default '0',
   customName varchar(60) default NULL,
