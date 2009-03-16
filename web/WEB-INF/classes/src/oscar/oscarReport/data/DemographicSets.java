@@ -53,6 +53,12 @@ public class DemographicSets {
    public DemographicSets() {
    }
    
+   public void addDemographicSet(String setName, String demographic){      
+       ArrayList list = new ArrayList();
+       list.add(demographic);
+       addDemographicSet(setName,list);
+   }
+   
    public void addDemographicSet(String setName, ArrayList demoList){      
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -70,7 +76,7 @@ public class DemographicSets {
       ArrayList retval = new ArrayList();
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
+         ResultSet rs = db.GetSQL("select * from demographicSets where archive != '1' and set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
          
          while (rs.next()){
             retval.add(db.getString(rs,"demographic_no"));            
@@ -93,7 +99,7 @@ public class DemographicSets {
        }
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         ResultSet rs = db.GetSQL("select * from demographicSets where set_name in (" + strNames.toString() + ") group by demographic_no");          
+         ResultSet rs = db.GetSQL("select * from demographicSets where  archive != '1' and set_name in (" + strNames.toString() + ") group by demographic_no");          
          
          while (rs.next()){
             retval.add(db.getString(rs,"demographic_no"));            
@@ -108,7 +114,7 @@ public class DemographicSets {
       ArrayList retval = new ArrayList();
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         ResultSet rs = db.GetSQL("select * from demographicSets where set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
+         ResultSet rs = db.GetSQL("select * from demographicSets  where archive != '1' and  set_name = '"+StringEscapeUtils.escapeSql(setName)+"'");          
          
          while (rs.next()){
             Hashtable h = new Hashtable();
@@ -168,11 +174,22 @@ public class DemographicSets {
       return retval;
    }
    
+   public ArrayList setDemographicDelete(String setName,String demoNo){      
+      ArrayList retval = new ArrayList();
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         db.RunSQL("update demographicSets set archive = '1' where set_name = '"+StringEscapeUtils.escapeSql(setName)+"' and demographic_no = '"+demoNo+"'");                            
+         db.CloseConn();
+      }catch (java.sql.SQLException e){ System.out.println(e.getMessage()); }            
+      return retval;
+   }
+   
+   
    public ArrayList getDemographicSets(String demoNo) {
        ArrayList retval = new ArrayList();
        try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         ResultSet rs = db.GetSQL("select distinct set_name from demographicSets where demographic_no = " + demoNo);
+         ResultSet rs = db.GetSQL("select distinct set_name from demographicSets where archive = '1' and demographic_no = " + demoNo);
          
          while (rs.next()){
             retval.add(db.getString(rs,"set_name"));            

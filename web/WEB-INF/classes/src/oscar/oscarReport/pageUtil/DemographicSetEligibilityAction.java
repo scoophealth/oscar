@@ -49,10 +49,18 @@ public class DemographicSetEligibilityAction extends Action {
         String setName = request.getParameter("setName");
         DemographicSets dsets = new DemographicSets();
         
-        if(s != null){
-           for (int i = 0; i < s.length;i++){
-              dsets.setDemographicIneligible(setName, s[i]);
+        if (request.getParameter("delete")!= null && request.getParameter("delete").equals("Delete")){
+            for (int i = 0; i < s.length;i++){
+              dsets.setDemographicDelete(setName, s[i]);
            }
+        }else{
+        
+            if(s != null){
+               for (int i = 0; i < s.length;i++){
+                  dsets.setDemographicIneligible(setName, s[i]);
+               }
+            }
+        
         }
                 
         return mapping.findForward("success");
