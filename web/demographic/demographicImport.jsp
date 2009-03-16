@@ -86,10 +86,10 @@ function displayAndDisable(){
                         <input type="file" name="importFile" value="">                    
                         <input type="submit" name="Submit" value="Import">
             </html:form>
-//--> <html:form action="/form/importUpload2.do" method="POST"
+//--> <html:form action="/form/importUpload3.do" method="POST"
 			enctype="multipart/form-data" onsubmit="displayAndDisable()">
 			<input type="file" name="importFile" value="">
-			<input type="submit" name="Submit" value="Import (CMS spec 2.0)">
+			<input type="submit" name="Submit" value="Import (CMS spec 3.0)">
 		</html:form>
 
 		<div id="waitingMessage" style="display: none;">

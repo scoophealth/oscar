@@ -28,6 +28,8 @@
 
 package oscar.oscarEncounter.oscarMeasurements.data;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -76,19 +78,35 @@ public class ImportExportMeasurements {
 	return labmList;
     }
     
-    public static void saveMeasurements(String type, String demoNo, String providerNo, String dataField, Date dateObserved) throws SQLException {
-	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+    public static Long saveMeasurements(String type, String demoNo, String providerNo, String dataField, Date dateObserved) throws SQLException {
 	String sql = "SELECT measuringInstruction FROM measurementType WHERE type='"+type+"' LIMIT 1";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	ResultSet rs = db.GetSQL(sql);
 	String mi = rs.next() ? rs.getString("measuringInstruction") : "";
-	saveMeasurements(type, demoNo, providerNo, dataField, mi, dateObserved);
+	return saveMeasurements(type, demoNo, providerNo, dataField, mi, dateObserved);
     }
     
-    public static void saveMeasurements(String type, String demoNo, String providerNo, String dataField, String measuringInstruction, Date dateObserved) throws SQLException {
+    public static Long saveMeasurements(String type, String demoNo, String providerNo, String dataField, String measuringInstruction, Date dateObserved) throws SQLException {
+	Long id = null;
+	if (dateObserved==null) dateObserved = new Date();
+	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered)" +
+				      " VALUES (?, ?, ?, ?, ?, ?, ?)";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	String sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered) VALUES (" +
-		    demoNo + ",'" + type.toUpperCase() + "','" + providerNo + "','" + dataField + "','" + measuringInstruction + "','" + dateObserved + "','" + new Date() + "')";
-	db.RunSQL(sql);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setString(1, demoNo);
+	pstmt.setString(2, type.toUpperCase());
+	pstmt.setString(3, providerNo);
+	pstmt.setString(4, dataField);
+	pstmt.setString(5, measuringInstruction);
+	pstmt.setDate(6, new java.sql.Date(dateObserved.getTime()));
+	pstmt.setDate(7, new java.sql.Date(new Date().getTime()));
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) id = rs.getLong(1);
+	pstmt.close();
+	conn.close();
+	return id;
     }
     
     public static void saveMeasurements(Measurements meas) throws SQLException {
@@ -99,28 +117,40 @@ public class ImportExportMeasurements {
             ResultSet rs = db.GetSQL(sql);
             mi = rs.next() ? rs.getString("measuringInstruction") : "";
         }
-	sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered) VALUES (" +
-                meas.getDemographicNo()+",'"+meas.getType()+"','"+meas.getProviderNo()+"','"+meas.getDataField()+"','"+mi+"','"+
-                meas.getDateObserved()+"','"+meas.getDateEntered()+"')";
-	db.RunSQL(sql);
-        
-        sql = "SELECT max(id) FROM measurements WHERE " +
-                "demographicNo = " + meas.getDemographicNo() + " AND " +
-                "type = '" + meas.getType() + "' AND " +
-                "providerNo = '" + meas.getProviderNo() + "' AND " +
-                "dataField = '" + meas.getDataField() + "' AND " +
-                "measuringInstruction = '" + mi + "' AND " +
-                "dateObserved = '" + meas.getDateObserved() + "' AND " +
-                "dateEntered = '" +  meas.getDateEntered() + "'";
-        ResultSet rs = db.GetSQL(sql);
-        if (rs.next()) meas.setId(rs.getLong("id"));
+	sql = "INSERT INTO measurements (demographicNo, type, providerNo, dataField, measuringInstruction, dateObserved, dateEntered)" +
+			       " VALUES (?, ?, ?, ?, ?, ?, ?)";
+	if (meas.getDateObserved()==null) meas.setDateObserved(new Date());
+	if (meas.getDateEntered()==null) meas.setDateEntered(new Date());
+	if (meas.getType()==null) meas.setType("");
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setLong(1, meas.getDemographicNo());
+	pstmt.setString(2, meas.getType());
+	pstmt.setString(3, meas.getProviderNo());
+	pstmt.setString(4, meas.getDataField());
+	pstmt.setString(5, mi);
+	pstmt.setDate(6, new java.sql.Date(meas.getDateObserved().getTime()));
+	pstmt.setDate(7, new java.sql.Date(meas.getDateEntered().getTime()));
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) meas.setId(rs.getLong(1));
+	pstmt.close();
+	conn.close();
     }
     
     public static void saveMeasurementsExt(MeasurementsExt mExt) throws SQLException {
+        String sql = "INSERT INTO measurementsExt (measurement_id,keyval,val) VALUES (?,?,?)";
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        String sql = "INSERT INTO measurementsExt (measurement_id,keyval,val) VALUES (" +
-                mExt.getMeasurementId() + ",'" + mExt.getKeyVal() + "','" + mExt.getVal() + "')";
-        db.RunSQL(sql);
+	Connection conn = db.getConnection();
+	PreparedStatement pstmt = conn.prepareStatement(sql);
+	pstmt.setLong(1, mExt.getMeasurementId());
+	pstmt.setString(2, mExt.getKeyVal());
+	pstmt.setString(3, mExt.getVal());
+	pstmt.executeUpdate();
+	ResultSet rs = pstmt.getGeneratedKeys();
+	if (rs.next()) mExt.setId(rs.getLong(1));
+	pstmt.close();
+	conn.close();
     }
     
     public static List getMeasurementsExt(Long measurementId) throws SQLException {

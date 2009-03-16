@@ -37,8 +37,8 @@
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
   
-  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
-  ArrayList queryArray = searchData.getQueryTypes();
+//  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
+//  ArrayList queryArray = searchData.getQueryTypes();
 
   String userRole = (String)session.getAttribute("userrole");
 %>
@@ -105,6 +105,41 @@ function checkSelect(slct) {
     }
     else return true;
 }
+
+function checkAll(all) {
+    var frm = document.DemographicExportForm;
+    if (all) {
+	frm.exPersonalHistory.checked = true;
+	frm.exFamilyHistory.checked = true;
+	frm.exPastHealth.checked = true;
+	frm.exProblemList.checked = true;
+	frm.exRiskFactors.checked = true;
+	frm.exAllergiesAndAdverseReactions.checked = true;
+	frm.exMedicationsAndTreatments.checked = true;
+	frm.exImmunizations.checked = true;
+	frm.exLaboratoryResults.checked = true;
+	frm.exAppointments.checked = true;
+	frm.exClinicalNotes.checked = true;
+	frm.exReportsReceived.checked = true;
+	frm.exAuditInformation.checked = true;
+	frm.exCareElements.checked = true;
+    } else {
+	frm.exPersonalHistory.checked = false;
+	frm.exFamilyHistory.checked = false;
+	frm.exPastHealth.checked = false;
+	frm.exProblemList.checked = false;
+	frm.exRiskFactors.checked = false;
+	frm.exAllergiesAndAdverseReactions.checked = false;
+	frm.exMedicationsAndTreatments.checked = false;
+	frm.exImmunizations.checked = false;
+	frm.exLaboratoryResults.checked = false;
+	frm.exAppointments.checked = false;
+	frm.exClinicalNotes.checked = false;
+	frm.exReportsReceived.checked = false;
+	frm.exAuditInformation.checked = false;
+	frm.exCareElements.checked = false;
+    }
+}
 </SCRIPT>
 
 
@@ -145,33 +180,28 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	</tr>
 	<tr>
 		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
-		<td valign="top" class="MainTableRightColumn"><html:form
-			action="/demographic/DemographicExport" method="get"
-			onsubmit="return checkSelect(patientSet.value);">
-			<div>
-			<% if (demographic_no!= null) { %> <input type="hidden"
-				name="demographicNo" value="<%=demographic_no%>" /> Exporting : <%} else {%>
-			Patient Set: <html:select property="patientSet">
-				<html:option value="-1">--Select Set--</html:option>
-				<%for (int i =0 ; i < queryArray.size(); i++){
-                        RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
-                        String qId = sc.id;
-                        String qName = sc.queryName;%>
-				<html:option value="<%=qId%>"><%=qName%></html:option>
-				<%}%>
-			</html:select> <%}%> <!--
-                  <input type="submit" value="Export" />
-//--></div>
-
-		</html:form> <html:form action="/demographic/DemographicExport2" method="get"
-			onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
-			<% if (demographic_no!= null) { %>
-			<input type="hidden" name="demographicNo" value="<%=demographic_no%>" />
-		    Exporting :
-		    
+		<td valign="top" class="MainTableRightColumn">
+		    <html:form action="/demographic/DemographicExport3" method="get" onsubmit="return checkSelect(patientSet.value);">
+		    <div>
+		    <% if (demographic_no!= null) { %>
+			    <input type="hidden" name="demographicNo" value="<%=demographic_no%>" /> Exporting :
 		    <%} else {%>
-			<html:hidden property="patientSet" />
-			<%}%>
+			    Patient Set: <html:select property="patientSet">
+				    <html:option value="-1">--Select Set--</html:option>
+<%
+/*			    for (int i =0 ; i < queryArray.size(); i++){
+				RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
+				String qId = sc.id;
+				String qName = sc.queryName;
+*/
+			    for (int i=0; i<sets.size(); i++) {
+				String setName = (String)sets.get(i);
+%>
+				<html:option value="<%=setName%>"><%=setName%></html:option>
+			    <%}%>
+			    </html:select>
+		    <%}%>
+		    </div><br>
 		   Media Type:
 		   <html:select property="mediaType">
 				<html:option value="Hard Disk">Hard Disk</html:option>
@@ -183,7 +213,32 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		   &nbsp;
 		   Number of Media:
 		   <html:text property="noOfMedia" size="1" value="1" />
-			<p><input type="submit" value="Export (CMS spec 2.0)" />
+		   
+		   <p><table border="1"><tr><td>
+		       Export Categories:
+		       <table cellpadding="10"><tr><td>
+		       <html:checkbox property="exPersonalHistory">PersonalHistory</html:checkbox><br>
+		       <html:checkbox property="exFamilyHistory">FamilyHistory</html:checkbox><br>
+		       <html:checkbox property="exPastHealth">PastHealth</html:checkbox><br>
+		       <html:checkbox property="exProblemList">ProblemList</html:checkbox><br>
+		       <html:checkbox property="exRiskFactors">RiskFactors</html:checkbox><br>
+		       <html:checkbox property="exAllergiesAndAdverseReactions">AllergiesAndAdverseReactions</html:checkbox><br>
+		       <html:checkbox property="exMedicationsAndTreatments">MedicationsAndTreatments</html:checkbox>
+		       </td><td>
+		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox><br>
+		       <html:checkbox property="exLaboratoryResults">LaboratoryResults</html:checkbox><br>
+		       <html:checkbox property="exAppointments">Appointments</html:checkbox><br>
+		       <html:checkbox property="exClinicalNotes">ClinicalNotes</html:checkbox><br>
+		       <html:checkbox property="exReportsReceived">ReportsReceived</html:checkbox><br>
+		       <html:checkbox property="exAuditInformation">AuditInformation</html:checkbox><br>
+		       <html:checkbox property="exCareElements">CareElements</html:checkbox>
+		       </td><td>
+			   <input type="button" value="Check All" onclick="checkAll(true);"/><p>
+			   <input type="button" value="Check None" onclick="checkAll(false);"/>
+		       </td></tr></table>
+		   </td></tr></table>
+		   
+		    <p><input type="submit" value="Export (CMS spec 3.0)" />
 		</html:form></td>
 	</tr>
 	<tr>

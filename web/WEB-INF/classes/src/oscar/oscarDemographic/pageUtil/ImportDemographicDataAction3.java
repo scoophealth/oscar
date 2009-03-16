@@ -451,6 +451,7 @@ public class ImportDemographicDataAction3 extends Action {
 		cmNote.setProgram_no(new EctProgram(se).getProgram(proNum));
 		
 		cmIssu.setDemographic_no(demoNo);
+		cmIssu.setType("system");
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
 		sCmIssu.add(cmIssu);
 		cmNote.setIssues(sCmIssu);
@@ -808,7 +809,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    special = Util.appendLine(special, "Notes: ", medArray[i].getNotes());
 		    special = Util.appendLine(special, getResidual(medArray[i].getResidualInfo()));
 		    
-		    String dose = medArray[i].getDosage();
+		    String dose = Util.noNull(medArray[i].getDosage());
 		    int sep1 = dose.indexOf("-");
 		    int sep2 = dose.indexOf(" ");
 		    int sep3 = dose.indexOf(" ", sep2+1);

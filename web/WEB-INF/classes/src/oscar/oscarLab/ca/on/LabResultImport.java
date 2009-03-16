@@ -134,6 +134,7 @@ public class LabResultImport {
     
     public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, Date timestamp) throws SQLException {
 	Long id = null;
+	if (timestamp==null) timestamp=new Date();
 	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	Connection conn = db.getConnection();
@@ -142,7 +143,7 @@ public class LabResultImport {
 	pstmt.setString(2, lab_no);
 	pstmt.setString(3, status);
 	pstmt.setString(4, comment);
-	pstmt.setDate(5, (java.sql.Date)timestamp);
+	pstmt.setDate(5, new java.sql.Date(timestamp.getTime()));
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getLong(1);
