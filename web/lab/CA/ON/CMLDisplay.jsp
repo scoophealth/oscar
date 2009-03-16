@@ -1,6 +1,6 @@
 <%@ page language="java" errorPage="../provider/errorpage.jsp"%>
 <%@ page
-	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*"%>
+	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
