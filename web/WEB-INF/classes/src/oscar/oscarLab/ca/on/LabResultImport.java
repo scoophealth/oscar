@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class LabResultImport {
    
@@ -73,11 +74,15 @@ public class LabResultImport {
     
     public static String saveLabReportInfo(String location_id) throws SQLException {
 	String id = "";
-	String sql = "INSERT INTO labReportInformation (location_id) VALUES (?)";
+	String print_date = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
+	String print_time = UtilDateUtilities.DateToString(new Date(),"HH:mm:ss");
+	String sql = "INSERT INTO labReportInformation (location_id, print_date, print_time) VALUES (?,?,?)";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
 	pstmt.setString(1, location_id);
+	pstmt.setString(2, print_date);
+	pstmt.setString(3, print_time);
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getString(1);
