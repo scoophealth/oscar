@@ -48,7 +48,9 @@
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
     
     String tid = request.getParameter("table_id");
-    Long tableId = filled(tid) ? Long.valueOf(tid) : 0L;
+    Long tableId = 0L;
+    if (filled(tid)) tableId = Long.valueOf(tid);
+    else tid = "";
     
     HttpSession se = request.getSession();
     String user_no = (String) se.getAttribute("user");
