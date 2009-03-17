@@ -719,10 +719,9 @@ public class ImportDemographicDataAction3 extends Action {
 		    startDate = dateFullPartial(aaReactArray[i].getStartDate());
 		    if (aaReactArray[i].getCode()!=null) regionalId = Util.noNull(aaReactArray[i].getCode().getValue());
 		    reaction = Util.appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
-		    reaction = Util.appendLine(reaction, getCode(aaReactArray[i].getCode(),"Offending Agent Code"));
 		    if (aaReactArray[i].getReactionType()!=null) reaction = Util.appendLine(reaction,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
-		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) reaction = Util.appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
 		    if (!getYN(aaReactArray[i].getKnownAllergies()).equals("")) reaction = Util.appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
+		    reaction = Util.appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
 		    reaction = Util.appendLine(reaction, getResidual(aaReactArray[i].getResidualInfo()));
 		    
 		    if (aaReactArray[i].getReactionType()!=null) {
@@ -776,12 +775,12 @@ public class ImportDemographicDataAction3 extends Action {
 		    duration	   = Util.noNull(medArray[i].getDuration());
 		    route	   = Util.noNull(medArray[i].getRoute());
 		    drugForm	   = Util.noNull(medArray[i].getForm());
-		    longTerm	   = getYN(medArray[i].getLongTermMedication())=="Y";
-		    pastMed	   = getYN(medArray[i].getPastMedications())=="Y";
+		    longTerm	   = getYN(medArray[i].getLongTermMedication())=="Yes";
+		    pastMed	   = getYN(medArray[i].getPastMedications())=="Yes";
 		    
 		    String pc = getYN(medArray[i].getPatientCompliance());
-		    if (pc=="Y") patientCompliance = 1;
-		    else if (pc=="N") patientCompliance = -1;
+		    if (pc=="Yes") patientCompliance = 1;
+		    else if (pc=="No") patientCompliance = -1;
 		    else patientCompliance = 0;
 		    
 		    if (duration.trim().equals("1 year")) duration = "365"; //coping with scenario in CMS 2.0
@@ -862,7 +861,7 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = Util.appendLine(errorImport,"No Immunization Name ("+(i+1)+")");
 		    }
 		    preventionDate = dateFullPartial(immuArray[i].getDate());
-		    refused = getYN(immuArray[i].getRefusedFlag()).equals("Y") ? "1" : "0";
+		    refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
 		    
 		    String comments="", iSummary="";
 		    if (immuArray[i].getCategorySummaryLine()!=null) {
@@ -1606,24 +1605,24 @@ public class ImportDemographicDataAction3 extends Action {
     
     String getYN(cdsDt.YnIndicator yn) {
 	if (yn==null) return "";
-	String ret = "N";
+	String ret = "No";
 	if (yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y || yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y_2) {
-	    ret = "Y";
+	    ret = "Yes";
 	} else if (yn.getBoolean()) {
-	    ret = "Y";
+	    ret = "Yes";
 	}
 	return ret;
     }
     
     String getYN(cdsDt.YnIndicatorAndBlank yn) {
 	if (yn==null) return "";
-	String ret = "N";
+	String ret = "No";
 	if (yn.getBlank()==cdsDt.Blank.X) {
 	    ret = "";
 	} else if (yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y || yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y_2) {
-	    ret = "Y";
+	    ret = "Yes";
 	} else if (yn.getBoolean()) {
-	    ret = "Y";
+	    ret = "Yes";
 	}
 	return ret;
     }

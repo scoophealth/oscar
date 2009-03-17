@@ -865,27 +865,32 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			medi.setDrugIdentificationNumber(data);
 			mSummary = Util.appendLine(mSummary, "DIN: ", data);
 		    }
-		    data = arr[p].getDrugName();
-		    if (!Util.filled(data)) {
+		    String drugName = arr[p].getDrugName();
+		    if (!Util.filled(drugName)) {
 			data = "";
 			err.add("Error: No Drug Name for Patient "+demoNo+" ("+(p+1)+")");
 		    }
-		    medi.setDrugName(data);
-		    mSummary = Util.appendLine(mSummary, "Drug Name: ", data);
+		    medi.setDrugName(drugName);
+		    mSummary = Util.appendLine(mSummary, "Drug Name: ", drugName);
 		    
-		    if (Util.filled(arr[p].getDosageDisplay())) {
-			data = arr[p].getDosageDisplay()+" "+Util.noNull(arr[p].getUnit())+" "+Util.noNull(arr[p].getFrequencyCode());
-			medi.setDosage(data);
-			mSummary = Util.appendLine(mSummary, "Dosage: ", data);
-		    }
 		    if (Util.filled(arr[p].getDosage())) {
 			String strength = arr[p].getDosage();
 			int sep = strength.indexOf("/");
+			
 			strength = sep<0 ? strength : strength.substring(0,sep);
+			if (sep>0) {
+			    strength = strength.substring(0,sep);
+			    err.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
+			}
 			cdsDt.DrugMeasure drugM = medi.addNewStrength();
 			drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
 			drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
 			mSummary = Util.appendLine(mSummary, "Strength: ", arr[p].getGenericName()+" "+strength);
+		    }
+		    if (Util.filled(arr[p].getDosageDisplay())) {
+			data = arr[p].getDosageDisplay()+" "+Util.noNull(arr[p].getUnit())+" "+Util.noNull(arr[p].getFrequencyCode());
+			medi.setDosage(data);
+			mSummary = Util.appendLine(mSummary, "Dosage: ", data);
 		    }
 		    if (Util.filled(medi.getDrugName()) || Util.filled(medi.getDrugIdentificationNumber())) {
 			medi.setNumberOfRefills(String.valueOf(arr[p].getRepeat()));
@@ -949,6 +954,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
 		    data = arr[p].getSpecial();
 		    if (Util.filled(data)) {
+			data = extractDrugInstr(data);
 			medi.setPrescriptionInstructions(data);
 			mSummary = Util.appendLine(mSummary, "Prescription Instructions: ", data);
 		    }
@@ -1689,6 +1695,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    b = src.indexOf(sep, i)==-1 ? src.length() : src.indexOf(sep, i);
 	}
 	return exs;
+    }
+    
+    String extractDrugInstr(String special) {
+	if (!special.contains("Repeats:")) return special;
+	String drugInstr = special;
+	Integer cut = special.indexOf("\n", special.indexOf("Repeats:"));
+	if (cut<0) cut = special.indexOf("\r", special.indexOf("Repeats:"));
+	if (cut>=0) {
+	    if (cut<special.length()-1) {
+		drugInstr = special.substring(cut+1);
+	    }
+	}
+	return drugInstr;
     }
     
     String trimBlankLine(String source) {
