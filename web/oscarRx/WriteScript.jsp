@@ -803,7 +803,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setRxDate(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd"));
     thisForm.setEndDate(RxUtil.DateToString(rx.getEndDate(),"yyyy-MM-dd"));
     thisForm.setWrittenDate(RxUtil.DateToString(rx.getWrittenDate(),"yyyy-MM-dd"));
-    if (thisForm.getWrittenDate().length()==0) thisForm.setWrittenDate(RxUtil.DateToString(RxUtil.Today()));
+    if (thisForm.getWrittenDate().length()==0) thisForm.setWrittenDate(RxUtil.DateToString(RxUtil.Today(),"yyyy-MM-dd"));
     try{
         System.out.println(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd") );
     }catch(Exception e){ e.printStackTrace(); }
