@@ -36,7 +36,7 @@ public class Drug implements Serializable {
 	@Column(name = "BN")
 	private String brandName = null;
 	@Column(name = "GCN_SEQNO")
-	private int gcnSeqNo = 0;
+	private Integer gcnSeqNo = 0;
 	private String customName=null;
 	@Column(name = "takemin")
 	private float takeMin = 0;
@@ -48,7 +48,7 @@ public class Drug implements Serializable {
 	@Column(name = "durunit")
 	private String durUnit = null;
 	private String quantity = null;
-	private int repeat = 0;
+	private Integer repeat = 0;
 	@Column(name = "last_refill_date")
 	@Temporal(TemporalType.DATE)
 	private Date lastRefillDate = null;
@@ -62,7 +62,7 @@ public class Drug implements Serializable {
 	@Column(name = "ATC")
 	private String atc = null;
 	@Column(name = "script_no")
-	private int scriptNo = 0;
+	private Integer scriptNo = 0;
 	@Column(name = "regional_identifier")
 	private String regionalIdentifier = null;
 	private String unit = null;
