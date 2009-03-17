@@ -245,8 +245,6 @@ public class ImportDemographicDataAction3 extends Action {
 	    String date_joined = dateFullPartial(demo.getEnrollmentDate());
 	    String end_date = dateFullPartial(demo.getEnrollmentTerminationDate());
 	    String sin = Util.noNull(demo.getSIN());
-	    String dNote = "";
-	    dNote = Util.appendLine(dNote, "SIN: ", sin);
 	    
 	    String chart_no = Util.noNull(demo.getChartNumber());
 	    String official_lang = "";
@@ -257,12 +255,15 @@ public class ImportDemographicDataAction3 extends Action {
 	    }
 	    String spoken_lang = Util.noNull(demo.getPreferredSpokenLanguage());
 	    String uvID = Util.noNull(demo.getUniqueVendorIdSequence());
+	    String fmLink = Util.noNull(demo.getFamilyMemberLink());
+	    String dNote = "";
 	    if (Util.filled(uvID)) {
 		if (!Util.filled(chart_no)) {
 		    chart_no = uvID;
 		    errorImport = Util.appendLine(errorImport,"Note: Unique Vendor Id imported as [chart_no]");
 		} else {
 		    dNote = Util.appendLine(dNote, "Unique Vendor ID: ", uvID);
+		    errorImport = Util.appendLine(errorImport,"Note: Unique Vendor Id imported as [chart_no]");
 		}
 	    }
 	    String versionCode="", hin="", hc_type="", eff_date="";
@@ -438,7 +439,6 @@ public class ImportDemographicDataAction3 extends Action {
 		
 		//Prepare cmNote
 		CaseManagementNote cmNote = new CaseManagementNote();
-		CaseManagementIssue cmIssu = new CaseManagementIssue();
 		cmNote.setUpdate_date(new Date());
 		cmNote.setObservation_date(new Date());
 		cmNote.setDemographic_no(demoNo);
@@ -450,15 +450,8 @@ public class ImportDemographicDataAction3 extends Action {
 		cmNote.setReporter_program_team("0");
 		cmNote.setProgram_no(new EctProgram(se).getProgram(proNum));
 		
-		cmIssu.setDemographic_no(demoNo);
-		cmIssu.setType("system");
-		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
-		sCmIssu.add(cmIssu);
-		cmNote.setIssues(sCmIssu);
-		
 		//PERSONAL HISTORY
-		Issue isu = cmm.getIssueInfoByCode("SocHistory");
-		cmIssu.setIssue(isu);
+		cmNote.setIssues(getCMIssue("SocHistory", demoNo, cmm));
 		PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();
 		for (int i=0; i<pHist.length; i++) {
 		    String socialHist = "";
@@ -471,13 +464,11 @@ public class ImportDemographicDataAction3 extends Action {
 		    socialHist = Util.appendLine(socialHist, getResidual(pHist[i].getResidualInfo()));
 		    if (Util.filled(socialHist)) {
 			cmNote.setNote(socialHist);
-			cmm.saveCaseIssue(cmIssu);
 			cmm.saveNoteSimple(cmNote);
 		    }
 		}
 		//FAMILY HISTORY
-		isu = cmm.getIssueInfoByCode("FamHistory");
-		cmIssu.setIssue(isu);
+		cmNote.setIssues(getCMIssue("FamHistory", demoNo, cmm));
 		FamilyHistory[] fHist = patientRec.getFamilyHistoryArray();
 		for (int i=0; i<fHist.length; i++) {
 		    String familyHist = "";
@@ -492,7 +483,6 @@ public class ImportDemographicDataAction3 extends Action {
 		    familyHist = Util.appendLine(familyHist, getResidual(fHist[i].getResidualInfo()));
 		    if (Util.filled(familyHist)) {
 			cmNote.setNote(familyHist);
-			cmm.saveCaseIssue(cmIssu);
 			cmm.saveNoteSimple(cmNote);
 		    }
 		    cmNote.setNote(fHist[i].getNotes());
@@ -522,8 +512,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//PAST HEALTH
-		isu = cmm.getIssueInfoByCode("MedHistory");
-		cmIssu.setIssue(isu);
+		cmNote.setIssues(getCMIssue("MedHistory", demoNo, cmm));
 		PastHealth[] pHealth = patientRec.getPastHealthArray();
 		for (int i=0; i< pHealth.length; i++) {
 		    String medicalHist = "";
@@ -540,7 +529,6 @@ public class ImportDemographicDataAction3 extends Action {
 		    medicalHist = Util.appendLine(medicalHist, getResidual(pHealth[i].getResidualInfo()));
 		    if (Util.filled(medicalHist)) {
 			cmNote.setNote(medicalHist);
-			cmm.saveCaseIssue(cmIssu);
 			cmm.saveNoteSimple(cmNote);
 		    }
 		    cmNote.setNote(pHealth[i].getNotes());
@@ -555,8 +543,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//PROBLEM LIST
-		isu = cmm.getIssueInfoByCode("Concerns");
-		cmIssu.setIssue(isu);
+		Set<CaseManagementIssue> problemListIssues = getCMIssue("Concerns", demoNo, cmm);
 		ProblemList[] probList = patientRec.getProblemListArray();
 		for (int i=0; i<probList.length; i++) {
 		    String ongConcerns = "";
@@ -572,7 +559,7 @@ public class ImportDemographicDataAction3 extends Action {
 				concernIssu.setDemographic_no(demoNo);
 				concernIssu.setIssue(disu);
 				cmm.saveCaseIssue(concernIssu);
-				sCmIssu.add(concernIssu);
+				problemListIssues.add(concernIssu);
 			    } else code_unknown = true;
 			} else code_unknown = true;
 			if (code_unknown) ongConcerns = Util.appendLine(ongConcerns, getCode(probList[i].getDiagnosisCode(),"Diagnosis"));
@@ -586,9 +573,8 @@ public class ImportDemographicDataAction3 extends Action {
 		    ongConcerns = Util.appendLine(ongConcerns, getResidual(probList[i].getResidualInfo()));
 		    if (Util.filled(ongConcerns)) {
 			cmNote.setNote(ongConcerns);
-			cmm.saveCaseIssue(cmIssu);
+			cmNote.setIssues(problemListIssues);
 			cmm.saveNoteSimple(cmNote);
-			if (concernIssu!=null) sCmIssu.remove(concernIssu);
 		    }
 		    cmNote.setNote(probList[i].getNotes());
 		    saveLinkNote(cmNote, cmm);
@@ -615,8 +601,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//RISK FACTORS
-		isu = cmm.getIssueInfoByCode("RiskFactors");
-		cmIssu.setIssue(isu);
+		cmNote.setIssues(getCMIssue("RiskFactors", demoNo, cmm));
 		RiskFactors[] rFactors = patientRec.getRiskFactorsArray();
 		for (int i=0; i<rFactors.length; i++) {
 		    String riskFactors = "";
@@ -630,7 +615,6 @@ public class ImportDemographicDataAction3 extends Action {
 		    riskFactors = Util.appendLine(riskFactors, getResidual(rFactors[i].getResidualInfo()));
 		    if (Util.filled(riskFactors)) {
 			cmNote.setNote(riskFactors);
-			cmm.saveCaseIssue(cmIssu);
 			cmm.saveNoteSimple(cmNote);
 		    }
 		    cmNote.setNote(rFactors[i].getNotes());
@@ -661,10 +645,8 @@ public class ImportDemographicDataAction3 extends Action {
 		}
 		//REMINDERS
 		if (demo.getPatientWarningFlags()!=null && demo.getPatientWarningFlags().equals("1")) {
-		    isu = cmm.getIssueInfoByCode("Reminders");
-		    cmIssu.setIssue(isu);
+		    cmNote.setIssues(getCMIssue("Reminders", demoNo, cmm));
 		    cmNote.setNote(demo.getNoteAboutPatient());
-		    cmm.saveCaseIssue(cmIssu);
 		    cmm.saveNoteSimple(cmNote);
 		}
 		//CLINICAL NOTES
@@ -1568,6 +1550,22 @@ public class ImportDemographicDataAction3 extends Action {
 	String providerNo = "";
 	if (Util.filled(ohip)) providerNo = new ProviderData().getProviderNoByOhip(ohip);
 	return providerNo;
+    }
+    
+    Set<CaseManagementIssue> getCMIssue(String code, String demoNo, CaseManagementManager cmm) {
+	    CaseManagementIssue cmIssu = new CaseManagementIssue();
+	    cmIssu.setDemographic_no(demoNo);
+	    cmIssu.setType("doctor");
+	    Issue isu = cmm.getIssueInfoByCode(Util.noNull(code));
+	    cmIssu.setIssue(isu);
+	    cmm.saveCaseIssue(cmIssu);
+	    
+	    
+System.out.println("Ronnie: issue="+isu.getDescription());
+	    
+	    Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
+	    sCmIssu.add(cmIssu);
+	    return sCmIssu;
     }
     
     String getCode(cdsDt.Code dCode, String dTitle) {
