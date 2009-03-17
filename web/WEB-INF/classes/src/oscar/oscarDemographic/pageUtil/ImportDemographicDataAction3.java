@@ -721,7 +721,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    reaction = Util.appendLine(reaction,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
 		    if (aaReactArray[i].getReactionType()!=null) reaction = Util.appendLine(reaction,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
 		    if (!getYN(aaReactArray[i].getKnownAllergies()).equals("")) reaction = Util.appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
-		    reaction = Util.appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
+		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) reaction = Util.appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
 		    reaction = Util.appendLine(reaction, getResidual(aaReactArray[i].getResidualInfo()));
 		    
 		    if (aaReactArray[i].getReactionType()!=null) {
@@ -771,12 +771,16 @@ public class ImportDemographicDataAction3 extends Action {
 		    lastRefillDate = dateFullPartial(medArray[i].getLastRefillDate());
 		    regionalId	   = Util.noNull(medArray[i].getDrugIdentificationNumber());
 		    frequencyCode  = Util.noNull(medArray[i].getFrequency());
-		    quantity	   = Util.noNull(medArray[i].getQuantity());
-		    duration	   = Util.noNull(medArray[i].getDuration());
+		    quantity	   = numOnly(medArray[i].getQuantity());
+		    duration	   = numOnly(medArray[i].getDuration());
+		    frequencyCode  = procFreq(frequencyCode);
 		    route	   = Util.noNull(medArray[i].getRoute());
 		    drugForm	   = Util.noNull(medArray[i].getForm());
 		    longTerm	   = getYN(medArray[i].getLongTermMedication())=="Yes";
 		    pastMed	   = getYN(medArray[i].getPastMedications())=="Yes";
+		    
+		    rxDate = Util.filled(rxDate) ? rxDate : "0001-01-01";
+		    endDate = Util.filled(endDate) ? endDate : "0001-01-01";
 		    
 		    String pc = getYN(medArray[i].getPatientCompliance());
 		    if (pc=="Yes") patientCompliance = 1;
@@ -807,6 +811,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    special = Util.appendLine(special, "Quantity: ", medArray[i].getQuantity());
 		    special = Util.appendLine(special, "Notes: ", medArray[i].getNotes());
 		    special = Util.appendLine(special, getResidual(medArray[i].getResidualInfo()));
+		    special = Util.appendLine(special, "");
 		    
 		    String dose = Util.noNull(medArray[i].getDosage());
 		    int sep1 = dose.indexOf("-");
@@ -1625,6 +1630,24 @@ public class ImportDemographicDataAction3 extends Action {
 	    ret = "Yes";
 	}
 	return ret;
+    }
+    
+    String numOnly(String s) {
+	if (!Util.filled(s)) return "";
+	String numbers = "1234567890";
+	Integer cut = -1;
+	for (int i=0; i<s.length(); i++) {
+	    if (!numbers.contains(s.substring(i,i+1))) cut = i;
+	}
+	if (cut>0) s = s.substring(0,cut);
+	return s;
+    }
+    
+    String procFreq(String freqCode) {
+	if (!Util.filled(freqCode)) return "";
+	freqCode = freqCode.toUpperCase();
+	freqCode = freqCode.replace(".","");
+	return freqCode;
     }
     
     void saveLinkNote(CaseManagementNote cmn, CaseManagementManager cmm) {
