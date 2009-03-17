@@ -65,6 +65,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -442,21 +443,8 @@ public class ImportDemographicDataAction3 extends Action {
 		WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 		CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
 		
-		//Prepare cmNote
-		CaseManagementNote cmNote = new CaseManagementNote();
-		cmNote.setUpdate_date(new Date());
-		cmNote.setObservation_date(new Date());
-		cmNote.setDemographic_no(demoNo);
-		cmNote.setProviderNo(proNum);
-		cmNote.setSigning_provider_no(proNum);
-		cmNote.setSigned(true);
-		cmNote.setHistory("");
-		cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
-		cmNote.setReporter_program_team("0");
-		cmNote.setProgram_no(new EctProgram(se).getProgram(proNum));
-		
 		//PERSONAL HISTORY
-		cmNote.setIssues(getCMIssue("SocHistory", demoNo, cmm));
+		CaseManagementNote cmNote = prepareCMNote(demoNo, proNum, se);
 		PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();
 		for (int i=0; i<pHist.length; i++) {
 		    String socialHist = "";
@@ -473,6 +461,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//FAMILY HISTORY
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		cmNote.setIssues(getCMIssue("FamHistory", demoNo, cmm));
 		FamilyHistory[] fHist = patientRec.getFamilyHistoryArray();
 		for (int i=0; i<fHist.length; i++) {
@@ -517,6 +506,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//PAST HEALTH
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		cmNote.setIssues(getCMIssue("MedHistory", demoNo, cmm));
 		PastHealth[] pHealth = patientRec.getPastHealthArray();
 		for (int i=0; i< pHealth.length; i++) {
@@ -548,6 +538,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//PROBLEM LIST
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		Set<CaseManagementIssue> problemListIssues = getCMIssue("Concerns", demoNo, cmm);
 		ProblemList[] probList = patientRec.getProblemListArray();
 		for (int i=0; i<probList.length; i++) {
@@ -606,6 +597,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//RISK FACTORS
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		cmNote.setIssues(getCMIssue("RiskFactors", demoNo, cmm));
 		RiskFactors[] rFactors = patientRec.getRiskFactorsArray();
 		for (int i=0; i<rFactors.length; i++) {
@@ -649,13 +641,14 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		}
 		//REMINDERS
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		if (demo.getPatientWarningFlags()!=null && demo.getPatientWarningFlags().equals("1")) {
 		    cmNote.setIssues(getCMIssue("Reminders", demoNo, cmm));
 		    cmNote.setNote(demo.getNoteAboutPatient());
 		    cmm.saveNoteSimple(cmNote);
 		}
 		//CLINICAL NOTES
-		cmNote.setIssues(null);
+		cmNote = prepareCMNote(demoNo, proNum, se);
 		ClinicalNotes[] cNotes = patientRec.getClinicalNotesArray();
 		for (int i=0; i<cNotes.length; i++) {
 		    if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
@@ -730,6 +723,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		    Long allergyId = RxAllergyImport.save(demoNo, entryDate, description, typeCode, reaction, startDate, severity, regionalId);
 		    
+		    cmNote = prepareCMNote(demoNo, proNum, se);
 		    cmNote.setNote(aaReactArray[i].getNotes());
 		    saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, allergyId, cmm);
 
@@ -844,6 +838,7 @@ public class ImportDemographicDataAction3 extends Action {
 			    BN,regionalId,frequencyCode,duration,quantity,repeat,lastRefillDate,special,route,drugForm,
 			    dosage,takemin,takemax,unit,longTerm,pastMed,patientCompliance,outsiderName,outsiderOhip,(i+1));
 		    
+		    cmNote = prepareCMNote(demoNo, proNum, se);
 		    cmNote.setNote(medArray[i].getNotes());
 		    saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, drugId, cmm);
 		}
@@ -1653,6 +1648,22 @@ public class ImportDemographicDataAction3 extends Action {
 	}
 	if (cut>0) s = s.substring(0,cut);
 	return s;
+    }
+    
+    CaseManagementNote prepareCMNote(String demoNo, String providerNo, HttpSession se) {
+	CaseManagementNote cmNote = new CaseManagementNote();
+	cmNote.setUpdate_date(new Date());
+	cmNote.setObservation_date(new Date());
+	cmNote.setDemographic_no(demoNo);
+	cmNote.setProviderNo(providerNo);
+	cmNote.setSigning_provider_no(providerNo);
+	cmNote.setSigned(true);
+	cmNote.setHistory("");
+	cmNote.setReporter_caisi_role("1");  //caisi_role for "doctor"
+	cmNote.setReporter_program_team("0");
+	cmNote.setProgram_no(new EctProgram(se).getProgram(providerNo));
+	cmNote.setUuid(UUID.randomUUID().toString());
+	return cmNote;
     }
     
     String procFreq(String freqCode) {
