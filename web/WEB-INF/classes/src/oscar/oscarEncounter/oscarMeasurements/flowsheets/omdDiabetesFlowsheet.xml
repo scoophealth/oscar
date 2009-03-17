@@ -51,27 +51,28 @@ ds_rules="diab.drl"
     <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />    
   </measurement>
   
-  <item measurement_type="FPG" display_name="Fasting Plasma Glucose" guideline="" graphable="yes" value_name="Fasting Plasma Glucose">
+  <item measurement_type="FBS" display_name="Fasting Plasma Glucose" guideline="" graphable="yes" value_name="Fasting Plasma Glucose">
     <rules>
       <recommendation strength="warning" >
-        <condition type="monthrange" param="FPG" value="&gt;3" />
+        <condition type="monthrange" param="FBS" value="&gt;3" />
       </recommendation>
       <recommendation strength="warning" >
-        <condition type="monthrange" param="FPG" value="-1" />
+        <condition type="monthrange" param="FBS" value="-1" />
       </recommendation>
     </rules>
     <ruleset>
       <rule indicationColor="LOW">
-        <condition type="getDataAsDouble" param="FPG" value="&lt;4" />
+        <condition type="getDataAsDouble" param="FBS" value="&lt;4" />
       </rule>
       <rule indicationColor="HIGH">
-        <condition type="getDataAsDouble" param="FPG" value="&gt;7" />
+        <condition type="getDataAsDouble" param="FBS" value="&gt;7" />
       </rule>
     </ruleset>
   </item>
-  <measurement type="FPG" typeDesc="Fasting Plasma Glucose" typeDisplayName="Fasting Plasma Glucose" measuringInstrc="">
-    <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-  </measurement>
+  <measurement type="FBS" typeDesc="Glucose FBS" typeDisplayName="FBS" measuringInstrc="FBS">
+        <validationRule name="Numeric Value: 0 to 50" maxValue="50" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength=""/>
+    </measurement>
+  
   
   <item measurement_type="FBPC" display_name="2 hr PC BG" guideline="" graphable="yes" value_name="2 hr PC BG">
     <rules>
