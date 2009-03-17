@@ -54,6 +54,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,6 +88,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.appt.AppointmentDAO;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -367,6 +370,8 @@ public class ImportDemographicDataAction3 extends Action {
 	    demoNo = demoRes.getId();
 	    if (demoNo!=null)
 	    {
+		insertIntoAdmission(demoNo, proNum);
+		
 		if (Util.filled(dNote)) dd.addDemographiccust(demoNo, dNote);
 		
 		if (!workExt.equals("")) dExt.addKey(primaryPhysician, demoNo, "wPhoneExt", workExt);
@@ -1557,11 +1562,8 @@ public class ImportDemographicDataAction3 extends Action {
 	    cmIssu.setDemographic_no(demoNo);
 	    cmIssu.setType("doctor");
 	    Issue isu = cmm.getIssueInfoByCode(Util.noNull(code));
-	    cmIssu.setIssue(isu);
+	    cmIssu.setIssue_id(isu.getId());
 	    cmm.saveCaseIssue(cmIssu);
-	    
-	    
-System.out.println("Ronnie: issue="+isu.getDescription());
 	    
 	    Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
 	    sCmIssu.add(cmIssu);
@@ -1779,6 +1781,20 @@ System.out.println("Ronnie: issue="+isu.getDescription());
         if (object != null){
             s.append(name+": "+object+"\n");
         }
+    }
+    
+    void insertIntoAdmission(String demoNo, String providerNo) throws SQLException {
+	String sql = "insert into admission (client_id,program_id,provider_no,admission_date,admission_from_transfer,discharge_from_transfer,admission_status,team_id,temporary_admission_flag,radioDischargeReason,clientstatus_id,automatic_discharge)" +
+				   " values (?,10016,?,now(),0,0,'current',0,0,0,0,0)";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.getConnection();
+	PreparedStatement ps = conn.prepareStatement(sql);
+	ps.setString(1, demoNo);
+	ps.setString(2, providerNo);
+	ps.executeUpdate();
+	ps.close();
+	conn.close();
+	
     }
     
     public ImportDemographicDataAction3() {
