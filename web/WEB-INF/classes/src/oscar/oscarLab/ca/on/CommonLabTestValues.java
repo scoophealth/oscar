@@ -553,7 +553,12 @@ public class CommonLabTestValues {
                                     String collDate = handler.getTimeStamp(i, j);
                                     h.put("lab_no",lab_no);
                                     h.put("collDate",collDate);
-                                    h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
+                                    System.out.println("COLLDATE "+collDate);
+                                    if (collDate.length() == 10){
+                                       h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd"));
+                                    }else{
+                                       h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
+                                    }
                                     labList.add(h);
                                     break;
                                 }
