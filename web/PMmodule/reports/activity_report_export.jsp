@@ -93,6 +93,9 @@
 			sb.append(StringEscapeUtils.escapeCsv(issueGroup.getName()));
 		}
 
+		sb.append(',');
+		sb.append("Total");
+
 		// for debugging
 		// System.err.println(sb.toString());
 		
@@ -148,8 +151,8 @@
 						sb.append(issueGroupEntry);
 					}
 					
-					// for debugging
-					// System.err.println(sb.toString());
+					sb.append(',');
+					sb.append(encounterEntry.getValue().rowTotal);
 					
 					out.write(sb.toString());
 					out.write('\n');
