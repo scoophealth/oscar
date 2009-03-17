@@ -1659,6 +1659,7 @@ public class ImportDemographicDataAction3 extends Action {
 	if (!Util.filled(freqCode)) return "";
 	freqCode = freqCode.toUpperCase();
 	freqCode = freqCode.replace(".","");
+	freqCode = freqCode.replace(" ","");
 	return freqCode;
     }
     
