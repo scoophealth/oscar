@@ -72,64 +72,65 @@
 		<%
 			for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
 			{
-		%>
-		<td class="genericTableHeader"><%=issueGroup.getName()%></td>
-		<%
-		}
+				%>
+				<td class="genericTableHeader"><%=issueGroup.getName()%></td>
+				<%
+			}
 		%>
 		<td class="genericTableHeader">Total</td>
 	</tr>
 	<%
-			for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
-			{
-		boolean hasPrintedRole = false;
-		for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
+		for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
 		{
-			String tempRoleName = "";
-			if (!hasPrintedRole)
+			boolean hasPrintedRole = false;
+			for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
 			{
-		tempRoleName = roleEntry.getKey().getName();
-		hasPrintedRole = true;
+				String tempRoleName = "";
+				if (!hasPrintedRole)
+				{
+					tempRoleName = roleEntry.getKey().getName();
+					hasPrintedRole = true;
+				}
+				%>
+					<tr class="genericTableRow">
+					<td class="genericTableHeader"><%=tempRoleName%></td>
+					<td class="genericTableData"><%=encounterEntry.getKey().name()%></td>
+					<%
+						for (Integer issueGroupEntry : encounterEntry.getValue().values())
+						{
+							%>
+								<td class="genericTableData"><%=issueGroupEntry%></td>
+							<%
+						}
+					%>
+	
+					<td class="genericTableData"><%=encounterEntry.getValue().rowTotal%></td>
+					</tr>
+				<%
 			}
-	%>
-	<tr class="genericTableRow">
-		<td class="genericTableHeader"><%=tempRoleName%></td>
-		<td class="genericTableData"><%=encounterEntry.getKey().name()%></td>
-		<%
-					for (Integer issueGroupEntry : encounterEntry.getValue().values())
-					{
 		%>
-		<td class="genericTableData"><%=issueGroupEntry%></td>
-		<%
-		}
-		%>
-		<td class="genericTableData"><%=encounterEntry.getValue().getTotalOfAllValues()%></td>
-	</tr>
-	<%
-	}
-	%>
-	<tr class="genericTableRow">
-		<td class="genericTableHeader"></td>
-		<td class="genericTableHeader">Sub Total</td>
-		<%
-				PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow = roleEntry.getValue().getIssueGroupTotals();
+		<tr class="genericTableRow">
+			<td class="genericTableHeader"></td>
+			<td class="genericTableHeader">Sub Total</td>
+			<%
+				PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow = roleEntry.getValue().subTotal;
 				for (Integer issueGroupEntry : encounterTypeDataRow.values())
 				{
-		%>
-		<td class="genericTableData"><%=issueGroupEntry%></td>
+					%>
+					<td class="genericTableData"><%=issueGroupEntry%></td>
+					<%
+				}
+			%>
+			<td class="genericTableData"><%=encounterTypeDataRow.rowTotal%></td>
+		</tr>
 		<%
-		}
-		%>
-		<td class="genericTableData"><%=encounterTypeDataRow.getTotalOfAllValues()%></td>
-	</tr>
-	<%
 	}
-	%>
+%>
 	<tr class="genericTableRow">
 		<td class="genericTableHeader">Total</td>
 		<td class="genericTableData"></td>
 		<%
-			PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow = roleDataGrid.getIssueGroupTotals();
+			PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow = roleDataGrid.total;
 			for (Integer issueGroupEntry : encounterTypeDataRow.values())
 			{
 		%>
@@ -137,7 +138,7 @@
 		<%
 		}
 		%>
-		<td class="genericTableData"><%=encounterTypeDataRow.getTotalOfAllValues()%></td>
+		<td class="genericTableData"><%=encounterTypeDataRow.rowTotal%></td>
 	</tr>
 </table>
 

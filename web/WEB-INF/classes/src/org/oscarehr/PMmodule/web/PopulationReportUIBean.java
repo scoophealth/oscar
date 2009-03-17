@@ -108,32 +108,40 @@ public class PopulationReportUIBean {
 			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
 		}
 
+		roleDataGrid.total=getEncounterTypeDataRow(null, null);
+		
 		return (roleDataGrid);
 	}
 
 	private EncounterTypeDataGrid getEncounterTypeDataGrid(Role role) {
 
+		Integer roleId=null;
+		if (role!=null) roleId=role.getId().intValue();
+		
 		EncounterTypeDataGrid result = new EncounterTypeDataGrid();
 
 		for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values()) {
-			result.put(encounterType, getEncounterTypeDataRow(role, encounterType));
+			result.put(encounterType, getEncounterTypeDataRow(roleId, encounterType));
 		}
 
+		result.subTotal=getEncounterTypeDataRow(roleId, null);
+		
 		return (result);
 	}
 
-	private EncounterTypeDataRow getEncounterTypeDataRow(Role role, EncounterUtil.EncounterType encounterType) {
+	private EncounterTypeDataRow getEncounterTypeDataRow(Integer roleId, EncounterUtil.EncounterType encounterType) {
 
 		EncounterTypeDataRow result = new EncounterTypeDataRow();
 
-		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, (int) role.getId().longValue(), encounterType, startDate,
-				endDate);
+		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, roleId, encounterType, startDate, endDate);
 
 		for (IssueGroup issueGroup : getIssueGroups()) {
 			Integer count = counts.get(issueGroup.getId());
 			result.put(issueGroup, (count != null ? count : 0));
 		}
 
+		result.rowTotal=populationReportDao.getCaseManagementNoteTotalCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
+		
 		return (result);
 	}
 }

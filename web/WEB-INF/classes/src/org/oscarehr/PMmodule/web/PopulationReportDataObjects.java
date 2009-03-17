@@ -18,6 +18,8 @@ public class PopulationReportDataObjects {
 	 */
 	public static class EncounterTypeDataRow extends AccumulatorMap<IssueGroup>
 	{
+		public int rowTotal=0;
+		
 		// this is just a place holder class so I know what item I'm dealing with
 	}
 
@@ -26,18 +28,7 @@ public class PopulationReportDataObjects {
 	 */
 	public static class EncounterTypeDataGrid extends TreeMap<EncounterUtil.EncounterType, EncounterTypeDataRow>
 	{
-		private EncounterTypeDataRow total=null;
-		
-		public EncounterTypeDataRow getIssueGroupTotals()
-		{
-			if (total==null)
-			{
-				total=new EncounterTypeDataRow();
-				for (EncounterTypeDataRow encounterTypeDataRow : values()) total.addAccumulator(encounterTypeDataRow);
-			}
-			
-			return(total);
-		}
+		public EncounterTypeDataRow subTotal=null;		
 	}
 	
 	/**
@@ -45,14 +36,7 @@ public class PopulationReportDataObjects {
 	 */
 	public static class RoleDataGrid extends TreeMap<Role, EncounterTypeDataGrid>
 	{
-		public EncounterTypeDataRow getIssueGroupTotals()
-		{
-			EncounterTypeDataRow total=new EncounterTypeDataRow();
-			
-			for (EncounterTypeDataGrid encounterTypeDataGrid : values()) total.addAccumulator(encounterTypeDataGrid.getIssueGroupTotals());
-			
-			return(total);
-		}
+		public EncounterTypeDataRow total=null;		
 	}
 	
 }
