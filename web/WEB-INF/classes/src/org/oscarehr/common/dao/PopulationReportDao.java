@@ -223,4 +223,32 @@ public class PopulationReportDao extends HibernateDaoSupport {
             SqlUtils.closeResources(c, ps, rs);
         }
     }
+
+    public Integer getCaseManagementNoteCountByIssueGroup(int programId, Integer issueGroupId, Integer roleId, EncounterType encounterType, Date startDate, Date endDate) {
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            c = DbConnectionFilter.getThreadLocalDbConnection();
+            ps = c.prepareStatement("select count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id "+(issueGroupId==null?"":"and IssueGroupIssues.issueGroupId=? ")+"and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id "+(encounterType==null?"":"and casemgmt_note.encounter_type=? ")+"and casemgmt_note.program_no=? "+(roleId==null?"":"and casemgmt_note.reporter_caisi_role=? ")+"and casemgmt_note.observation_date>=? and casemgmt_note.observation_date<=?");
+            int counter=1;
+            if (issueGroupId!=null) ps.setInt(counter++, issueGroupId);
+            if (encounterType!=null) ps.setString(counter++, encounterType.getOldDbValue());
+            ps.setInt(counter++, programId);
+            if (roleId!=null) ps.setInt(counter++, roleId);
+            ps.setTimestamp(counter++, new Timestamp(startDate != null?startDate.getTime():0));
+            ps.setTimestamp(counter++, new Timestamp(endDate != null?endDate.getTime():System.currentTimeMillis()));
+
+            rs = ps.executeQuery();
+            rs.next();
+            
+            return(rs.getInt(1));
+        }
+        catch (SQLException e) {
+            throw (new HibernateException(e));
+        }
+        finally {
+            SqlUtils.closeResources(c, ps, rs);
+        }
+    }
 }

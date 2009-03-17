@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoleDAO;
@@ -41,6 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class PopulationReportUIBean {
 
+	private static Logger logger=LogManager.getLogger(PopulationReportUIBean.class);
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private RoleDAO roleDAO = (RoleDAO) SpringUtils.getBean("roleDAO");
 	private IssueGroupDao issueGroupDao = (IssueGroupDao) SpringUtils.getBean("issueGroupDao");
@@ -102,6 +105,8 @@ public class PopulationReportUIBean {
 
 	public RoleDataGrid getRoleDataGrid() {
 
+		long startTime=System.currentTimeMillis();
+		
 		RoleDataGrid roleDataGrid = new RoleDataGrid();
 
 		for (Role role : getRoles()) {
@@ -109,6 +114,9 @@ public class PopulationReportUIBean {
 		}
 
 		roleDataGrid.total=getEncounterTypeDataRow(null, null);
+		
+		long totalTime=System.currentTimeMillis()-startTime;
+		logger.debug("report generation in seconds : "+(totalTime/1000));
 		
 		return (roleDataGrid);
 	}
