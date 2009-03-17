@@ -770,7 +770,6 @@ public class ImportDemographicDataAction3 extends Action {
 		    endDate	   = dateFullPartial(medArray[i].getEndDate());
 		    lastRefillDate = dateFullPartial(medArray[i].getLastRefillDate());
 		    regionalId	   = Util.noNull(medArray[i].getDrugIdentificationNumber());
-		    frequencyCode  = Util.noNull(medArray[i].getFrequency());
 		    quantity	   = numOnly(medArray[i].getQuantity());
 		    duration	   = numOnly(medArray[i].getDuration());
 		    frequencyCode  = procFreq(frequencyCode);
@@ -805,13 +804,20 @@ public class ImportDemographicDataAction3 extends Action {
 			special = Util.appendLine(special, "Summary: ", mSummary);
 			errorImport = Util.appendLine(errorImport,"Note: Medications Summary imported in [special] ("+(i+1)+")");
 		    }
-		    special = Util.appendLine(special, "DIN: ", regionalId);
+		    if (medArray[i].getStrength()!=null) {
+			dosage = Util.noNull(medArray[i].getStrength().getAmount())+" "+Util.noNull(medArray[i].getStrength().getUnitOfMeasure());
+			special = Util.appendLine(special, "Strength: ", dosage);
+		    }
+		    //special = Util.appendLine(special, "DIN: ", regionalId);
+		    //special = Util.appendLine(special, "Quantity: ", medArray[i].getQuantity());
+		    special = Util.appendLine(special, "Take ", medArray[i].getDosage());
+		    special += Util.filled(route) ? " "+route : "";
+		    special += Util.filled(frequencyCode) ? " "+frequencyCode : "";
+		    special += Util.filled(duration) ? " for "+duration : "";
+		    
 		    special = Util.appendLine(special, "Prescription Instructions: ", medArray[i].getPrescriptionInstructions());
-		    special = Util.appendLine(special, "Dosage: ", medArray[i].getDosage());
-		    special = Util.appendLine(special, "Quantity: ", medArray[i].getQuantity());
-		    special = Util.appendLine(special, "Notes: ", medArray[i].getNotes());
 		    special = Util.appendLine(special, getResidual(medArray[i].getResidualInfo()));
-		    special = Util.appendLine(special, "");
+		    special += Util.filled(special) ? "\n" : "";
 		    
 		    String dose = Util.noNull(medArray[i].getDosage());
 		    int sep1 = dose.indexOf("-");
@@ -826,10 +832,13 @@ public class ImportDemographicDataAction3 extends Action {
 			    takemax = takemin;
 			}
 			unit = dose.substring(sep2+1,sep3);
-		    }
-		    if (medArray[i].getStrength()!=null) {
-			dosage = Util.noNull(medArray[i].getStrength().getAmount())+" "+Util.noNull(medArray[i].getStrength().getUnitOfMeasure());
-			special = Util.appendLine(special, "Strength: ", dosage);
+		    } else {
+			takemin = Integer.parseInt(numOnly(dose));
+			takemax = takemin;
+			String[] dose_split = dose.split(" ");
+			if (dose_split.length>1) {
+			    unit = dose_split[1];
+			}
 		    }
 		    String prescribedBy="", outsiderName="", outsiderOhip="";
 		    if (medArray[i].getPrescribedBy()!=null) {
@@ -1633,11 +1642,14 @@ public class ImportDemographicDataAction3 extends Action {
     }
     
     String numOnly(String s) {
-	if (!Util.filled(s)) return "";
+	if (!Util.filled(s)) return "0";
 	String numbers = "1234567890";
 	Integer cut = -1;
 	for (int i=0; i<s.length(); i++) {
-	    if (!numbers.contains(s.substring(i,i+1))) cut = i;
+	    if (!numbers.contains(s.substring(i,i+1))) {
+		cut = i;
+		break;
+	    }
 	}
 	if (cut>0) s = s.substring(0,cut);
 	return s;
