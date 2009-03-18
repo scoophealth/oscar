@@ -338,7 +338,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             } else if (meas.getType().equals("POSK")) { //Packs of Cigarettes per day
 		cdsDt.SmokingPacks smokp = careElements.addNewSmokingPacks();
 		smokp.setDate(Util.calDate(meas.getDateObserved()));
-		smokp.setPerDay(BigDecimal.valueOf(Double.valueOf(meas.getDataField())));
+		smokp.setPerDay(new BigDecimal(meas.getDataField()));
                 if (dateObserved==null) {
                     errors.add("Error! No Date for Smoking Packs (id="+meas.getId()+") for Patient "+demoNo);
                 }
