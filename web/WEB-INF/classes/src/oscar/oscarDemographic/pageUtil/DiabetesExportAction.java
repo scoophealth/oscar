@@ -300,8 +300,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             if (dateObserved!=null) {
                 if (startDate.after(dateObserved) || endDate.before(dateObserved)) continue;
             }
-            CareElements careElements = patientRecord.addNewCareElements();
+            
             if (meas.getType().equals("HT")) { //Height in cm
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.Height height = careElements.addNewHeight();
 		height.setDate(Util.calDate(meas.getDateObserved()));
 		height.setHeight(meas.getDataField());
@@ -310,6 +311,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Height (id="+meas.getId()+") for Patient "+demoNo);
 		}
             } else if (meas.getType().equals("WT") && meas.getMeasuringInstruction().equalsIgnoreCase("in kg")) { //Weight in kg
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.Weight weight = careElements.addNewWeight();
 		weight.setDate(Util.calDate(meas.getDateObserved()));
 		weight.setWeight(meas.getDataField());
@@ -318,6 +320,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Weight (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("WAIS") || meas.getType().equals("WC")) { //Waist Circumference in cm
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.WaistCircumference waist = careElements.addNewWaistCircumference();
 		waist.setDate(Util.calDate(meas.getDateObserved()));
 		waist.setWaistCircumference(meas.getDataField());
@@ -326,6 +329,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Waist Circumference (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("BP")) { //Blood Pressure
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.BloodPressure bloodp = careElements.addNewBloodPressure();
 		bloodp.setDate(Util.calDate(meas.getDateObserved()));
 		String[] sdbp = meas.getDataField().split("/");
@@ -336,6 +340,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Blood Pressure (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("POSK")) { //Packs of Cigarettes per day
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.SmokingPacks smokp = careElements.addNewSmokingPacks();
 		smokp.setDate(Util.calDate(meas.getDateObserved()));
 		smokp.setPerDay(new BigDecimal(meas.getDataField()));
@@ -343,6 +348,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Smoking Packs (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("SMK")) { //Smoking
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.SmokingStatus smoks = careElements.addNewSmokingStatus();
 		smoks.setDate(Util.calDate(meas.getDateObserved()));
 		smoks.setStatus(Util.yn(meas.getDataField()));
@@ -350,6 +356,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Smoking Status (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("SMBG")) { //Self Monitoring Blood Glucose
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.SelfMonitoringBloodGlucose bloodg = careElements.addNewSelfMonitoringBloodGlucose();
 		bloodg.setDate(Util.calDate(meas.getDateObserved()));
 		bloodg.setSelfMonitoring(Util.yn(meas.getDataField()));
@@ -357,6 +364,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Self-monitoring Blood Glucose (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("DMME")) { //Diabetes Education
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.DiabetesEducationalSelfManagement des = careElements.addNewDiabetesEducationalSelfManagement();
 		des.setDate(Util.calDate(meas.getDateObserved()));
 		des.setEducationalTrainingPerformed(Util.yn(meas.getDataField()));
@@ -364,6 +372,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Diabetes Educational Self-management (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("SMCD")) { //Self Management Challenges
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.DiabetesSelfManagementChallenges dsc = careElements.addNewDiabetesSelfManagementChallenges();
 		dsc.setCodeValue(cdsDt.DiabetesSelfManagementChallenges.CodeValue.X_44941_3);
 		dsc.setDate(Util.calDate(meas.getDateObserved()));
@@ -372,6 +381,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Diabetes Self-management Challenges (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("MCCN")) { //Motivation Counseling Completed Nutrition
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesMotivationalCounselling dmc = careElements.addNewDiabetesMotivationalCounselling();
 		    dmc.setDate(Util.calDate(meas.getDateObserved()));
@@ -381,6 +391,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("MCCE")) { //Motivation Counseling Completed Exercise
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesMotivationalCounselling dmc = careElements.addNewDiabetesMotivationalCounselling();
 		    dmc.setDate(Util.calDate(meas.getDateObserved()));
@@ -390,6 +401,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("MCCS")) { //Motivation Counseling Completed Smoking Cessation
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesMotivationalCounselling dmc = careElements.addNewDiabetesMotivationalCounselling();
 		    dmc.setDate(Util.calDate(meas.getDateObserved()));
@@ -399,6 +411,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("MCCO")) { //Motivation Counseling Completed Other
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesMotivationalCounselling dmc = careElements.addNewDiabetesMotivationalCounselling();
 		    dmc.setDate(Util.calDate(meas.getDateObserved()));
@@ -408,6 +421,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("EYEE")) { //Dilated Eye Exam
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesComplicationScreening dcs = careElements.addNewDiabetesComplicationsScreening();
 		    dcs.setDate(Util.calDate(meas.getDateObserved()));
@@ -417,6 +431,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("FTE")) { //Foot Exam
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesComplicationScreening dcs = careElements.addNewDiabetesComplicationsScreening();
 		    dcs.setDate(Util.calDate(meas.getDateObserved()));
@@ -426,6 +441,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("FTLS")) { // Foot Exam Test Loss of Sensation (Neurological Exam)
+                CareElements careElements = patientRecord.addNewCareElements();
                 if (Util.yn(meas.getDataField())==cdsDt.YnIndicatorsimple.Y) {
 		    cdsDt.DiabetesComplicationScreening dcs = careElements.addNewDiabetesComplicationsScreening();
 		    dcs.setDate(Util.calDate(meas.getDateObserved()));
@@ -435,6 +451,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     }
                 }
             } else if (meas.getType().equals("CGSD")) { //Collaborative Goal Setting
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.DiabetesSelfManagementCollaborative dsco = careElements.addNewDiabetesSelfManagementCollaborative();
 		dsco.setDate(Util.calDate(meas.getDateObserved()));
 		dsco.setCodeValue(cdsDt.DiabetesSelfManagementCollaborative.CodeValue.X_44943_9);
@@ -443,9 +460,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                     errors.add("Error! No Date for Diabetes Self-management Collaborative Goal Setting (id="+meas.getId()+") for Patient "+demoNo);
                 }
             } else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
+                CareElements careElements = patientRecord.addNewCareElements();
 		cdsDt.HypoglycemicEpisodes he = careElements.addNewHypoglycemicEpisodes();
 		he.setDate(Util.calDate(meas.getDateObserved()));
-		he.setNumOfReportedEpisodes(BigInteger.valueOf(Double.valueOf(meas.getDataField())));
+		he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField()));
                 if (dateObserved==null) {
                     errors.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
                 }
