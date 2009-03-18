@@ -54,7 +54,6 @@ public class ManageHnrClientAction {
 
 				if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
-				if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
 
 				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart());
 				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd());
@@ -75,7 +74,6 @@ public class ManageHnrClientAction {
 
 				if (hnrClient.getLastName() != null) demographic.setLastName(hnrClient.getLastName());
 				if (hnrClient.getProvince() != null) demographic.setProvince(hnrClient.getProvince());
-				if (hnrClient.getSin() != null) demographic.setSin(hnrClient.getSin());
 				if (hnrClient.getStreetAddress() != null) demographic.setAddress(hnrClient.getStreetAddress());
 
 				demographicDao.getHibernateTemplate().saveOrUpdate(demographic);
@@ -121,17 +119,17 @@ public class ManageHnrClientAction {
 			if (hcInfoValidated) {
 				isAtLeastOneThingValidated = true;
 
-				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
-				if (demographic.getCity() != null) hnrClient.setCity(demographic.getCity());
 				if (demographic.getFirstName() != null) hnrClient.setFirstName(demographic.getFirstName());
 				if (demographic.getLastName() != null) hnrClient.setLastName(demographic.getLastName());
+
+				// genders can't be synced until gender constants are resolved
+				// if (demographic.getSex()!=null) hnrClient.setGender(demographic.getSex());
+
+				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType());
-				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
 				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(demographic.getEffDate());
 				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(demographic.getHcRenewDate());
-				if (demographic.getProvince() != null) hnrClient.setProvince(demographic.getProvince());
-				if (demographic.getAddress() != null) hnrClient.setStreetAddress(demographic.getAddress());
 			}
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);
@@ -150,8 +148,9 @@ public class ManageHnrClientAction {
 				
 				// genders can't be synced until gender constants are resolved
 				// if (demographic.getSex()!=null) hnrClient.setGender(demographic.getSex());
-
-				if (demographic.getSin() != null) hnrClient.setSin(demographic.getSin());
+				if (demographic.getAddress() != null) hnrClient.setStreetAddress(demographic.getAddress());
+				if (demographic.getCity() != null) hnrClient.setCity(demographic.getCity());
+				if (demographic.getProvince() != null) hnrClient.setProvince(demographic.getProvince());
 			}
 
 			if (isAtLeastOneThingValidated)

@@ -36,13 +36,18 @@
 	<tr>
 		<td class="genericTableHeader">First Name</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
-		<td rowspan="11" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
+		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Last Name</td>
 		<td><%=StringUtils.trimToEmpty(demographic.getLastName())%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getLastName())%></td>
+	</tr>
+	<tr>
+		<td class="genericTableHeader">Gender</td>
+		<td><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
+		<td><%=manageHnrClient.getRemoteGender()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
@@ -60,11 +65,6 @@
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinType())%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">Health Card Version</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getVer())%></td>
-		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinVersion())%></td>
-	</tr>
-	<tr>
 		<td class="genericTableHeader">Health Card Valid Start</td>
 		<td><%=manageHnrClient.getLocalFormatedHinStartDate()%></td>
 		<td><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
@@ -75,9 +75,10 @@
 		<td><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">Province/State/Territory</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getProvince())%></td>
-		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getProvince())%></td>
+		<td class="genericTableHeader">Street Address</td>
+		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
+		<td rowspan="3" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
+		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">City</td>
@@ -85,20 +86,9 @@
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getCity())%></td>
 	</tr>
 	<tr>
-		<td class="genericTableHeader">Street Address</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
-		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
-	</tr>
-	<tr>
-		<td class="genericTableHeader">Gender</td>
-		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
-		<td rowspan="2" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
-		<td style="border-top:solid black 1px"><%=manageHnrClient.getRemoteGender()%></td>
-	</tr>
-	<tr>
-		<td class="genericTableHeader">SIN</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getSin())%></td>
-		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getSin())%></td>
+		<td class="genericTableHeader">Province/State/Territory</td>
+		<td><%=StringUtils.trimToEmpty(demographic.getProvince())%></td>
+		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getProvince())%></td>
 	</tr>
 </table>
 

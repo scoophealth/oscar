@@ -170,15 +170,12 @@ public class HnrDataValidation {
 
 		sb.append(demographic.getFirstName()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getLastName()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getSex()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getFormattedDob()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHin()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHcType()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
-		sb.append(demographic.getVer()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getEffDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHcRenewDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
-		sb.append(demographic.getProvince()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
-		sb.append(demographic.getCity()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
-		sb.append(demographic.getAddress()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 
 		return (sb.toString().getBytes());
 	}
@@ -186,8 +183,9 @@ public class HnrDataValidation {
 	public static byte[] getOtherInfoValidationBytes(Demographic demographic) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(demographic.getSex()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
-		sb.append(demographic.getSin()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getAddress()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getCity()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		sb.append(demographic.getProvince()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 
 		return (sb.toString().getBytes());
 	}
