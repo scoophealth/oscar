@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
-<%@ page import="oscar.oscarProvider.data.*"%>
+<%@ page import="oscar.oscarProvider.data.*, oscar.log.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.*,java.lang.*,java.util.Date"%>
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -81,6 +81,8 @@ if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {
     System.out.println("RX DATE " + rxDate);
     provider = new oscar.oscarRx.data.RxProviderData().getProvider(signingProvider);
     session.setAttribute("tmpBeanRX", null);
+    String ip = request.getRemoteAddr();
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_PRESCRIPTION, String.valueOf(bean.getDemographicNo()), ip);
 }
 else {
     bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
@@ -120,7 +122,8 @@ OscarProperties props = OscarProperties.getInstance();
 
 String pracNo = provider.getPractitionerNo();
 
-
+String strUser = (String)session.getAttribute("user");
+ProviderData user = new ProviderData(strUser);
 %>
 <html:form action="/form/formname">
 
@@ -251,7 +254,7 @@ String pracNo = provider.getPractitionerNo();
 				</tr>
 				<% if( rePrint.equalsIgnoreCase("true") && rx != null ) { %>
 				<tr valign=bottom style="font-size: 6px;">
-					<td height=25px colspan="2"><span style="float: left;">Reprint;
+                                    <td height=25px colspan="2">Reprint by <%=user.getProviderName(strUser)%><span style="float: left;">
 					Originally Printed:&nbsp;<%=rx.getPrintDate()%></span> <span
 						style="float: right;">Times Printed:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
 					</td>
