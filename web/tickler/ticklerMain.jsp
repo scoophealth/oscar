@@ -1,4 +1,6 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.common.model.*"%>
+<%@page import="org.springframework.web.context.WebApplicationContext,oscar.oscarLab.ca.on.*"%>  
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -7,7 +9,9 @@
 <%response.sendRedirect("../noRights.html");%>
 </security:oscarSec>
 
+<%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*,org.oscarehr.common.dao.*" %>
 <%@ page import="java.util.*,java.text.*, java.sql.*, oscar.*, java.net.*, org.oscarehr.common.dao.ViewDAO, org.oscarehr.common.model.View, org.springframework.web.context.WebApplicationContext, org.springframework.web.context.support.WebApplicationContextUtils" %>
+
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" />
@@ -25,8 +29,11 @@
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   
+  
   WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());  
   ViewDAO viewDao =  (ViewDAO) ctx.getBean("UserViewDAO");
+  TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
+  
   String role = (String)request.getSession().getAttribute("userrole");
   Map<String,View> viewMap = viewDao.getView(View.TICKLER_VIEW,role);  
   View v;
@@ -58,7 +65,7 @@
       assignedTo = request.getParameter("assignedTo");
   }
   
-  
+
 %>
 
 <%@ include file="dbTicker.jsp" %>
@@ -223,6 +230,12 @@ var beginD = "1900-01-01"
 	e.checked = false;
 	//Unhighlight(e);
     }
+    
+    function reportWindow(page) {
+    windowprops="height=660, width=960, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes, top=0, left=0";
+    var popup = window.open(page, "labreport", windowprops);
+    popup.focus();
+}
 
     function CheckAll()
     {
@@ -552,185 +565,184 @@ var beginD = "1900-01-01"
 <table bgcolor=#666699 border=0 cellspacing=0 width=100%><form name="ticklerform" method="post" action="dbTicklerMain.jsp">
 <tr><td>
 
-<table class="sortable" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <thead>
-        <TR bgcolor=#EEEEFF>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="3%"></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="17%"><bean:message key="tickler.ticklerMain.msgDemographicName"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="17%"><bean:message key="tickler.ticklerMain.msgDoctorName"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgDate"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="9%"><bean:message key="tickler.ticklerMain.msgCreationDate"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.Priority"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="12%"><bean:message key="tickler.ticklerMain.taskAssignedTo"/></th>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<TR bgcolor=#666699>
+<TD width="3%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
+<TD width="17%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDemographicName"/></B></FONT></TD>
+<TD width="17%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDoctorName"/></B></FONT></TD>
+<TD width="9%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDate"/></B></FONT></TD>
+<TD width="9%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgCreationDate"/></B></FONT></TD>
+<TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.Priority"/></B></FONT></TD>
+<TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.taskAssignedTo"/></B></FONT></TD>
+
+<TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgStatus"/></B></FONT></TD>
+<TD width="30%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgMessage"/></B></FONT></TD>
+</TR>
+<%
+    String dateBegin = xml_vdate;
+    String dateEnd = xml_appointment_date;
+    String redColor = "", lilacColor = "" , whiteColor = "";
+    String vGrantdate = "1980-01-07 00:00:00.0";
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale());
+    String provider;
+    String taskAssignedTo = "";
+    if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+    if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+    ResultSet rs=null ;
+    String[] param =new String[5];
+    boolean bodd=false;
+    param[0] = ticklerview;
+
+    param[1] = dateBegin;
+    param[2] = dateEnd;
+    param[3] = request.getParameter("providerview")==null?"%": request.getParameter("providerview");
+    param[4] = request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
+   System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
+
+    rs = apptMainBean.queryResults(param, "search_tickler");
+    while (rs.next()) {
+       nItems = nItems +1;
+
+        if (apptMainBean.getString(rs,"provider_last")==null || apptMainBean.getString(rs,"provider_first")==null){
+            provider = "";
+        }
+        else{
+            provider = apptMainBean.getString(rs,"provider_last") + ", " + apptMainBean.getString(rs,"provider_first");
+        }
+
+        if (apptMainBean.getString(rs,"assignedLast")==null || apptMainBean.getString(rs,"assignedFirst")==null){
+            taskAssignedTo = "";
+        }
+        else{
+            taskAssignedTo = apptMainBean.getString(rs,"assignedLast") + ", " + apptMainBean.getString(rs,"assignedFirst");
+        }
+        bodd=bodd?false:true;
+        vGrantdate = apptMainBean.getString(rs,"service_date")+ ".0";
+        java.util.Date grantdate = dateFormat.parse(vGrantdate);
+        java.util.Date toDate = new java.util.Date();
+        long millisDifference = toDate.getTime() - grantdate.getTime();
+        long daysDifference = millisDifference / (1000 * 60 * 60 * 24);
+if (daysDifference > 0){
+
+%>
+
+<tr >
+<TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><input type="checkbox" name="checkbox" value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+<%
+	if (vLocale.getCountry().equals("BR")) { %>
+     <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+<%}else{%>
+     <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+<%}%>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+	<%
+		java.util.Date service_date = rs.getDate("service_date");
+		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		String service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+	<%
+		service_date = rs.getDate("update_date");
+		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"status").equals("A")?stActive:apptMainBean.getString(rs,"status").equals("C")?stComplete:apptMainBean.getString(rs,"status").equals("D")?stDeleted:apptMainBean.getString(rs,"status")%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=apptMainBean.getString(rs,"message")%></TD>
+ </tr>
+<%
+}else {
+%>
+<tr >
+<TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><input type="checkbox" name="checkbox" value="<%=apptMainBean.getString(rs,"tickler_no")%>"></TD>
+<%
+	if (vLocale.getCountry().equals("BR")) { %>
+      <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+<%}else{%>
+      <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=apptMainBean.getString(rs,"last_name")%>,<%=apptMainBean.getString(rs,"first_name")%></a></TD>
+<%}%>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
+	<%
+		java.util.Date service_date = rs.getDate("service_date");
+		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		String service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
+	<%
+		service_date = rs.getDate("update_date");
+		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"priority")%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"status").equals("A")?stActive:apptMainBean.getString(rs,"status").equals("C")?stComplete:apptMainBean.getString(rs,"status").equals("D")?stDeleted:apptMainBean.getString(rs,"status")%></TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=apptMainBean.getString(rs,"message")%>
+ <%
+    List<TicklerLink> linkList = ticklerLinkDAO.getLinkByTickler(new Long(rs.getLong("tickler_no")));
+    if (linkList != null){
+        for(TicklerLink tl : linkList){
+            String type = tl.getTableName();  
+            %>
+        
+           <% if ( LabResultData.isMDS(type) ){ %>
+            <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+            <% }else if (LabResultData.isCML(type)){ %>
+            <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+            <% }else if (LabResultData.isHL7TEXT(type)){ %>
+            <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+            <% }else if (LabResultData.isDocument(type)){ %>
+            <a href="javascript:reportWindow('../dms/ManageDocument.do?method=display&doc_no=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+            <% }else {%>
+            <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=tl.getTableId()%>&providerNo=<%=user_no%>&searchProviderNo=<%=user_no%>&status=')">ATT</a>
+            <% }%>
+
             
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="6%"><bean:message key="tickler.ticklerMain.msgStatus"/></th>
-            <th style="color:#000000; font-size:xsmall; font-family:verdana,arial,helvetica;" width="30%"><bean:message key="tickler.ticklerMain.msgMessage"/></th>            
-        </TR>
-    </thead>
-                        <tfoot>
-                            <tr bgcolor=#666699><td colspan="8" class="white"><a href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                    <input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
-                                    <input type="hidden" name="submit_form" value="">
-                                    <% if (ticklerview.compareTo("D") == 0){%>
-                                    <input type="button" value="<bean:message key="tickler.ticklerMain.btnEraseCompletely"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Erase Completely'; document.forms['ticklerform'].submit();">
-                                    <%} else{%>
-                                    <input type="button" value="<bean:message key="tickler.ticklerMain.btnComplete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Complete'; document.forms['ticklerform'].submit();">
-                                    <input type="button" value="<bean:message key="tickler.ticklerMain.btnDelete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Delete'; document.forms['ticklerform'].submit();">
-                                    <%}%>
-                            <input type="button" name="button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()" class="sbttn"> </td></tr>
-                        </tfoot>
-                        <tbody>                               
-                            <%
-                            String dateBegin = xml_vdate;
-                            String dateEnd = xml_appointment_date;
-                            String redColor = "", lilacColor = "" , whiteColor = "";
-                            String vGrantdate = "1980-01-07 00:00:00.0";
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale());
-                            String provider;
-                            String taskAssignedTo = "";
-                            if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-                            if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
-                            ResultSet rs=null ;
-                            String[] param =new String[6];
-                            boolean bodd=false;
-                            param[0] = ticklerview;
-                            
-                            param[1] = dateBegin;
-                            param[2] = dateEnd;
-                            param[3] = providerview.equals("all") ? "%" : providerview; //request.getParameter("providerview")==null?"%": request.getParameter("providerview");
-                            param[4] = assignedTo.equals("all") ? "%" : assignedTo; //request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo");
-                            //System.out.println(request.getParameter("assignedTo")==null?"%": request.getParameter("assignedTo"));
-                            
-                            String colNames[] = new String[] {"last_name", "provider_last", "service_date", "update_date", "priority", "assignedLast", "status", "message"}; 
-                            v = null;
-                            String order = "service_date desc";
-                            int col;
-                            if( viewMap != null ) { 
-                                v = viewMap.get("columnId");
-                                if( v != null ) {                            
-                                   col = Integer.parseInt(v.getValue()) - 1;
-                                   order = colNames[col] + " ";
-                                   v = viewMap.get("sortOrder");
-                                   if( v!= null ) {
-                                       order += v.getValue();
-                                   }
-                                }
-                            }
-                            
-                            System.out.println("SORT ORDER " + order);
-                            param[5] = order;
-                            String sql = "select t.tickler_no, d.demographic_no, d.last_name,d.first_name, p.last_name as provider_last, p.first_name as provider_first, t.status,t.message,t.service_date, t.update_date, t.priority, p2.first_name AS assignedFirst, p2.last_name as assignedLast from tickler t LEFT JOIN provider p2 ON ( p2.provider_no=t.task_assigned_to), demographic d LEFT JOIN provider p ON ( p.provider_no=d.provider_no) where t.demographic_no=d.demographic_no and t.status='" + param[0] + "' and TO_DAYS(t.service_date) >=TO_DAYS('" + param[1] + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + param[2] + "') and d.provider_no like '" + param[3] + "' and t.task_assigned_to like '" + param[4] + "' order by " + param[5];
-                            oscar.oscarDB.DBHandler db = new oscar.oscarDB.DBHandler(oscar.oscarDB.DBHandler.OSCAR_DATA);
-                            java.sql.PreparedStatement ps =  db.GetConnection().prepareStatement(sql);
-                              
-                            rs = db.GetSQL(sql);
-                            //rs = apptMainBean.queryResults(param, "search_ticklerOrdered");
-                            while (rs.next()) {
-                            nItems = nItems +1;
-                            
-                            if (db.getString(rs,"provider_last")==null || db.getString(rs,"provider_first")==null){
-                            provider = "";
-                            }
-                            else{
-                            provider = db.getString(rs,"provider_last") + ", " + db.getString(rs,"provider_first");
-                            }
-                            
-                            if (db.getString(rs,"assignedLast")==null || db.getString(rs,"assignedFirst")==null){
-                            taskAssignedTo = "";
-                            }
-                            else{
-                            taskAssignedTo = db.getString(rs,"assignedLast") + ", " + db.getString(rs,"assignedFirst");
-                            }
-                            bodd=bodd?false:true;
-                            vGrantdate = db.getString(rs,"service_date")+ ".0";
-                            java.util.Date grantdate = dateFormat.parse(vGrantdate);
-                            java.util.Date toDate = new java.util.Date();
-                            long millisDifference = toDate.getTime() - grantdate.getTime();
-                            long daysDifference = millisDifference / (1000 * 60 * 60 * 24);
-                            if (daysDifference > 0){
-                            
-                            %>
-                            
-                            <tr >
-                                <TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=nItems%><input type="checkbox" name="checkbox" value="<%=db.getString(rs,"tickler_no")%>"></TD>
-                                <%
-                                if (vLocale.getCountry().equals("BR")) { %>
-                                <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=db.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=db.getString(rs,"last_name")%>,<%=db.getString(rs,"first_name")%></a></TD>
-                                <%}else{%>
-                                <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=db.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=db.getString(rs,"last_name")%>,<%=db.getString(rs,"first_name")%></a></TD>
-                                <%}%>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
-                                    <%
-                                    java.util.Date service_date = rs.getDate("service_date");
-                                    SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-                                    String service_date_str = dateFormat2.format(service_date);
-                                    out.print(service_date_str);
-                                    %> 
-                                </TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
-                                    <%
-                                    service_date = rs.getDate("update_date");
-                                    dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-                                    service_date_str = dateFormat2.format(service_date);
-                                    out.print(service_date_str);
-                                    %> 
-                                </TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=db.getString(rs,"priority")%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=db.getString(rs,"status").equals("A")?stActive:db.getString(rs,"status").equals("C")?stComplete:db.getString(rs,"status").equals("D")?stDeleted:db.getString(rs,"status")%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=db.getString(rs,"message")%></TD>
-                            </tr>
-                            <%
-                            }else {
-                            %>
-                            <tr >
-                                <TD width="3%"  ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=nItems%><input type="checkbox" name="checkbox" value="<%=db.getString(rs,"tickler_no")%>"></TD>
-                                <%
-                                if (vLocale.getCountry().equals("BR")) { %>
-                                <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=db.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr')"><%=db.getString(rs,"last_name")%>,<%=db.getString(rs,"first_name")%></a></TD>
-                                <%}else{%>
-                                <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=db.getString(rs,"demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=db.getString(rs,"last_name")%>,<%=db.getString(rs,"first_name")%></a></TD>
-                                <%}%>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
-                                    <%
-                                    java.util.Date service_date = rs.getDate("service_date");
-                                    SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-                                    String service_date_str = dateFormat2.format(service_date);
-                                    out.print(service_date_str);
-                                    %> 
-                                </TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
-                                    <%
-                                    service_date = rs.getDate("update_date");
-                                    dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-                                    service_date_str = dateFormat2.format(service_date);
-                                    out.print(service_date_str);
-                                    %> 
-                                </TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=db.getString(rs,"priority")%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=db.getString(rs,"status").equals("A")?stActive:db.getString(rs,"status").equals("C")?stComplete:db.getString(rs,"status").equals("D")?stDeleted:db.getString(rs,"status")%></TD>
-                                <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=db.getString(rs,"message")%></TD>
-                            </tr>
-                            <%
-                            }
-                            
-                            %>
-                            
-                            <%}
-                            
-                            //apptMainBean.closePstmtConn();
-                            rs.close();
-                            db.CloseConn();
-                            
-                            if (nItems == 0) {
-                            %>
-                            <tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>                        
-                            <%}%>
-                        </tbody>
-                        
+            
+      <%}
+        
+    }
+    
+    
+    %>
+   
+</TD>
+ </tr>
+<%
+}
+
+%>
+
+<%}
+
+apptMainBean.closePstmtConn();
+
+if (nItems == 0) {
+%>
+<tr><td colspan="8" class="white"><bean:message key="tickler.ticklerMain.msgNoMessages"/></td></tr>
+<%}%>
+<tr bgcolor=#666699><td colspan="8" class="white"><a href="javascript:CheckAll();"><bean:message key="tickler.ticklerMain.btnCheckAll"/></a> - <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<input type="button" name="button" value="<bean:message key="tickler.ticklerMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
+<input type="hidden" name="submit_form" value="">
+<% if (ticklerview.compareTo("D") == 0){%>
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnEraseCompletely"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Erase Completely'; document.forms['ticklerform'].submit();">
+<%} else{%>
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnComplete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Complete'; document.forms['ticklerform'].submit();">
+<input type="button" value="<bean:message key="tickler.ticklerMain.btnDelete"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Delete'; document.forms['ticklerform'].submit();">
+<%}%>
+<input type="button" name="button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()" class="sbttn"> </td></tr>
+
 </table></td></tr></form></table>
 <p><font face="Arial, Helvetica, sans-serif" size="2"> </font></p>
   <p>&nbsp; </p>
