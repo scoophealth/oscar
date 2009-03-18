@@ -338,7 +338,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             } else if (meas.getType().equals("POSK")) { //Packs of Cigarettes per day
 		cdsDt.SmokingPacks smokp = careElements.addNewSmokingPacks();
 		smokp.setDate(Util.calDate(meas.getDateObserved()));
-		smokp.setPerDay(BigDecimal.valueOf(Long.valueOf(meas.getDataField())));
+		smokp.setPerDay(BigDecimal.valueOf(Double.valueOf(meas.getDataField())));
                 if (dateObserved==null) {
                     errors.add("Error! No Date for Smoking Packs (id="+meas.getId()+") for Patient "+demoNo);
                 }
@@ -445,7 +445,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             } else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
 		cdsDt.HypoglycemicEpisodes he = careElements.addNewHypoglycemicEpisodes();
 		he.setDate(Util.calDate(meas.getDateObserved()));
-		he.setNumOfReportedEpisodes(BigInteger.valueOf(Long.valueOf(meas.getDataField())));
+		he.setNumOfReportedEpisodes(BigInteger.valueOf(Double.valueOf(meas.getDataField())));
                 if (dateObserved==null) {
                     errors.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
                 }
@@ -596,9 +596,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	for (LabMeasurements labMea : labMeaList) {
 	    String data = Util.noNull(labMea.getExtVal("identifier"));
 	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
-            if (Util.filled(loinc)) loinc = loinc.trim();
-            if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
-	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(loinc.trim());
+            if (Util.filled(loinc)) {
+                loinc = loinc.trim();
+                if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
+            }
+            
+	    LaboratoryResults.TestName.Enum testName = LaboratoryResults.TestName.Enum.forString(loinc);
 	    if (testName==null) continue;
 	    
 	    LaboratoryResults labResults = patientRecord.addNewLaboratoryResults();
