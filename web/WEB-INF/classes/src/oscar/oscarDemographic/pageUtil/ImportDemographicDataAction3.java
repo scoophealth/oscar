@@ -264,6 +264,7 @@ public class ImportDemographicDataAction3 extends Action {
 	    String uvID = demo.getUniqueVendorIdSequence();
 	    String fmLink = demo.getFamilyMemberLink();
 	    String pwFlag = demo.getPatientWarningFlags();
+	    String psDate = dateFullPartial(demo.getPersonStatusDate());
 	    
 	    if (Util.filled(uvID)) {
 		if (!Util.filled(chart_no)) {
@@ -281,6 +282,10 @@ public class ImportDemographicDataAction3 extends Action {
 	    if (Util.filled(pwFlag)) {
 		dNote = Util.appendLine(dNote, "Patient Warning Flag: ", pwFlag);
 		errorImport = Util.appendLine(errorImport,"Note: Patient Warning Flag imported to Patient Note");
+	    }
+	    if (Util.filled(psDate)) {
+		dNote = Util.appendLine(dNote, "Person Status Date: ", psDate);
+		errorImport = Util.appendLine(errorImport,"Note: Person Status Date imported to Patient Note");
 	    }
 	    
 	    String versionCode="", hin="", hc_type="", eff_date="";
@@ -469,7 +474,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    } else {
 			summaryGood = "No";
 			errorImport = Util.appendLine(errorImport,"No Summary for Personal History ("+(i+1)+")");
-		    }		    
+		    }
 		    socialHist = Util.appendLine(socialHist, getResidual(pHist[i].getResidualInfo()));
 		    if (Util.filled(socialHist)) {
 			cmNote.setNote(socialHist);
@@ -491,16 +496,18 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = Util.appendLine(errorImport,"No Summary for Family History ("+(i+1)+")");
 		    }
 		    familyHist = Util.appendLine(familyHist, getResidual(fHist[i].getResidualInfo()));
+		    Long hostNoteId = null;
 		    if (Util.filled(familyHist)) {
 			cmNote.setNote(familyHist);
 			cmm.saveNoteSimple(cmNote);
+			hostNoteId = cmNote.getId();
+			cmNote = prepareCMNote(se);
+			cmNote.setNote(fHist[i].getNotes());
+			saveLinkNote(hostNoteId, cmNote, cmm);
 		    }
-		    cmNote = prepareCMNote(se);
-		    cmNote.setNote(fHist[i].getNotes());
-		    saveLinkNote(cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
-		    cme.setNoteId(cmNote.getId());
+		    cme.setNoteId(hostNoteId);
 		    if (fHist[i].getStartDate()!=null) {
 			cme.setKeyVal(cme.STARTDATE);
 			cme.setDateValue(dDateFullPartial(fHist[i].getStartDate(),"yyyy-MM-dd"));
@@ -539,17 +546,19 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = Util.appendLine(errorImport,"No Summary for Past Health ("+(i+1)+")");
 		    }
 		    medicalHist = Util.appendLine(medicalHist, getResidual(pHealth[i].getResidualInfo()));
+		    Long hostNoteId = null;
 		    if (Util.filled(medicalHist)) {
 			cmNote.setNote(medicalHist);
 			cmm.saveNoteSimple(cmNote);
+			hostNoteId = cmNote.getId();
+			cmNote = prepareCMNote(se);
+			cmNote.setNote(pHealth[i].getNotes());
+			saveLinkNote(hostNoteId, cmNote, cmm);
 		    }
-		    cmNote = prepareCMNote(se);
-		    cmNote.setNote(pHealth[i].getNotes());
-		    saveLinkNote(cmNote, cmm);
 		    
 		    if (pHealth[i].getResolvedDate()!=null) {
 			CaseManagementNoteExt cme = new CaseManagementNoteExt();
-			cme.setNoteId(cmNote.getId());
+			cme.setNoteId(hostNoteId);
 			cme.setKeyVal(cme.RESOLUTIONDATE);
 			cme.setDateValue(dDateFullPartial(pHealth[i].getResolvedDate(),"yyyy-MM-dd"));
 			cmm.saveNoteExt(cme);
@@ -585,17 +594,19 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = Util.appendLine(errorImport,"No Summary for Problem List ("+(i+1)+")");
 		    }
 		    ongConcerns = Util.appendLine(ongConcerns, getResidual(probList[i].getResidualInfo()));
+		    Long hostNoteId = null;
 		    if (Util.filled(ongConcerns)) {
 			cmNote.setNote(ongConcerns);
 			cmNote.setIssues(problemListIssues);
 			cmm.saveNoteSimple(cmNote);
+			hostNoteId = cmNote.getId();
+			cmNote = prepareCMNote(se);
+			cmNote.setNote(probList[i].getNotes());
+			saveLinkNote(hostNoteId, cmNote, cmm);
 		    }
-		    cmNote = prepareCMNote(se);
-		    cmNote.setNote(probList[i].getNotes());
-		    saveLinkNote(cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
-		    cme.setNoteId(cmNote.getId());
+		    cme.setNoteId(hostNoteId);
 		    if (probList[i].getOnsetDate()!=null) {
 			cme.setKeyVal(cme.STARTDATE);
 			cme.setDateValue(dDateFullPartial(probList[i].getOnsetDate(),"yyyy-MM-dd"));
@@ -629,16 +640,18 @@ public class ImportDemographicDataAction3 extends Action {
 			errorImport = Util.appendLine(errorImport,"No Summary for Risk Factors ("+(i+1)+")");
 		    }
 		    riskFactors = Util.appendLine(riskFactors, getResidual(rFactors[i].getResidualInfo()));
+		    Long hostNoteId = null;
 		    if (Util.filled(riskFactors)) {
 			cmNote.setNote(riskFactors);
 			cmm.saveNoteSimple(cmNote);
+			hostNoteId = cmNote.getId();
+			cmNote = prepareCMNote(se);
+			cmNote.setNote(rFactors[i].getNotes());
+			saveLinkNote(hostNoteId, cmNote, cmm);
 		    }
-		    cmNote = prepareCMNote(se);
-		    cmNote.setNote(rFactors[i].getNotes());
-		    saveLinkNote(cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
-		    cme.setNoteId(cmNote.getId());
+		    cme.setNoteId(hostNoteId);
 		    if (rFactors[i].getStartDate()!=null) {
 			cme.setKeyVal(cme.STARTDATE);
 			cme.setDateValue(dDateFullPartial(rFactors[i].getStartDate(),"yyyy-MM-dd"));
@@ -957,7 +970,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    _location[i] = Util.noNull(labResultArr[i].getLaboratoryName());
 		    _accession[i] = Util.noNull(labResultArr[i].getAccessionNumber());
 		    _comments[i] = Util.noNull(labResultArr[i].getPhysiciansNotes());
-		    _coll_date[i] = dateFullPartial(labResultArr[i].getCollectionDateTime());
+		    _coll_date[i] = dateOnly(dateFullPartial(labResultArr[i].getCollectionDateTime()));
 		    _req_date[i] = dDateFullPartial(labResultArr[i].getLabRequisitionDateTime(),null);
                     _rev_date[i] = dDateFullPartial(labResultArr[i].getDateTimeResultReviewed(),null);
 		    
@@ -1547,6 +1560,10 @@ public class ImportDemographicDataAction3 extends Action {
 	return UtilDateUtilities.StringToDate(sdate, format);
     }
     
+    String dateOnly(String d) {
+	return UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(d),"yyyy-MM-dd");
+    }
+    
     String[] getPersonName(cdsDt.PersonNameSimple person) {
 	String[] name = new String[2];
 	if (person!=null) {
@@ -1679,8 +1696,8 @@ public class ImportDemographicDataAction3 extends Action {
 	return freqCode;
     }
     
-    void saveLinkNote(CaseManagementNote cmn, CaseManagementManager cmm) {
-	saveLinkNote(cmn, CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId(), cmm);
+    void saveLinkNote(Long hostId, CaseManagementNote cmn, CaseManagementManager cmm) {
+	saveLinkNote(cmn, CaseManagementNoteLink.CASEMGMTNOTE, hostId, cmm);
     }
     
     void saveLinkNote(CaseManagementNote cmn, Integer tableName, Long tableId, CaseManagementManager cmm) {
