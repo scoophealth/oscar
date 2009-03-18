@@ -73,12 +73,16 @@ Tickler tickler = new Tickler();
        
       long ticklerNo = tickler.getTickler_no();
       if (ticklerNo > 0){
-      TicklerLink tLink = new TicklerLink();      
-         tLink.setTableId(Long.parseLong(docId));
-         tLink.setTableName(docType);
-         tLink.setTicklerNo(ticklerNo);
-         TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
-         ticklerLinkDAO.save(tLink);
+          try{
+             TicklerLink tLink = new TicklerLink();
+             tLink.setTableId(Long.parseLong(docId));
+             tLink.setTableName(docType);
+             tLink.setTicklerNo(ticklerNo);
+             TicklerLinkDAO ticklerLinkDAO = (TicklerLinkDAO) ctx.getBean("ticklerLinkDAO");
+             ticklerLinkDAO.save(tLink);
+             }catch(Exception e){
+                 System.out.println("No link with this tickler");
+             }
       }else{
           System.out.println("LESS THAN");
       }
