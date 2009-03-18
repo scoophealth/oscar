@@ -35,14 +35,6 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 	
 	private static final String FILE_PREFIX = "File5";
 	
-	public DATISGamingForm() {}
-	
-	public DATISGamingForm(Integer clientId, Integer programId, Integer facilityId) {
-		super.setClientId(clientId);
-		super.setProgramId(programId);
-		super.setFacilityId(facilityId);
-	}
-	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
@@ -60,21 +52,24 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		
 		for(DATISField field : fields) {
-			String fieldName = field.getName();
 			String fieldQuestion = field.getQuestion();
 			String lbl = null;
 			for(IntakeAnswer ans : answers) {
 				if(ans.getNode().getGrandParent().equals(file5Node)) {
 					lbl = ans.getNode().getParent().getLabelStr();
 					if(StringUtils.deleteWhitespace(lbl.toUpperCase()).equals(StringUtils.deleteWhitespace(fieldQuestion.toUpperCase()))) {
-						writeKeyValue(buf, ans, field);
+						writeCSV(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}
 			}
 		}
 		
-		return buf.toString();
+		if(buf.lastIndexOf(",") == -1) {
+			return buf.toString();
+		}
+		
+		return buf.substring(0, buf.lastIndexOf(",")).toString();
 	}
 
 }

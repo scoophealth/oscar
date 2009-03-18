@@ -84,6 +84,17 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intake;
 	}
 	
+	public List<Integer> getIntakeClientsByFacilityId(Integer facilityId) {
+		if(facilityId == null) {
+			throw new IllegalArgumentException("Parameter facilityId must be non-null");
+		}
+		
+		List<Integer> clientIds = getHibernateTemplate().find("select distinct i.clientId from Intake i where i.facilityId = ? order by i.clientId",
+				new Object[] { facilityId });
+		
+		return clientIds;
+	}
+	
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
 	 */

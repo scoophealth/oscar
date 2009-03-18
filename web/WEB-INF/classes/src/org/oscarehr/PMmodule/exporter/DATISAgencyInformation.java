@@ -35,15 +35,6 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 	private static final String FILE_PREFIX = "Agency Information";
 	
 	private static final Logger log = Logger.getLogger(DATISAgencyInformation.class);
-
-	public DATISAgencyInformation() {
-	}
-	
-	public DATISAgencyInformation(Integer clientId, Integer programId, Integer facilityId) {
-		super.setClientId(clientId);
-		super.setProgramId(programId);
-		super.setFacilityId(facilityId);
-	}
 	
 	@Override
 	protected String exportData() throws ExportException {
@@ -81,14 +72,18 @@ public class DATISAgencyInformation extends AbstractIntakeExporter {
 				});
 				
 				if(found != null) {
-					writeKeyValue(buf, ans, found);
+					writeCSV(buf, ans, found);
 					//writeData(buf, ans, found);
 					counter++;
 				}
 			}
 		}
 		
-		return buf.toString();
+		if(buf.lastIndexOf(",") == -1) {
+			return buf.toString();
+		}
+		
+		return buf.substring(0, buf.lastIndexOf(",")).toString();
 	}
 
 }

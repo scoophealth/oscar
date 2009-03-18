@@ -31,8 +31,12 @@ public class DATISExporterFactory {
 	
 	private DATISExporterFactory() {
 		files = new HashMap<String, AbstractIntakeExporter>();
-		files.put("ai", new DATISAgencyInformation()); // Agency Information
-		// TODO - add the rest of DATIS files
+		files.put("agencyinformation", new DATISAgencyInformation());
+		files.put("listofprograms", new DATISListOfPrograms());
+		files.put("main", new DATISMain());
+		files.put("programinformation", new DATISProgramInformation());
+		files.put("gamblingform", new DATISGamingForm());
+		files.put("nonclientservice", new DATISNonClientService());
 	}
 	
 	public synchronized static DATISExporterFactory getInstance() {
@@ -43,7 +47,7 @@ public class DATISExporterFactory {
 		return factory;
 	}
 	
-	public AbstractIntakeExporter getExporter(String fileno) {
-		return files.get(fileno);
+	public AbstractIntakeExporter getExporter(String filename) {
+		return files.get(filename);
 	}
 }

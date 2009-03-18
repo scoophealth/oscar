@@ -37,14 +37,6 @@ public class DATISMain extends AbstractIntakeExporter {
 	private static final String FILE_PREFIX_MAIN = "Main";
 	private static final String FILE_PREFIX_GAMBLING = "GAMBLING";
 	
-	public DATISMain() {}
-	
-	public DATISMain(Integer clientId, Integer programId, Integer facilityId) {
-		super.setClientId(clientId);
-		super.setProgramId(programId);
-		super.setFacilityId(facilityId);
-	}
-	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
@@ -83,14 +75,18 @@ public class DATISMain extends AbstractIntakeExporter {
 				});
 				
 				if(found != null) {
-					writeKeyValue(buf, ans, found);
+					writeCSV(buf, ans, found);
 					//writeData(buf, ans, found);
 					counter++;
 				}
 			}
 		}
 
-		return buf.toString();
+		if(buf.lastIndexOf(",") == -1) {
+			return buf.toString();
+		}
+		
+		return buf.substring(0, buf.lastIndexOf(",")).toString();
 	}
 
 }

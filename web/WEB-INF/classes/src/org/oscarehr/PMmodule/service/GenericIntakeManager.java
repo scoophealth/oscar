@@ -236,6 +236,10 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getRegIntakes(getRegIntakeNodes(clientId),
 				clientId, null, facilityId);
 	}
+	
+	public List<Integer> getIntakeClientsByFacilityId(Integer facilityId) {
+		return genericIntakeDAO.getIntakeClientsByFacilityId(facilityId);
+	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getIndepthIntakes(java.lang.Integer)

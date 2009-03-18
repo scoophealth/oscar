@@ -21,6 +21,9 @@
 */
 package org.oscarehr.PMmodule.exporter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +72,10 @@ public class TestServlet extends HttpServlet {
 				break;
 			}
 			
-			exporter.setClientId(clientId);
+//			List<Integer> clients = new ArrayList<Integer>();
+//			clients.add(clientId);
+//			
+//			exporter.setClients(clients);
 			exporter.setFacilityId(facilityId);
 			response.getWriter().print(exporter.export());
 		} catch (Exception e) {

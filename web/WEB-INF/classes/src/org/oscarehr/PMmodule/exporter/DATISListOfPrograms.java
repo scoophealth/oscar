@@ -34,15 +34,6 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 	
 	private static final Logger log = Logger.getLogger(DATISListOfPrograms.class);
 	
-	public DATISListOfPrograms() {
-	}
-	
-	public DATISListOfPrograms(Integer clientId, Integer programId, Integer facilityId) {
-		super.setClientId(clientId);
-		super.setProgramId(programId);
-		super.setFacilityId(facilityId);
-	}
-	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
@@ -70,7 +61,7 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 						lbl = ans.getNode().getLabelStr().toUpperCase();
 					}
 					if(lbl.startsWith(fieldName)) {
-						writeKeyValue(buf, ans, field);
+						writeCSV(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}
@@ -78,7 +69,11 @@ public class DATISListOfPrograms extends AbstractIntakeExporter {
 				
 		}
 		
-		return buf.toString();
+		if(buf.lastIndexOf(",") == -1) {
+			return buf.toString();
+		}
+		
+		return buf.substring(0, buf.lastIndexOf(",")).toString();
 	}
 
 }

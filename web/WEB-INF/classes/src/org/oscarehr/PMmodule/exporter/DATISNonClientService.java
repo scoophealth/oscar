@@ -34,14 +34,6 @@ public class DATISNonClientService extends AbstractIntakeExporter {
 	
 	private static final Logger log = Logger.getLogger(DATISNonClientService.class);
 	
-	public DATISNonClientService() {}
-	
-	public DATISNonClientService(Integer clientId, Integer programId, Integer facilityId) {
-		super.setClientId(clientId);
-		super.setProgramId(programId);
-		super.setFacilityId(facilityId);
-	}
-	
 	@Override
 	protected String exportData() throws ExportException {
 		List<IntakeNode> intakeNodes = intake.getNode().getChildren();
@@ -65,14 +57,18 @@ public class DATISNonClientService extends AbstractIntakeExporter {
 				if(ans.getNode().getGrandParent().equals(file6Node)) {
 					lbl = ans.getNode().getParent().getLabelStr().toUpperCase();
 					if(lbl.startsWith(fieldName)) {
-						writeKeyValue(buf, ans, field);
+						writeCSV(buf, ans, field);
 						//writeData(buf, ans, field);
 					}
 				}
 			}
 		}
 		
-		return buf.toString();
+		if(buf.lastIndexOf(",") == -1) {
+			return buf.toString();
+		}
+		
+		return buf.substring(0, buf.lastIndexOf(",")).toString();
 	}
 	
 }

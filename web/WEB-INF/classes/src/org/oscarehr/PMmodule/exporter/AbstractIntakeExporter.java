@@ -48,7 +48,7 @@ public abstract class AbstractIntakeExporter {
 	private static final String FIELD_QUESTION = "question";
 	
 	private GenericIntakeManager genericIntakeManager;
-	private Integer clientId;
+	private List<Integer> clients;
 	private Integer programId;
 	private Integer facilityId;
 	private String fieldsFile;
@@ -59,9 +59,18 @@ public abstract class AbstractIntakeExporter {
 	private static final Logger log = Logger.getLogger(AbstractIntakeExporter.class);
 	
 	public String export() throws ExportException {
+		StringBuilder buf = new StringBuilder();
+		
 		initExport();
 		
-		return exportData();
+		log.info("Number of Clients to export: " + clients.size());
+		
+		for(Integer clientId : clients) {
+			getIntakeForClient(clientId);
+			buf.append(exportData() + "\n");
+		}
+		
+		return buf.toString();
 	}
 	
 	protected abstract String exportData() throws ExportException;
@@ -73,6 +82,18 @@ public abstract class AbstractIntakeExporter {
 			
 			log.debug("Fields loaded from file " + fieldsFile);
 			
+			if(null == clients || clients.isEmpty()) {
+				// Get all clients for the specified facility...
+				clients = genericIntakeManager.getIntakeClientsByFacilityId(facilityId);
+			}
+			
+		} catch(Throwable t) {
+			throw new ExportException(t);
+		}
+	}
+	
+	private void getIntakeForClient(Integer clientId) throws ExportException {
+		try {
 			intake = genericIntakeManager.getMostRecentQuickIntake(clientId, facilityId);
 		} catch(Throwable t) {
 			throw new ExportException(t);
@@ -130,12 +151,12 @@ public abstract class AbstractIntakeExporter {
 		this.genericIntakeManager = genericIntakeManager;
 	}
 
-	public Integer getClientId() {
-		return clientId;
+	public List<Integer> getClients() {
+		return clients;
 	}
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
+	public void setClients(List<Integer> clients) {
+		this.clients = clients;
 	}
 
 	public Integer getProgramId() {
@@ -163,23 +184,24 @@ public abstract class AbstractIntakeExporter {
 	}
 
 	protected void writeData(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
-		String value = ans.getValue();
-		if(ans.getValue().length() > found.getMaxSize()) {
-			value = ans.getValue().substring(0, found.getMaxSize());
-		}
-		if(found.getType().equals(DATISType.TEXT)) {
-			buf.append(StringUtils.rightPad(value, found.getMaxSize(), ' '));
-		} else if(found.getType().equals(DATISType.DATETIME)) {
-			// TODO date validation...
-			buf.append(StringUtils.rightPad(value, found.getMaxSize(), ' '));
-		} else if(found.getType().equals(DATISType.NUMBER) || 
-				found.getType().equals(DATISType.INTEGER) || 
-				found.getType().equals(DATISType.DOUBLE)) {
-			buf.append(StringUtils.leftPad(value, found.getMaxSize(), '0'));
-		}
+		String value = getFieldValue(ans, found);
+		
+		buf.append(value);
 	}
 	
 	protected void writeKeyValue(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
+		String value = getFieldValue(ans, found);
+		
+		buf.append(found.getName() + " = " + value + "\n");
+	}
+	
+	protected void writeCSV(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
+		String value = getFieldValue(ans, found);
+		
+		buf.append(value + ",");
+	}
+
+	private String getFieldValue(IntakeAnswer ans, DATISField found) {
 		String value = ans.getValue();
 		
 		if(value.length() > found.getMaxSize()) {
@@ -195,7 +217,7 @@ public abstract class AbstractIntakeExporter {
 			value = StringUtils.leftPad(value.trim(), found.getMaxSize(), '0');
 		}
 		
-		buf.append(found.getName() + " = " + value + "\n");
+		return value;
 	}
 	
 }
