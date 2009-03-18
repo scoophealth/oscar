@@ -515,10 +515,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             cdsDt.AddressStructured address = addr.addNewStructured();
             addr.setAddressType(cdsDt.AddressType.R);
             address.setLine1(demographic.getAddress());
-            if (Util.filled(demographic.getCity()) || Util.filled(demographic.getProvince()) || Util.filled(demographic.getPostal())) {
-		address.setCity(demographic.getCity());
+	    if (Util.filled(demographic.getCity()) || Util.filled(demographic.getProvince()) || Util.filled(demographic.getPostal())) {
+		address.setCity(Util.noNull(demographic.getCity()));
 		address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getProvince()));
-		address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+		address.addNewPostalZipCode().setPostalCode(Util.noNull(demographic.getPostal()).replace(" ",""));
 	    }
         }
         
@@ -527,10 +527,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         
         DemographicExt ext = new DemographicExt();
         Hashtable demoExt = ext.getAllValuesForDemo(demoNo);
-        if (Util.filled(demographic.getPhone())) {
+	
+        String phoneNo = demographic.getPhone();
+	if (Util.filled(phoneNo) && phoneNo.length()>=7) {
             cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
             phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
-            phoneResident.setPhoneNumber(demographic.getPhone());
+            phoneResident.setPhoneNumber(phoneNo);
             data = (String) demoExt.get("hPhoneExt");
             if (data!=null) {
                 if (data.length()>5) {
@@ -591,7 +593,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     void setLaboratoryResults(PatientRecord patientRecord, String demoNo) throws SQLException {
 	List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(demoNo);
 	for (LabMeasurements labMea : labMeaList) {
-	    String data = labMea.getExtVal("identifier");
+	    String data = Util.noNull(labMea.getExtVal("identifier"));
 	    String loinc = new MeasurementMapConfig().getLoincCodeByIdentCode(data);
             if (Util.filled(loinc)) loinc = loinc.trim();
             if (loinc.equals("9318-7")) loinc = "14959-1"; //Urine Albumin-Creatinine Ratio
@@ -622,15 +624,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		errors.add("Error! No Unit for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
-	    labResults.setLaboratoryName(labMea.getExtVal("labname"));
-	    if (labResults.getLaboratoryName()==null) {
+	    labResults.setLaboratoryName(Util.noNull(labMea.getExtVal("labname")));
+	    if (!Util.filled(labResults.getLaboratoryName())) {
 		errors.add("Error! No Laboratory Name for Lab Test "+testName+" for Patient "+demoNo);
 	    }
 	    
 	    labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.U);
 	    data = Util.noNull(labMea.getExtVal("abnormal"));
-	    if (data=="A") labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
-	    if (data=="N") labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
+	    if (data.equals("A")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Y);
+	    if (data.equals("N")) labResults.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.N);
 	    
 	    data = labMea.getExtVal("accession");
 	    if (Util.filled(data)) {
@@ -678,9 +680,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			reviewer.setOHIPPhysicianId(pd.getOhip_no());
 			Util.writeNameSimple(reviewer.addNewName(), pd.getFirst_name(), pd.getLast_name());
 		    }
-		    Date timestamp = (Date)labRoutingInfo.get("timestamp");
-		    if (timestamp!=null) {
-			labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(timestamp));
+		    String timestamp = (String)labRoutingInfo.get("timestamp");
+		    if (Util.filled(timestamp)) {
+			Date dateStamp = UtilDateUtilities.StringToDate(timestamp, "yyyy-MM-dd HH:mm:ss");
+			labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(dateStamp));
 		    }
 		}
 		
@@ -735,7 +738,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
             medications.setFrequency(pa[p].getFreqDisplay());
                 
             data = Util.noNull(pa[p].getDuration());
-            medications.setDuration(pa[p].getDuration());
+	    if (Util.filled(data)) {
+		String durunit = Util.noNull(pa[p].getDurationUnit());
+		Integer fctr = 1;
+		if (durunit.equals("W")) fctr = 7;
+		else if (durunit.equals("M")) fctr = 30;
+		Integer meddur = Integer.parseInt(Util.getNum(data)) * fctr;
+		medications.setDuration(meddur.toString());
+	    }
             
             data = Util.noNull(pa[p].getQuantity());
             medications.setQuantity(data);

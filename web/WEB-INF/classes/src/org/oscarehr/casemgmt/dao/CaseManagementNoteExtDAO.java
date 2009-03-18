@@ -39,7 +39,7 @@ public class CaseManagementNoteExtDAO extends HibernateDaoSupport {
 	}
 	
 	public List getExtByNote(Long noteId) {
-	    String hql = "from CaseManagementNoteExt cExt where cExt.noteId = ?";
+	    String hql = "from CaseManagementNoteExt cExt where cExt.noteId = ? order by cExt.id desc";
 	    return this.getHibernateTemplate().find(hql, noteId);
 	}
 	

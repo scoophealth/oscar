@@ -48,7 +48,7 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <!--I18n-->
-<title>oscarPrevention</title>
+<title>Demographic Export</title>
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="../share/css/OscarStandardLayout.css">
@@ -217,21 +217,21 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		   <p><table border="1"><tr><td>
 		       Export Categories:
 		       <table cellpadding="10"><tr><td>
-		       <html:checkbox property="exPersonalHistory">PersonalHistory</html:checkbox><br>
-		       <html:checkbox property="exFamilyHistory">FamilyHistory</html:checkbox><br>
-		       <html:checkbox property="exPastHealth">PastHealth</html:checkbox><br>
-		       <html:checkbox property="exProblemList">ProblemList</html:checkbox><br>
-		       <html:checkbox property="exRiskFactors">RiskFactors</html:checkbox><br>
-		       <html:checkbox property="exAllergiesAndAdverseReactions">AllergiesAndAdverseReactions</html:checkbox><br>
-		       <html:checkbox property="exMedicationsAndTreatments">MedicationsAndTreatments</html:checkbox>
+		       <html:checkbox property="exPersonalHistory">Personal History</html:checkbox><br>
+		       <html:checkbox property="exFamilyHistory">Family History</html:checkbox><br>
+		       <html:checkbox property="exPastHealth">Past Health</html:checkbox><br>
+		       <html:checkbox property="exProblemList">Problem List</html:checkbox><br>
+		       <html:checkbox property="exRiskFactors">Risk Factors</html:checkbox><br>
+		       <html:checkbox property="exAllergiesAndAdverseReactions">Allergies & Adverse Reactions</html:checkbox><br>
+		       <html:checkbox property="exMedicationsAndTreatments">Medications & Treatments</html:checkbox>
 		       </td><td>
 		       <html:checkbox property="exImmunizations">Immunizations</html:checkbox><br>
-		       <html:checkbox property="exLaboratoryResults">LaboratoryResults</html:checkbox><br>
+		       <html:checkbox property="exLaboratoryResults">Laboratory Results</html:checkbox><br>
 		       <html:checkbox property="exAppointments">Appointments</html:checkbox><br>
-		       <html:checkbox property="exClinicalNotes">ClinicalNotes</html:checkbox><br>
-		       <html:checkbox property="exReportsReceived">ReportsReceived</html:checkbox><br>
-		       <html:checkbox property="exAuditInformation">AuditInformation</html:checkbox><br>
-		       <html:checkbox property="exCareElements">CareElements</html:checkbox>
+		       <html:checkbox property="exClinicalNotes">Clinical Notes</html:checkbox><br>
+		       <html:checkbox property="exReportsReceived">Reports Received</html:checkbox><br>
+		       <html:checkbox property="exAuditInformation">Audit Information</html:checkbox><br>
+		       <html:checkbox property="exCareElements">Care Elements</html:checkbox>
 		       </td><td>
 			   <input type="button" value="Check All" onclick="checkAll(true);"/><p>
 			   <input type="button" value="Check None" onclick="checkAll(false);"/>

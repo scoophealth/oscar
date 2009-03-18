@@ -581,7 +581,11 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) throws SQLException {
-        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime) values (?,?,?,?,?,?,'A',?,0,?,?,?)";
+	return addDocument(demoNo, docFileName, docDesc, docType, contentType, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null);
+    }
+    
+    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) throws SQLException {
+        String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,responsible,updatedatetime,status,contenttype,public1,observationdate,reviewer,reviewdatetime, source) values (?,?,?,?,?,?,'A',?,0,?,?,?,?)";
         String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
         int key = 0;
 
@@ -599,6 +603,7 @@ public class EDocUtil extends SqlUtilBaseS {
         add_record.setString(8, observationDate);
 	add_record.setString(9, reviewer);
 	add_record.setString(10, reviewDateTime);
+	add_record.setString(11, source);
 
         add_record.executeUpdate();
         ResultSet rs = add_record.getGeneratedKeys();

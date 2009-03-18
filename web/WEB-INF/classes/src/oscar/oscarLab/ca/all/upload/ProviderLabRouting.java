@@ -90,7 +90,7 @@ public class ProviderLabRouting {
 	    info.put("provider_no", rs.getString("provider_no"));
 	    info.put("status", rs.getString("status"));
 	    info.put("comment", rs.getString("comment"));
-	    info.put("timestamp", rs.getDate("timestamp"));
+	    info.put("timestamp", rs.getString("timestamp"));
 	    info.put("lab_type", rs.getString("lab_type"));
 	    info.put("id", rs.getInt("id"));
 	}

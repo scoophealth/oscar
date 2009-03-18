@@ -55,7 +55,7 @@ public class LabMeasurements {
     
     public String getExtVal(String key) {
 	for (MeasurementsExt e : this.exts) {
-	    if (e.getKeyVal().equals("key")) return e.getVal();
+	    if (e.getKeyVal().equals(key)) return e.getVal();
 	}
 	return null;
     }

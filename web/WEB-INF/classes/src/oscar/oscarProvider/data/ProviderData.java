@@ -581,7 +581,8 @@ public class ProviderData {
 	db.CloseConn();
 	
 	if (providerNo!=null && !providerNo.trim().equals("")) {
-	    int lastPN = Integer.valueOf(providerNo) - 1;
+	    int lastPN = Integer.valueOf(providerNo);
+	    lastPN = lastPN<-100 ? lastPN-1 : -101;
 	    providerNo = String.valueOf(lastPN);
 	} else {
 	    providerNo = "-101";

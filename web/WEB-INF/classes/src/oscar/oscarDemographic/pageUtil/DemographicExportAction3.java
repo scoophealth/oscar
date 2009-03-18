@@ -361,9 +361,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    addr.setAddressType(cdsDt.AddressType.R);
 		    address.setLine1(demographic.getAddress());
 		    if (Util.filled(demographic.getCity()) || Util.filled(demographic.getProvince()) || Util.filled(demographic.getPostal())) {
-			address.setCity(demographic.getCity());
+			address.setCity(Util.noNull(demographic.getCity()));
 			address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getProvince()));
-			address.addNewPostalZipCode().setPostalCode(demographic.getPostal().replace(" ",""));
+			address.addNewPostalZipCode().setPostalCode(Util.noNull(demographic.getPostal()).replace(" ",""));
 		    }
 		}
 		String phoneNo = demographic.getPhone();
@@ -389,7 +389,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (data!=null) {
 			if (data.length()>5) {
 			    data = data.substring(0,5);
-			    err.add("Error! Work phone extension too long, export trimmed for Patient "+this.demographicNo);
+			    err.add("Note: Work phone extension too long, export trimmed for Patient "+this.demographicNo);
 			}
 			phoneWork.setExtension(data);
 		    }
@@ -445,7 +445,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    if (Util.filled(data)) {
 				if (data.length()>5) {
 				    data = data.substring(0,5);
-				    err.add("Error! Home phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+this.demographicNo);
+				    err.add("Note: Home phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+this.demographicNo);
 				}
 				phoneRes.setExtension(data);
 			    }
@@ -459,7 +459,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    if (Util.filled(data)) {
 				if (data.length()>5) {
 				    data = data.substring(0,5);
-				    err.add("Error! Work phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+this.demographicNo);
+				    err.add("Note: Work phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+this.demographicNo);
 				}
 				phoneW.setExtension(data);
 			    }
@@ -483,30 +483,37 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		for (CaseManagementNote cmn : lcmn) {
 		    String famHist="", socHist="", medHist="", concerns="", reminders="", riskFactors="", encounter="", annotation="", summary="";
 		    Set<CaseManagementIssue> sisu = cmn.getIssues();
+		    boolean systemIssue = false;
 		    for (CaseManagementIssue isu : sisu) {
 			String _issue = isu.getIssue()!=null ? isu.getIssue().getCode() : "";
                         if (_issue.equals("SocHistory")) {
+			    systemIssue = true;
                             socHist = cmn.getNote();
                             break;
 			} else if (_issue.equals("FamHistory")) {
+			    systemIssue = true;
                             famHist = cmn.getNote();
                             break;
                         } else if (_issue.equals("MedHistory")) {
+			    systemIssue = true;
                             medHist = cmn.getNote();
                             break;
                         } else if (_issue.equals("Concerns")) {
+			    systemIssue = true;
                             concerns = cmn.getNote();
                             break;
                         } else if (_issue.equals("Reminders")) {
+			    systemIssue = true;
                             reminders = cmn.getNote();
                             break;
 			} else if (_issue.equals("RiskFactors")) {
+			    systemIssue = true;
 			    riskFactors = cmn.getNote();
 			    break;
-                        } else if (cmm.getLinkByNote(cmn.getId()).isEmpty()) { //this is not an annotation
+			} else continue;
+		    }
+		    if (!systemIssue && cmm.getLinkByNote(cmn.getId()).isEmpty()) { //this is not an annotation
                             encounter = cmn.getNote();
-                            break;
-                        }
 		    }
 		    CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(CaseManagementNoteLink.CASEMGMTNOTE, cmn.getId());
 		    if (cml!=null) {
@@ -520,6 +527,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    if (Util.filled(socHist)) {
 			summary = socHist;
 			summary = Util.appendLine(summary, "Notes: ", annotation);
+                        for (CaseManagementIssue isu : sisu) {
+                            String codeSystem = isu.getIssue().getType();
+                            if (!codeSystem.equals("system")) {
+                                summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                            }
+			}
 			patientRec.addNewPersonalHistory().setCategorySummaryLine(summary);
 		    }
 		}
@@ -530,15 +543,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			fHist.setDiagnosisProblemDescription(famHist);
 			summary = "Problem Description: "+famHist;
 			
+			boolean diagnosisAssigned = false;
                         for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                cdsDt.Code diagnosis = fHist.addNewDiagnosisCode();
-                                diagnosis.setCodingSystem(codeSystem);
-                                diagnosis.setValue(isu.getIssue().getCode());
-                                diagnosis.setDescription(isu.getIssue().getDescription());
-                                summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getDescription());
-                                break;
+				if (diagnosisAssigned) {
+				    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+				} else {
+				    cdsDt.Code diagnosis = fHist.addNewDiagnosisCode();
+				    diagnosis.setCodingSystem(codeSystem);
+				    diagnosis.setValue(isu.getIssue().getCode());
+				    diagnosis.setDescription(isu.getIssue().getDescription());
+				    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getDescription());
+				    diagnosisAssigned = true;
+				}
                             }
 			}
 			boolean bSTARTDATE=false, bAGEATONSET=false, bRELATIONSHIP=false, bTREATMENT=false;
@@ -586,15 +604,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			PastHealth pHealth = patientRec.addNewPastHealth();
 			summary = "Problem Description: " + medHist;
 			
-                        for (CaseManagementIssue isu : sisu) {
+                        boolean diagnosisAssigned = false;
+			for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                cdsDt.Code diagnosis = pHealth.addNewDiagnosisOrProcedureCode();
-                                diagnosis.setCodingSystem(codeSystem);
-                                diagnosis.setValue(isu.getIssue().getCode());
-                                diagnosis.setDescription(isu.getIssue().getDescription());
-                                summary = Util.appendLine(summary, "Diagnosis/Procedure: ", diagnosis.getDescription());
-                                break;
+				if (diagnosisAssigned) {
+				    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+				} else {
+				    cdsDt.Code diagnosis = pHealth.addNewDiagnosisOrProcedureCode();
+				    diagnosis.setCodingSystem(codeSystem);
+				    diagnosis.setValue(isu.getIssue().getCode());
+				    diagnosis.setDescription(isu.getIssue().getDescription());
+				    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getDescription());
+				    diagnosisAssigned = true;
+				}
                             }
 			}
 			boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bTREATMENT=false;
@@ -637,15 +660,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			pList.setProblemDescription(concerns);
 			summary = "Problem Description: "+concerns;
 			
+			boolean diagnosisAssigned = false;
                         for (CaseManagementIssue isu : sisu) {
                             String codeSystem = isu.getIssue().getType();
                             if (!codeSystem.equals("system")) {
-                                cdsDt.Code diagnosis = pList.addNewDiagnosisCode();
-                                diagnosis.setCodingSystem(codeSystem);
-                                diagnosis.setValue(isu.getIssue().getCode());
-                                diagnosis.setDescription(isu.getIssue().getDescription());
-                                summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getDescription());
-                                break;
+				if (diagnosisAssigned) {
+				    summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+				} else {
+				    cdsDt.Code diagnosis = pList.addNewDiagnosisCode();
+				    diagnosis.setCodingSystem(codeSystem);
+				    diagnosis.setValue(isu.getIssue().getCode());
+				    diagnosis.setDescription(isu.getIssue().getDescription());
+				    summary = Util.appendLine(summary, "Diagnosis: ", diagnosis.getDescription());
+				    diagnosisAssigned = true;
+				}
                             }
 			}
 			boolean bSTARTDATE=false, bRESOLUTIONDATE=false, bPROBLEMSTATUS=false;
@@ -673,6 +701,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 				bPROBLEMSTATUS = true;
 			    }
 			}
+			if (pList.getOnsetDate()==null) {
+			    err.add("Error! No Onset Date for Problem List for Patient "+this.demographicNo);
+			    pList.addNewOnsetDate();
+			}
+			
 			if (Util.filled(annotation)) {
 			    pList.setNotes(annotation);
 			    summary = Util.appendLine(summary, "Notes: ", annotation);
@@ -716,6 +749,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    rFact.setNotes(annotation);
 			    summary = Util.appendLine(summary, "Notes: ", annotation);
 			}
+                        for (CaseManagementIssue isu : sisu) {
+                            String codeSystem = isu.getIssue().getType();
+                            if (!codeSystem.equals("system")) {
+                                summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                            }
+			}
 			rFact.setCategorySummaryLine(summary);
 		    }
 		}
@@ -723,6 +762,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    // CLINCAL NOTES
 		    if (Util.filled(encounter)) {
 			ClinicalNotes cNote = patientRec.addNewClinicalNotes();
+                        for (CaseManagementIssue isu : sisu) {
+                            String codeSystem = isu.getIssue().getType();
+                            if (!codeSystem.equals("system")) {
+                                encounter = Util.appendLine(encounter, "Diagnosis: ", isu.getIssue().getDescription());
+                            }
+			}
 			cNote.setMyClinicalNotesContent(encounter);
 			cNote.addNewEnteredDateTime().setDateTime(Util.calDate(cmn.getUpdate_date()));
 			cNote.addNewEventDateTime().setDateTime(Util.calDate(cmn.getObservation_date()));
@@ -760,6 +805,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			}
 			if (Util.filled(annotation)) {
 			    alerts = Util.appendLine(alerts, "Notes: ", annotation);
+			}
+                        for (CaseManagementIssue isu : sisu) {
+                            String codeSystem = isu.getIssue().getType();
+                            if (!codeSystem.equals("system")) {
+                                summary = Util.appendLine(summary, "Diagnosis: ", isu.getIssue().getDescription());
+                            }
 			}
 			alerts = Util.appendLine(alerts, "----------------------------------------");
 		    }
@@ -1046,7 +1097,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    if (exLaboratoryResults) {
 		// LABORATORY RESULTS
                 List<LabMeasurements> labMeaList = ImportExportMeasurements.getLabMeasurements(this.demographicNo);
+		
                 for (LabMeasurements labMea : labMeaList) {
+		    
                     LaboratoryResults labResults = patientRec.addNewLaboratoryResults();
                     labResults.setLabTestCode(Util.noNull(labMea.getExtVal("identifier")));
                     labResults.setTestName(Util.noNull(labMea.getExtVal("name")));
@@ -1116,9 +1169,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                                 reviewer.setOHIPPhysicianId(pvd.getOhip_no());
                                 Util.writeNameSimple(reviewer.addNewName(), pvd.getFirst_name(), pvd.getLast_name());
                             }
-                            Date timestamp = (Date)labRoutingInfo.get("timestamp");
-                            if (timestamp!=null) {
-                                labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(timestamp));
+                            String timestamp = (String)labRoutingInfo.get("timestamp");
+                            if (Util.filled(timestamp)) {
+				Date dateStamp = UtilDateUtilities.StringToDate(timestamp, "yyyy-MM-dd HH:mm:ss");
+				labResults.addNewDateTimeResultReviewed().setDateTime(Util.calDate(dateStamp));
                             }
                         }
 
