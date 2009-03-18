@@ -377,7 +377,7 @@ var beginD = "1900-01-01"
             params += "&name=columnId&value=" + columnId + "&name=sortOrder&value=" + attrib;
         }
         
-        console.log(params);
+        //console.log(params);
         new Ajax.Request (
             url,
             {
