@@ -179,7 +179,10 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
+		<td class="MainTableLeftColumn" valign="top">
+		    <% if (demographic_no== null) { %>
+		    <a href="diabetesExport.jsp">Diabetes Export</a></td>
+		    <%} %>
 		<td valign="top" class="MainTableRightColumn">
 		    <html:form action="/demographic/DemographicExport3" method="get" onsubmit="return checkSelect(patientSet.value);">
 		    <div>
