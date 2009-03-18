@@ -1097,9 +1097,12 @@ public class ImportDemographicDataAction3 extends Action {
                     
                     LaboratoryResults.ReferenceRange refRange = labResults.getReferenceRange();
                     if (refRange!=null) {
-                        saveMeasurementsExt(measId, "maximum", refRange.getHighLimit());
-                        saveMeasurementsExt(measId, "minimum", refRange.getLowLimit());
-                        saveMeasurementsExt(measId, "range", refRange.getReferenceRangeText());
+			if (Util.filled(refRange.getReferenceRangeText())) {
+			    saveMeasurementsExt(measId, "range", refRange.getReferenceRangeText());
+			} else {
+			    saveMeasurementsExt(measId, "maximum", refRange.getHighLimit());
+			    saveMeasurementsExt(measId, "minimum", refRange.getLowLimit());
+			}
                     }
 		    
 		    for (int i=0; i<labResultArr.length; i++) {

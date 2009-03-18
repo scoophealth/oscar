@@ -144,12 +144,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 }
 
     void fillPatientRecord(PatientRecord patientRecord,String demoNo) throws SQLException, Exception{
-	setDemographicDetails(patientRecord, demoNo);
-	setCareElements(patientRecord, demoNo);
-	setImmunizations(patientRecord, demoNo);
-	setLaboratoryResults(patientRecord, demoNo);
-	setMedicationsAndTreatments(patientRecord, demoNo);
-	setProblemList(patientRecord, demoNo);
+	if (setProblemList(patientRecord, demoNo)) {
+	    setReportInformation(patientRecord);
+	    setDemographicDetails(patientRecord, demoNo);
+	    setCareElements(patientRecord, demoNo);
+	    setImmunizations(patientRecord, demoNo);
+	    setLaboratoryResults(patientRecord, demoNo);
+	    setMedicationsAndTreatments(patientRecord, demoNo);
+	}
     }
     
     
@@ -174,7 +176,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		demoNo = l2.get(0);
 	    }
 	    PatientRecord patientRecord = omdcdsdiabetes.addNewPatientRecord();
-	    setReportInformation(patientRecord);
 	    fillPatientRecord(patientRecord, demoNo);
 	    
             //export file to temp directory
@@ -800,7 +801,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
         }
     }
     
-    void setProblemList(PatientRecord patientRecord, String demoNo) {
+    boolean setProblemList(PatientRecord patientRecord, String demoNo) {
 	/*                                     */
 	/* Note: Look for Diabetes Type 1 or 2 */
 	/*	 Only 1 item is allowed        */
@@ -829,7 +830,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    diagnosis.setValue(null);
 	    diagnosis.setCodingSystem(null);
 	    onsetDate.setDateTime(null);
+	    return false;
 	}
+	return true;
     }
     
     void setReportInformation(PatientRecord patientRecord) {
