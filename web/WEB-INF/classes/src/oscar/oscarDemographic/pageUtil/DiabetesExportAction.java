@@ -718,8 +718,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 medications.addNewEndDate().setFullDate(Util.calDate(pa[p].getEndDate()));
             }
             
-            data = Util.noNull(pa[p].getDrugName());
-            medications.setDrugName(data);
+            String drugName = Util.noNull(pa[p].getDrugName());
+            medications.setDrugName(drugName);
             
             data = String.valueOf(pa[p].getRepeat());
             medications.setNumberOfRefills(data);
@@ -762,6 +762,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
                 String strength = pa[p].getDosage();
                 int sep = strength.indexOf("/");
                 strength = sep<0 ? strength : strength.substring(0,sep);
+		if (sep>0) {
+		    strength = strength.substring(0,sep);
+		    errors.add("Note: Multiple components exist for Drug "+drugName+" for Patient "+demoNo+". Exporting 1st one as Strength.");
+		}
                 cdsDt.DrugMeasure drugM = medications.addNewStrength();
                 drugM.setAmount(strength.substring(0,strength.indexOf(" ")));
                 drugM.setUnitOfMeasure(strength.substring(strength.indexOf(" ")+1));
