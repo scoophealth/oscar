@@ -495,6 +495,7 @@ public class ImportDemographicDataAction3 extends Action {
 			cmNote.setNote(familyHist);
 			cmm.saveNoteSimple(cmNote);
 		    }
+		    cmNote = prepareCMNote(se);
 		    cmNote.setNote(fHist[i].getNotes());
 		    saveLinkNote(cmNote, cmm);
 		    
@@ -542,6 +543,7 @@ public class ImportDemographicDataAction3 extends Action {
 			cmNote.setNote(medicalHist);
 			cmm.saveNoteSimple(cmNote);
 		    }
+		    cmNote = prepareCMNote(se);
 		    cmNote.setNote(pHealth[i].getNotes());
 		    saveLinkNote(cmNote, cmm);
 		    
@@ -588,6 +590,7 @@ public class ImportDemographicDataAction3 extends Action {
 			cmNote.setIssues(problemListIssues);
 			cmm.saveNoteSimple(cmNote);
 		    }
+		    cmNote = prepareCMNote(se);
 		    cmNote.setNote(probList[i].getNotes());
 		    saveLinkNote(cmNote, cmm);
 		    
@@ -630,6 +633,7 @@ public class ImportDemographicDataAction3 extends Action {
 			cmNote.setNote(riskFactors);
 			cmm.saveNoteSimple(cmNote);
 		    }
+		    cmNote = prepareCMNote(se);
 		    cmNote.setNote(rFactors[i].getNotes());
 		    saveLinkNote(cmNote, cmm);
 		    
