@@ -133,16 +133,15 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 			<td colspan="2"><input type="hidden" name="demographicNo" value="<%=demographic_no%>"/>
 			Reporting :
     <%} else {%>
-			<td>Patient Set: </td>
-			<td><html:select property="patientSet">
-				<html:option value="-1">--Select Set--</html:option>
-		    <%for (int i =0 ; i < queryArray.size(); i++){
-			RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
-			String qId = sc.id;
-			String qName = sc.queryName;%>
-				<html:option value="<%=qId%>"><%=qName%></html:option>
-		    <%}%>
-			    </html:select></td>
+			    Patient Set: <html:select property="patientSet">
+				    <html:option value="-1">--Select Set--</html:option>
+<%
+			    for (int i=0; i<sets.size(); i++) {
+				String setName = (String)sets.get(i);
+%>
+				<html:option value="<%=setName%>"><%=setName%></html:option>
+			    <%}%>
+			    </html:select>
 		    <%}%>
 		    </tr><tr>
 			<td>Start Date: </td>
