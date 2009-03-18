@@ -98,11 +98,13 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                 NavBarDisplayDAO.Item item = Dao.Item();
                 String service = (String) theRequests.service.get(idx);
                 String dateStr    = (String) theRequests.date.get(idx);
+                String status = (String)theRequests.status.get(idx);
                 DateFormat formatter = new SimpleDateFormat(dbFormat);
                 try {
                     date = (Date)formatter.parse(dateStr);
                     serviceDateStr = DateUtils.getDate(date, dateFormat);
-                    if( date.before(cutoffDate) ) {
+                    //if we are after cut off date and not completed set to red
+                    if( date.before(cutoffDate) && !status.equals("4") ) {
                         item.setColour(red);
                     }
                 }
