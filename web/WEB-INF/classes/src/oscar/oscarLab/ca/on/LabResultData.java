@@ -50,6 +50,7 @@ public class LabResultData implements Comparable{
     public static String CML = "CML";
     public static String MDS = "MDS";
     public static String EXCELLERIS = "BCP"; //EXCELLERIS
+    public static String DOCUMENT = "DOC"; //INTERNAL DOCUMENT
     
     //HL7TEXT handles all messages types recieved as a hl7 formatted string
     public static String HL7TEXT = "HL7";
@@ -131,6 +132,41 @@ public class LabResultData implements Comparable{
         if (HL7TEXT.equals(labType)){ ret = true; }
         return ret;
     }
+    
+    public boolean isDocument(){
+        boolean ret = false;
+        if (DOCUMENT.equals(labType)){ ret = true; }
+        return ret;
+    }
+    
+    ////
+    
+    public static boolean isMDS(String type){
+        boolean ret = false;
+        if (MDS.equals(type)){ ret = true; }
+        return ret;
+    }
+    
+    public static boolean isCML(String type){
+        boolean ret = false;
+        if (CML.equals(type)){ ret = true; }
+        return ret;
+    }
+    
+    public static boolean isHL7TEXT(String type){
+        boolean ret = false;
+        if (HL7TEXT.equals(type)){ ret = true; }
+        return ret;
+    }
+    
+    public static boolean isDocument(String type){
+        boolean ret = false;
+        if (DOCUMENT.equals(type)){ ret = true; }
+        return ret;
+    }
+    
+    
+    
     
     public String getDiscipline(){
         if (CML.equals(this.labType)){
