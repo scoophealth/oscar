@@ -7,6 +7,7 @@
 <%@page	import="java.sql.ResultSet,
 		java.sql.SQLException,
 		java.util.Date,
+		java.util.Hashtable,
 		java.util.Vector,
 		oscar.oscarDB.DBHandler,
 		oscar.oscarLab.LabRequestReportLink,
@@ -16,13 +17,17 @@
     String rptId = request.getParameter("rptid");
     String reqId = request.getParameter("reqid");
     String linkReqId = request.getParameter("linkReqId");
+    
     String sql = null;
+    String reqDateLink = "";
     
     Vector<String> req_id      = new Vector<String>();
     Vector<String> formCreated = new Vector<String>();
     Vector<String> patientName = new Vector<String>();
     if (linkReqId==null) {
 	try {
+	    reqDateLink = LabRequestReportLink.getRequestDate(reqId);
+	    
 	    sql = "SELECT ID, formCreated, patientName FROM formLabReq07";
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	    ResultSet rs = db.GetSQL(sql);
@@ -40,8 +45,8 @@
 	    sql = "SELECT formCreated FROM formLabReq07 WHERE ID="+linkReqId;
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	    ResultSet rs = db.GetSQL(sql);
-	    Date req_date = null;
-	    if (rs.next()) req_date = rs.getDate("formCreated");
+	    String req_date = "";
+	    if (rs.next()) req_date = UtilDateUtilities.DateToString(rs.getDate("formCreated"),"yyyy-MM-dd");
 	
 	    Long id = LabRequestReportLink.getIdByReport(table, Long.valueOf(rptId));
 	    if (id==null) { //new report
@@ -68,6 +73,7 @@
 	<input type="hidden" name="rptid" value="<%=rptId%>" />
 	<input type="hidden" name="reqid" value="<%=reqId%>" />
 	<p>&nbsp;</p>
+	Requisition Date: <%=reqDateLink%><p>
 	Link to Lab Requestion:
 	<select name="linkReqId">
 	    <option value="-1">---</option>
