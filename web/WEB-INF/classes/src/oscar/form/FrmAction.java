@@ -110,7 +110,7 @@ public final class FrmAction extends Action {
                 newID = rec.saveFormRecord(props);
                 String ip = request.getRemoteAddr();
                 LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request
-                        .getParameter("form_class"), "" + newID, ip);
+                        .getParameter("form_class"), "" + newID, ip,request.getParameter("demographic_no"));
 
             }
             String strAction = rec.findActionValue(request.getParameter("submit"));            

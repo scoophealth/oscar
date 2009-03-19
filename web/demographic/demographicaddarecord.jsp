@@ -291,7 +291,7 @@
        
 		// add log
 		String ip = request.getRemoteAddr();
-		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip);
+		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip,param2[0]);
 
         //add to waiting list if the waiting_list parameter in the property file is set to true
 
