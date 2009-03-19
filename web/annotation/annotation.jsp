@@ -70,8 +70,6 @@
 	if (cmn!=null) note = cmn.getNote();
     } else { 
 	//attribute outdated, get note from database
-	se.removeAttribute("anno_display");
-	se.removeAttribute("anno_last_id");
 	if (cml!=null) { //annotation exists
 	    String nid = cml.getNoteId().toString();
 	    note = cmm.getNote(nid).getNote();
