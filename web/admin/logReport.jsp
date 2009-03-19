@@ -190,6 +190,7 @@ function onSub() {
         prop.setProperty("contentId", dbObj.getString(rs,"contentId"));
         prop.setProperty("ip", dbObj.getString(rs,"ip"));
         prop.setProperty("provider_no", dbObj.getString(rs,"provider_no"));
+        prop.setProperty("demographic_no",dbObj.getString(rs,"demographic_no"));
         vec.add(prop);
       }
 
@@ -223,6 +224,7 @@ function onSub() {
 		<% if(bAll) { %>
 		<TH>Provider</TH>
 		<% } %>
+                <TH>Demo</TH>
 	</tr>
 	<%
 String catName = "";
@@ -242,6 +244,9 @@ for (int i = 0; i < vec.size(); i++) {
 		<% if(bAll) { %>
 		<td><%=propName.getProperty(prop.getProperty("provider_no"), "")%></td>
 		<% } %>
+                <td>
+                    <%=prop.getProperty("demographic_no")%>
+                </td>
 	</tr>
 	<% } %>
 	<script type="text/javascript">
