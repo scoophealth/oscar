@@ -16,17 +16,20 @@
     //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String demographic_no = request.getParameter("demographic_no");
+    String providerNo = (String) session.getAttribute("user");
+    String temp = request.getParameter("template");
 %>
 <oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <security:oscarSec roleName="<%=roleName$%>" objectName="_flowsheet" rights="r" reverse="<%=true%>">
         "You have no right to access this page!"
-        <% response.sendRedirect("../../noRights.html"); %>
+        <% 
+         LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
+        response.sendRedirect("../../noRights.html"); %>
     </security:oscarSec>
 </oscar:oscarPropertiesCheck>
 <%
-    String demographic_no = request.getParameter("demographic_no");
-    String providerNo = (String) session.getAttribute("user");
-    String temp = request.getParameter("template");
+   
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_FLOWSHEET,  temp , request.getRemoteAddr(),demographic_no);
     
     
