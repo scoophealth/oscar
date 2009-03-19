@@ -189,7 +189,7 @@ public class ManageHnrClientAction {
 			logger.debug("setPictureValidation currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			ClientImage clientImage = clientImageDAO.getClientImage(clientId);
-			if (clientImage == null) throw (new IllegalStateException("Attempt to validate an image that doesn't exist. clientId=" + clientId));
+			if (!HnrDataValidation.isImageValidated(clientImage)) throw (new IllegalStateException("Attempt to validate an image that doesn't exist, button should have been disabled. clientId=" + clientId));
 
 			HnrDataValidation hnrDataValidation = new HnrDataValidation();
 			hnrDataValidation.setClientId(clientId);
@@ -210,6 +210,7 @@ public class ManageHnrClientAction {
 			logger.debug("setHcInfoValidation currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);
+			if (!HnrDataValidation.isHcInfoValidateable(demographic)) throw (new IllegalStateException("Attempt to validate a clients hc info that is not validateable, button should have been disabled. clientId=" + clientId));
 
 			HnrDataValidation hnrDataValidation = new HnrDataValidation();
 			hnrDataValidation.setClientId(clientId);
@@ -230,6 +231,7 @@ public class ManageHnrClientAction {
 			logger.debug("setOtherInfoValidation currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId + ", valid=" + valid);
 
 			Demographic demographic = demographicDao.getDemographicById(clientId);
+			if (!HnrDataValidation.isOtherInfoValidateable(demographic)) throw (new IllegalStateException("Attempt to validate a clients other info that is not validateable, button should have been disabled. clientId=" + clientId));
 
 			HnrDataValidation hnrDataValidation = new HnrDataValidation();
 			hnrDataValidation.setClientId(clientId);

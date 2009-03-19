@@ -36,7 +36,7 @@
 	<tr>
 		<td class="genericTableHeader">First Name</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
-		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
+		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" <%=manageHnrClient.isHcInfoValidatable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
@@ -77,7 +77,7 @@
 	<tr>
 		<td class="genericTableHeader">Street Address</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
-		<td rowspan="3" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
+		<td rowspan="3" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" <%=manageHnrClient.isOtherInfoValidatable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
 	</tr>
 	<tr>

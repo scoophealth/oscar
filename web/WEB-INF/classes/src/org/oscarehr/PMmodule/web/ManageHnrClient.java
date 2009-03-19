@@ -73,7 +73,17 @@ public class ManageHnrClient {
 
 	public boolean isImageValidateable()
 	{
-		return(clientImage!=null);
+		return(HnrDataValidation.isImageValidated(clientImage));
+	}
+	
+	public boolean isHcInfoValidatable()
+	{
+		return(HnrDataValidation.isHcInfoValidateable(demographic));
+	}
+	
+	public boolean isOtherInfoValidatable()
+	{
+		return(HnrDataValidation.isOtherInfoValidateable(demographic));
 	}
 	
 	public String getLocalClientImageUrl() {

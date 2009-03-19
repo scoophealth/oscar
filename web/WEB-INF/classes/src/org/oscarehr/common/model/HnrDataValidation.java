@@ -36,6 +36,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.oscarehr.casemgmt.model.ClientImage;
+
 /**
  * This object is to help support tracking which fields in the demographic object have been marked as "valid" by an end user. The original intent is because only "validated" information is allowed to be sent to the HNR and part of the scope of work was to
  * track who validated which fields and when. To keep track of what is validated and to help nullify the validation upon change of data, we're going to use a CRC32 on the data being validated. The reason is because there's currently no reliable way of
@@ -148,7 +150,7 @@ public class HnrDataValidation {
 		CRC32 crc32 = new CRC32();
 		crc32.update(b);
 
-		return (crc32.getValue()==validationCrc);
+		return (validationCrc!=-1 && crc32.getValue()==validationCrc);
 	}
 
 	public boolean isValidAndMatchingCrc(byte[] b) {
@@ -165,7 +167,33 @@ public class HnrDataValidation {
 		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
 
+	public static boolean isImageValidated(ClientImage clientImage) {
+		if (clientImage == null || clientImage.getImage_data()==null) return(false);
+		else return(true);
+	}
+	
+	public static byte[] getImageValidationBytes(ClientImage clientImage) {
+		if (!isImageValidated(clientImage)) return(null);
+			
+		return(clientImage.getImage_data());
+	}
+	
+	public static boolean isHcInfoValidateable(Demographic demographic) {
+		if (demographic==null) return(false);
+		else if (demographic.getFirstName()==null) return(false);
+		else if (demographic.getLastName()==null) return(false);
+		else if (demographic.getSex()==null) return(false);
+		else if (demographic.getBirthDay()==null) return(false);
+		else if (demographic.getHin()==null) return(false);
+		else if (demographic.getHcType()==null) return(false);
+		else if (demographic.getEffDate()==null) return(false);
+		else if (demographic.getHcRenewDate()==null) return(false);
+		else return(true);
+	}
+	
 	public static byte[] getHcInfoValidationBytes(Demographic demographic) {
+		if (!isHcInfoValidateable(demographic)) return(null);
+		
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(demographic.getFirstName()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
@@ -180,7 +208,18 @@ public class HnrDataValidation {
 		return (sb.toString().getBytes());
 	}
 
+	public static boolean isOtherInfoValidateable(Demographic demographic) {
+		if (demographic==null) return(false);
+		else if (demographic.getAddress()==null) return(false);
+		else if (demographic.getCity()==null) return(false);
+		else if (demographic.getProvince()==null) return(false);
+		else return(true);
+		
+	}
+	
 	public static byte[] getOtherInfoValidationBytes(Demographic demographic) {
+		if (!isOtherInfoValidateable(demographic)) return(null);
+		
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(demographic.getAddress()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
