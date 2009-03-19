@@ -22,7 +22,7 @@ Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(s
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
 
 //String sql = "SELECT status FROM providerLabRouting WHERE lab_no='"+segmentID+"';";
-String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+segmentID+"';";
+String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type='HL7' and lab_no='"+segmentID+"';";
 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 ResultSet rs = db.GetSQL(sql);
 String demographicID = "";
