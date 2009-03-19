@@ -77,7 +77,7 @@ public class Util {
 	Integer cut = special.indexOf("\n", rear);
 	if (cut<0) cut = special.indexOf("\r", rear);
 	if (cut>=0) {
-	    if (cut<special.length()-1) {
+	    if (cut<special.length()) {
 		special = special.substring(cut+1);
 	    }
 	} else {
