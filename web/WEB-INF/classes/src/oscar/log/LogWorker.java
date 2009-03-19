@@ -47,6 +47,7 @@ public class LogWorker extends Thread {
     String content = null;
     String contentId = null;
     String ip = null;
+    String demographic_no = null;
 
     public LogWorker() {
     }
@@ -59,11 +60,29 @@ public class LogWorker extends Thread {
         this.ip = ip;
     }
 
+    
+    public LogWorker(String provider_no, String action, String content, String contentId, String ip,String demographic) {
+        this.provider_no = provider_no;
+        this.action = action;
+        this.content = content;
+        this.contentId = contentId;
+        this.ip = ip;
+        this.demographic_no = demographic;
+    }
+    
     public void run() {
         try {
-            DBHelp db = new DBHelp();
-            String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
+            DBHelp db = new DBHelp(); 
+            String sql = "insert into log (provider_no,action,content,contentId, ip,demographic_no) values('" + provider_no;
             sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
+            
+            if (demographic_no != null){
+                sql = "insert into log (provider_no,action,content,contentId, ip,demographic_no) values('" + provider_no;
+                sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "','"+demographic_no+"')";
+            
+                
+            }
+            
             try {
                 db.updateDBRecord(sql, provider_no);
             } catch (SQLException e) {
