@@ -99,7 +99,7 @@ public class LogAction {
 	
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	ResultSet rs;
-	String sql = "SELECT * FROM log WHERE contentId = '" + demo_no +"'";
+	String sql = "SELECT * FROM log WHERE demographic_no = '" + demo_no +"'";
 	rs = db.GetSQL(sql);
 
 	while (rs.next()) {
