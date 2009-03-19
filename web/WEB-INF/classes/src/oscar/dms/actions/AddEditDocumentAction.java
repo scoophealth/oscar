@@ -209,10 +209,17 @@ public class AddEditDocumentAction extends DispatchAction {
             String fileName = docFile.getFileName();
 	    String reviewerId = filled(fm.getReviewerId()) ? fm.getReviewerId() : "";
 	    String reviewDateTime = filled(fm.getReviewDateTime()) ? fm.getReviewDateTime() : "";
+            
 	    
 	    if (!filled(reviewerId) && fm.getReviewDoc()) {
 		reviewerId = (String)request.getSession().getAttribute("user");
 		reviewDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), EDocUtil.REVIEW_DATETIME_FORMAT);
+                if (fm.getFunction() != null && fm.getFunction().equals("demographic")){
+                    LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REVIEWED , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr(),fm.getFunctionId());
+                }else{
+                    LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REVIEWED , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr());
+                
+                }
 	    }
             EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());
             newDoc.setDocId(fm.getMode());
@@ -228,7 +235,14 @@ public class AddEditDocumentAction extends DispatchAction {
                 throw new FileNotFoundException();
             }
             EDocUtil.editDocumentSQL(newDoc, fm.getReviewDoc());
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_DOCUMENT, newDoc.getDocId(), request.getRemoteAddr());
+            
+            if (fm.getFunction() != null && fm.getFunction().equals("demographic")){
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr(),fm.getFunctionId());
+            }else{
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE , LogConst.CON_DOCUMENT, fm.getMode(), request.getRemoteAddr());
+
+            }
+            
         } catch (Exception e) {
             request.setAttribute("docerrors", errors);
             request.setAttribute("completedForm", fm);
