@@ -16,6 +16,9 @@ public class LogConst {
     public static final String DELETE = "delete";
     public static final String REPRINT = "reprint";
     public static final String REVIEWED = "reviewed";
+    public static final String ACK = "acknowledge";
+    public static final String NORIGHT= "no right";
+    
     
 
     public static final String CON_LOGIN = "login";
@@ -32,6 +35,16 @@ public class LogConst {
     public static final String CON_TICKLER = "tickler";
     public static final String CON_CME_NOTE = "CME note";
     public static final String CON_DOCUMENT = "document";
+    public static final String CON_HL7_LAB = "lab";
+    public static final String CON_CML_LAB = "cml lab";
+    public static final String CON_MDS_LAB = "mds lab";
+    public static final String CON_PATHNET_LAB = "pathnet lab";
+    public static final String CON_FLOWSHEET = "FLWST_";
+    
+    
+    
+    
+    
     
     
 }
