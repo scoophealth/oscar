@@ -53,7 +53,7 @@ public class Util {
 	
 	GDateBuilder gd = new GDateBuilder();
 	gd.setDate(inDate);
-	if (gd.getYear()<1600) {
+	if (gd.getYear()<0001) {
 	    return null;
 	} else {
 	    gd.clearTimeZone();
