@@ -743,9 +743,6 @@ public class ImportDemographicDataAction3 extends Action {
 		    if (!getYN(aaReactArray[i].getKnownAllergies()).equals("")) reaction = Util.appendLine(reaction,"Known Allergies: ",getYN(aaReactArray[i].getKnownAllergies()));
 		    if (aaReactArray[i].getHealthcarePractitionerType()!=null) reaction = Util.appendLine(reaction,"Healthcare Practitioner Type: ",aaReactArray[i].getHealthcarePractitionerType().toString());
 		    
-		    if (aaReactArray[i].getReactionType()!=null) {
-			if (aaReactArray[i].getReactionType()==cdsDt.AdverseReactionType.AL) typeCode="0"; //allergies
-		    }
 		    if (typeCode.equals("") && aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
 			if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.DR) typeCode="13"; //drug
 			else if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.ND) typeCode="0"; //non-drug
@@ -892,11 +889,16 @@ public class ImportDemographicDataAction3 extends Action {
 		//IMMUNIZATIONS
 		Immunizations[] immuArray = patientRec.getImmunizationsArray();
 		for (int i=0; i<immuArray.length; i++) {
-		    String preventionDate="", preventionType="", refused="0";
+		    String preventionDate="", preventionType="", refused="0", comments="";
 		    ArrayList preventionExt = new ArrayList();
 		   
 		    if (Util.filled(immuArray[i].getImmunizationName())) {
-			preventionType = immuArray[i].getImmunizationName();
+			preventionType = mapPreventionType(immuArray[i].getImmunizationCode());
+			if (preventionType.equals("")) {
+			    preventionType = "OtherA";
+			    errorImport = Util.appendLine(errorImport, "Note: Immunization "+immuArray[i].getImmunizationName()+" contains no DIN number. Item mapped to Other Layout A");
+			}
+			comments = Util.appendLine(comments, "Immunization Name: ", immuArray[i].getImmunizationName());
 		    } else {
 			dataGood = "No";
 			errorImport = writeError(errorImport, errWarnings, "No Immunization Name ("+(i+1)+")");
@@ -904,7 +906,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    preventionDate = dateFullPartial(immuArray[i].getDate());
 		    refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
 		    
-		    String comments="", iSummary="";
+		    String iSummary="";
 		    if (immuArray[i].getCategorySummaryLine()!=null) {
 			iSummary = immuArray[i].getCategorySummaryLine().trim();
 		    } else {
@@ -913,7 +915,7 @@ public class ImportDemographicDataAction3 extends Action {
 		    }
 		    comments = Util.appendLine(comments, immuArray[i].getNotes());
 		    if (Util.filled(iSummary)) {
-			comments = Util.appendLine(comments, "Summary", iSummary);
+			comments = Util.appendLine(comments, "Summary: ", iSummary);
 			errorImport = Util.appendLine(errorImport,"Note: Immunization Summary imported in [comments] ("+(i+1)+")");
 		    }
 		    comments = Util.appendLine(comments, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
@@ -1624,6 +1626,8 @@ public class ImportDemographicDataAction3 extends Action {
 		cmm.saveCaseIssue(cmIssu);
 		sCmIssu.add(cmIssu);
 	    }
+	    if (diagCode==null) return sCmIssu;
+	    
 	    if (Util.noNull(diagCode.getCodingSystem()).equalsIgnoreCase("icd9")) {
 		isu = cmm.getIssueInfoByCode(Util.noNull(diagCode.getValue()));
 		if (isu!=null) {
@@ -1708,6 +1712,31 @@ public class ImportDemographicDataAction3 extends Action {
 	    ret = "Yes";
 	}
 	return ret;
+    }
+    
+    String mapPreventionType(cdsDt.Code imCode) {
+	if (imCode==null) return "";
+	if (!imCode.getCodingSystem().equalsIgnoreCase("DIN")) return "";
+	
+	ArrayList<String> dinFlu = new ArrayList<String>();
+	ArrayList<String> dinHebAB = new ArrayList<String>();
+	ArrayList<String> dinCHOLERA = new ArrayList<String>();
+	
+	dinFlu.add("01914510");
+	dinFlu.add("02015986");
+	dinFlu.add("02269562");
+	dinFlu.add("02223929");
+
+	dinHebAB.add("02230578");
+	dinHebAB.add("02237548");
+
+	dinCHOLERA.add("00074969");
+	dinCHOLERA.add("02247208");
+	
+	if (dinFlu.contains(Util.noNull(imCode.getValue()))) return "Flu";
+	if (dinHebAB.contains(Util.noNull(imCode.getValue()))) return "HebAB";
+	if (dinCHOLERA.contains(Util.noNull(imCode.getValue()))) return "CHOLERA";
+	return "OtherA";
     }
     
     CaseManagementNote prepareCMNote(HttpSession se) {
