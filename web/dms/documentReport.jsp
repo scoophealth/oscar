@@ -404,7 +404,9 @@ function popup1(height, width, url, windowName){
                     String contentType = "";
                     if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
                         contentType = curdoc.getContentType().substring(slash+1);
-                    }
+                    } else {
+			contentType = curdoc.getContentType();
+		    }
                     String dStatus = "";                    
                     if ((curdoc.getStatus() + "").compareTo("H") == 0) 
                         dStatus="html";
