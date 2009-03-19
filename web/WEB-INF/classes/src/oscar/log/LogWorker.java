@@ -73,7 +73,7 @@ public class LogWorker extends Thread {
     public void run() {
         try {
             DBHelp db = new DBHelp(); 
-            String sql = "insert into log (provider_no,action,content,contentId, ip,demographic_no) values('" + provider_no;
+            String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
             sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
             
             if (demographic_no != null){
