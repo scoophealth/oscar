@@ -63,7 +63,7 @@ public final class RxDeleteAllergyAction extends Action {
             patient.deleteAllergy(id);          
             
             String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, ""+id, ip,""+patient.getDemographicNo());
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_ALLERGY, ""+id, ip,""+patient.getDemographicNo());
 
             return (mapping.findForward("success"));
     }
