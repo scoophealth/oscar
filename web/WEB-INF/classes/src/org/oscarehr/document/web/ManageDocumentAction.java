@@ -55,7 +55,6 @@ import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 
@@ -335,13 +334,18 @@ public class ManageDocumentAction extends DispatchAction {
         String doc_no = request.getParameter("doc_no");
            log.debug("Document No :"+doc_no);
            
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
-           
+        CtlDocument ctld = documentDAO.getCtrlDocument(Integer.parseInt(doc_no));
+        if(ctld.isDemographicDocument()){
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr(),""+ctld.getModuleId());
+        }else{           
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
+        }
+        
         String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         File documentDir = new File(docdownload);
         log.debug("Document Dir is a dir"+documentDir.isDirectory());
         
-        Document d = documentDAO.getDocument(doc_no);
+        Document d = documentDAO.getDocument(doc_no); 
         log.debug("Document Name :"+d.getDocfilename());
         
         
