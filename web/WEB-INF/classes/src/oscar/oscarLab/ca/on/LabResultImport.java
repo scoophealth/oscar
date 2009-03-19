@@ -49,8 +49,8 @@ public class LabResultImport {
     
     public static String saveLabPatientPhysicianInfo(String labReportInfo_id, String accession_num, String collDate, String firstname, String lastname, String sex, String hin, String birthdate, String phone) throws SQLException {
 	String id = "";
-	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, lab_status)" +
-						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'N')";
+	String sql = "INSERT INTO labPatientPhysicianInfo (labReportInfo_id, accession_num, patient_first_name, patient_last_name, patient_sex, patient_health_num, patient_dob, patient_phone, collection_date, service_date, lab_status)" +
+						 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'N')";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	Connection conn = db.getConnection();
 	PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -63,6 +63,7 @@ public class LabResultImport {
 	pstmt.setString(7, birthdate);
 	pstmt.setString(8, phone);
 	pstmt.setString(9, collDate);
+	pstmt.setString(10, collDate);
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getString(1);
@@ -137,9 +138,9 @@ public class LabResultImport {
 	return id;
     }
     
-    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, Date timestamp) throws SQLException {
+    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp) throws SQLException {
 	Long id = null;
-	if (timestamp==null) timestamp=new Date();
+	if (timestamp==null || ("").equals(timestamp)) timestamp="0001-01-01";
 	String sql = "INSERT INTO providerLabRouting (provider_no, lab_no, status, comment, timestamp, lab_type) values (?,?,?,?,?,'CML')";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	Connection conn = db.getConnection();
@@ -148,7 +149,7 @@ public class LabResultImport {
 	pstmt.setString(2, lab_no);
 	pstmt.setString(3, status);
 	pstmt.setString(4, comment);
-	pstmt.setDate(5, new java.sql.Date(timestamp.getTime()));
+	pstmt.setString(5, timestamp);
 	pstmt.executeUpdate();
 	ResultSet rs = pstmt.getGeneratedKeys();
 	if (rs.next()) id = rs.getLong(1);
