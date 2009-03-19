@@ -190,7 +190,7 @@
 	  dtparam[3]=MyDateFormat.getSysDate(sbDate.toString());
  System.out.println("DATE '" + sbDate.toString() + "'");
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
-
+     
   //DemographicExt
      DemographicExt dExt = new DemographicExt();
      String proNo = (String) session.getValue("user");
@@ -401,7 +401,8 @@
     //response.sendRedirect("search.jsp");
     String ip = request.getRemoteAddr();
     String user = (String)session.getAttribute("user");
-    LogAction.addALog(user,LogConst.UPDATE,LogConst.CON_DEMOGRAPHIC,request.getParameter("demographic_no"),ip);
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC,  request.getParameter("demographic_no") , request.getRemoteAddr(),request.getParameter("demographic_no"));
+     
   } else {
 %>
 <h1>Sorry, fail to update !!! <%= request.getParameter("demographic_no") %>.</h1>

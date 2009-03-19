@@ -48,7 +48,7 @@ You have no rights to access the data!
 </security:oscarSec>
 
 <%@ page
-	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets"
+	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
@@ -72,6 +72,7 @@ You have no rights to access the data!
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
+        
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
 	String userfirstname = (String) session.getAttribute("userfirstname");
@@ -81,6 +82,9 @@ You have no rights to access the data!
 	int nStrShowLen = 20;
         String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
 
+        LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
+
+        
         OscarProperties oscarProps = OscarProperties.getInstance();
 
         ProvinceNames pNames = ProvinceNames.getInstance();
