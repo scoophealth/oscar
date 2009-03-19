@@ -442,6 +442,7 @@ public class DemographicData {
             this.date_joined = date_joined;
             this.chart_no = chart_no;
 	    this.official_lang = official_lang;
+	    this.spoken_lang = spoken_lang;
             this.provider_no = provider_no;
             this.sex = sex;
             this.end_date = end_date;
