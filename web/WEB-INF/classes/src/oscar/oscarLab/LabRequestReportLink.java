@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
 import oscar.oscarDB.DBHandler;
+import oscar.util.UtilDateUtilities;
 
 public class LabRequestReportLink {
     
@@ -51,19 +52,31 @@ public class LabRequestReportLink {
 	return link;
     }
     
+    public static String getRequestDate(String id) throws SQLException {
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	String sql = "SELECT request_date FROM labRequestReportLink WHERE id=" + id;
+	ResultSet rs = db.GetSQL(sql);
+	Date requestDate = null;
+	if (rs.next()) {
+	    requestDate = rs.getDate(1);
+	}
+	return UtilDateUtilities.DateToString(requestDate,"yyyy-MM-dd");
+    }
+    
     public static Long getIdByReport(String reportTable, Long reportId) throws SQLException {
 	Hashtable link = getLinkByReport(reportTable, reportId);
 	return (Long)link.get("id");
     }
     
-    public static void save(String requestTable, Long requestId, Date requestDate, String reportTable, Long reportId) throws SQLException {
+    public static void save(String requestTable, Long requestId, String requestDate, String reportTable, Long reportId) throws SQLException {
+	if (requestDate==null || ("").equals(requestDate)) requestDate="0001-01-01";
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "INSERT INTO labRequestReportLink (request_table,request_id,request_date,report_table,report_id) VALUES ('" +
 		     requestTable+"',"+requestId+",'"+requestDate+"','"+reportTable+"',"+reportId+")";
 	db.RunSQL(sql);
     }
     
-    public static void update(Long id, String requestTable, Long requestId, Date requestDate) throws SQLException {
+    public static void update(Long id, String requestTable, Long requestId, String requestDate) throws SQLException {
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	String sql = "UPDATE labRequestReportLink SET request_table='" + requestTable + "'" +
 						" AND request_id=" + requestId +
