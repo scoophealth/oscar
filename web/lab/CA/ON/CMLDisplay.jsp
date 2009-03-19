@@ -1,6 +1,6 @@
 <%@ page language="java" errorPage="../provider/errorpage.jsp"%>
 <%@ page
-	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink,log.oscar.*,oscar.oscarDB.*,java.sql.*,log.oscar.*"%>
+	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarDB.*,java.sql.*,oscar.log.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -520,7 +520,7 @@ function linkreq(rptId, reqId) {
 				<td align="center"><%=thisResult.abn %></td>
 				<td align="left"><%=thisResult.getReferenceRange()%></td>
 				<td align="left"><%=thisResult.units %></td>
-				<td align="center"><%=""/*thisGroup.timeStamp */%></td>
+				<td align="center"><%=lab.collectionDate%></td>
 				<td align="center"><%=thisResult.locationId %></td>
 				<td align="center"><%=""/*thisResult.resultStatus*/ %></td>
 			</tr>
