@@ -458,11 +458,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 note = new CaseManagementNote();
                 note.setDemographic_no(demo);
                 newNote = true;
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
             }
             else {
                 note = this.caseManagementMgr.getNote(noteId);
                 //if note has not changed don't save
-                
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
                 if( strNote.equals(note.getNote()) && !issueChange.equals("true") )
                     return null;
             }
@@ -481,6 +482,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             else {
                 note.setArchived(true);
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
             }
             
             log.debug("Note archived " + note.isArchived());
