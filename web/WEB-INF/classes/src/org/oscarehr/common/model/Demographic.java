@@ -82,7 +82,7 @@ public class Demographic implements Serializable {
 	private String citizenship;
 	private String sin;
 	private Integer headRecord = null;
-	private Set subRecord = null;
+	private Set<Integer> subRecord = null;
 
 	private int activeCount = 0;
 	private int hsAlertCount = 0;
@@ -725,7 +725,6 @@ public class Demographic implements Serializable {
 		if (getNumLinks() > 0) {
 			String[] links = getLinks().split(",");
 			for (int x = 0; x < links.length; x++) {
-				String components[] = links[x].split("/");
 				if (response.length() > 0) {
 					response.append(",");
 				}
@@ -776,11 +775,11 @@ public class Demographic implements Serializable {
 		return demographicNo;
 	}
 
-	public Set getSubRecord() {
+	public Set<Integer> getSubRecord() {
 		return subRecord;
 	}
 
-	public void setSubRecord(Set subRecord) {
+	public void setSubRecord(Set<Integer> subRecord) {
 		this.subRecord = subRecord;
 	}
 
