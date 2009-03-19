@@ -1328,7 +1328,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			ReportsReceived rpr = patientRec.addNewReportsReceived();
 			rpr.setFileExtensionAndVersion("");
 			rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-			rpr.setSubClass(Util.noNull(edoc.getFileName()));
+			rpr.setSubClass(Util.noNull(edoc.getDescription()));
 			
 			File f = new File(edoc.getFilePath());
 			if (!f.exists()) {

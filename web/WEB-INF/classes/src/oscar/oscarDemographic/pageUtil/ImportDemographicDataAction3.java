@@ -492,26 +492,25 @@ public class ImportDemographicDataAction3 extends Action {
 		    familyHist = Util.appendLine(familyHist, getCode(fHist[i].getDiagnosisCode(),"Diagnosis"));
 		    
 		    Long hostNoteId = null;
-		    if (Util.filled(familyHist)) {
-			cmNote.setNote(familyHist);
-			cmm.saveNoteSimple(cmNote);
-			hostNoteId = cmNote.getId();
-			
-			cmNote = prepareCMNote(se);
-			String note = Util.noNull(fHist[i].getNotes());
-			
-			if (Util.filled(fHist[i].getCategorySummaryLine())) {
-			    note = Util.appendLine(note, "- Summary -");
-			    note = Util.appendLine(note, fHist[i].getCategorySummaryLine().trim());
-			} else {
-			    summaryGood = "No";
-			    errorImport = Util.appendLine(errorImport,"No Summary for Family History ("+(i+1)+")");
-			}
-			note = Util.appendLine(note, getResidual(fHist[i].getResidualInfo()));
-			
-			cmNote.setNote(note);
-			saveLinkNote(hostNoteId, cmNote, cmm);
+		    if (!Util.filled(familyHist)) familyHist = "";
+		    cmNote.setNote(familyHist);
+		    cmm.saveNoteSimple(cmNote);
+		    hostNoteId = cmNote.getId();
+
+		    cmNote = prepareCMNote(se);
+		    String note = Util.noNull(fHist[i].getNotes());
+
+		    if (Util.filled(fHist[i].getCategorySummaryLine())) {
+			note = Util.appendLine(note, "- Summary -");
+			note = Util.appendLine(note, fHist[i].getCategorySummaryLine().trim());
+		    } else {
+			summaryGood = "No";
+			errorImport = Util.appendLine(errorImport,"No Summary for Family History ("+(i+1)+")");
 		    }
+		    note = Util.appendLine(note, getResidual(fHist[i].getResidualInfo()));
+
+		    cmNote.setNote(note);
+		    saveLinkNote(hostNoteId, cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		    cme.setNoteId(hostNoteId);
@@ -547,26 +546,25 @@ public class ImportDemographicDataAction3 extends Action {
 		    medicalHist = Util.appendLine(medicalHist,"Resolved ? ",pHealth[i].getResolvedIndicator());
 		    
 		    Long hostNoteId = null;
-		    if (Util.filled(medicalHist)) {
-			cmNote.setNote(medicalHist);
-			cmm.saveNoteSimple(cmNote);
-			hostNoteId = cmNote.getId();
-			
-			cmNote = prepareCMNote(se);
-			String note = Util.noNull(pHealth[i].getNotes());
-			
-			if (Util.filled(pHealth[i].getCategorySummaryLine())) {
-			    note = Util.appendLine(note, "- Summary -");
-			    note = Util.appendLine(note, pHealth[i].getCategorySummaryLine().trim());
-			} else {
-			    summaryGood = "No";
-			    errorImport = Util.appendLine(errorImport,"No Summary for Past Health ("+(i+1)+")");
-			}
-			note = Util.appendLine(note, getResidual(pHealth[i].getResidualInfo()));
-			
-			cmNote.setNote(note);
-			saveLinkNote(hostNoteId, cmNote, cmm);
+		    if (!Util.filled(medicalHist)) medicalHist = "";
+		    cmNote.setNote(medicalHist);
+		    cmm.saveNoteSimple(cmNote);
+		    hostNoteId = cmNote.getId();
+
+		    cmNote = prepareCMNote(se);
+		    String note = Util.noNull(pHealth[i].getNotes());
+
+		    if (Util.filled(pHealth[i].getCategorySummaryLine())) {
+			note = Util.appendLine(note, "- Summary -");
+			note = Util.appendLine(note, pHealth[i].getCategorySummaryLine().trim());
+		    } else {
+			summaryGood = "No";
+			errorImport = Util.appendLine(errorImport,"No Summary for Past Health ("+(i+1)+")");
 		    }
+		    note = Util.appendLine(note, getResidual(pHealth[i].getResidualInfo()));
+
+		    cmNote.setNote(note);
+		    saveLinkNote(hostNoteId, cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		    cme.setNoteId(hostNoteId);
@@ -591,26 +589,25 @@ public class ImportDemographicDataAction3 extends Action {
 		    ongConcerns = Util.appendLine(ongConcerns, getCode(probList[i].getDiagnosisCode(),"Diagnosis"));
 		    
 		    Long hostNoteId = null;
-		    if (Util.filled(ongConcerns)) {
-			cmNote.setNote(ongConcerns);
-			cmm.saveNoteSimple(cmNote);
-			hostNoteId = cmNote.getId();
-			
-			cmNote = prepareCMNote(se);
-			String note = Util.noNull(probList[i].getNotes());
-			
-			if (Util.filled(probList[i].getCategorySummaryLine())) {
-			    note = Util.appendLine(note, "- Summary -");
-			    note = Util.appendLine(note, probList[i].getCategorySummaryLine().trim());
-			} else {
-			    summaryGood = "No";
-			    errorImport = Util.appendLine(errorImport,"No Summary for Problem List ("+(i+1)+")");
-			}
-			note = Util.appendLine(note, getResidual(probList[i].getResidualInfo()));
-			
-			cmNote.setNote(note);
-			saveLinkNote(hostNoteId, cmNote, cmm);
+		    if (!Util.filled(ongConcerns)) ongConcerns = "";
+		    cmNote.setNote(ongConcerns);
+		    cmm.saveNoteSimple(cmNote);
+		    hostNoteId = cmNote.getId();
+
+		    cmNote = prepareCMNote(se);
+		    String note = Util.noNull(probList[i].getNotes());
+
+		    if (Util.filled(probList[i].getCategorySummaryLine())) {
+			note = Util.appendLine(note, "- Summary -");
+			note = Util.appendLine(note, probList[i].getCategorySummaryLine().trim());
+		    } else {
+			summaryGood = "No";
+			errorImport = Util.appendLine(errorImport,"No Summary for Problem List ("+(i+1)+")");
 		    }
+		    note = Util.appendLine(note, getResidual(probList[i].getResidualInfo()));
+
+		    cmNote.setNote(note);
+		    saveLinkNote(hostNoteId, cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		    cme.setNoteId(hostNoteId);
@@ -642,26 +639,25 @@ public class ImportDemographicDataAction3 extends Action {
 		    riskFactors = Util.appendLine(riskFactors,"Risk Factor: ",rFactors[i].getRiskFactor());
 		    
 		    Long hostNoteId = null;
-		    if (Util.filled(riskFactors)) {
-			cmNote.setNote(riskFactors);
-			cmm.saveNoteSimple(cmNote);
-			hostNoteId = cmNote.getId();
-			
-			cmNote = prepareCMNote(se);
-			String note = Util.noNull(rFactors[i].getNotes());
-			
-			if (Util.filled(rFactors[i].getCategorySummaryLine())) {
-			    note = Util.appendLine(note, "- Summary -");
-			    note = Util.appendLine(note, rFactors[i].getCategorySummaryLine().trim());
-			} else {
-			    summaryGood = "No";
-			    errorImport = Util.appendLine(errorImport,"No Summary for Risk Factors ("+(i+1)+")");
-			}
-			note = Util.appendLine(note, getResidual(rFactors[i].getResidualInfo()));
-			
-			cmNote.setNote(note);
-			saveLinkNote(hostNoteId, cmNote, cmm);
+		    if (!Util.filled(riskFactors)) riskFactors = "";
+		    cmNote.setNote(riskFactors);
+		    cmm.saveNoteSimple(cmNote);
+		    hostNoteId = cmNote.getId();
+
+		    cmNote = prepareCMNote(se);
+		    String note = Util.noNull(rFactors[i].getNotes());
+
+		    if (Util.filled(rFactors[i].getCategorySummaryLine())) {
+			note = Util.appendLine(note, "- Summary -");
+			note = Util.appendLine(note, rFactors[i].getCategorySummaryLine().trim());
+		    } else {
+			summaryGood = "No";
+			errorImport = Util.appendLine(errorImport,"No Summary for Risk Factors ("+(i+1)+")");
 		    }
+		    note = Util.appendLine(note, getResidual(rFactors[i].getResidualInfo()));
+
+		    cmNote.setNote(note);
+		    saveLinkNote(hostNoteId, cmNote, cmm);
 		    
 		    CaseManagementNoteExt cme = new CaseManagementNoteExt();
 		    cme.setNoteId(hostNoteId);
@@ -701,8 +697,8 @@ public class ImportDemographicDataAction3 extends Action {
 		    CaseManagementNote cmNote = prepareCMNote(se);
 		    if (cNotes[i].getEventDateTime()==null) cmNote.setObservation_date(new Date());
 		    else cmNote.setObservation_date(dDateFullPartial(cNotes[i].getEventDateTime()));
-		    if (cNotes[i].getEnteredDateTime()==null) cmNote.setUpdate_date(new Date());
-		    else cmNote.setUpdate_date(dDateFullPartial(cNotes[i].getEnteredDateTime()));
+		    if (cNotes[i].getSignedDateTime()==null) cmNote.setUpdate_date(new Date());
+		    else cmNote.setUpdate_date(dDateFullPartial(cNotes[i].getSignedDateTime()));
 		    
 		    String encounter = cNotes[i].getMyClinicalNotesContent();
 		    encounter = Util.appendLine(encounter,"Note Type: ",cNotes[i].getNoteType());
@@ -717,8 +713,8 @@ public class ImportDemographicDataAction3 extends Action {
 			String signPhysicianOHIP = cNotes[i].getSigningOHIPPhysicianId();
 			cmNote.setSigning_provider_no(writeProviderData(signPhysicianName, signPhysicianOHIP));
 		    }
-		    encounter = Util.appendLine(encounter,"Signed DateTime: ",dateFullPartial(cNotes[i].getSignedDateTime()));
 		    encounter = Util.appendLine(encounter,"Signing Physician OHIP Id: ",cNotes[i].getSigningOHIPPhysicianId());
+		    encounter = Util.appendLine(encounter,"Entered DateTime: ",dateFullPartial(cNotes[i].getEnteredDateTime()));
 		    if (Util.filled(encounter)) {
 			cmNote.setNote(encounter);
 			cmm.saveNoteSimple(cmNote);
@@ -1071,9 +1067,11 @@ public class ImportDemographicDataAction3 extends Action {
                     LaboratoryResults.Result result = labResults.getResult();
                     String unit = null;
                     if (result!=null) {
-                        if (Util.filled(result.getValue())) meas.setDataField(result.getValue());
-                        if (Util.filled(result.getUnitOfMeasure())) unit = result.getUnitOfMeasure();
-                    }
+                        meas.setDataField(Util.noNull(result.getValue()));
+                        unit = Util.noNull(result.getUnitOfMeasure());
+                    } else {
+			meas.setDataField("");
+		    }
                     if (labResults.getDateTimeResultReceivedByCMS()!=null) {
                         meas.setDateEntered(dDateFullPartial(labResults.getDateTimeResultReceivedByCMS()));
                     } else {
@@ -1098,7 +1096,7 @@ public class ImportDemographicDataAction3 extends Action {
 			dataGood = "No";
                         errorImport = writeError(errorImport,errWarnings,"No Collection DateTime for Lab Test "+testCode+" for Patient "+this.demographicNo);
                     }
-		    String labname = labResults.getLaboratoryName();
+		    String labname = Util.noNull(labResults.getLaboratoryName());
                     if (Util.filled(labname)) {
                         saveMeasurementsExt(measId, "labname", labname);
                     } else {

@@ -46,19 +46,14 @@ public class Util {
     }
     
     static public XmlCalendar calDate(Date inDate, boolean canNull) {
-	if (inDate==null) {
+	if (inDate==null || UtilDateUtilities.DateToString(inDate,"yyyy-MM-dd").equals("0001-01-01")) {
 	    if (canNull) return null;
-	    else inDate = UtilDateUtilities.StringToDate("0001-01-01");
+	    else inDate = UtilDateUtilities.StringToDate("0001-01-03");
 	}
-	
 	GDateBuilder gd = new GDateBuilder();
 	gd.setDate(inDate);
-	if (gd.getYear()<0001) {
-	    return null;
-	} else {
-	    gd.clearTimeZone();
-	    return gd.getCalendar();
-	}
+	gd.clearTimeZone();
+	return gd.getCalendar();
     }
     
     static boolean cleanFile(String filename) {
