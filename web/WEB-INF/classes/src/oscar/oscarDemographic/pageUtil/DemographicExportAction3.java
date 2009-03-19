@@ -1416,12 +1416,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    audReport = Util.appendLine(audReport, rName[j]+": ", rCont[j]);
 			}
 			audReport = Util.appendLine(audReport, "------------------------------------------------------------");
-			
-			audSummary = Util.appendLine(audSummary, rName[0]+": ", rCont[0]);
-			audSummary = Util.appendLine(audSummary, rName[2]+": ", rCont[2]);
-			audSummary = Util.appendLine(audSummary, "------------------------------------------------------------");
 		    }
-		    
+		    audSummary = audReport;
 		    AuditInformation audInf = patientRec.addNewAuditInformation();
 		    if (!Util.filled(audSummary)) {
 			err.add("Error! No Category Summary Line (Audit Information) for Patient "+this.demographicNo);
