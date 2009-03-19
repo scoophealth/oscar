@@ -1,6 +1,6 @@
 <%@ page language="java" errorPage="../provider/errorpage.jsp"%>
 <%@ page
-	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink"%>
+	import="java.util.*, oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.CML.*,oscar.oscarLab.LabRequestReportLink,log.oscar.*,oscar.oscarDB.*,java.sql.*,log.oscar.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -15,7 +15,27 @@ lab.populateLab(segmentID);
 
 Long reqIDL = LabRequestReportLink.getIdByReport("labPatientPhysicianInfo",Long.valueOf(segmentID));
 String reqID = reqIDL==null ? "" : String.valueOf(reqIDL);
+%>
+<oscar:oscarPropertiesCheck property="SPEC3" value="yes">
+    <%
+    String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+segmentID+"';";
+DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+ResultSet rs = db.GetSQL(sql);
+String demographicID = "";
 
+while(rs.next()){
+    demographicID = db.getString(rs,"demographic_no");
+}
+rs.close();
+    
+if(lab.demographicNo != null && !lab.demographicNo.equals("null")){
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),lab.demographicNo);
+}else{           
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
+}
+%>
+</oscar:oscarPropertiesCheck>
+<%
 /*
 String ackStatus = request.getParameter("status");
 if ( request.getParameter("searchProviderNo") == null || request.getParameter("searchProviderNo").equals("") ) {

@@ -6,7 +6,7 @@
 		 oscar.oscarLab.ca.all.util.*,
 		 oscar.oscarLab.ca.all.parsers.*,
 		 oscar.oscarLab.LabRequestReportLink,
-		 oscar.oscarMDS.data.ReportStatus,
+		 oscar.oscarMDS.data.ReportStatus,oscar.log.*,
 		 org.apache.commons.codec.binary.Base64" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -26,10 +26,20 @@ String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_no='"+segme
 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 ResultSet rs = db.GetSQL(sql);
 String demographicID = "";
+
 while(rs.next()){
     demographicID = db.getString(rs,"demographic_no");
 }
 rs.close();
+
+
+if(demographicID != null && !demographicID.equals("")){
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
+}else{           
+    LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
+}
+        
+
 
 boolean ackFlag = false;
 AcknowledgementData ackData = new AcknowledgementData();

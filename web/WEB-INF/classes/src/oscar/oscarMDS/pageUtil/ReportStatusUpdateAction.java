@@ -24,6 +24,7 @@
 package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -37,6 +38,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 
 public class ReportStatusUpdateAction extends Action {
@@ -59,6 +63,26 @@ public class ReportStatusUpdateAction extends Action {
         String comment = request.getParameter("comment");
         String lab_type = request.getParameter("labType");
         Properties props = OscarProperties.getInstance();
+
+        
+        if(status == 'A'){
+            String demographicID = "";
+            try{
+                String sql = "SELECT demographic_no FROM patientLabRouting WHERE lab_type = '"+lab_type+"' and lab_no='"+labNo+"'";
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = db.GetSQL(sql);
+
+                while(rs.next()){
+                    demographicID = db.getString(rs,"demographic_no");
+                }
+                rs.close();
+
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ACK, LogConst.CON_HL7_LAB, ""+labNo, request.getRemoteAddr(),demographicID);
+            }catch(Exception ep){
+
+            }
+        }
+        
         
         try {
             CommonLabResultData data = new CommonLabResultData();
