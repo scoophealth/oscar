@@ -145,7 +145,7 @@ public class MeasurementMapConfig {
     public String getLoincCodeByIdentCode(String identifier) throws SQLException {
 	if (identifier!=null && identifier.trim().length()>0) {
 	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	    String sql = "SELECT loinc_code FROM measurementMap WHERE ident_code="+identifier;
+	    String sql = "SELECT loinc_code FROM measurementMap WHERE ident_code='"+identifier+"'";
 	    ResultSet rs = db.GetSQL(sql);
 
 	    if (rs.next()) return rs.getString("loinc_code");
