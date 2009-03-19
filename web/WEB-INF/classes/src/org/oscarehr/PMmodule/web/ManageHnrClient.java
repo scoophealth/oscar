@@ -71,6 +71,11 @@ public class ManageHnrClient {
 		return hnrClient;
 	}
 
+	public boolean isImageValidateable()
+	{
+		return(clientImage!=null);
+	}
+	
 	public String getLocalClientImageUrl() {
 		if (clientImage == null) return (ClientImage.imageMissingPlaceholderUrl);
 		else return ("/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId=" + demographic.getDemographicNo());

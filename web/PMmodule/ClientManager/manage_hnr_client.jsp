@@ -30,7 +30,7 @@
 	<tr>
 		<td class="genericTableHeader">Picture</td>
 		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getLocalClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
-		<td style="vertical-align:middle;text-align:center;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getPictureValidationActionString()%>" onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getPictureValidationActionString()%>Picture&demographicId=<%=currentDemographicId%>'" /></td>
+		<td style="vertical-align:middle;text-align:center;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getPictureValidationActionString()%>" <%=manageHnrClient.isImageValidateable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getPictureValidationActionString()%>Picture&demographicId=<%=currentDemographicId%>'" /></td>
 		<td><img style="height:96px; width:96px" src="<%=request.getContextPath()+manageHnrClient.getHnrClientImageUrl()%>" alt="client_image_<%=demographic.getDemographicNo()%>" /></td>
 	</tr>
 	<tr>
