@@ -76,6 +76,10 @@
 	<item desc="Hep AB=Hepatitis AB" name="HepAB" link="" layout="injection"
 		atc="J07BC20" showIfMinRecordNum="1" />
 
+        <item desc="Dukoral" name="CHOLERA" link="" layout="injection"
+		atc="J07AE01" showIfMinRecordNum="1" />
+        
+
 	<item desc="Rabies=Rabies" name="Rabies" link="" layout="injection"
 		atc="J07BG01" showIfMinRecordNum="1" />
 
