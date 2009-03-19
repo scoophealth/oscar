@@ -93,7 +93,7 @@ You have no rights to access the data!
 
 <%
 	String ip = request.getRemoteAddr();
-	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip,demographic$);
 %>
 <%  
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
