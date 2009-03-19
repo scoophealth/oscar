@@ -598,6 +598,7 @@ function getCPP(issueCode) {
 	    return cppNames[i];
 	}
     }
+    return "";
 }
 
 var exFields = new Array(8);
