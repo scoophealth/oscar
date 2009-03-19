@@ -244,6 +244,16 @@
 		<servlet-name>DATISExportTest</servlet-name>
 		<url-pattern>/PMmodule/export</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DATISExport</servlet-name>
+		<servlet-class>org.oscarehr.PMmodule.exporter.DATISExporterServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DATISExport</servlet-name>
+		<url-pattern>/PMmodule/exportfiles</url-pattern>
+	</servlet-mapping>
     
     <servlet-mapping>
 		<servlet-name>action</servlet-name>

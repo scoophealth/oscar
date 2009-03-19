@@ -84,6 +84,7 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intake;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Integer> getIntakeClientsByFacilityId(Integer facilityId) {
 		if(facilityId == null) {
 			throw new IllegalArgumentException("Parameter facilityId must be non-null");
@@ -93,6 +94,13 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 				new Object[] { facilityId });
 		
 		return clientIds;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> getIntakeFacilityIds() {
+		List<Integer> facilityIds = getHibernateTemplate().find("select distinct i.facilityId from Intake i ");
+		
+		return facilityIds;
 	}
 	
 	/**
