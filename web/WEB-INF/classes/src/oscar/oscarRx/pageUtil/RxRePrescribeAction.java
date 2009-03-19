@@ -37,6 +37,8 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
 
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarRx.data.RxPrescriptionData;
 
 
@@ -62,6 +64,11 @@ public final class RxRePrescribeAction extends DispatchAction {
         
         RxDrugListForm frm = (RxDrugListForm)form;
         String script_no = frm.getDrugList();
+        
+        
+        String ip = request.getRemoteAddr();
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip,""+beanRX.getDemographicNo());
+        
         
         RxPrescriptionData rxData = new RxPrescriptionData();
         ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());

@@ -64,6 +64,9 @@ public final class RxDeleteRxAction extends Action {
             return null;
         }
         
+        String ip = request.getRemoteAddr();
+        
+        
         try {
             oscar.oscarRx.data.RxPrescriptionData rxData =
             new oscar.oscarRx.data.RxPrescriptionData();
@@ -84,6 +87,8 @@ public final class RxDeleteRxAction extends Action {
                 rxData.getPrescription(drugId);
                 
                 rx.Delete();
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo());
+       
             }
         }
         catch (Exception e) {
@@ -91,8 +96,6 @@ public final class RxDeleteRxAction extends Action {
         }
         
                 
-        String ip = request.getRemoteAddr();
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, ""+bean.getDemographicNo(), ip);
-        return (mapping.findForward("success"));
+         return (mapping.findForward("success"));
     }
 }

@@ -42,6 +42,7 @@ import oscar.log.LogConst;
 import oscar.oscarRx.data.RxAllergyData;
 import oscar.oscarRx.data.RxDrugData;
 import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 
 
 public final class RxAddAllergyAction extends Action {
@@ -100,10 +101,10 @@ public final class RxAddAllergyAction extends Action {
                 }
             }
             
-            patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
+            Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
             
             String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, ""+patient.getDemographicNo(), ip);
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo());
 
             return (mapping.findForward("success"));
     }
