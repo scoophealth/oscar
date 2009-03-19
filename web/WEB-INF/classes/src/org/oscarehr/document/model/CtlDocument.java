@@ -131,7 +131,13 @@ public  class CtlDocument  implements Serializable {
 		this.status = status;
 	}
 
-
+        
+        public boolean isDemographicDocument(){
+            if(id.getModule() != null && id.getModule().equals("demographic")){
+                return true;
+            }
+            return false;
+        }
 
 
 	public boolean equals (Object obj) {
