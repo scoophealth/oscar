@@ -63,7 +63,7 @@ public abstract class AbstractIntakeExporter {
 		
 		initExport();
 		
-		log.info("Number of Clients to export: " + clients.size());
+		log.debug("Number of Clients to export: " + clients.size());
 		
 		for(Integer clientId : clients) {
 			getIntakeForClient(clientId);
@@ -84,6 +84,7 @@ public abstract class AbstractIntakeExporter {
 			
 			if(null == clients || clients.isEmpty()) {
 				// Get all clients for the specified facility...
+				log.debug("Fetching clients for facility ID: " + facilityId);
 				clients = genericIntakeManager.getIntakeClientsByFacilityId(facilityId);
 			}
 			

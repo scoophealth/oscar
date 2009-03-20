@@ -36,13 +36,13 @@ request.setAttribute("facilities", facilities);
 <body>
 	
 	<form name="datisform" method="post" action="../exportfiles" onsubmit="return callAction()">
-		<table cellpadding="0" cellspacing="0" width="40%">
+		<table cellpadding="0" cellspacing="0" width="40%" style="text-indent: 2px;">
 			<tr style="background-color: #342D7E">
 				<td style="color: #FFFFFF"><strong>DATIS EXPORT</strong></td>
 			</tr>
 			<tr style="background-color: #C2DFFF">
 				<td>
-					<table cellpadding="0" cellspacing="0">
+					<table cellpadding="0" cellspacing="0" style="text-indent: 2px;">
 						<tr><td>&nbsp;</td></tr>
 						<tr><td>Facility(All clients in facility will be exported):&nbsp;</td>
 							<td>
@@ -58,7 +58,7 @@ request.setAttribute("facilities", facilities);
 			</tr>
 			<tr style="background-color: #C2DFFF">
 				<td>
-					<table cellpadding="0" cellspacing="0">
+					<table cellpadding="0" cellspacing="0" style="text-indent: 2px;">
 						<tr><td>Files to export:</td></tr>
 						<tr><td><input name="ai" type="checkbox" checked="checked">Agency Information</td></tr>
 						<tr><td><input name="lp" type="checkbox" checked="checked">List Of Programs</td></tr>
@@ -74,6 +74,9 @@ request.setAttribute("facilities", facilities);
 				<td>
 					<input id="exportButton" type="submit" value="Export Files" />&nbsp;(This operation may take few minutes)
 				</td>
+			</tr>
+			<tr style="background-color: #C2DFFF">
+				<td><em>If this operation is taking longer time, try exporting one file at a time.</em></td>
 			</tr>
 		</table>
 	</form>

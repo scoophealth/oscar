@@ -44,36 +44,47 @@ public class DATISExporterServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		try {
 			facilityId = Integer.parseInt(request.getParameter("facilityId"));
+			
+			log.debug("Exporting for facility ID: " + facilityId);
+			
 			String dirLocation = request.getSession().getServletContext().getRealPath("WEB-INF/datisexport");
 			
-			AbstractIntakeExporter exporter = null;
-
+			AbstractIntakeExporter[] exporter = new AbstractIntakeExporter[6];
+			
 			if(request.getParameter("ai") != null) {
-				exporter = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
-				exportCSVFile(exporter, "agencyinformation", dirLocation);
+				exporter[0] = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
+				exportCSVFile(exporter[0], "agencyinformation", dirLocation);
 			}
 			if(request.getParameter("lp") != null) {
-				exporter = (DATISListOfPrograms)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterListOfPrograms");
-				exportCSVFile(exporter, "listofprograms", dirLocation);
+				exporter[1] = (DATISListOfPrograms)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterListOfPrograms");
+				exportCSVFile(exporter[1], "listofprograms", dirLocation);
 			}
 			if(request.getParameter("mn") != null) {
-				exporter = (DATISMain)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterMain");
-				exportCSVFile(exporter, "main", dirLocation);
+				exporter[2] = (DATISMain)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterMain");
+				exportCSVFile(exporter[2], "main", dirLocation);
 			}
 			if(request.getParameter("pi") != null) {
-				exporter = (DATISProgramInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterProgramInformation");
-				exportCSVFile(exporter, "programinformation", dirLocation);
+				exporter[3] = (DATISProgramInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterProgramInformation");
+				exportCSVFile(exporter[3], "programinformation", dirLocation);
 			}
 			if(request.getParameter("gf") != null) {
-				exporter = (DATISGamingForm)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterGamblingForm");
-				exportCSVFile(exporter, "gamblingform", dirLocation);
+				exporter[4] = (DATISGamingForm)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterGamblingForm");
+				exportCSVFile(exporter[4], "gamblingform", dirLocation);
 			}
 			if(request.getParameter("nc") != null) {
-				exporter = (DATISNonClientService)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterNonClientService");
-				exportCSVFile(exporter, "nonclientservice", dirLocation);
+				exporter[5] = (DATISNonClientService)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterNonClientService");
+				exportCSVFile(exporter[5], "nonclientservice", dirLocation);
+			}
+			
+			// Reset clients list for subsequent requests
+			for(int i = 0; i < exporter.length; i++) {
+				if(exporter[i] != null) {
+					exporter[i].setClients(null);
+				}
 			}
 			
 			response.sendRedirect("GenericIntake/DATISExport.jsp");
+			
 		} catch(Throwable t) {
 			t.printStackTrace();
 			try {
@@ -93,7 +104,7 @@ public class DATISExporterServlet extends HttpServlet {
 		writer.flush();
 		writer.close();
 		
-		log.info("File " + filename + " exported.");
+		log.debug("File " + filename + " exported.");
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
