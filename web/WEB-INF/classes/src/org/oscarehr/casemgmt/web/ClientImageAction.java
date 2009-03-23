@@ -63,6 +63,7 @@ public class ClientImageAction extends DispatchAction {
 
 			FormFile formFile = formBean.getImagefile();
 			String type = formFile.getFileName().substring(formFile.getFileName().lastIndexOf(".")+1);
+			if (type!=null) type=type.toLowerCase();
 			
 			log.info("extension = " + type);
 			
