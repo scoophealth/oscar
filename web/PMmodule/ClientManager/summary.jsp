@@ -114,7 +114,7 @@ function openSurvey() {
 			imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographic.getDemographicNo();
 		}
 	%>
-	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" />
+	<img style="height:96px; width:96px" src="<%=request.getContextPath()+imagePlaceholder%>" alt="client_image_<%=currentDemographic.getDemographicNo()%>" onmouseover="src='<%=request.getContextPath()+imageUrl%>'" onmouseout="src='<%=request.getContextPath()+imagePlaceholder%>'" onClick="window.open('<%=request.getContextPath()%>/casemgmt/uploadimage.jsp?demographicNo=<%=currentDemographic.getDemographicNo()%>', '', 'height=500,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=50,left=50')" />
 </div>
 
 <div class="tabs">
