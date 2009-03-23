@@ -33,6 +33,9 @@ public class IntegratorConsentDao extends AbstractDao {
         return(entityManager.find(IntegratorConsent.class, id));
     }
     
+    /**
+     * results are ordered by newest first
+     */
     public IntegratorConsent findLatestByFacilityDemographicAndRemoteFacility(int facilityId, int demographicId, int remoteFacilityId) {
     	Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 and integratorFacilityId=?3 order by x.createdDate desc");
 		query.setParameter(1, facilityId);
@@ -43,6 +46,9 @@ public class IntegratorConsentDao extends AbstractDao {
 		return((IntegratorConsent)getSingleResultOrNull(query));
     }
 
+    /**
+     * results are ordered by newest first
+     */
 	public List<IntegratorConsent> findByFacilityAndDemographic(int facilityId, int demographicId) {
 		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
 		query.setParameter(1, facilityId);
