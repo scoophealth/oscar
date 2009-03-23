@@ -43,8 +43,12 @@
 <script>
 	function init_page() {
 		<%
-			if(request.getAttribute("success") != null) {
-				%>opener.document.caseManagementViewForm.submit(); self.close();<%
+			if(request.getAttribute("success") != null) 
+			{
+				%>
+					opener.location.reload();
+					self.close();
+				<%
 			}
 		%>
 	}
