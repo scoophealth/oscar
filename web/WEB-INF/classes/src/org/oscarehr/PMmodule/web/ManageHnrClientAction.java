@@ -12,10 +12,12 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.HnrDataValidationDao;
+import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.HnrDataValidation;
+import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
 
@@ -26,7 +28,8 @@ public class ManageHnrClientAction {
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static HnrDataValidationDao hnrDataValidationDao = (HnrDataValidationDao) SpringUtils.getBean("hnrDataValidationDao");
-
+	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
+	
 	public static void copyHnrToLocal(Facility currentFacility, Provider currentProvider, Integer clientId) {
 		try {
 			logger.debug("copyHnrToLocal currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId);
@@ -91,7 +94,7 @@ public class ManageHnrClientAction {
 			// 1) there's a linked client at which point update the linked client on the hnr
 			// 2) there is no linked client at which point create a new linked client on the hnr and create the link.
 
-			// were ignoring the anomalie of multiple hnr links as it should never really happen though it's theorietically possible due to lack of atomic updates on this table.
+			// were ignoring the anomalie of multiple hnr links as it should never really happen though it's theoretically possible due to lack of atomic updates on this table.
 			List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
 
 			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = null;
@@ -159,11 +162,21 @@ public class ManageHnrClientAction {
 				if (clientLink != null) {
 					hnrClient.setLinkingId(clientLink.getRemoteLinkId());
 				}
-	
+
+				// set the consent
+				hnrClient.setHidden(true);
+				List<IntegratorConsent> consents=integratorConsentDao.findByFacilityAndDemographic(currentFacility.getId(), clientId);
+				if (consents.size()>0) {
+					// only 1 hnr setting so using the latest is fine.
+					IntegratorConsent integratorConsent=consents.get(0);
+					hnrClient.setHidden(!integratorConsent.isConsentToHealthNumberRegistry());
+					hnrClient.setHiddenConsentDate(integratorConsent.getCreatedDate());
+				}
+				
 				// save the client
 				hnrClient.setCreatedBy("faciliy: " + currentFacility.getName() + ", provider:" + currentProvider.getFormattedName());
 				Integer linkingId = caisiIntegratorManager.setHnrClient(currentFacility, currentProvider, hnrClient);
-	
+
 				// if the hnr client is new / not previously linked, save the new link
 				// in theory this can lead to multiple links if 2 people run this method
 				// at the same time, in reality it should really be a problem and
