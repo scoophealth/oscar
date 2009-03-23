@@ -22,26 +22,36 @@
 package org.oscarehr.PMmodule.exporter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class DATISExporterServlet extends HttpServlet {
-	
+
 	private static final long serialVersionUID = -3152671093057808424L;
 	
 	private static final Logger log = Logger.getLogger(DATISExporterServlet.class);
 
+	private static final String OUTFILE_ZIP = "outfile.zip";
 	private int facilityId;
+	private String[] filenames = new String[6];
+	private int fileIndex = 0;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		FileInputStream fis = null;
+		
 		try {
 			facilityId = Integer.parseInt(request.getParameter("facilityId"));
 			
@@ -83,26 +93,77 @@ public class DATISExporterServlet extends HttpServlet {
 				}
 			}
 			
-			response.sendRedirect("GenericIntake/DATISExport.jsp");
+			response.setContentType("application/zip");
+			
+			fis = getZipFile(dirLocation);
+			byte[] buf = new byte[1024];
+			while(fis.read(buf) != -1) {
+				response.getOutputStream().write(buf);
+			}
 			
 		} catch(Throwable t) {
 			t.printStackTrace();
 			try {
 				response.getWriter().print("An Error Occured during DATIS Export operation.\nPlease check server log for details.");
 			} catch (IOException e) {
+				log.error(e);
 				e.printStackTrace();
 			}
+		} finally {
+			fileIndex = 0;
+			filenames = new String[6];
+			if(fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e) {
+					log.error(e);
+					e.printStackTrace();
+				}
+			}
 		}
+	}
+
+	private FileInputStream getZipFile(String dirLocation) throws IOException {
+		byte[] buf = new byte[1024];
+
+		String outFilename = dirLocation + File.separatorChar + OUTFILE_ZIP;
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outFilename));
+		for (int i = 0; i < filenames.length; i++) {
+			if(StringUtils.isBlank(filenames[i])) {
+				continue;
+			}
+			
+			FileInputStream in = new FileInputStream(filenames[i]);
+			out.putNextEntry(new ZipEntry(filenames[i].substring(1 + filenames[i].lastIndexOf(File.separatorChar))));
+
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			
+			out.closeEntry();
+			in.close();
+		}
+		
+		out.close();
+		
+		return new FileInputStream(outFilename);
 	}
 
 	private void exportCSVFile(AbstractIntakeExporter exporter, String filename, String dirLocation) throws Exception {
 		exporter.setFacilityId(facilityId);
 		String data = exporter.export();
-		PrintWriter writer = new PrintWriter(dirLocation + File.separatorChar + filename + "Facility" + facilityId + ".csv");
+		
+		log.debug(filename + " data exported.");
+		
+		String fullName = dirLocation + File.separatorChar + filename + "Facility" + facilityId + ".csv";
+		PrintWriter writer = new PrintWriter(fullName);
 		writer.write(data);
 			
 		writer.flush();
 		writer.close();
+		
+		filenames[fileIndex++] = fullName;
 		
 		log.debug("File " + filename + " exported.");
 	}

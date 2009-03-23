@@ -22,9 +22,13 @@ request.setAttribute("facilities", facilities);
 <head>
 <script type="text/javascript">
 	function callAction() {
-		document.getElementById("exportButton").value = "Exporting...";
-		document.getElementById("exportButton").disabled = true;
-		return true;
+//		document.getElementById("exportButton").value = "Exporting...";
+//		document.getElementById("exportButton").disabled = true;
+		if(document.getElementById("submitted").value == false) {
+			document.getElementById("submitted").value = true;
+			return true;
+		}
+		return false;
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -36,6 +40,7 @@ request.setAttribute("facilities", facilities);
 <body>
 	
 	<form name="datisform" method="post" action="../exportfiles" onsubmit="return callAction()">
+		<input type="hidden" name="submitted" value="false">
 		<table cellpadding="0" cellspacing="0" width="40%" style="text-indent: 2px;">
 			<tr style="background-color: #342D7E">
 				<td style="color: #FFFFFF"><strong>DATIS EXPORT</strong></td>
@@ -76,7 +81,7 @@ request.setAttribute("facilities", facilities);
 				</td>
 			</tr>
 			<tr style="background-color: #C2DFFF">
-				<td><em>If this operation is taking longer time, try exporting one file at a time.</em></td>
+				<td><em>If this operation is taking long time, try exporting one file at a time.</em></td>
 			</tr>
 		</table>
 	</form>
