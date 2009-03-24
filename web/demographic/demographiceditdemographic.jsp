@@ -121,6 +121,9 @@ You have no rights to access the data!
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/check_hin.js"></script>
+
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -290,51 +293,17 @@ function isValidDate(day,month,year){
 
 
 function checkHin() {
-	var typeInOK = false;
 	var hin = document.updatedelete.hin.value;
 	var province = document.updatedelete.hc_type.value;
-	//alert(hin);
-	//check OHIP, no others
-	if(province=="ON") {
-		//alert(hin.length + " | " + hin.charAt(1));
-		if(checkTypeNum(hin) && hin.length==10) {
-		    typeInOK = mod10Check(hin);
-		}
+
+	if (!isValidHin(hin, province))
+	{
+		alert ("You must type in the right HIN.");
+		return(false);
 	}
 
-	//don't check
-	if(province!="ON" || hin.length==0) typeInOK = true;
-
-	if (!typeInOK) alert ("You must type in the right HIN.");
-	return typeInOK;
+	return(true);
 }
-	function mod10Check(hinNum) {
-		var typeInOK = false;
-		var hChar = new Array();
-		var sum = 0;
-		for (i=0; i<hinNum.length; i++) {
-			hChar[i] = hinNum.charAt(i);
-		}
-
-		for (i=0; i<hinNum.length; i=i+2) {
-			hChar[i] = mod10CheckCalDig(hChar[i]);
-		}
-
-		for (i=0; i<hinNum.length-1; i++) {
-			sum = eval(sum*1 + hChar[i]*1);
-		}
-
-		var calDigit = 10-(""+sum).charAt((""+sum).length-1) ;
-		if (hChar[hinNum.length-1] == ( (""+calDigit).charAt((""+calDigit).length-1) )) typeInOK = true;
-
-		return typeInOK;
-	}
-	function mod10CheckCalDig(dig) {
-		var ret = dig*2 + "";
-		if (ret.length==2) ret = eval(ret.charAt(0)*1+ret.charAt(1)*1);
-
-		return ret;
-	}
 
 function checkTypeInEdit() {
   if ( !checkName() ) return false;
@@ -344,25 +313,6 @@ function checkTypeInEdit() {
   return(true);
 }
 
-function checkTypeNum(typeIn) {
-	var typeInOK = true;
-	var i = 0;
-	var length = typeIn.length;
-	var ch;
-	// walk through a string and find a number
-	if (length>=1) {
-	  while (i <  length) {
-		  ch = typeIn.substring(i, i+1);
-		  if (ch == "-") { i++; continue; }
-		  if ((ch < "0") || (ch > "9") ) {
-			  typeInOK = false;
-			  break;
-		  }
-	    i++;
-    }
-	} else typeInOK = false;
-	return typeInOK;
-}
 function formatPhoneNum() {
     if (document.updatedelete.phone.value.length == 10) {
         document.updatedelete.phone.value = document.updatedelete.phone.value.substring(0,3) + "-" + document.updatedelete.phone.value.substring(3,6) + "-" + document.updatedelete.phone.value.substring(6);

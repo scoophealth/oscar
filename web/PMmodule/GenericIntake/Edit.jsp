@@ -44,6 +44,7 @@
 <%@page import="org.apache.commons.lang.StringUtils"%><html:html xhtml="true" locale="true">
 <head>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
     <title>Generic Intake Edit</title>
     <style type="text/css">
         @import "<html:rewrite page="/css/genericIntake.css" />";

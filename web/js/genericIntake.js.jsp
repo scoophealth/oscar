@@ -100,21 +100,29 @@ function validateEdit() {
 	}
 
 	// only allow numbers to be entered
-	var healthCardNo = getElement('client.hin');
-	var healthCardVersion = getElement('client.ver');
-	if (isNaN(healthCardNo.value))
+	var province = getElement('client.province').value;
+	var healthCardNo = getElement('client.hin').value;
+	var healthCardVersion = getElement('client.ver').value;
+	if (isNaN(healthCardNo))
     {
     	alert("Please enter only digit characters in the \"Health Card #\" field.");
 		document.forms[0].elements['client.hin'].focus();
 		return false;
     }
+
+	if (!isValidHin(healthCardNo, province))
+	{
+		alert ("You must type in the right HIN.");
+		return(false);
+	}
+
 	
 	//only allow upper case alpha characters to be entered
 	if (!checkChar(healthCardVersion)){
 		return error(healthCardVersion, "Please enter only alpha characters in the \"Version\" field.");
 		
 	}
-	document.forms[0].elements['client.ver'].value = healthCardVersion.value.toUpperCase();
+	document.forms[0].elements['client.ver'].value = healthCardVersion.toUpperCase();
 	
 	if (!check_mandatory()) {
 	    return false;
@@ -365,7 +373,7 @@ function error(element, msg) {
 function checkChar(checkString) {
 	var checkOK = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";	
 	var allValid = true;
-	var checkStr = checkString.value;	
+	var checkStr = checkString;	
 	for (i = 0;  i < checkStr.length;  i++){	
 		ch = checkStr.charAt(i);
 		for (j = 0;  j < checkOK.length;  j++) 
