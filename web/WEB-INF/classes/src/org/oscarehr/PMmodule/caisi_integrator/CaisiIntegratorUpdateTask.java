@@ -90,7 +90,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 	private static TimerTask timerTask = null;
-
+	private static boolean shutdownSignaled=false;
+	
 	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -112,6 +113,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	public static synchronized void startTask() {
 		if (timerTask == null) {
+			shutdownSignaled=false;
+			
 			int period = 0;
 			String periodStr = null;
 			try {
@@ -125,6 +128,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.info("Scheduling CaisiIntegratorUpdateTask for period : " + period);
 			timerTask = new CaisiIntegratorUpdateTask();
 			timer.schedule(timerTask, 10000, period);
+			
+			Runtime.getRuntime().addShutdownHook
+			(
+				new Thread()
+				{
+					public void run()
+					{
+						shutdownSignaled=true;
+					}
+				}
+			);
 		} else {
 			logger.error("Start was called twice on this timer task object.", new Exception());
 		}
@@ -132,6 +146,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	public static synchronized void stopTask() {
 		if (timerTask != null) {
+			shutdownSignaled=true;
+			
 			timerTask.cancel();
 			timerTask = null;
 
@@ -143,7 +159,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
 		try {
-			pushAllFacilities();
+			pushAllFacilities();			
+		} catch (InterruptedException e) {
+			logger.debug("CaisiIntegratorUpdateTask received shutdown notice.");
 		} catch (Exception e) {
 			logger.error("unexpected error occurred", e);
 		} finally {
@@ -153,10 +171,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+	public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		List<Facility> facilities = facilityDao.findAll(null);
 
 		for (Facility facility : facilities) {
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+			
 			try {
 				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
 					pushAllFacilityData(facility);
@@ -174,7 +194,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		logger.debug("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// check all parameters are present
@@ -219,12 +239,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setMyFacility(cachedFacility);
 	}
 
-	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
 		ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
 
 		for (Program program : programs) {
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+
 			CachedProgram cachedProgram = new CachedProgram();
 
 			BeanUtils.copyProperties(cachedProgram, program);
@@ -247,12 +269,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedPrograms(cachedPrograms);
 	}
 
-	private void pushProviders(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+	private void pushProviders(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
 		ArrayList<CachedProvider> cachedProviders = new ArrayList<CachedProvider>();
 
 		for (String providerId : providerIds) {
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+
 			Provider provider = providerDao.getProvider(providerId);
 
 			CachedProvider cachedProvider = new CachedProvider();
@@ -270,7 +294,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedProviders(cachedProviders);
 	}
 
-	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException {
+	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		DemographicWs demogrpahicService = caisiIntegratorManager.getDemographicWs(facility.getId());
 		HnrWs hnrService = caisiIntegratorManager.getHnrWs(facility.getId());
@@ -279,6 +303,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
 
 			try {
 				pushDemographic(facility, demogrpahicService, demographicId);
@@ -358,7 +384,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
+	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, InterruptedException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographic(demographicId.toString());
@@ -366,6 +392,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+			
 			// don't send issue if it is not in our facility.
 			if (!isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
 
@@ -394,7 +422,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (false);
 	}
 
-	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException {
+	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException, InterruptedException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
@@ -406,6 +434,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// add prevention to array list to send
 		List<Prevention> localPreventions = preventionDao.findNotDeletedByDemographicId(demographicId);
 		for (Prevention localPrevention : localPreventions) {
+			if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+
 			if (!providerIdsInFacility.contains(localPrevention.getCreatorProviderNo())) continue;
 
 			CachedDemographicPrevention cachedDemographicPrevention = new CachedDemographicPrevention();
@@ -440,19 +470,23 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
 	}
 
-	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
+	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) throws InterruptedException {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		// not finished yet
+		if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+
 	}
 
-	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
+	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException, InterruptedException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
 		ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
 		if (drugs != null) {
 			for (Drug drug : drugs) {
+				if (shutdownSignaled) throw(new InterruptedException("Shutdown signaled"));
+
 				if (!providerIdsInFacility.contains(drug.getProviderNo())) continue;
 
 				CachedDemographicDrug cachedDemographicDrug = new CachedDemographicDrug();
