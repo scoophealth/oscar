@@ -38,6 +38,8 @@ import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.ShutdownException;
 
 public class BedProgramDischargeTask extends TimerTask {
 
@@ -77,6 +79,8 @@ public class BedProgramDischargeTask extends TimerTask {
             }
             
             for (Program bedProgram : bedPrograms) {
+            	MiscUtils.checkShutdownSignaled();
+            	
                 Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
                 Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
                 Date currentExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime());
@@ -91,6 +95,8 @@ public class BedProgramDischargeTask extends TimerTask {
                     }
                     
                     for (Bed reservedBed : reservedBeds) {
+                    	MiscUtils.checkShutdownSignaled();
+                    	
                         BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());
                         
                         if (bedDemographic != null && bedDemographic.getId() != null && bedDemographic.isExpired()) {
@@ -106,6 +112,8 @@ public class BedProgramDischargeTask extends TimerTask {
             }
 
             log.info("finish bed program discharge task");
+        } catch (ShutdownException e) {
+        	log.debug("BedProgramDischargeTask noticed shutdown signaled.");
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();

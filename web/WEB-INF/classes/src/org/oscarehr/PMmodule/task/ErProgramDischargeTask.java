@@ -37,6 +37,8 @@ import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.ShutdownException;
 
 public class ErProgramDischargeTask extends TimerTask {
 
@@ -73,6 +75,8 @@ public class ErProgramDischargeTask extends TimerTask {
             boolean er_clerk = false;
 
             for (Iterator i = providers.iterator(); i.hasNext();) {
+            	MiscUtils.checkShutdownSignaled();
+            	
                 Provider provider = (Provider)i.next();
 
                 er_clerk = false;
@@ -101,6 +105,8 @@ public class ErProgramDischargeTask extends TimerTask {
                     if (programAdmissions == null) continue;
 
                     for (Iterator j = programAdmissions.iterator(); j.hasNext();) {
+                    	MiscUtils.checkShutdownSignaled();
+                    	
                         Admission admission = (Admission)j.next();
 
                         // check admission date, determine if we should discharge
@@ -121,6 +127,8 @@ public class ErProgramDischargeTask extends TimerTask {
                     }
                 }
             }
+        } catch (ShutdownException e) {
+        	log.debug("ErProgramDischargeTask noticed shutdown hook.");
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
