@@ -56,15 +56,15 @@
 							if (showHNRCheckbox)
 							{
 								%>
-									<td class="genericTableData" style="text-align:center;vertical-align:middle" rowspan="<%=manageConsent.getAllRemoteFacilities().size()%>" ><input type="checkbox" name="consent.hnr" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>					
+									<td class="genericTableData" style="text-align:center;vertical-align:middle" rowspan="<%=manageConsent.getAllRemoteFacilities().size()%>" ><input type="checkbox" name="consent.hnr" <%=manageConsent.displayAsChecked(remoteFacilityId,"hnr")?"checked=\"on\"":""%> /></td>					
 								<%								
 								showHNRCheckbox=false;
 							}
 						%>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.nonDomain" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"nonDomain")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.mental" <%=manageConsent.wasPreviouslyChecked(remoteFacilityId,"mental")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.displayAsChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.displayAsChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.nonDomain" <%=manageConsent.displayAsChecked(remoteFacilityId,"nonDomain")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.mental" <%=manageConsent.displayAsChecked(remoteFacilityId,"mental")?"checked=\"on\"":""%> /></td>
 					</tr>
 				<%
 			}

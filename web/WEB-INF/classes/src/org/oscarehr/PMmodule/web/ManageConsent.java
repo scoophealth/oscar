@@ -51,9 +51,12 @@ public class ManageConsent {
 		return (allRemoteFacilities);
 	}
 
-	public boolean wasPreviouslyChecked(int remoteFacilityId, String consentField) {
+	public boolean displayAsChecked(int remoteFacilityId, String consentField) {
 		IntegratorConsent consent = currentConsents.get(remoteFacilityId);
-		if (consent == null) return (false);
+		if (consent == null) {
+			if ("hic".equals(consentField)) return (false);
+			return (true);
+		}
 
 		if ("hic".equals(consentField)) return (consent.isRestrictConsentToHic());
 		else if ("search".equals(consentField)) return (consent.isConsentToSearches());
