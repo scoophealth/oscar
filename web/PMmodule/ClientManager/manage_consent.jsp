@@ -40,7 +40,7 @@
 			<td class="genericTableHeader"></td>
 			<td class="genericTableHeader" style="text-align:center">Allow health number registry<br />information to be viewed</td>
 			<td class="genericTableHeader" style="text-align:center">Restrict<br/>to HICs</td>
-			<td class="genericTableHeader" style="text-align:center">Allow to show up<br />in searches</td>
+			<td class="genericTableHeader" style="text-align:center;display:none">Allow to show up<br />in searches</td>
 			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />all non domain data</td>
 			<td class="genericTableHeader" style="text-align:center">Allow sending of<br />mental health data</td>
 		</tr>
@@ -62,7 +62,7 @@
 							}
 						%>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.hic" <%=manageConsent.displayAsChecked(remoteFacilityId,"hic")?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.displayAsChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center;display:none"><input type="checkbox" name="consent.<%=remoteFacilityId%>.search" <%=manageConsent.displayAsChecked(remoteFacilityId,"search")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.nonDomain" <%=manageConsent.displayAsChecked(remoteFacilityId,"nonDomain")?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.mental" <%=manageConsent.displayAsChecked(remoteFacilityId,"mental")?"checked=\"on\"":""%> /></td>
 					</tr>
