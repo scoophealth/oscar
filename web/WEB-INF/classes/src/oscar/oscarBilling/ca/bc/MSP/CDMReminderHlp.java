@@ -32,6 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.oscarehr.util.MiscUtils;
+
 import oscar.oscarTickler.TicklerCreator;
 import oscar.util.SqlUtils;
 
@@ -66,6 +68,8 @@ public class CDMReminderHlp {
     crt.resolveTicklers(cdmPatientNos, remString);
 
     for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
+    	MiscUtils.checkShutdownSignaled();
+    	
       String[] dxRecord = (String[]) iter.next();
       String demoNo = dxRecord[0];
       String provNo = dxRecord[1];

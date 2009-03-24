@@ -27,7 +27,10 @@ package oscar.util;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.ShutdownException;
 
 /**
  *
@@ -40,13 +43,15 @@ import org.oscarehr.util.DbConnectionFilter;
  * @version 1.0
  */
 public class AlertTimer {
-    private static AlertTimer alerts = null;
+	private static Logger logger=LogManager.getLogger(AlertTimer.class);
+	
+	private static AlertTimer alerts = null;
     private static Timer timer;
     String alertCodes[] = null;
     oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = null;
 
     private AlertTimer(String[] codes, long interval) {
-        timer = new Timer(true);
+        timer = new Timer("AlertTimer", true);
         alertCodes = codes;
         hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
         //triggers alerts 5 seconds after instantiation
@@ -68,8 +73,11 @@ public class AlertTimer {
             try {
                 hlp.manageCDMTicklers(alertCodes);
             }
+            catch (ShutdownException e) {
+            	logger.debug("AlertTimer noticed shutdown signaled.");
+            }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             finally {
                 DbConnectionFilter.releaseThreadLocalDbConnection();
