@@ -117,7 +117,6 @@
         <display-el:column title="">
         	<input type="submit" value="Copy to Local" onclick="copyRemote(<%=facilityId%>,<%=demographicTransfer.getCaisiDemographicId()%>)" />
         </display-el:column>
-        <display-el:column title="Facility Name"><%=facilityName%></display-el:column>
         <display-el:column title="Client Name" >
         	<c:out value="${x.demographicTransfer.lastName}" />, <c:out value="${x.demographicTransfer.firstName}" />
         </display-el:column>
@@ -125,7 +124,6 @@
         	<c:out value="${x.demographicTransfer.birthDate.year}" />-<c:out value="${x.demographicTransfer.birthDate.month}" />-<c:out value="${x.demographicTransfer.birthDate.day}" />
         </display-el:column>
         <display-el:column property="demographicTransfer.gender" title="Gender" />
-        <display-el:column property="demographicTransfer.hin" title="Health Number" />
         <display-el:column property="score" title="Matching Score" />
     </display-el:table>
 </c:if>

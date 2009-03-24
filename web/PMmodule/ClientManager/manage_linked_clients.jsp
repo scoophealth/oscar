@@ -36,24 +36,18 @@
 			<td class="genericTableHeader">Linked</td>
 			<td class="genericTableHeader">Photo</td>
 			<td class="genericTableHeader">Score</td>
-			<td class="genericTableHeader">Facility</td>
-			<td class="genericTableHeader">Id</td>
 			<td class="genericTableHeader">Last Name</td>
 			<td class="genericTableHeader">First Name</td>
 			<td class="genericTableHeader">Birth Date</td>
-			<td class="genericTableHeader">HIN</td>
 			<td class="genericTableHeader">Gender</td>
 		</tr>
 		<tr class="genericTableRow" style="background-color:#ccffcc">
 			<td class="genericTableData">Local</td>
 			<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+ManageLinkedClients.getLocalImageUrl(currentDemographicId)%>" alt="client_image_<%=currentDemographicId%>" /></td>
 			<td class="genericTableData">100</td>
-			<td class="genericTableData"><%=currentFacility.getName()%></td>
-			<td class="genericTableData"><%=currentDemographicId%></td>
 			<td class="genericTableData"><%=demographic.getLastName()%></td>
 			<td class="genericTableData"><%=demographic.getFirstName()%></td>
 			<td class="genericTableData"><%=demographic.getFormattedDob()%></td>
-			<td class="genericTableData"><%=demographic.getHin()%></td>
 			<td class="genericTableData"><%=demographic.getSex()%></td>
 		</tr>
 		<tr>
@@ -70,12 +64,9 @@
 							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> /></td>
 							<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+temp.imageUrl%>" alt="client_image_<%=temp.linkDestination+'_'+temp.remoteLinkId%>" /></td>
 							<td class="genericTableData"><%=temp.matchingScore%></td>
-							<td class="genericTableData"><%=temp.linkDestination%></td>
-							<td class="genericTableData"><%=temp.remoteLinkId%></td>
 							<td class="genericTableData"><%=temp.lastName%></td>
 							<td class="genericTableData"><%=temp.firstName%></td>
 							<td class="genericTableData"><%=temp.birthDate%></td>
-							<td class="genericTableData"><%=temp.hin%></td>
 							<td class="genericTableData"><%=temp.gender%></td>
 						</tr>
 					<%
