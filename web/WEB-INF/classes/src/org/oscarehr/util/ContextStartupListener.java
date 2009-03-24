@@ -23,6 +23,9 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 	        logger.error("Unexpected error.", e);
         }
 		
+        MiscUtils.setShutdownSignaled(false);
+        MiscUtils.registerShutdownHook();
+        
 		CaisiIntegratorUpdateTask.startTask();		
 	}
 
@@ -32,6 +35,8 @@ public class ContextStartupListener implements javax.servlet.ServletContextListe
 //		logger.info("Server processes stopping. context=" + sce.getServletContext().getContextPath());
 
 		CaisiIntegratorUpdateTask.stopTask();
+        MiscUtils.setShutdownSignaled(true);
+        MiscUtils.deregisterShutdownHook();
 		VmStat.stopContinuousLogging();
 	}
 }
