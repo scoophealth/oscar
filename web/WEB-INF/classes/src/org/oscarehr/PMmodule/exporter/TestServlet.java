@@ -45,7 +45,11 @@ public class TestServlet extends HttpServlet {
 			AbstractIntakeExporter exporter = null;
 			
 			int fileno = Integer.parseInt(request.getParameter("file"));
-			int clientId = Integer.parseInt(request.getParameter("c"));
+			int clientId = 0;
+			
+			if(null != request.getParameter("c"))
+				clientId = Integer.parseInt(request.getParameter("c"));
+			
 			int facilityId = Integer.parseInt(request.getParameter("f"));
 			
 			switch(fileno) {
@@ -72,10 +76,12 @@ public class TestServlet extends HttpServlet {
 				break;
 			}
 			
-//			List<Integer> clients = new ArrayList<Integer>();
-//			clients.add(clientId);
-//			
-//			exporter.setClients(clients);
+			if(clientId != 0) {
+				List<Integer> clients = new ArrayList<Integer>();
+				clients.add(clientId);
+				exporter.setClients(clients);
+			}
+			
 			exporter.setFacilityId(facilityId);
 			response.getWriter().print(exporter.export());
 		} catch (Exception e) {

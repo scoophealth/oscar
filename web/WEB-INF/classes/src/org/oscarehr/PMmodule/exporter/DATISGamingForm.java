@@ -52,6 +52,8 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		
 		for(DATISField field : fields) {
+			if(field.getName().equalsIgnoreCase("Q3_3")) // empty question field
+				buf.append("00000000");
 			String fieldQuestion = field.getQuestion();
 			String lbl = null;
 			for(IntakeAnswer ans : answers) {

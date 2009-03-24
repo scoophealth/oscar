@@ -29,7 +29,7 @@
 	<field name="Q5A_18" type="number" colpos="210" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Random Events/Informal Bets"></field>
 	<field name="Q5A_19_1" type="text" colpos="218" maxsize="50" question="Other Type of Gambling Activity"></field>
 	<field name="Q5A_19_2" type="number" colpos="268" maxsize="8" question="Frequency of Gambling Activity in Past 12 Months - Other"></field>
-	<field name="Q5B_1" type="number" colpos="276" maxsize="8" question="Problem Gambling Activities - Major"></field>
+	<field name="Q5B_1" type="number" colpos="276" maxsize="8" question="Problem Gambling Activities- Major"></field>
 	<field name="Q5B_2" type="number" colpos="284" maxsize="8" question="Problem Gambling Activities - 1st"></field>
 	<field name="Q5B_3" type="number" colpos="292" maxsize="8" question="Problem Gambling Activities - 2nd"></field>
 	<field name="Q6A_1" type="number" colpos="300" maxsize="8" question="Frequency of Gambling Location in Past 12 Months - Commercial Casino"></field>

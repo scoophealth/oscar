@@ -53,6 +53,8 @@ public abstract class AbstractIntakeExporter {
 	private Integer facilityId;
 	private String fieldsFile;
 	
+	private IValidator validator;
+	
 	protected Intake intake;
 	protected List<DATISField> fields;
 	
@@ -196,29 +198,38 @@ public abstract class AbstractIntakeExporter {
 		buf.append(found.getName() + " = " + value + "\n");
 	}
 	
-	protected void writeCSV(StringBuilder buf, IntakeAnswer ans, DATISField found)	throws ExportException {
-		String value = getFieldValue(ans, found);
+	protected void writeCSV(StringBuilder buf, IntakeAnswer ans, DATISField field)	throws ExportException {
+		String value = getFieldValue(ans, field);
+		
+		if(validator != null) {
+			value = validator.validate(field, value);
+		}
 		
 		buf.append(value + ",");
 	}
 
-	private String getFieldValue(IntakeAnswer ans, DATISField found) {
+	private String getFieldValue(IntakeAnswer ans, DATISField field) {
 		String value = ans.getValue();
 		
-		if(value.length() > found.getMaxSize()) {
-			value = value.substring(0, found.getMaxSize());
-		} else {
-			value = StringUtils.rightPad(value, found.getMaxSize(), ' ');
+		if(value.equalsIgnoreCase("declined")) {
+			value = " ";
 		}
 		
-		if(DATISType.isNumeric(found.getType())) {
-			if(value.charAt(found.getMaxSize()-1) == '-') {
-				value = value.substring(0, found.getMaxSize() - 1);
-			}
-			value = StringUtils.leftPad(value.trim(), found.getMaxSize(), '0');
+		if(value.length() > field.getMaxSize()) {
+			value = value.substring(0, field.getMaxSize());
+		} else {
+			value = StringUtils.rightPad(value, field.getMaxSize(), ' ');
 		}
 		
 		return value;
+	}
+
+	public IValidator getValidator() {
+		return validator;
+	}
+
+	public void setValidator(IValidator validator) {
+		this.validator = validator;
 	}
 	
 }

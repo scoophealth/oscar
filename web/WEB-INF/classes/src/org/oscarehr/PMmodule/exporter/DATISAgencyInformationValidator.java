@@ -21,37 +21,18 @@
 */
 package org.oscarehr.PMmodule.exporter;
 
-public enum DATISType {
-	TEXT("text"),
-	DATETIME("datetime"),
-	NUMBER("number"),
-	INTEGER("integer"),
-	DOUBLE("double"),
-	SELECT_NUMERIC("selectnumeric"),
-	SELECT_YN("selectyn"),
-	SELECT_YNU("selectynu");
-	
-	private String value;
-	
-	private DATISType(String value) {
-		this.value = value;
-	}
-	
-	public String getValue() {
+import org.apache.commons.lang.StringUtils;
+
+public class DATISAgencyInformationValidator implements IValidator {
+
+	/* 
+	 * @see org.oscarehr.PMmodule.exporter.IValidator#validate(org.oscarehr.PMmodule.exporter.DATISField, java.lang.String)
+	 */
+	@Override
+	public String validate(DATISField field, String value) {
+		//TODO
+		
 		return value;
 	}
-	
-	public static boolean isNumeric(DATISType t) {
-		if(t == null) {
-			return false;
-		}
-		return t.equals(SELECT_NUMERIC) || t.equals(NUMBER) || t.equals(INTEGER);
-	}
-	
-	public static boolean isDecimal(DATISType t) {
-		if(t == null) {
-			return false;
-		}
-		return t.equals(DOUBLE);
-	}
+
 }
