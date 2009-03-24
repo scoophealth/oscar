@@ -498,12 +498,12 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	style="display:inline; margin-top:0; margin-bottom:0;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="includeIssue" value="off" />
-        <html:hidden property="appointmentNo"  value="<%=request.getParameter("appointmentNo")%>" />
-        <html:hidden property="appointmentDate"  value="<%=request.getParameter("appointmentDate")%>" />
-        <html:hidden property="start_time"  value="<%=request.getParameter("start_time")%>" />
-        <html:hidden property="billRegion" value="<%=((String )oscarVariables.getProperty("billregion","")).trim().toUpperCase()%>"/>
-        <html:hidden property="apptProvider" value="<%=request.getParameter("apptProvider")%>"/>
-        <html:hidden property="providerview" value="<%=request.getParameter("providerview")%>"/>
+        <html:hidden property="appointmentNo"  value="<%=request.getParameter(\"appointmentNo\")%>" />
+        <html:hidden property="appointmentDate"  value="<%=request.getParameter(\"appointmentDate\")%>" />
+        <html:hidden property="start_time"  value="<%=request.getParameter(\"start_time\")%>" />
+        <html:hidden property="billRegion" value="<%=((String )oscarVariables.getProperty(\"billregion\",\"\")).trim().toUpperCase()%>"/>
+        <html:hidden property="apptProvider" value="<%=request.getParameter(\"apptProvider\")%>"/>
+        <html:hidden property="providerview" value="<%=request.getParameter(\"providerview\")%>"/>
         <input type="hidden" name="toBill" id="toBill" value="false">
 	<input type="hidden" name="deleteId" value="0">
 	<input type="hidden" name="lineId" value="0">
