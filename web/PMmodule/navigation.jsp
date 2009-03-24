@@ -249,8 +249,6 @@
 
 	<div><html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
 	</div>
-	<div><a href="javascript:void(0)" 
-		onclick="window.open('<%=request.getContextPath()%>/PMmodule/GenericIntake/DATISExport.jsp')">DATIS Export</a></div>
 </security:oscarSec> <security:oscarSec roleName="<%=roleName$%>" objectName="_pmm.editor"
 	rights="r">
 	<span>Editor</span>
