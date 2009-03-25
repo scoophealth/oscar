@@ -5,11 +5,11 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 

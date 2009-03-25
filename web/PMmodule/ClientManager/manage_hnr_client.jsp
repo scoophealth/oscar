@@ -14,7 +14,7 @@
 	
 	ManageHnrClient manageHnrClient=new ManageHnrClient(currentFacility, currentProvider, currentDemographicId);
 	Demographic demographic=manageHnrClient.getDemographic();
-	org.oscarehr.caisi_integrator.ws.client.Client hnrClient=manageHnrClient.getHnrClient();
+	org.oscarehr.hnr.ws.Client hnrClient=manageHnrClient.getHnrClient();
 %>
 
 

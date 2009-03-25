@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.util.SpringUtils;
 
 public class IntegratorJspBean {

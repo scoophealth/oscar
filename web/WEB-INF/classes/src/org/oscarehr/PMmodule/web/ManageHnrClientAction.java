@@ -39,7 +39,7 @@ public class ManageHnrClientAction {
 			// it might be 0 if some one unlinked the client at the same time you are looking at this screen.
 			if (clientLinks.size() > 0) {
 				ClientLink clientLink = clientLinks.get(0);
-				org.oscarehr.caisi_integrator.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
+				org.oscarehr.hnr.ws.Client hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
 
 				Demographic demographic = demographicDao.getDemographicById(clientId);
 
@@ -97,7 +97,7 @@ public class ManageHnrClientAction {
 			// were ignoring the anomalie of multiple hnr links as it should never really happen though it's theoretically possible due to lack of atomic updates on this table.
 			List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), clientId, true, ClientLink.Type.HNR);
 
-			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = null;
+			org.oscarehr.hnr.ws.Client hnrClient = null;
 			ClientLink clientLink = null;
 
 			// try to retrieve existing linked client to update
@@ -108,7 +108,7 @@ public class ManageHnrClientAction {
 
 			// can be null if there's no existing link or if the data on the hnr has been revoked of consent
 			if (hnrClient == null) {
-				hnrClient = new org.oscarehr.caisi_integrator.ws.client.Client();
+				hnrClient = new org.oscarehr.hnr.ws.Client();
 			}
 
 			// copy any non null data to the HNR if it's validated

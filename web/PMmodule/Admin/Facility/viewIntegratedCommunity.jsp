@@ -1,6 +1,6 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.admin.IntegratorJspBean"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 <%@page import="java.util.List"%>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>

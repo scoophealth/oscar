@@ -44,9 +44,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
-import org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention;
-import org.oscarehr.caisi_integrator.ws.client.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;

@@ -40,9 +40,9 @@
 <%@page import="org.oscarehr.common.model.Drug"%>
 <%@page import="oscar.oscarRx.data.RxPrescriptionData"%>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicDrug"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicDrug"%>
 <%@page import="org.oscarehr.oscarRx.StaticScriptBean"%>
 <%@page import="java.util.ArrayList"%><html:html locale="true">
 <head>

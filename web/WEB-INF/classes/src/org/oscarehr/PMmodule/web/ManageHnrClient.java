@@ -30,7 +30,7 @@ public class ManageHnrClient {
 	private Demographic demographic = null;
 	private ClientImage clientImage = null;
 	private ClientLink clientLink = null;
-	private org.oscarehr.caisi_integrator.ws.client.Client hnrClient = null;
+	private org.oscarehr.hnr.ws.Client hnrClient = null;
 	private boolean pictureValidated = false;
 	private boolean hcInfoValidated = false;
 	private boolean otherValidated = false;
@@ -67,7 +67,7 @@ public class ManageHnrClient {
 		return demographic;
 	}
 
-	public org.oscarehr.caisi_integrator.ws.client.Client getHnrClient() {
+	public org.oscarehr.hnr.ws.Client getHnrClient() {
 		return hnrClient;
 	}
 

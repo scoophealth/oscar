@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.caisi_integrator.ws.client.DemographicTransfer;
-import org.oscarehr.caisi_integrator.ws.client.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
@@ -126,7 +126,7 @@ public class ImageRenderingServlet extends HttpServlet {
 			// get image
 			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
 			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-			org.oscarehr.caisi_integrator.ws.client.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
+			org.oscarehr.hnr.ws.Client hnrClient = caisiIntegratorManager.getHnrClient(loggedInFacility, provider, linkingId);
 
 			if (hnrClient != null && hnrClient.getImage() != null) {
 				renderImage(response, hnrClient.getImage(), "jpeg");

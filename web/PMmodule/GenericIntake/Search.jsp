@@ -2,8 +2,8 @@
 <%@ taglib uri="http://displaytag.sf.net/el" prefix="display-el" %>
 <%@ include file="/common/messages.jsp"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicTransfer"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.MatchingDemographicTransferScore"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="java.util.HashMap"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>

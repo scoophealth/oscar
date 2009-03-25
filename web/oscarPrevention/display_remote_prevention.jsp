@@ -1,17 +1,17 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.DemographicWs"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.FacilityIdIntegerCompositePk"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
 
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedFacility"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedProvider"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.FacilityIdStringCompositePk"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedProvider"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.client.CachedDemographicPrevention.Attributes"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention.Attributes"%>
 <%@page import="java.util.List"%><html xmlns="http://www.w3.org/1999/xhtml">
 	<head>	
 		<title>Remote Prevention</title>
