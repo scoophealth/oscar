@@ -44,7 +44,7 @@ public class DATISExporterServlet extends HttpServlet {
 	
 	private static final Logger log = Logger.getLogger(DATISExporterServlet.class);
 	
-	private static final String RESPONSE_MIME_TYPE = "application/zip";
+	private static final String RESPONSE_MIME_TYPE = "application/x-zip-compressed";
 	private static final String OUTFILE_ZIP = "outfile.zip";
 	
 	private int facilityId;
@@ -96,6 +96,7 @@ public class DATISExporterServlet extends HttpServlet {
 			}
 			
 			response.setContentType(RESPONSE_MIME_TYPE);
+			response.setHeader("Content-Disposition", "attachment;filename=DATISexport.zip");
 			
 			fis = getZipFile(dirLocation);
 			byte[] buf = new byte[1024];
@@ -107,7 +108,7 @@ public class DATISExporterServlet extends HttpServlet {
 			log.error(t);
 			t.printStackTrace();
 			try {
-				response.getWriter().print("An Error Occured during DATIS Export operation.\nPlease check server log for details.");
+				response.getWriter().print("An Error Occured during DATIS Export operation. Please check server log for details.");
 			} catch (IOException e) {
 				log.error(e);
 				e.printStackTrace();

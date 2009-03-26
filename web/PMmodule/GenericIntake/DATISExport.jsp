@@ -24,8 +24,8 @@ request.setAttribute("facilities", facilities);
 	function callAction() {
 //		document.getElementById("exportButton").value = "Exporting...";
 //		document.getElementById("exportButton").disabled = true;
-		if(document.getElementById("submitted").value == false) {
-			document.getElementById("submitted").value = true;
+		if(document.getElementById("submitted").value == 'off') {
+			document.getElementById("submitted").value = 'on';
 			return true;
 		}
 		return false;
@@ -40,7 +40,7 @@ request.setAttribute("facilities", facilities);
 <body>
 	
 	<form name="datisform" method="post" action="../exportfiles" onsubmit="return callAction()">
-		<input type="hidden" name="submitted" value="false">
+		<input type="hidden" name="submitted" value="off">
 		<table cellpadding="0" cellspacing="0" width="40%" style="text-indent: 2px;">
 			<tr style="background-color: #342D7E">
 				<td style="color: #FFFFFF"><strong>DATIS EXPORT</strong></td>
