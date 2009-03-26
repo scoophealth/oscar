@@ -42,18 +42,30 @@ public class Util {
     }
     
     static public XmlCalendar calDate(Date inDate) {
-	return calDate(inDate, true);
+	String date = UtilDateUtilities.DateToString(inDate, "yyyy-MM-dd");
+	String time = UtilDateUtilities.DateToString(inDate, "HH:mm:ss");
+	if (date.equals("")) date = "0001-01-01";
+	if (time.equals("")) time = "00:00:00";
+	
+	XmlCalendar x = new XmlCalendar(date+"T"+time);
+	return x;
     }
     
-    static public XmlCalendar calDate(Date inDate, boolean canNull) {
-	if (inDate==null || UtilDateUtilities.DateToString(inDate,"yyyy-MM-dd").equals("0001-01-01")) {
-	    if (canNull) return null;
-	    else inDate = UtilDateUtilities.StringToDate("0001-01-03");
+    static public XmlCalendar calDate(String inDate) {
+	Date dateTime = null;
+	dateTime = UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd HH:mm:ss");
+	if (dateTime==null) UtilDateUtilities.StringToDate(inDate,"yyyy-MM-dd");
+	if (dateTime==null) { //inDate may contain time only
+	    try {
+		XmlCalendar x = new XmlCalendar(inDate);
+		return x;
+	    } catch (Exception ex) { //inDate format is wrong
+		XmlCalendar x = new XmlCalendar("0001-01-01 00:00:00");
+		return x;
+	    }
+	    
 	}
-	GDateBuilder gd = new GDateBuilder();
-	gd.setDate(inDate);
-	gd.clearTimeZone();
-	return gd.getCalendar();
+	return calDate(dateTime);
     }
     
     static boolean cleanFile(String filename) {
