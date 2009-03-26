@@ -39,8 +39,8 @@ request.setAttribute("facilities", facilities);
 </head>
 <body>
 	
-	<form name="datisform" method="post" action="../exportfiles" onsubmit="return callAction()">
-		<input type="hidden" name="submitted" value="off">
+	<form name="datisform" method="post" action="../exportfiles">
+		<input type="hidden" id="submitted" name="submitted" value="off">
 		<table cellpadding="0" cellspacing="0" width="40%" style="text-indent: 2px;">
 			<tr style="background-color: #342D7E">
 				<td style="color: #FFFFFF"><strong>DATIS EXPORT</strong></td>
