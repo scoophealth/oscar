@@ -21,6 +21,8 @@
 */
 package org.oscarehr.PMmodule.exporter;
 
+import java.util.List;
+
 public interface IValidator {
 
 	/**
@@ -30,4 +32,10 @@ public interface IValidator {
 	 * @return String
 	 */
 	public String validate(DATISField field, String value);
+	
+	/**
+	 * Returns the list of validation errors.
+	 * @return
+	 */
+	public List<String> getErrorList();
 }

@@ -47,6 +47,8 @@ public abstract class AbstractIntakeExporter {
 	private static final String FIELD_NAME = "name";
 	private static final String FIELD_QUESTION = "question";
 	
+	private static final String ANSWER_DECLINED = "declined";
+	
 	private GenericIntakeManager genericIntakeManager;
 	private List<Integer> clients;
 	private Integer programId;
@@ -211,7 +213,7 @@ public abstract class AbstractIntakeExporter {
 	private String getFieldValue(IntakeAnswer ans, DATISField field) {
 		String value = ans.getValue();
 		
-		if(value.equalsIgnoreCase("declined")) {
+		if(value.equalsIgnoreCase(ANSWER_DECLINED)) {
 			value = " ";
 		}
 		

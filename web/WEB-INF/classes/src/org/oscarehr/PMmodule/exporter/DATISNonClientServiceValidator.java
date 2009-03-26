@@ -21,16 +21,26 @@
 */
 package org.oscarehr.PMmodule.exporter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DATISNonClientServiceValidator implements IValidator {
 
+	private List<String> errorsList = new ArrayList<String>();
+	
 	/* 
 	 * @see org.oscarehr.PMmodule.exporter.IValidator#validate(org.oscarehr.PMmodule.exporter.DATISField, java.lang.String)
 	 */
-//	@Override
+	@Override
 	public String validate(DATISField field, String value) {
 		// TODO Auto-generated method stub
 		
 		return value;
+	}
+
+	@Override
+	public List<String> getErrorList() {
+		return errorsList;
 	}
 
 }
