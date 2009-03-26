@@ -103,7 +103,7 @@ month.)
 
 	<tr>
 		<td></td>
-		<td><input type="submit" value="export" /></td>
+		<td><input type="submit" value="export"  onclick="window.open('<%=request.getContextPath()%>/common/progress_dialog.jsp', '', 'height=300,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=200,left=400')" /></td>
 	</tr>
 </table>
 </form>

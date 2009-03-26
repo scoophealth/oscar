@@ -174,14 +174,15 @@ public class PopulationReportDao extends HibernateDaoSupport {
         ResultSet rs = null;
         try {
             c = DbConnectionFilter.getThreadLocalDbConnection();
-            ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id "+(encounterType==null?"":"and casemgmt_note.encounter_type=? ")+"and casemgmt_note.program_no=? "+(roleId==null?"":"and casemgmt_note.reporter_caisi_role=? ")+"and casemgmt_note.observation_date>=? and casemgmt_note.observation_date<=? group by issueGroupId");
+            String sqlCommand="select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id "+(encounterType==null?"":"and casemgmt_note.encounter_type=? ")+"and casemgmt_note.program_no=? "+(roleId==null?"":"and casemgmt_note.reporter_caisi_role=? ")+"and casemgmt_note.observation_date>=? and casemgmt_note.observation_date<=? group by issueGroupId";
+            ps = c.prepareStatement(sqlCommand);
             int counter=1;
             if (encounterType!=null) ps.setString(counter++, encounterType.getOldDbValue());
             ps.setInt(counter++, programId);
             if (roleId!=null) ps.setInt(counter++, roleId);
             ps.setTimestamp(counter++, new Timestamp(startDate != null?startDate.getTime():0));
             ps.setTimestamp(counter++, new Timestamp(endDate != null?endDate.getTime():System.currentTimeMillis()));
-
+            
             rs = ps.executeQuery();
             HashMap<Integer, Integer> results = new HashMap<Integer, Integer>();
             while (rs.next())

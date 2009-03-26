@@ -1,4 +1,5 @@
 
+<%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@page import="oscar.util.SqlUtils"%><%-- 
 /*
 * Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
@@ -70,6 +71,10 @@
 	//    for each month...
 	//       print monthly data
 
+	session.removeAttribute("progressStatus");
+	ProgressStatus progressStatus=new ProgressStatus();
+	session.setAttribute("progressStatus", progressStatus);
+	
 	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
 	
 	// print header
@@ -106,6 +111,11 @@
 		out.write('\n');
 	}
 
+	long months=(endCalendar.getTimeInMillis()-startCalendar.getTimeInMillis())/(DateUtils.MILLIS_PER_DAY*30);
+	long total=populationReportUIBean.getAllPrograms().size()*populationReportUIBean.getRoles().size()*3*months;
+	progressStatus.total="Estimated total "+total+" rows ("+populationReportUIBean.getAllPrograms().size()+" programs * "+populationReportUIBean.getRoles().size()+" roles * 3 encounter Types * "+months+" months)";
+	int rowsProcessed=0;
+	
 	for (Program program : populationReportUIBean.getAllPrograms())
 	{
 		populationReportUIBean.setProgramId(program.getId());
@@ -117,7 +127,7 @@
 		startCalendar.getTimeInMillis();
 		Calendar tempStartCalendar = (Calendar)startCalendar.clone();
 		tempStartCalendar.clear(Calendar.DAY_OF_MONTH);
-
+		
 		while (tempStartCalendar.compareTo(endCalendar) < 0)
 		{
 			Calendar tempEndCalendar = (Calendar)tempStartCalendar.clone();
@@ -156,6 +166,11 @@
 					
 					out.write(sb.toString());
 					out.write('\n');
+					
+					rowsProcessed++;
+					progressStatus.processed=""+rowsProcessed+" rows processed";
+					progressStatus.percentComplete=(int)(rowsProcessed*100/total);
+					progressStatus.currentItem=""+program.getName()+" "+dateFormatter.format(tempStartCalendar.getTime())+" "+roleEntry.getKey().getName();
 				}
 			}
 			
@@ -163,4 +178,6 @@
 			tempStartCalendar.getTime();
 		}
 	}
+	
+	progressStatus.completed=true;
 %>

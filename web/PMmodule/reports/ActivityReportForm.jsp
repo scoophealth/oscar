@@ -78,8 +78,7 @@
 			</tr>
 			-->
 		<tr>
-			<td align="center" colspan="2"><html:submit
-				value="Generate Report" /></td>
+			<td align="center" colspan="2"><html:submit	value="Generate Report"/></td>
 		</tr>
 	</table>
 	</div>
