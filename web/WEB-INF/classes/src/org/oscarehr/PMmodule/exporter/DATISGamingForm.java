@@ -34,6 +34,7 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 	private static final Logger log = Logger.getLogger(DATISGamingForm.class);
 	
 	private static final String FILE_PREFIX = "File5";
+	private static final String EMPTY_FIELD_Q3_3 = "Q3_3";
 	
 	@Override
 	protected String exportData() throws ExportException {
@@ -52,10 +53,14 @@ public class DATISGamingForm extends AbstractIntakeExporter {
 		Set<IntakeAnswer> answers = intake.getAnswers();
 		
 		for(DATISField field : fields) {
-			if(field.getName().equalsIgnoreCase("Q3_3")) // empty question field
+			if(field.getName().equalsIgnoreCase(EMPTY_FIELD_Q3_3)) { // empty question field
 				buf.append("00000000,");
+				continue;
+			}
+			
 			String fieldQuestion = field.getQuestion();
 			String lbl = null;
+			
 			for(IntakeAnswer ans : answers) {
 				if(ans.getNode().getGrandParent().equals(file5Node)) {
 					lbl = ans.getNode().getParent().getLabelStr();
