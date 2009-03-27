@@ -131,11 +131,12 @@
 			</tr>
 			<tr>
 				<td>
-				<table cellspacing="6" cellpadding="0">
+				<table cellspacing="10" cellpadding="0">
 					<tr style="height: 20px">
 						<th align="left"><b>Provider</b></th>
 						<th align="left"><b>Start Date</b></th>
 						<th align="left"><b>End Date</b></th>
+						<th align="left"><b>Prescription Date</b></th>
 						<th align="left"><b>Prescription Details</b></th>
 						<th colspan="2"></th>
 					</tr>
@@ -152,6 +153,7 @@
 						<td><%=drug.providerName%></td>
 						<td><%=drug.startDate%></td>
 						<td><%=drug.endDate%></td>
+						<td><%=drug.writtenDate%></td>
 						<td><%=drug.prescriptionDetails%></td>
 						<td>
 						<%

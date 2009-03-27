@@ -48,6 +48,7 @@ public class StaticScriptBean {
 		public String startDate = null;
 		protected Date dateStartDate=null;
 		public String endDate = null;
+		public String writtenDate = null;
 		public String prescriptionDetails = null;
 		public String genericName = null;
 		public String customName = null;
@@ -104,6 +105,7 @@ public class StaticScriptBean {
 		drugDisplayData.startDate = RxUtil.DateToString(remoteDrug.getRxDate());
 		drugDisplayData.dateStartDate = remoteDrug.getRxDate();
 
+		drugDisplayData.writtenDate = RxUtil.DateToString(remoteDrug.getCreateDate());
 		drugDisplayData.endDate = RxUtil.DateToString(remoteDrug.getEndDate());
 
 		drugDisplayData.prescriptionDetails = RxPrescriptionData.getFullOutLine(remoteDrug.getSpecial()).replaceAll(";", " ");
@@ -133,6 +135,7 @@ public class StaticScriptBean {
 		drugDisplayData.dateStartDate = drug.getRxDate();
 
 		drugDisplayData.endDate = RxUtil.DateToString(drug.getEndDate());
+		drugDisplayData.writtenDate = RxUtil.DateToString(drug.getWrittenDate());
 
 		drugDisplayData.prescriptionDetails = RxPrescriptionData.getFullOutLine(drug.getSpecial()).replaceAll(";", " ");
 
