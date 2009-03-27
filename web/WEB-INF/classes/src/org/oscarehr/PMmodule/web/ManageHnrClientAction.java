@@ -174,7 +174,7 @@ public class ManageHnrClientAction {
 				}
 				
 				// save the client
-				hnrClient.setCreatedBy("faciliy: " + currentFacility.getName() + ", provider:" + currentProvider.getFormattedName());
+				hnrClient.setUpdatedBy("faciliy: " + currentFacility.getName() + ", provider:" + currentProvider.getFormattedName());
 				Integer linkingId = caisiIntegratorManager.setHnrClient(currentFacility, currentProvider, hnrClient);
 
 				// if the hnr client is new / not previously linked, save the new link
