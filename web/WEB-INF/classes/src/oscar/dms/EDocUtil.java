@@ -121,7 +121,7 @@ public class EDocUtil extends SqlUtilBaseS {
  
     public static String addDocumentSQL(EDoc newDocument) {
         String preparedSQL = "INSERT INTO document (doctype, docdesc, docxml, docfilename, doccreator, source, responsible, program_id, updatedatetime, status, contenttype, public1, observationdate) VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?,?)";
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[12];
+        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[13];
         int counter = 0;
         param[counter++] = new DBPreparedHandlerParam(newDocument.getType());
         param[counter++] = new DBPreparedHandlerParam(newDocument.getDescription());
