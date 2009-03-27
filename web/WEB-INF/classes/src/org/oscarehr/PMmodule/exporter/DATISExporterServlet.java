@@ -45,47 +45,54 @@ public class DATISExporterServlet extends HttpServlet {
 	private static final Logger log = Logger.getLogger(DATISExporterServlet.class);
 	
 	private static final String RESPONSE_MIME_TYPE = "application/x-zip-compressed";
+	private static final String EXPORT_PATH = "WEB-INF/datisexport";
 	private static final String OUTFILE_ZIP = "outfile.zip";
-	
-	private int facilityId;
-	private String[] filenames = new String[6];
-	private int fileIndex = 0;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		FileInputStream fis = null;
 		
+		int facilityId;
+		String[] filenames = new String[6];
+		int fileIndex = 0;
+		File dir = null;
+		
 		try {
 			facilityId = Integer.parseInt(request.getParameter("facilityId"));
+			String sessionId = request.getSession().getId();
 			
 			log.debug("Exporting for facility ID: " + facilityId);
 			
-			String dirLocation = request.getSession().getServletContext().getRealPath("WEB-INF/datisexport");
+			String dirLocation = request.getSession().getServletContext().getRealPath(EXPORT_PATH);
+			dir = new File(dirLocation + File.separatorChar + sessionId);
+			dir.mkdir();
+			dirLocation = dirLocation + File.separatorChar + sessionId;
+			
 			
 			AbstractIntakeExporter[] exporter = new AbstractIntakeExporter[6];
 			
 			if(request.getParameter("ai") != null) {
 				exporter[0] = (DATISAgencyInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterAgencyInformation");
-				exportCSVFile(exporter[0], "agencyinformation", dirLocation);
+				exportCSVFile(exporter[0], "agencyinformation", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			if(request.getParameter("lp") != null) {
 				exporter[1] = (DATISListOfPrograms)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterListOfPrograms");
-				exportCSVFile(exporter[1], "listofprograms", dirLocation);
+				exportCSVFile(exporter[1], "listofprograms", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			if(request.getParameter("mn") != null) {
 				exporter[2] = (DATISMain)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterMain");
-				exportCSVFile(exporter[2], "main", dirLocation);
+				exportCSVFile(exporter[2], "main", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			if(request.getParameter("pi") != null) {
 				exporter[3] = (DATISProgramInformation)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterProgramInformation");
-				exportCSVFile(exporter[3], "programinformation", dirLocation);
+				exportCSVFile(exporter[3], "programinformation", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			if(request.getParameter("gf") != null) {
 				exporter[4] = (DATISGamingForm)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterGamblingForm");
-				exportCSVFile(exporter[4], "gamblingform", dirLocation);
+				exportCSVFile(exporter[4], "gamblingform", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			if(request.getParameter("nc") != null) {
 				exporter[5] = (DATISNonClientService)WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext()).getBean("intakeExporterNonClientService");
-				exportCSVFile(exporter[5], "nonclientservice", dirLocation);
+				exportCSVFile(exporter[5], "nonclientservice", dirLocation, facilityId, filenames, fileIndex++);
 			}
 			
 			// Reset clients list for subsequent requests
@@ -98,7 +105,7 @@ public class DATISExporterServlet extends HttpServlet {
 			response.setContentType(RESPONSE_MIME_TYPE);
 			response.setHeader("Content-Disposition", "attachment;filename=DATISexport.zip");
 			
-			fis = getZipFile(dirLocation);
+			fis = getZipFile(dirLocation, filenames);
 			byte[] buf = new byte[1024];
 			while(fis.read(buf) != -1) {
 				response.getOutputStream().write(buf);
@@ -114,8 +121,6 @@ public class DATISExporterServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		} finally {
-			fileIndex = 0;
-			filenames = new String[6];
 			if(fis != null) {
 				try {
 					fis.close();
@@ -124,10 +129,28 @@ public class DATISExporterServlet extends HttpServlet {
 					e.printStackTrace();
 				}
 			}
+			if(dir != null) {
+				try {
+					removeFiles(dir);
+				} catch (IOException e) {
+					log.error(e);
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
-	private FileInputStream getZipFile(String dirLocation) throws IOException {
+	private void removeFiles(File dir) throws IOException {
+		if(dir.exists() && dir.isDirectory()) {
+			for(File f :dir.listFiles()) {
+				f.delete();
+			}
+			
+			dir.delete();
+		}
+	}
+
+	private FileInputStream getZipFile(String dirLocation, String[] filenames) throws IOException {
 		byte[] buf = new byte[1024];
 
 		String outFilename = dirLocation + File.separatorChar + OUTFILE_ZIP;
@@ -154,7 +177,7 @@ public class DATISExporterServlet extends HttpServlet {
 		return new FileInputStream(outFilename);
 	}
 
-	private void exportCSVFile(AbstractIntakeExporter exporter, String filename, String dirLocation) throws Exception {
+	private void exportCSVFile(AbstractIntakeExporter exporter, String filename, String dirLocation, int facilityId, String[] filenames, int fileIndex) throws Exception {
 		exporter.setFacilityId(facilityId);
 		String data = exporter.export();
 		
@@ -167,7 +190,7 @@ public class DATISExporterServlet extends HttpServlet {
 		writer.flush();
 		writer.close();
 		
-		filenames[fileIndex++] = fullName;
+		filenames[fileIndex] = fullName;
 		
 		log.debug("File " + filename + " exported.");
 	}

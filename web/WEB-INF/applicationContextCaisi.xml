@@ -135,37 +135,37 @@
 	<!--  from Quatro end -->
 	
 	<!-- DATIS Intake Exporter -->
-	<bean id="agencyInformationValidator" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformationValidator" />
-	<bean id="gamingFormValidator" class="org.oscarehr.PMmodule.exporter.DATISGamingFormValidator" />
-	<bean id="listOfProgramsValidator" class="org.oscarehr.PMmodule.exporter.DATISListOfProgramsValidator" />
-	<bean id="mainValidator" class="org.oscarehr.PMmodule.exporter.DATISMainValidator" />
-	<bean id="nonClientServiceValidator" class="org.oscarehr.PMmodule.exporter.DATISNonClientServiceValidator" />
-	<bean id="programInformationValidator" class="org.oscarehr.PMmodule.exporter.DATISProgramInformationValidator" />
+	<bean id="agencyInformationValidator" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformationValidator" scope="prototype" />
+	<bean id="gamingFormValidator" class="org.oscarehr.PMmodule.exporter.DATISGamingFormValidator" scope="prototype" />
+	<bean id="listOfProgramsValidator" class="org.oscarehr.PMmodule.exporter.DATISListOfProgramsValidator" scope="prototype" />
+	<bean id="mainValidator" class="org.oscarehr.PMmodule.exporter.DATISMainValidator" scope="prototype" />
+	<bean id="nonClientServiceValidator" class="org.oscarehr.PMmodule.exporter.DATISNonClientServiceValidator" scope="prototype" />
+	<bean id="programInformationValidator" class="org.oscarehr.PMmodule.exporter.DATISProgramInformationValidator" scope="prototype" />
 	
 	<bean id="abstractIntakeExporter" abstract="true" class="org.oscarehr.PMmodule.exporter.AbstractIntakeExporter" >
 		<property name="genericIntakeManager" ref="genericIntakeManager"></property>
 	</bean>
-	<bean id="intakeExporterAgencyInformation" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformation" parent="abstractIntakeExporter">
+	<bean id="intakeExporterAgencyInformation" class="org.oscarehr.PMmodule.exporter.DATISAgencyInformation" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/agencyinformation.xml"></property>
 		<property name="validator" ref="agencyInformationValidator"></property>
 	</bean>
-	<bean id="intakeExporterListOfPrograms" class="org.oscarehr.PMmodule.exporter.DATISListOfPrograms" parent="abstractIntakeExporter">
+	<bean id="intakeExporterListOfPrograms" class="org.oscarehr.PMmodule.exporter.DATISListOfPrograms" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/listofprograms.xml"></property>
 		<property name="validator" ref="listOfProgramsValidator"></property>
 	</bean>
-	<bean id="intakeExporterMain" class="org.oscarehr.PMmodule.exporter.DATISMain" parent="abstractIntakeExporter">
+	<bean id="intakeExporterMain" class="org.oscarehr.PMmodule.exporter.DATISMain" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/main.xml"></property>
 		<property name="validator" ref="mainValidator"></property>
 	</bean>
-	<bean id="intakeExporterProgramInformation" class="org.oscarehr.PMmodule.exporter.DATISProgramInformation" parent="abstractIntakeExporter">
+	<bean id="intakeExporterProgramInformation" class="org.oscarehr.PMmodule.exporter.DATISProgramInformation" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/programinformation.xml"></property>
 		<property name="validator" ref="programInformationValidator"></property>
 	</bean>
-	<bean id="intakeExporterGamblingForm" class="org.oscarehr.PMmodule.exporter.DATISGamingForm" parent="abstractIntakeExporter">
+	<bean id="intakeExporterGamblingForm" class="org.oscarehr.PMmodule.exporter.DATISGamingForm" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/gamblingform.xml"></property>
 		<property name="validator" ref="gamingFormValidator"></property>
 	</bean>
-	<bean id="intakeExporterNonClientService" class="org.oscarehr.PMmodule.exporter.DATISNonClientService" parent="abstractIntakeExporter">
+	<bean id="intakeExporterNonClientService" class="org.oscarehr.PMmodule.exporter.DATISNonClientService" parent="abstractIntakeExporter" scope="prototype">
 		<property name="fieldsFile" value="/org/oscarehr/PMmodule/exporter/nonclientservice.xml"></property>
 		<property name="validator" ref="nonClientServiceValidator"></property>
 	</bean>
