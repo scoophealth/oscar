@@ -32,7 +32,7 @@ public class DATISListOfProgramsValidator implements IValidator {
 	/* 
 	 * @see org.oscarehr.PMmodule.exporter.IValidator#validate(org.oscarehr.PMmodule.exporter.DATISField, java.lang.String)
 	 */
-	@Override
+//	@Override
 	public String validate(DATISField field, String value) {
 		if(DATISType.isNumeric(field.getType())) {
 			if(value.charAt(field.getMaxSize()-1) == '-') {
@@ -46,7 +46,7 @@ public class DATISListOfProgramsValidator implements IValidator {
 		return value;
 	}
 
-	@Override
+//	@Override
 	public List<String> getErrorList() {
 		return errorsList;
 	}
