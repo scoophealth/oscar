@@ -114,6 +114,8 @@ ArrayList<Hashtable> pdList = new ProviderData().getProviderList();
 ArrayList doctypes = EDocUtil.getDoctypes(module);
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_DOCUMENT;
 String annotation_tableid = editDocumentNo;
+Long now = new Date().getTime();
+String annotation_attrib = "anno"+now;
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -205,6 +207,7 @@ String annotation_tableid = editDocumentNo;
 	<input type="hidden" name="reviewerId" value="<%=formdata.getReviewerId()%>" />
 	<input type="hidden" name="reviewDateTime" value="<%=formdata.getReviewDateTime()%>" />
 	<input type="hidden" name="reviewDoc" value="false" />
+	<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
 	
 	<table width="100%" height="100%" class="layouttable">
 		<tr>
@@ -284,7 +287,7 @@ String annotation_tableid = editDocumentNo;
 		<tr>
 			<td colspan="2">
 			    <input type="button" value="Annotation"
-			    onclick="window.open('/oscar/annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=annotation_tableid%>&demo=<%=moduleid%>','anwin','width=400,height=250');" />
+			    onclick="window.open('/oscar/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&display=<%=annotation_display%>&table_id=<%=annotation_tableid%>&demo=<%=moduleid%>','anwin','width=400,height=250');" />
 			</td>
 		</tr>
 		<tr>

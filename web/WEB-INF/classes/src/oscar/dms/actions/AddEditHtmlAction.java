@@ -114,22 +114,22 @@ public class AddEditHtmlAction extends Action {
             String docId = EDocUtil.addDocumentSQL(currentDoc);
 	    
 	    /* Save annotation */
+	    String attrib_name = request.getParameter("annotation_attrib");
 	    HttpSession se = request.getSession();
 	    WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 	    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-	    
-	    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(fm.getFunctionId()+"annoNote"+CaseManagementNoteLink.DOCUMENT);
-	    if (cmn!=null) {
-		cmm.saveNoteSimple(cmn);
-		CaseManagementNoteLink cml = new CaseManagementNoteLink();
-		cml.setTableName(cml.DOCUMENT);
-		cml.setTableId(Long.valueOf(docId));
-		cml.setNoteId(cmn.getId());
-		cmm.saveNoteLink(cml);
-		
-		se.removeAttribute(fm.getFunctionId()+"annoNote"+cml.DOCUMENT);
-		se.removeAttribute("anno_display");
-		se.removeAttribute("anno_last_id");
+	    if (attrib_name!=null) {
+		CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(attrib_name);
+		if (cmn!=null) {
+		    cmm.saveNoteSimple(cmn);
+		    CaseManagementNoteLink cml = new CaseManagementNoteLink();
+		    cml.setTableName(cml.DOCUMENT);
+		    cml.setTableId(Long.valueOf(docId));
+		    cml.setNoteId(cmn.getId());
+		    cmm.saveNoteLink(cml);
+
+		    se.removeAttribute(attrib_name);
+		}
 	    }
         } else {
             currentDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), "", fm.getHtml(), fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'H', fm.getObservationDate(), reviewerId, reviewDateTime, fm.getFunction(), fm.getFunctionId());

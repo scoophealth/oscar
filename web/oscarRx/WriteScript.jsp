@@ -69,6 +69,8 @@ boolean isCustom = true;
 String atcCode = null;
 String regionalIdentifier="";
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
+Long now = new Date().getTime();
+String annotation_attrib = "anno"+now;
 %>
 
 <script language=javascript>
@@ -785,7 +787,7 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 
 <html:form action="/oscarRx/writeScript">
 
-
+	<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
 	<html:hidden property="action" />
 	<%
 
@@ -1322,7 +1324,7 @@ int i;
 						    value="Update, Print and Save" />
 					    </td>
 					    <td align="right">
-						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('/oscar/annotation/annotation.jsp?demo=<%=bean.getDemographicNo()%>&display=<%=annotation_display%>','anwin','width=400,height=250');"
+						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('/oscar/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&demo=<%=bean.getDemographicNo()%>&display=<%=annotation_display%>','anwin','width=400,height=250');"
 						    value="Annotation" />
 					    </td></tr></table>
 		     <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />

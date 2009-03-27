@@ -43,6 +43,9 @@
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 
 <%
+    String attrib_name = request.getParameter("atbname");
+    if (attrib_name==null) attrib_name="";
+    
     String demo = request.getParameter("demo");
     String display = request.getParameter("display");
     boolean saved = Boolean.valueOf(request.getParameter("saved"));
@@ -62,27 +65,22 @@
     String note = "";
     
     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);
-    String last_display = (String)se.getAttribute("anno_display");
-    Long last_id = (Long)se.getAttribute("anno_last_id");
-    if (display.equals(last_display) && tableId.equals(last_id)) {
-	//get note from attribute
-	CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(demo+"annoNote"+tableName);
-	if (cmn!=null) note = cmn.getNote();
+    //get note from attribute
+    CaseManagementNote a_cmn = (CaseManagementNote)se.getAttribute(attrib_name);
+    if (a_cmn!=null) {
+	note = a_cmn.getNote();
     } else { 
-	//attribute outdated, get note from database
+	//get note from database
 	if (cml!=null) { //annotation exists
 	    String nid = cml.getNoteId().toString();
 	    note = cmm.getNote(nid).getNote();
 	}
     }
-    
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
 	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no, prog_no);
 	if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
-	    se.setAttribute(demo+"annoNote"+tableName, cmn);
-	    se.setAttribute("anno_display", display);
-	    se.setAttribute("anno_last_id", tableId);
+	    if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
 	} else { //annotated subject exists
 	    cmm.saveNoteSimple(cmn);
 	    if (cml!=null) { //previous annotation exists
@@ -113,6 +111,7 @@
 
 <body bgcolor="#EEEEFF" onload="document.forms[0].note.focus();">
     <form action="annotation.jsp" method="post">
+	<input type="hidden" name="atbname" value="<%=attrib_name%>" />
 	<input type="hidden" name="demo" value="<%=demo%>" />
 	<input type="hidden" name="display" value="<%=display%>" />
 	<input type="hidden" name="table_id" value="<%=tid%>" />

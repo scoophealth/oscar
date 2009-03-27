@@ -120,6 +120,7 @@ public final class RxWriteScriptAction extends Action {
             System.out.println("SAVING STASH " + rx.getCustomInstr());
 	    
             bean.setStashItem(bean.getStashIndex(), rx);
+	    request.setAttribute("RonnieTest","Ronnie test Something...");
          
             rx=null;
          
@@ -139,22 +140,22 @@ public final class RxWriteScriptAction extends Action {
                     rx.Save(scriptId);
 		    
 		    /* Save annotation */
+		    String attrib_name = request.getParameter("annotation_attrib");
 		    HttpSession se = request.getSession();
 		    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 		    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-		    
-		    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(String.valueOf(rx.getDemographicNo())+"annoNote"+CaseManagementNoteLink.DRUGS);
-		    if (cmn!=null) {
-			cmm.saveNoteSimple(cmn);
-			CaseManagementNoteLink cml = new CaseManagementNoteLink();
-			cml.setTableName(cml.DRUGS);
-			cml.setTableId((long)rx.getDrugId());
-			cml.setNoteId(cmn.getId());
-			cmm.saveNoteLink(cml);
-			
-			se.removeAttribute(String.valueOf(rx.getDemographicNo())+"annoNote"+cml.DRUGS);
-			se.removeAttribute("anno_display");
-			se.removeAttribute("anno_last_id");
+		    if (attrib_name!=null) {
+			CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(attrib_name);
+			if (cmn!=null) {
+			    cmm.saveNoteSimple(cmn);
+			    CaseManagementNoteLink cml = new CaseManagementNoteLink();
+			    cml.setTableName(cml.DRUGS);
+			    cml.setTableId((long)rx.getDrugId());
+			    cml.setNoteId(cmn.getId());
+			    cmm.saveNoteLink(cml);
+
+			    se.removeAttribute(attrib_name);
+			}
 		    }
                     rx = null;
                 }

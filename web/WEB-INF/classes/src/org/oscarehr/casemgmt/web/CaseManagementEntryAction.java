@@ -756,21 +756,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 	    }
 
 	    /* Save annotation */
+	    String attrib_name = request.getParameter("annotation_attrib");
 	    HttpSession se = request.getSession();
-	    CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(demo+"annoNote"+CaseManagementNoteLink.CASEMGMTNOTE);
-	    if (cmn!=null) {
-		caseManagementMgr.saveNoteSimple(cmn);
-		CaseManagementNoteLink cml = new CaseManagementNoteLink();
-		cml.setTableName(cml.CASEMGMTNOTE);
-		cml.setTableId(note.getId());
-		cml.setNoteId(cmn.getId());
-		caseManagementMgr.saveNoteLink(cml);
-		
-		se.removeAttribute(demo+"annoNote"+cml.CASEMGMTNOTE);
-		se.removeAttribute("anno_display");
-		se.removeAttribute("anno_last_id");
+	    if (attrib_name!=null) {
+		CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(attrib_name);
+		if (cmn!=null) {
+		    caseManagementMgr.saveNoteSimple(cmn);
+		    CaseManagementNoteLink cml = new CaseManagementNoteLink();
+		    cml.setTableName(cml.CASEMGMTNOTE);
+		    cml.setTableId(note.getId());
+		    cml.setNoteId(cmn.getId());
+		    caseManagementMgr.saveNoteLink(cml);
+
+		    se.removeAttribute(attrib_name);
+		}
 	    }
-	    
             caseManagementMgr.getEditors(note);
             
             ActionForward forward = mapping.findForward("listCPPNotes");
