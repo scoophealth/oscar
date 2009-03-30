@@ -34,6 +34,8 @@
   
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
+  DemographicData demoData = new DemographicData();
+  String nameAge = demoData.getNameAgeString(demographic_no);
   
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
   ArrayList prevList = pdc.getPreventions();
@@ -363,7 +365,7 @@ div.recommendations li {
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td><oscar:nameage demographicNo="<%=demographic_no%>" /></td>
+				<td><%=nameAge%></td>
 				<td>&nbsp;</td>
 				<td style="text-align: right"><a
 					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
