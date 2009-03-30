@@ -62,6 +62,12 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <h1>Activity Report : <%=program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
+<div>
+The numbers here represent the number of encounters/notes except in the total unique clients column where it represents clients.
+The total and subtotal rows don't always add up to all the encounter types as some encounters are left blank for the encounter type.
+The total encounters column is a unique encounter count, so if an encounter involved 3 issues, it will only be counted once in the total unique encounters column.
+The total unique clients column is a unique count so if a client had 10 encounters for 15 issues, they will only be counted once in the total unique client column
+</div>
 
 <input type="button" value="Back" onclick="history.go(-1);" />
 
@@ -77,7 +83,8 @@
 				<%
 			}
 		%>
-		<td class="genericTableHeader">Total</td>
+		<td class="genericTableHeader">Total unique encounters</td>
+		<td class="genericTableHeader">Total unique clients</td>
 	</tr>
 	<%
 		for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
@@ -104,7 +111,8 @@
 						}
 					%>
 	
-					<td class="genericTableData"><%=encounterEntry.getValue().rowTotal%></td>
+					<td class="genericTableData"><%=encounterEntry.getValue().rowTotalUniqueEncounters%></td>
+					<td class="genericTableData"><%=encounterEntry.getValue().rowTotalUniqueClients%></td>
 					</tr>
 				<%
 			}
@@ -121,7 +129,8 @@
 					<%
 				}
 			%>
-			<td class="genericTableData"><%=encounterTypeDataRow.rowTotal%></td>
+			<td class="genericTableData"><%=encounterTypeDataRow.rowTotalUniqueEncounters%></td>
+			<td class="genericTableData"><%=encounterTypeDataRow.rowTotalUniqueClients%></td>
 		</tr>
 		<%
 	}
@@ -138,7 +147,8 @@
 		<%
 		}
 		%>
-		<td class="genericTableData"><%=encounterTypeDataRow.rowTotal%></td>
+		<td class="genericTableData"><%=encounterTypeDataRow.rowTotalUniqueEncounters%></td>
+		<td class="genericTableData"><%=encounterTypeDataRow.rowTotalUniqueClients%></td>
 	</tr>
 </table>
 

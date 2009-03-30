@@ -18,9 +18,8 @@ public class PopulationReportDataObjects {
 	 */
 	public static class EncounterTypeDataRow extends AccumulatorMap<IssueGroup>
 	{
-		public int rowTotal=0;
-		
-		// this is just a place holder class so I know what item I'm dealing with
+		public int rowTotalUniqueEncounters=0;
+		public int rowTotalUniqueClients=0;
 	}
 
 	/**

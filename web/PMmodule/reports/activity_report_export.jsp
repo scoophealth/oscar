@@ -76,6 +76,7 @@
 	session.setAttribute("progressStatus", progressStatus);
 	
 	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
+	populationReportUIBean.skipTotalRow=true;
 	
 	// print header
 	{
@@ -99,7 +100,9 @@
 		}
 
 		sb.append(',');
-		sb.append("Total");
+		sb.append("Total Unique Encounters");
+		sb.append(',');
+		sb.append("Total Unique Clients");
 
 		// for debugging
 		// System.err.println(sb.toString());
@@ -162,7 +165,9 @@
 					}
 					
 					sb.append(',');
-					sb.append(encounterEntry.getValue().rowTotal);
+					sb.append(encounterEntry.getValue().rowTotalUniqueEncounters);
+					sb.append(',');
+					sb.append(encounterEntry.getValue().rowTotalUniqueClients);
 					
 					out.write(sb.toString());
 					out.write('\n');

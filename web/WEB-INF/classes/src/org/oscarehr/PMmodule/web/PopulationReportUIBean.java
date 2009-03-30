@@ -52,6 +52,7 @@ public class PopulationReportUIBean {
 	private int programId = -1;
 	private Date startDate = null;
 	private Date endDate = null;
+	public boolean skipTotalRow=false;
 
 	public PopulationReportUIBean() {
 
@@ -113,7 +114,7 @@ public class PopulationReportUIBean {
 			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
 		}
 
-		roleDataGrid.total=getEncounterTypeDataRow(null, null);
+		if (!skipTotalRow) roleDataGrid.total=getEncounterTypeDataRow(null, null);
 		
 		long totalTime=System.currentTimeMillis()-startTime;
 		logger.debug("report generation in seconds : "+(totalTime/1000));
@@ -132,7 +133,7 @@ public class PopulationReportUIBean {
 			result.put(encounterType, getEncounterTypeDataRow(roleId, encounterType));
 		}
 
-		result.subTotal=getEncounterTypeDataRow(roleId, null);
+		if (!skipTotalRow) result.subTotal=getEncounterTypeDataRow(roleId, null);
 		
 		return (result);
 	}
@@ -148,7 +149,8 @@ public class PopulationReportUIBean {
 			result.put(issueGroup, (count != null ? count : 0));
 		}
 
-		result.rowTotal=populationReportDao.getCaseManagementNoteTotalCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
+		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
+		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
 		
 		return (result);
 	}
