@@ -42,6 +42,7 @@ public class RxSessionBean {
     private int stashIndex = -1;
     private Hashtable allergyWarnings = new Hashtable();
     private Hashtable workingAllergyWarnings = new Hashtable();
+    private ArrayList attributeNames = new ArrayList();
     
     
     
@@ -60,6 +61,16 @@ public class RxSessionBean {
     }
     public void setDemographicNo(int RHS) {
         this.demographicNo = RHS;
+    }
+    
+    public ArrayList getAttributeNames() {
+	return this.attributeNames;
+    }
+    public void setAttributeNames(ArrayList RHS) {
+	this.attributeNames = RHS;
+    }
+    public void addAttributeName(String RHS) {
+	this.attributeNames.add(RHS);
     }
     
     //--------------------------------------------------------------------------

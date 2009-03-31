@@ -787,8 +787,8 @@ String annotation_attrib = "anno"+now;
 
 <html:form action="/oscarRx/writeScript">
 
-	<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
 	<html:hidden property="action" />
+	<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
 	<%
 
 

@@ -24,6 +24,7 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -120,12 +121,15 @@ public final class RxWriteScriptAction extends Action {
             System.out.println("SAVING STASH " + rx.getCustomInstr());
 	    
             bean.setStashItem(bean.getStashIndex(), rx);
-	    request.setAttribute("RonnieTest","Ronnie test Something...");
-         
             rx=null;
-         
+	    
+	    if (bean.getStashSize()>bean.getAttributeNames().size()) {
+		String annotation_attrib = request.getParameter("annotation_attrib");
+		if (annotation_attrib==null) annotation_attrib="";
+		bean.addAttributeName(annotation_attrib);
+	    }
             
-            if(frm.getAction().equals("update")){                
+            if(frm.getAction().equals("update")){
                 fwd = "refresh";
             }
             if(frm.getAction().equals("updateAddAnother")){
@@ -135,15 +139,16 @@ public final class RxWriteScriptAction extends Action {
                 int i;
                 String scriptId = prescription.saveScript(bean);
                 
+		ArrayList<String> attrib_names = bean.getAttributeNames();
                 for(i=0; i<bean.getStashSize(); i++){
                     rx = bean.getStashItem(i);
                     rx.Save(scriptId);
 		    
 		    /* Save annotation */
-		    String attrib_name = request.getParameter("annotation_attrib");
 		    HttpSession se = request.getSession();
 		    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
 		    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+		    String attrib_name = attrib_names.get(i);
 		    if (attrib_name!=null) {
 			CaseManagementNote cmn = (CaseManagementNote)se.getAttribute(attrib_name);
 			if (cmn!=null) {
