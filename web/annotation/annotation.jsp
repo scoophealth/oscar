@@ -65,28 +65,32 @@
     String note = "";
     
     CaseManagementNoteLink cml = cmm.getLatestLinkByTableId(tableName, tableId);
+    CaseManagementNote p_cmn = null;
+    if (cml!=null) p_cmn = cmm.getNote(cml.getNoteId().toString());
+    String uuid = "";
+    if (p_cmn!=null) uuid = p_cmn.getUuid();
+    
     //get note from attribute
     CaseManagementNote a_cmn = (CaseManagementNote)se.getAttribute(attrib_name);
     if (a_cmn!=null) {
 	note = a_cmn.getNote();
     } else { 
 	//get note from database
-	if (cml!=null) { //annotation exists
-	    String nid = cml.getNoteId().toString();
-	    note = cmm.getNote(nid).getNote();
+	if (p_cmn!=null) { //previous annotation exists
+	    note = p_cmn.getNote();
 	}
     }
     if (saved) {
 	String prog_no = new EctProgram(se).getProgram(user_no);
 	CaseManagementNote cmn = createCMNote(request.getParameter("note"), demo, user_no, prog_no);
-	if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
-	    if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
-	} else { //annotated subject exists
-	    cmm.saveNoteSimple(cmn);
-	    if (cml!=null) { //previous annotation exists
-		cml.setNoteId(cmn.getId());
-		cmm.updateNoteLink(cml);
-	    } else { //new annotation
+	if (cmn!=null) {
+	    if (p_cmn!=null) {  //previous annotation exists
+		cmn.setUuid(uuid); //assign same UUID to new annotation
+	    }
+	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
+		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
+	    } else { //annotated subject exists
+		cmm.saveNoteSimple(cmn);
 		cml = new CaseManagementNoteLink();
 		cml.setTableName(tableName);
 		cml.setTableId(tableId);
@@ -95,6 +99,13 @@
 	    }
 	}
 	response.sendRedirect("../close.html");
+    }
+    
+    //Display revision history
+    Integer rev = 0;
+    if (p_cmn!=null) {
+	List l = cmm.getNotesByUUID(uuid);
+	rev = l.size();
     }
 %>
 
@@ -105,7 +116,16 @@
     
     <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
     <script type="text/javascript">
-	
+	function showHistory(uuid,display) {
+	    if (uuid=="") {
+		alert("Annotation History Not Found!");
+		return false;
+	    } else {
+		var href = "showHistory.jsp?uuid="+uuid+"&display="+display;
+		window.open(href,"histwin","width=600,height=600");
+	    }
+	    return true;
+	}
     </script>
 </head>
 
@@ -117,14 +137,20 @@
 	<input type="hidden" name="table_id" value="<%=tid%>" />
 	<input type="hidden" name="saved" />
 	<table>
-	    <tr><td><%=display%> Annotation:</td></tr>
-	    <tr>
-		<td><textarea name="note" rows="10" cols="50"><%=note%></textarea></td>
+	    <tr><td colspan="2"><%=display%> Annotation:</td></tr>
+	    <tr><td colspan="2">
+		    <textarea name="note" rows="10" cols="50"><%=note%></textarea>
+		</td>
 	    </tr>
 	    <tr>
-		<td align="center">
+		<td>
 		    <input type="submit" value="Save" onclick="this.form.saved.value='true';"/> &nbsp;
 		    <input type="button" value="Cancel" onclick="window.close();"/>
+		</td>
+		<td align="right">
+	<% if (rev>0) { %>
+		    rev<a href="#" onclick="showHistory('<%=uuid%>','<%=display%>');"><%=rev%></a>
+	<% } %>
 		</td>
 	    </tr>
 	</table>
