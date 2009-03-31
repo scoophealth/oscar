@@ -90,6 +90,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return tmp.get(0);
 	}
 
+	public List<CaseManagementNote> getNotesByUUID(String uuid) {
+		String hql = "select cmn from CaseManagementNote cmn where cmn.uuid = ?";
+		List<CaseManagementNote> ret = this.getHibernateTemplate().find(hql, uuid);
+		return ret;
+	}
+	
 	public List<CaseManagementNote> getCPPNotes(String demoNo, long issueId, String staleDate) {
 		Date d;
 		GregorianCalendar cal = new GregorianCalendar(1970, 1, 1);

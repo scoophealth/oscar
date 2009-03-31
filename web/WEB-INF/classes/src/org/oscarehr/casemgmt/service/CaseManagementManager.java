@@ -369,6 +369,10 @@ public class CaseManagementManager {
 		return this.caseManagementNoteDAO.getNote(Long.valueOf(note_id));
 	}
 
+	public List<CaseManagementNote> getNotesByUUID(String uuid) {
+		return this.caseManagementNoteDAO.getNotesByUUID(uuid);
+	}
+	
 	public CaseManagementNote getMostRecentNote(String uuid) {
 		return this.caseManagementNoteDAO.getMostRecentNote(uuid);
 	}
