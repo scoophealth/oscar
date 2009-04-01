@@ -112,6 +112,13 @@ function setComment(){
     frames['preview'].document.getElementById('additNotes').innerHTML = '<%=comment%>';
 }
 
+function setDefaultAddr(){
+    var url = "setDefaultAddr.jsp";
+    var ran_number=Math.round(Math.random()*1000000);
+    var addr = encodeURIComponent(document.getElementById('addressSel').value);
+    var params = "addr="+addr+"&rand="+ran_number;  //]
+    new Ajax.Request(url, {method: 'post',parameters:params});
+}
 
     
 
@@ -162,6 +169,7 @@ function printPaste2Parent(){
 
 
 function addressSelect() {
+    setDefaultAddr();
    <% if(vecAddressName != null) {
          for(int i=0; i<vecAddressName.size(); i++) {%>
 	    if(document.getElementById("addressSel").value=="<%=i%>") {
@@ -304,17 +312,14 @@ function toggleView(form) {
 					<tr>
 						<td align="center" colspan=2>Address <select
 							name="addressSel" id="addressSel" onChange="addressSelect()">
-							<%  for (int i =0; i < vecAddressName.size();i++){
+							<% String rxAddr = (String) session.getAttribute("RX_ADDR");
+                                                          for (int i =0; i < vecAddressName.size();i++){
 					                 String te = (String) vecAddressName.get(i);
-                                                         String tf = (String) vecAddress.get(i);
-					            %>
+                                                         String tf = (String) vecAddress.get(i);%>
 
 							<option value="<%=i%>"
-								<% if ( tf.indexOf(te) != -1)
-                                                          { %>
-								SELECTED
-								<% }
-                                                     %>><%=te%></option>
+								<% if ( rxAddr != null && rxAddr.equals(""+i)){ %>SELECTED<%}%>
+                                                                ><%=te%></option>
 							<%  }%>
 
 						</select></td>
