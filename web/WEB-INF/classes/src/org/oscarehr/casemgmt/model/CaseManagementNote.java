@@ -54,7 +54,7 @@ public class CaseManagementNote extends BaseObject {
 	private String history;
 	private Provider provider;
 	private Set issues = new HashSet();
-        private Set extend = new HashSet();
+    private Set extend = new HashSet();
 	private List editors = new ArrayList();
 	private String roleName;
 	private String programName;
@@ -63,7 +63,10 @@ public class CaseManagementNote extends BaseObject {
 
 	private String password;
 	private boolean locked;
-        private boolean archived;
+    private boolean archived;
+    
+    private boolean remote = false;
+    private String facilityName = "None Specified";
 
 	private int hashCode = Integer.MIN_VALUE;
         private int position = 0;
@@ -416,4 +419,20 @@ public class CaseManagementNote extends BaseObject {
         public void setPosition(int position) {
             this.position = position;
         }
+
+		public boolean isRemote() {
+			return remote;
+		}
+
+		public void setRemote(boolean isRemote) {
+			this.remote = isRemote;
+		}
+
+		public String getFacilityName() {
+			return facilityName;
+		}
+
+		public void setFacilityName(String facilityName) {
+			this.facilityName = facilityName;
+		}
 }

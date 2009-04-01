@@ -61,6 +61,7 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
+import org.oscarehr.casemgmt.service.CommunityNoteManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
@@ -345,9 +346,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
 				request.setAttribute("Issues", communityIssues);
 			}
-			/* PROGRESS NOTES */
-			List<CaseManagementNote> notes = null;
-
+			
 			log.debug("Get stale note date");
 			// filter the notes by the checked issues and date if set
 			UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
@@ -356,6 +355,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			log.debug("Get stale note date " + String.valueOf(current - start));
 			start = current;
 
+			/* PROGRESS NOTES */
+			List<CaseManagementNote> notes = null;
+			List<CaseManagementNote> remoteNotes = new ArrayList<CaseManagementNote>();
 			// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
 			String[] checked_issues = request.getParameterValues("check_issue");
 			if(useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
@@ -370,7 +372,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
 					start = current;
 				}
-				else {
+				else { // get all notes
 					log.debug("Get Notes");
 					notes = caseManagementMgr.getNotes(demoNo);
 					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
@@ -387,6 +389,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					request.setAttribute("checked_issues", checked_issues);
 					// construct an array of checked issues by ID
 					String[] checked_issueIDs = new String[checked_issues.length];
+					List<String> checked_remoteIssueCodes = new ArrayList<String>();
 					for(int i=0;i<checked_issues.length;i++)
 					{
 						for(CaseManagementCommunityIssue issue: communityIssues)
@@ -394,20 +397,34 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 							if(issue.getCheckboxID().equals(checked_issues[i]))
 							{
 								checked_issueIDs[i] = Long.toString(issue.getIssue_id());
+								if(issue.isRemote()) checked_remoteIssueCodes.add(issue.getIssue().getCode());
 								continue;
 							}
 						}
 					}
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), checked_remoteIssueCodes);
+					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
 					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
 					start = current;
 				}
-				else { // nothing is checked
+				else { // nothing is checked, get all notes
 					log.debug("Get Notes");
 					notes = caseManagementMgr.getNotes(demoNo);
 					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+					// get all remote issue codes
+					ArrayList<String> remote_issueCodes = new ArrayList<String>();
+					for(CaseManagementCommunityIssue issue: communityIssues)
+					{
+						if(issue.isRemote())
+						{
+							remote_issueCodes.add(issue.getIssue().getCode());
+						}
+					}
+					// get community notes for all remote issues
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), remote_issueCodes);
 					current = System.currentTimeMillis();
 					log.debug("Get Notes " + String.valueOf(current - start));
 					start = current;
@@ -426,13 +443,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			 */
 			// apply role based access
 			// if(request.getSession().getAttribute("archiveView")!="true")
-			log.debug("Filter Notes");
-                                                
-			notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);                        
-			current = System.currentTimeMillis();
-			log.debug("FILTER NOTES " + String.valueOf(current - start));
-			start = current;
-
+			
 			String resetFilter = request.getParameter("resetFilter");
 			System.out.println("RESET FILTER " + resetFilter);
 			if (resetFilter != null && resetFilter.equals("true")) {
@@ -442,6 +453,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				caseForm.setFilter_roles(null);
 				caseForm.setNote_sort(null);
 			}
+
+			log.debug("Filter Notes");
+            
+			// filter notes based on role and program/provider mappings
+			notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);                        
+			current = System.currentTimeMillis();
+			log.debug("FILTER NOTES " + String.valueOf(current - start));
+			start = current;
 
 			// apply provider filter
 			log.debug("Filter Notes Provider");
@@ -463,12 +482,19 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			log.debug("Filter on Role " + String.valueOf(current - start));
 			start = current;
                         
+			// this is a local filter and does not apply to remote notes
 			log.debug("Pop notes with editors");
 			this.caseManagementMgr.getEditors(notes);
 			current = System.currentTimeMillis();
 			log.debug("Pop notes with editors " + String.valueOf(current - start));
 			start = current;
-
+			
+			// this is the wrong place for this
+			if(useNewCaseMgmt == null || !useNewCaseMgmt.equals("true"))
+			{
+				notes.addAll(remoteNotes);
+			}
+			
 			/*
 			 * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 			 */
@@ -491,7 +517,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			// request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
-		}
+		} // end Current Issues Tab
 
 		log.debug("Get CPP");
 		CaseManagementCPP cpp = this.caseManagementMgr.getCPP(this.getDemographicNo(request));
@@ -658,7 +684,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		    lcme.addAll(caseManagementMgr.getExtByNote(cmn.getId()));
 		}
 		request.setAttribute("NoteExts", lcme);
-                request.setAttribute("Notes", notes);
+        request.setAttribute("Notes", notes);
 		/*
 		oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 		String noteSort = p.getProperty("CMESort", "");
@@ -842,8 +868,12 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return notes;
 	}
 
-	/*
+	/**
 	 * This method extracts a unique list of providers, and optionally filters out all notes belonging to providerNo (arg2).
+	 * @param notes
+	 * @param providers
+	 * @param providerNo
+	 * @return
 	 */
 	protected List applyProviderFilters(List notes, Set providers, String[] providerNo) {
 		boolean filter = false;

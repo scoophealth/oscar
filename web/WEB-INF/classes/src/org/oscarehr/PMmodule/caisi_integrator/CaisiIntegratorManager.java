@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWs;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -43,8 +44,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityWsService;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.HnrWsService;
 import org.oscarehr.caisi_integrator.ws.IssueTransfer;
-import org.oscarehr.hnr.ws.MatchingClientParameters;
-import org.oscarehr.hnr.ws.MatchingClientScore;
+import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProgramWsService;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
@@ -54,8 +54,12 @@ import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hnr.ws.MatchingClientParameters;
+import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.FacilityProviderSegmentedTimeClearedHashMap;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
+
+import oscar.OscarProperties;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -175,7 +179,7 @@ public class CaisiIntegratorManager {
 		try
 		{
 			DemographicWs demographicWs = getDemographicWs(facilityId);
-			List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);;
+			List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId,OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
 			
 			// this is done for cached lists
 			// cloned so alterations don't affect the cached data
@@ -220,6 +224,23 @@ public class CaisiIntegratorManager {
 		{
 			return null;
 		}
+	}
+	
+	public List<NoteTransfer> getRemoteNotes(int facilityId, int demographicId, List<IssueTransfer> remoteIssues) throws MalformedURLException
+	{
+		try
+		{
+			DemographicWs demographicWs = getDemographicWs(facilityId);
+			List<NoteTransfer> notes = (List<NoteTransfer>)demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
+			
+			return notes;
+		}
+		catch(Exception e)
+		{
+			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
+			return new ArrayList<NoteTransfer>();
+		}
+			
 	}
 	
 	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {

@@ -425,6 +425,7 @@ Progress Note Report View:
 					<td>Provider</td>
 					<td>Status</td>
 					<td>Program</td>
+					<td>Location</td>
 					<td>Role</td>
 				</tr>
 				<%
@@ -498,6 +499,10 @@ Progress Note Report View:
 						<td><c:out value="${note.providerName}" /></td>
 						<td><c:out value="${note.status}" /></td>
 						<td><c:out value="${note.programName}" /></td>
+						<td>
+							<c:if test="${note.remote=='true'}"><c:out value="${note.facilityName }" /></c:if>
+							<c:if test="${note.remote=='false'}">local</c:if>
+						</td>
 						<td><c:out value="${note.roleName}" /></td>
 					</tr>
 				</c:forEach>
@@ -514,23 +519,50 @@ Progress Note Report View:
 				<c:forEach var="note" items="${Notes}">
 					<%
 						if (index1++ % 2 != 0)
-										{
-											bgcolor1="white";
-										}
-										else
-										{
-											bgcolor1="#EEEEFF";
-										}
-										String noteId=((CaseManagementNote)noteList.get(index1 - 1)).getId().toString();
-										request.setAttribute("noteId", noteId);
+						{
+							bgcolor1="white";
+						}
+						else
+						{
+							bgcolor1="#EEEEFF";
+						}
+						String noteId;
+						if(((CaseManagementNote)noteList.get(index1 - 1)).isRemote())
+						{
+							noteId = "remoteNote"+index1;
+						}
+						else
+						{
+							noteId=((CaseManagementNote)noteList.get(index1 - 1)).getId().toString();
+							request.setAttribute("noteId", noteId);
+						}
+						
 					%>
 					<tr>
 						<td>
 						<table id="test<%=index1%>" width="100%" border="0" style="margin-bottom: 5px">
 							<tr bgcolor="<%=bgcolor1%>">
+								<td width="7%">Facility</td>
+								<td width="93%">
+									<c:if test="${note.remote}">
+										<c:out value="${note.facilityName } (Remote Facility)" />
+									</c:if>
+									<c:if test="${note.remote=='false'}">
+										<c:out value="Local Facility" />
+									</c:if>
+								</td>
+							</tr>
+							<tr bgcolor="<%=bgcolor1%>">
+								<td width="7%">Program</td>
+								<td width="93%">
+									<c:out value="${note.programName }" />
+								</td>
+							</tr>
+							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Provider</td>
-								<td width="93%"><c:out
-									value="${note.provider.formattedName }" /></td>
+								<td width="93%">
+									<c:out value="${note.provider.formattedName }" />
+								</td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Date</td>
@@ -543,33 +575,41 @@ Progress Note Report View:
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Action</td>
-								<td width="93%"><c:if
-									test="${(!note.signed) and (sessionScope.readonly=='false')}">
-									<c:url
-										value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-										var="notesURL" />
-									<input type="button" value="Edit and Sign"
-										onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
-								</c:if> <c:if
-									test="${note.signed and note.providerNo eq param.providerNo}">
-									<c:url
-										value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-										var="notesURL" />
-									<input type="button" value="Edit This Note"
-										onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
-								</c:if> <c:if test="${note.hasHistory == true}">
-									<c:url
-										value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-										var="historyURL" />
-									<input type="button" value="Note History"
-										onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
-								</c:if> <c:if test="${note.locked}">
-									<c:url
-										value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}"
-										var="lockedURL" />
-									<input type="button" value="Unlock"
-										onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
-								</c:if></td>
+								<td width="93%">
+									<c:if test="${note.remote}">
+										<c:out value="Remote notes are not editable" />
+									</c:if>
+									<c:if test="${note.remote=='false'}">
+										<c:if test="${(!note.signed) and (sessionScope.readonly=='false')}">
+										<c:url
+											value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+											var="notesURL" />
+										<input type="button" value="Edit and Sign"
+											onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
+										</c:if> 
+										<c:if test="${note.signed and note.providerNo eq param.providerNo}">
+										<c:url
+											value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+											var="notesURL" />
+										<input type="button" value="Edit This Note"
+											onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
+										</c:if> 
+										<c:if test="${note.hasHistory == true}">
+										<c:url
+											value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
+											var="historyURL" />
+										<input type="button" value="Note History"
+											onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
+										</c:if> 
+										<c:if test="${note.locked}">
+										<c:url
+											value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}"
+											var="lockedURL" />
+										<input type="button" value="Unlock"
+											onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
+										</c:if>
+									</c:if>
+								</td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Note</td>
@@ -583,6 +623,7 @@ Progress Note Report View:
 								</c:choose></td>
 							</tr>
 						</table>
+						
 						</td>
 					</tr>
 				</c:forEach>
