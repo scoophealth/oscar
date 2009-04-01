@@ -23,6 +23,7 @@
 		catch (DuplicateHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
+			ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
 		}
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
