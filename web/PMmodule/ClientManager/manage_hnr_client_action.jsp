@@ -1,4 +1,6 @@
 
+<%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException"%>
 <%@page import="org.apache.log4j.LogManager"%><%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageHnrClientAction"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
@@ -14,7 +16,14 @@
 	
 	if ("copyLocalValidatedToHnr".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.copyLocalValidatedToHnr(currentFacility, currentProvider, currentDemographicId);
+		try
+		{
+			ManageHnrClientAction.copyLocalValidatedToHnr(currentFacility, currentProvider, currentDemographicId);
+		}
+		catch (DuplicateHinExceptionException e)
+		{
+			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
+		}
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
 	{

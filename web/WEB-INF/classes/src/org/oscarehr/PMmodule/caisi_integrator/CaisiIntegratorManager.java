@@ -37,6 +37,7 @@ import org.oscarehr.caisi_integrator.ws.CommunityIssueWs;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
+import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
@@ -395,7 +396,7 @@ public class CaisiIntegratorManager {
 		return (client);
 	}
 
-	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException {
+	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException {
 		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());

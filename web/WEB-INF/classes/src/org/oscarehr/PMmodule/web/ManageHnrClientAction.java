@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -86,7 +87,7 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void copyLocalValidatedToHnr(Facility currentFacility, Provider currentProvider, Integer clientId) {
+	public static void copyLocalValidatedToHnr(Facility currentFacility, Provider currentProvider, Integer clientId) throws DuplicateHinExceptionException {
 		try {
 			logger.debug("copyLocalToHnr currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId);
 
@@ -192,6 +193,8 @@ public class ManageHnrClientAction {
 					clientLinkDao.persist(clientLink);
 				}
 			}
+		} catch (DuplicateHinExceptionException e) {
+			throw(e);
 		} catch (Exception e) {
 			logger.error("Unexpected Error.", e);
 		}
