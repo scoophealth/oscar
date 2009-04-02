@@ -4,6 +4,7 @@
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.util.HinValidator"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
@@ -16,8 +17,6 @@
 	Demographic demographic=manageHnrClient.getDemographic();
 	org.oscarehr.hnr.ws.Client hnrClient=manageHnrClient.getHnrClient();
 %>
-
-
 
 <h3>Manage Linked Clients</h3>
 <br />
@@ -36,59 +35,59 @@
 	</tr>
 	<tr>
 		<td class="genericTableHeader">First Name</td>
-		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%></td>
+		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%><%=(StringUtils.trimToNull(demographic.getFirstName())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" <%=manageHnrClient.isHcInfoValidatable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Last Name</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getLastName())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getLastName())%><%=(StringUtils.trimToNull(demographic.getLastName())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getLastName())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Gender</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getSex())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getSex())%><%=(StringUtils.trimToNull(demographic.getSex())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteGender()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
-		<td><%=demographic.getFormattedDob()%></td>
+		<td><%=demographic.getFormattedDob()%><%=(StringUtils.trimToNull(demographic.getFormattedDob())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedBirthDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Number</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getHin())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getHin())%><%=(StringUtils.trimToNull(demographic.getHin())==null||!HinValidator.isValid(demographic.getHin(),demographic.getHcType())?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHin())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Type</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getHcType())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getHcType())%><%=(StringUtils.trimToNull(demographic.getHcType())==null||!HinValidator.isValid(demographic.getHin(),demographic.getHcType())?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getHinType())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Valid Start</td>
-		<td><%=manageHnrClient.getLocalFormatedHinStartDate()%></td>
+		<td><%=manageHnrClient.getLocalFormatedHinStartDate()%><%=(StringUtils.trimToNull(manageHnrClient.getLocalFormatedHinStartDate())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedHinStartDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Health Card Valid End</td>
-		<td><%=manageHnrClient.getLocalFormatedHinEndDate()%></td>
+		<td><%=manageHnrClient.getLocalFormatedHinEndDate()%><%=(StringUtils.trimToNull(manageHnrClient.getLocalFormatedHinEndDate())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedHinEndDate()%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Street Address</td>
-		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getAddress())%></td>
+		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getAddress())%><%=(StringUtils.trimToNull(demographic.getAddress())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td rowspan="3" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getOtherInfoValidationActionString()%>" <%=manageHnrClient.isOtherInfoValidatable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getOtherInfoValidationActionString()%>OtherInfo&demographicId=<%=currentDemographicId%>'" /></td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getStreetAddress())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">City</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getCity())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getCity())%><%=(StringUtils.trimToNull(demographic.getCity())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getCity())%></td>
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Province/State/Territory</td>
-		<td><%=StringUtils.trimToEmpty(demographic.getProvince())%></td>
+		<td><%=StringUtils.trimToEmpty(demographic.getProvince())%><%=(StringUtils.trimToNull(demographic.getProvince())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getProvince())%></td>
 	</tr>
 </table>

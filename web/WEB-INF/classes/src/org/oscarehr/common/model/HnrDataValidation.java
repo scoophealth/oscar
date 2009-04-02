@@ -37,6 +37,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.oscarehr.casemgmt.model.ClientImage;
+import org.oscarehr.util.HinValidator;
 
 /**
  * This object is to help support tracking which fields in the demographic object have been marked as "valid" by an end user. The original intent is because only "validated" information is allowed to be sent to the HNR and part of the scope of work was to
@@ -186,6 +187,7 @@ public class HnrDataValidation {
 		else if (demographic.getBirthDay()==null) return(false);
 		else if (demographic.getHin()==null) return(false);
 		else if (demographic.getHcType()==null) return(false);
+		else if (!HinValidator.isValid(demographic.getHin(), demographic.getHcType().toLowerCase())) return(false);
 		else if (demographic.getEffDate()==null) return(false);
 		else if (demographic.getHcRenewDate()==null) return(false);
 		else return(true);
