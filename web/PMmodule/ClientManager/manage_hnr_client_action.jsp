@@ -1,6 +1,7 @@
 
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException"%>
 <%@page import="org.apache.log4j.LogManager"%><%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageHnrClientAction"%>
 <%@page import="org.oscarehr.common.model.Facility"%>
@@ -23,6 +24,11 @@
 		catch (DuplicateHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
+			ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
+		}
+		catch (InvalidHinExceptionException e)
+		{
+			WebUtils.addErrorMessage(session, "This HIN you provided does not pass validation. Please check the HIN and it's Type.");
 			ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
 		}
 	}

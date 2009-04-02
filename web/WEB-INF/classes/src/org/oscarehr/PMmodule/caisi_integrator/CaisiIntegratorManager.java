@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWs;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -44,6 +43,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWsService;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.HnrWsService;
+import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
 import org.oscarehr.caisi_integrator.ws.IssueTransfer;
 import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
@@ -396,7 +396,7 @@ public class CaisiIntegratorManager {
 		return (client);
 	}
 
-	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException {
+	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException {
 		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());

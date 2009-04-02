@@ -8,6 +8,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
+import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -87,7 +88,7 @@ public class ManageHnrClientAction {
 		}
 	}
 
-	public static void copyLocalValidatedToHnr(Facility currentFacility, Provider currentProvider, Integer clientId) throws DuplicateHinExceptionException {
+	public static void copyLocalValidatedToHnr(Facility currentFacility, Provider currentProvider, Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException {
 		try {
 			logger.debug("copyLocalToHnr currentFacility=" + currentFacility.getId() + ", currentProvider=" + currentProvider.getProviderNo() + ", client=" + clientId);
 
@@ -131,7 +132,7 @@ public class ManageHnrClientAction {
 
 				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
-				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType());
+				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType().toLowerCase());
 				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(demographic.getEffDate());
 				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(demographic.getHcRenewDate());
 			}
@@ -193,6 +194,8 @@ public class ManageHnrClientAction {
 					clientLinkDao.persist(clientLink);
 				}
 			}
+		} catch (InvalidHinExceptionException e) {
+			throw(e);
 		} catch (DuplicateHinExceptionException e) {
 			throw(e);
 		} catch (Exception e) {
