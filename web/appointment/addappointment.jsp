@@ -60,7 +60,7 @@ String [][] dbQueries=new String[][] {
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
     {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
 
-    {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
+    {"search_demographic_statusroster", "select * from demographic where demographic_no = ? " }, 
     {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date" },
     {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc"}
 
@@ -130,6 +130,7 @@ String [][] dbQueries=new String[][] {
 -->
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 <title><bean:message key="appointment.addappointment.title" /></title>
 <script type="text/javascript">
 
@@ -409,6 +410,15 @@ function pasteAppt() {
 <%
 String patientStatus = "";
 String disabled="";
+String address ="";
+String province = "";
+String city ="";
+String postal ="";
+String phone = "";
+String phone2 = "";
+String email  = "";
+String hin = "";
+String dob = "";
 %>
 <%
 
@@ -421,55 +431,44 @@ String disabled="";
       while (rsdemo.next()) { 
 
             patientStatus = rsdemo.getString("patient_status");
+            address = rsdemo.getString("address");                    
+            city               = rsdemo.getString("city");
+            province          = rsdemo.getString("province"); 
+            postal            = rsdemo.getString("postal");
+            phone             = rsdemo.getString("phone"); 
+            phone2             = rsdemo.getString("phone2");
+            email             = rsdemo.getString("email");
+            String year_of_birth     = rsdemo.getString("year_of_birth");
+            String month_of_birth     = rsdemo.getString("month_of_birth"); 
+            String date_of_birth     = rsdemo.getString("date_of_birth");
+            dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
+            hin                = rsdemo.getString("hin");
+            String ver               = rsdemo.getString("ver");
+            hin = hin +" "+ver;
 
             if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
-
                patientStatus = "";
-
-
-            }
-	         else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
-    
+            }else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
                disabled = "disabled";
-
             }
 	
             String rosterStatus = rsdemo.getString("roster_status");
-
             if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
-
                rosterStatus = "";
-
             }
 
-/*          patientStatus = (patientStatus != null && !patientStatus.equalsIgnoreCase("AC")) ? 
 
-			  (" Patient Status:<font color='yellow'>" + patientStatus + "</font>" ) : "";
-
-
-
-		  String rosterStatus = rsdemo.getString("roster_status");
-
-          rosterStatus = (rosterStatus != null && !rosterStatus.equalsIgnoreCase("RO")) ?
-
-			  (" Roster Status:<font color='yellow'>" + rosterStatus + "</font> ") : "";
-
-*/
-
-
-
-		  if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
-
+            if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
               String rsbgcolor = "BGCOLOR=\"orange\"" ;
-
-			  String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
+              String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 
 %>
 <table width="98%" <%=rsbgcolor%> border=0 align='center'>
 	<tr>
-		<td><font color='blue' title='<%=exp%>'> <b><bean:message
-			key="Appointment.msgPatientStatus" />:&nbsp;<font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message
-			key="Appointment.msgRosterStatus" />:&nbsp;<font color='yellow'><%=rosterStatus%></font></b></td>
+		<td><font color='blue' title='<%=exp%>'> <b><bean:message key="Appointment.msgPatientStatus" />:&nbsp;
+                    <font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message key="Appointment.msgRosterStatus" />:&nbsp;
+                    <font color='yellow'><%=rosterStatus%></font></b>
+                </td>
 	</tr>
 </table>
 <% 
@@ -764,22 +763,51 @@ String disabled="";
 </TABLE>
 </FORM>
 
-<table style="font-size: 8pt;" bgcolor="#c0c0c0" align="center">
+<%String demoNo = request.getParameter("demographic_no");%>
+<table align="center" style="font-family: arial, sans-serif">
+<tr>
+    <td valign="top">    
+        <%if( bFromWL && demoNo != null && demoNo.length() > 0 ) {%>
+        <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
+            <tr bgcolor="#ccccff">
+                <th style="font-family: arial, sans-serif" colspan="2">
+                    Demographics
+                    <a title="Master File" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoNo%>&amp;displaymode=edit&amp;dboperation=search_detail','master')" href="javascript: function myFunction() {return false; }">edit</a>
+                </th>
+            </tr>
+             <tr bgcolor="#ccccff">
+                <th style="padding-right: 20px" align="left">Hin:</th>
+                <td><%=hin%> </td>
+            </tr>
+            <tr bgcolor="#ccccff">
+                <th style="padding-right: 20px"align="left">Address:</th>
+                <td><%=address%>, <%=city%>, <%=province%>, <%=postal%></td>
+            </tr>
+            <tr bgcolor="#ccccff">
+                <th style="padding-right: 20px" align="left">Phone:</th>
+                <td><b>H</b>:<%=phone%> <b>W</b>:<%=phone2%> </td>
+            </tr>
+            <tr bgcolor="#ccccff" align="left">
+                <th style="padding-right: 20px">Email:</th>
+                <td><%=email%></td>
+            </tr>
+
+        </table>
+        <%}%>
+    </td>
+    <td valign="top">
+<table style="font-size: 8pt;" bgcolor="#c0c0c0" align="center" valign="top">
 	<tr bgcolor="#ccccff">
-		<th style="font-family: arial, sans-serif" colspan="4"><bean:message
-			key="appointment.addappointment.msgOverview" /></th>
+		<th style="font-family: arial, sans-serif" colspan="4"><bean:message key="appointment.addappointment.msgOverview" /></th>
 	</tr>
 	<tr style="font-family: arial, sans-serif" bgcolor="#ccccff">
-		<th style="padding-right: 25px"><bean:message
-			key="Appointment.formDate" /></th>
-		<th style="padding-right: 25px"><bean:message
-			key="Appointment.formStartTime" /></th>
-		<th style="padding-right: 25px"><bean:message
-			key="appointment.addappointment.msgProvider" /></th>
+		<th style="padding-right: 25px"><bean:message key="Appointment.formDate" /></th>
+ 		<th style="padding-right: 25px"><bean:message key="Appointment.formStartTime" /></th>
+		<th style="padding-right: 25px"><bean:message key="appointment.addappointment.msgProvider" /></th>
 		<th><bean:message key="appointment.addappointment.msgComments" /></th>
 	</tr>
 	<%        
-        String demoNo = request.getParameter("demographic_no");
+        
         int iRow=0;
         if( bFromWL && demoNo != null && demoNo.length() > 0 ) {
 //            rsdemo = addApptBean.queryResults(demoNo, "search_appt_future");
@@ -841,5 +869,9 @@ String disabled="";
         addApptBean.closePstmtConn();
         %>
 </table>
+</td>
+</tr>
+</table>
+
 </body>
 </html:html>
