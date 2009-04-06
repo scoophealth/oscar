@@ -155,7 +155,7 @@ public class CommunityIssueManager {
 		try
 		{
 			List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
-			if(communityCodes == null)
+			if(communityCodes == null || communityCodes.isEmpty())
 			{
 				communityCodes = ciMan.getCommunityIssueCodeList(facilityId, type);
 			}
