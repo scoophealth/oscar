@@ -154,11 +154,10 @@ public class CommunityIssueManager {
 	{
 		try
 		{
-			List<String> communityCodes = ciMan.getCommunityIssueCodeList(facilityId, type);
+			List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
 			if(communityCodes == null)
 			{
-				
-				communityCodes = issueDao.getLocalCodesByCommunityType(type);
+				communityCodes = ciMan.getCommunityIssueCodeList(facilityId, type);
 			}
 			return communityCodes;
 		}
