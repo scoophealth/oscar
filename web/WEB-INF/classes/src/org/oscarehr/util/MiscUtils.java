@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
 /**
  * When using the shutdown hook...
  * <br /><br />
@@ -121,5 +124,37 @@ public class MiscUtils {
 		cal.getTimeInMillis();
 
 		return (cal);
+	}
+	
+	/**
+	 * This method should only really be called once per context in the context startup listener.	 * @param contextPath
+	 */
+	protected static void addLoggingOverrideConfiguration(String contextPath)
+	{
+		String configLocation = System.getProperty("log4j.override.configuration");
+		if (configLocation != null)
+		{
+			if (contextPath != null)
+			{
+				if (contextPath.length() > 0 && contextPath.charAt(0) == '/') contextPath = contextPath.substring(1);
+				if (contextPath.length() > 0 && contextPath.charAt(contextPath.length() - 1) == '/')
+					contextPath = contextPath.substring(0, contextPath.length() - 2);
+			}
+
+			String resolvedLocation = configLocation.replace("${contextName}", contextPath);
+			getLogger().info("loading additional override logging configuration from : "+resolvedLocation);
+			DOMConfigurator.configureAndWatch(resolvedLocation);
+		}
+	}
+
+	/**
+	 * This method will return a logger instance which has the name based on the class that's calling this method.
+	 */
+	public static Logger getLogger()
+	{
+		Throwable t = new Throwable();
+		StackTraceElement[] ste = t.getStackTrace();
+		String caller = ste[1].getClassName();
+		return(Logger.getLogger(caller));
 	}
 }
