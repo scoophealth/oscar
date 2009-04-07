@@ -36,7 +36,23 @@
 	<tr>
 		<td class="genericTableHeader">First Name</td>
 		<td style="border-top:solid black 1px"><%=StringUtils.trimToEmpty(demographic.getFirstName())%><%=(StringUtils.trimToNull(demographic.getFirstName())==null?"<span style=\"color:red\">*</span>":"")%></td>
-		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px"><input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" <%=manageHnrClient.isHcInfoValidatable()?"":"disabled=\"disabled\""%> onclick="document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>'" /></td>
+		<td rowspan="8" style="vertical-align:middle;text-align:center;border-top:solid black 1px;border-right:solid black 1px">
+			<script type="text/javascript">
+				function validateHcInfo()
+				{
+					if (confirm('Have you called the Ministry of Health to validate this client\'s Health Card Number? If yes click "ok" if not select "cancel" and call the Ministry of Health before validating this Client\'s Health Card Number on the CAISI system.'))
+					{
+						document.location='manage_hnr_client_action.jsp?action=<%=manageHnrClient.getHcInfoValidationActionString()%>HcInfo&demographicId=<%=currentDemographicId%>';
+						return(true);
+					}
+					else
+					{
+						return(false);
+					}
+				}
+			</script>
+			<input type="button" value="<%=manageHnrClient.getHcInfoValidationActionString()%>" <%=manageHnrClient.isHcInfoValidatable()?"":"disabled=\"disabled\""%> onclick="validateHcInfo()" />
+		</td>
 		<td style="border-top:solid black 1px"><%=hnrClient==null?"":StringUtils.trimToEmpty(hnrClient.getFirstName())%></td>
 	</tr>
 	<tr>
