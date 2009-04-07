@@ -69,6 +69,26 @@ public class Factory {
         
     }
     
+    
+    public String getHL7Body(String segmentID){
+        String getMessage = "SELECT type, message from hl7TextMessage where lab_id = '"+segmentID+"';";
+        String ret = null;
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs = db.GetSQL(getMessage);
+            Base64 base64 = new Base64();
+            while(rs.next()){
+                String fileString = db.getString(rs,"message");
+                ret = new String(base64.decode(fileString.getBytes("ASCII")), "ASCII");
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){
+            logger.error("Could not retrieve lab for segmentID("+segmentID+")", e);
+        }
+        return ret;
+    }
+    
     /*
      *  Create and return the message handler corresponding to the message type
      */
