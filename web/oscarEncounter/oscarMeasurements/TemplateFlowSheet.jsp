@@ -524,6 +524,31 @@ div.recommendations li{
 
             </div>
         </div>
+        
+        
+        
+       
+         <div class="leftBox">
+            <h3>&nbsp;Current Patient Allergy List  <a class="DoNotPrint" href="#" onclick="Element.toggle('allergFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+            <div class="wrapper" id="allergFullListing"  >
+
+                <%  oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies;
+                    allergies = new oscar.oscarRx.data.RxPatientData().getPatient(Integer.parseInt(demographic_no)).getAllergies();
+                    
+                    if (allergies.length > 0){%>
+                <ul>
+                    <%for (int i = 0; i < allergies.length; i++){
+                        String rxD = ""+allergies[i].getEntryDate();
+                        String rxP = allergies[i].getAllergy().getDESCRIPTION();
+                    %>
+                    <li title="<%=rxD%> - <%=rxP%>"> 
+                            - <%= org.apache.commons.lang.StringUtils.abbreviate(rxP, 12)%>
+                    </li>
+                    <%}%>
+                </ul>
+                <%}%>
+            </div>
+        </div>
     </security:oscarSec>
     <% } %>
 <div>
