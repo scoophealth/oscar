@@ -31,11 +31,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.util.MiscUtils;
 
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -44,6 +46,8 @@ import oscar.oscarRx.data.RxPrescriptionData;
 
 public final class RxRePrescribeAction extends DispatchAction {
     
+	private static final Logger logger=MiscUtils.getLogger();
+	
     public ActionForward reprint(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -125,7 +129,7 @@ public final class RxRePrescribeAction extends DispatchAction {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
                 } catch (Exception e) { 
-                    e.printStackTrace();
+                	logger.error("Unexpected error.", e);
                     break; 
                 }
                 
