@@ -144,7 +144,7 @@ public final class RxRePrescribeAction extends DispatchAction {
             
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
+            logger.error("Unexpected error occurred.", e);
         }             
                 
             return (mapping.findForward("success"));
