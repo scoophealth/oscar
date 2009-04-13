@@ -806,7 +806,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 %>
 </select>
 <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
-         <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp;
+         <a href=# onClick = "review('0')" title="<bean:message key="provider.appointmentProviderAdminDay.viewProvAval"/>"><bean:message key="provider.appointmentProviderAdminDay.schedView"/></a> &nbsp;|&nbsp;
 <% } else {  %>
          <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
 <% } %>
