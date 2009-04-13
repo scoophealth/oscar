@@ -112,7 +112,18 @@ public class RxPrescriptionData {
 				prescription.setPatientCompliance(rs.getInt("patient_compliance"));
 				prescription.setOutsideProviderName(db.getString(rs, "outside_provider_name"));
 				prescription.setOutsideProviderOhip(db.getString(rs, "outside_provider_ohip"));
+				
+				if (prescription.getSpecial()==null || prescription.getSpecial().length()<=6)
+				{
+					logger.error("I strongly suspect something is wrong, either special is null or it appears to not contain anything useful. drugId="+drugId+", drug.special="+prescription.getSpecial(), new IllegalStateException("Drug special is blank or invalid"));
+					logger.error("data from db is : "+rs.getString("special"));
+				}
 			}
+			else
+			{
+				logger.error("Drug is not found it should always be found. drugId="+drugId, new IllegalStateException("Drug not found."));
+			}
+			
 			rs.close();
 
 		} catch (SQLException e) {
