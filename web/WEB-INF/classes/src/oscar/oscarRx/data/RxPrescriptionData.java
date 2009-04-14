@@ -68,11 +68,12 @@ public class RxPrescriptionData {
 	public Prescription getPrescription(int drugId) {
 		Prescription prescription = null;
 
+		String sql = "SELECT * FROM drugs WHERE drugid = " + drugId;
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT * FROM drugs WHERE drugid = " + drugId;
 
 			rs = db.GetSQL(sql);
 
@@ -127,7 +128,7 @@ public class RxPrescriptionData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(sql, e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -224,11 +225,12 @@ public class RxPrescriptionData {
 		Prescription[] arr = {};
 		ArrayList lst = new ArrayList();
 
+		String sql = "SELECT * FROM drugs WHERE  " + "demographic_no = " + demographicNo + " " + "ORDER BY rx_date DESC, drugId DESC";
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT * FROM drugs WHERE  " + "demographic_no = " + demographicNo + " " + "ORDER BY rx_date DESC, drugId DESC";
 
 			Prescription p;
 
@@ -279,7 +281,7 @@ public class RxPrescriptionData {
 			arr = (Prescription[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(sql, e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -345,11 +347,12 @@ public class RxPrescriptionData {
 		Prescription[] arr = {};
 		ArrayList lst = new ArrayList();
 
+		String sql = "SELECT d.*FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.ATC = '" + atc + "' " + "ORDER BY rx_date DESC, drugId DESC";
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT d.*FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.ATC = '" + atc + "' " + "ORDER BY rx_date DESC, drugId DESC";
 
 			Prescription p;
 			String datesRePrinted;
@@ -364,8 +367,7 @@ public class RxPrescriptionData {
 
 			arr = (Prescription[]) lst.toArray(arr);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error(sql, e);
 		}
 
 		return arr;
@@ -375,11 +377,12 @@ public class RxPrescriptionData {
 		Prescription[] arr = {};
 		ArrayList lst = new ArrayList();
 
+		String sql = "SELECT d.*FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.regional_identifier = '" + regionalIdentifier + "' " + "ORDER BY rx_date DESC, drugId DESC";
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT d.*FROM drugs d WHERE  " + "d.demographic_no = " + demographicNo + " and d.regional_identifier = '" + regionalIdentifier + "' " + "ORDER BY rx_date DESC, drugId DESC";
 
 			Prescription p;
 
@@ -393,8 +396,7 @@ public class RxPrescriptionData {
 
 			arr = (Prescription[]) lst.toArray(arr);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			logger.error(sql, e);
 		}
 
 		return arr;
@@ -409,11 +411,12 @@ public class RxPrescriptionData {
 		Prescription[] arr = {};
 		ArrayList lst = new ArrayList();
 
+		String sql = "SELECT d.*, p.date_printed, p.dates_reprinted FROM drugs d, prescription p WHERE  " + "d.demographic_no = " + demographicNo + " and d.script_no = p.script_no " + "ORDER BY rx_date DESC, drugId DESC";
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT d.*, p.date_printed, p.dates_reprinted FROM drugs d, prescription p WHERE  " + "d.demographic_no = " + demographicNo + " and d.script_no = p.script_no " + "ORDER BY rx_date DESC, drugId DESC";
 
 			Prescription p;
 			String datesRePrinted;
@@ -474,7 +477,7 @@ public class RxPrescriptionData {
 			arr = (Prescription[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(sql, e);
 		}
 
 		return arr;
@@ -483,11 +486,12 @@ public class RxPrescriptionData {
 	public ArrayList<Prescription> getPrescriptionsByScriptNo(int script_no, int demographicNo) {
 		ArrayList<Prescription> lst = new ArrayList<Prescription>();
 
+		String sql = "select drugs.*, p.date_printed, p.dates_reprinted from drugs, prescription p where p.script_no = drugs.script_no and " + "drugs.script_no = " + script_no;
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "select drugs.*, p.date_printed, p.dates_reprinted from drugs, prescription p where p.script_no = drugs.script_no and " + "drugs.script_no = " + script_no;
 
 			Prescription p;
 			String datesRePrinted;
@@ -543,7 +547,7 @@ public class RxPrescriptionData {
 			db.getConnection().close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(sql, e);
 		}
 
 		return lst;
@@ -554,11 +558,12 @@ public class RxPrescriptionData {
 		Prescription[] arr = {};
 		ArrayList lst = new ArrayList();
 
+		String sql = "SELECT * FROM drugs WHERE archived = 0 AND " + "demographic_no = " + demographicNo + " " + "ORDER BY rx_date DESC, drugId DESC";
+
 		try {
 			// Get Prescription from database
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs;
-			String sql = "SELECT * FROM drugs WHERE archived = 0 AND " + "demographic_no = " + demographicNo + " " + "ORDER BY rx_date DESC, drugId DESC";
 
 			Prescription p;
 
@@ -610,7 +615,7 @@ public class RxPrescriptionData {
 			arr = (Prescription[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(sql, e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -623,9 +628,9 @@ public class RxPrescriptionData {
 		Prescription[] p = getPrescriptionsByPatientHideDeleted(demographicNo);
 		for (int i = 0; i < p.length; i++) {
 			if (p[i].isCurrent()) {
-				System.out.println(p[i].getAtcCode() + " " + p[i].getBrandName());
+				logger.debug(p[i].getAtcCode() + " " + p[i].getBrandName());
 				if (!vec.contains(p[i].getAtcCode())) {
-					System.out.println("Actually Adding " + p[i].getAtcCode() + " " + p[i].getBrandName());
+					logger.debug("Actually Adding " + p[i].getAtcCode() + " " + p[i].getBrandName());
 					if (p[i].isValidAtcCode()) {
 						vec.add(p[i].getAtcCode());
 					}
@@ -731,7 +736,7 @@ public class RxPrescriptionData {
 			arr = (Prescription[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -764,7 +769,7 @@ public class RxPrescriptionData {
 			arr = (Favorite[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -791,7 +796,7 @@ public class RxPrescriptionData {
 			rs.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -810,7 +815,7 @@ public class RxPrescriptionData {
 			db.getConnection().close();
 			ret = true;
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		}
 
 		return ret;
@@ -892,10 +897,10 @@ public class RxPrescriptionData {
 			}
 			db.getConnection().close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		}
 
-		System.out.println("INSERT INTO PRESCRIPTION " + retval);
+		logger.debug("INSERT INTO PRESCRIPTION " + retval);
 		return retval;
 	}
 
@@ -905,7 +910,7 @@ public class RxPrescriptionData {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			db.RunSQL(sql);
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -914,7 +919,7 @@ public class RxPrescriptionData {
 	public String getScriptComment(String scriptNo) {
 		String ret = null;
 		String sql = "select rx_comments from  prescription where script_no = " + scriptNo;
-		System.out.println("SQL " + sql);
+		logger.debug("SQL " + sql);
 		try {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			ResultSet rs = db.GetSQL(sql);
@@ -922,7 +927,7 @@ public class RxPrescriptionData {
 				ret = rs.getString("rx_comments");
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			logger.error(e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -1488,7 +1493,7 @@ public class RxPrescriptionData {
 				return ret;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println(e.getMessage());
+				logger.error(e);
 				return null;
 			}
 		}
@@ -1570,7 +1575,7 @@ public class RxPrescriptionData {
 				db.RunSQL(sql);
 				ret = true;
 			} catch (SQLException e) {
-				System.out.println("DATABASE ERROR: " + e.getMessage());
+				logger.error("DATABASE ERROR: " + e.getMessage());
 			}
 
 			return ret;
@@ -1600,7 +1605,7 @@ public class RxPrescriptionData {
 				}
 
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				logger.error(e);
 			}
 			return ret;
 		}
@@ -1745,7 +1750,7 @@ public class RxPrescriptionData {
 				db.getConnection().close();
 
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				logger.error(e);
 			}
 
 			return b;
@@ -2268,7 +2273,7 @@ public class RxPrescriptionData {
 				}
 
 			} catch (SQLException e) {
-				System.out.println(e.getMessage());
+				logger.error(e);
 			} finally {
 				DbConnectionFilter.releaseThreadLocalDbConnection();
 			}
