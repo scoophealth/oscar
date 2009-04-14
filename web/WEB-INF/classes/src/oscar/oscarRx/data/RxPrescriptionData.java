@@ -839,8 +839,6 @@ public class RxPrescriptionData {
 		StringBuffer textView = new StringBuffer();
 		String retval = null;
 
-		Prescription rx;
-
 		// ///create full text view
 		oscar.oscarRx.data.RxPatientData.Patient patient = null;
 		oscar.oscarRx.data.RxProviderData.Provider provider = null;
@@ -874,8 +872,12 @@ public class RxPrescriptionData {
 
 		String txt;
 		for (int i = 0; i < bean.getStashSize(); i++) {
-			rx = bean.getStashItem(i);
-			txt = rx.getFullOutLine().replaceAll(";", "\n");
+			Prescription rx = bean.getStashItem(i);
+			
+			String fullOutLine=rx.getFullOutLine();
+			if (fullOutLine==null || fullOutLine.length()<6) logger.error("Drug full outline appears to be null or empty : "+fullOutLine, new IllegalStateException("full out line appears wrong"));
+			
+			txt = fullOutLine.replaceAll(";", "\n");			
 			textView.append("\n" + txt);
 		}
 		// textView.append();
