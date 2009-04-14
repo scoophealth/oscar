@@ -5,6 +5,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ page
 	import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*,oscar.oscarRx.util.*"%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <%long start = System.currentTimeMillis();%>
@@ -34,6 +35,7 @@
  * Ontario, Canada 
  */
 -->
+
 
 
 <html:html locale="true">
@@ -835,6 +837,9 @@ if(bean.getStashIndex() > -1){ //new way
     if (isEmpty(thisForm.getLastRefillDate())) thisForm.setLastRefillDate("yyyy-mm-dd");
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
+    
+    if (rx.getSpecial()==null || rx.getSpecial().length()<6) MiscUtils.getLogger().error("The drug special passed to the display of the user was already blank :"+rx.getSpecial());
+    
     thisForm.setSpecial(rx.getSpecial());
     thisForm.setLongTerm(rx.getLongTerm());
     thisForm.setPastMed(rx.getPastMed());
