@@ -18,6 +18,12 @@
 		</layout>
 	</appender>
 
+	<appender name="EMAIL" class="org.oscarehr.util.Log4JGmailErrorAppender">
+		<param name="SmtpUser" value="application_emails@example.com" />
+		<param name="SmtpPassword" value="my_password" />
+		<param name="RecipientEmailAddress" value="system_administrator@example.com" />
+	</appender>
+
 	<appender name="VMSTAT_FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/vmstat.log" />
 		<param name="Append" value="true" />
