@@ -1621,7 +1621,11 @@ public class RxPrescriptionData {
 			if (this.takeMin > this.takeMax) {
 				this.takeMax = this.takeMin;
 			}
-
+			
+			if (getSpecial()==null || getSpecial().length()<6) logger.error("drug special appears to be null or empty : "+getSpecial(), new IllegalStateException("Drug special is invalid."));
+			String parsedSpecial=RxUtil.replace(this.getSpecial(), "'", "");
+			if (parsedSpecial==null || parsedSpecial.length()<6) logger.error("drug special after parsing appears to be null or empty : "+parsedSpecial, new IllegalStateException("Drug special is invalid after parsing."));
+			
 			try {
 				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 				ResultSet rs;
@@ -1637,7 +1641,7 @@ public class RxPrescriptionData {
 					        + this.getGCN_SEQNO() + " AND " + "customName = '" + this.getCustomName() + "' AND " + "takemin = " + this.getTakeMin() + " AND " + "takemax = " + this.getTakeMax() + " AND " + "freqcode = '" + this.getFrequencyCode()
 					        + "' AND " + "duration = '" + this.getDuration() + "' AND " + "durunit = '" + this.getDurationUnit() + "' AND " + "quantity = '" + this.getQuantity() + "' AND " + "unitName = '" + this.getUnitName() + "' AND " + "`repeat` = "
 					        + this.getRepeat() + " AND " + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "' AND " + "nosubs = " + this.getNosubsInt() + " AND " + "prn = " + this.getPrnInt() + " AND " + "special = '"
-					        + RxUtil.replace(this.getSpecial(), "'", "") + "' AND " + "outside_provider_name = '" + this.getOutsideProviderName() + "' AND " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "' AND "
+					        + parsedSpecial + "' AND " + "outside_provider_name = '" + this.getOutsideProviderName() + "' AND " + "outside_provider_ohip = '" + this.getOutsideProviderOhip() + "' AND "
 					        + "custom_instructions = " + this.getCustomInstr() + " AND " + "long_term = " + this.getLongTerm() + " AND " + "past_med = " + this.getPastMed() + " AND " + "patient_compliance = " + this.getPatientCompliance();
 
 					rs = db.GetSQL(sql);
@@ -1691,7 +1695,7 @@ public class RxPrescriptionData {
 						        + ", "
 						        + this.getPrnInt()
 						        + ", '"
-						        + RxUtil.replace(this.getSpecial(), "'", "")
+						        + parsedSpecial
 						        + "','"
 						        + this.getGenericName()
 						        + "','"
@@ -1736,7 +1740,7 @@ public class RxPrescriptionData {
 					        + RxUtil.DateToString(this.getEndDate()) + "', " + "written_date = '" + RxUtil.DateToString(this.getWrittenDate()) + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBrandName()) + "', " + "GCN_SEQNO = "
 					        + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '"
 					        + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", "
-					        + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + RxUtil.replace(this.getSpecial(), "'", "")
+					        + "last_refill_date = '" + RxUtil.DateToString(this.getLastRefillDate()) + "', " + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + parsedSpecial
 					        + "', " + "ATC = '" + this.atcCode + "', " + "regional_identifier = '" + this.regionalIdentifier + "', " + "unit = '" + this.getUnit() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute() + "', "
 					        + "drug_form = '" + this.getDrugForm() + "', " + "dosage = '" + this.getDosage() + "', " + "outside_provider_name = '" + this.getOutsideProviderName() + "', " + "outside_provider_ohip = '" + this.getOutsideProviderOhip()
 					        + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "unitName = '" + this.getUnitName() + "', " + "long_term = " + this.getLongTerm() + ", " + "past_med = " + this.getPastMed() + ", " + "patient_compliance = "
@@ -2170,6 +2174,10 @@ public class RxPrescriptionData {
 				this.takeMax = this.takeMin;
 			}
 
+			if (getSpecial()==null || getSpecial().length()<6) logger.error("drug special appears to be null or empty : "+getSpecial(), new IllegalStateException("Drug special is invalid."));
+			String parsedSpecial=RxUtil.replace(this.getSpecial(), "'", "");
+			if (parsedSpecial==null || parsedSpecial.length()<6) logger.error("drug special after parsing appears to be null or empty : "+parsedSpecial, new IllegalStateException("Drug special is invalid after parsing."));
+
 			try {
 				DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 				ResultSet rs;
@@ -2179,7 +2187,7 @@ public class RxPrescriptionData {
 					sql = "SELECT favoriteid FROM favorites WHERE " + "provider_no = '" + this.getProviderNo() + "' AND " + "favoritename = '" + this.getFavoriteName() + "' AND " + "BN = '" + this.getBN() + "' AND " + "GCN_SEQNO = " + this.getGCN_SEQNO()
 					        + " AND " + "customName = '" + this.getCustomName() + "' AND " + "takemin = " + this.getTakeMin() + " AND " + "takemax = " + this.getTakeMax() + " AND " + "freqcode = '" + this.getFrequencyCode() + "' AND " + "duration = '"
 					        + this.getDuration() + "' AND " + "durunit = '" + this.getDurationUnit() + "' AND " + "quantity = '" + this.getQuantity() + "' AND " + "`repeat` = " + this.getRepeat() + " AND " + "nosubs = " + this.getNosubsInt() + " AND "
-					        + "prn = " + this.getPrnInt() + " AND " + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "' AND " + "GN = '" + this.getGN() + "' AND " + "unitName = '" + this.getUnitName() + "' AND " + "custom_instructions = "
+					        + "prn = " + this.getPrnInt() + " AND " + "special = '" + parsedSpecial + "' AND " + "GN = '" + this.getGN() + "' AND " + "unitName = '" + this.getUnitName() + "' AND " + "custom_instructions = "
 					        + this.getCustomInstr();
 
 					rs = db.GetSQL(sql);
@@ -2223,7 +2231,7 @@ public class RxPrescriptionData {
 						        + ", "
 						        + this.getPrnInt()
 						        + ", '"
-						        + RxUtil.replace(this.getSpecial(), "'", "")
+						        + parsedSpecial
 						        + "', '"
 						        + this.getGN()
 						        + "', ' "
@@ -2264,7 +2272,7 @@ public class RxPrescriptionData {
 					sql = "UPDATE favorites SET " + "provider_no = '" + this.getProviderNo() + "', " + "favoritename = '" + this.getFavoriteName() + "', " + "BN = '" + StringEscapeUtils.escapeSql(this.getBN()) + "', " + "GCN_SEQNO = "
 					        + this.getGCN_SEQNO() + ", " + "customName = '" + StringEscapeUtils.escapeSql(this.getCustomName()) + "', " + "takemin = " + this.getTakeMin() + ", " + "takemax = " + this.getTakeMax() + ", " + "freqcode = '"
 					        + this.getFrequencyCode() + "', " + "duration = '" + this.getDuration() + "', " + "durunit = '" + this.getDurationUnit() + "', " + "quantity = '" + this.getQuantity() + "', " + "`repeat` = " + this.getRepeat() + ", "
-					        + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + RxUtil.replace(this.getSpecial(), "'", "") + "', " + "GN = '" + this.getGN() + "', " + "ATC = '" + this.getAtcCode() + "', "
+					        + "nosubs = " + this.getNosubsInt() + ", " + "prn = " + this.getPrnInt() + ", " + "special = '" + parsedSpecial + "', " + "GN = '" + this.getGN() + "', " + "ATC = '" + this.getAtcCode() + "', "
 					        + "regional_identifier = '" + this.getRegionalIdentifier() + "', " + "unit = '" + this.getUnit() + "', " + "unitName = '" + this.getUnitName() + "', " + "method = '" + this.getMethod() + "', " + "route = '" + this.getRoute()
 					        + "', " + "drug_form = '" + this.getDrugForm() + "', " + "custom_instructions = " + this.getCustomInstr() + ", " + "dosage = '" + this.getDosage() + "' " + "WHERE favoriteid = " + this.getFavoriteId();
 
