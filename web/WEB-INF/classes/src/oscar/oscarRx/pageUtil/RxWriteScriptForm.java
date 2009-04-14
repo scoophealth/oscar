@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.MiscUtils;
 
 public final class RxWriteScriptForm extends ActionForm {
     String action = "";
@@ -251,6 +252,9 @@ public final class RxWriteScriptForm extends ActionForm {
     }
     
     public void setSpecial(String RHS) {
+    	
+    	if (RHS==null || RHS.length()<6) MiscUtils.getLogger().error("drug special is either null or empty : "+RHS, new IllegalArgumentException("special is null or empty"));
+    	
         this.special = RHS;
     }
     

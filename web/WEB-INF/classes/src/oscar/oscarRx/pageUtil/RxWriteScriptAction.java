@@ -113,6 +113,8 @@ public final class RxWriteScriptAction extends Action {
 			rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
 			
 			logger.debug("SAVING STASH " + rx.getCustomInstr());
+			if (rx.getSpecial()==null) logger.error("Drug.special is null : "+rx.getSpecial()+" : "+frm.getSpecial());
+			else if (rx.getSpecial().length()<6) logger.warn("Drug.special appears to be empty : "+rx.getSpecial()+" : "+frm.getSpecial());
 
 			bean.setStashItem(bean.getStashIndex(), rx);
 			rx = null;
