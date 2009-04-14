@@ -28,7 +28,10 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
-
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -240,6 +243,7 @@
 
 </head>
 <body onload="init()">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
 <%//get programId
 String pId=(String)session.getAttribute("case_program_id");
 if (pId==null) pId="";
@@ -367,6 +371,7 @@ if (pId==null) pId="";
 				</td>
 				<td>
 <% if (!cbb.getCommunityIssue().isRemote()){ %>
+			<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="u">
 				<nested:equal name="issueCheckList" property="used"
 					value="false">
 					<%submitString = "this.form.method.value='issueDelete';";
@@ -382,6 +387,7 @@ if (pId==null) pId="";
 					+ ind.intValue() + "';";
 			%>					
 					<input type="submit" value="Change Issue" onclick="<%=submitString%>">
+			</security:oscarSec>
 <%}
 else{%>
 					Active Community Issue
@@ -393,9 +399,9 @@ else{%>
 	</table>
 	<br>
 	<br>
-	<nested:submit value="add new issue"
-		onclick="this.form.method.value='addNewIssue';" />
-
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="w">
+		<nested:submit value="add new issue" onclick="this.form.method.value='addNewIssue';" />
+	</security:oscarSec>
 
 	<p><b>Progress Note Entry View </b></p>
 	<%if ("true".equalsIgnoreCase((String)request.getAttribute("change_flag"))) {%>
@@ -489,5 +495,10 @@ else{%>
 
 	</table>
 </nested:form>
+
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u" reverse="true">
+<b>You do not have permission to edit this note.</b>
+</security:oscarSec>
 </body>
 </html>

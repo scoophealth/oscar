@@ -404,7 +404,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					}
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), checked_remoteIssueCodes);
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
 					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
 					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
@@ -424,7 +424,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 						}
 					}
 					// get community notes for all remote issues
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), remote_issueCodes);
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
 					current = System.currentTimeMillis();
 					log.debug("Get Notes " + String.valueOf(current - start));
 					start = current;
@@ -489,7 +489,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			log.debug("Pop notes with editors " + String.valueOf(current - start));
 			start = current;
 			
-			// this is the wrong place for this
+			// this is the wrong place for this, but we aren't actively filtering on role, provider or 
+			// program.  see CommunityNoteManager.getRemoteNotes() for detail on current role filtering.
+			// da 2009.04.06
 			if(useNewCaseMgmt == null || !useNewCaseMgmt.equals("true"))
 			{
 				notes.addAll(remoteNotes);

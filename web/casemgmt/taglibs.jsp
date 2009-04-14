@@ -40,11 +40,14 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-nested"
 	prefix="nested"%>
 
+<%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt"%>
 
 <%@ taglib uri="/WEB-INF/caisirole-tag.tld" prefix="caisirole"%>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 

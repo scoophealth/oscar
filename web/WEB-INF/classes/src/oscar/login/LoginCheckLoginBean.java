@@ -184,6 +184,7 @@ public class LoginCheckLoginBean {
                 profession = accessDB.getString(rs,"provider_type");
             }
 
+            // retrieve the oscar roles for this Provider as a comma separated list
             sql = "select role_name from secUserRole where activeyn=1 and provider_no = '" + secBean.getProviderNo() + "'";
             rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {

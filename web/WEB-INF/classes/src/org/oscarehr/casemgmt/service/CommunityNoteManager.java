@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.caisi.model.Role;
 import org.jboss.logging.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.IssueTransfer;
 import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -25,12 +27,20 @@ public class CommunityNoteManager {
 	private CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	private CaseManagementNoteDAO cmnDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
 	
-	public List<CaseManagementNote> getRemoteNotes(int facilityId, int demographicId, List<String> issues)
+	public List<CaseManagementNote> getRemoteNotes(int facilityId, int demographicId, String providerNo, String programId, List<String> issues)
 	{
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
 		try
 		{
 			List<IssueTransfer> transfers = new ArrayList<IssueTransfer>();
+			
+			// get demographic role
+			Role role = cMan.getProviderRole(providerNo, programId, facilityId);
+			if(role == null || (!role.getName().equals("doctor") && !role.getName().equals("nurse"))) // not a doctor or nurse 
+			{
+				return notes;
+			}
+			
 			for(String issue: issues)
 			{
 				IssueTransfer trans = new IssueTransfer();
@@ -76,4 +86,5 @@ public class CommunityNoteManager {
 		}
 		return notes;
 	}
+
 }

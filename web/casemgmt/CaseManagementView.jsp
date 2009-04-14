@@ -41,6 +41,10 @@
 	java.util.List noteList=(java.util.List)request.getAttribute("Notes");
 %>
 
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
 <html:form action="/CaseManagementView" method="get">
 	<html:hidden property="demographicNo" />
 	<html:hidden property="providerNo" />
@@ -344,6 +348,9 @@
 			</c:choose></td>
 
 		</tr>
+		<tr>
+			<td colspan="2" style="border-top: 1px solid #666666;">&nbsp;</td>
+		</tr>
 	</table>
 	<jsp:include
 		page='<%="/casemgmt/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>' />
@@ -369,8 +376,9 @@
 
 	<br />
 	<br />
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="r">
 	<c:if test="${not empty Notes}">
-Progress Note Report View:
+<b>Progress Note Report View:</b>
 
 <table border="0" width="100%">
 			<tr>
@@ -380,6 +388,7 @@ Progress Note Report View:
 				&nbsp;|&nbsp; <span
 					style="text-decoration: underline; cursor: pointer; color: blue"
 					onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit();return false;">Detailed</span>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="w">
 				<c:if test="${sessionScope.readonly=='false'}">
 					<c:url
 						value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
@@ -388,7 +397,9 @@ Progress Note Report View:
 	<span style="text-decoration: underline; cursor: pointer; color: blue"
 						onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New
 					Note</span>
-				</c:if> &nbsp;|&nbsp; <span
+				</c:if> 
+				</security:oscarSec>
+				&nbsp;|&nbsp; <span
 					style="text-decoration: underline; cursor: pointer; color: blue"
 					onclick="window.print();">Print</span> <c:if test="${can_restore}">
 					<c:url
@@ -444,7 +455,9 @@ Progress Note Report View:
 										}
 					%>
 					<tr bgcolor="<%=bgcolor%>" align="center">
-						<td><c:choose>
+						<td>
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
+						<c:choose>
 							<c:when
 								test="${(!note.signed) and (sessionScope.readonly=='false')}">
 								<c:url
@@ -467,7 +480,9 @@ Progress Note Report View:
 								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif"
 									title="" />
 							</c:otherwise>
-						</c:choose> <c:choose>
+						</c:choose> 
+						</security:oscarSec>
+						<c:choose>
 							<c:when test="${note.hasHistory == true and note.locked != true}">
 								<c:url
 									value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
@@ -480,7 +495,9 @@ Progress Note Report View:
 								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif"
 									title="" />
 							</c:otherwise>
-						</c:choose> <c:choose>
+						</c:choose> 
+						<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
+						<c:choose>
 							<c:when test="${note.locked}">
 								<c:url
 									value="/CaseManagementView.do?method=unlock&noteId=${note.id}"
@@ -493,7 +510,9 @@ Progress Note Report View:
 								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif"
 									title="" />
 							</c:otherwise>
-						</c:choose></td>
+						</c:choose>
+						</security:oscarSec>
+						</td>
 						<td><fmt:formatDate pattern="yyyy-MM-dd hh:mm a"
 							value="${note.observation_date}" /></td>
 						<td><c:out value="${note.providerName}" /></td>
@@ -573,13 +592,14 @@ Progress Note Report View:
 								<td width="7%">Status</td>
 								<td width="93%"><c:out value="${note.status}" /></td>
 							</tr>
-							<tr bgcolor="<%=bgcolor1%>">
+						<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Action</td>
 								<td width="93%">
 									<c:if test="${note.remote}">
 										<c:out value="Remote notes are not editable" />
 									</c:if>
 									<c:if test="${note.remote=='false'}">
+									<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
 										<c:if test="${(!note.signed) and (sessionScope.readonly=='false')}">
 										<c:url
 											value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
@@ -594,6 +614,7 @@ Progress Note Report View:
 										<input type="button" value="Edit This Note"
 											onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
 										</c:if> 
+									</security:oscarSec>
 										<c:if test="${note.hasHistory == true}">
 										<c:url
 											value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
@@ -601,6 +622,7 @@ Progress Note Report View:
 										<input type="button" value="Note History"
 											onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
 										</c:if> 
+									<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
 										<c:if test="${note.locked}">
 										<c:url
 											value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}"
@@ -608,10 +630,11 @@ Progress Note Report View:
 										<input type="button" value="Unlock"
 											onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
 										</c:if>
+									</security:oscarSec>
 									</c:if>
 								</td>
 							</tr>
-							<tr bgcolor="<%=bgcolor1%>">
+						<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Note</td>
 								<td width="93%"><c:choose>
 									<c:when test="${note.locked}">
@@ -629,6 +652,7 @@ Progress Note Report View:
 				</c:forEach>
 			</table>
 		</c:if>
+		
 		<%
 			String filter=request.getParameter("filter_provider");
 					if (filter != null && filter.length() > 0)
@@ -647,15 +671,18 @@ Progress Note Report View:
 &nbsp;|&nbsp;
 <span style="text-decoration: underline; cursor: pointer; color: blue"
 			onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit();return false;">Detailed</span>
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="w">
 		<c:if test="${sessionScope.readonly=='false'}">
 			<c:url
 				value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
 				var="noteURL" />
 	&nbsp;|&nbsp;
-	<span style="text-decoration: underline; cursor: pointer; color: blue"
+	
+			<span style="text-decoration: underline; cursor: pointer; color: blue"
 				onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New
 			Note</span>
 		</c:if>
+		</security:oscarSec>
 &nbsp;|&nbsp;
 <span style="text-decoration: underline; cursor: pointer; color: blue"
 			onclick="window.print();">Print</span> <c:if test="${can_restore}">
@@ -671,8 +698,8 @@ Progress Note Report View:
 		<br />
 		<br />
 	</c:if>
-
-
+</security:oscarSec>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="w">
 	<c:if test="${'Current Issues'==selectedTab and empty Notes and sessionScope.readonly=='false'}">
 		<c:url
 			value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
@@ -681,6 +708,6 @@ Progress Note Report View:
 			onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New
 		Note</span>
 	</c:if>
-
+</security:oscarSec>
 
 </html:form>

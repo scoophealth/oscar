@@ -268,7 +268,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (String providerId : providerIds) {
 			MiscUtils.checkShutdownSignaled();
-
+			logger.debug("Adding provider "+providerId+" for "+facility.getName());
 			Provider provider = providerDao.getProvider(providerId);
 
 			CachedProvider cachedProvider = new CachedProvider();
@@ -477,14 +477,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<NoteTransfer> notes = new ArrayList<NoteTransfer>();
 		for(CaseManagementNote localNote : localNotes){
 			// don't upload locked notes
+			logger.debug("Checking note "+localNote.getId());
 			if(localNote.isLocked())
 			{
+				logger.debug("Note "+localNote.getId()+" is locked, skipping");
 				continue;
 			}
 			// filter out notes from a programs attached to different facilities
 			Program noteProgram = programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
 			if(noteProgram.getFacilityId() != facility.getId())
 			{
+				logger.debug("Note "+localNote.getId()+" is attached to Program "+localNote.getProgram_no()+" from "+noteProgram.getFacilityId()+", NOT "+facility.getId()+", skipping");
 				continue;
 			}
 			Set issues = localNote.getIssues();

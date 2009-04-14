@@ -29,11 +29,16 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.Map"%>
 
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="r">
 
 <%
 	Map dxMap = (Map)request.getAttribute("dxMap");
 %>
-Issue Filter Create Report View:
+<b>Issue Filter Create Report View:</b>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="1"
 	bgcolor="#C0C0C0">
@@ -131,4 +136,4 @@ Issue Filter Create Report View:
 		onclick="document.caseManagementViewForm.hideActiveIssue.value='true';document.caseManagementViewForm.method.value='setHideActiveIssues';document.caseManagementViewForm.submit(); return false;">hide
 	resolved issues</span>
 </logic:notEqual>
-
+</security:oscarSec>

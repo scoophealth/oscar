@@ -1047,6 +1047,19 @@ public class CaseManagementManager {
 
 		return filteredNotes;
 	}
+	
+	public Role getProviderRole(String providerNo, String programId, Integer currentFacilityId) 
+	{
+		// Get Role - if no ProgramProvider record found, show no issues.
+		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+		if (ppList == null || ppList.isEmpty()) {
+			return null;
+		}
+
+		ProgramProvider pp = (ProgramProvider) ppList.get(0);
+		Role role = pp.getRole();
+		return role;
+	}
 
 	public boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
 		boolean result = false;
