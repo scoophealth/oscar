@@ -848,7 +848,7 @@ public class RxPrescriptionData {
 			patient = new oscar.oscarRx.data.RxPatientData().getPatient(demographic_no);
 			provider = new oscar.oscarRx.data.RxProviderData().getProvider(provider_no);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		ProSignatureData sig = new ProSignatureData();
 		boolean hasSig = sig.hasSignature(bean.getProviderNo());
@@ -1492,7 +1492,6 @@ public class RxPrescriptionData {
 
 				return ret;
 			} catch (Exception e) {
-				e.printStackTrace();
 				logger.error(e);
 				return null;
 			}
@@ -1554,7 +1553,7 @@ public class RxPrescriptionData {
 
 				db.getConnection().close();
 			} catch (Exception e) {
-				e.printStackTrace(System.out);
+				logger.error(e);
 			}
 		}
 
