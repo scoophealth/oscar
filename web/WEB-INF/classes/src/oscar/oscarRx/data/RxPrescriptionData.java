@@ -1360,7 +1360,10 @@ public class RxPrescriptionData {
 		}
 
 		public String getSpecial() {
-			return this.special;
+			
+			if (special==null || special.length()<6) logger.error("Some one is retrieving the drug special but it appears to be blank : "+special, new IllegalStateException());
+			
+			return special;
 		}
 
 		public String getOutsideProviderName() {
@@ -1379,16 +1382,20 @@ public class RxPrescriptionData {
 			this.outsideProviderOhip = outsideProviderOhip;
 		}
 
-		public void setSpecial(String RHS) {
+		public void setSpecial(String RHS) {			
+			if (RHS==null || RHS.length()<6) logger.error("Some one is setting the drug special but it appears to be blank : "+special, new IllegalStateException());
+
 			if (RHS != null) {
 				if (!RHS.equals("null")) {
-					this.special = RHS;
+					special = RHS;
 				} else {
-					this.special = null;
+					special = null;
 				}
 			} else {
-				this.special = null;
+				special = null;
 			}
+			
+			if (special==null || special.length()<6) logger.error("after processing the drug special but it appears to be blank : "+special, new IllegalStateException());
 		}
 
 		public String getSpecialDisplay() {
