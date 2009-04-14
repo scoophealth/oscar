@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -38,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -48,6 +50,9 @@ import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 public final class RxWriteScriptAction extends Action {
+	
+	private static final Logger logger=MiscUtils.getLogger();
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
 
 		// Setup variables
@@ -106,7 +111,8 @@ public final class RxWriteScriptAction extends Action {
 			rx.setPastMed(frm.getPastMed());
 			rx.setPatientCompliance(frm.getPatientComplianceY(), frm.getPatientComplianceN());
 			rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
-			System.out.println("SAVING STASH " + rx.getCustomInstr());
+			
+			logger.debug("SAVING STASH " + rx.getCustomInstr());
 
 			bean.setStashItem(bean.getStashIndex(), rx);
 			rx = null;
