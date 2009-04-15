@@ -19,11 +19,13 @@
  * MB Software, margaritabowl.com
  * Vancouver, B.C., Canada 
  */
+
 package org.oscarehr.util;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Priority;
@@ -55,9 +57,9 @@ import org.apache.log4j.spi.LoggingEvent;
  * a clustered installation or multiple applications. It will append the name to
  * the subject of the emails
  */
-public class Log4JGmailErrorAppender extends AppenderSkeleton
+public class Log4JGmailErrorAppender extends AppenderSkeleton implements ThreadFactory
 {
-	private ExecutorService executorService=Executors.newSingleThreadExecutor();
+	private ExecutorService executorService=Executors.newSingleThreadExecutor(this);
 	
 	private String smtpServer="smtp.gmail.com";
 	private String smtpUser=null;
@@ -107,6 +109,16 @@ public class Log4JGmailErrorAppender extends AppenderSkeleton
 	public boolean requiresLayout()
 	{
 		return false;
+	}
+
+//	@Override
+	public Thread newThread(Runnable runnable)
+	{
+		Thread thread=new Thread(runnable);
+		thread.setDaemon(true);
+		thread.setName(getClass().getName());
+		thread.setPriority(Thread.MIN_PRIORITY);
+		return(thread);
 	}
 
 	public void setServerName(String serverName)
