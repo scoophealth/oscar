@@ -370,7 +370,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
 				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
 				if (clientLinks.size() > 0) {
-					hnrService.setHnrClientHidden("Integrator Update Task", clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), consent.getCreatedDate());
+					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), consent.getCreatedDate());
 				}
 			}
 		}

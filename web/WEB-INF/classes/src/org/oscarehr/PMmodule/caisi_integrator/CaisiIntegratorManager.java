@@ -376,7 +376,7 @@ public class CaisiIntegratorManager {
 
 	public List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws DatatypeConfigurationException, MalformedURLException {
 		HnrWs hnrWs = getHnrWs(facility.getId());
-		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(getProviderAuditString(facility, provider), matchingClientParameters);
+		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(matchingClientParameters);
 
 		for (MatchingClientScore temp : potentialMatches)
 			hnrClientCache.put(facility.getId(), provider.getProviderNo(), temp.getClient().getLinkingId(), temp.getClient());
@@ -389,7 +389,7 @@ public class CaisiIntegratorManager {
 
 		if (client == null) {
 			HnrWs hnrWs = getHnrWs(facility.getId());
-			client = hnrWs.getHnrClient(getProviderAuditString(facility, provider), linkingId);
+			client = hnrWs.getHnrClient(linkingId);
 			if (client != null) hnrClientCache.put(facility.getId(), provider.getProviderNo(), linkingId, client);
 		}
 
@@ -400,7 +400,7 @@ public class CaisiIntegratorManager {
 		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());
-		return(hnrWs.setHnrClientData(getProviderAuditString(facility, provider), hnrClient));
+		return(hnrWs.setHnrClientData(hnrClient));
 	}
 
 	private static String getProviderAuditString(Facility facility, Provider provider) {
