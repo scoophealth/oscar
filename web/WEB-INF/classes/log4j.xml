@@ -18,11 +18,27 @@
 		</layout>
 	</appender>
 
-	<appender name="EMAIL" class="org.oscarehr.util.Log4JGmailErrorAppender">
+	<!-- Example gmail appender (can be used for any smtp ssl) -->
+	<!-- 
+	<appender name="GMAIL" class="org.oscarehr.util.Log4JGmailErrorAppender">
 		<param name="SmtpUser" value="application_emails@example.com" />
 		<param name="SmtpPassword" value="my_password" />
 		<param name="RecipientEmailAddress" value="system_administrator@example.com" />
 	</appender>
+ 	-->
+ 	
+	<!-- Example regular email appender -->
+	<!-- 
+	<appender name="EMAIL" class="org.apache.log4j.net.SMTPAppender">
+		<param name="BufferSize" value="4" />
+		<param name="From" value="from@example.com" />
+		<param name="SMTPHost" value="my_smtp_server.example.com" />
+		<param name="SMTPPassword" value="my_password" />
+		<param name="SMTPUsername" value="my_smtp_user" />
+		<param name="Subject" value="Server Error" />
+		<param name="To" value="to@example.com" />
+	</appender>
+ 	-->
 
 	<appender name="VMSTAT_FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="${catalina.base}/logs/vmstat.log" />
