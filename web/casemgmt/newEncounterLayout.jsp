@@ -334,6 +334,46 @@
     <meta http-equiv="Cache-Control" content="no-cache">
     <script type="text/javascript">
         
+        //Text items used in newCaseManagementView.js
+        socHistoryLabel = encodeURI("<bean:message key="oscarEncounter.socHistory.title"/>");
+        medHistoryLabel = encodeURI("<bean:message key="oscarEncounter.medHistory.title"/>");
+        onGoingLabel = encodeURI("<bean:message key="oscarEncounter.onGoing.title"/>");
+        remindersLabel = encodeURI("<bean:message key="oscarEncounter.reminders.title"/>");
+        oMedsLabel = encodeURI("<bean:message key="oscarEncounter.oMeds.title"/>");
+        famHistoryLabel = encodeURI("<bean:message key="oscarEncounter.famHistory.title"/>");
+        riskFactorsLabel = encodeURI("<bean:message key="oscarEncounter.riskFactors.title"/>");
+        insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
+        unsavedNoteWarning = "<bean:message key="oscarEncounter.unsavedNoteWarning.msg"/>";
+        sessionExpiredError = "<bean:message key="oscarEncounter.sessionExpiredError.msg"/>";
+        unlockNoteError = "<bean:message key="oscarEncounter.unlockNoteError.msg"/>";
+        filterError = "<bean:message key="oscarEncounter.filterError.msg"/>";
+        pastObservationDateError = "<bean:message key="oscarEncounter.pastObservationDateError.msg"/>";
+        assignIssueError = "<bean:message key="oscarEncounter.assignIssueError.msg"/>";
+        assignObservationDateError = "<bean:message key="oscarEncounter.assignObservationDateError.msg"/>";
+        savingNoteError = "<bean:message key="oscarEncounter.savingNoteError.msg"/>";
+        changeIssueMsg = "<bean:message key="oscarEncounter.change.title"/>";
+        closeWithoutSaveMsg = "<bean:message key="oscarEncounter.closeWithoutSave.msg"/>";
+        pickIssueMsg = "<bean:message key="oscarEncounter.pickIssue.msg"/>";
+        assignIssueMsg = "<bean:message key="oscarEncounter.assign.title"/>";
+        updateIssueError = "<bean:message key="oscarEncounter.updateIssueError.msg"/>";
+        unsavedNoteMsg = "<bean:message key="oscarEncounter.unsavedNote.msg"/>";
+        printDateMsg = "<bean:message key="oscarEncounter.printDate.msg"/>";
+        printDateOrderMsg = "<bean:message key="oscarEncounter.printDateOrder.msg"/>";
+        nothing2PrintMsg = "<bean:message key="oscarEncounter.nothingToPrint.msg"/>";
+        editUnsignedMsg = "<bean:message key="oscarEncounter.printDateOrder.msg"/>";
+        month[0] = "<bean:message key="share.CalendarPopUp.msgJan"/>";
+        month[1] = "<bean:message key="share.CalendarPopUp.msgFeb"/>";
+        month[2] = "<bean:message key="share.CalendarPopUp.msgMar"/>";
+        month[3] = "<bean:message key="share.CalendarPopUp.msgApr"/>";
+        month[4] = "<bean:message key="share.CalendarPopUp.msgMay"/>";
+        month[5] = "<bean:message key="share.CalendarPopUp.msgJun"/>";
+        month[6] = "<bean:message key="share.CalendarPopUp.msgJul"/>";
+        month[7] = "<bean:message key="share.CalendarPopUp.msgAug"/>";
+        month[8] = "<bean:message key="share.CalendarPopUp.msgSep"/>";
+        month[9] = "<bean:message key="share.CalendarPopUp.msgOct"/>";
+        month[10] = "<bean:message key="share.CalendarPopUp.msgNov"/>";
+        month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
+        
 function init() {       
         
     //console.log("Begin init");
@@ -412,25 +452,25 @@ function init() {
                   <div id="winTitle"></div>
                   <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
 		  <table>
-		      <tr id="_startdate"><td><%=cme.STARTDATE%>: </td>
+		      <tr id="_startdate"><td><bean:message key="oscarEncounter.startdate.title"/>: </td>
 			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_resolutiondate"><td><%=cme.RESOLUTIONDATE%>: </td>
+		      <tr id="_resolutiondate"><td><bean:message key="oscarEncounter.resolutionDate.title"/>: </td>
 			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_ageatonset"><td><%=cme.AGEATONSET%>: </td>
+		      <tr id="_ageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
 			<td><input type="text" id="ageatonset" name="ageatonset" value="" size="2"></td></tr>
-		      <tr id="_treatment"><td><%=cme.TREATMENT%>: </td>
+		      <tr id="_treatment"><td><bean:message key="oscarEncounter.treatment.title"/>: </td>
 			<td><input type="text" id="treatment" name="treatment" value=""></td></tr>
-		      <tr id="_proceduredate"><td><%=cme.PROCEDUREDATE%>: </td>
+		      <tr id="_proceduredate"><td><bean:message key="oscarEncounter.procedureDate.title"/>: </td>
 			<td><input type="text" id="proceduredate" name="proceduredate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_problemstatus"><td><%=cme.PROBLEMSTATUS%>: </td>
-			<td><input type="text" id="problemstatus" name="problemstatus" value="" size="8"> (active/resolved/...)</td></tr>
-		      <tr id="_exposuredetail"><td><%=cme.EXPOSUREDETAIL%>: </td>
+		      <tr id="_problemstatus"><td><bean:message key="oscarEncounter.problemStatus.title"/>: </td>
+			<td><input type="text" id="problemstatus" name="problemstatus" value="" size="8"> <bean:message key="oscarEncounter.problemStatusExample.msg"/></td></tr>
+		      <tr id="_exposuredetail"><td><bean:message key="oscarEncounter.exposureDetail.title"/>: </td>
 			<td><input type="text" id="exposuredetail" name="exposuredetail" value=""></td></tr>
-		      <tr id="_relationship"><td><%=cme.RELATIONSHIP%>: </td>
+		      <tr id="_relationship"><td><bean:message key="oscarEncounter.relationship.title"/>: </td>
 			<td><input type="text" id="relationship" name="relationship" value=""></td></tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
-		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='Annotation' id="anno"> &nbsp; &nbsp;
+		      <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/annotation.png"/>" title='<bean:message key="oscarEncounter.Index.btnAnotation"/>' id="anno"> &nbsp; &nbsp;
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/edit-cut.png"/>" title='<bean:message key="oscarEncounter.Index.btnArchive"/>' onclick="$('archived').value='true';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
@@ -443,18 +483,18 @@ function init() {
                   </div>
                   <bean:message key="oscarEncounter.Index.assnIssue"/>&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
                  
-                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
+                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking"/>" /></span>
                   
               </form>
           </div>
           <div id="printOps" class="printOps">
-              <h3 style="margin-bottom:5px; text-align:center;">Print Dialog</h3>
+              <h3 style="margin-bottom:5px; text-align:center;"><bean:message key="oscarEncounter.Index.PrintDialog"/></h3>
               <form id="frmPrintOps" action="" onsubmit="return false;">
-                   <input type="radio" id="printopSelected" name="printop" value="selected">Selected<br>
-                   <input type="radio" id="printopAll" name="printop" value="all">All<br>
-                   <input type="radio" id="printopDates" name="printop" value="dates">Dates&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);">Today</a><br>                   
-                   <div style="float:left; margin-left:5px; width:30px;">From:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
-                   <div style="float:left; margin-left:5px; width:30px;">To:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
+                   <input type="radio" id="printopSelected" name="printop" value="selected"><bean:message key="oscarEncounter.Index.PrintSelect"/><br>
+                   <input type="radio" id="printopAll" name="printop" value="all"><bean:message key="oscarEncounter.Index.PrintAll"/><br>
+                   <input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a><br>                   
+                   <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintFrom"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
+                   <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintTo"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
                    <div style="margin-top:5px; text-align:center">
                        <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
                        <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">

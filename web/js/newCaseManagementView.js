@@ -218,12 +218,20 @@ function monitorNavBars(e) {
 /*
  *Draw the cpp views
  */
+var socHistoryLabel;
+var medHistoryLabel;
+var onGoingLabel;
+var remindersLabel;
+var oMedsLabel;
+var famHistoryLabel;
+var riskFactorsLabel;
+
 function showIssueNotes() {
     var issueNoteUrls = {
-        divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=SocHistory&title=Social%20History&cmd=divR1I1",
-        divR1I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=Medical%20History&cmd=divR1I2",
-        divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Concerns&title=Ongoing%20Concerns&cmd=divR2I1",
-        divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Reminders&title=Reminders&cmd=divR2I2"
+        divR1I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=SocHistory&title=" + socHistoryLabel + "&cmd=divR1I1",
+        divR1I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=MedHistory&title=" + medHistoryLabel + "&cmd=divR1I2",
+        divR2I1:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Concerns&title=" + onGoingLabel + "&cmd=divR2I1",
+        divR2I2:    ctx + "/CaseManagementView.do?hc=996633&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=Reminders&title=" + remindersLabel + "&cmd=divR2I2"
     };
     var limit = 5;
     
@@ -271,9 +279,9 @@ function navBarLoader() {
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
                   ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
-                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=Other%20Meds&cmd=OMeds",
-                  ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=Risk%20Factors&cmd=RiskFactors",
-                  ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=Family%20History&cmd=FamHistory",
+                  ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
+                  ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
+                  ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
                   ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
               ];
               
@@ -984,6 +992,7 @@ function loadDiv(div,url,limit) {
         setCaretPosition($(caseNote),curPos);
     }
     
+     var insertTemplateError;
      function ajaxInsertTemplate(varpage) { //fetch template
         
         if(varpage!= 'null'){                  
@@ -995,7 +1004,7 @@ function loadDiv(div,url,limit) {
                                     evalScripts: true, 
                                     onSuccess:writeToEncounterNote,
                                     onFailure: function() {
-                                            alert("Inserting template " + varpage + " failed");
+                                            alert(insertTemplateError);
                                         }
                                   }
                             );                    
@@ -1055,6 +1064,7 @@ function resetView(frm, error, e) {
 
 var updatedNoteId = -1;  //used to store id of ajax saved note used below
 var selectBoxes = new Object();
+var unsavedNoteWarning;
 function changeToView(id) {
     var parent = $(id).parentNode.id;
     var nId = parent.substr(1);
@@ -1070,7 +1080,7 @@ function changeToView(id) {
     //if so, warn user that changes will be lost if not saved        
 
     if( origCaseNote != $F(id)  || origObservationDate != $("observationDate").value) {
-        if( !confirm("Your changes to the current note have not been saved. Select Ok to save and continue or Cancel to continue editing current note"))
+        if( !confirm(unsavedNoteWarning))
             return false;
         else {
             saving = true;
@@ -1453,6 +1463,8 @@ function resetEdit(e) {
 }
 
 //send password to server for auth to display locked Note
+var sessionExpiredError;
+var unlockNoteError;
 function unlock_ajax(id) {    
     var url = ctx + "/CaseManagementView.do";
     var noteId = id.substr(1);  
@@ -1474,9 +1486,9 @@ function unlock_ajax(id) {
                                     },
                         onFailure: function(request) {
                                         if( request.status == 403 )
-                                            alert("Session Expired");
+                                            alert(sessionExpiredError);
                                         else
-                                            alert("Error " + request.status + "\nAn error occurred while unlocking note");
+                                            alert(request.status + " " +  unlockNoteError);
                                     }
                    }
             );
@@ -1711,7 +1723,7 @@ function issueIsAssigned() {
     return false;
 }
 
-
+var filterError;
 function filter(reset) {
     document.forms["caseManagementEntryForm"].method.value = "edit";
     document.forms["caseManagementEntryForm"].note_edit.value = "new";
@@ -1734,7 +1746,7 @@ function filter(reset) {
                             caseMgtViewfrm.submit(); 
                         },
                         onFailure: function(request) {
-                            alert("Filtering Failed "+ request.status);
+                            alert(request.status + " " + filterError);
                         }
                      }
                    );          
@@ -1761,20 +1773,24 @@ function validDate() {
         return false;
 }
 
+var pastObservationDateError;
+var assignObservationDateError;
+var assignIssueError;
+var savingNoteError;
 function ajaxSaveNote(div,noteId,noteTxt) {
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
-        alert("Observation date must be in the past");
+        alert(pastObservationDateError);
         return false;
     }
 
     if( caisiEnabled ) {
         if( !issueIsAssigned() ) {
-            alert("At least one(1) issue must be assigned to note");
+            alert(assignIssueError);
             return false;
         }
 
         if( $("observationDate").value.length == 0 ) {
-            alert("An observation date must be set");
+            alert(assignObservationDateError);
             return false;
         }
     }
@@ -1807,9 +1823,9 @@ function ajaxSaveNote(div,noteId,noteTxt) {
                         postBody: params,                       
                         onFailure: function(request) {
                             if( request.status == 403 )
-                                alert("Session Expired");
+                                alert(sessionExpiredError);
                             else
-                                alert("Error saving note " + request.status + " " + request.responseText);
+                                alert(savingNoteError + " " + request.status + " " + request.responseText);
                         }                        
                      }
                    );  
@@ -1820,7 +1836,7 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 function savePage(method, chain) {
     
     if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
-        alert("Observation date must be in the past");
+        alert(pastObservationDateError);
         return false;
     }
     
@@ -1831,12 +1847,12 @@ function savePage(method, chain) {
     
     if( caisiEnabled ) {
         if( !issueIsAssigned() ) {
-            alert("At least one(1) issue must be assigned to note");
+            alert(assignIssueError);
             return false;
         }
 
         if( $("observationDate").value.length == 0 ) {
-            alert("An observation date must be set");
+            alert(assignObservationDateError);
             return false;
         }
     }
@@ -1864,9 +1880,9 @@ function savePage(method, chain) {
                         },
                         onFailure: function(request) {
                             if( request.status == 403 )
-                                alert("Session Expired");
+                                alert(sessionExpiredError);
                             else
-                                alert("Error saving form " + request.status);
+                                alert(request.status + " " + savingNoteError);
                         }
                      }
                    );          
@@ -1874,7 +1890,7 @@ function savePage(method, chain) {
     return false;
 }
     
-    
+    var changeIssueMsg;
     function changeDiagnosis(issueId) {
         var methodArg = "ajaxChangeDiagnosis"; 
         var divIdArg = $("noteIssues").up().id;
@@ -1882,7 +1898,7 @@ function savePage(method, chain) {
         changeIssueFunc = updateIssues.bindAsEventListener(thisObj, methodArg, divIdArg);
         
         document.forms['caseManagementEntryForm'].change_diagnosis_id.value=issueId;
-        $("asgnIssues").value="Change";       
+        $("asgnIssues").value= changeIssueMsg;    
                         
         Element.stopObserving('asgnIssues', 'click', addIssueFunc);
         Element.observe('asgnIssues', 'click', changeIssueFunc);
@@ -1901,10 +1917,11 @@ function savePage(method, chain) {
         return false;    
     }
     
+    var closeWithoutSaveMsg;
     function closeEnc(e) {
         Event.stop(e);
         if( origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value) {
-            if( confirm("Are you sure you wish to close the encounter? Any unsaved data WILL BE LOST") ) {
+            if( confirm(closeWithoutSaveMsg) ) {
                 var frm = document.forms["caseManagementEntryForm"];
                 tmpSaveNeeded = false;
                 frm.method.value = "cancel";
@@ -1959,17 +1976,19 @@ function saveIssueId(txtField, listItem) {
     submitIssues = true;
 }
 
+var pickIssueMsg;
+var assignIssueMsg;
 function updateIssues(e) {
     var args = $A(arguments);
     args.shift();    
    
     if( $("newIssueId").value.length == 0 || $("issueAutocomplete").value != $("newIssueName").value )         
-        alert("Please select a full issue name from the auto completion menu");
+        alert(pickIssueMsg);
     else
         ajaxUpdateIssues(args[0], args[1]);
     
-    if( $F("asgnIssues") != "Assign" ) {
-        $("asgnIssues").value="Assign";
+    if( $F("asgnIssues") != assignIssueMsg ) {
+        $("asgnIssues").value= assignIssueMsg;
         Element.stopObserving('asgnIssues', 'click', changeIssueFunc);
         Element.observe('asgnIssues', 'click', addIssueFunc);
     }
@@ -1978,6 +1997,7 @@ function updateIssues(e) {
     return false;
 }
 var ajaxRequest; 
+var updateIssueError;
 function ajaxUpdateIssues(method, div) {
     var frm = document.forms["caseManagementEntryForm"];
     frm.method.value = method;    
@@ -1987,8 +2007,7 @@ function ajaxUpdateIssues(method, div) {
     ajaxRequest = new Ajax.Updater( {success:div}, url, { 
                                         evalScripts: true, parameters: Form.serialize(frm), onSuccess: onIssueUpdate,
                                         onFailure: function(response) { 
-                                                        alert( "Error " + response.status + "\nMost likely your session has expired.  Login again.\n" +
-                                                                "If problem persists contact support");
+                                                        alert( response.status + " " + updateIssueError);
                                                     }                                        
                                     } );           
     
@@ -2137,7 +2156,7 @@ function deleteAutoSave() {
                            }
                     );
 }
-
+var month=new Array(12);
 function autoSave(async) {    
     
     var url = ctx + "/CaseManagementEntry.do";
@@ -2157,21 +2176,7 @@ function autoSave(async) {
 				},
                                 onSuccess: function(req) {     
                                                 var nId = caseNote.substr(13);
-                                                var sig = "sig" + nId;                                                
-                                                var month=new Array(12)
-                                                
-                                                month[0]="Jan"
-                                                month[1]="Feb"
-                                                month[2]="Mar"
-                                                month[3]="Apr"
-                                                month[4]="May"
-                                                month[5]="Jun"
-                                                month[6]="Jul"
-                                                month[7]="Aug"
-                                                month[8]="Sep"
-                                                month[9]="Oct"
-                                                month[10]="Nov"
-                                                month[11]="Dec"
+                                                var sig = "sig" + nId;                                                                                                                                                                                                
                                                 
                                                 if( $("autosaveTime") == null ) 
                                                     new Insertion.Bottom(sig, "<div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'><\/div>");
@@ -2179,7 +2184,8 @@ function autoSave(async) {
                                                 var d = new Date();
                                                 var min = d.getMinutes();
                                                 min = min < 10 ? "0" + min : min;
-                                                var fmtDate = "<i>Draft Saved " + d.getDate() + "-" + month[d.getMonth()] + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
+                                                
+                                                var fmtDate = "<i>Draft Saved " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
                                                 $("autosaveTime").update(fmtDate);
                                                 
                                            }
@@ -2204,8 +2210,9 @@ function setTimer() {
     autoSaveTimer = setTimeout("backup()", 60000);
 }
 
+var unsavedNoteMsg;
 function restore() {
-    if(confirm('There is an unsaved note for this client.  Click Ok to edit it.')) {
+    if(confirm(unsavedNoteMsg)) {
         document.caseManagementEntryForm.method.value='restore';
         document.caseManagementEntryForm.chain.value = 'list';
 	document.caseManagementEntryForm.submit();			
@@ -2455,11 +2462,13 @@ function autoCompleteShowMenuCPP(element, update) {
         
     }
     
+    var printDateMsg;
+    var printDateOrderMsg;
     function printDateRange() {
         var sdate = $F("printStartDate");
         var edate = $F("printEndDate");
         if( sdate.length == 0 || edate.length == 0 ) {
-            alert("Both start date and end date must be specified");
+            alert(printDateMsg);
             return false;
         }
 
@@ -2472,7 +2481,7 @@ function autoCompleteShowMenuCPP(element, update) {
         var msend = Date.parse(formatdate);
 
         if( msbeg > msend ) {
-            alert("Beginning date must precede end date");
+            alert(printDateOrderMsg);
             return false;
         }  
         
@@ -2528,6 +2537,7 @@ function autoCompleteShowMenuCPP(element, update) {
         return false;
     }
     
+    var nothing2PrintMsg;
     function printNotes() {
         if( $("printopDates").checked && !printDateRange()) {            
             return false;
@@ -2536,7 +2546,7 @@ function autoCompleteShowMenuCPP(element, update) {
             printAll();        
             
         if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" ) {
-            alert("Nothing selected to print");
+            alert(nothing2PrintMsg);
             return false;
         }
         
@@ -2618,9 +2628,10 @@ function autoCompleteShowMenuCPP(element, update) {
         }                
     }
     
+    var editUnsignedMsg;
     function noPrivs(e) {
         
-        if( confirm("This note has not been signed by the owner.  Are you sure you want to continue to edit?") ) {
+        if( confirm(editUnsignedMsg) ) {
             editNote(e);
         }
         else {

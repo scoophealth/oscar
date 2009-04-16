@@ -339,7 +339,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
 	<nested:notEmpty name="caseManagementViewForm"
 		property="filter_providers">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Providers:</u><br>
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.providers.title"/>:</u><br>
 		<nested:iterate type="String" id="filter_provider"
 			property="filter_providers">
 			<c:choose>
@@ -357,7 +357,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			</c:choose>
 		</nested:iterate></div>
 	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="filter_roles">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Roles:</u><br>
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.roles.title"/>:</u><br>
 		<nested:iterate type="String" id="filter_role" property="filter_roles">
 			<c:choose>
 				<c:when test="${filter_role == 'a'}">
@@ -374,7 +374,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			</c:choose>
 		</nested:iterate></div>
 	</nested:notEmpty> <nested:notEmpty name="caseManagementViewForm" property="note_sort">
-		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u>Sort:</u><br>
+		<div style="float: left; margin-left: 30px; margin-top: 0px;"><u><bean:message key="oscarEncounter.sort.title"/>:</u><br>
 		<nested:write property="note_sort" /><br>
 		</div>
 	</nested:notEmpty>
@@ -382,11 +382,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<div id="filter" style="display: none;">
 	<div
 		style="clear: both; height: 150px; width: auto; overflow: auto; float: left; position: relative; left: 10%;">
-	Provider:
+	<bean:message key="oscarEncounter.providers.title"/>:
 	<ul
 		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
 		<li><html:multibox property="filter_providers" value="a"
-			onclick="filterCheckBox(this)"></html:multibox>All</li>
+			onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title"/></li>
 		<%
                         Set<Provider> providers = (Set<Provider>)request.getAttribute("providers");                                                
                         
@@ -411,7 +411,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<ul
 		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
 		<li><html:multibox property="filter_roles" value="a"
-			onclick="filterCheckBox(this)"></html:multibox>All</li>
+			onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title"/></li>
 		<%
                         List roles = (List)request.getAttribute("roles");
                         for( int num = 0; num < roles.size(); ++num ) {
@@ -426,24 +426,24 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	</ul>
 	</div>
 
-	<div style="float: left; position: relative; left: 25%;">Sort:
+	<div style="float: left; position: relative; left: 25%;"><bean:message key="oscarEncounter.sort.title"/>:
 	<ul
 		style="margin-left: 0px; padding-left: 0px; margin-top: 1px; list-style: none inside none;">
-		<li><html:radio property="note_sort" value="observation_date_asc">Observation Date Asc</html:radio></li>
+		<li><html:radio property="note_sort" value="observation_date_asc"><bean:message key="oscarEncounter.sortDateAsc.title"/></html:radio></li>
 		<li><html:radio property="note_sort"
-			value="observation_date_desc">Observation Date Desc</html:radio></li>
-		<li><html:radio property="note_sort" value="providerName">Provider</html:radio></li>
-		<li><html:radio property="note_sort" value="programName">Program</html:radio></li>
-		<li><html:radio property="note_sort" value="roleName">Role</html:radio></li>
+			value="observation_date_desc"><bean:message key="oscarEncounter.sortDateDesc.title"/></html:radio></li>
+		<li><html:radio property="note_sort" value="providerName"><bean:message key="oscarEncounter.provider.title"/></html:radio></li>
+		<li><html:radio property="note_sort" value="programName"><bean:message key="oscarEncounter.program.title"/></html:radio></li>
+		<li><html:radio property="note_sort" value="roleName"><bean:message key="oscarEncounter.role.title"/></html:radio></li>
 	</ul>
 	</div>
 
 	<div
 		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
-		onclick="return filter(false);">Show View</div>
+		onclick="return filter(false);"><bean:message key="oscarEncounter.showView.title"/></div>
 	<div
 		style="text-align: right; cursor: pointer; text-decoration: underline; margin-right: 10px;"
-		onclick="return filter(true);">Reset Filter</div>
+		onclick="return filter(true);"><bean:message key="oscarEncounter.resetFilter.title"/></div>
 	</div>
 	<div
 		style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
@@ -470,22 +470,22 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			key="global.BNF" /></option>
 	</select> <input type="text" id="keyword" name="keyword" value=""
 		onkeypress="return grabEnter('searchButton',event)" /> <input
-		type="button" id="searchButton" name="button" value="Search"
+		type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>"
 		onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 
 	</div>
 	<div style="clear: both; text-align: right"><img
-		style="cursor: pointer;" title="View Filter" alte="View Filter"
+		style="cursor: pointer;" title="<bean:message key="oscarEncounter.viewFilter.title"/>" alt="<bean:message key="oscarEncounter.viewFilter.title"/>"
 		onclick="showFilter();"
-		src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;Filter
-	&nbsp;&nbsp; <img style="cursor: pointer;" title="Print"
-		id='imgPrintCPP' alt="Toggle Print CPP"
+		src="<c:out value="${ctx}/oscarEncounter/graphics/folder-saved-search.png"/>">&nbsp;<bean:message key="oscarEncounter.Filter.title"/>
+	&nbsp;&nbsp; <img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>"
+		id='imgPrintCPP' alt="<bean:message key="oscarEncounter.togglePrintCPP.title"/>"
 		onclick="return printInfo(this,'printCPP');"
-		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;CPP
-	&nbsp;&nbsp; <img style="cursor: pointer;" title="Print"
-		id='imgPrintRx' alt="Toggle Print Rx"
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;<bean:message key="oscarEncounter.cpp.title"/>
+	&nbsp;&nbsp; <img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>"
+		id='imgPrintRx' alt="<bean:message key="oscarEncounter.togglePrintRx.title"/>"
 		onclick="return printInfo(this, 'printRx');"
-		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;Rx
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;<bean:message key="oscarEncounter.Rx.title"/>
 	&nbsp;&nbsp;</div>
 	</div>
 </html:form>
@@ -697,8 +697,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             <%--<input type="hidden" name="caseNote.id" value="<%=note.getId()%>">
                             <input type="hidden" name="caseNote.demographic_no"
 			value="<%=note.getDemographic_no()%>"> --%>
-                            <img title="Print"
-			id='print<%=note.getId()%>' alt="Toggle Print Note"
+                            <img title="<bean:message key="oscarEncounter.print.title"/>"
+			id='print<%=note.getId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
@@ -728,20 +728,20 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             
                             String rev = note.getRevision();
                             if( fulltxt ) {
-                            %> <img title="Minimize Display"
-			id='quitImg<%=note.getId()%>' alt="Minimize Display"
+                            %> <img title="<bean:message key="oscarEncounter.MinDisplay.title"/>"
+			id='quitImg<%=note.getId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>"
 			onclick="minView(event)"
 			style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
 		<% }else {
-                            %> <img title="Maximize Display"
+                            %> <img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>"
 			id='quitImg<%=note.getId()%>' alt="Maximize Display"
 			onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' />
 		<% }
                     
-                            %> <img title="Print"
-			id='print<%=note.getId()%>' alt="Toggle Print Note"
+                            %> <img title="<bean:message key="oscarEncounter.print.title"/>"
+			id='print<%=note.getId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
@@ -752,8 +752,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			    System.out.println("Format note " + String.valueOf(time2 - time1));
 			    time1 = time2;
                             --%> <% if( largeNote(noteStr) ) {
-                            %> <img title="Minimize Display"
-			id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display"
+                            %> <img title="<bean:message key="oscarEncounter.MinDisplay.title"/>"
+			id='bottomQuitImg<%=note.getId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>"
 			onclick="minView(event)"
 			style='float: right; margin-right: 5px; margin-bottom: 3px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
@@ -769,9 +769,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		<div id="sumary<%=note.getId()%>">
 		<div id="observation<%=note.getId()%>"
 			style="float: right; margin-right: 3px;"><i>Date:&nbsp;<span
-			id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a
+			id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;<bean:message key="oscarEncounter.noteRev.title"/><a
 			href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
-		<div><span style="float: left;">Editors:</span>
+		<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span>
 		<ul style="list-style: none inside none; margin: 0px;">
 			<%  
                                             List editors = note.getEditors();
@@ -810,8 +810,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                     }
                                     if( issSet.size() > 0 ) {
                                     %>
-		<div style="display: block;"><span style="float: left;">Assigned
-		Issues</span>
+		<div style="display: block;"><span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title"/></span>
 		<ul style="float: left; list-style: circle inside none; margin: 0px;">
 			<% 
                                         Iterator i = issSet.iterator();
@@ -943,7 +942,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<span id="busy" style="display: none"><img
 		style="position: absolute;"
 		src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"
-		alt="Working..." /></span></div>
+		alt="<bean:message key="oscarEncounter.Index.btnWorking" />"</span></div>
 	</div>
 </nested:form>
 </div>
