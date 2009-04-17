@@ -83,21 +83,23 @@ import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.LoggedInUserFilter.LoggedInInfo;
 
 import oscar.OscarProperties;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private static final Logger logger = LogManager.getLogger(CaisiIntegratorUpdateTask.class);
-	
+
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 	private static TimerTask timerTask = null;
-	
+
 	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
@@ -132,7 +134,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			logger.info("Scheduling CaisiIntegratorUpdateTask for period : " + period);
 			timerTask = new CaisiIntegratorUpdateTask();
-			timer.schedule(timerTask, 10000, period);			
+			timer.schedule(timerTask, 10000, period);
 		} else {
 			logger.error("Start was called twice on this timer task object.", new Exception());
 		}
@@ -150,13 +152,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	public void run() {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
+		LoggedInInfo x = new LoggedInInfo();
+		x.internalThreadDescription="Caisi Integrator Update Task";
+		LoggedInUserFilter.loggedInInfo.set(x);
+
 		try {
-			pushAllFacilities();			
+			pushAllFacilities();
 		} catch (ShutdownException e) {
 			logger.debug("CaisiIntegratorUpdateTask received shutdown notice.");
 		} catch (Exception e) {
 			logger.error("unexpected error occurred", e);
 		} finally {
+			LoggedInUserFilter.loggedInInfo.remove();
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 
 			logger.debug("CaisiIntegratorUpdateTask finished");
@@ -168,7 +175,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (Facility facility : facilities) {
 			MiscUtils.checkShutdownSignaled();
-			
+
 			try {
 				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
 					pushAllFacilityData(facility);
@@ -268,7 +275,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (String providerId : providerIds) {
 			MiscUtils.checkShutdownSignaled();
-			logger.debug("Adding provider "+providerId+" for "+facility.getName());
+			logger.debug("Adding provider " + providerId + " for " + facility.getName());
 			Provider provider = providerDao.getProvider(providerId);
 
 			CachedProvider cachedProvider = new CachedProvider();
@@ -385,7 +392,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
 			MiscUtils.checkShutdownSignaled();
-			
+
 			// don't send issue if it is not in our facility.
 			if (!isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
 
@@ -467,44 +474,40 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 		// Only notes from the COMMUNITY_ISSUE_CODETYPE group will be sent
 		String issueType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
-		if (issueType == null || issueType.equalsIgnoreCase(""))
-		{
+		if (issueType == null || issueType.equalsIgnoreCase("")) {
 			logger.info("No Community Issue Code Type specified, community notes will not be shared.");
 			return;
 		}
 		// need to get all issue IDs for notes on COMMUNITY ISSUES
-		List<CaseManagementNote> localNotes = (List<CaseManagementNote>)caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
+		List<CaseManagementNote> localNotes = (List<CaseManagementNote>) caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
 		ArrayList<NoteTransfer> notes = new ArrayList<NoteTransfer>();
-		for(CaseManagementNote localNote : localNotes){
+		for (CaseManagementNote localNote : localNotes) {
 			// don't upload locked notes
-			logger.debug("Checking note "+localNote.getId());
-			if(localNote.isLocked())
-			{
-				logger.debug("Note "+localNote.getId()+" is locked, skipping");
+			logger.debug("Checking note " + localNote.getId());
+			if (localNote.isLocked()) {
+				logger.debug("Note " + localNote.getId() + " is locked, skipping");
 				continue;
 			}
 			// filter out notes from a programs attached to different facilities
 			Program noteProgram = programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
-			if(noteProgram.getFacilityId() != facility.getId())
-			{
-				logger.debug("Note "+localNote.getId()+" is attached to Program "+localNote.getProgram_no()+" from "+noteProgram.getFacilityId()+", NOT "+facility.getId()+", skipping");
+			if (noteProgram.getFacilityId() != facility.getId()) {
+				logger.debug("Note " + localNote.getId() + " is attached to Program " + localNote.getProgram_no() + " from " + noteProgram.getFacilityId() + ", NOT " + facility.getId() + ", skipping");
 				continue;
 			}
 			Set issues = localNote.getIssues();
 			List<String> communityIssueCodes = new ArrayList<String>();
 			Iterator<CaseManagementIssue> iter = issues.iterator();
-			while(iter.hasNext())
-			{
+			while (iter.hasNext()) {
 				Issue issue = (iter.next()).getIssue();
-				if(issue.getType().equalsIgnoreCase(issueType));
+				if (issue.getType().equalsIgnoreCase(issueType))
+				;
 				{
 					communityIssueCodes.add(issue.getCode());
 				}
 			}
-			
+
 			// if there are community issue codes attached to this note, add it to the transfer list
-			if(!communityIssueCodes.isEmpty())
-			{
+			if (!communityIssueCodes.isEmpty()) {
 				NoteTransfer transfer = new NoteTransfer();
 				transfer.setFacilityId(facility.getId());
 				transfer.setNoteId(localNote.getId().intValue());
@@ -516,23 +519,23 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				transfer.setNote(localNote.getNote());
 				transfer.setUpdateDate(localNote.getUpdate_date());
 				transfer.setObservationDate(localNote.getObservation_date());
-				//transfer.setIssueCodes(communityIssueCodes.toArray(new String[communityIssueCodes.size()]));
+				// transfer.setIssueCodes(communityIssueCodes.toArray(new String[communityIssueCodes.size()]));
 				transfer.setRole(localNote.getRoleName());
 				StringBuffer buff = new StringBuffer();
-				for(String code: communityIssueCodes)
-				{
+				for (String code : communityIssueCodes) {
 					buff.append(code);
 					buff.append("||");
 				}
-				transfer.setIssueCodes(buff.substring(0, buff.length()-2));
+				transfer.setIssueCodes(buff.substring(0, buff.length() - 2));
 				notes.add(transfer);
 			}
 		}
-		//NoteTransfer[] notesToSend = (NoteTransfer[])notes.toArray();
+		// NoteTransfer[] notesToSend = (NoteTransfer[])notes.toArray();
 		service.setCachedDemographicNotes(notes);
 	}
 
-	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException, ShutdownException {
+	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException,
+	        ShutdownException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);
