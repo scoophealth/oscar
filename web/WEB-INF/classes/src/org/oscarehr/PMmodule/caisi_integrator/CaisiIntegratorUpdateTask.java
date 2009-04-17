@@ -87,7 +87,6 @@ import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.LoggedInUserFilter.LoggedInInfo;
 
 import oscar.OscarProperties;
 
@@ -152,9 +151,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	public void run() {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
-		LoggedInInfo x = new LoggedInInfo();
-		x.internalThreadDescription="Caisi Integrator Update Task";
-		LoggedInUserFilter.loggedInInfo.set(x);
+		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
 
 		try {
 			pushAllFacilities();

@@ -39,6 +39,7 @@ import org.oscarehr.common.dao.RedirectLinkDao;
 import org.oscarehr.common.dao.RedirectLinkTrackingDao;
 import org.oscarehr.common.model.RedirectLink;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInUserFilter;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -61,7 +62,9 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet 
         public void run() {
             logger.debug("RedirectCleaningTimerTask timerTask started.");
 
-            try {
+    		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+
+    		try {
                 if (dataRetentionTimeMillis == -1) return;
 
                 // delete old redirect entries
@@ -71,6 +74,7 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet 
                 logger.error("Unexpected error flushing html open queue.", e);
             }
             finally {
+    			LoggedInUserFilter.loggedInInfo.remove();
                 DbConnectionFilter.releaseThreadLocalDbConnection();
             }
 

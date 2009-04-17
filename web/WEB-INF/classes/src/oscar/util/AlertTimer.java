@@ -30,6 +30,7 @@ import java.util.TimerTask;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInUserFilter;
 import org.oscarehr.util.ShutdownException;
 
 /**
@@ -70,6 +71,7 @@ public class AlertTimer {
      */
     class ReminderClass extends TimerTask {
         public void run() {
+    		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
             try {
                 hlp.manageCDMTicklers(alertCodes);
             }
@@ -80,6 +82,7 @@ public class AlertTimer {
                 logger.error(e);
             }
             finally {
+        		LoggedInUserFilter.loggedInInfo.remove();
                 DbConnectionFilter.releaseThreadLocalDbConnection();
             }
         }

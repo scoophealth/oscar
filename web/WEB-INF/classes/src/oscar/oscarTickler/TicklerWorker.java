@@ -32,6 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.LoggedInUserFilter;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarDemographic.data.DemographicNameAgeString;
@@ -54,6 +55,8 @@ public class TicklerWorker extends Thread {
 
     public void run() {
         //System.out.println("TICKLERWORKER THREAD STARTED");
+		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+
         try {
             TicklerData td = new TicklerData();
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -76,6 +79,7 @@ public class TicklerWorker extends Thread {
             e.printStackTrace();
         }
         finally {
+    		LoggedInUserFilter.loggedInInfo.remove();
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         /// check to see if tickler is needed

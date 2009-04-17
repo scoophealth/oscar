@@ -75,6 +75,33 @@ public class LoggedInUserFilter implements javax.servlet.Filter
 	
 	public static final ThreadLocal<LoggedInInfo> loggedInInfo = new ThreadLocal<LoggedInInfo>();
 
+	/**
+	 * This method is intended to be used by timer task or background threads to 
+	 * setup the thread local loggedInInfo. It should do basic checks to see if 
+	 * there's lingering data, then set the thread local internalThreadDescription 
+	 * to the name of the class that called this method, i.e. your thread class name.
+	 */
+	public static void setLoggedInInfoToCurrentClassName()
+	{
+		checkForLingeringData();
+		
+		// get callers class
+		Throwable t = new Throwable();
+		StackTraceElement[] ste = t.getStackTrace();
+		Class<?> caller = ste[1].getClass();
+
+		// create and set new thread local
+		LoggedInInfo x = new LoggedInInfo();
+		x.internalThreadDescription=caller.getName();
+		LoggedInUserFilter.loggedInInfo.set(x);
+	}
+	
+	private static void checkForLingeringData()
+	{
+		LoggedInInfo x = loggedInInfo.get();
+		if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);				
+	}
+	
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		// nothing
@@ -84,14 +111,12 @@ public class LoggedInUserFilter implements javax.servlet.Filter
 	{
 		try
 		{
-			// check for lingering data
-			LoggedInInfo x = loggedInInfo.get();
-			if (x != null) logger.warn("Logged in info should be null on new requests but it wasn't. oldUser=" + x);
+			checkForLingeringData();
 
 			// set new / current data
 			HttpServletRequest request=(HttpServletRequest) tmpRequest;
 			HttpSession session=request.getSession();
-			x=new LoggedInInfo();
+			LoggedInInfo x=new LoggedInInfo();
 			x.currentFacility=(Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
 			x.loggedInProvider=(Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 			loggedInInfo.set(x);
