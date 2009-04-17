@@ -63,7 +63,8 @@ public class AppointmentDao extends OscarSuperDao {
      */
     protected class ExportApptDataRowMapper implements RowMapper {
 
-		@Override
+// annotated inner classes not supported till 1.6
+//		@Override
         public Object mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			ApptData ad = new ApptData();
 
