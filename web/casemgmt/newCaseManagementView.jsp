@@ -935,7 +935,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<input type='image' id='toggleIssue'
 		onclick="return showIssues(event);"
 		src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>"
-		title='Display Issues'>&nbsp; <input tabindex="8" type="text"
+		title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; <input tabindex="8" type="text"
 		id="issueAutocomplete" name="issueSearch" style="z-index: 2;"
 		onkeypress="return submitIssue(event);" size="25">&nbsp; <input
 		tabindex="9" type="button" id="asgnIssues" value="Assign">
