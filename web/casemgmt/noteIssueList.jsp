@@ -72,16 +72,16 @@
 		style="float: right; margin-right: 3px;">
 </nested:notEmpty>
 <nested:notEmpty name="ajaxsave">
-	<i>Date:&nbsp;<span
+	<i><bean:message key="oscarEncounter.date.title"/>:&nbsp;<span
 		id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
 	<nested:write name="caseManagementEntryForm"
 		property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" /> </span>&nbsp;
-	rev<a href="#"
+	<bean:message key="oscarEncounter.noteRev.title"/><a href="#"
 		onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write
 		name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
 </nested:notEmpty>
 <nested:empty name="ajaxsave">
-	<i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />"
+	<i><bean:message key="oscarEncounter.date.title"/>:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />"
 		id="observationDate_cal" alt="calendar">&nbsp;<input type="text"
 		id="observationDate" name="observation_date"
 		ondblclick="this.value='';"
@@ -92,7 +92,7 @@
 		name="caseManagementEntryForm" property="caseNote.revision" /></a>
 </nested:empty>
 </div>
-<div><span style="float: left;">Editors:</span> <nested:equal
+<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span> <nested:equal
 	name="newNote" value="false">
 	<ul style="list-style: none inside none; margin: 0px;">
 		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
@@ -113,15 +113,15 @@
 	<div style="margin: 0px;">&nbsp;</div>
 </nested:equal></div>
 <% encSelect += noteIndex; %>
-<div style="clear: right; margin-right: 3px; margin: 0px; float: right;">Enc
-Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
+<div style="clear: right; margin-right: 3px; margin: 0px; float: right;"><bean:message key="oscarEncounter.encType.title"/>
+:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
 	name="ajaxsave">
 	<html:select styleId="<%=encSelect%>" styleClass="encTypeCombo"
 		name="caseManagementEntryForm" property="caseNote.encounter_type">
 		<html:option value=""></html:option>
-		<html:option value="face to face encounter with client">face to face encounter with client</html:option>
-		<html:option value="telephone encounter with client">telephone encounter with client</html:option>
-		<html:option value="encounter without client">encounter without client</html:option>
+		<html:option value="face to face encounter with client"><bean:message key="oscarEncounter.faceToFaceEnc.title"/></html:option>
+		<html:option value="telephone encounter with client"><bean:message key="oscarEncounter.telephoneEnc.title"/></html:option>
+		<html:option value="encounter without client"><bean:message key="oscarEncounter.noClientEnc.title"/></html:option>
 	</html:select>
 </nested:empty> <nested:notEmpty name="ajaxsave">
             &quot;<nested:write name="caseManagementEntryForm"
@@ -133,8 +133,8 @@ Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
         <div>&nbsp;</div>
     </nested:equal> --%>
 <nested:greaterThan name="numIssues" value="0">
-	<div style="display: block;"><span style="float: left;">Assigned
-	Issues</span>
+	<div style="display: block;"><span style="float: left;"><bean:message key="oscarEncounter.assignedIssues.title"/>
+	</span>
 	<ul style="float: left; list-style: circle inside; margin: 0px;">
 		<nested:iterate id="noteIssue" property="caseNote.issues"
 			name="caseManagementEntryForm">
@@ -152,7 +152,7 @@ Type:&nbsp;<span id="encType<%=noteIndex%>"> <nested:empty
 
 <div id="noteIssues"
 	style="margin: 0px; background-color: #CCCCFF; font-size: 8px; display: none;">
-<b>Reference Issues</b>
+<b><bean:message key="oscarEncounter.referenceIssues.title"/></b>
 <table id="setIssueList" style="font-size: 8px;">
 	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 		<%
