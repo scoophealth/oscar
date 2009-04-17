@@ -551,12 +551,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             boolean removed = false;
             
             //we've removed all issues so record that
+            ResourceBundle props = ResourceBundle.getBundle("oscarResources");
             if( issue_id == null ) {
                 while( iter.hasNext() ) {
                     cIssue = iter.next();
                     issueNames.append(cIssue.getIssue().getDescription() + "\n");                    
                 }
-                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
+                
+                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
                 note.setNote(strNote);
                 removed = true;
             }
@@ -582,7 +584,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
                 //if we have removed an issue add it to message body
                 if( issueNames.length() > 0 ) {
-                    strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " Removed following issue(s):\n" + issueNames.toString();
+                    strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
                     note.setNote(strNote);                    
                 }
 
@@ -1034,12 +1036,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setRevision(String.valueOf(revision));
 
         String observationDate = cform.getObservation_date();
-
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
         if (observationDate != null && !observationDate.equals("")) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
             Date dateObserve = formatter.parse(observationDate);
             if( dateObserve.getTime() > now.getTime() ) {
-                request.setAttribute("DateError", "Observation Date set in future, rolled back to current time");
+                request.setAttribute("DateError", props.getString("oscarEncounter.futureDate.Msg"));
                 note.setObservation_date(now);
             }
             else
@@ -1102,14 +1104,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             request.getSession().setAttribute(varName, new Boolean(true)); // tell CaseManagementView we have just saved note
             ActionForward fwd = mapping.findForward(chain);            
             StringBuffer path = new StringBuffer(fwd.getPath());
-            
+            ResourceBundle props = ResourceBundle.getBundle("oscarResources");
             if( request.getAttribute("DateError") != null ) {
                 if( path.indexOf("?") == -1 )
                     path.append("?");
                 else
                     path.append("&");
                
-                path.append("DateError=Observation Date set in future.  Rolled back to current time");
+                path.append("DateError=" + props.getString("oscarEncounter.futureDate.Msg"));
             }
             
             
@@ -1152,12 +1154,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         
         String observationDate = request.getParameter("obsDate");        
-        
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
         if (observationDate != null && !observationDate.equals("")) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
             Date dateObserve = formatter.parse(observationDate);
             if( dateObserve.getTime() > now.getTime() ) {
-                request.setAttribute("DateError", "Observation Date set in future, rolled back to current time");
+                request.setAttribute("DateError", props.getString("oscarEncounter.futureDate.Msg"));
                 note.setObservation_date(now);
             }
             else
@@ -1914,7 +1916,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         List<CaseManagementNote> history = caseManagementMgr.getHistory(noteid);
         request.setAttribute("history", history);
-        request.setAttribute("title", "Note Revision History");
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+        request.setAttribute("title", props.getString("oscarEncounter.noteHistory.title"));
         return mapping.findForward("showHistory");
     }
     
@@ -1943,13 +1946,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         
         StringBuffer title = new StringBuffer();
         String arrIssues[] = issueIds.split(",");
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
         for( int idx = 0; idx < arrIssues.length; ++idx ) {
             Issue i = this.caseManagementMgr.getIssue(arrIssues[idx]);
             title.append(i.getDescription());
             if( idx < arrIssues.length - 1 )
                 title.append(", ");
         }
-        title.append(" History");
+        title.append(" " + props.getString("oscarEncounter.history.title"));
         request.setAttribute("title", title.toString());
         
         return mapping.findForward("showHistory");
