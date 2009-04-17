@@ -24,13 +24,9 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -56,7 +52,6 @@ function start(){
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
   //boolean bNew = true;
-  ResultSet rsdemo = null;
   //if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")==0 ) 
   //  bNew = false;
 
@@ -64,13 +59,13 @@ function start(){
    String content="";
    String encounterattachment="";
    String temp="";
-   rsdemo = apptMainBean.queryResults(request.getParameter("encounter_no"), request.getParameter("dboperation"));
-   while (rsdemo.next()) { 
-     content = rsdemo.getString("content");
-     encounterattachment = rsdemo.getString("encounterattachment");
+   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("encounter_no")});
+   for (Map enc : resultList) {
+     content = (String)enc.get("content");
+     encounterattachment = (String)enc.get("encounterattachment");
 %>
-<font size="-1"><%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%>
-&nbsp;<font color="green"><%=rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%></font></font>
+<font size="-1"><%=enc.get("encounter_date")%> <%=enc.get("encounter_time")%>
+&nbsp;<font color="green"><%=((String)enc.get("subject")).equals("")?"Unknown":enc.get("subject")%></font></font>
 <br>
 <xml id="xml_list">
 <encounter>
@@ -79,7 +74,6 @@ function start(){
 </xml>
 <%
    }     
-   //apptMainBean.closePstmtConn();
 %>
 <table datasrc='#xml_list' width='100%' border='0' BGCOLOR="#EEEEFF">
 	<tr>
@@ -101,16 +95,14 @@ function start(){
 </table>
 <%
   if(request.getParameter("template")!=null && !(request.getParameter("template").equals(".")) ) {
-     rsdemo = apptMainBean.queryResults(request.getParameter("template"), "search_template");
-     while (rsdemo.next()) { 
-       out.println(rsdemo.getString("encountertemplate_displayvalue"));
+	 resultList = oscarSuperManager.find("providerDao", "search_template", new Object[] {request.getParameter("template")});
+	 for (Map t: resultList) {
+       out.println((String)t.get("encountertemplate_displayvalue"));
      }
-  }else {
+  } else {
      out.println("<table datasrc='#xml_list' border='0'><tr><td><font color='blue'>Content:</font></td></tr><tr><td><div datafld='xml_content'></td></tr></table>");
   }
-  apptMainBean.closePstmtConn();
 %>
-
 
 <center><input type="button" value="Print Preview"
 	onClick="popupPage(600,800, 'providerencounterprint.jsp?encounter_no=<%=request.getParameter("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&username=<%=request.getParameter("username")%>')">

@@ -25,13 +25,11 @@
 -->
 
 <%
-    
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.sql.*, java.util.*, java.net.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -55,45 +53,44 @@
 <%
   //update the demo accessary data
   String content=null;//default is not null temp=null, 
-  int numRecord=1, rowsAffected=0;
+  long numRecord=1, rowsAffected=0;
   content="<xml_Problem_List>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Problem_List"))+"</xml_Problem_List>"+ "<xml_Medication>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Medication"))+"</xml_Medication>"+ "<xml_Alert>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Alert"))+"</xml_Alert>" +"<xml_Family_Social_History>"+SxmlMisc.replaceHTMLContent(request.getParameter("xml_Family_Social_History"))+"</xml_Family_Social_History>";
 
-  String[] param0 =new String[2];
-	param0[0]=request.getParameter("demographic_no");
-	param0[1]=content; 
-  String[] param2 =new String[2];
-	param2[0]=content;
-	param2[1]=request.getParameter("demographic_no");
-	ResultSet rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessorycount");
- 	while (rsdemo.next()) { 
-    numRecord=rsdemo.getInt("count(demographic_no)");
+  String[] param0 = new String[2];
+  param0[0]=request.getParameter("demographic_no");
+  param0[1]=content; 
+  String[] param2 = new String[2];
+  param2[0]=content;
+  param2[1]=request.getParameter("demographic_no");
+  List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
+  for (Map demo : resultList) {
+    numRecord=(Long)demo.get("count(demographic_no)");
   }
   if(numRecord==0) {
-    rowsAffected = apptMainBean.queryExecuteUpdate(param0,"add_demographicaccessory");
+    rowsAffected = oscarSuperManager.update("providerDao", "add_demographicaccessory", param0);
   } else {
-    rowsAffected = apptMainBean.queryExecuteUpdate(param2,"update_demographicaccessory");
+    rowsAffected = oscarSuperManager.update("providerDao", "update_demographicaccessory", param2);
   }
   if (rowsAffected !=1) { out.println("Error"); return;}
 
 
   //get demographic string
-  rsdemo = null;
   String demoname=null,address=null,phone=null,dob=null,gender=null,hin=null,ver=null,roster=null,fd=null;
   int dob_year = 0, dob_month = 0, dob_date = 0;
-  rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_demograph" );
-  while (rsdemo.next()) { 
-    demoname="<xml_name>" +SxmlMisc.replaceHTMLContent(rsdemo.getString("last_name")+", "+rsdemo.getString("first_name")) +"</xml_name>";
-    address="<xml_address>" +SxmlMisc.replaceHTMLContent(rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal")) +"</xml_address>";
-	  phone="<xml_hp>" +rsdemo.getString("phone") +"</xml_hp>";
-    dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
-    dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
-    dob_date = Integer.parseInt(rsdemo.getString("date_of_birth"));
+  resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
+  for (Map demo : resultList) {
+    demoname="<xml_name>" +SxmlMisc.replaceHTMLContent(demo.get("last_name")+", "+demo.get("first_name")) +"</xml_name>";
+    address="<xml_address>" +SxmlMisc.replaceHTMLContent(demo.get("address") +",  "+demo.get("city") +",  "+demo.get("province") +"  "+ demo.get("postal")) +"</xml_address>";
+	phone="<xml_hp>" +demo.get("phone") +"</xml_hp>";
+    dob_year = Integer.parseInt((String)demo.get("year_of_birth"));
+    dob_month = Integer.parseInt((String)demo.get("month_of_birth"));
+    dob_date = Integer.parseInt((String)demo.get("date_of_birth"));
     dob="<xml_dob>" +dob_year+"-"+dob_month+"-"+dob_date +"</xml_dob>";
-    gender="<xml_sex>" +rsdemo.getString("sex") +"</xml_sex>";
-    hin="<xml_hin>" +rsdemo.getString("hin") +"</xml_hin>";
-    ver="<xml_ver>" +rsdemo.getString("ver") +"</xml_ver>";
-    roster="<xml_roster>" +rsdemo.getString("roster_status") +"</xml_roster>";
-    // fd="<xml_fd>" +SxmlMisc.replaceHTMLContent((rsdemo.getString("family_doctor")==null?"":rsdemo.getString("family_doctor"))) +"</xml_fd>";
+    gender="<xml_sex>" +demo.get("sex") +"</xml_sex>";
+    hin="<xml_hin>" +demo.get("hin") +"</xml_hin>";
+    ver="<xml_ver>" +demo.get("ver") +"</xml_ver>";
+    roster="<xml_roster>" +demo.get("roster_status") +"</xml_roster>";
+    // fd="<xml_fd>" +SxmlMisc.replaceHTMLContent((demo.get("family_doctor")==null?"":demo.get("family_doctor"))) +"</xml_fd>";
   }
   GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
@@ -120,54 +117,52 @@
 	param[4]=subject;
 	param[5]=content;
 	param[6]=URLDecoder.decode(request.getParameter("encounterattachment")).replace('^','&'); //restore the '&' symbol
-  rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
+  rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+  if (rowsAffected == 1) {
     //if need to delete the previous edit enc. to recyclebin
     if(request.getParameter("del_encounter_no")!=null && !request.getParameter("del_encounter_no").equals("null") ) {
-      String[] param3 =new String[4];
-      ResultSet rs = apptMainBean.queryResults(request.getParameter("del_encounter_no"), "search_encountersingle");
-      while (rs.next()) { 
-        content = "<encounter_no>"+apptMainBean.getString(rs,"encounter_no")+"</encounter_no>"+ "<demographic_no>"+apptMainBean.getString(rs,"demographic_no")+"</demographic_no>"+ "<encounter_date>"+apptMainBean.getString(rs,"encounter_date")+"</encounter_date>";
-        content += "<encounter_time>"+apptMainBean.getString(rs,"encounter_time")+"</encounter_time>"+ "<provider_no>"+apptMainBean.getString(rs,"provider_no")+"</provider_no>"+ "<subject>"+apptMainBean.getString(rs,"subject")+"</subject>";
-        content += "<content>"+apptMainBean.getString(rs,"content")+"</content>" +"<encounterattachment>"+apptMainBean.getString(rs,"encounterattachment")+"</encounterattachment>";
+      String[] param3 = new String[4];
+      resultList = oscarSuperManager.find("providerDao", "search_encountersingle", new Object[] {request.getParameter("del_encounter_no")});
+      for (Map encounter : resultList) {
+        content = "<encounter_no>"+encounter.get("encounter_no")+"</encounter_no>"+ "<demographic_no>"+encounter.get("demographic_no")+"</demographic_no>"+ "<encounter_date>"+encounter.get("encounter_date")+"</encounter_date>";
+        content += "<encounter_time>"+encounter.get("encounter_time")+"</encounter_time>"+ "<provider_no>"+encounter.get("provider_no")+"</provider_no>"+ "<subject>"+encounter.get("subject")+"</subject>";
+        content += "<content>"+encounter.get("content")+"</content>" +"<encounterattachment>"+encounter.get("encounterattachment")+"</encounterattachment>";
 	      param3[0]=user_no;
 	      param3[1]=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH) +" "+now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
-	      param3[2]=apptMainBean.getString(rs,"encounter_date"); //keyword
+	      param3[2]=String.valueOf(encounter.get("encounter_date")); //keyword
 	      param3[3]=content;
       }
-      int rowsAffected2 = apptMainBean.queryExecuteUpdate(param3, "delete_encounter1");
-      if(rowsAffected2 ==1) {
-        rowsAffected2 = apptMainBean.queryExecuteUpdate(request.getParameter("del_encounter_no"), "delete_encounter2");
-      }    
+      int rowsAffected2 = oscarSuperManager.update("providerDao", "delete_encounter1", param3);
+      if (rowsAffected2 == 1) {
+        rowsAffected2 = oscarSuperManager.update("providerDao", "delete_encounter2", new Object[] {request.getParameter("del_encounter_no")});
+      }
     }
   
-  if(request.getParameter("submit") != null && request.getParameter("submit").equals("Save & Print Preview") ) {  //response.sendRedirect("providerencounterprint.jsp"); //
-    //get encounter_no
-    String[] param1 =new String[4];
-    param1[0]=request.getParameter("demographic_no");
+    if(request.getParameter("submit") != null && request.getParameter("submit").equals("Save & Print Preview") ) {  //response.sendRedirect("providerencounterprint.jsp"); //
+      //get encounter_no
+      String[] param1 = new String[4];
+      param1[0]=request.getParameter("demographic_no");
 	  param1[1]=curYear+"-"+(curMonth)+"-"+curDay; //request.getParameter("encounter_date");
 	  param1[2]=now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND); //request.getParameter("encounter_time"); 
 	  param1[3]=request.getParameter("user_no");
-    rsdemo = apptMainBean.queryResults(param1, "search_encounter_no"); 
-    String encounter_no = "0";
-    while (rsdemo.next()) { 
-      encounter_no = apptMainBean.getString(rsdemo,"encounter_no");
-    }
-    apptMainBean.closePstmtConn();
-    if(true) {
-      out.clear();
-      pageContext.forward("providerencounterprint.jsp?encounter_no="+encounter_no);
-      return;
-    }
-  } 
-
+      resultList = oscarSuperManager.find("providerDao", "search_encounter_no", param1);
+      String encounter_no = "0";
+      for (Map encounter : resultList) {
+        encounter_no = String.valueOf(encounter.get("encounter_no"));
+      }
+      if (true) {
+        out.clear();
+        pageContext.forward("providerencounterprint.jsp?encounter_no="+encounter_no);
+        return;
+      }
+    } 
 %>
 <p>
 <h1>Successful Addition of an Encounter Record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
-      self.close();
-     	self.opener.refresh();
+	self.opener.refresh();
+	self.close();
 </script> <%
   }  else {
 %>
@@ -176,10 +171,9 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <input type="button" value="Close this window" onClick="window.close()">
 </center>
 </body>

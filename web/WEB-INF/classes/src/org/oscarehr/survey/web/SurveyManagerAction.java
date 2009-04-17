@@ -986,6 +986,20 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		return null;
 	}
 	
+	public ActionForward export_inverse_csv(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("id");
+		try {
+			response.setContentType("APPLICATION/OCTET-STREAM");
+			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
+			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
+			this.oscarFormManager.generateInverseCSV(Long.valueOf(id), response.getOutputStream());
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public ActionForward export_to_db(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		
 		String id = request.getParameter("id");

@@ -25,7 +25,6 @@
 -->
 
 <%
-  
   if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Print Preview")==0) {
     //    response.sendRedirect("form"+request.getParameter("form_name")+ "print.jsp");
     if(true) {
@@ -37,8 +36,7 @@
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.*, java.net.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -70,20 +68,19 @@
   //save form
   String[] param =new String[6];
   param[0]=request.getParameter("demographic_no");
-	param[1]=request.getParameter("user_no");
+  param[1]=request.getParameter("user_no");
   param[2]=form_date;
   param[3]=form_time; //MyDateFormat.getTimeXX_XX_XX(request.getParameter("form_time"));
-	param[4]=request.getParameter("form_name");
-	param[5]=content;
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
+  param[4]=request.getParameter("form_name");
+  param[5]=content;
+  int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
 
-  if (rowsAffected ==1) { //if success
-    ResultSet rsdemo = null;
-    String[] param2 =new String[2];
+  if (rowsAffected == 1) { //if success
+    String[] param2 = new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]=request.getParameter("form_name");
-    rsdemo = apptMainBean.queryResults(param2, "search_form_no");
-    while (rsdemo.next()) {   
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
+    for (Map form : resultList) {
       //save as an encounter 
       if(request.getParameter("formtype")!=null && request.getParameter("formtype").compareTo("direct")==0 ) {
         if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Save & Exit")==0) {
@@ -94,25 +91,27 @@
       	 param1[3]=request.getParameter("user_no");
       	 param1[4]="No Subject"+ " |"+ "Form:"+request.getParameter("form_name");
       	 param1[5]=""; //content
-      	 param1[6]="<form>providercontrol.jsp?form_no=" +rsdemo.getString("form_no")+ "&dboperation=search_form&displaymodevariable=form" +request.getParameter("form_name").toLowerCase()+ ".jsp&displaymode=vary&bNewForm=0</form>";
-         int rowsAffected1 = apptMainBean.queryExecuteUpdate(param1,"add_encounter");
-         if (rowsAffected1 !=1) break;
+      	 param1[6]="<form>providercontrol.jsp?form_no=" +form.get("form_no")+ "&dboperation=search_form&displaymodevariable=form" +request.getParameter("form_name").toLowerCase()+ ".jsp&displaymode=vary&bNewForm=0</form>";
+   	     int rowsAffected1 = oscarSuperManager.update("providerDao", "add_encounter", param1);
+         if (rowsAffected1 != 1) break;
         }
         //save as an encounter attachment 
         if(request.getParameter("cmd")!=null && request.getParameter("cmd").compareTo("Save & Enc")==0) {
-%> <script LANGUAGE="JavaScript">
+%>
+<script LANGUAGE="JavaScript">
 //  self.close();
-	//self.location.href = urll;  
+//  self.location.href = urll;  
 //  var page = "index.html" ;
 //  windowprops = "height=600,width=700,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
 //  window.open(page, "apptProvider1", windowprops);
 //  var urll = "providercontrol.jsp?appointment_no="+<%=request.getParameter("appointment_no")%>+"&demographic_no="+<%=request.getParameter("demographic_no")%>+"&curProvider_no=&status=T";
-//urll +=  "&reason="+<%=request.getParameter("reason")%>+"&appointment_date="+<%=form_date%>+"&start_time="+<%=form_time%>+"&displaymode=encounter&dboperation=search_demograph&template=" ;
-//  urll += "&encounterattachment="+<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>")%> ;
+//  urll +=  "&reason="+<%=request.getParameter("reason")%>+"&appointment_date="+<%=form_date%>+"&start_time="+<%=form_time%>+"&displaymode=encounter&dboperation=search_demograph&template=";
+//  urll += "&encounterattachment="+<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>")%> ;
 //  urll += "&attachmentdisplay=" +<%=request.getParameter("xml_subject")%> ;
-</script> <%
+</script>
+<%
           response.sendRedirect("providercontrol.jsp?appointment_no="+request.getParameter("appointment_no")+"&demographic_no="+request.getParameter("demographic_no")+"&curProvider_no=&status=T"+"&reason="+request.getParameter("reason")+"&appointment_date="+form_date+"&start_time="+form_time+"&displaymode=encounter&dboperation=search_demograph&template="+
-            "&encounterattachment="+URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>") +
+            "&encounterattachment="+URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>") +
             "&attachmentdisplay=" +request.getParameter("xml_subject") );
 //          if(true) {
             //out.clear();
@@ -123,17 +122,17 @@
         }
         
         //update or add a record to the demoaccess
-        ResultSet rsdemo1 = null;
         String content1=null;
         String alert = SxmlMisc.replaceHTMLContent(request.getParameter("xml_Alert_demographicaccessory"));  //SxmlMisc.getXmlContent(endWith("_demographicaccessory"));
         String medication = SxmlMisc.replaceHTMLContent(request.getParameter("xml_Medication_demographicaccessory"));  
         int rowsAffected2=0;
-        String[] param3 =new String[2];
+        String[] param3 = new String[2];
 
-        rsdemo1 = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
-        if (rsdemo1.next()) { //update a record to the demoaccess
+        List<Map> resultList1 = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+        if (resultList1.size() > 0) { //update a record to the demoaccess
+          Map acc = resultList1.get(0);
           //String tempcontent;
-          content1 = rsdemo1.getString("content");
+          content1 = String.valueOf(acc.get("content"));
           content1=SxmlMisc.replaceOrAddXmlContent(content1, "<xml_Alert>","</xml_Alert>",alert);
           content1=SxmlMisc.replaceOrAddXmlContent(content1, "<xml_Medication>","</xml_Medication>",medication);
 /*
@@ -146,24 +145,25 @@
 */ //System.out.println(content1); 
           param3[0]=content1; 
           param3[1]=request.getParameter("demographic_no");
-          rowsAffected2 = apptMainBean.queryExecuteUpdate(param3,"update_demographicaccessory");
+    	  rowsAffected2 = oscarSuperManager.update("providerDao", "update_demographicaccessory", param3);
         } else {//add a record to the demoaccess
           param3[0]=request.getParameter("demographic_no");
           param3[1]="<xml_Alert>" +alert+ "</xml_Alert>"+"<xml_Medication>" +medication+ "</xml_Medication>"; 
-          rowsAffected2 = apptMainBean.queryExecuteUpdate(param3,"add_demographicaccessory");
+    	  rowsAffected2 = oscarSuperManager.update("providerDao", "add_demographicaccessory", param3);
         }//end if
         
         if (rowsAffected2 ==1) out.println("<script LANGUAGE='JavaScript'>self.close();</script>");
         break;
       } //end if
       
-%> <!--p><h1>Successful Addition of an appointment Record.</h1></p--> <script
-	LANGUAGE="JavaScript">
+%> <!--p><h1>Successful Addition of an appointment Record.</h1></p-->
+<script LANGUAGE="JavaScript">
       self.close();
-      self.opener.document.encounter.encounterattachment.value +="<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+rsdemo.getString("form_no")+"&bNewForm=0</form>") %>";
+      self.opener.document.encounter.encounterattachment.value +="<%=URLEncoder.encode("<form>form"+request.getParameter("form_name")+".jsp?form_no="+form.get("form_no")+"&bNewForm=0</form>") %>";
       self.opener.document.encounter.attachmentdisplay.value += "<%=request.getParameter("xml_subject")%> "; //form_name")%> ";
      	//self.opener.refresh();
-</script> <%
+</script>
+<%
       break; //get only one form_no
     }//end of while
   }  else {
@@ -173,10 +173,9 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>

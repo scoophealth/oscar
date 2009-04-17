@@ -71,9 +71,7 @@ function isBeforeNow(inputDay, inputHour, inputMinute) {
 	var now = new Date();
 	var date=new Date();
 	var myDate_array=inputDay.split("/");
-	date.setFullYear(myDate_array[0]);
-	date.setMonth(myDate_array[1]-1);
-	date.setDate(myDate_array[2]);
+	date.setFullYear(myDate_array[0], myDate_array[1]-1, myDate_array[2]);
 	if (!(inputHour==null || inputHour =='')) date.setHours(inputHour);
 	if (!(inputMinute==null || inputMinute =='')) date.setMinutes(inputMinute);
 	date.setSeconds(59.999);
@@ -89,9 +87,7 @@ function isBeforeNowxMin(inputDay, inputHour, inputMinute, allowedMinutes) {
 	var now = new Date();
 	var date=new Date();
 	var myDate_array=inputDay.split("/");
-	date.setFullYear(myDate_array[0]);
-	date.setMonth(myDate_array[1]-1);
-	date.setDate(myDate_array[2]);
+	date.setFullYear(myDate_array[0], myDate_array[1]-1, myDate_array[2]);
 	if (!(inputHour==null || inputHour =='' || inputHour == 0)) date.setHours(inputHour);
 	if (!(inputMinute==null || inputMinute =='' || inputMinute == 0)) date.setMinutes(inputMinute);
 	date.setSeconds(0.0);

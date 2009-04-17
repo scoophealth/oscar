@@ -1,44 +1,30 @@
 
 <%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
+
   String DONOTBOOK = "Do_Not_Book";
   String curProvider_no = request.getParameter("provider_no");
   String curDoctor_no = request.getParameter("doctor_no") != null ? request.getParameter("doctor_no") : "";
-
   String curUser_no = (String) session.getAttribute("user");
-
   String userfirstname = (String) session.getAttribute("userfirstname");
-
   String userlastname = (String) session.getAttribute("userlastname");
 
   //String curDemoNo = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):"";
-
   //String curDemoName = request.getParameter("demographic_name")!=null?request.getParameter("demographic_name"):"";  
 
   int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
 
-
-
   boolean bFirstDisp=true; //this is the first time to display the window
-
   boolean bFromWL=false; //this is from waiting list page
 
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
-
   if (request.getParameter("demographic_no")!=null) bFromWL=true;
 
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
-  
-  ApptData apptObj = (new ApptOpt()).getApptObj(request);
-
 %>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, oscar.oscarDB.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"
-	errorPage="../appointment/errorpage.jsp"%>
-<%@ page import="org.springframework.web.context.WebApplicationContext"
+	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*, oscar.appt.*"
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="../appointment/errorpage.jsp"%>
@@ -46,37 +32,18 @@
 	errorPage="../appointment/errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean"
-	scope="page" /><%@ include file="../admin/dbconnection.jsp"%>
 <%--RJ 07/07/2006 --%>
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
-<% 
-
-String [][] dbQueries=new String[][] { 
-
-    {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
-    {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
-    {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
-    {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
-
-    {"search_demographic_statusroster", "select * from demographic where demographic_no = ? " }, 
-    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= ? and appt.appointment_date < ? order by appointment_date" },
-    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < ? and appt.appointment_date > ? order by appointment_date desc, start_time desc"}
-
-  };
-//    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= now() and appt.appointment_date < date_add(now(), interval 365 day) order by appointment_date" },
-//    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < now() and appt.appointment_date > date_sub(now(), interval 365 day) order by appointment_date desc"}
-
-  addApptBean.doConfigure(dbParams,dbQueries);
-  int iPageSize=5;
-%>
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <%      
+  int iPageSize=5;
+
+  ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
+
   oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
   String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
-  WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
+
+  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)webApplicationContext.getBean("AppointmentStatusMgr");
   List allStatus = apptStatusMgr.getAllActiveStatus();
 %>
 <!--  
@@ -128,13 +95,15 @@ String [][] dbQueries=new String[][] {
  */
 
 -->
+<html:html locale="true">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 <title><bean:message key="appointment.addappointment.title" /></title>
 <script type="text/javascript">
 
-<!-- start javascript ---- check to see if it is really empty in database
+<!--
 
 function setfocus() {
 
@@ -319,14 +288,10 @@ function pasteAppt() {
 
 </script>
 </head>
-<html:html locale="true">
-<meta http-equiv="Cache-Control" content="no-cache">
 <%
 
   SimpleDateFormat fullform = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
-
   SimpleDateFormat inform = new SimpleDateFormat ("yyyy-MM-dd");
-
   SimpleDateFormat outform = new SimpleDateFormat ("EEE");
 
   java.util.Date apptDate;
@@ -349,160 +314,129 @@ function pasteAppt() {
   }
 
   String dateString1 = outform.format(apptDate );
-
   String dateString2 = inform.format(apptDate );
 
-
-
-	GregorianCalendar caltime =new GregorianCalendar( );
-
-	caltime.setTime(apptDate);
-
-	caltime.add(caltime.MINUTE, Integer.parseInt(duration)-1 );
-
-
+  GregorianCalendar caltime =new GregorianCalendar( );
+  caltime.setTime(apptDate);
+  caltime.add(caltime.MINUTE, Integer.parseInt(duration)-1 );
 
   String [] param = new String[8] ;
-
   param[0] = dateString2;
-
   param[1] = curProvider_no;
-
   param[2] = request.getParameter("start_time");
-
   param[3] = caltime.get(Calendar.HOUR_OF_DAY) +":"+ caltime.get(Calendar.MINUTE);
-
-//	System.out.println(param[3] );
-
   param[4] = param[2];
-
   param[5] = param[3];
-
   param[6] = param[2];
-
   param[7] = param[3];
 
-	ResultSet rsdemo = addApptBean.queryResults(param, "search_appt");
-
-	int apptnum = rsdemo.next()?rsdemo.getInt("n"):0 ;
+  List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_appt", param);
+  long apptnum = resultList.size() > 0 ? (Long)resultList.get(0).get("n") : 0;
 
   String deepcolor = apptnum==0?"#CCCCFF":"gold", weakcolor = apptnum==0?"#EEEEFF":"ivory";
 
-  rsdemo = addApptBean.queryResults(param, "search_appt_name");
+  resultList = oscarSuperManager.find("appointmentDao", "search_appt_name", param);
   boolean bDnb = false;
-  while(rsdemo.next()) {
-      String apptName = rsdemo.getString("name");
-      if(apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
+  for (Map apt : resultList) {
+    String apptName = (String) apt.get("name");
+    if (apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
   }
   
   // select provider lastname & firstname
   String pLastname = "";
   String pFirstname = "";
-  ResultSet rspvd = addApptBean.queryResults(curProvider_no, "search_provider_name");
-  if (rspvd.next()) {
-      pLastname = rspvd.getString("last_name");
-      pFirstname = rspvd.getString("first_name");
+  resultList = oscarSuperManager.find("appointmentDao", "search_provider_name", new Object [] {curProvider_no});
+  if (resultList.size() > 0) {
+	  Map name = resultList.get(0);
+      pLastname = (String) name.get("last_name");
+      pFirstname = (String) name.get("first_name");
   }
-  rspvd.close();
 %>
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
-String patientStatus = "";
-String disabled="";
-String address ="";
-String province = "";
-String city ="";
-String postal ="";
-String phone = "";
-String phone2 = "";
-String email  = "";
-String hin = "";
-String dob = "";
-%>
-<%
+  String patientStatus = "";
+  String disabled="";
+  String address ="";
+  String province = "";
+  String city ="";
+  String postal ="";
+  String phone = "";
+  String phone2 = "";
+  String email  = "";
+  String hin = "";
+  String dob = "";
 
   //to show Alert msg
 
-  if (!bFirstDisp && !request.getParameter("demographic_no").equals("")) {
+  if (!bFirstDisp && request.getParameter("demographic_no") != null && !request.getParameter("demographic_no").equals("")) {
 
-	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographic_statusroster");
+	resultList = oscarSuperManager.find("appointmentDao", "search_demographic_statusroster", new Object [] {request.getParameter("demographic_no") });
+	for (Map status : resultList) {
 
-      while (rsdemo.next()) { 
+        patientStatus      = (String) status.get("patient_status");
+        address            = (String) status.get("address");                    
+        city               = (String) status.get("city");
+        province           = (String) status.get("province"); 
+        postal             = (String) status.get("postal");
+        phone              = (String) status.get("phone"); 
+        phone2             = (String) status.get("phone2");
+        email              = (String) status.get("email");
+        String year_of_birth   = (String) status.get("year_of_birth");
+        String month_of_birth  = (String) status.get("month_of_birth"); 
+        String date_of_birth   = (String) status.get("date_of_birth");
+        dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
+        hin                    = (String) status.get("hin");
+        String ver             = (String) status.get("ver");
+        hin = hin +" "+ ver;
 
-            patientStatus = rsdemo.getString("patient_status");
-            address = rsdemo.getString("address");                    
-            city               = rsdemo.getString("city");
-            province          = rsdemo.getString("province"); 
-            postal            = rsdemo.getString("postal");
-            phone             = rsdemo.getString("phone"); 
-            phone2             = rsdemo.getString("phone2");
-            email             = rsdemo.getString("email");
-            String year_of_birth     = rsdemo.getString("year_of_birth");
-            String month_of_birth     = rsdemo.getString("month_of_birth"); 
-            String date_of_birth     = rsdemo.getString("date_of_birth");
-            dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
-            hin                = rsdemo.getString("hin");
-            String ver               = rsdemo.getString("ver");
-            hin = hin +" "+ver;
+        if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
+           patientStatus = "";
+        } else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
+           disabled = "disabled";
+        }
 
-            if (patientStatus == null || patientStatus.equalsIgnoreCase("AC")) {
-               patientStatus = "";
-            }else if (patientStatus.equalsIgnoreCase("FI")||patientStatus.equalsIgnoreCase("DE")||patientStatus.equalsIgnoreCase("IN")) {
-               disabled = "disabled";
-            }
-	
-            String rosterStatus = rsdemo.getString("roster_status");
-            if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
-               rosterStatus = "";
-            }
+        String rosterStatus = (String) status.get("roster_status");
+        if (rosterStatus == null || rosterStatus.equalsIgnoreCase("RO")) {
+           rosterStatus = "";
+        }
 
 
-            if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
-              String rsbgcolor = "BGCOLOR=\"orange\"" ;
-              String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
+        if(!patientStatus.equals("") || !rosterStatus.equals("") ) {
+          String rsbgcolor = "BGCOLOR=\"orange\"" ;
+          String exp = " null-undefined\n IN-inactive ID-deceased OP-out patient\n NR-not signed\n FS-fee for service\n TE-terminated\n SP-self pay\n TP-third party";
 
 %>
 <table width="98%" <%=rsbgcolor%> border=0 align='center'>
 	<tr>
 		<td><font color='blue' title='<%=exp%>'> <b><bean:message key="Appointment.msgPatientStatus" />:&nbsp;
                     <font color='yellow'><%=patientStatus%></font>&nbsp;<bean:message key="Appointment.msgRosterStatus" />:&nbsp;
-                    <font color='yellow'><%=rosterStatus%></font></b>
+                    <font color='yellow'><%=rosterStatus%></font></b></font>
                 </td>
 	</tr>
 </table>
 <% 
 
-	      }
+        }
+	}
 
-      }
-      rsdemo.close();
-      
-	  rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_demographiccust_alert");
-
-      while (rsdemo.next()) { 
-
-          if(rsdemo.getString("cust3")!=null && !rsdemo.getString("cust3").equals("") ) {
+	resultList = oscarSuperManager.find("appointmentDao", "search_demographiccust_alert", new Object [] {request.getParameter("demographic_no") });
+	for (Map alert : resultList) {
+		if (alert.get("cust3") != null && !alert.get("cust3").equals("") ) {
 
 %>
 <p>
 <table width="98%" BGCOLOR="yellow" border=1 align='center'>
 	<tr>
-		<td><font color='red'><bean:message
-			key="Appointment.formAlert" />: <b><%=rsdemo.getString("cust3")%></b></td>
+		<td><font color='red'><bean:message key="Appointment.formAlert" />: <b><%=alert.get("cust3")%></b></font></td>
 	</tr>
 </table>
 <%    
 
-          }
-
-      }
-
-      
-
+		}
+	}
   }
 
-  
 
   if(apptnum!=0) {
 
@@ -663,10 +597,10 @@ String dob = "";
 			String tempLoc = "";
             if(bFirstDisp && bMoreAddr) {
             	//System.out.println(dateString2 + curProvider_no);
-            	tempLoc = (new ApptOpt()).getLocationFromSchedule(dateString2, curProvider_no);
+            	tempLoc = (new JdbcApptImpl()).getLocationFromSchedule(dateString2, curProvider_no);
             }
             String loc = bFirstDisp?tempLoc:request.getParameter("location").equals("")?"":request.getParameter("location");
-            String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            String colo = bMoreAddr? ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
             %>
 				<td width="20%"><input type="TEXT" name="location"
 					style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>"
@@ -810,64 +744,48 @@ String dob = "";
         
         int iRow=0;
         if( bFromWL && demoNo != null && demoNo.length() > 0 ) {
-//            rsdemo = addApptBean.queryResults(demoNo, "search_appt_future");
-            DBPreparedHandlerParam[] param2 =new DBPreparedHandlerParam[3];
-            param2[0]= new DBPreparedHandlerParam(demoNo);
+
+            Object [] param2 = new Object[3];
+            param2[0] = demoNo;
             Calendar cal2 = Calendar.getInstance();
-            param2[1]=new DBPreparedHandlerParam(new java.sql.Date(cal2.getTime().getTime()));
+            param2[1] = new java.sql.Date(cal2.getTime().getTime());
             cal2.add(Calendar.YEAR, 1);
-            param2[2]=new DBPreparedHandlerParam(new java.sql.Date(cal2.getTime().getTime()));
-            rsdemo = addApptBean.queryResults_paged(param2, "search_appt_future", 0);
-            ArrayList appts = new ArrayList();
-            ApptData appt;
-            while(rsdemo.next()) {
+            param2[2] = new java.sql.Date(cal2.getTime().getTime());
+    		resultList = oscarSuperManager.find("appointmentDao", "search_appt_future", param2);
+
+    		for (Map appt : resultList) {
                 iRow ++;
-                if(iRow>iPageSize) break;
-                appt = new ApptData();
-                appt.setAppointment_date(rsdemo.getString("appointment_date"));
-                appt.setStart_time(rsdemo.getString("start_time"));
-                appt.setName(rsdemo.getString("last_name") + ", " + rsdemo.getString("first_name")); //provider name
-                appt.setStatus(rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") ) );
-                appts.add(appt);
-            }
-            //we have to reverse order to start in future and move towards present
-            for( int idx = appts.size()-1; idx >= 0; --idx ) {
-                appt = (ApptData)appts.get(idx);
-        %>
+                if (iRow > iPageSize) break;
+    %>
 	<tr bgcolor="#eeeeff">
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getAppointment_date()%></td>
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getStart_time()%></td>
-		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.getName()%></td>
-		<td style="background-color: #CCFFCC;"><%=appt.getStatus()%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("appointment_date")%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("start_time")%></td>
+		<td style="background-color: #CCFFCC; padding-right: 25px"><%=appt.get("last_name") + ",&nbsp;" + appt.get("first_name")%></td>
+		<td style="background-color: #CCFFCC;"><%=appt.get("status")==null?"":(appt.get("status").equals("N")?"No Show":(appt.get("status").equals("C")?"Cancelled":"") )%></td>
 	</tr>
 	<%
             }
-            rsdemo.close();
+
             iRow=0;
-//            rsdemo = addApptBean.queryResults_paged(demoNo, "search_appt_past", 0);
-            DBPreparedHandlerParam[] param3 =new DBPreparedHandlerParam[3];
-            param3[0]= new DBPreparedHandlerParam(demoNo);
-            Calendar cal3 = Calendar.getInstance();
-            param3[1]=new DBPreparedHandlerParam(new java.sql.Date(cal3.getTime().getTime()));
-            cal3.add(Calendar.YEAR, -1);
-            param3[2]=new DBPreparedHandlerParam(new java.sql.Date(cal3.getTime().getTime()));
-            rsdemo = addApptBean.queryResults_paged(param3, "search_appt_past", 0);
-            while(rsdemo.next()) {
+            cal2 = Calendar.getInstance();
+            cal2.add(Calendar.YEAR, -1);
+            param2[2] = new java.sql.Date(cal2.getTime().getTime());
+    		resultList = oscarSuperManager.find("appointmentDao", "search_appt_past", param2);
+
+    		for (Map appt : resultList) {
                 iRow ++;
-                if(iRow>iPageSize) break;
-        %>
+                if (iRow > iPageSize) break;
+    %>
 	<tr bgcolor="#eeeeff">
-		<td style="padding-right: 25px"><%=rsdemo.getString("appointment_date")%></td>
-		<td style="padding-right: 25px"><%=rsdemo.getString("start_time")%></td>
-		<td style="padding-right: 25px"><%=rsdemo.getString("last_name") + ",&nbsp;" + rsdemo.getString("first_name")%></td>
-		<td><%=rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") )%></td>
+		<td style="padding-right: 25px"><%=appt.get("appointment_date")%></td>
+		<td style="padding-right: 25px"><%=appt.get("start_time")%></td>
+		<td style="padding-right: 25px"><%=appt.get("last_name") + ",&nbsp;" + appt.get("first_name")%></td>
+		<td><%=appt.get("status")==null?"":(appt.get("status").equals("N")?"No Show":(appt.get("status").equals("C")?"Cancelled":"") )%></td>
 	</tr>
 	<%
             }
         }
-        rsdemo.close();
-        addApptBean.closePstmtConn();
-        %>
+    %>
 </table>
 </td>
 </tr>

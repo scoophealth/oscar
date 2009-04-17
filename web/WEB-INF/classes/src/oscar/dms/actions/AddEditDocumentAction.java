@@ -23,9 +23,9 @@
 
 package oscar.dms.actions;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +39,9 @@ import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.util.SessionConstants;
-
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.data.AddEditDocumentForm;
@@ -125,7 +125,15 @@ public class AddEditDocumentAction extends DispatchAction {
     public ActionForward execute2(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
         AddEditDocumentForm fm = (AddEditDocumentForm) form;
-        if (fm.getMode().equals("add")) {
+        if (fm.getMode().equals("") && fm.getFunction().equals("") && fm.getFunctionId().equals("")) {
+        	//file size exceeds the upload limit
+            Hashtable errors = new Hashtable();
+            errors.put("uploaderror", "dms.error.uploadError");
+            request.setAttribute("docerrors", errors);
+            request.setAttribute("completedForm", fm);
+            request.setAttribute("editDocumentNo", "");
+            return mapping.findForward("failEdit");
+        } else if (fm.getMode().equals("add")) {
             //if add/edit success then send redirect, if failed send a forward (need the formdata and errors hashtables while trying to avoid POSTDATA messages)
             if (addDocument(fm, mapping, request) == true) { //if success
                 ActionRedirect redirect = new ActionRedirect(mapping.findForward("successAdd"));
@@ -166,15 +174,15 @@ public class AddEditDocumentAction extends DispatchAction {
                 throw new Exception();
             }
             FormFile docFile = fm.getDocFile();
-            String fileName = docFile.getFileName();
-            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
-            newDoc.setDocPublic(fm.getDocPublic());
-            fileName = newDoc.getFileName();
-            //save local file;
             if (docFile.getFileSize() == 0) {
                 errors.put("uploaderror", "dms.error.uploadError");
                 throw new FileNotFoundException();
             }
+            String fileName = docFile.getFileName();
+            EDoc newDoc = new EDoc(fm.getDocDesc(), fm.getDocType(), fileName, "", fm.getDocCreator(), fm.getResponsibleId(), fm.getSource(), 'A', fm.getObservationDate(), "", "", fm.getFunction(), fm.getFunctionId());
+            newDoc.setDocPublic(fm.getDocPublic());
+            fileName = newDoc.getFileName();
+            //save local file
             writeLocalFile(docFile, fileName);
             newDoc.setContentType(docFile.getContentType());
 
@@ -253,17 +261,26 @@ public class AddEditDocumentAction extends DispatchAction {
     }
     
     private void writeLocalFile(FormFile docFile, String fileName) throws Exception {
+        InputStream fis = null;
+        FileOutputStream fos = null;
         try {
-             byte[] docdata = docFile.getFileData();
-             String savePath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/" + fileName;
-             FileOutputStream fileStream = new FileOutputStream(new File(savePath));
-             fileStream.write(docdata);
+            fis = docFile.getInputStream();
+            String savePath = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/" + fileName;
+            fos = new FileOutputStream(savePath);
+            byte[] buf = new byte[128*1024];
+            int i = 0;
+            while ((i = fis.read(buf)) != -1) {
+                fos.write(buf, 0, i);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (fis != null) fis.close();
+            if (fos != null) fos.close();
         }
     }
     
     private boolean filled(String s) {
-	return (s!=null && s.trim().length()>0);
+        return (s!=null && s.trim().length()>0);
     }
 }

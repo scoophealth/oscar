@@ -34,8 +34,7 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -59,33 +58,31 @@
 	</tr>
 </table>
 <%
-   ResultSet rsdemo = null;
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), request.getParameter("dboperation")); //dboperation=search_demograph
-   while (rsdemo.next()) { 
-     demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-     dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
-     dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
-     dob_date = Integer.parseInt(rsdemo.getString("date_of_birth"));
+   //dboperation=search_demograph
+   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("demographic_no")});
+   for (Map demo : resultList) {
+     demoname=demo.get("last_name")+", "+demo.get("first_name");
+     dob_year = Integer.parseInt(String.valueOf(demo.get("year_of_birth")));
+     dob_month = Integer.parseInt(String.valueOf(demo.get("month_of_birth")));
+     dob_date = Integer.parseInt(String.valueOf(demo.get("date_of_birth")));
      dob=dob_year+"-"+dob_month+"-"+dob_date;
-     //dob=rsdemo.getString("year_of_birth")+"-"+rsdemo.getString("month_of_birth")+"-"+rsdemo.getString("date_of_birth");
-     gender=rsdemo.getString("sex");
-     hin=rsdemo.getString("hin");
-     roster=rsdemo.getString("roster_status");
+     gender=String.valueOf(demo.get("sex"));
+     hin=String.valueOf(demo.get("hin"));
+     roster=String.valueOf(demo.get("roster_status"));
    }
  
-	GregorianCalendar now=new GregorianCalendar();
+  GregorianCalendar now=new GregorianCalendar();
   int curYear = now.get(Calendar.YEAR);
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   int age=0;
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
-  rsdemo = null;
-  rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
   boolean bNewDemoAcc=true;
-  if (rsdemo.next()) { 
-    String content=rsdemo.getString("content");
+  resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+  for (Map demo : resultList) {
+    String content=String.valueOf(demo.get("content"));
     bNewDemoAcc=false;
 %>
 <xml id="xml_list">
@@ -95,7 +92,6 @@
 </xml>
 <%
   } 
-  apptMainBean.closePstmtConn();
 %>
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
 	<form name="encounter" method="post" action="providercontrol.jsp">
@@ -180,8 +176,8 @@
 			</table>
 
 			</td>
-			</tr>
-			</form>
-		</table>
+		</tr>
+	</form>
+</table>
 </body>
 </html>

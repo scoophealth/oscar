@@ -12,7 +12,7 @@
  * Read the entire license text here: http://www.gnu.org/licenses/lgpl.html
  */
 
-// $Id: calendar.js,v 1.1 2006-12-16 04:33:31 hexbinary Exp $
+// $Id: calendar.js,v 1.2 2009-04-17 15:25:55 hexbinary Exp $
 
 /** The Calendar object constructor. */
 Calendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
@@ -911,9 +911,7 @@ Calendar.prototype.create = function (_par) {
 				var y = date.getFullYear();
 				date.setHours(h);
 				date.setMinutes(parseInt(M.innerHTML, 10));
-				date.setFullYear(y);
-				date.setMonth(m);
-				date.setDate(d);
+				date.setFullYear(y, m, d);
 				this.dateClicked = false;
 				this.callHandler();
 			};
@@ -1717,10 +1715,7 @@ Date.prototype.equalsTo = function(date) {
 /** Set only the year, month, date parts (keep existing time) */
 Date.prototype.setDateOnly = function(date) {
 	var tmp = new Date(date);
-	this.setDate(1);
-	this.setFullYear(tmp.getFullYear());
-	this.setMonth(tmp.getMonth());
-	this.setDate(tmp.getDate());
+	this.setFullYear(tmp.getFullYear(), tmp.getMonth(), tmp.getDate());
 };
 
 /** Prints the date in a string according to the given format. */

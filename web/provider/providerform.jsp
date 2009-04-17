@@ -26,8 +26,7 @@
 
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -68,6 +67,10 @@ function setfocus() {
 		<td><input type="text" name="formfilename" style="width: 100%"></td>
 	</tr>
 	<tr>
+		<td valign="top" width="30%" align="right">Form Table:</td>
+		<td><input type="text" name="formtable" style="width: 100%"></td>
+	</tr>
+	<tr>
 		<td colspan="2">
 		<div align="center"><INPUT TYPE="hidden" NAME="dboperation"
 			VALUE='add_encounterform'> <INPUT TYPE="hidden"
@@ -86,15 +89,14 @@ function setfocus() {
 	<tr>
 		<td align="center"><font color="white">Form Name: </font> <select
 			name="encounterform_name">
-			<%
-   ResultSet rsdemo = null;
-   rsdemo = apptMainBean.queryResults("search_encounterformname");
-   while (rsdemo.next()) { 
-	%>
-			<option value="<%=rsdemo.getString("encounterform_name")%>"><%=rsdemo.getString("encounterform_name")%></option>
-			<%
-     }
-	%>
+<%
+  List<Map> resultList = oscarSuperManager.find("providerDao", "search_encounterformname", new Object[] {});
+  for (Map form : resultList) {
+%>
+			<option value="<%=form.get("form_name")%>"><%=form.get("form_name")%></option>
+<%
+  }
+%>
 		</select> <input type="submit" value="Delete" name="submit"> <INPUT
 			TYPE="hidden" NAME="displaymode" VALUE='save_encounterform'>
 		</td>

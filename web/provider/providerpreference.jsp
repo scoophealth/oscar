@@ -10,8 +10,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.OscarProperties" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="../admin/dbconnection.jsp" %>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <!--  
 /*
  * 
@@ -37,18 +36,12 @@
  * Ontario, Canada 
  */
 -->
-<%
-String [][] dbQueries=new String[][] {
-    {"search_pref_defaultbill", "select default_servicetype from preference where provider_no = ?"},
-    {"list_bills_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
-};
-apptMainBean.doConfigure(dbParams,dbQueries);
-%>
-
-<head><title><bean:message key="provider.providerpreference.title"/></title></head>
-
 <html:html locale="true">
-<meta http-equiv="Cache-Control" content="no-cache" >
+
+<head>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<title><bean:message key="provider.providerpreference.title" /></title>
+<meta http-equiv="Cache-Control" content="no-cache">
 
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
@@ -154,6 +147,7 @@ function showHideBillPref() {
 }
 
 </script>
+</head>
 
 <body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
@@ -234,7 +228,7 @@ function showHideBillPref() {
             <td width="20%"> 
              <%  String myCheck3 = "";
              	 String myCheck4 = "";                 
-                  if((request.getParameter("default_pmm")).equals("enabled"))
+                  if("enabled".equals(request.getParameter("default_pmm")))
                   { myCheck3 = "checked";
                   	  myCheck4 = "unchecked";}
                   else
@@ -310,15 +304,19 @@ function showHideBillPref() {
           <bean:message key="provider.labelDefaultBillForm"/>: 
 	  <select name="default_servicetype">
 	      <option value="no">-- no --</option>
-<%  ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_pref_defaultbill");
-    if (rs.next()) {
-        ResultSet rs1 = apptMainBean.queryResults("list_bills_servicetype");
-        while (rs1.next()) { %>
-	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(apptMainBean.getString(rs,"default_servicetype"))?"selected":""%>>
-		<%=apptMainBean.getString(rs1,"servicetype_name")%>
-	      </option>
-<%  }	} 
-    apptMainBean.closePstmtConn(); 
+<%
+	List<Map> resultList = oscarSuperManager.find("providerDao", "search_pref_defaultbill", new Object[] {request.getParameter("provider_no")});
+	if (resultList.size() > 0) {
+		String def = String.valueOf(resultList.get(0).get("default_servicetype"));
+		resultList = oscarSuperManager.find("providerDao", "list_bills_servicetype", new Object[] {});
+		for (Map bill : resultList) {
+%>
+				<option value="<%=bill.get("servicetype")%>"
+					<%=def.equals(bill.get("servicetype"))?"selected":""%>>
+					<%=bill.get("servicetype_name")%></option>
+<%
+		}
+	} 
 %>
 	  </select>	    
 	  </div>

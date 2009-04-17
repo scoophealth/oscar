@@ -25,22 +25,11 @@
 -->
 
 <%
-  
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc limit 1 offset 0"},  
-    {"search_form", "select * from form where form_no=? "},
-  };
-  String[][] responseTargets=new String[][] {  };
-  formMainBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -68,30 +57,27 @@ function setfocus() {
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
   boolean bNew = true, bNewList = true; 
-  ResultSet rsdemo = null;
   String content="";
   if( request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("0")==0 ) bNew = false;
 
   if(!bNew ) { //not new form
     bNewList = false;
-    rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) { 
-      content = rsdemo.getString("content");
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    for (Map form : resultList) {
+      content = (String)form.get("content");
 %> <xml id="xml_list"><encounter> <%=content%> </encounter></xml> <%
     }
-    formMainBean.closePstmtConn();
   } else {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]="Old Rourke" ; //form_name;
 //System.out.println(param2[0]+param2[1]);
-    rsdemo = formMainBean.queryResults(param2, "search_form_no");
-    while (rsdemo.next()) { 
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
+    for (Map form : resultList) {
       bNew = false;
-      content = rsdemo.getString("content");
-%> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml> <%
+      content = (String)form.get("content");
+%> <xml id="xml_list"><encounter> <%=content%> </encounter></xml> <%
     }          
-    formMainBean.closePstmtConn();
   }
 %>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">

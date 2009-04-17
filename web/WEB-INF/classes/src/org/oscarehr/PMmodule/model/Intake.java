@@ -232,13 +232,17 @@ public class Intake implements Serializable {
 	
 	public String getType() {
 		String type = PROGRAM;
-		
+		/*
 		if (getNode().getId().equals(1)) {
 			type = QUICK;
 		} else if (getNode().getId().equals(2)) {
 			type = INDEPTH;
 		}
-		
+		*/
+		if(node.getFormType() == 1) {
+			type = QUICK;
+		}
+		else type = INDEPTH;
 		return type;
 	}
 

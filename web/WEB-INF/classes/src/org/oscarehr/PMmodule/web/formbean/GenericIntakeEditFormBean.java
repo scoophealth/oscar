@@ -65,6 +65,8 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	
 	private Intake intake;
 
+	private Integer nodeId;
+	
     public GenericIntakeEditFormBean() {
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
@@ -381,4 +383,13 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return result;
 	}
 
+	public Integer getNodeId() {
+		return nodeId;
+	}
+
+	public void setNodeId(Integer nodeId) {
+		this.nodeId = nodeId;
+	}
+
+	
 }

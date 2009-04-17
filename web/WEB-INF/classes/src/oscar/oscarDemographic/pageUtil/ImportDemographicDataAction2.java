@@ -43,14 +43,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Properties;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -58,8 +56,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.jdom.Element;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.appt.AppointmentDAO;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
@@ -74,6 +73,7 @@ import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarRx.data.RxAllergyImport;
 import oscar.oscarRx.data.RxPrescriptionImport;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -781,9 +781,9 @@ public class ImportDemographicDataAction2 extends Action {
 		String name="", notes="", reason="", status="", startTime="", endTime="";
 		providerNo="";
 
-		HttpSession session = req.getSession();
-		Properties p = (Properties) session.getAttribute("oscarVariables");
-		AppointmentDAO apD = new AppointmentDAO(p);
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(
+				req.getSession().getServletContext());
+		OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");
 
 		for (int i=0; i<appArray.length; i++) {
 		    name = lastName + "," + firstName;
@@ -837,7 +837,8 @@ public class ImportDemographicDataAction2 extends Action {
 			String personOHIP = appArray[i].getProvider().getOHIPPhysicianId();
 			providerNo = writeProviderData(personName, personOHIP);
 		    }
-		    apD.addAppointment(providerNo, appointmentDate, startTime, endTime, name, demoNo, notes, reason, status);
+		    oscarSuperManager.update("appointmentDao", "import_appt", new Object [] {providerNo,
+		    		appointmentDate, startTime, endTime, name, demoNo, notes, reason, status});
 		}
 		
 		//REPORTS RECEIVED

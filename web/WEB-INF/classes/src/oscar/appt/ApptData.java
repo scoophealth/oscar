@@ -1,5 +1,9 @@
 package oscar.appt;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ApptData {
 	String appointment_no;
 	String provider_no;
@@ -21,6 +25,9 @@ public class ApptData {
 	String remarks;
 	String duration;
 	String chart_no;
+	String providerLastName;
+	String providerFirstName;
+	String ohipNo;
 
 	public String getAppointment_date() {
 		return appointment_date;
@@ -182,4 +189,45 @@ public class ApptData {
 		this.duration = duration;
 	}
 
+	
+	public Date getDateAppointmentDate() throws ParseException {
+	    return stringToDateOrTime(this.appointment_date, true);
+	}
+	
+	public Date getDateStartTime() throws ParseException {
+	    return stringToDateOrTime(this.start_time, false);
+	}
+	
+	public Date getDateEndTime() throws ParseException {
+	    return stringToDateOrTime(this.end_time, false);
+	}
+	
+	public String getProviderFirstName() {
+	    return this.providerFirstName;
+	}
+	
+	public void setProviderFirstName(String name) {
+		this.providerFirstName = name;
+	}
+	
+	public String getProviderLastName() {
+	    return this.providerLastName;
+	}
+	
+	public void setProviderLastName(String name) {
+		this.providerLastName = name;
+	}
+	
+	public String getOhipNo() {
+	    return this.ohipNo;
+	}
+	
+	public void setOhipNo(String ohipNo) {
+		this.ohipNo = ohipNo;
+	}
+
+	private Date stringToDateOrTime(String s, boolean isDate) throws ParseException {
+	    if (isDate) return new SimpleDateFormat("yyyy-MM-dd").parse(s);
+	    else return new SimpleDateFormat("HH:mm:ss").parse(s);
+	}
 }

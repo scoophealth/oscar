@@ -24,29 +24,26 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="receptionist.receptionistdisplaymygroup.title" /></title>
-</head>
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
-
 <script language="javascript">
 <!--
 
 // stop -->
 </script>
+</head>
 
 <body bgproperties="fixed" onLoad="setfocus()" topmargin="0"
 	leftmargin="0" rightmargin="0">
@@ -73,29 +70,28 @@
 				<th><bean:message
 					key="receptionist.receptionistdisplaymygroup.msgOrder" /></th>
 			</tr>
-			<%
-   ResultSet rsgroup = null;
-   boolean bNewNo=false;
-   String oldNo="";
-   rsgroup = apptMainBean.queryResults("searchmygroupall");
-   while (rsgroup.next()) { 
-     bNewNo=bNewNo?false:true;
+<%
+	boolean bNewNo = false;
+	String oldNo = "";
+	List<Map> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
+	for (Map group : resultList) {
+		String groupNo = String.valueOf(group.get("mygroup_no"));
+		bNewNo = bNewNo?false:true;
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"#EEEEFF"%>">
 				<td width="10%" align="center"><input type="checkbox"
-					name="<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>"
-					value="<%=rsgroup.getString("mygroup_no")%>"></td>
-				<td ALIGN="center"><%=rsgroup.getString("mygroup_no")%></td>
-				<td>&nbsp; <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%>
+					name="<%=groupNo + group.get("provider_no")%>"
+					value="<%=groupNo%>"></td>
+				<td ALIGN="center"><%=groupNo%></td>
+				<td>&nbsp; <%=group.get("last_name") + ", " + group.get("first_name")%>
 				</td>
 				<td ALIGN="center"><INPUT TYPE="text"
-					name="__vieworder<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>"
-					VALUE="<%=rsgroup.getString("vieworder")==null?"":rsgroup.getString("vieworder")%>"
+					name="__vieworder<%=groupNo + group.get("provider_no")%>"
+					VALUE="<%=group.get("vieworder")==null?"":group.get("vieworder")%>"
 					SIZE="3" maxlength="2"></td>
 			</tr>
-			<%
-   }
-   apptMainBean.closePstmtConn();
+<%
+	}
 %>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
 

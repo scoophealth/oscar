@@ -33,8 +33,7 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 
 <html:base />
-<link rel="stylesheet" type="text/css"
-	href="../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 
 <title><bean:message key="provider.editRxFax.title" /></title>
 

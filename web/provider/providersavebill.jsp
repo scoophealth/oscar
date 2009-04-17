@@ -35,8 +35,7 @@
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -65,28 +64,23 @@
   String content="";//default is not null temp=null, 
   content=SxmlMisc.createXmlDataString(request, "xml_");
 
-    //System.out.println(subject+content);
-    String[] param =new String[7];
-	  param[0]=request.getParameter("demographic_no");
-	  param[1]=request.getParameter("user_no");
-	  param[2]=request.getParameter("billing_date");
-	  param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
-	  param[4]=request.getParameter("billing_name");
-	  param[5]=content;
-	  param[6]=request.getParameter("total");
+  String[] param = new String[7];
+  param[0]=request.getParameter("demographic_no");
+  param[1]=request.getParameter("user_no");
+  param[2]=request.getParameter("billing_date");
+  param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("billing_time"));
+  param[4]=request.getParameter("billing_name");
+  param[5]=content;
+  param[6]=request.getParameter("total");
 
-//	  int[] demo_no = new int[1]; demo_no[0]=Integer.parseInt(request.getParameter("demographic_no")); int rowsAffected = apptMainBean.queryExecuteUpdate(demo_no,param,request.getParameter("dboperation"));
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
-    //apptMainBean.closePstmtConn();//change the status to billed {"updateapptstatus", "update appointment set status=? where appointment_no=? //provider_no=? and appointment_date=? and start_time=?"},
-    String[] param1 =new String[2];
-	  param1[0]="B";
-	  param1[1]=request.getParameter("appointment_no");
-//	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-   rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
-   ResultSet rsdemo = null;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_billing_no");
-   while (rsdemo.next()) {    
+  int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+  if (rowsAffected == 1) {
+	String[] param1 = new String[2];
+	param1[0]="B";
+	param1[1]=request.getParameter("appointment_no");
+	rowsAffected = oscarSuperManager.update("providerDao", "updateapptstatus", param1);
+	List<Map> resultList = oscarSuperManager.find("providerDao", "search_billing_no", new Object[] {request.getParameter("demographic_no")});
+	for (Map bill: resultList) {
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
@@ -94,23 +88,23 @@
 <script LANGUAGE="JavaScript">
       self.close();
       //self.top.location = 'providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_no=<%=Integer.parseInt(request.getParameter("demographic_no"))%>&curProvider_no=<%=curUser_no%>&username=<%= userfirstname+" "+userlastname %>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&status=B&displaymode=encounter&dboperation=search_demograph&template=';
-      self.opener.document.encounter.encounterattachment.value +="<billing>providercontrol.jsp?billing_no=<%=rsdemo.getString("billing_no")%>^displaymode=vary^displaymodevariable=billing<%=request.getParameter("billing_name")%>.jsp^dboperation=search_bill</billing>";
+      self.opener.document.encounter.encounterattachment.value +="<billing>providercontrol.jsp?billing_no=<%=bill.get("billing_no")%>^displaymode=vary^displaymodevariable=billing<%=request.getParameter("billing_name")%>.jsp^dboperation=search_bill</billing>";
       self.opener.document.encounter.attachmentdisplay.value +="Billing "; //:<%=request.getParameter("billing_name")%> ";
-     	//self.opener.refresh();
-</script> <%
-    break; //get only one billing_no
-    }//end of while
-  }  else {
+      //self.opener.refresh();
+</script>
+<%
+	  break; //get only one billing_no
+	}//end of for
+  } else {
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>

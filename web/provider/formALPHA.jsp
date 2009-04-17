@@ -30,17 +30,7 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc limit 1 offset 0"},  
-    {"search_form", "select * from form where form_no=? "},
-  };
-  String[][] responseTargets=new String[][] {  };
-  formMainBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -100,10 +90,9 @@ function onSubmitForm() {
 
   if( !bNew ) {
     String content="";
-    ResultSet rsdemo = null;
-    rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) { 
-      content = rsdemo.getString("content");
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    for (Map form : resultList) {
+        content = (String)form.get("content");
 %>
 <xml id="xml_list">
 <encounter>
@@ -112,7 +101,6 @@ function onSubmitForm() {
 </xml>
 <%
     }     
-    formMainBean.closePstmtConn();
   }
 %>
 </head>

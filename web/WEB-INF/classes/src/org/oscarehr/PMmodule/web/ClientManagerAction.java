@@ -1481,10 +1481,15 @@ public class ClientManagerAction extends BaseAction {
 		if (tabBean.getTab().equals("Forms")) {
 			request.setAttribute("regIntakes", genericIntakeManager.getRegIntakes(Integer.valueOf(demographicNo), facilityId));
 			request.setAttribute("quickIntakes", genericIntakeManager.getQuickIntakes(Integer.valueOf(demographicNo), facilityId));
-			request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo), facilityId));
+			//request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo), facilityId));
+			request.setAttribute("indepthIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId,2));
+			request.setAttribute("generalIntakes", genericIntakeManager.getIntakesByType(Integer.valueOf(demographicNo), facilityId,3));			
 			request.setAttribute("programIntakes", genericIntakeManager.getProgramIntakes(Integer.valueOf(demographicNo), facilityId));
 			request.setAttribute("programsWithIntake", genericIntakeManager.getProgramsWithIntake(Integer.valueOf(demographicNo)));
 
+			request.setAttribute("indepthIntakeNodes", genericIntakeManager.getIntakeNodesByType(2));
+			request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
+			
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllForms(facilityId,providerNo));
 			request.setAttribute("surveys", surveyManager.getForms(demographicNo, facilityId,providerNo));

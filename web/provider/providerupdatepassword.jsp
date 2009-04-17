@@ -27,57 +27,42 @@
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
+  String curUser_no = (String) session.getAttribute("user");
+  MessageDigest md = MessageDigest.getInstance("SHA");
 %>
-
 
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*,java.security.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="pwdMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%
-  String curUser_no = (String) session.getAttribute("user");
-  MessageDigest md = MessageDigest.getInstance("SHA");
-%>
-<%@ include file="../admin/dbconnection.jsp"%>
-<%
-  //operation available to the client -- dboperation
-  String [][] dbQueries=new String[][] {
-    {"searchpassword", "select password from security where provider_no = ?" },
-	  {"updatepassword", "update security set password = ? where  provider_no= ?" },
-  };
-   
-   //associate each operation with an output JSP file -- displaymode
-   String[][] responseTargets=new String[][] {   };
-   pwdMainBean.doConfigure(dbParams,dbQueries,responseTargets);
-   ResultSet rsgroup = pwdMainBean.queryResults(curUser_no, "searchpassword");
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
-   while (rsgroup.next()) { 
+<%
+	List<Map> resultList = oscarSuperManager.find("providerDao", "searchpassword", new Object[] {curUser_no});
+	for (Map pwd : resultList) {
      StringBuffer sbTemp = new StringBuffer();
      byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());
      for(int i=0; i<btOldPasswd.length; i++) sbTemp = sbTemp.append(btOldPasswd[i]);
-   
-     String stroldpasswd = sbTemp.toString();
-//     System.out.println(stroldpasswd+ " oldpassword ");
 
-     String strDBpasswd = rsgroup.getString("password");
-     if(rsgroup.getString("password").length()<20) {
-       sbTemp = new StringBuffer();
-       byte[] btDBPasswd= md.digest(rsgroup.getString("password").getBytes());
-       for(int i=0; i<btDBPasswd.length; i++) sbTemp = sbTemp.append(btDBPasswd[i]);
-       strDBpasswd = sbTemp.toString();
+     String stroldpasswd = sbTemp.toString();
+//   System.out.println(stroldpasswd+ " oldpassword ");
+
+     String strDBpasswd = (String) pwd.get("password");
+     if (strDBpasswd.length()<20) {
+         sbTemp = new StringBuffer();
+         byte[] btDBPasswd= md.digest(strDBpasswd.getBytes());
+         for(int i=0; i<btDBPasswd.length; i++) sbTemp = sbTemp.append(btDBPasswd[i]);
+         strDBpasswd = sbTemp.toString();
      }
-//     System.out.println(rsgroup.getString("password")+"  db ");
      
      if( stroldpasswd.equals(strDBpasswd ) && request.getParameter("mypassword").equals(request.getParameter("confirmpassword")) ) {
        sbTemp = new StringBuffer();
        byte[] btNewPasswd= md.digest(request.getParameter("mypassword").getBytes());
        for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 
-       String[] param =new String[2];
-	     param[0]=sbTemp.toString();
-	     param[1]=curUser_no;
-       int rowsAffected = pwdMainBean.queryExecuteUpdate(param, "updatepassword");
+       String[] param = new String[2];
+       param[0]=sbTemp.toString();
+       param[1]=curUser_no;
+       int rowsAffected = oscarSuperManager.update("providerDao", "updatepassword", param);
        if(rowsAffected==1) out.println("<script language='javascript'>self.close();</script>");
      } else {
        response.sendRedirect("providerchangepassword.jsp");

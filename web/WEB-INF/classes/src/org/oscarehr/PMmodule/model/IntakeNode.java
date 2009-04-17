@@ -49,6 +49,8 @@ public class IntakeNode implements Serializable {
     private List<IntakeNode> children;
     private Set<Intake> intakes;
     private Set<IntakeAnswer> answers;
+    private Integer formType;
+    
 
     // constructors
     public IntakeNode() {
@@ -451,4 +453,12 @@ public class IntakeNode implements Serializable {
         }
         return this.hashCode;
     }
+
+	public void setFormType(Integer type) {
+		this.formType = type;
+	}
+	
+	public Integer getFormType() {
+		return this.formType;
+	}
 }

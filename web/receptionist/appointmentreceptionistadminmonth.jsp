@@ -31,9 +31,9 @@
 <%@ page
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*,oscar.*"
 	errorPage="errorpage.jsp"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  
   String curUser_no, curProvider_no,userfirstname,userlastname, mygroupno,n_t_w_w="";
   curProvider_no = (String) session.getAttribute("user");
 
@@ -49,8 +49,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
   int view=0;
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable"
 	scope="session" />
 <jsp:useBean id="myGrpBean" class="java.util.Properties" scope="page" />
@@ -58,10 +56,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	scope="session" />
 
 <%
-      String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-  ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
-  while (rsgroup1.next()) { 
- 	  resourcebaseurl = rsgroup1.getString("value");
+  String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
+  List<Map> resultList = oscarSuperManager.find("receptionistDao", "search_resource_baseurl", new String[] {"resource_baseurl"});
+  for (Map url : resultList) {
+ 	  resourcebaseurl = (String) url.get("value");
   }
 
   GregorianCalendar now=new GregorianCalendar();
@@ -109,11 +107,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
   strDay=day>9?(""+day):("0"+day);
 
   //initial holiday bean
-  ResultSet rsgroup = null;
   if(scheduleHolidayBean.isEmpty() ) {
-    rsgroup = apptMainBean.queryResults(((year-1)+"-"+month+"-01"),"search_scheduleholiday");
-    while (rsgroup.next()) { 
-      scheduleHolidayBean.put(rsgroup.getString("sdate"), new HScheduleHoliday(rsgroup.getString("holiday_name") ));
+    resultList = oscarSuperManager.find("receptionistDao", "search_scheduleholiday", new String[] {(year-1)+"-"+month+"-01"});
+    for (Map holiday : resultList) {
+      scheduleHolidayBean.put(String.valueOf(holiday.get("sdate")), new HScheduleHoliday(String.valueOf(holiday.get("holiday_name"))));
     }
   }
   //declare display schedule string
@@ -128,18 +125,17 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     myGrpBean.setProperty(mygroupno, mygroupno);
   } else {
     if(!mygroupno.equals("all")) { //find group members
-      rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupprovider");
-      while (rsgroup.next()) { 
-        myGrpBean.setProperty(rsgroup.getString("provider_no"), mygroupno);
+      resultList = oscarSuperManager.find("receptionistDao", "searchmygroupprovider", new Object[] {mygroupno});
+      for (Map provider : resultList) {
+        myGrpBean.setProperty(String.valueOf(provider.get("provider_no")), mygroupno);
       }
     } else { //find all providers
       // the following line works only on MySQL. Should not be used
       // rsgroup = apptMainBean.queryResults("last_name", "searchallprovider");
-      rsgroup = apptMainBean.queryResults( "searchallprovider");
-
- 	    while (rsgroup.next()) { 
- 	      myGrpBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
- 	    }
+      resultList = oscarSuperManager.find("receptionistDao", "searchallprovider", new String[] {});
+      for (Map provider : resultList) {
+    	myGrpBean.setProperty(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));
+ 	  }
     }
   }
 
@@ -263,16 +259,16 @@ function refresh1() {
 					moduleName="ticklerplus">
 					<a href=#
 						onClick="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=n_t_w_w%>');return false;"><bean:message
-						key="receptionist.appointmentrecepcionistmonth.btnPref" /></a></font></td>
-				</caisi:IsModuleLoad>
+						key="receptionist.appointmentrecepcionistmonth.btnPref" /></a>
+				</caisi:isModuleLoad>
 				<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
 					<a href=#
 						onClick="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;"><bean:message
 						key="receptionist.appointmentrecepcionistmonth.btnPref" /></a>
-					</font>
-					</td>
-					</caisi:IsModuleLoad>
-					<td></td>
+				</caisi:isModuleLoad>
+				</font>
+				</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td valign="bottom"><img
@@ -339,21 +335,23 @@ function refresh1() {
 					name="provider_no" onChange="selectprovider(this)">
 					<option value="all"><bean:message
 						key="receptionist.appointmentrecepcionistmonth.formAllDocs" /></option>
-					<% rsgroup = apptMainBean.queryResults("searchmygroupno");
- 	 while (rsgroup.next()) { 
+<%
+	resultList = oscarSuperManager.find("receptionistDao", "searchmygroupno", new Object[] {});
+	for (Map group : resultList) {
 %>
-					<option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>"
-						<%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%>><bean:message
-						key="receptionist.appointmentrecepcionistmonth.formGRP" />: <%=rsgroup.getString("mygroup_no")%></option>
-					<% } %>
+					<option value="<%="_grp_"+group.get("mygroup_no")%>"
+						<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><bean:message
+						key="receptionist.appointmentrecepcionistmonth.formGRP" />: <%=group.get("mygroup_no")%></option>
+<%
+	}
 
-					<% rsgroup = apptMainBean.queryResults("searchprovider");
- 	 while (rsgroup.next()) { 
+	resultList = oscarSuperManager.find("receptionistDao", "searchprovider", new Object[] {});
+	for (Map provider : resultList) {
 %>
-					<option value="<%=rsgroup.getString("provider_no")%>"
-						<%=mygroupno.equals(rsgroup.getString("provider_no"))?"selected":""%>><%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
-					<%
- 	 }
+					<option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+					<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
+<%
+	}
 %>
 				</select> <a href="../logout.jsp"><bean:message
 					key="receptionist.appointmentrecepcionistmonth.btnLogOut" /> <img
@@ -394,14 +392,16 @@ function refresh1() {
     if(providerBean.get(mygroupno) == null) { //it is a real group defined by users
       param[0] = year+"-"+month+"-"+"1";
       param[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
-      rsgroup = apptMainBean.queryResults(param,"search_scheduledate_datep");
+      resultList = oscarSuperManager.find("receptionistDao", "search_scheduledate_datep", param);
     } else {
       String[] param1 = new String[3];
       param1[0] = year+"-"+month+"-"+"1";
       param1[1] = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+"1";
       param1[2] = mygroupno;
-      rsgroup = apptMainBean.queryResults(param1,"search_scheduledate_singlep");
+      resultList = oscarSuperManager.find("receptionistDao", "search_scheduledate_singlep", param1);
     }
+              Iterator<Map> it = resultList.iterator();
+              Map date = null;
               for (int i=0; i<dateGrid.length; i++) {
                 out.println("</tr>");
                 for (int j=0; j<7; j++) {
@@ -422,20 +422,24 @@ function refresh1() {
 						href='receptionistcontrol.jsp?year=<%=year%>&month=<%=MyDateFormat.getDigitalXX(month)%>&day=<%=MyDateFormat.getDigitalXX(dateGrid[i][j])%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName"))%>&displaymode=day&dboperation=searchappointmentday'>
 					<span class='date'>&nbsp;<%=dateGrid[i][j] %> </span> <font
 						size="-2" color="blue"><%=strHolidayName.toString()%></font> <%
-    while (bFistEntry?rsgroup.next():true) { 
-    if(!rsgroup.getString("sdate").equals(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])) ) {
-      bFistEntry = false;
-      break;
-    } else {  
-      //System.out.println("ccc "+dateGrid[i][j]);
-      bFistEntry = true;
-      if(rsgroup.getString("available").equals("0")) continue;
-    }
-    if( myGrpBean.containsKey(rsgroup.getString("provider_no")) ) {
+    while (bFistEntry?it.hasNext():true) {
+      date = bFistEntry?it.next():date;
+      if(!String.valueOf(date.get("sdate")).equals(year+"-"+MyDateFormat.getDigitalXX(month)+"-"+MyDateFormat.getDigitalXX(dateGrid[i][j])) ) {
+        bFistEntry = false;
+        break;
+      } else {  
+        //System.out.println("ccc "+dateGrid[i][j]);
+        bFistEntry = true;
+        if(String.valueOf(date.get("available")).equals("0")) continue;
+      }
+      if( myGrpBean.containsKey(String.valueOf(date.get("provider_no"))) ) {
 %> <br>
-					<span class='datepname'>&nbsp;<%=Misc.getShortStr(providerBean.getProperty(rsgroup.getString("provider_no")),"",11 )%></span><span
-						class='datephour'><%=rsgroup.getString("hour") %></span><span
-						class='datepreason'><%=rsgroup.getString("reason") %></span> <%  }  }  %>
+					<span class='datepname'>&nbsp;<%=Misc.getShortStr(providerBean.getProperty(String.valueOf(date.get("provider_no"))),"",11 )%></span><span
+						class='datephour'><%=date.get("hour") %></span><span
+						class='datepreason'><%=date.get("reason") %></span>
+<%    }
+    }
+%>
 					</a></font></td>
 					<%
                   }

@@ -29,18 +29,7 @@
 %>
 <%@ page import="java.sql.*, java.util.*, java.net.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_demographicaccessorycount", "select count(demographic_no) from demographicaccessory where demographic_no=?"},
-    {"add_demographicaccessory", "insert into demographicaccessory values(?,?)"},
-    {"update_demographicaccessory", "update demographicaccessory set content=? where demographic_no=?"},
-  };
-  String[][] responseTargets=new String[][] {  };
-  accsBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -55,33 +44,32 @@
 	</tr>
 </table>
 <%
-  String content="";//default is not null temp=null, 
-  content=SxmlMisc.createXmlDataString(request, "xml_");
+	String content=SxmlMisc.createXmlDataString(request, "xml_");
 
-    String[] param =new String[2];
-	  param[0]=request.getParameter("demographic_no");
-	  param[1]=content; 
-    String[] param1 =new String[2];
-	  param1[0]=content;
-	  param1[1]=param[0];
+	String[] param = new String[2];
+	param[0]=request.getParameter("demographic_no");
+	param[1]=content; 
 
-    int numRecord=1, rowsAffected=0;
-	  ResultSet rs = accsBean.queryResults(param[0], "search_demographicaccessorycount");
- 	  while (rs.next()) { 
-      numRecord=rs.getInt("count(demographic_no)");
-    }
+	String[] param1 = new String[2];
+	param1[0]=content;
+	param1[1]=param[0];
 
-    if(numRecord==0) {
-      rowsAffected = accsBean.queryExecuteUpdate(param,"add_demographicaccessory");
+	long numRecord=1, rowsAffected=0;
+	List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {param[0]});
+	for (Map acc : resultList) {
+		numRecord = (Long) acc.get("count(demographic_no)");
+	}
+
+    if (numRecord==0) {
+      rowsAffected = oscarSuperManager.update("providerDao", "add_demographicaccessory", param);
     } else {
-      rowsAffected = accsBean.queryExecuteUpdate(param1,"update_demographicaccessory");
-	    //System.out.println("ss  "+param1[0]+rowsAffected);
+      rowsAffected = oscarSuperManager.update("providerDao", "update_demographicaccessory", param1);
     }
       
-  if (rowsAffected ==1) {
+	if (rowsAffected == 1) {
 %>
 <p>
-<h1>Successful Updaten of an demographic acce Record.</h1>
+<h1>Successful Update of the demographic accessory record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
      	//self.history.go(-1);return false;//this.location.reload();	//self.opener.refresh();
@@ -97,17 +85,16 @@ function dunescape(s) {
      	self.opener.document.encounter.xml_Alert.value = dunescape("<%=URLEncoder.encode(request.getParameter("xml_Alert"))%>");
      	self.opener.document.encounter.xml_Family_Social_History.value = dunescape("<%=URLEncoder.encode(request.getParameter("xml_Family_Social_History"))%>");
 </script> <%
-  }  else {
+	} else {
 %>
 <p>
 <h1>Sorry, Update has failed.</h1>
 </p>
 <%  
-  }
-  accsBean.closePstmtConn();
+	}
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="self.close()"></form>
 </center>

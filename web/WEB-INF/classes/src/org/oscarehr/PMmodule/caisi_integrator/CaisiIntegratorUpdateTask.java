@@ -391,7 +391,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			MiscUtils.checkShutdownSignaled();
 
 			// don't send issue if it is not in our facility.
-			if (!isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
+			logger.debug("Facility:" + facility.getName() + " - caseManagementIssue = " + caseManagementIssue.toString());
+			if (caseManagementIssue.getProgram_id() == null || !isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
 
 			Issue issue = caseManagementIssue.getIssue();
 			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();

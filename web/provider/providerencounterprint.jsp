@@ -24,24 +24,9 @@
  */
 -->
 
-<%
-  
-  //String user_no = (String) session.getAttribute("user");
-%>
 <%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="encPrintBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-{"search_encountersingle", "select * from encounter where encounter_no = ?"},
-  };
-  String[][] responseTargets=new String[][] {
-  };
-  encPrintBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -73,18 +58,16 @@
 			</TR>
 		</TABLE>
 
-		<%
-   ResultSet rsdemo = null;
-   rsdemo = encPrintBean.queryResults(request.getParameter("encounter_no"), "search_encountersingle"); 
+<%
+   List<Map> resultList = oscarSuperManager.find("providerDao", "search_encountersingle", new Object[] {request.getParameter("encounter_no")});
    String encounter_date=null,encounter_time=null,subject=null,content=null,provider_no=null;
-   if (rsdemo.next()) { 
-     encounter_date=rsdemo.getString("encounter_date");
-     encounter_time=rsdemo.getString("encounter_time");
-     provider_no=rsdemo.getString("provider_no");
-     subject=rsdemo.getString("subject");
-     content= rsdemo.getString("content");
+   for (Map enc : resultList) {
+     encounter_date=String.valueOf(enc.get("encounter_date"));
+     encounter_time=String.valueOf(enc.get("encounter_time"));
+     provider_no=(String)enc.get("provider_no");
+     subject=(String)enc.get("subject");
+     content=(String)enc.get("content");
    }
-   encPrintBean.closePstmtConn();
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml>
 		<table width="100%" border="1" datasrc='#xml_list'>
 			<tr>

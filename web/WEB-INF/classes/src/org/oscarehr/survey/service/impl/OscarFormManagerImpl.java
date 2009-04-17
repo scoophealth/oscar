@@ -7,9 +7,7 @@ import java.util.Map;
 
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.service.OscarFormManager;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 public class OscarFormManagerImpl implements OscarFormManager {
 
 	private OscarFormDAO dao;
@@ -26,6 +24,9 @@ public class OscarFormManagerImpl implements OscarFormManager {
 		dao.generateCSV(formId, out);
 	}
 
+	public void generateInverseCSV(Long formId, OutputStream out) {
+		dao.generateInverseCSV(formId, out);
+	}
 	public void convertFormXMLToDb(Long formId) {
 		dao.convertFormXMLToDb(formId);
 	}

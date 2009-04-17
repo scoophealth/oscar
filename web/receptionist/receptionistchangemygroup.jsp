@@ -24,41 +24,30 @@
  */
 -->
 
-<%
-  
-  String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
-%>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="groupBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<%@ include file="../admin/dbconnection.jsp"%>
-<%
-  String [][] dbQueries=new String[][] {
-    {"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
-    {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
-  };
-  groupBean.doConfigure(dbParams,dbQueries);
-%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
+<%
+  String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
+%>
 
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="recepcionist.recepcionistchangemygroup.title" /></title>
-</head>
 <meta http-equiv="Cache-Control" content="no-cache">
-
 <script language="javascript">
 <!-- start javascript ---- check to see if it is really empty in database
 
 // stop javascript -->
 </script>
+</head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -76,13 +65,15 @@
 		<td><bean:message
 			key="recepcionist.recepcionistchangemygroup.formChange" />:</TD>
 		<TD align="right"><select name="mygroup_no">
-			<% ResultSet rsgroup = groupBean.queryResults("searchmygroupno");
- 	 while (rsgroup.next()) { 
+<%
+	List<Map> resultList = oscarSuperManager.find("receptionistDao", "searchmygroupno", new Object[] {});
+	for (Map group : resultList) {
+		String groupNo = String.valueOf(group.get("mygroup_no"));
 %>
-			<option value="<%=rsgroup.getString("mygroup_no")%>"
-				<%=oldGroup_no.equals(rsgroup.getString("mygroup_no"))?"selected":""%>><%=rsgroup.getString("mygroup_no")%></option>
-			<%
- 	 }
+			<option value="<%=groupNo%>"
+				<%=oldGroup_no.equals(groupNo)?"selected":""%>><%=groupNo%></option>
+<%
+	}
 %>
 		</select> &nbsp;<INPUT TYPE="submit"
 			VALUE="<bean:message key="recepcionist.recepcionistchangemygroup.btnChange"/>">
@@ -103,24 +94,22 @@
 				<td ALIGN="center"><font face="arial"> <bean:message
 					key="recepcionist.recepcionistchangemygroup.msgName" /></font></td>
 			</tr>
-			<%
-   rsgroup = null;
-   boolean bNewNo=false;
-   String oldNo="";
-   rsgroup = groupBean.queryResults("searchmygroupall");
-   while (rsgroup.next()) { 
-     if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
-       bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
-     }
+<%
+	boolean bNewNo = false;
+	String oldNo = "";
+	resultList = oscarSuperManager.find("receptionistDao", "searchmygroupall", new Object[] {});
+	for (Map group : resultList) {
+		String groupNo = String.valueOf(group.get("mygroup_no"));
+		if (!groupNo.equals(oldNo)) {
+			bNewNo = bNewNo?false:true; oldNo = groupNo;
+		}
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
-				<td><font face="arial"> &nbsp;<%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></font>
-				</td>
+				<td ALIGN="center"><font face="arial"><%=groupNo%></font></td>
+				<td><font face="arial"> &nbsp;<%=group.get("last_name") + ", " + group.get("first_name")%></font></td>
 			</tr>
-			<%
-   }
-   groupBean.closePstmtConn();
+<%
+	}
 %>
 			<INPUT TYPE="hidden" NAME="start_hour"
 				VALUE='<%=(String) session.getAttribute("starthour")%>'>

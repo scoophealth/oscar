@@ -25,23 +25,13 @@
 -->
 
 <%
-  
   String apptProvider_no, user_no, username;
   user_no = (String) session.getAttribute("user");
   //username =  request.getParameter("username").toUpperCase();
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="accsBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-    {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
-  };
-  String[][] responseTargets=new String[][] {  };
-  accsBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -69,13 +59,10 @@ function setfocus() {
 	</tr>
 </table>
 <%
-   ResultSet rsdemo = null;
-
-   rsdemo = null;
-   rsdemo = accsBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); 
    boolean bNewDemoAcc=true;
-   if (rsdemo.next()) { 
-     String content=rsdemo.getString("content");
+   List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+   for (Map acc : resultList) {
+     String content=(String)acc.get("content");
      bNewDemoAcc=false;
 %>
 <xml id="xml_list">
@@ -85,8 +72,6 @@ function setfocus() {
 </xml>
 <%
    } 
-     accsBean.closePstmtConn();
-
 %>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<!--for form use-->

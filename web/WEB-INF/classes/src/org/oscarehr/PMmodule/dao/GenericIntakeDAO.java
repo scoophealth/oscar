@@ -119,6 +119,29 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		return intakes;
 	}
+	
+	/*
+	 * 1. get nodes.
+	 * foreach node, get intakes for that node
+	 */
+	public List<Intake> getIntakesByType(Integer formType, Integer clientId, Integer programId, Integer facilityId) {
+		List<Intake> intake_results = new ArrayList<Intake>();
+		if (formType == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
+		}
+		
+		List<IntakeNode> nodes = this.getIntakeNodesByType(formType);
+
+		for(IntakeNode node:nodes) {
+			List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? and (i.facilityId=? or i.facilityId is null) order by i.createdOn desc",
+					new Object[] { node, clientId, facilityId });			
+			List<Intake> intakes = convertToIntakes(results, programId);
+			intake_results.addAll(intakes);
+		}
+		
+		
+		return intake_results;
+	}
 
 	public List<Intake> getIntakesByFacility(IntakeNode node, Integer clientId, Integer programId, Integer facilityId) {
 		if (node == null || clientId == null) {
@@ -182,6 +205,10 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 	}
 
 	public List<Integer> getIntakeNodesIdByClientId(Integer clientId) {
+		return getIntakeNodesIdByClientId(clientId,null);
+	}
+	
+	public List<Integer> getIntakeNodesIdByClientId(Integer clientId, Integer formType) {
 		if (clientId == null) {
 			throw new IllegalArgumentException("Parameters intakeId must be non-null");
 		}
@@ -193,7 +220,9 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		
 		List<Integer> intakeNodeIds = new ArrayList();
 		for (Intake i : intakes) {
-		    intakeNodeIds.add(i.getNode().getId());
+			if(formType != null && i.getNode().getFormType() == formType) {
+				intakeNodeIds.add(i.getNode().getId());
+			}
 		}
 		for (int i=1; i<intakeNodeIds.size(); i++) {
 		    if (intakeNodeIds.get(i).equals(intakeNodeIds.get(i-1))) {
@@ -521,4 +550,8 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		return intake;
 	}
 	*/
+	
+	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
+		return this.getHibernateTemplate().find("From IntakeNode n where n.formType = ? and n.publish_by is not null", new Object[] {formType});
+	}
 }

@@ -25,7 +25,6 @@
 -->
 
 <%
-  
   String user_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, java.io.*, oscar.*"
@@ -42,8 +41,6 @@
 <meta http-equiv="Pragma" content="no-cache">
 <script language="JavaScript">
 <!--		
-
-
 function onExit() {
   if(confirm("Are you sure to exit WITHOUT saving the form?")) window.close();
 }

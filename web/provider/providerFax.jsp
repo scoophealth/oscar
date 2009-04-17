@@ -31,12 +31,8 @@
 
 
 <%
-if(session.getValue("user") == null)
-    response.sendRedirect("../logout.htm");
-  String curUser_no;
-  curUser_no = (String) session.getAttribute("user");
-
-
+  if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+  String curUser_no = (String) session.getAttribute("user");
 %>
 <html:html locale="true">
 <head>

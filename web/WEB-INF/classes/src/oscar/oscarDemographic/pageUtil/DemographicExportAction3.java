@@ -28,23 +28,6 @@
 
 package oscar.oscarDemographic.pageUtil;
 
-import cds.OmdCdsDocument;
-import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
-import cds.AppointmentsDocument.Appointments;
-import cds.AuditInformationDocument.AuditInformation;
-import cds.CareElementsDocument.CareElements;
-import cds.ClinicalNotesDocument.ClinicalNotes;
-import cds.DemographicsDocument.Demographics;
-import cds.FamilyHistoryDocument.FamilyHistory;
-import cds.ImmunizationsDocument.Immunizations;
-import cds.LaboratoryResultsDocument.LaboratoryResults;
-import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
-import cds.PastHealthDocument.PastHealth;
-import cds.PatientRecordDocument.PatientRecord;
-import cds.PersonalHistoryDocument.PersonalHistory;
-import cds.ProblemListDocument.ProblemList;
-import cds.ReportsReceivedDocument.ReportsReceived;
-import cds.RiskFactorsDocument.RiskFactors;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -55,8 +38,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -66,9 +47,11 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -82,17 +65,21 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.OscarProperties;
-import oscar.appt.AppointmentDAO;
-import oscar.appt.AppointmentDAO.Appointment;
+import oscar.appt.ApptData;
 import oscar.appt.ApptStatusData;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.log.LogAction;
 import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
-import oscar.oscarDemographic.data.*;
-import oscar.oscarEncounter.oscarMeasurements.data.*;
+import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarDemographic.data.DemographicExt;
+import oscar.oscarDemographic.data.DemographicRelationship;
+import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.LabMeasurements;
+import oscar.oscarEncounter.oscarMeasurements.data.Measurements;
 import oscar.oscarLab.LabRequestReportLink;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
@@ -105,7 +92,24 @@ import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPrescriptionData;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
+import cds.OmdCdsDocument;
+import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
+import cds.AppointmentsDocument.Appointments;
+import cds.AuditInformationDocument.AuditInformation;
+import cds.CareElementsDocument.CareElements;
+import cds.ClinicalNotesDocument.ClinicalNotes;
+import cds.DemographicsDocument.Demographics;
+import cds.FamilyHistoryDocument.FamilyHistory;
+import cds.ImmunizationsDocument.Immunizations;
+import cds.LaboratoryResultsDocument.LaboratoryResults;
+import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cds.PastHealthDocument.PastHealth;
+import cds.PatientRecordDocument.PatientRecord;
+import cds.ProblemListDocument.ProblemList;
+import cds.ReportsReceivedDocument.ReportsReceived;
+import cds.RiskFactorsDocument.RiskFactors;
 
 /**
  *
@@ -158,6 +162,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     
     DemographicData d = new DemographicData();
+
+    WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(
+			request.getSession().getServletContext());
+	OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");
 
     ArrayList inject = new ArrayList();
 
@@ -1235,19 +1243,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		// APPOINTMENTS
 		HttpSession session = request.getSession();
 		Properties p = (Properties) session.getAttribute("oscarVariables");
-		Vector appts = new AppointmentDAO(p).retrieve(this.demographicNo);
-		Appointment ap = null;
+		List appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {this.demographicNo});
+		ApptData ap = null;
 		for (int j=0; j<appts.size(); j++) {
-		    ap = (Appointment)appts.get(j);
+		    ap = (ApptData)appts.get(j);
 		    Appointments aptm = patientRec.addNewAppointments();
 		    
 		    aptm.setSequenceIndex(Integer.parseInt(ap.getAppointment_no()));
 		    String apNotes = "Appointment No: "+ap.getAppointment_no();
 		    
 		    cdsDt.DateFullOrPartial apDate = aptm.addNewAppointmentDate();
-		    apDate.setFullDate(Util.calDate(ap.getDateAppointment()));
-		    if (ap.getDateAppointment()!=null) {
-			apNotes = Util.appendLine(apNotes, "Date: ", UtilDateUtilities.DateToString(ap.getDateAppointment(),"yyyy-MM-dd"));
+		    apDate.setFullDate(Util.calDate(ap.getAppointment_date()));
+		    if (ap.getAppointment_date()!=null) {
+			apNotes = Util.appendLine(apNotes, "Date: ", UtilDateUtilities.DateToString(ap.getDateAppointmentDate(),"yyyy-MM-dd"));
 		    } else {
 			err.add("Error! No Appointment Date ("+j+") for Patient "+this.demographicNo);
 		    }
@@ -1285,11 +1293,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			aptm.setAppointmentPurpose(ap.getReason());
 			apNotes = Util.appendLine(apNotes, "Purpose: ", ap.getReason());
 		    }
-		    if (Util.filled(ap.getProviderFirstN()) || Util.filled(ap.getProviderLastN())) {
+		    if (Util.filled(ap.getProviderFirstName()) || Util.filled(ap.getProviderLastName())) {
 			Appointments.Provider prov = aptm.addNewProvider();
 			if (Util.filled(ap.getOhipNo())) prov.setOHIPPhysicianId(ap.getOhipNo());
-			Util.writeNameSimple(prov.addNewName(), ap.getProviderFirstN(), ap.getProviderLastN());
-			apNotes = Util.appendLine(apNotes, "Provider: ", ap.getProviderFirstN()+" "+ap.getProviderLastN());
+			Util.writeNameSimple(prov.addNewName(), ap.getProviderFirstName(), ap.getProviderLastName());
+			apNotes = Util.appendLine(apNotes, "Provider: ", ap.getProviderFirstName()+" "+ap.getProviderLastName());
 		    }
 		    if (Util.filled(ap.getNotes())) apNotes = Util.appendLine(apNotes, "Notes: ", ap.getNotes());
 		    if (Util.filled(apNotes)) {

@@ -1,3 +1,9 @@
+<%
+  if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
+%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <!--  
 /*
  * 
@@ -23,29 +29,9 @@
  * Ontario, Canada 
  */
 -->
-
-<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
-	errorPage="errorpage.jsp"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<script LANGUAGE="JavaScript">
-<!--
-function start(){
-  this.focus();
-}
-function closeit() {
-  self.opener.refresh();
-  self.close();
-}   
-//-->
-</script>
 </head>
 <body onload="start()" background="../images/gray_bg.jpg"
 	bgproperties="fixed">
@@ -57,31 +43,30 @@ function closeit() {
 	</tr>
 </table>
 <%
-  int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("appointment_no"),"delete");
-  if (rowsAffected ==1) {
+	int rowsAffected = oscarSuperManager.update("appointmentDao", "delete", new Object [] {request.getParameter("appointment_no")});
+	if (rowsAffected == 1) {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentdeletearecord.msgDeleteSuccess" /></h1>
 </p>
 <script LANGUAGE="JavaScript">
-   self.opener.refresh();
-   self.close();
+	self.opener.refresh();
+	self.close();
 </script> <%  
-  } else {
+	} else {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentdeletearecord.msgDeleteFailure" /></h1>
 </p>
 <%  
-  }
-  apptMainBean.closePstmtConn();
+	}
 %>
 <p></p>
-<hr width="90%"></hr>
-<form><input type="button"
-	value="<bean:message key="global.btnClose"/>" onClick="closeit()">
+<hr width="90%"/>
+<form>
+<input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
 </form>
 </center>
 </body>

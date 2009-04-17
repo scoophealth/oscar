@@ -152,6 +152,10 @@ public class GenericIntakeManager {
 	public Intake createIndepthIntake(String providerNo) {
 		return createIntake(getIndepthIntakeNode(), null, null, providerNo);
 	}
+	
+	public Intake createIntake(IntakeNode node, String providerNo) {
+		return createIntake(node, null, null, providerNo);
+	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#createProgramIntake(java.lang.Integer,
@@ -268,6 +272,14 @@ public class GenericIntakeManager {
 		return programIntakes;
 	}
 
+	/**
+	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getIndepthIntakes(java.lang.Integer)
+	 */
+	public List<Intake> getIntakesByType(Integer clientId, Integer facilityId, Integer formType) {
+		return genericIntakeDAO.getIntakesByType(formType, clientId,
+				null, facilityId);
+	}
+	
 	/**
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getProgramsWithIntake(java.lang.Integer)
 	 */
@@ -525,7 +537,7 @@ public class GenericIntakeManager {
 		return intake;
 	}
 
-	private Intake copyIntakeWithId(IntakeNode node, Integer clientId,
+	public Intake copyIntakeWithId(IntakeNode node, Integer clientId,
 			Integer programId, String staffId, Integer facilityId) {
 		Intake source = genericIntakeDAO.getLatestIntake(node, clientId,
 				programId, facilityId);
@@ -618,7 +630,7 @@ public class GenericIntakeManager {
 
 	private List<IntakeNode> getRegIntakeNodes(Integer clientId) {
 		List<Integer> nodeIds = genericIntakeDAO
-				.getIntakeNodesIdByClientId(clientId);
+				.getIntakeNodesIdByClientId(clientId,1);
 		List<IntakeNode> nodeList = new ArrayList();
 		if (nodeIds.size() > 0) {
 			for (Integer i : nodeIds) {
@@ -801,6 +813,10 @@ public class GenericIntakeManager {
 		builder.append(answerElement);
 
 		return builder.toString();
+	}
+	
+	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
+		return genericIntakeDAO.getIntakeNodesByType(formType);
 	}
 
 	/*

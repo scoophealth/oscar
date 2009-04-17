@@ -259,7 +259,7 @@ String annotation_tableid = editDocumentNo;
 		    <td colspan=2>
 			<p>&nbsp;</p>
 			<center>
-			<input type="submit" name="Submit" value="Update">
+			<input type="submit" name="Submit" value="Update" <%=("".equals(editDocumentNo)?"disabled":"") %>>
 			<input type="button" value="Cancel" onclick="window.close();">
 			</center>
 		    </td>

@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -160,6 +161,59 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		return keyMap;
 	}
 	
+	public Map<String,String> getQuestionTypeMap(OscarForm form) {
+		//get ordered list of keys with question headers - use LinkedHashMap
+		LinkedHashMap<String,String> keyMap = new LinkedHashMap<String,String>();
+		SurveyDocument model = null;
+		try {
+			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
+		}catch(Exception e) {
+			logger.error(e);
+			return null;
+		}
+		
+		int page=1;
+		int section=0;
+		String id="";
+		for(Page p:model.getSurvey().getBody().getPageArray()) {
+			section=0;
+			
+			for(Page.QContainer container:p.getQContainerArray()) {
+				if(container.isSetQuestion()) {
+					Question q = container.getQuestion();
+					if(q.getType().isSetDate()) {
+						keyMap.put(q.getDescription(),"date");
+					} else if(q.getType().isSetOpenEnded()) {
+						keyMap.put(q.getDescription(),"openEnded");
+					} else if(q.getType().isSetRank()) {
+						keyMap.put(q.getDescription(),"rank");
+					} else if(q.getType().isSetScale()) {
+						keyMap.put(q.getDescription(),"scale");
+					} else if(q.getType().isSetSelect()) {
+						keyMap.put(q.getDescription(),"select");
+					} 					
+				} else {
+					for(Question q:container.getSection().getQuestionArray()) {
+						if(q.getType().isSetDate()) {
+							keyMap.put(q.getDescription(),"date");
+						} else if(q.getType().isSetOpenEnded()) {
+							keyMap.put(q.getDescription(),"openEnded");
+						} else if(q.getType().isSetRank()) {
+							keyMap.put(q.getDescription(),"rank");
+						} else if(q.getType().isSetScale()) {
+							keyMap.put(q.getDescription(),"scale");
+						} else if(q.getType().isSetSelect()) {
+							keyMap.put(q.getDescription(),"select");
+						} 						
+					}
+					section++;
+				}
+			}		
+			page++;
+		}	
+		return keyMap;
+	}
+	
 	public void generateCSV(Long formId, OutputStream out) {
 		PrintWriter pout = new PrintWriter(out,true);
 		
@@ -279,6 +333,143 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 						
 			pout.println();
 		}
+		pout.flush();
+	}
+	
+	
+	public Map<String,String> getQuestionDescriptions(OscarForm form) {
+		//get ordered list of keys with question headers - use LinkedHashMap
+		LinkedHashMap<String,String> keyMap = new LinkedHashMap<String,String>();
+		SurveyDocument model = null;
+		try {
+			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
+		}catch(Exception e) {
+			logger.error(e);
+			return null;
+		}
+		
+		int page=1;
+		int section=0;
+		
+		for(Page p:model.getSurvey().getBody().getPageArray()) {
+			section=0;
+			
+			for(Page.QContainer container:p.getQContainerArray()) {
+				if(container.isSetQuestion()) {
+					Question q = container.getQuestion();
+					String id = page + "_" + section + "_"+ q.getId();
+					keyMap.put(q.getDescription(),id);
+				} else {
+					for(Question q:container.getSection().getQuestionArray()) {
+						String id = page + "_" + section + "_"+ q.getId();
+						keyMap.put(q.getDescription(),id);
+					}
+					section++;
+				}
+			}		
+			page++;
+		}	
+		return keyMap;
+	}
+	
+	public String getSingleAnswer(Long instanceId, long page, long section, long question) {
+		List result = this.getHibernateTemplate().find("SELECT d.value FROM OscarFormData d where d.instanceId=? and d.pageNumber=? and d.sectionId=? and d.questionId=?", new Object[] {instanceId,page,section,question});
+		if(result != null && result.size()>0) {
+			return (String)result.get(0);
+		}
+		return null;
+	}
+	
+	public String[] getMultipleAnswers(Long instanceId, long page, long section, long question) {
+		List<String> results = new ArrayList<String>();
+		List result = this.getHibernateTemplate().find("SELECT d.value FROM OscarFormData d where d.instanceId=? and d.pageNumber=? and d.sectionId=? and d.questionId=?", new Object[] {instanceId,page,section,question});
+		if(result != null && result.size()>0) {
+			for(String val:(List<String>)result) {
+				if(val != null) {
+					results.add(val);
+				}
+			}
+		}
+		return results.toArray(new String[results.size()]);
+	}
+	
+	//for MFH
+	
+	public void generateInverseCSV(Long formId, OutputStream out) {
+		PrintWriter pout = new PrintWriter(out,true);
+		
+		//get form structure - output headers, and determine order to print out data elements
+		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+		
+		//get form instances, headers = instances
+		List result = this.getHibernateTemplate().find("select f.id,f.clientId,f.dateCreated from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
+		
+		
+		//TODO: combine the two variables into a set..single call
+		//questions description,location (1_0_1)
+		Map<String,String> questions = getQuestionDescriptions(form);		
+		//question types
+		Map<String,String> questionTypeMap = getQuestionTypeMap(form);
+		
+		
+		//print header line
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		pout.print(escapeAndQuote("FC MO"));pout.print(",");
+		pout.print(escapeAndQuote("Data Element"));
+		for(int x=0;x<result.size();x++) {
+			Object o = result.get(x);
+			Long instanceId = (Long)((Object[])result.get(x))[0];
+			Long clientId = (Long)((Object[])result.get(x))[1];
+			Date dateCreated = (Date)((Object[])result.get(x))[2];
+			pout.print(",");
+			pout.print(escapeAndQuote("Client #" + clientId + " - " + sdf.format(dateCreated) ));						
+		}
+		pout.println();
+		
+		
+		//Each question has a line.
+		
+		Iterator<String> iter=questions.keySet().iterator();
+		while(iter.hasNext()) {
+			String descr = iter.next();
+			pout.print("\"\",");
+			pout.print("\""+descr+"\",");
+			//for each instance, pull out answers
+			for(int x=0;x<result.size();x++) {
+				if(x>0) {
+					pout.print(",");
+				}
+				Object o = result.get(x);
+				Long instanceId = (Long)((Object[])result.get(x))[0];
+				//OscarFormInstance instance = (OscarFormInstance)this.getHibernateTemplate().get(OscarFormInstance.class,instanceId);
+				//need to get answer for the question.
+				
+				String type = questionTypeMap.get(descr);
+				String location = questions.get(descr);
+				String[] locParts = location.split("\\_");
+				
+				if("openEnded".equals(type) || "date".equals(type)) {	
+					String answer = getSingleAnswer(instanceId,Integer.parseInt(locParts[0]),Integer.parseInt(locParts[1]),Integer.parseInt(locParts[2]));
+					pout.print("\"" + answer + "\"");
+				} else if("select".equals(type)) {
+					String[] answers = getMultipleAnswers(instanceId,Integer.parseInt(locParts[0]),Integer.parseInt(locParts[1]),Integer.parseInt(locParts[2]));
+					pout.print("\"");
+					for(int z=0;z<answers.length;z++) {
+						if(z>0) { pout.print(",");}
+						pout.print(answers[z]);
+					}
+					pout.print("\"");					
+				} else {
+					pout.print("\"\"");
+				}
+				
+			}
+			pout.println();
+		}
+		
+		
+		
+		
 		pout.flush();
 	}
 	

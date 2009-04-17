@@ -71,7 +71,6 @@ function toggleSig(n) {
 
 </caisi:isModuleLoad>
 <!-- add by caisi end-->
-<!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message

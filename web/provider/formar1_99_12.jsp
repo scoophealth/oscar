@@ -25,30 +25,16 @@
 -->
 
 <%
-  
   String form_name="ar1_99_12";
   String user_no = (String) session.getAttribute("user");
   String resource_baseurl = "http://resource.oscarmcmaster.org/oscarResource/";
 %>
 <%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
-<%@ include file="../admin/dbconnection.jsp"%>
-<% 
-  String [][] dbQueries=new String[][] { 
-{"search_form", "select * from form where form_no=? "}, //new?delete
-{"search_form_no", "select form_no, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1 offset 0"}, //new?delete
-{"search_demograph", "select *  from demographic where demographic_no=?"},
-{"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
-{"compare_form", "select form_no, form_name, content from form where demographic_no=? and form_name like ? order by form_date desc, form_time desc,form_no desc limit 1 offset 0"},
-  };
-  String[][] responseTargets=new String[][] {
-  };
-  formMainBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<jsp:useBean id="risks" class="oscar.OBRisks_99_12" scope="page" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <html>
 <head>
@@ -165,7 +151,6 @@ function onSubmitForm() {
 <%
   //if bNewForm is false (0), then it should be able to display xml data.
   boolean bNew = true, bNewList = true; //bNew=if using the old xml_form data, bNewList=if it is from history
-  ResultSet rsdemo = null;
   String content="", demoname=null,address=null,dob=null,homephone=null,workphone=null,familydoc=null,allergies="",medications="";
   String birthAttendants="", newbornCare="",riskFactors="",finalEDB="",g="",t="",p="",a="",l="",prepregwt="";
   int age=0;
@@ -173,70 +158,70 @@ function onSubmitForm() {
 
   if(!bNew ) { //not new form
     bNewList = false;
-    rsdemo = formMainBean.queryResults(request.getParameter("form_no"), "search_form");
-    while (rsdemo.next()) { 
-      content = rsdemo.getString("content");
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form", new Object[] {request.getParameter("form_no")});
+    for (Map form : resultList) {
+      content = (String)form.get("content");
 %> <xml id="xml_list"><encounter><%=content%></encounter></xml> <%
     }     
   } else {
     String[] param2 =new String[2];
     param2[0]=request.getParameter("demographic_no");
     param2[1]="ar1%" ; //form_name;
-    rsdemo = formMainBean.queryResults(param2, "search_form_no");
-    while (rsdemo.next()) { 
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_form_no", param2);
+    for (Map form : resultList) {
       bNew = false;
       if(request.getParameter("bNewForm")!=null && request.getParameter("bNewForm").compareTo("1")==0)  // for new form
         bNew = true;
-      content = rsdemo.getString("content");
+      content = (String)form.get("content");
 %> <xml id="xml_list"> <encounter> <%=content%> </encounter> </xml> <%
     }     
 
-    //rsdemo = null;
-    rsdemo = formMainBean.queryResults(request.getParameter("demographic_no"), "search_demograph"); //dboperation=search_demograph
-    while (rsdemo.next()) { 
-      demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-      address=rsdemo.getString("address") +",  "+ rsdemo.getString("city") +",  "+ rsdemo.getString("province") +"  "+ rsdemo.getString("postal");
-      dob=rsdemo.getString("year_of_birth")+"/"+rsdemo.getString("month_of_birth")+"/"+rsdemo.getString("date_of_birth");
-      homephone=rsdemo.getString("phone");
-      workphone=rsdemo.getString("phone2");
-      familydoc = SxmlMisc.getXmlContent(rsdemo.getString("family_doctor"),"family_doc");
+    resultList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {request.getParameter("demographic_no")});
+    for (Map demo : resultList) {
+      demoname=demo.get("last_name")+", "+demo.get("first_name");
+      address=demo.get("address") +",  "+demo.get("city") +",  "+ demo.get("province") +"  "+ demo.get("postal");
+      dob=demo.get("year_of_birth")+"/"+demo.get("month_of_birth")+"/"+demo.get("date_of_birth");
+      homephone=(String)demo.get("phone");
+      workphone=(String)demo.get("phone2");
+      familydoc=SxmlMisc.getXmlContent((String)demo.get("family_doctor"),"family_doc");
       familydoc = familydoc !=null ? familydoc : "" ;
+      age=MyDateFormat.getAge(Integer.parseInt((String)demo.get("year_of_birth")),Integer.parseInt((String)demo.get("month_of_birth")),Integer.parseInt((String)demo.get("date_of_birth")));
+    }
 
-	  age=MyDateFormat.getAge(Integer.parseInt(rsdemo.getString("year_of_birth")),Integer.parseInt(rsdemo.getString("month_of_birth")),Integer.parseInt(rsdemo.getString("date_of_birth")));
+    resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+    for (Map acc : resultList) {
+      allergies=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Alert>","</xml_Alert>");
+      medications=SxmlMisc.getXmlContent((String)acc.get("content"),"<xml_Medication>","</xml_Medication>");
     }
-    rsdemo = formMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
-    if (rsdemo.next()) { 
-      allergies=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Alert>","</xml_Alert>");
-      medications=SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_Medication>","</xml_Medication>");
-    }
-	//find the latest version of g,t,p,a,l etc.
+
+    //find the latest version of g,t,p,a,l etc.
     String[] param1 =new String[2];
     param1[0]=request.getParameter("demographic_no");
     param1[1]="ar%"; //!!! other forms can't have the name of 'ar' chars.
-    rsdemo = formMainBean.queryResults(param1, "compare_form");
-    if (rsdemo.next() && !bNew) { 
-      birthAttendants = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ba>","</xml_ba>");
+    resultList = oscarSuperManager.find("providerDao", "compare_form", param1);
+    for (Map form : resultList) if (!bNew) {
+      content = (String)form.get("content");
+      birthAttendants = SxmlMisc.getXmlContent(content,"<xml_ba>","</xml_ba>");
 	  birthAttendants = birthAttendants==null?"":birthAttendants;
-      newbornCare = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_nc>","</xml_nc>");
+      newbornCare = SxmlMisc.getXmlContent(content,"<xml_nc>","</xml_nc>");
 	  newbornCare = newbornCare==null?"":newbornCare;
-      riskFactors = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_rfi>","</xml_rfi>");
+      riskFactors = SxmlMisc.getXmlContent(content,"<xml_rfi>","</xml_rfi>");
 	  riskFactors = riskFactors==null?"":riskFactors;
-      finalEDB = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_fedb>","</xml_fedb>");
+      finalEDB = SxmlMisc.getXmlContent(content,"<xml_fedb>","</xml_fedb>");
 	  finalEDB = finalEDB==null?"":finalEDB;
-      g = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_gra>","</xml_gra>");
+      g = SxmlMisc.getXmlContent(content,"<xml_gra>","</xml_gra>");
 	  g = g==null?"":g;
-      t = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_term>","</xml_term>");
+      t = SxmlMisc.getXmlContent(content,"<xml_term>","</xml_term>");
 	  t = t==null?"":t;
-      p = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_prem>","</xml_prem>");
+      p = SxmlMisc.getXmlContent(content,"<xml_prem>","</xml_prem>");
 	  p = p==null?"":p;
-      l = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_liv>","</xml_liv>");
+      l = SxmlMisc.getXmlContent(content,"<xml_liv>","</xml_liv>");
 	  l = l==null?"":l;
-      prepregwt = SxmlMisc.getXmlContent(rsdemo.getString("content"),"<xml_ppw>","</xml_ppw>");
+      prepregwt = SxmlMisc.getXmlContent(content,"<xml_ppw>","</xml_ppw>");
 	  prepregwt = prepregwt==null?"":prepregwt;
     }
   }
   //boolean bNewDemoAcc=true;
-  formMainBean.closePstmtConn();
 %>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">

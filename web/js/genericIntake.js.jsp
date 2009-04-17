@@ -36,6 +36,9 @@ function validateSearchForm() {
 }
 
 function validBedCommunityProgram() {
+	if(getElement('bedCommunityProgramId') == null) {
+		return true;
+	}
 	var programIdStr=getElement('bedCommunityProgramId').value;
 	var programId = Number(programIdStr);
 		
@@ -59,8 +62,12 @@ function validIntakeLocation() {
 }
 
 function validateEdit() {
-	var programIdStr=getElement('bedCommunityProgramId').value;
-	var programId = Number(programIdStr);
+	var programIdEl = getElement('bedCommunityProgramId');
+	var programId = 0;
+	if(programIdEl != null) {
+		var programIdStr = programIdEl.value;
+		programId = Number(programIdStr);
+	}	
 	var gender=getElement('client.sex');
 
 	if (gender.value == 'M')

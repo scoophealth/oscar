@@ -51,6 +51,10 @@ public class CaseManagementIssue extends BaseObject {
 	
 	protected int hashCode = Integer.MIN_VALUE;
 	
+	public String toString() {
+		return "CaseManagementIssue: id=" + id;
+	}
+	
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof CaseManagementIssue)) return false;
@@ -162,7 +166,7 @@ public class CaseManagementIssue extends BaseObject {
 	public void setResolved(boolean resolved) {
 		this.resolved = resolved;
 	}
-	
+
 	public String getType() {
 		return type;
 	}

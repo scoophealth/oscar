@@ -27,29 +27,20 @@
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
   //if action is good, then give me the result
-	  //param[0]=Integer.parseInt((new GregorianCalendar()).get(Calendar.MILLISECOND) ); //int
     String[] param =new String[2];
-	  param[0]=request.getParameter("status")+ request.getParameter("statusch");
-	  param[1]=request.getParameter("appointment_no");
-/*	  param[1]=request.getParameter("provider_no");
-	  param[2]=request.getParameter("year")+"-"+request.getParameter("month")+"-"+request.getParameter("day");
-	  param[3]=request.getParameter("start_time");
-	  param[4]=request.getParameter("demographic_no");
-*/	  
-    int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
-    if (rowsAffected ==1) {
-      apptMainBean.closePstmtConn();
-	    //String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day")+"&displaymode=day&dboperation=searchappointmentday";
+    param[0]=request.getParameter("status")+ request.getParameter("statusch");
+    param[1]=request.getParameter("appointment_no");
+    int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+    if (rowsAffected == 1) {//add_record
       int view=0;
       if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
       String strView=(view==0)?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") );
       String strViewAll=request.getParameter("viewall")==null?"0":(request.getParameter("viewall")) ;
-	    String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day") +"&view="+  strView  +"&displaymode=day&dboperation=searchappointmentday" +"&viewall=" +strViewAll;
+      String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day") +"&view="+  strView  +"&displaymode=day&dboperation=searchappointmentday" +"&viewall=" +strViewAll;
     if(true) {
       out.clear();
     	response.sendRedirect(displaypage);
@@ -63,5 +54,4 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>

@@ -2,9 +2,7 @@
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <!--  
 /*
  * 
@@ -48,46 +46,46 @@
   String createdatetime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss");
 
   int rowsAffected = 0;
-  if(request.getParameter("buttoncancel")!=null && ( request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show")) ) {
-    String[] param1 =new String[4];
-	  param1[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
-	  param1[1]=creator;  //request.getParameter("creator");
-	  param1[2]=createdatetime;
-	  param1[3]=request.getParameter("appointment_no");
-    rowsAffected = apptMainBean.queryExecuteUpdate(param1, "updatestatusc");
+  if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show"))) {
+	  String[] param = new String[4];
+	  param[0]=request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N";
+	  param[1]=creator;  //request.getParameter("creator");
+	  param[2]=createdatetime;
+	  param[3]=request.getParameter("appointment_no");
+	  rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", param);
+
   } else {
-    int[] intparam=new int [1];
-	  if(!(request.getParameter("demographic_no").equals(""))) intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-	  else intparam[0]=0;
-  
-    String[] param =new String[16];
-	  param[0]=request.getParameter("appointment_date");
-	  param[1]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
-	  param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-	  param[3]=request.getParameter("keyword");
-	  param[4]=request.getParameter("notes");
-	  param[5]=request.getParameter("reason");
-	  param[6]=request.getParameter("location");
-	  param[7]=request.getParameter("resources");
-	  param[8]=request.getParameter("type");
-	  param[9]=request.getParameter("style");
-	  param[10]=request.getParameter("billing");
-	  param[11]=request.getParameter("status");
-	  param[12]=createdatetime;  //request.getParameter("createdatetime");
-	  param[13]=creator;  //request.getParameter("creator");
-	  param[14]=request.getParameter("remarks");
-	  param[15]=request.getParameter("appointment_no");
-    rowsAffected = apptMainBean.queryExecuteUpdate(intparam,param, request.getParameter("dboperation"));
+	  String[] param = new String[17];
+	  if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
+		  param[0] = request.getParameter("demographic_no");
+	  } else param[0]="0";
+	  param[1]=request.getParameter("appointment_date");
+	  param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
+	  param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
+	  param[4]=request.getParameter("keyword");
+	  param[5]=request.getParameter("notes");
+	  param[6]=request.getParameter("reason");
+	  param[7]=request.getParameter("location");
+	  param[8]=request.getParameter("resources");
+	  param[9]=request.getParameter("type");
+	  param[10]=request.getParameter("style");
+	  param[11]=request.getParameter("billing");
+	  param[12]=request.getParameter("status");
+	  param[13]=createdatetime;  //request.getParameter("createdatetime");
+	  param[14]=creator;  //request.getParameter("creator");
+	  param[15]=request.getParameter("remarks");
+	  param[16]=request.getParameter("appointment_no");
+	  rowsAffected = oscarSuperManager.update("appointmentDao", request.getParameter("dboperation"), param);
   }
-  if (rowsAffected ==1) {
+  if (rowsAffected == 1) {
 %>
 <p>
 <h1><bean:message
 	key="appointment.appointmentupdatearecord.msgUpdateSuccess" /></h1>
 </p>
 <script LANGUAGE="JavaScript">
-     	self.opener.refresh();
-      self.close();
+	self.opener.refresh();
+	self.close();
 </script> <%  
   } else {
 %>
@@ -97,12 +95,11 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
-<hr width="90%"></hr>
-<form><input type="button"
-	value="<bean:message key="global.btnClose"/>" onClick="closeit()">
+<hr width="90%"/>
+<form>
+<input type="button" value="<bean:message key="global.btnClose"/>" onClick="closeit()">
 </form>
 </center>
 </body>

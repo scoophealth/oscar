@@ -911,9 +911,7 @@ Calendar.prototype.create = function (_par) {
 				var y = date.getFullYear();
 				date.setHours(h);
 				date.setMinutes(parseInt(M.innerHTML, 10));
-				date.setFullYear(y);
-				date.setMonth(m);
-				date.setDate(d);
+				date.setFullYear(y, m, d);
 				this.dateClicked = false;
 				this.callHandler();
 			};

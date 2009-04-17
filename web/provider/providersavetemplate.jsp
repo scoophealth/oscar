@@ -24,13 +24,9 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -47,13 +43,10 @@
 <body onload="start()">
 <%
   if(request.getParameter("submit").equals("Delete")) {
-    String[] param =new String[1];
+    String[] param = new String[1];
     param[0]=request.getParameter("encountertemplate_name");
-    int rowsAffected = apptMainBean.queryExecuteUpdate(param,"delete_template");
-    out.println("<script LANGUAGE='JavaScript'> self.close(); </script>");
+    int rowsAffected = oscarSuperManager.update("providerDao", "delete_template", param);
     out.println("<script language='JavaScript'>self.close();</script>");
-    //System.out.println(param[0]+"   JJ     JJJ    ");
-    apptMainBean.closePstmtConn();
   } else {
 %>
 
@@ -66,17 +59,16 @@
 	</tr>
 </table>
 <%
-  //if action is good, then give me the result
-  String[] param =new String[4];
-  param[0]=request.getParameter("templatename");
-	param[1]=request.getParameter("templatename");
-	param[2]=request.getParameter("templatetext"); //	"<table><tr><td width='10%'>Subject:</td><td><input type='text' name='xml_subject' style='width:100%' value='' size='60' maxlength='60'></td></tr><tr><td>Content:</td><td><textarea name='xml_content' style='width:100%' cols='60' rows='8'>" +request.getParameter("templatetext")+
+	  //if action is good, then give me the result
+	  String[] param =new String[4];
+	  param[0]=request.getParameter("templatename");
+	  param[1]=null;
+	  param[2]=request.getParameter("templatetext"); //	"<table><tr><td width='10%'>Subject:</td><td><input type='text' name='xml_subject' style='width:100%' value='' size='60' maxlength='60'></td></tr><tr><td>Content:</td><td><textarea name='xml_content' style='width:100%' cols='60' rows='8'>" +request.getParameter("templatetext")+
 	         // "</textarea></td></tr><input type='hidden' name='xml_subjectprefix' value='.'></talbe>";
-	param[3]="Unknown";
-  //System.out.println(param[0]+"   "+param[1]+"JJJJJJJJ    "+param[2]);
+	  param[3]="Unknown";
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
+	  int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+	  if (rowsAffected == 1) {
 %>
 <p>
 <h1>Successful Addition of a billing Record.</h1>
@@ -85,23 +77,22 @@
       self.close();
      	//self.opener.refresh();
 </script> <%
-  }  else {
+	  }  else {
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
 <%  
-  }
-  apptMainBean.closePstmtConn();
+	  }
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>
 
 <%
-}
+  }
 %>
 </body>
 </html>

@@ -24,13 +24,9 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -46,12 +42,11 @@
 </head>
 <body onload="start()">
 <%
-  if(request.getParameter("submit").equals("Delete")) {
-    String[] param =new String[1];
+  if (request.getParameter("submit").equals("Delete")) {
+    String[] param = new String[1];
     param[0]=request.getParameter("encounterform_name");
-    int rowsAffected = apptMainBean.queryExecuteUpdate(param,"delete_encounterform");
+    int rowsAffected = oscarSuperManager.update("providerDao", "delete_encounterform", param);
     out.println("<script language='JavaScript'>self.close();</script>");
-    apptMainBean.closePstmtConn();
   } else {
 %>
 <center>
@@ -62,35 +57,37 @@
 	</tr>
 </table>
 <%
-  String[] param =new String[2];
-  param[0]=request.getParameter("formname");
-	param[1]="form"+request.getParameter("formfilename")+".jsp?demographic_no=";
+    String[] param = new String[4];
+    param[0]=request.getParameter("formname");
+	param[1]="../form/"+request.getParameter("formfilename")+".jsp?demographic_no=";
+	param[2]=request.getParameter("formtable");
+	param[3]="0";
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
+    int rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+    if (rowsAffected == 1) {
 %>
 <p>
 <h1>Successful Addition of a encounter-form Record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
       self.close();
-</script> <%
-  }  else {
+</script>
+<%
+    } else {
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
 <%  
-  }
-  apptMainBean.closePstmtConn();
+    }
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>
 <%
-}
+  }
 %>
 </body>
 </html>

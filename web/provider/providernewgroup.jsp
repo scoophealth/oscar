@@ -24,13 +24,9 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -39,7 +35,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providernewgroup.title" /></title>
-</head>
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 
@@ -60,21 +55,21 @@ function checkForm() {
 }
 // stop javascript -->
 </script>
+</head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <%
-  if(request.getParameter("submit_form").equals("Delete") ) { //delete the group member 
+  if ("Delete".equals(request.getParameter("submit_form")) ) { //delete the group member 
     int rowsAffected=0;
-    String[] param =new String[2];
-    StringBuffer strbuf=new StringBuffer();
+    String[] param = new String[2];
 
   	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	    strbuf=new StringBuffer(e.nextElement().toString());
-  		if( strbuf.toString().indexOf("displaymode")!=-1 || strbuf.toString().indexOf("submit_form")!=-1) continue;
-      param[0]=request.getParameter(strbuf.toString());
+  		StringBuffer strbuf=new StringBuffer(e.nextElement().toString());
+  		if (strbuf.toString().indexOf("displaymode")!=-1 || strbuf.toString().indexOf("submit_form")!=-1) continue;
+    	param[0]=request.getParameter(strbuf.toString());
 	    param[1]=strbuf.toString().substring( param[0].length() ); 
-      rowsAffected = apptMainBean.queryExecuteUpdate(param,"deletegroupmember");
+	    rowsAffected = oscarSuperManager.update("providerDao", "deletegroupmember", param);
 	    //System.out.println(" " +rowsAffected+ param[0]+ "     " + param[1]);
     }
     out.println("<script language='JavaScript'>self.close();</script>");
@@ -106,28 +101,26 @@ function checkForm() {
 					size="-2"><bean:message
 					key="provider.providernewgroup.msgMaxChars" /></font></td>
 			</tr>
-			<%
-   ResultSet rsgroup = null;
+<%
    int i=0;
-   rsgroup = apptMainBean.queryResults("searchprovider");
-   while (rsgroup.next()) { 
+   List<Map> resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
+   for (Map provider : resultList) {
      i++;
 %>
 			<tr BGCOLOR="#C4D9E7">
-				<td><font face="arial"> &nbsp;<%=rsgroup.getString("last_name")%>,
-				<%=rsgroup.getString("first_name")%></font></td>
+				<td><font face="arial"> &nbsp;<%=provider.get("last_name")%>,
+				<%=provider.get("first_name")%></font></td>
 				<td ALIGN="center"><font face="arial"> </font> <input
 					type="checkbox" name="data<%=i%>" value="<%=i%>"> <input
 					type="hidden" name="provider_no<%=i%>"
-					value="<%=rsgroup.getString("provider_no")%>"> <INPUT
+					value="<%=provider.get("provider_no")%>"> <INPUT
 					TYPE="hidden" NAME="last_name<%=i%>"
-					VALUE='<%=rsgroup.getString("last_name")%>'> <INPUT
+					VALUE='<%=provider.get("last_name")%>'> <INPUT
 					TYPE="hidden" NAME="first_name<%=i%>"
-					VALUE='<%=rsgroup.getString("first_name")%>'></td>
+					VALUE='<%=provider.get("first_name")%>'></td>
 			</tr>
-			<%
+<%
    }
-   apptMainBean.closePstmtConn();
 %>
 			<INPUT TYPE="hidden" NAME="dboperation" VALUE='savemygroup'>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='savemygroup'>

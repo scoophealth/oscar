@@ -44,14 +44,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Properties;
+import java.util.List;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -60,14 +59,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.GDateBuilder;
 import org.apache.xmlbeans.XmlCalendar;
 import org.oscarehr.util.SessionConstants;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import oscar.appt.AppointmentDAO;
+import oscar.appt.ApptData;
 import oscar.appt.ApptStatusData;
-import oscar.appt.AppointmentDAO.Appointment;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-import oscar.log.LogAction;
-import oscar.log.model.Log;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarDemographic.data.DemographicExt;
@@ -83,6 +81,7 @@ import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
+import oscar.service.OscarSuperManager;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -117,6 +116,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     
     
     DemographicData d = new DemographicData();
+
+    WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(
+			request.getSession().getServletContext());
+	OscarSuperManager oscarSuperManager = (OscarSuperManager)webApplicationContext.getBean("oscarSuperManager");
 
     ArrayList inject = new ArrayList();
 
@@ -745,19 +748,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		labs = null;
 
 		// APPOINTMENTS
-		HttpSession session = request.getSession();
-		Properties p = (Properties) session.getAttribute("oscarVariables");
-		Vector appts = new AppointmentDAO(p).retrieve(demoNo);
-		Appointment ap = null;
+		List appts = oscarSuperManager.populate("appointmentDao", "export_appt", new String[] {demoNo});
+		ApptData ap = null;
 		for (int j=0; j<appts.size(); j++) {
-		    ap = (Appointment)appts.get(j);
+		    ap = (ApptData)appts.get(j);
 		    cds.AppointmentsDocument.Appointments aptm = patientRec.addNewAppointments();
 
 		    aptm.setSequenceIndex(Integer.parseInt(ap.getAppointment_no()));
 
-		    if (ap.getDateAppointment()!=null) {
-			if (getCalDate(ap.getDateAppointment())!=null) {
-			    aptm.addNewAppointmentDate().setFullDate(getCalDate(ap.getDateAppointment()));
+		    if (ap.getDateAppointmentDate()!=null) {
+			if (getCalDate(ap.getDateAppointmentDate())!=null) {
+			    aptm.addNewAppointmentDate().setFullDate(getCalDate(ap.getDateAppointmentDate()));
 			} else {
 			    err.add("Note: Not exporting invalid Appointment Date ("+(j+1)+") for Patient "+demoNo);
 			}
@@ -802,10 +803,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			err.add("Error! No Appointment Notes for Patient "+demoNo+" ("+(j+1)+")");
 		    }
 
-		    if (filled(ap.getProviderFirstN()) || filled(ap.getProviderLastN())) {
+		    if (filled(ap.getProviderFirstName()) || filled(ap.getProviderLastName())) {
 			cds.AppointmentsDocument.Appointments.Provider prov = aptm.addNewProvider();
 			if (filled(ap.getOhipNo())) prov.setOHIPPhysicianId(ap.getOhipNo());
-			writeNameSimple(prov.addNewName(), ap.getProviderFirstN(), ap.getProviderLastN());
+			writeNameSimple(prov.addNewName(), ap.getProviderFirstName(), ap.getProviderLastName());
 		    }
 		}
 

@@ -13,19 +13,6 @@ public class JdbcApptImpl {
 	private static final Logger _logger = Logger.getLogger(JdbcApptImpl.class);
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
-	public boolean deleteAppt(String apptNo) {
-		boolean retval = false;
-		String sql = "delete from appointment where appointment_no=" + apptNo;
-		// _logger.info("deleteAppt(sql = " + sql + ")");
-
-		retval = dbObj.updateDBRecord(sql);
-
-		if (retval) {
-			_logger.error("deleteAppt(sql = " + sql + ")");
-		}
-		return retval;
-	}
-
 	public String getLocationFromSchedule(String apptDate, String provider_no) {
 		String retval = getLocationFromSpec(apptDate, provider_no, "c");
 		if (!"".equals(retval))

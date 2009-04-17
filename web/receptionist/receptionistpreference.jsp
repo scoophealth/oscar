@@ -37,7 +37,6 @@
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message
 	key="receptionist.receptionistpreference.title" /></title>
-</head>
 <meta http-equiv="Cache-Control" content="no-cache">
 
 <script language="javascript">
@@ -95,6 +94,7 @@ function checkTypeInAll() {
 
 // stop javascript -->
 </script>
+</head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">

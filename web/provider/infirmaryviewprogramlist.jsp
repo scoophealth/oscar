@@ -27,7 +27,6 @@ function submitProgram(ctrl) {
 }
 function submitStatus(ctrl) {
 	var programCtrl = document.getElementById("bedprogram_no");
-	//alert(ctrl.value);
 	document.location.href = "<%=providerurlString%>"+"&infirmaryView_programId="+programCtrl.value+"&infirmaryView_clientStatusId="+ctrl.value;
 }
 </script>

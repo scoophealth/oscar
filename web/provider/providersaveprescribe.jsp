@@ -29,14 +29,12 @@
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
-//  mygroupno = (String) session.getAttribute("groupno");  
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -64,9 +62,9 @@
 <%
   //if action is good, then give me the result
   String temp=null, content="";//default is not null
-	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-		temp=e.nextElement().toString();
-		if( temp.indexOf("xml_")==-1) continue;
+  for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+	temp=e.nextElement().toString();
+	if( temp.indexOf("xml_")==-1) continue;
   	content+="<" +temp+ ">" +request.getParameter(temp)+ "</" +temp+ ">";
     System.out.println(temp+"         "+content);
   }
@@ -85,34 +83,34 @@
     String[] param2 =new String[2];
 	  param2[0]=param1[1];
 	  param2[1]=param1[0];
-    int numRecord=1, rowsAffected=0;
-	  ResultSet rs = apptMainBean.queryResults(param1[0], "search_demographicaccessorycount");
- 	  while (rs.next()) { 
-      numRecord=rs.getInt("count(demographic_no)");
+    long numRecord=1, rowsAffected=0;
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_demographicaccessorycount", new Object[] {request.getParameter("demographic_no")});
+    for (Map demo : resultList) {
+      numRecord=(Long)demo.get("count(demographic_no)");
     }
     if(numRecord==0) {
-      rowsAffected = apptMainBean.queryExecuteUpdate(param1,"add_demographicaccessory");
+  	  rowsAffected = oscarSuperManager.update("providerDao", "add_demographicaccessory", param1);
     } else {
-      rowsAffected = apptMainBean.queryExecuteUpdate(param2,"update_demographicaccessory");
+  	  rowsAffected = oscarSuperManager.update("providerDao", "update_demographicaccessory", param2);
     }
 
   //add the prescribe record
-  rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
-  if (rowsAffected ==1) {
-    ResultSet rsdemo = null;
-    rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_prescribe_no");
-    while (rsdemo.next()) {    
+  rowsAffected = oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+  if (rowsAffected == 1) {
+    resultList = oscarSuperManager.find("providerDao", "search_prescribe_no", new Object[] {request.getParameter("demographic_no")});
+    for (Map pre : resultList) {
 %>
 <p>
 <h1>Successful Addition of a Prescribe Record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
       self.close();
-      self.opener.document.encounter.encounterattachment.value +="<prescribe>providercontrol.jsp?prescribe_no=<%=rsdemo.getString("prescribe_no")%>^displaymode=vary^displaymodevariable=providerprescribesingle.jsp^dboperation=search_prescribe^bNewForm=0</prescribe>";
+      self.opener.document.encounter.encounterattachment.value +="<prescribe>providercontrol.jsp?prescribe_no=<%=pre.get("prescribe_no")%>^displaymode=vary^displaymodevariable=providerprescribesingle.jsp^dboperation=search_prescribe^bNewForm=0</prescribe>";
       self.opener.document.encounter.attachmentdisplay.value +="Prescribe ";
      	//self.opener.refresh();
-</script> <%
-    break; //get only one prescribe_no
+</script>
+<%
+      break; //get only one prescribe_no
     }//end of while
   }  else {
 %>
@@ -121,10 +119,9 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button" value="Close this window"
 	onClick="window.close()"></form>
 </center>

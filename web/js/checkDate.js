@@ -267,9 +267,20 @@ function calculateAge(year, month, date) {
 function validateDate(year, month, day)
 {
 	var date=new Date();
+/*
+	// Updated by Eugene Petruhin on 01.04.2009 while fixing #2723507
+	// Never ever do the following, always set all date parts at once!
+
 	date.setFullYear(year);
 	date.setMonth(month-1);
 	date.setDate(day);
+
+	// This construct depends on execution time's day and can result in a wrong month being set.
+	// i.e. say today is 31st of March 2009, we pass (2009, September, 11) and date will be set to 2009 October 11.
+	// This happens because today's day is 31st and September only has 30 days
+	// so date is normalized to 2009 October 01 when setMonth() is called.
+*/
+	date.setFullYear(year, month-1, day);
 
 	if (year!=date.getFullYear()) return(false);
 	if (month!=date.getMonth()+1) return(false);
@@ -281,9 +292,7 @@ function validateDate(year, month, day)
 function validateBirthDay(myDate){
 	var date=new Date();
 	var myDate_array=myDate.split("/");
-	date.setFullYear(myDate_array[0]);
-	date.setMonth(myDate_array[1]-1);
-	date.setDate(myDate_array[2]);
+	date.setFullYear(myDate_array[0], myDate_array[1]-1, myDate_array[2]);
 	
 	var today = new Date;
     if (date > today){
@@ -291,13 +300,9 @@ function validateBirthDay(myDate){
       return false;
     }
 
-    // date.setDate(date.getDate()+100*365);  
-    date.setFullYear(date.getFullYear()+100);  
-    date.setMonth(date.getMonth());
-	date.setDate(date.getDate());   
+    date.setFullYear(date.getFullYear()+100, date.getMonth(), date.getDate());  
     if (date < today){   
       alert('Date of birth may not be older than 100 years.');
       return false;
     }
-    
 }

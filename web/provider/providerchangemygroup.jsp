@@ -25,26 +25,11 @@
 -->
 
 <%
-  
-  //String curProvider_no, curOperator_no;
-  //curProvider_no = request.getParameter("provider_no");
-  //curOperator_no = (String) session.getAttribute("user");
   String oldGroup_no = request.getParameter("mygroup_no")==null?".":request.getParameter("mygroup_no");
 %>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="groupBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-
-<%@ include file="../admin/dbconnection.jsp"%>
-<%
-  String [][] dbQueries=new String[][] {
-    {"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"}, 
-    {"searchmygroupall", "select * from mygroup order by mygroup_no"}, 
-  };
-  String[][] responseTargets=new String[][] {  };
-  groupBean.doConfigure(dbParams,dbQueries,responseTargets);
-%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -53,7 +38,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providerchangemygroup.title" /></title>
-</head>
 <meta http-equiv="Cache-Control" content="no-cache">
 
 <script language="javascript">
@@ -64,6 +48,7 @@ function setfocus() {
 }
 // stop javascript -->
 </script>
+</head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -81,12 +66,13 @@ function setfocus() {
 		<td><bean:message
 			key="provider.providerchangemygroup.msgChangeGroup" />:</TD>
 		<TD align="right"><select name="mygroup_no">
-			<% ResultSet rsgroup = groupBean.queryResults("searchmygroupno");
- 	 while (rsgroup.next()) { 
+<%
+	List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+	for (Map group : resultList) {
 %>
-			<option value="<%=rsgroup.getString("mygroup_no")%>"
-				<%=oldGroup_no.equals(rsgroup.getString("mygroup_no"))?"selected":""%>><%=rsgroup.getString("mygroup_no")%></option>
-			<%
+			<option value="<%=group.get("mygroup_no")%>"
+				<%=oldGroup_no.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
+<%
  	 }
 %>
 		</select> &nbsp;<INPUT TYPE="submit"
@@ -108,25 +94,23 @@ function setfocus() {
 				<td ALIGN="center"><font face="arial"> <bean:message
 					key="provider.providerchangemygroup.msgName" /></font></td>
 			</tr>
-			<%
-   rsgroup = null;
+<%
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = groupBean.queryResults("searchmygroupall");
-   while (rsgroup.next()) { 
-     if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
-       bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
+   resultList = oscarSuperManager.find("providerDao", "searchmygroupall", new Object[] {});
+   for (Map group : resultList) {
+     if(!(oldNo.equals(group.get("mygroup_no"))) ) {
+       bNewNo=bNewNo?false:true; oldNo=String.valueOf(group.get("mygroup_no"));
        //System.out.println(oldNo);
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
-				<td><font face="arial"> &nbsp;<%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></font>
+				<td ALIGN="center"><font face="arial"> <%=group.get("mygroup_no")%></font></td>
+				<td><font face="arial"> &nbsp;<%=group.get("last_name")+", "+group.get("first_name")%></font>
 				</td>
 			</tr>
 			<%
    }
-   groupBean.closePstmtConn();
 %>
 			<INPUT TYPE="hidden" NAME="start_hour"
 				VALUE='<%=(String) session.getAttribute("starthour")%>'>

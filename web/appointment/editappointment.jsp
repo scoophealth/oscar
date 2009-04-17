@@ -1,6 +1,6 @@
-
 <%
-  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
+  if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
+
   String curProvider_no = request.getParameter("provider_no");
   String curUser_no = (String) session.getAttribute("user");
   String userfirstname = (String) session.getAttribute("userfirstname");
@@ -8,20 +8,12 @@
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
   String origDate = null;
 
-  
-
-  boolean bFirstDisp=true; //this is the first time to display the window
-  if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
-  
-  ApptData apptObj = (new ApptOpt()).getApptObj(request);
+  boolean bFirstDisp = true; //this is the first time to display the window
+  if (request.getParameter("bFirstDisp")!=null) bFirstDisp = (request.getParameter("bFirstDisp")).equals("true");
 %>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <%@ page
 	import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*"
-	errorPage="errorpage.jsp"%>
-<%@ page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"
-	errorPage="errorpage.jsp"%>
-<%@ page import="org.springframework.web.context.WebApplicationContext"
 	errorPage="errorpage.jsp"%>
 <%@ page import="oscar.appt.status.service.AppointmentStatusMgr"
 	errorPage="errorpage.jsp"%>
@@ -29,10 +21,17 @@
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+
+<%      
+  ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
+
+  oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
+  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
+
+  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)webApplicationContext.getBean("AppointmentStatusMgr");
+  List allStatus = apptStatusMgr.getAllActiveStatus();
+%>
 <!--  
 /*
  * 
@@ -58,20 +57,15 @@
  * Ontario, Canada 
  */
 -->
-<%      
-  oscar.OscarProperties pros = oscar.OscarProperties.getInstance();
-  String strEditable = pros.getProperty("ENABLE_EDIT_APPT_STATUS");
-  WebApplicationContext wc = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-  AppointmentStatusMgr apptStatusMgr = (AppointmentStatusMgr)wc.getBean("AppointmentStatusMgr");
-  List allStatus = apptStatusMgr.getAllActiveStatus();
-%>
 <html:html locale="true">
 <head>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="appointment.editappointment.title" /></title>
 
 <script language="javascript">
-<!-- start javascript ---- 
+<!-- // start javascript 
 function demographicdetail(vheight,vwidth) {
   if(document.forms['EDITAPPT'].demographic_no.value=="") return;
   self.close();
@@ -85,14 +79,9 @@ function onButRepeat() {
 		document.forms[0].submit();
 	}
 }
-// stop javascript -->
-</script>
 
-</head>
-<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
-<meta http-equiv="Cache-Control" content="no-cache">
-<script>
 var saveTemp=0;
+
 function setfocus() {
   this.focus();
   document.EDITAPPT.keyword.focus();
@@ -195,7 +184,7 @@ function checkTimeTypeIn(obj) {
 	  } 
 	}
 }
-<% if(apptObj!=null) { %>
+<% if (apptObj!=null) { %>
 function pasteAppt() {
 	document.EDITAPPT.status.value = "<%=apptObj.getStatus()%>";
 	document.EDITAPPT.duration.value = "<%=apptObj.getDuration()%>";
@@ -211,8 +200,9 @@ function pasteAppt() {
 function onCut() {
   document.EDITAPPT.submit();
 }
-
+// stop javascript -->
 </script>
+</head>
 <body onload="setfocus()" background="../images/gray_bg.jpg"
 	bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"
@@ -226,61 +216,56 @@ function onCut() {
 </table>
 
 <%
-  String chartno="", phone="", rosterstatus="", alert="";
-  String[] param = new String[1];
-  param[0]=request.getParameter("appointment_no");
-  String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
+	Map appt = null;
+	String demono="", chartno="", phone="", rosterstatus="", alert="", doctorNo="";
+	String strApptDate = bFirstDisp?"":request.getParameter("appointment_date") ;
 
-  ResultSet rs = null, rsdemo = null;
-  if(bFirstDisp) rs = apptMainBean.queryResults(param, request.getParameter("dboperation"));
-  if(bFirstDisp&&rs==null) { %> <bean:message
-	key="appointment.editappointment.msgNoSuchAppointment" /> <% } else {
-    while (bFirstDisp?rs.next():true) { 
-	  //get chart_no from demographic table if it exists.
-	  if(bFirstDisp && apptMainBean.getString(rs,"demographic_no")!=null) {
-	    String demono=apptMainBean.getString(rs,"demographic_no");
-		  if(!demono.equals("0") && !demono.equals("") ) {
-    	  rsdemo = apptMainBean.queryResults(demono, "search_detail");
-		    if(rsdemo.next()) {
-		      chartno = rsdemo.getString("chart_no");
-		      phone = rsdemo.getString("phone");
-		      rosterstatus = rsdemo.getString("roster_status");
-		    }
-    	  rsdemo = apptMainBean.queryResults(demono, "search_demographiccust_alert");
-		    if(rsdemo.next()) {
-		      alert = rsdemo.getString("cust3");
-		    }
-		    
-		  }
-	  }  
-	  if(!bFirstDisp && !request.getParameter("demographic_no").equals("") ) {
-	    String demono=request.getParameter("demographic_no");
-		  if(!demono.equals("0") ) {
-    	  rsdemo = apptMainBean.queryResults(demono, "search_detail");
-		    if(rsdemo.next()) {
-		      chartno = rsdemo.getString("chart_no");
-		      phone = rsdemo.getString("phone");
-		      rosterstatus = rsdemo.getString("roster_status");
-		    }
-    	  rsdemo = apptMainBean.queryResults(demono, "search_demographiccust_alert");
-		    if(rsdemo.next()) {
-		      alert = rsdemo.getString("cust3");
-		    }
-		  }
-    }	
+	if (bFirstDisp) {
+		List<Map> resultList = oscarSuperManager.find("appointmentDao",
+				request.getParameter("dboperation"), new Object [] {request.getParameter("appointment_no")});
+		if (resultList.size() == 0) {
+%>
+<bean:message key="appointment.editappointment.msgNoSuchAppointment" /> 
+<%
+			return;
+		} else {
+			appt = resultList.get(0); 
+		}
+	}
+
+	if (bFirstDisp && appt.get("demographic_no")!=null) {
+		demono = String.valueOf(appt.get("demographic_no"));
+	} else if (request.getParameter("demographic_no")!=null && !request.getParameter("demographic_no").equals("")) {
+		demono = request.getParameter("demographic_no");
+	}
+
+	//get chart_no from demographic table if it exists
+	if (!demono.equals("0") && !demono.equals("")) {
+   		List<Map> resultList = oscarSuperManager.find("appointmentDao", "search_detail", new Object [] {demono});
+		if (resultList.size() > 0) {
+			Map detail = resultList.get(0);
+			chartno = (String) detail.get("chart_no");
+			phone = (String) detail.get("phone");
+			rosterstatus = (String) detail.get("roster_status");
+		}
+   		resultList = oscarSuperManager.find("appointmentDao", "search_demographiccust_alert", new Object [] {demono});
+		if (resultList.size() > 0) {
+			Map detail = resultList.get(0);
+			alert = (String) detail.get("cust3");
+		}
+	}
 
     //RJ 07/12/2006
     //If page is loaded first time hit db for patient's family doctor
     //Else if we are coming back from search this has been done for us
     //Else how did we get here?
-    String doctorNo = "";
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
-        DemographicData.Demographic demo = dd.getDemographic(apptMainBean.getString(rs,"demographic_no"));
-        doctorNo = demo!=null? (demo.getProviderNo()) : "";
-    }
-    else if( !request.getParameter("doctor_no").equals(""))
+        DemographicData.Demographic demo = dd.getDemographic(String.valueOf(appt.get("demographic_no")));
+        doctorNo = demo!=null ? (demo.getProviderNo()) : "";
+    } else if (!request.getParameter("doctor_no").equals("")) {
         doctorNo = request.getParameter("doctor_no");
+    }
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
@@ -295,38 +280,36 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT"
 					NAME="appointment_date"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"appointment_date"):strApptDate%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					VALUE="<%=bFirstDisp?appt.get("appointment_date"):strApptDate%>"
+					WIDTH="25" HEIGHT="20" border="0"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"> <bean:message
 					key="Appointment.formStatus" /> :</font></div>
 				</td>
 				<td width="20%" ALIGN="LEFT">
-				<%     
+<%     
               String statusCode = request.getParameter("status");
-              if (rs != null &&  bFirstDisp){
-                  statusCode = apptMainBean.getString(rs,"status");
+              if (bFirstDisp){
+                  statusCode = (String) appt.get("status");
               }
               String signOrVerify = "";
-              if (statusCode.length()>=2){
-              signOrVerify = statusCode.substring(1,2);
-              statusCode = statusCode.substring(0,1);
+              if (statusCode.length() >= 2){
+                  signOrVerify = statusCode.substring(1,2);
+                  statusCode = statusCode.substring(0,1);
               }
-            %> <%
-            if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")){
-            %> <select name="status" STYLE="width: 154px" HEIGHT="20"
-					border="0">
+              if (strEditable!=null && strEditable.equalsIgnoreCase("yes")) { %>
+                <select name="status" STYLE="width: 154px">
 					<% for (int i = 0; i < allStatus.size(); i++) { %>
 					<option
 						value="<%=((AppointmentStatus)allStatus.get(i)).getStatus()+signOrVerify%>"
 						<%=((AppointmentStatus)allStatus.get(i)).getStatus().equals(statusCode)?"SELECTED":""%>><%=((AppointmentStatus)allStatus.get(i)).getDescription()%></option>
 					<% } %>
 				</select> <%
-            }
-            if (strEditable==null || !strEditable.equalsIgnoreCase("yes")){
-            %> <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"> <%}%>
+              } else { %>
+                <INPUT TYPE="TEXT" NAME="status" VALUE="<%=statusCode%>" WIDTH="25"> <%
+              }
+%>
 				</td>
 			</tr>
 			<tr valign="middle">
@@ -337,16 +320,16 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT"
 					NAME="start_time"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"start_time").substring(0,5):request.getParameter("start_time")%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					VALUE="<%=bFirstDisp?String.valueOf(appt.get("start_time")).substring(0,5):request.getParameter("start_time")%>"
+					WIDTH="25"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"> <bean:message
 					key="Appointment.formType" /> :</font></div>
 				</td>
 				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT" NAME="type"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"type"):request.getParameter("type")%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					VALUE="<%=bFirstDisp?appt.get("type"):request.getParameter("type")%>"
+					WIDTH="25"></td>
 			</tr>
 			<tr valign="middle">
 				<td width="20%" ALIGN="LEFT">
@@ -357,17 +340,17 @@ function onCut() {
 				<%
   int everyMin = 1;
   if(bFirstDisp) {
-    int endtime = (Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(0,2) ) )*60 + (Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(3,5) ) ) ;
-    int starttime = (Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(0,2) ) )*60 + (Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(3,5) ) ) ;
+    int endtime = (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("end_time")).substring(3,5) ) ) ;
+    int starttime = (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(0,2) ) )*60 + (Integer.parseInt(String.valueOf(appt.get("start_time")).substring(3,5) ) ) ;
     everyMin = endtime - starttime +1;
   }
 %> <INPUT TYPE="hidden" NAME="end_time"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"end_time").substring(0,5):request.getParameter("end_time")%>"
+					VALUE="<%=bFirstDisp?String.valueOf(appt.get("end_time")).substring(0,5):request.getParameter("end_time")%>"
 					WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">
 				<%--              <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" onChange="checkTimeTypeIn(this)">--%>
 				<INPUT TYPE="TEXT" NAME="duration"
 					VALUE="<%=request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin)%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					WIDTH="25"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="Arial, Helvetica, sans-serif"><bean:message
@@ -376,7 +359,7 @@ function onCut() {
 				<td width="20%" ALIGN="LEFT"><input type="TEXT" name="chart_no"
 					readonly
 					value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>"
-					width="25" height="20" border="0" hspace="2"></td>
+					width="25"></td>
 			</tr>
 			<% if(providerBean.getProperty(doctorNo)!=null) {%>
 			<tr valign="middle">
@@ -400,8 +383,8 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><INPUT TYPE="TEXT" NAME="keyword"
 					tabindex="1"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"name"):request.getParameter("name")%>"
-					HEIGHT="20" border="0" hspace="2" width="25"></td>
+					VALUE="<%=bFirstDisp?appt.get("name"):request.getParameter("name")%>"
+					width="25"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT"><INPUT TYPE="hidden"
 					NAME="orderby" VALUE="last_name, first_name"> <INPUT
@@ -417,8 +400,8 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><input type="TEXT"
 					name="demographic_no" onFocus="onBlockFieldFocus(this)" readonly
-					value="<%=bFirstDisp?( rs.getInt("demographic_no")==0?"":(""+rs.getInt("demographic_no")) ):request.getParameter("demographic_no")%>"
-					width="25" height="20" border="0" hspace="2"></td>
+					value="<%=bFirstDisp?( ((Integer)appt.get("demographic_no"))==0?"":(""+appt.get("demographic_no")) ):request.getParameter("demographic_no")%>"
+					width="25"></td>
 			</tr>
 			<tr valign="middle">
 				<td width="20%" ALIGN="LEFT">
@@ -427,7 +410,7 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><font face="Times New Roman">
 				<textarea name="reason" tabindex="2" rows="2" wrap="virtual"
-					cols="18"><%=bFirstDisp?apptMainBean.getString(rs,"reason"):request.getParameter("reason")%></textarea>
+					cols="18"><%=bFirstDisp?appt.get("reason"):request.getParameter("reason")%></textarea>
 				</font></TD>
 				<td width="5%"><font face="Times New Roman"> </font></td>
 				<td width="20%" ALIGN="LEFT">
@@ -436,7 +419,7 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><font face="Times New Roman">
 				<textarea name="notes" tabindex="3" rows="2" wrap="virtual"
-					cols="18"><%=bFirstDisp?apptMainBean.getString(rs,"notes"):request.getParameter("notes")%></textarea>
+					cols="18"><%=bFirstDisp?appt.get("notes"):request.getParameter("notes")%></textarea>
 				</font></td>
 			</tr>
 			<tr valign="middle">
@@ -448,12 +431,12 @@ function onCut() {
 				<% 
             OscarProperties props = OscarProperties.getInstance();
             boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
-            String loc = bFirstDisp?apptMainBean.getString(rs,"location"):request.getParameter("location").equals("")?"":request.getParameter("location");
-            String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            String loc = bFirstDisp?((String)appt.get("location")):request.getParameter("location").equals("")?"":request.getParameter("location");
+            String colo = bMoreAddr?ApptUtil.getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
             %> <INPUT TYPE="TEXT" NAME="location" tabindex="4"
 					style="background-color: <%=colo%>"
-					VALUE="<%=bFirstDisp?apptMainBean.getString(rs,"location"):request.getParameter("location")%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					VALUE="<%=bFirstDisp?appt.get("location"):request.getParameter("location")%>"
+					WIDTH="25"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"><bean:message
@@ -461,8 +444,8 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT"><input type="TEXT"
 					name="resources" tabindex="5"
-					value="<%=bFirstDisp?apptMainBean.getString(rs,"resources"):request.getParameter("resources")%>"
-					width="25" height="20" border="0" hspace="2"></td>
+					value="<%=bFirstDisp?appt.get("resources"):request.getParameter("resources")%>"
+					width="25"></td>
 			</tr>
 			<tr valign="middle">
 				<td width="20%" ALIGN="LEFT">
@@ -471,9 +454,9 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT">
 				<%
-  String lastCreatorNo = bFirstDisp?apptMainBean.getString(rs,"creator"):request.getParameter("user_id");
+  String lastCreatorNo = bFirstDisp?((String)appt.get("creator")):request.getParameter("user_id");
 %> <INPUT TYPE="TEXT" NAME="user_id" VALUE="<%=lastCreatorNo%>" readonly
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"></td>
+					WIDTH="25"></td>
 				<td width="5%"></td>
 				<td width="20%" ALIGN="LEFT">
 				<div align="right"><font face="arial"><bean:message
@@ -481,23 +464,17 @@ function onCut() {
 				</td>
 				<td width="20%" ALIGN="LEFT">
 				<%                 
-                 origDate =  rs != null ? rs.getString("createdatetime") : request.getParameter("createDate");
-                 String lastDateTime = bFirstDisp?apptMainBean.getString(rs,"updatedatetime"):request.getParameter("updatedatetime");
-                 if (lastDateTime == null){ lastDateTime = bFirstDisp?apptMainBean.getString(rs,"createdatetime"):request.getParameter("createdatetime"); }
+                 origDate =  bFirstDisp ? String.valueOf(appt.get("createdatetime")) : request.getParameter("createDate");
+                 String lastDateTime = bFirstDisp?String.valueOf(appt.get("updatedatetime")):request.getParameter("updatedatetime");
+                 if (lastDateTime == null){ lastDateTime = bFirstDisp?String.valueOf(appt.get("createdatetime")):request.getParameter("createdatetime"); }
 		%> <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly
 					VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>"
-					WIDTH="25" HEIGHT="20" border="0" hspace="2"> <%
-      break;
-    } //end while
-  } //end if
-  if(bFirstDisp) apptMainBean.closePstmtConn();
+					WIDTH="25"> <%
  
-    // the cursor of ResultSet only goes through once from top
 				GregorianCalendar now=new GregorianCalendar();
 				String strDateTime=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH)+" "
 					+	now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
                                 
-                                System.out.println("HERHE");
 %> <INPUT TYPE="hidden" NAME="createdatetime" VALUE="<%=strDateTime%>">
 				<INPUT TYPE="hidden" NAME="provider_no" VALUE="<%=curProvider_no%>">
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="update_apptrecord">
@@ -515,7 +492,7 @@ function onCut() {
 				<div align="right"><font face="arial">Create Date :</font></div>
 				</td>
 				<td><INPUT TYPE="TEXT" NAME="createDate" readonly
-					VALUE="<%=origDate%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+					VALUE="<%=origDate%>" WIDTH="25">
 				</td>
 			</tr>
 		</table>
@@ -556,9 +533,7 @@ function onCut() {
 		<td><bean:message key="Appointment.msgTelephone" />: <%= phone%><br>
 		<bean:message key="Appointment.msgRosterStatus" />: <%=rosterstatus%>
 		</td>
-		<%
-  if(alert!=null && !alert.equals("") ) {
-%>
+		<% if (alert!=null && !alert.equals("")) { %>
 		<td bgcolor='yellow'><font color='red'><b><%=alert%></b></font></td>
 		<% } %>
 	</tr>

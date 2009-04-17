@@ -32,8 +32,6 @@
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.util.UtilMisc, oscar.form.graphic.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
 
 <html>
 <head>

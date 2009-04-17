@@ -54,11 +54,12 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 <%@ page import="org.apache.commons.lang.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="as" class="oscar.appt.ApptStatusData" scope="page" />
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
+
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <!-- Struts for i18n -->
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -115,10 +116,6 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 %>
 <%
-   
-    ResultSet rsTickler = null;
-    ResultSet rsStudy = null;
-    ResultSet rsDemo = null;
     String tickler_no="", textColor="", tickler_note="";
     String ver = "", roster="";
     String yob = "";
@@ -129,13 +126,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	String studySymbol = "#", studyColor = "red";
 
     String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-    Object[] rst=apptMainBean.queryResultsCaisi("resource_baseurl", "search_resource_baseurl");
-    ResultSet rsgroup1 =(ResultSet) rst[0];
-    while (rsgroup1.next()) {
- 	    resourcebaseurl = rsgroup1.getString("value");
+    List<Map> resultList = oscarSuperManager.find("providerDao", "search_resource_baseurl", new Object[] {"resource_baseurl"});
+    for (Map url : resultList) {
+ 	    resourcebaseurl = (String)url.get("value");
     }
-    rsgroup1 = null;
-    ((Statement) rst[1]).close();
 
     GregorianCalendar cal = new GregorianCalendar();
     int curYear = cal.get(Calendar.YEAR);
@@ -505,16 +499,13 @@ function phrAsyncGo2() {
    int numProvider=0, numAvailProvider=0;
    String [] curProvider_no;
    String [] curProviderName;
-   ResultSet rsgroup = null;
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
-	   rst= apptMainBean.queryResultsCaisi("searchallprovider");
-     rsgroup = (ResultSet) rst[0];
- 	   while (rsgroup.next()) {
- 	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
- 	   }
- 	  ((Statement) rst[1]).close();
- 	 }
+    resultList = oscarSuperManager.find("providerDao", "searchallprovider", new Object[] {});
+    for (Map provider : resultList) {
+ 	    providerBean.setProperty(String.valueOf(provider.get("provider_no")), provider.get("last_name")+","+provider.get("first_name"));
+    }
+   }
 
 if(providerBean.get(mygroupno) != null) { //single appointed provider view
      numProvider=1;
@@ -524,21 +515,17 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
      curProviderName[0]=providerBean.getProperty(mygroupno);
 } else {
 	if(view==0) { //multiple views
-		rst=apptMainBean.queryResultsCaisi(mygroupno, "searchmygroupcount");
-		rsgroup = (ResultSet) rst[0];
-		while (rsgroup.next()) {
-			numProvider=rsgroup.getInt(1);
-		}
-		((Statement) rst[1]).close();
+	   resultList = oscarSuperManager.find("providerDao", "searchmygroupcount", new Object[] {mygroupno});
+	   for (Map count : resultList) {
+	        numProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
+	   }
        String [] param3 = new String [2];
        param3[0] = mygroupno;
        param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
-  	   rst= apptMainBean.queryResultsCaisi(param3, "search_numgrpscheduledate");
-  	 rsgroup=(ResultSet) rst[0];
-  	   while (rsgroup.next()) {
-			numAvailProvider = rsgroup.getInt(1);
-		}
-  	 ((Statement) rst[1]).close();
+       resultList = oscarSuperManager.find("providerDao", "search_numgrpscheduledate", param3);
+       for (Map count : resultList) {
+         numAvailProvider = ((Long)(count.get(count.keySet().toArray()[0]))).intValue();
+	   }
   	 
      if(numProvider==0) {
        numProvider=1; //the login user
@@ -555,16 +542,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
 
-		rst=apptMainBean.queryResultsCaisi(mygroupno, "searchmygroupprovider");
-	   rsgroup = (ResultSet) rst[0];
-	   int iTemp=0;
-     while (rsgroup.next()) {
-       curProvider_no[iTemp]=rsgroup.getString("provider_no");
-       curProviderName[iTemp]=rsgroup.getString("first_name")+" "+rsgroup.getString("last_name");
+     int iTemp = 0;
+     resultList = oscarSuperManager.find("providerDao", "searchmygroupprovider", new Object[] {mygroupno});
+     for (Map provider : resultList) {
+       curProvider_no[iTemp] = String.valueOf(provider.get("provider_no"));
+       curProviderName[iTemp] = provider.get("first_name")+" "+provider.get("last_name");
        iTemp++;
      }
-     ((Statement)rst[1]).close();
-     }
+    }
    } else { //single view
      numProvider=1;
      curProvider_no = new String [numProvider];
@@ -579,22 +564,19 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
    param3[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
      param3[1] = curProvider_no[nProvider];
-     	rst=apptMainBean.queryResultsCaisi(param3, "search_appttimecode");
-	   rsgroup = (ResultSet)rst[0];
-     while (rsgroup.next()) {
-       dateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
-     }
+     resultList = oscarSuperManager.find("providerDao", "search_appttimecode", param3);
+     for (Map provider : resultList) {
+       dateTimeCodeBean.put(String.valueOf(provider.get("provider_no")), String.valueOf(provider.get("timecode")));
+     } 
    }
-   ((Statement)rst[1]).close();
-   	rst=apptMainBean.queryResultsCaisi("search_timecode");
-	 rsgroup = (ResultSet)rst[0];
-   while (rsgroup.next()) {
-     dateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
-     dateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
-     dateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
-     dateTimeCodeBean.put("confirm" + rsgroup.getString("code"), rsgroup.getString("confirm"));
+
+   resultList = oscarSuperManager.find("providerDao", "search_timecode", new Object[] {});
+   for (Map appt : resultList) {
+     dateTimeCodeBean.put("description"+appt.get("code"), appt.get("description"));
+     dateTimeCodeBean.put("duration"+appt.get("code"), appt.get("duration"));
+     dateTimeCodeBean.put("color"+appt.get("code"), (appt.get("color")==null || "".equals(appt.get("color")))?bgcolordef:appt.get("color"));
+     dateTimeCodeBean.put("confirm" + appt.get("code"), appt.get("confirm"));
    }
-   ((Statement)rst[1]).close();
 
    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 %>
@@ -760,7 +742,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
 <!-- caisi infirmary view extension add ffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-<table><tr><td>
+<table><tr><td align="right">
     <caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="appointment">
 	<% session.setAttribute("infirmaryView_isOscar", "true"); %>
     </caisi:ProgramExclusiveView>
@@ -785,24 +767,21 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 <%
 	request.getSession().setAttribute("archiveView","false");
-	rst=apptMainBean.queryResultsCaisi( "searchmygroupno");
-   rsgroup = (ResultSet) rst[0];
- 	 while (rsgroup.next()) {
+	resultList = oscarSuperManager.find("providerDao", "searchmygroupno", new Object[] {});
+	for (Map group : resultList) {
 %>
-  <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>
+  <option value="<%="_grp_"+group.get("mygroup_no")%>"
+		<%=mygroupno.equals(group.get("mygroup_no"))?"selected":""%>><%=group.get("mygroup_no")%></option>
 <%
- 	 }
- 	((Statement)rst[1]).close();
-%>
+	}
 
-<% rst = apptMainBean.queryResultsCaisi("searchprovider");
-	rsgroup = (ResultSet) rst[0];
- 	 while (rsgroup.next()) {
+	resultList = oscarSuperManager.find("providerDao", "searchprovider", new Object[] {});
+	for (Map provider : resultList) {
 %>
-  <option value="<%=rsgroup.getString("provider_no")%>" <%=mygroupno.equals(rsgroup.getString("provider_no"))?"selected":""%> %> <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
+  <option value="<%=provider.get("provider_no")%>" <%=mygroupno.equals(provider.get("provider_no"))?"selected":""%>>
+		<%=provider.get("last_name")+", "+provider.get("first_name")%></option>
 <%
- 	 }
- 	((Statement)rst[1]).close();
+	}
 %>
 </select>
 <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
@@ -816,7 +795,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 %>
-&nbsp&nbsp&nbsp&nbsp
+&nbsp;&nbsp;&nbsp;&nbsp;
 </logic:equal>
 
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
@@ -854,10 +833,9 @@ int iCols=0, iRows=0, iS=0,iE=0,iSm=0,iEm=0; //for each S/E starting/Ending hour
 int ih=0, im=0, iSn=0, iEn=0 ; //hour, minute, nthStartTime, nthEndTime, rowspan
 boolean bFirstTimeRs=true;
 boolean bFirstFirstR=true;
-DBPreparedHandlerParam[] paramTickler =new DBPreparedHandlerParam[2];
-String[] param =new String[2];
+Object[] paramTickler = new Object[2];
+String[] param = new String[2];
 String strsearchappointmentday=request.getParameter("dboperation");
-ResultSet rs = null;
 
 boolean userAvail = true;
 int me = -1;
@@ -875,17 +853,15 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
      depth = bDispTemplatePeriod ? (24*60 / timecodeLength) : everyMin; // add function to display different time slot
      param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
-     rst = apptMainBean.queryResultsCaisi(param1, "search_scheduledate_single");
-		
-     rsgroup=(ResultSet) rst[0];
+     resultList = oscarSuperManager.find("providerDao", "search_scheduledate_single", param1);
+
      //viewall function
      if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
-       if(!rsgroup.next() || rsgroup.getString("available").equals("0")) {
-         if(nProvider!=me ) continue;
-         else userAvail = false;
-       }
+    	 if(resultList.size()==0 || "0".equals(resultList.get(0).get("available")) ) {
+             if(nProvider!=me ) continue;
+             else userAvail = false;
+    	 }
      }
-     ((Statement)rst[1]).close();
      bColor=bColor?false:true;
  %>
             <td valign="top" width="<%=1*100/numProvider%>%"> <!-- for the first provider's schedule -->
@@ -926,17 +902,16 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- caisi infirmary view exteion add end ffffffffffffffffff-->
 <!-- =============== following block is the original oscar code. -->
         <!-- table for hours of day start -->
-        <table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
-				<%
-          bFirstTimeRs=true;
-          bFirstFirstR=true;
-  				param[0]=curProvider_no[nProvider];
-	 				param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
-	 			
-	 			rst=apptMainBean.queryResultsCaisi(param, strsearchappointmentday);
-   				rs = (ResultSet)rst[0];
-                                
-                                
+        <table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">                            
+<%
+        bFirstTimeRs=true;
+        bFirstFirstR=true;
+  		param[0]=curProvider_no[nProvider];
+		param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
+
+		List<Map> appointmentList = oscarSuperManager.find("providerDao", strsearchappointmentday, param);
+		Iterator<Map> it = appointmentList.iterator();
+		Map appointment = null;
 
 			    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
             hourCursor = ih/60;
@@ -957,14 +932,15 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
             </td>
-				<%
-          	while (bFirstTimeRs?rs.next():true) { //if it's not the first time to parse the standard time, should pass it by
-          	  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
+<%
 
-          	  iS=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(0,2));
-        	    iSm=Integer.parseInt(apptMainBean.getString(rs,"start_time").substring(3,5));
-         	    iE=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(0,2));
-     	        iEm=Integer.parseInt(apptMainBean.getString(rs,"end_time").substring(3,5));
+        while (bFirstTimeRs?it.hasNext():true) { //if it's not the first time to parse the standard time, should pass it by
+        	  appointment = bFirstTimeRs?it.next():appointment;
+          	  len = bFirstTimeRs&&!bFirstFirstR?lenLimitedS:lenLimitedL;
+          	  iS=Integer.parseInt(String.valueOf(appointment.get("start_time")).substring(0,2));
+        	  iSm=Integer.parseInt(String.valueOf(appointment.get("start_time")).substring(3,5));
+         	  iE=Integer.parseInt(String.valueOf(appointment.get("end_time")).substring(0,2));
+     	      iEm=Integer.parseInt(String.valueOf(appointment.get("end_time")).substring(3,5));
           	  if( (ih < iS*60+iSm) && (ih+depth-1)<iS*60+iSm ) { //iS not in this period (both start&end), get to the next period
           	  	//out.println("<td width='10'>&nbsp;</td>"); //should be comment
           	  	bFirstTimeRs=false;
@@ -979,30 +955,29 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
          	    //iRows=(iE-iS)*60/depth+iEm/depth-iSm/depth+1; //to see if the period across an hour period
 
          	    //get time format: 00:00am/pm
-         	    //String startTime = (iS>12?("0"+(iS-12)):apptMainBean.getString(rs,"start_time").substring(0,2))+":"+apptMainBean.getString(rs,"start_time").substring(3,5)+am_pm ;
-         	    //String endTime   = (iE>12?("0"+(iE-12)):apptMainBean.getString(rs,"end_time").substring(0,2))  +":"+apptMainBean.getString(rs,"end_time").substring(3,5)+(iE<12?"am":"pm");
-                    String name = UtilMisc.toUpperLowerCase(apptMainBean.getString(rs,"name"));
-          	  int demographic_no = rs.getInt("demographic_no");
-                  paramTickler[0]=new DBPreparedHandlerParam(String.valueOf(demographic_no));
-                  paramTickler[1]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(strDate)); //year+"-"+month+"-"+day;//e.g."2001-02-02";
-                  rsTickler = null;
-                  rsTickler = apptMainBean.queryResults_paged(paramTickler, "search_tickler", 0);
+         	    //String startTime = (iS>12?("0"+(iS-12)):String.valueOf(appointment.get("start_time")).substring(0,2))+":"+String.valueOf(appointment.get("start_time")).substring(3,5)+am_pm ;
+         	    //String endTime   = (iE>12?("0"+(iE-12)):String.valueOf(appointment.get("end_time")).substring(0,2))  +":"+String.valueOf(appointment.get("end_time")).substring(3,5)+(iE<12?"am":"pm");
+                    String name = UtilMisc.toUpperLowerCase(String.valueOf(appointment.get("name")));
+          	  int demographic_no = (Integer)appointment.get("demographic_no");
+                  paramTickler[0]=String.valueOf(demographic_no);
+                  paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
                   tickler_no = "";
                   tickler_note="";
-                  while (rsTickler.next()){
-                      tickler_no = rsTickler.getString("tickler_no");
-                      tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
-                  }
-                  rsDemo = null;
-                  ver = "";
+    		      List<Map> ticklerList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
+    		  	  for (Map tickler : ticklerList) {
+    			        tickler_no = String.valueOf(tickler.get("tickler_no"));
+    			        tickler_note = tickler.get("message")==null?tickler_note:tickler_note + "\n" + tickler.get("message");
+    	          }
+
+    		  	  ver = "";
                   roster = "";
-                  rsDemo = apptMainBean.queryResults(demographic_no, "search_demograph");
-                  if(rsDemo.next()){
-                    ver = rsDemo.getString("ver");
-                    roster = rsDemo.getString("roster_status");
-                    int intMob = rsDemo.getInt("month_of_birth");
-                    int intDob = rsDemo.getInt("date_of_birth");
-		    mob = String.valueOf(intMob);
+    		      List<Map> demoList = oscarSuperManager.find("providerDao", "search_demograph", new Object[] {demographic_no});
+    		  	  for (Map demo : demoList) {
+                    ver = (String)demo.get("ver");
+                    roster = (String)demo.get("roster_status");
+                    int intMob = Integer.parseInt(String.valueOf(demo.get("month_of_birth")));
+                    int intDob = Integer.parseInt(String.valueOf(demo.get("date_of_birth")));
+                    mob = String.valueOf(intMob);
                     dob = String.valueOf(intDob);
                     demBday = mob + "-" + dob;
 
@@ -1013,17 +988,18 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
                   study_no = new StringBuffer("");
                   study_link = new StringBuffer("");
 				  studyDescription = new StringBuffer("");
-                  rsStudy = null;
-                  rsStudy = apptMainBean.queryResults(demographic_no, "search_studycount");
+
 				  int numStudy = 0;
-				  if (rsStudy.next()) numStudy =  rsStudy.getInt(1);
+    		      List<Map> studyList = oscarSuperManager.find("providerDao", "search_studycount", new Object[] {demographic_no});
+    		  	  for (Map study : studyList) {
+    		  		  numStudy = ((Long)(study.get(study.keySet().toArray()[0]))).intValue();
+    		  	  }
 				  if (numStudy == 1) {
-                      rsStudy = null;
-                      rsStudy = apptMainBean.queryResults(demographic_no, "search_study");
-                      while (rsStudy.next()){
-                          study_no = new StringBuffer(rsStudy.getString("s.study_no"));
-                          study_link = new StringBuffer(rsStudy.getString("s.study_link"));
-                          studyDescription = new StringBuffer(rsStudy.getString("s.description"));
+	    		      studyList = oscarSuperManager.find("providerDao", "search_study", new Object[] {demographic_no});
+	    		  	  for (Map study : studyList) {
+                          study_no = new StringBuffer(String.valueOf(study.get("study_no")));
+                          study_link = new StringBuffer(String.valueOf(study.get("study_link")));
+                          studyDescription = new StringBuffer(String.valueOf(study.get("description")));
                       }
 				  } else if (numStudy > 1) {
                       study_no = new StringBuffer("0");
@@ -1031,9 +1007,9 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 				      studyDescription = new StringBuffer("Form Studies");
 				  }
 
-          	  String reason = apptMainBean.getString(rs,"reason");
-          	  String notes = apptMainBean.getString(rs,"notes");
-          	  String status = (apptMainBean.getString(rs,"status")).trim();
+		  	  String reason = String.valueOf(appointment.get("reason")).trim();
+          	  String notes = String.valueOf(appointment.get("notes")).trim();
+          	  String status = String.valueOf(appointment.get("status")).trim();
           	  bFirstTimeRs=true;
 			    as.setApptStatus(status);
         %>
@@ -1042,7 +1018,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
             <%
 			    if (as.getNextStatus() != null && !as.getNextStatus().equals("")) {
             %>
-            <a href="providercontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<%=as.getTitle()%> " > 
+            <a href="providercontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&status=&statusch=<%=as.getNextStatus()%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=addstatus&dboperation=updateapptstatus&viewall=<%=request.getParameter("viewall")==null?"0":(request.getParameter("viewall"))%>"; title="<%=as.getTitle()%> " > 
             <%
 				}
 			    if (as.getNextStatus() != null) {
@@ -1066,7 +1042,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
     				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     			</caisi:isModuleLoad>
     		<%} %>	    		
-<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
+<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
 <bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
 <bean:message key="provider.appointmentProviderAdminDay.notes"/>: <%=UtilMisc.htmlEscape(notes)%>" >
@@ -1098,13 +1074,13 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 <% } %>
 <!-- doctor code block -->
 
-<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
+<a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=appointment.get("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search');return false;"  <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON_TOOLTIP" value="yes" defaultVal="true"> title="<%=name%>
 &nbsp; reason: <%=UtilMisc.htmlEscape(reason)%>
    &nbsp; notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view==0)?(name.length()>len?name.substring(0,len):name):name%></a>
 <% if(len==lenLimitedL || view!=0 || numAvailProvider==1 ) {%>
 <!-- doctor code block -->
 <% if(bShowEncounterLink) { %>
-<% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+apptMainBean.getString(rs,"appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status+ "&providerview=" + curProvider_no[nProvider] + "&user_no=" + curUser_no + "&apptProvider=" + curProvider_no[nProvider];%>
+<% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.get("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status;%>
 <a href=# onClick="popupPage(710, 1024,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
@@ -1116,15 +1092,12 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
              <% if(status.indexOf('B')==-1) {
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>
-               <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=apptMainBean.getString(rs,"appointment_no")%>");return false;' title="Faturamento">|FAT|</a>
+               <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=appointment.get("appointment_no")%>");return false;' title="Faturamento">|FAT|</a>
              <% } else {%>
-	       <!--<a href=# onClick='popupPage(700,1000, "../billing/billingOB.jsp?billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>-->
-           <!--    <a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(oscarVariables.getProperty("billregion"))%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/>|</a>-->
-               <a href=# onClick='popupPage(755,1200, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
-
+              <a href=# onClick='popupPage(755,1200, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=appointment.get("appointment_no")%>&demographic_name=<%=URLEncoder.encode(name)%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=iS+":"+iSm%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
              <% } %>
 <% } else {%>
-    <a href=# onClick='onUnbilled("../billing/CA/<%=prov%>/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=apptMainBean.getString(rs,"appointment_no")%>");return false;' title="<bean:message key="global.billingtag"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
+    <a href=# onClick='onUnbilled("../billing/CA/<%=prov%>/billingDeleteWithoutNo.jsp?status=<%=status%>&appointment_no=<%=appointment.get("appointment_no")%>");return false;' title="<bean:message key="global.billingtag"/>">|-<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
 <% } %>
 <!--/security:oscarSec-->
 	  </security:oscarSec>
@@ -1157,13 +1130,13 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 	 
 	  <!-- add one link to caisi Program Management Module -->
 	  <caisi:isModuleLoad moduleName="caisi">
-	  	<!--<a href=# onClick="popupPage(700, 1048,'../PMmodule/ClientManager.do?id=<%=demographic_no%>')" title="Program Management">|P</a>-->
+	  	<%-- <a href=# onClick="popupPage(700, 1048,'../PMmodule/ClientManager.do?id=<%=demographic_no%>')" title="Program Management">|P</a>--%>
 	  	<a href='../PMmodule/ClientManager.do?id=<%=demographic_no%>' title="Program Management">|P</a>
     </caisi:isModuleLoad>   
           <%
      //out.print(monthDay + " " + demBday);
       if(isBirthday(monthDay,demBday)){%>
-      	| <img src="../images/cake.gif" height="20"/>
+      	| <img src="../images/cake.gif" height="20" alt="Happy Birthday"/>
 
       <%}%>
       <!--Inline display of reason -->
@@ -1178,9 +1151,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
             //out.println("<td width='1'>&nbsp;</td></tr>"); give a grid display
             out.println("<td width='1'></td></tr>"); //no grid display
           }
-		  ((Statement)rst[1]).close();
-    			//apptMainBean.closePstmtConn();
-				%>
+		%>
 
           </table> <!-- end table for each provider schedule display -->
 <!-- caisi infirmary view extension add fffffffffff-->
@@ -1218,8 +1189,6 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
             </td>
  <%
    } //end of display team a, etc.   
-   apptMainBean.closePstmtConn();
-   
  %>
 
 

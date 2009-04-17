@@ -8,7 +8,11 @@
     WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     GenericIntakeManager  genericIntakeManager =  (GenericIntakeManager) ctx.getBean("genericIntakeManager");
     String published = request.getParameter("published");
-    String publishedForm = request.getParameter("published_form");
+    String formType = request.getParameter("form_type");
+    int frmType = 0;
+    try {
+	frmType = Integer.valueOf(formType).intValue();
+    } catch(NumberFormatException e) {}
     IntakeNode itn = (IntakeNode) session.getAttribute("intakeNode");
     Integer frmVersion = (Integer) session.getAttribute("form_version");
     String publisher = session.getAttribute("publisher").toString();
@@ -21,14 +25,15 @@
     IntakeNode nwItn = new IntakeNode();
     copyIntakeNode(itn, nwItn);
     nwItn.setForm_version(frmVersion);
+    nwItn.setFormType(Integer.valueOf(frmType).intValue());
     genericIntakeManager.saveIntakeNode(nwItn);
     updateEqId(nwItn, genericIntakeManager);
 
-    if (publishedForm !=null || published != null) {
+    if (published != null) {
     	updatePublish(nwItn, publisher, genericIntakeManager);        
     }
     
-    if (published!=null) {
+    if (published!=null && frmType == 1) {
 	    genericIntakeManager.updateAgencyIntakeQuick(nwItn.getId());
     }
     session.removeAttribute("intakeNode");
@@ -124,6 +129,7 @@ void copyIntakeNode(IntakeNode org, IntakeNode cpy) {
     cpy.setNodeTemplate(org.getNodeTemplate());
     cpy.setPos(org.getPos());
     cpy.setMandatory(org.getMandatory());
+    cpy.setFormType(org.getFormType());
     if (!org.isIntake() && !org.isPage() && !org.isSection() && !org.isAnswerCompound()) {
         cpy.setEq_to_id(org.getEq_to_id());
     }

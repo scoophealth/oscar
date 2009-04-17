@@ -1,7 +1,7 @@
 <%@ page import="oscar.*, org.oscarehr.util.*"%>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
-	<%	
+<%	
 	session.setAttribute("case_program_id", session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID));
 	java.util.Date todayDate=new java.util.Date();
 	todayDate.setHours(23);
@@ -60,80 +60,24 @@
 java.util.Date apptime=new java.util.Date();
 int demographic_no = (new Integer(de.getValue())).intValue();
 String demographic_name=de.getLabel();
-//param[0]=curProvider_no[nProvider];
-//param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
-//rs = apptMainBean.queryResults(param, strsearchappointmentday);
-//System.out.println(param[0]+"::"+param[1]+"::"+rs);
-//original oscar code for demographic table
-%>
-<c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">
-<%
-paramTickler[0]=new DBPreparedHandlerParam(String.valueOf(demographic_no));
-paramTickler[1]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(strDate)); //year+"-"+month+"-"+day;//e.g."2001-02-02";
-//rsTickler = null;
-rsTickler = apptMainBean.queryResults_paged(paramTickler, "search_tickler", 0);
-//rsTickler = (java.sql.ResultSet)rss[0];
+
+%><c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}"><%
+paramTickler[0]=String.valueOf(demographic_no);
+paramTickler[1]=MyDateFormat.getSysDate(strDate); //year+"-"+month+"-"+day;//e.g."2001-02-02";
+List<Map> ticklerResultList = oscarSuperManager.find("providerDao", "search_tickler", paramTickler);
 tickler_no = "";
 tickler_note="";
-while (rsTickler.next()){
-    tickler_no = rsTickler.getString("tickler_no");
-    tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
+for (Map tickler : ticklerResultList) {
+    tickler_no = String.valueOf(tickler.get("tickler_no"));
+    tickler_note = tickler.get("message")==null?tickler_note:tickler_note + "\n" + tickler.get("message");
 }
 %></c:if><%
-//((java.sql.Statement)rss[1]).close();
 
-
-rsDemo = null;
 ver = "";
 roster = "";
-/*
-Object[] rss = apptMainBean.queryResultsCaisi(demographic_no, "search_demograph");
-rsDemo = (java.sql.ResultSet) rss[0];
-if(rsDemo.next()){
-	  ver = (rsDemo.getString("ver")==null)? "" : rsDemo.getString("ver");
-	  roster = (rsDemo.getString("roster_status")==null) ? "": rsDemo.getString("roster_status");
-	  int intMob = rsDemo.getInt("month_of_birth");
-	  int intDob = rsDemo.getInt("date_of_birth");
-	mob = String.valueOf(intMob);
-	  dob = String.valueOf(intDob);
-	  demBday = mob + "-" + dob;
-
-	  if (roster == null || !roster.equalsIgnoreCase("FS")) {
-	      roster = "";
-	  }
-}
-((java.sql.Statement)rss[1]).close();
-*/
-rsDemo = null;
-
 study_no = new StringBuffer("");
 study_link = new StringBuffer("");
 studyDescription = new StringBuffer("");
-rsStudy = null;
-/*
-rss = apptMainBean.queryResultsCaisi(demographic_no, "search_studycount");
-rsStudy = (java.sql.ResultSet) rss[0];
-int numStudy = 0;
-if (rsStudy.next()) numStudy =  rsStudy.getInt(1);
-if (numStudy == 1) {
-	((java.sql.Statement)rss[1]).close();
-    rsStudy = null;
-    rss = apptMainBean.queryResultsCaisi(demographic_no, "search_study");
-    rsStudy = (java.sql.ResultSet) rss[0];
-    while (rsStudy.next()){
-        study_no = new StringBuffer(rsStudy.getString("s.study_no"));
-        study_link = new StringBuffer(rsStudy.getString("s.study_link"));
-        studyDescription = new StringBuffer(rsStudy.getString("s.description"));
-    }
-} else if (numStudy > 1) {
-    study_no = new StringBuffer("0");
-    study_link = new StringBuffer("formstudy.jsp");
-    studyDescription = new StringBuffer("Form Studies");
-}
-((java.sql.Statement)rss[1]).close();
-*/
-rsStudy=null;
-
 String reason ="";
 String notes = "";
 String status = "T";

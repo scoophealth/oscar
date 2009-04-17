@@ -1,4 +1,4 @@
-<!--  
+<%--  
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,20 +22,18 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%
-  String[] param =new String[2];
-  param[0]=request.getParameter("status")+ request.getParameter("statusch");
-  param[1]=request.getParameter("appointment_no");
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation")); //add_record
-  if (rowsAffected ==1) {
-    apptMainBean.closePstmtConn();
+  String[] param = new String[2];
+  param[0] = request.getParameter("status") + request.getParameter("statusch");
+  param[1] = request.getParameter("appointment_no");
+  int rowsAffected = oscarSuperManager.update("receptionistDao", request.getParameter("dboperation"), param);
+  if (rowsAffected == 1) {
     int view=0;
     if(request.getParameter("view")!=null) view=Integer.parseInt(request.getParameter("view")); //0-multiple views, 1-single view
     String strView=(view==0)?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") );
@@ -53,5 +51,4 @@
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>

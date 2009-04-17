@@ -26,8 +26,7 @@
 
 <%@ page import="java.util.*, java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -88,15 +87,14 @@ function setfocus() {
 	<tr>
 		<td align="center"><font color="white">Template Name: </font> <select
 			name="encountertemplate_name">
-			<%
-   ResultSet rsdemo = null;
-   rsdemo = apptMainBean.queryResults("search_templatename");
-   while (rsdemo.next()) { 
-	%>
-			<option value="<%=rsdemo.getString("encountertemplate_name")%>"><%=rsdemo.getString("encountertemplate_name")%></option>
-			<%
-     }
-	%>
+<%
+  List<Map> resultList = oscarSuperManager.find("providerDao", "search_templatename", new Object[] {});
+  for (Map template : resultList) {
+%>
+			<option value="<%=template.get("encountertemplate_name")%>"><%=template.get("encountertemplate_name")%></option>
+<%
+  }
+%>
 		</select> <input type="submit" value="Delete" name="submit"> <INPUT
 			TYPE="hidden" NAME="displaymode" VALUE='savetemplate'></td>
 	</tr>

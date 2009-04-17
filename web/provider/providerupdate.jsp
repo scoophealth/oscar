@@ -25,8 +25,7 @@
 -->
 
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -43,9 +42,9 @@
 	</tr>
 </table>
 <table border="0" cellspacing="1" cellpadding="2">
-	<%
+<%
   //if action is good, then give me the result
-    String[] param =new String[13];
+	  String[] param = new String[13];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("specialty");
@@ -60,58 +59,57 @@
 	  param[11]=request.getParameter("status");
 	  param[12]=request.getParameter("provider_no");
 
-  apptMainBean.queryExecuteUpdate( param,request.getParameter("dboperation"));
-  ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_detail");
-  while (rs.next()) {
-    // the cursor of ResultSet only goes through once from top
+	  oscarSuperManager.update("providerDao", request.getParameter("dboperation"), param);
+	  List<Map> resultList = oscarSuperManager.find("providerDao", "search_detail", new Object[] {request.getParameter("provider_no")});
+	  for (Map provider : resultList) {
+	  // the cursor only goes through once from top
 %>
 	<tr bgcolor="#66FF66">
 		<td><b>provider_no:</b></td>
-		<td colspan="3"><span style="color: black"><%= apptMainBean.getString(rs,"provider_no") %></span></td>
+		<td colspan="3"><span style="color: black"><%=provider.get("provider_no") %></span></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>last_name:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"last_name") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("last_name") %></td>
 		<td bgcolor="#C4D9E7"><b>first_name:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"first_name") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("first_name") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>specialty:</b></td>
-		<td bgcolor="#C4D9E7"><span style="color: blue"><%= apptMainBean.getString(rs,"specialty") %></span></td>
+		<td bgcolor="#C4D9E7"><span style="color: blue"><%=provider.get("specialty") %></span></td>
 		<td bgcolor="#C4D9E7"><b>team:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"team") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("team") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>sex:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"sex") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("sex") %></td>
 		<td bgcolor="#C4D9E7"><b>dob:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"dob") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("dob") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>address:</b></td>
-		<td colspan="3" bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"address") %></td>
+		<td colspan="3" bgcolor="#C4D9E7"><%=provider.get("address") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>phone:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"phone") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("phone") %></td>
 		<td bgcolor="#C4D9E7"><b>ohip_no:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"ohip_no") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("ohip_no") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>rma_no:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"rma_no") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("rma_no") %></td>
 		<td bgcolor="#C4D9E7"><b>hso_no:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"hso_no") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("hso_no") %></td>
 	</tr>
 	<tr>
 		<td bgcolor="#C4D9E7"><b>status:</b></td>
-		<td bgcolor="#C4D9E7"><%= apptMainBean.getString(rs,"status") %></td>
+		<td bgcolor="#C4D9E7"><%=provider.get("status") %></td>
 		<td bgcolor="#C4D9E7"></td>
 		<td bgcolor="#C4D9E7"></td>
 	</tr>
-	<%
-  }
-  apptMainBean.closePstmtConn();
+<%
+	  }
 %>
 </table>
 <p></p>

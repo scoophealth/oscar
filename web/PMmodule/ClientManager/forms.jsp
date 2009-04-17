@@ -39,6 +39,11 @@ function printIndepthIntake(clientId) {
 	window.open(url, 'indepthIntakePrint', 'width=1024,height=768,scrollbars=1');
 }
 
+function printIntake(clientId, intakeId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&intakeId="+intakeId+"&clientId=" + clientId;
+	window.open(url, 'indepthIntakePrint', 'width=1024,height=768,scrollbars=1');
+}
+
 function printProgramIntake(clientId, programId) {
 	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=program&intakeId=-1&clientId=" + clientId + "&programId=" + programId;
 	window.open(url, 'programIntakePrint', 'width=1024,height=768,scrollbars=1');
@@ -56,6 +61,14 @@ function openSurvey(methodId) {
 	 	methodName = "printPreview_survey";
 		
 	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method="+ methodName + "&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
+}
+
+function createIntake(clientId,nodeId) {
+	if(nodeId == '') {
+		return;
+	}
+	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=none&nodeId="+nodeId+"&clientId=" + clientId;
+
 }
 </script>
 
@@ -103,6 +116,7 @@ function openSurvey(methodId) {
 	<thead>
 		<tr>
 			<th>Date</th>
+			<th>Name</th>
 			<th>Staff</th>
 			<th>Actions</th>
 		</tr>
@@ -110,19 +124,64 @@ function openSurvey(methodId) {
 	<c:forEach var="intake" items="${indepthIntakes}">
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
+			<td><c:out value="${intake.node.label.label}"/></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><input type="button" value="Print Preview" onclick="printIndepthIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td>
+				<input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)"/>
+				<input type="button" value="Print Preview" onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" />
+			</td>
 		</tr>
 	</c:forEach>
-	<tr>
-		<td colspan="3">
-			<input type="button" value="Update" onclick="updateIndepthIntake('<c:out value="${client.demographicNo}" />')" />
-		</td>
-	</tr>
 </table>
+New Follow-up Intake:&nbsp;
+<select onchange="createIntake('<c:out value="${client.demographicNo}" />',this.options[this.selectedIndex].value);">
+	<option value="" selected></option>
+	<c:forEach var="node" items="${indepthIntakeNodes}">
+		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}"/></option>
+	</c:forEach>
+</select>
+
 <br />
 <br />
 
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">General Forms</th>
+		</tr>
+	</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Name</th>
+			<th>Staff</th>			
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<c:forEach var="intake" items="${generalIntakes}">
+		<tr>
+			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
+			<td><c:out value="${intake.node.label.label}"/></td>
+			<td><c:out value="${intake.staffName}" /></td>
+			<td>
+				<input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)"/>				
+				<input type="button" value="Print Preview" onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" />
+			</td>
+		</tr>
+	</c:forEach>
+</table>
+New General Form:&nbsp;
+<select onchange="createIntake('<c:out value="${client.demographicNo}" />',this.options[this.selectedIndex].value);">
+	<option value="" selected></option>
+	<c:forEach var="node" items="${generalIntakeNodes}">
+		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}"/></option>
+	</c:forEach>
+</select>
+<br />
+<br />
+<!-- 
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
@@ -159,11 +218,11 @@ function openSurvey(methodId) {
 </table>
 <br />
 <br />
-
+-->
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">User Created</th>
+			<th title="Programs">User Created Forms</th>
 		</tr>
 	</table>
 </div>
@@ -187,14 +246,13 @@ function openSurvey(methodId) {
 		</tr>
 	</c:forEach>
 </table>
-<br />
-<br />
-
 New User Created Form:&nbsp;
 <html:select property="form.formId" onchange="openSurvey(0)">
 	<html:option value="0">&nbsp;</html:option>
 	<html:options collection="survey_list" property="formId" labelProperty="description" />
 </html:select>
+<br />
+<br />
 
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">

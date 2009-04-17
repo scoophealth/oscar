@@ -46,6 +46,7 @@ public interface OscarFormDAO {
 	public List getOscarFormsByClientId(Long clientId);
 	
 	public void generateCSV(Long formId, OutputStream out);
+	public void generateInverseCSV(Long formId, OutputStream out);
 	public void convertFormXMLToDb(Long formId);
 	public Map<String[],String> getFormReport(Long formId, Date startDate, Date endDate) ;
 }

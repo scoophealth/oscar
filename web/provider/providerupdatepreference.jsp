@@ -30,8 +30,7 @@
 
 <%@ page import="java.sql.*, java.util.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html:html locale="true">
 <head>
@@ -55,39 +54,51 @@
 </table>
 <%
 String[] param=null;
+String op = request.getParameter("dboperation"); // updatepreference
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[9];
-}else {
-	param =new String[7];
+  param = new String[9];
+  param[6]=request.getParameter("new_tickler_warning_window");
+  if (param[6] == null) {
+	param[6] = (String) session.getAttribute("newticklerwarningwindow");
+  }
+  param[7]=request.getParameter("default_pmm");
+  if (param[7] == null) {
+	  param[7] = session.getAttribute("default_pmm")==null?"disabled":(String) session.getAttribute("default_pmm");
+  }
+  param[8]=request.getParameter("provider_no");
+  op += "_newtickler";
+} else {
+  param = new String[7];
+  param[6]=request.getParameter("provider_no");
 }
-	  param[0]=request.getParameter("start_hour");
-	  param[1]=request.getParameter("end_hour");
-	  param[2]=request.getParameter("every_min");
-	  param[3]=request.getParameter("mygroup_no");
-	  param[4]=request.getParameter("default_servicetype");
-	  param[5]=request.getParameter("color_template");
-	  param[6]=request.getParameter("provider_no");
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  param[7]=request.getParameter("new_tickler_warning_window");
-	  param[8]=request.getParameter("default_pmm");
-}
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
-  if (rowsAffected >=1) { //Successful Update of a Preference Record.
+
+param[0]=request.getParameter("start_hour");
+param[1]=request.getParameter("end_hour");
+param[2]=request.getParameter("every_min");
+param[3]=request.getParameter("mygroup_no");
+param[4]=request.getParameter("default_servicetype");
+param[5]=request.getParameter("color_template");
+
+int rowsAffected = oscarSuperManager.update("providerDao", op, param);
+if (rowsAffected >= 1) { //Successful Update of a Preference Record.
     session.setAttribute("starthour", param[0]);
     session.setAttribute("endhour", param[1]);
     session.setAttribute("everymin", param[2]);
     session.setAttribute("groupno", param[3]);
     session.setAttribute("default_servicetype", param[4]);
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
+  if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
-    session.setAttribute("default_pmm", param[8]);
-}
-%> <script LANGUAGE="JavaScript">
-     	self.opener.refresh1();
-      self.close();
-</script> <%  
-  } else {
-  //now try to add the new preference record
+    session.setAttribute("default_pmm", param[7]);
+  }
+%>
+<script LANGUAGE="JavaScript">
+     self.opener.refresh1();
+     self.close();
+</script>
+<%  
+} else {
+	//now try to add the new preference record
+	op = "add_preference";
 	param[0]=request.getParameter("provider_no");
 	param[1]=request.getParameter("start_hour");
 	param[2]=request.getParameter("end_hour");
@@ -95,25 +106,34 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	param[4]=request.getParameter("mygroup_no");
 	param[5]=request.getParameter("default_servicetype");
 	param[6]=request.getParameter("color_template");
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
+  if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	param[7]=request.getParameter("new_tickler_warning_window");
+	if (param[7] == null) {
+		param[7] = (String) session.getAttribute("newticklerwarningwindow");
+	}
 	param[8]=request.getParameter("default_pmm");
-}	
-  rowsAffected = apptMainBean.queryExecuteUpdate(param, "add_preference");
-  if (rowsAffected ==1) { //Successful add of a Preference Record.
+	if (param[8] == null) {
+		param[8] = session.getAttribute("default_pmm")==null?"disabled":(String) session.getAttribute("default_pmm");
+	}
+	op += "_newtickler";
+  }
+  rowsAffected = oscarSuperManager.update("providerDao", op, param);
+  if (rowsAffected == 1) { //Successful add of a Preference Record.
     session.setAttribute("starthour", param[1]);
     session.setAttribute("endhour", param[2]);
     session.setAttribute("everymin", param[3]);
     session.setAttribute("groupno", param[4]);
     session.setAttribute("default_servicetype", param[5]);
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    session.setAttribute("newticklerwarningwindow", param[6]);
-    session.setAttribute("default_pmm",param[8]);
-}
-%> <script LANGUAGE="JavaScript">
-     	self.opener.refresh1();
-      self.close();
-</script> <%  
+  if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
+    session.setAttribute("newticklerwarningwindow", param[7]);
+    session.setAttribute("default_pmm", param[8]);
+  }
+%>
+<script LANGUAGE="JavaScript">
+     self.opener.refresh1();
+     self.close();
+</script>
+<%  
   } else {
 %>
 <p>
@@ -122,11 +142,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 </p>
 <%  
   }
-  }
-  apptMainBean.closePstmtConn();
+}
 %>
 <p></p>
-<hr width="90%"></hr>
+<hr width="90%"/>
 <form><input type="button"
 	value=<bean:message key="global.btnClose"/> onClick="self.close()">
 </form>

@@ -29,8 +29,7 @@
 %>
 <%@ page import="java.util.*,java.sql.*"
 	errorPage="../provider/errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -39,7 +38,6 @@
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="provider.providerdisplaymygroup.title" /></title>
-</head>
 <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
 <meta http-equiv="Pragma" content="no-cache">
 
@@ -52,6 +50,7 @@
 
 // stop javascript -->
 </script>
+</head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
 	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -76,28 +75,27 @@
 				<td ALIGN="center"><font face="arial"> <bean:message
 					key="provider.providerdisplaymygroup.msgProvider" /></font></td>
 			</tr>
-			<%
-   ResultSet rsgroup = null;
+<%
    boolean bNewNo=false;
    String oldNo="";
-   rsgroup = apptMainBean.queryResults("searchmygroupall");
-   while (rsgroup.next()) { 
-     if(!(rsgroup.getString("mygroup_no").equals(oldNo)) ) {
-       bNewNo=bNewNo?false:true; oldNo=rsgroup.getString("mygroup_no");
+   List<Map> resultList = oscarSuperManager.find("providerDao", "searchmygroupall", new Object[] {});
+   for (Map group : resultList) {
+	 String groupNo = String.valueOf(group.get("mygroup_no"));
+     if(!(groupNo.equals(oldNo)) ) {
+       bNewNo=bNewNo?false:true; oldNo=groupNo;
        //System.out.println(oldNo);
      }
 %>
 			<tr BGCOLOR="<%=bNewNo?"white":"ivory"%>">
 				<td width="10%" align="center"><input type="checkbox"
-					name="<%=rsgroup.getString("mygroup_no")+rsgroup.getString("provider_no")%>"
-					value="<%=rsgroup.getString("mygroup_no")%>"></td>
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("mygroup_no")%></font></td>
-				<td ALIGN="center"><font face="arial"> <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></font>
+					name="<%=groupNo+group.get("provider_no")%>"
+					value="<%=groupNo%>"></td>
+				<td ALIGN="center"><font face="arial"> <%=groupNo%></font></td>
+				<td ALIGN="center"><font face="arial"> <%=group.get("last_name")+", "+group.get("first_name")%></font>
 				</td>
 			</tr>
 			<%
    }
-   apptMainBean.closePstmtConn();
 %>
 			<INPUT TYPE="hidden" NAME="displaymode" VALUE='newgroup'>
 

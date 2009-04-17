@@ -61,5 +61,8 @@
 			<key column="intake_node_id" />
 			<one-to-many class="IntakeAnswer" />
 		</set>
+				
+		<property name="formType" column="form_type" type="integer" />
+
 	</class>
 </hibernate-mapping>

@@ -1,48 +1,20 @@
-
 <% 
-if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
-String curProvider_no = request.getParameter("provider_no");
-String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
-boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
+  String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF", tableTitle = "#99ccff";
+  boolean bEdit = request.getParameter("appointment_no") != null ? true : false;
 %>
-
 <%@ page import="java.util.*, oscar.*, oscar.util.*"
 	errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-
-<jsp:useBean id="groupApptBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
-<%@ include file="../admin/dbconnection.jsp"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 <% 
-String [][] dbQueries=new String[][] { 
-	{"search_groupprovider", "select p.last_name, p.first_name, p.provider_no from mygroup m, provider p where m.mygroup_no=? and m.provider_no=p.provider_no order by p.last_name"}, 
-	{"add_appt", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?)"}, 
-	{"delete", "delete from appointment where appointment_date=? and start_time=? and end_time=? and name=? and creator=?"}, 
-	{"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" }, 
-	{"search_appt", "select * from appointment where appointment_no = ?" }, 
-	{"delete_appt", "delete from appointment where appointment_no = ?" }, 
-	//{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_no = ?" }, 
-	{"cancel_appt", "update appointment set status = ?, updatedatetime = ?, creator = ? where appointment_no = ?" }, 
-	//{"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? " }, 
-	{"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,updatedatetime=?,creator=?,remarks=? where appointment_no=? " }, 
-        {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" }, 
-};
-groupApptBean.doConfigure(dbParams,dbQueries);
-%>
-
-<%
-  if (request.getParameter("groupappt")!=null) {
+  if (request.getParameter("groupappt") != null) {
     boolean bSucc = false;
-    if (request.getParameter("groupappt")!=null && request.getParameter("groupappt").equals("Add Group Appointment") ) {
-        String[] param =new String[16];
+    if (request.getParameter("groupappt").equals("Add Group Appointment")) {
         int rowsAffected=0, datano=0;
-        StringBuffer strbuf=new StringBuffer();
 		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
-		String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
-
+		String userName = (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 		String everyNum = request.getParameter("everyNum")!=null? request.getParameter("everyNum") : "0";
 		String everyUnit = request.getParameter("everyUnit")!=null? request.getParameter("everyUnit") : "day";
 		String endDate = request.getParameter("endDate")!=null? request.getParameter("endDate") : UtilDateUtilities.DateToString(UtilDateUtilities.now(),"dd/MM/yyyy");
@@ -55,17 +27,18 @@ groupApptBean.doConfigure(dbParams,dbQueries);
 		GregorianCalendar gEndDate = (GregorianCalendar) gCalDate.clone();
 		gEndDate.setTime(UtilDateUtilities.StringToDate(endDate, "dd/MM/yyyy"));
 
-		int[] intparam=new int [1];
+        //StringBuffer strbuf = new StringBuffer();
         //for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 	        //strbuf=new StringBuffer(e.nextElement().toString());
             //if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
-          
 		    //datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
+
+		    String[] param=new String[17];
      	    param[0]=request.getParameter("provider_no");
 	        param[1]=request.getParameter("appointment_date");
     	    param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
 	        param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-            param[4] = request.getParameter("keyword");
+            param[4]=request.getParameter("keyword");
 	        param[5]=request.getParameter("notes");
 	        param[6]=request.getParameter("reason");
     	    param[7]=request.getParameter("location");
@@ -77,16 +50,18 @@ groupApptBean.doConfigure(dbParams,dbQueries);
      	    param[13]=createdDateTime;   //request.getParameter("createdatetime");
 	        param[14]=userName;  //request.getParameter("creator");
     	    param[15]=request.getParameter("remarks");
-	        if (!(request.getParameter("demographic_no").equals(""))) {
-				intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-     	    } else intparam[0]=0;
+	  	    if (request.getParameter("demographic_no")!=null && !(request.getParameter("demographic_no").equals(""))) {
+				param[16]=request.getParameter("demographic_no");
+		    } else param[16]="0";
 
         //}
-		// repeat adding
-		while (true) {
 
-			rowsAffected = groupApptBean.queryExecuteUpdate(param,intparam,"add_appt");
-			gCalDate.setTime(UtilDateUtilities.StringToDate(param[1], "yyyy-MM-dd"));
+        // repeat adding
+		while (true) {
+			rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", param);
+            if (rowsAffected != 1) break;
+
+            gCalDate.setTime(UtilDateUtilities.StringToDate(param[1], "yyyy-MM-dd"));
 			if (everyUnit.equals("day")) {
 				gCalDate.add(Calendar.DATE, delta);
 			} else if (everyUnit.equals("month")) {
@@ -97,50 +72,48 @@ groupApptBean.doConfigure(dbParams,dbQueries);
 
 			if (gCalDate.after(gEndDate)) break;
 			else param[1] = UtilDateUtilities.DateToString(gCalDate.getTime(), "yyyy-MM-dd");
-
 		}
         if (rowsAffected == 1) bSucc = true;
-
 	}
 
 
-    if (request.getParameter("groupappt")!=null && (request.getParameter("groupappt").equals("Group Update") 
-		    || request.getParameter("groupappt").equals("Group Cancel") || request.getParameter("groupappt").equals("Group Delete"))) {
+    if (request.getParameter("groupappt").equals("Group Update") || request.getParameter("groupappt").equals("Group Cancel") ||
+    		request.getParameter("groupappt").equals("Group Delete")) {
         int rowsAffected=0, datano=0;
-        StringBuffer strbuf=new StringBuffer();
 		String createdDateTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(),"yyyy-MM-dd HH:mm:ss");
 		String userName =  (String) session.getAttribute("userlastname") + ", " + (String) session.getAttribute("userfirstname");
 
 		for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	        strbuf=new StringBuffer(e.nextElement().toString());
+			StringBuffer strbuf = new StringBuffer(e.nextElement().toString());
             if (strbuf.toString().indexOf("one")==-1 && strbuf.toString().indexOf("two")==-1) continue;
- 		    datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
+ 		    datano = Integer.parseInt(request.getParameter(strbuf.toString()));
 
             if (request.getParameter("groupappt").equals("Group Cancel")) {
-                String[] paramc =new String[4];
+                String[] paramc = new String[4];
 	            paramc[0]="C";
-	            paramc[1]=createdDateTime;
-     	        paramc[2]=userName;   //request.getParameter("createdatetime");
+	            paramc[1]=userName;
+     	        paramc[2]=createdDateTime;
 	            paramc[3]=request.getParameter("appointment_no" + datano);  //request.getParameter("creator");
 
-                rowsAffected = groupApptBean.queryExecuteUpdate(paramc , "cancel_appt");
+                rowsAffected = oscarSuperManager.update("appointmentDao", "updatestatusc", paramc);
 			}
 
-			//can find and save them to recyclebin first
 		    //delete the selected appts
             if (request.getParameter("groupappt").equals("Group Delete")) {
-                rowsAffected = groupApptBean.queryExecuteUpdate(request.getParameter("appointment_no" + datano) , "delete_appt");
+            	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
+            			new Object [] {request.getParameter("appointment_no" + datano)});
 			}
 
 			if (request.getParameter("groupappt").equals("Group Update")) {
-                rowsAffected = groupApptBean.queryExecuteUpdate(request.getParameter("appointment_no" + datano) , "delete_appt");
+            	rowsAffected = oscarSuperManager.update("appointmentDao", "delete",
+            			new Object [] {request.getParameter("appointment_no" + datano)});
      	        
-                String[] paramu =new String[16];
+                String[] paramu = new String[17];
 				paramu[0]=request.getParameter("provider_no"+datano);
 				paramu[1]=request.getParameter("appointment_date");
 	    	    paramu[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
 		        paramu[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-			    paramu[4] = request.getParameter("keyword");
+			    paramu[4]=request.getParameter("keyword");
 				paramu[5]=request.getParameter("notes");
 		        paramu[6]=request.getParameter("reason");
 			    paramu[7]=request.getParameter("location");
@@ -152,29 +125,29 @@ groupApptBean.doConfigure(dbParams,dbQueries);
      			paramu[13]=createdDateTime;   //request.getParameter("createdatetime");
 		        paramu[14]=userName;  //request.getParameter("creator");
 			    paramu[15]=request.getParameter("remarks");
-			    int[] intparam=new int [1];
-				if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
-					intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-		 	    } else intparam[0]=0;
-			    
-				rowsAffected = groupApptBean.queryExecuteUpdate(paramu,intparam,"add_appt");
-	            if (rowsAffected != 1) break;
+		        if (!(request.getParameter("demographic_no").equals("")) && strbuf.toString().indexOf("one") != -1) {
+					paramu[16]=request.getParameter("demographic_no");
+	     	    } else {
+	     	    	paramu[16]="0";
+	     	    }
+		    	rowsAffected = oscarSuperManager.update("appointmentDao", "add_apptrecord", paramu);
+
 			}
+	    	if (rowsAffected != 1) break;
 		}
         if (rowsAffected == 1) bSucc = true;
 	}
-%>
-<%   
+
     if (bSucc) {
 %>
 <h1><bean:message
 	key="appointment.appointmentgrouprecords.msgAddSuccess" /></h1>
 <script LANGUAGE="JavaScript">
-self.close();
-self.opener.refresh();
+	self.opener.refresh();
+	self.close();
 </script>
 <%
-        }  else {
+    } else {
 %>
 <p>
 <h1><bean:message
@@ -182,11 +155,9 @@ self.opener.refresh();
 </p>
 <%  
     }
-    groupApptBean.closePstmtConn();
     return;
-  }
+  } // if (request.getParameter("groupappt") != null)
 %>
-<%--TODO: Check to see if HTML output is correct--%>
 <!--  
 /*
  * 
@@ -365,8 +336,6 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
         step           :    1                // show all years in drop-down boxes (instead of every other year as default)
     });
 </script>
-
-
 
 </body>
 </html:html>

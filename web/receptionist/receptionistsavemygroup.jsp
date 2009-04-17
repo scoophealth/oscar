@@ -24,13 +24,9 @@
  */
 -->
 
-<%
-  
-%>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="../errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -43,6 +39,7 @@ function start(){
 //-->
 </script>
 </head>
+
 <body onload="start()">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="90%">
@@ -53,36 +50,35 @@ function start(){
 </table>
 <%
   int rowsAffected=0, datano=0;
-  StringBuffer strbuf=new StringBuffer();
-  String[] param =new String[4];
-  param[0]=request.getParameter("mygroup_no");
+  String[] param = new String[4];
+  param[0] = request.getParameter("mygroup_no");
 
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	  strbuf=new StringBuffer(e.nextElement().toString());
-		if( strbuf.toString().indexOf("data")==-1 ) continue;
-		datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
-	  param[1]=request.getParameter("provider_no"+datano);
-	  param[2]=request.getParameter("last_name"+datano);
-	  param[3]=request.getParameter("first_name"+datano);
-    rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
+	  StringBuffer strbuf = new StringBuffer(e.nextElement().toString());
+	  if (strbuf.toString().indexOf("data")==-1) continue;
+	  datano = Integer.parseInt(request.getParameter(strbuf.toString()));
+	  param[1] = request.getParameter("provider_no" + datano);
+	  param[2] = request.getParameter("last_name" + datano);
+	  param[3] = request.getParameter("first_name" + datano);
+      rowsAffected = oscarSuperManager.update("receptionistDao", request.getParameter("dboperation"), param);
   }
 
-  if (rowsAffected ==1) {
+  if (rowsAffected == 1) {
 %>
 <p>
 <h1>Successful Addition of a Group Record.</h1>
 </p>
 <script LANGUAGE="JavaScript">
       self.close();
-</script> <%
-  }  else {
+</script>
+<%
+  } else {
 %>
 <p>
 <h1>Sorry, addition has failed.</h1>
 </p>
 <%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <hr width="90%"></hr>

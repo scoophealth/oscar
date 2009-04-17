@@ -1083,7 +1083,7 @@ function changeCodeDesc() {
 	BillingSiteIdPrep sitePrep = new BillingSiteIdPrep();
 	String [] siteList = sitePrep.getSiteList();
 	String strServDate = request.getParameter("appointment_date")!=null? request.getParameter("appointment_date"):strToday;
-	String thisSite = (new ApptOpt()).getLocationFromSchedule(strServDate, apptProvider_no);
+	String thisSite = (new JdbcApptImpl()).getLocationFromSchedule(strServDate, apptProvider_no);
 	String suggestSite = sitePrep.getSuggestSite(siteList, thisSite, strServDate, apptProvider_no );
 %>
 				<tr>

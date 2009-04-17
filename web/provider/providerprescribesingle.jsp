@@ -30,8 +30,7 @@
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -57,28 +56,23 @@ function start(){
 </table>
 </center>
 <%
-   ResultSet rsdemo = null;
-   String content="";
-   rsdemo = apptMainBean.queryResults(request.getParameter("prescribe_no"), request.getParameter("dboperation"));
-   while (rsdemo.next()) { 
-     content = rsdemo.getString("content");
-  }
+   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("prescribe_no")});
+   Map prescribe = resultList.get(0);
 %>
-<font size="-1"><%=rsdemo.getString("prescribe_date")%> <%=rsdemo.getString("prescribe_time")%></font>
+<font size="-1"><%=prescribe.get("prescribe_date")%> <%=prescribe.get("prescribe_time")%></font>
 <br>
 <hr>
 <xml id="xml_list">
 <encounter>
 <xml_content>
-<%=content%>
+<%=prescribe.get("content")%>
 </xml_content>
 </encounter>
 </xml>
 
-<p><!-open and read from database-> <%
+<p><!-- open and read from database--> <%
   //System.out.println("kkkkkkkkkkkkkkkkkkkkk"+request.getParameter("template"));
   out.println("<table datasrc='#xml_list' border='0'><tr><td><font color='blue'>Content:</font></td></tr><tr><td><div datafld='xml_content'></td></tr></table>");
-  apptMainBean.closePstmtConn();
 %>
 
 <center>

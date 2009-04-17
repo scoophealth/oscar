@@ -25,7 +25,6 @@
 -->
 
 <%
-  
   String apptProvider_no, user_no, username;
   user_no = (String) session.getAttribute("user");
   apptProvider_no = request.getParameter("curProvider_no");
@@ -33,22 +32,21 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*,java.net.*"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 <%
-   ResultSet rsdemo = null;
    String demoname=null,dob=null,gender=null,hin=null,roster=null;
    int dob_year = 0, dob_month = 0, dob_date = 0;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), request.getParameter("dboperation")); //dboperation=search_demograph
-   while (rsdemo.next()) { 
-     demoname=rsdemo.getString("last_name")+", "+rsdemo.getString("first_name");
-     dob_year = Integer.parseInt(rsdemo.getString("year_of_birth"));
-     dob_month = Integer.parseInt(rsdemo.getString("month_of_birth"));
-     dob_date = Integer.parseInt(rsdemo.getString("date_of_birth"));
+   List<Map> resultList = oscarSuperManager.find("providerDao", request.getParameter("dboperation"), new Object[] {request.getParameter("demographic_no")});
+   for (Map demo : resultList) { //dboperation=search_demograph
+     demoname=demo.get("last_name")+", "+demo.get("first_name");
+     dob_year = Integer.parseInt(String.valueOf(demo.get("year_of_birth")));
+     dob_month = Integer.parseInt(String.valueOf(demo.get("month_of_birth")));
+     dob_date = Integer.parseInt(String.valueOf(demo.get("date_of_birth")));
      dob=dob_year+"-"+dob_month+"-"+dob_date;
-     gender=rsdemo.getString("sex");
-     hin=rsdemo.getString("hin");
-     roster=rsdemo.getString("roster_status");
+     gender=String.valueOf(demo.get("sex"));
+     hin=String.valueOf(demo.get("hin"));
+     roster=String.valueOf(demo.get("roster_status"));
    }
 %>
 
@@ -158,11 +156,10 @@ function gotoAccs() {
   int age=0;
   if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
 
-   rsdemo = null;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_demographicaccessory"); //dboperation=search_demograph
-   boolean bNewDemoAcc=true;
-   if (rsdemo.next()) { 
-     String content=rsdemo.getString("content");
+  boolean bNewDemoAcc=true;
+  resultList = oscarSuperManager.find("providerDao", "search_demographicaccessory", new Object[] {request.getParameter("demographic_no")});
+  for (Map acc : resultList) {
+     String content=String.valueOf(acc.get("content"));
      bNewDemoAcc=false;
 %>
 <xml id="xml_list">
@@ -257,19 +254,18 @@ function gotoAccs() {
 	<tr>
 		<td><font size="-1"><!--History--></font></td>
 		<td width="100%">
-		<%
-   rsdemo = null;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
+<%
    int i=0;
-   while (rsdemo.next()) { 
+   resultList = oscarSuperManager.find("providerDao", "search_encounter", new Object[] {request.getParameter("demographic_no")});
+   for (Map enc : resultList) {
      i++;
      if(i>3) {
        out.println("<a href=# onClick=\"popupPage(400,600,'providercontrol.jsp?demographic_no=" +request.getParameter("demographic_no")+ "&dboperation=search_encounter&displaymode=encounterhistory');return false;\">... more</a>");
        break;
      }
-%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
+%> &nbsp;<%=enc.get("encounter_date")%> <%=enc.get("encounter_time")%><font
 			color="blue"> <%
-     String historysubject = rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject");
+     String historysubject = enc.get("subject")==null?"No Reason":String.valueOf(enc.get("subject")).equals("")?"No Reason":String.valueOf(enc.get("subject"));
      StringTokenizer st=new StringTokenizer(historysubject,":");
      //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
@@ -281,12 +277,12 @@ function gotoAccs() {
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim().toLowerCase()+".jsp";
 %> <a href=#
-			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
+			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=enc.get("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0');return false;"><%=historysubject%>
 		</a></font><br>
 		<%
      } else if(strForm.compareTo("")!=0) {
 %> <a href=#
-			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle');return false;"><%=rsdemo.getString("subject")==null?"No Reason":rsdemo.getString("subject").equals("")?"No Reason":rsdemo.getString("subject")%>
+			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=enc.get("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle');return false;"><%=historysubject%>
 		</a></font><br>
 		<%
      }
@@ -309,34 +305,32 @@ function gotoAccs() {
     Billing</font></a><br--> <!--a href=# onClick='popupPage(700,720, "../billing/billingOB.jsp?hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=apptProvider_no%>&appointment_date=<%=request.getParameter("appointment_date")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1")'><font color="yellow">
     Billing</font></a><br--> <%       
      }
-   %> <!--a href=# onClick='popupPage(500,700, "providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=user_no%>&username=<%= username %>&apptProvider_no=<%=apptProvider_no%>&displaymode=prescribe&dboperation=search_demograph&template=" );return false;'><font color="yellow">
-    Prescribe</font></a--></td>
+   %> <a href=# onClick='popupPage(500,700, "providercontrol.jsp?appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&curProvider_no=<%=user_no%>&username=<%= username %>&apptProvider_no=<%=apptProvider_no%>&displaymode=prescribe&dboperation=search_demograph&template=" );return false;'><font color="yellow">
+    Prescribe</font></a></td>
 		<td align="right"><select name="formmenu" size="1"
 			OnChange="selectform(this)">
 			<option selected value="">Form</option>
-			<%
-   rsdemo = null;
-   rsdemo = apptMainBean.queryResults("%", "search_encounterform");
-   while (rsdemo.next()) { 
+<%
+   resultList = oscarSuperManager.find("providerDao", "search_encounterform", new Object[] {"%"});
+   for (Map form : resultList) {
 	%>
 			<option
-				value="<%=rsdemo.getString("encounterform_value")+request.getParameter("demographic_no")%>"><%=rsdemo.getString("encounterform_name")%></option>
+				value="<%=form.get("form_value")+request.getParameter("demographic_no")%>"><%=form.get("form_name")%></option>
 			<%
-     }
-	%>
+   }
+%>
 		</select> <select name="templatemenu" OnChange="selecttemplate(this)">
-			<option selected value=""><%=request.getParameter("template").equals("")?"Template":request.getParameter("template")%>
-			</option>
-			<%
-   rsdemo = null;
-   rsdemo = apptMainBean.queryResults("%", "search_template");
-   while (rsdemo.next()) { 
-	%>
+			<option selected value=""><%=request.getParameter("template").equals("")?"Template":request.getParameter("template")%></option>
+<%
+   resultList = oscarSuperManager.find("providerDao", "search_template", new Object[] {"%"});
+   for (Map template : resultList) {
+	   String url = String.valueOf(template.get("encountertemplate_name"));//encountertemplate_url");
+%>
 			<option
-				value="<%=rsdemo.getString("encountertemplate_url").length()>20?rsdemo.getString("encountertemplate_url").substring(0,20):rsdemo.getString("encountertemplate_url")%>"><%=rsdemo.getString("encountertemplate_name").toLowerCase()%></option>
-			<%
-     }
-	%>
+				value="<%=url.length()>20?url.substring(0,20):url%>"><%=((String)template.get("encountertemplate_name")).toLowerCase()%></option>
+<%
+   }
+%>
 		</select></td>
 	</tr>
 </table>
@@ -347,8 +341,8 @@ function gotoAccs() {
 		<td align="center">
 		<%
   if(request.getParameter("template")!=null && !(request.getParameter("template").equals("")) ) {
-     rsdemo = apptMainBean.queryResults(request.getParameter("template"), "search_template");
-     while (rsdemo.next()) { 
+    resultList = oscarSuperManager.find("providerDao", "search_template", new Object[] {request.getParameter("template")});
+    for (Map template : resultList) {
 %>
 		<table>
 			<tr>
@@ -360,18 +354,18 @@ function gotoAccs() {
 			<tr>
 				<td>Content:</td>
 				<td><textarea name='xml_content' style='width: 100%' cols='60'
-					rows='10'><%=rsdemo.getString("encountertemplate_value")%>
+					rows='10'><%=template.get("encountertemplate_value")%>
  </textarea></td>
 			</tr>
 			<input type='hidden' name='xml_subjectprefix' value='SOAP'>
 			</talbe>
-			<%     
-     }
-  }else if(request.getParameter("editpreviousenc")!=null && request.getParameter("editpreviousenc").equals("1") ) {
+<%
+    }
+  } else if(request.getParameter("editpreviousenc")!=null && request.getParameter("editpreviousenc").equals("1") ) {
      String [] param = new String [2];
      param[0] = request.getParameter("demographic_no");
      param[1] = user_no ;
-     rsdemo = apptMainBean.queryResults(param, "search_previousenc");
+     resultList = oscarSuperManager.find("providerDao", "search_previousenc", param);
 %>
 			<table width="100%">
 				<tr>
@@ -385,11 +379,10 @@ function gotoAccs() {
 					<td><textarea name='xml_content' style="width: 100%" cols='50'
 						rows='10'>
 <%  //String at=null, enc=null;
-    if (rsdemo.next()) { 
-      String at = SxmlMisc.getXmlContent(rsdemo.getString("content"),"xml_content") ;
-      //enc = rsdemo.getString("encounter_no");
+    if (resultList.size() > 0) {
+      String at = SxmlMisc.getXmlContent((String)resultList.get(0).get("content"),"xml_content") ;
       out.println(at==null?"":at + "</textarea>");
-      out.println("<input type=\"hidden\" name=\"del_encounter_no\" value=\"" + rsdemo.getString("encounter_no") + "\">") ;
+      out.println("<input type=\"hidden\" name=\"del_encounter_no\" value=\"" + resultList.get(0).get("encounter_no") + "\">") ;
     } else {
       out.println("</textarea>");
     }
@@ -400,7 +393,7 @@ function gotoAccs() {
 			</table>
 			<input type='hidden' name='xml_subjectprefix' value=".">
 			<%  
-  }else {
+  } else {
 %>
 			<table width="100%">
 				<tr>
@@ -423,14 +416,14 @@ function gotoAccs() {
   }
 
   String slpusername="", slppassword="";
-  rsdemo = apptMainBean.queryResults(user_no, "search_provider_slp");
-  while (rsdemo.next()) { 
-    if(rsdemo.getString("comments")!=null) {
-      slpusername = SxmlMisc.getXmlContent(rsdemo.getString("comments"),"<xml_p_slpusername>","</xml_p_slpusername>");
-    	slppassword = SxmlMisc.getXmlContent(rsdemo.getString("comments"),"<xml_p_slppassword>","</xml_p_slppassword>");
+  resultList = oscarSuperManager.find("providerDao", "search_provider_slp", new Object[] {user_no});
+  for (Map slp : resultList) {
+	String comments = (String)slp.get("comments");
+    if(comments!=null) {
+      slpusername = SxmlMisc.getXmlContent(comments,"<xml_p_slpusername>","</xml_p_slpusername>");
+      slppassword = SxmlMisc.getXmlContent(comments,"<xml_p_slppassword>","</xml_p_slppassword>");
     }
   }
-  apptMainBean.closePstmtConn();
 %>
 
 			</td>

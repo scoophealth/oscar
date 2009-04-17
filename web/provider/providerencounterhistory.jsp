@@ -30,8 +30,7 @@
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat"
 	errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html>
 <head>
@@ -63,19 +62,18 @@
 <table width="90%" border="0">
 	<tr>
 		<td width="95%">
-		<%
-   ResultSet rsdemo = null;
-   rsdemo = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_encounter");
+<%
+   List<Map> resultList = oscarSuperManager.find("providerDao", "search_encounter", new Object[] {request.getParameter("demographic_no")});
    //int i=0;
-   while (rsdemo.next()) { 
+   for (Map enc : resultList) {
      //i++;
      //if(i>3) {
      //  out.println("<a href=# onClick=\"popupPage(400,600,'providercontrol.jsp?demographic_no=" +request.getParameter("demographic_no")+ "&dboperation=search_encounter&displaymode=encounterhistory')\">... more</a>");
      //  break;
      //}
-%> &nbsp;<%=rsdemo.getString("encounter_date")%> <%=rsdemo.getString("encounter_time")%><font
+%> &nbsp;<%=enc.get("encounter_date")%> <%=enc.get("encounter_time")%><font
 			color="yellow"> <%
-     String historysubject = rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject");
+     String historysubject = enc.get("subject")==null?"NULL":((String)enc.get("subject")).equals("")?"Unknown":(String)enc.get("subject");
      StringTokenizer st=new StringTokenizer(historysubject,":");
      //System.out.println(" history = " + historysubject);
      String strForm="", strTemplateURL="";
@@ -87,12 +85,12 @@
      if(strForm.toLowerCase().compareTo("form")==0 && st.hasMoreTokens()) {
        strTemplateURL = "template" + (new String(st.nextToken())).trim().toLowerCase()+".jsp";
 %> <a href=#
-			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
+			onClick="popupPage(600,800,'providercontrol.jsp?encounter_no=<%=enc.get("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&dboperation=search_encountersingle&displaymodevariable=<%=strTemplateURL%>&displaymode=vary&bNewForm=0')"><%=historysubject %>
 		</a></font><br>
 		<%
      } else if(strForm.compareTo("")!=0) {
 %> <a href=#
-			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=rsdemo.getString("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=rsdemo.getString("subject")==null?"NULL":rsdemo.getString("subject").equals("")?"Unknown":rsdemo.getString("subject")%>
+			onClick="popupPage(400,600,'providercontrol.jsp?encounter_no=<%=enc.get("encounter_no")%>&demographic_no=<%=request.getParameter("demographic_no")%>&template=<%=strForm%>&dboperation=search_encountersingle&displaymode=encountersingle')"><%=historysubject %>
 		</a></font><br>
 		<%
      }

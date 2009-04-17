@@ -54,6 +54,7 @@ function onSetting() {
 		<th align=CENTER><font face="Arial, Helvetica, sans-serif"
 			color="#FFFFFF"> PRINT SETTING</font></th>
 </table>
+
 <center>
 <form name="printsetting" method="post" action="">
 <p>X : <input type="text" name="x" size="10" value="0"> <br>
