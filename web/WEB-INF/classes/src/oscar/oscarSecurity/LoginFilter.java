@@ -39,7 +39,18 @@ import net.sf.cookierevolver.CRFactory;
  */
 public class LoginFilter implements Filter {
 
-	private static final String[] EXEMPT_URLS = { "/images/", "/lab/CMLlabUpload.do", "/lab/newLabUpload.do", "/lab/CA/ON/uploadComplete.jsp" };
+	private static final String[] EXEMPT_URLS = { 
+		"/images/", 
+		"/lab/CMLlabUpload.do", 
+		"/lab/newLabUpload.do", 
+		"/lab/CA/ON/uploadComplete.jsp",
+		"/PopulationReport.do",
+		"/login.do",
+		"/logout.jsp",
+		"/index.jsp",
+		"/loginfailed.jsp",
+		"/index.html"
+	};
 
 	/*
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -64,8 +75,11 @@ public class LoginFilter implements Filter {
 
 				/*
 				 * If the requested resource is npt exempt then redirect to the logout page.
+				 * 
+				 * bug fix: removed root directory auto-exemption. If you want to have a resource
+				 * be an exemption, you must explicitely add to EXEMPT_URLS array.
 				 */
-				if (!inListOfExemptions(requestURI, contextPath) && requestURI.indexOf("/", contextPath.length() + 1) > 0) {
+				if (!inListOfExemptions(requestURI, contextPath)) {
 					httpResponse.sendRedirect(contextPath + "/logout.jsp");
 					return;
 				}
