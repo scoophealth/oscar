@@ -26,10 +26,10 @@
 
 <html>
 <body>
-<h4><font color="red">Your password will be expired soon, </font>please
-contact your administrator to change your password. If you are the
+<h4><font color="red">Your account will be expired soon, </font>please
+contact your administrator to renew your account. If you are the
 administrator, then you can follow the following steps to change the
-password:</h4>
+expiry date:</h4>
 <ol>
 	<li>Click 'Admin' tab on the top of this page.</li>
 	<li>Click 'Search/Edit/Delete Security Records'.</li>
