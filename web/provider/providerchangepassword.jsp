@@ -35,37 +35,49 @@
 	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
 	errorPage="errorpage.jsp"%>
 
+<%!
+	OscarProperties op = OscarProperties.getInstance();
+%>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
 <title><bean:message key="provider.providerchangepassword.title" /></title>
 <meta http-equiv="Cache-Control" content="no-cache">
 
 <script language="javascript">
-<!-- start javascript 
-function setfocus() {
-  this.focus();
-  document.updatepassword.oldpassword.focus();
-  document.updatepassword.oldpassword.select();
+function setfocus(el) {
+	this.focus();
+	document.updatepassword.elements[el].focus();
+	document.updatepassword.elements[el].select();
 }
-function checkPwdLength() {
-	var typeInOK = false;
-  var len1=document.updatepassword.mypassword.value.length;
-  var len2=document.updatepassword.confirmpassword.value.length;
-  if(len1==len2 && len1>5) typeInOK=true;
-	if(!typeInOK) alert ('<bean:message key="provider.providerchangepassword.msgPasswordLengthError"/>');
-
-	return typeInOK;
+function checkPwdPolicy() {
+	if (document.updatepassword.oldpassword.value == "") {
+		alert ('<bean:message key="provider.providerchangepassword.msgOldPasswordError"/>');
+		setfocus('oldpassword');
+		return false;
+	}
+	var pwd1=document.updatepassword.mypassword.value;
+	var pwd2=document.updatepassword.confirmpassword.value;
+	if (!validatePassword(pwd1)) {
+		setfocus('mypassword');
+		return false;
+	}
+	if (pwd1 != pwd2) {
+		alert ('<bean:message key="provider.providerchangepassword.msgPasswordConfirmError"/>');
+		setfocus('confirmpassword');
+		return false;
+	}
+	return true;
 }
-
-// stop javascript -->
 </script>
 </head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+	onLoad="setfocus('oldpassword')" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME="updatepassword" METHOD="post"
-	ACTION="providerupdatepassword.jsp" onSubmit="return(checkPwdLength())">
+	ACTION="providerupdatepassword.jsp" onSubmit="return(checkPwdPolicy())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%">
 	<tr bgcolor="#486ebd">
 		<th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF"><bean:message
@@ -76,7 +88,7 @@ function checkPwdLength() {
 <table width="100%" border="0" cellpadding="2" bgcolor="#eeeeee">
 	<tr>
 		<td><font face="arial" size="2"><bean:message
-			key="provider.providerchangepassword.msgInstructions" /><b><bean:message
+			key="provider.providerchangepassword.msgInstructions" /> <b><bean:message
 			key="provider.providerchangepassword.msgUpdate" /></b> <bean:message
 			key="provider.providerchangepassword.msgClickButton" /></font></td>
 	</tr>
@@ -97,7 +109,9 @@ function checkPwdLength() {
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="mypassword" value="" size=20
 			maxlength=10> <font size="-2">(<bean:message
-			key="provider.providerchangepassword.msgPasswordLength" />)</font></td>
+			key="provider.providerchangepassword.msgAtLeast" />
+			<%=op.getProperty("password_min_length")%> <bean:message
+			key="provider.providerchangepassword.msgSymbols" />)</font></td>
 	</tr>
 	<tr>
 		<td width="50%" align="right"><font face="arial"><bean:message
@@ -105,12 +119,14 @@ function checkPwdLength() {
 			key="provider.providerchangepassword.formNewPassword" />:</b></font></td>
 		<td><input type=password name="confirmpassword" value="" size=20
 			maxlength=10> <font size="-2">(<bean:message
-			key="provider.providerchangepassword.msgPasswordLength" />)</font></td>
+			key="provider.providerchangepassword.msgAtLeast" />
+			<%=op.getProperty("password_min_length")%> <bean:message
+			key="provider.providerchangepassword.msgSymbols" />)</font></td>
 	</tr>
 </table>
 </center>
 <table width="100%" border="0" cellpadding="4" cellspacing="0"
-	BGCOLOR="#486ebd">
+	bgcolor="#486ebd">
 	<tr>
 		<TD align="center" width="50%"><INPUT TYPE="submit"
 			VALUE='<bean:message key="provider.providerchangepassword.btnSubmit"/>'
@@ -118,7 +134,7 @@ function checkPwdLength() {
 			VALUE='<bean:message key="global.btnBack"/>'
 			onClick="window.close();"></TD>
 	</tr>
-</TABLE>
+</table>
 </form>
 </body>
 </html:html>

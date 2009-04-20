@@ -40,6 +40,8 @@ public class OscarSuperManager {
 
 	private OscarSuperDao providerSuperDao;
 
+	private OscarSuperDao adminSuperDao;
+
 	public void setAppointmentSuperDao(OscarSuperDao appointmentDao) {
 		this.appointmentSuperDao = appointmentDao;
 	}
@@ -52,6 +54,10 @@ public class OscarSuperManager {
 		this.providerSuperDao = providerDao;
 	}
 
+	public void setAdminSuperDao(OscarSuperDao adminDao) {
+		this.adminSuperDao = adminDao;
+	}
+
 	/**
 	 * Enables every injected dao in this manager to be accessed by its name.<br>
 	 * Don't forget to update this function then you add a dao field.
@@ -60,6 +66,7 @@ public class OscarSuperManager {
 		oscarDaoMap.put("appointmentDao", appointmentSuperDao);
 		oscarDaoMap.put("receptionistDao", receptionistSuperDao);
 		oscarDaoMap.put("providerDao", providerSuperDao);
+		oscarDaoMap.put("adminDao", adminSuperDao);
 
 		// making sure all daos have been injected properly
 		for (String daoName : oscarDaoMap.keySet()) {
@@ -131,7 +138,7 @@ public class OscarSuperManager {
 	 *            dao name
 	 * @return dao instance
 	 */
-	private OscarSuperDao getDao(String daoName) {
+	protected OscarSuperDao getDao(String daoName) {
 		OscarSuperDao oscarSuperDao = oscarDaoMap.get(daoName);
 		if (oscarSuperDao != null) {
 			return oscarSuperDao;

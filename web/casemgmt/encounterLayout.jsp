@@ -46,9 +46,8 @@
 <html:base />
 <title>Case Management</title>
 <meta http-equiv="Cache-Control" content="no-cache">
-<!-- <meta http-equiv="refresh" content="300;"> -->
-<script type="text/javascript" language=javascript>
-    </script>
+<%! String refresh = oscar.OscarProperties.getInstance().getProperty("refresh.encounterLayout.jsp", "-1"); %>
+<%="-1".equals(refresh)?"":"<meta http-equiv=\"refresh\" content=\""+refresh+";\">"%>
 </head>
 <body>
 <table border="0" width="100%" cellspacing="5">

@@ -86,11 +86,11 @@
 	<bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 	<bean id="clinicDAO" class="org.oscarehr.common.dao.ClinicDAO" autowire="byName" />
 	<bean id="UserDSMessagePrefsDAO" class="org.oscarehr.common.dao.UserDSMessagePrefsDAO" autowire="byName" />
-        <bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
+	<bean id="flowSheetCustomizerDAO" class="org.oscarehr.common.dao.FlowSheetCustomizerDAO" autowire="byName"/>
 	<bean id="flowSheetDrugDAO" class="org.oscarehr.common.dao.FlowSheetDrugDAO" autowire="byName"/>
-        <bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
-        <bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
-        <bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
+	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
+	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
+	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
         
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
@@ -99,12 +99,13 @@
 	<bean id="userAccessDao" class="com.quatro.dao.security.UserAccessDao" autowire="byName" />
 	<bean id="appointStatusDao" class="oscar.appt.status.dao.hibernate.AppointmentStatusDAOHibernate" autowire="byName" />
 	<bean id="rxCloneDao" class="oscar.oscarRx.dao.hibernate.RxCloneFavoritesDAOHibernate" autowire="byName" />
-        <bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
+	<bean id="providerInboxRoutingDAO" class="org.oscarehr.common.dao.ProviderInboxRoutingDao" autowire="byName"/>
 
 	<!-- Dao classes that implement OscarSuperDao -->
 	<bean id="appointmentSuperDao" class="oscar.dao.AppointmentDao" autowire="byName" />
 	<bean id="receptionistSuperDao" class="oscar.dao.ReceptionistDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
+	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
 
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>

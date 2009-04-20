@@ -36,16 +36,19 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
-<%
-  //if(session.getAttribute("user") == null)  response.sendRedirect("../logout.jsp");
+<%@ page
+	import="java.lang.*, java.util.*, java.text.*,java.sql.*, oscar.*"
+	errorPage="errorpage.jsp"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
+<%!
+	OscarProperties op = OscarProperties.getInstance();
 %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
 
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/checkPassword.js.jsp"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.securityupdatesecurity.title" /></title>
 <link rel="stylesheet" type="text/css" href="bcArStyle.css">
@@ -64,48 +67,65 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <link rel="stylesheet" href="../web.css">
-<script LANGUAGE="JavaScript">
- <!--
-
-   function onsub() {
-      if(document.updatearecord.user_name.value=="" ||
-		 document.updatearecord.password.value==""||
-		 document.updatearecord.provider_no.value==""		
-		) {
-        alert('<bean:message key="global.msgInputKeyword"/>');
-        return false;
-      } else if(document.forms[0].b_ExpireSet.checked && document.forms[0].date_ExpireDate.value.length<10) {
-        alert('<bean:message key="global.msgInputKeyword"/>');
-        return false;
-     // } else if(document.forms[0].b_RemoteLockSet.checked && document.forms[0].pin.value.length<3) {
-     //   alert('<bean:message key="global.msgInputKeyword"/>');
-     //   return false;
-     //} else if(document.forms[0].b_LocalLockSet.checked && document.forms[0].pin.value.length<3) {
-     //   alert('<bean:message key="global.msgInputKeyword"/>');
-     //   return false;
-      }else if(document.forms[0].password.value != document.forms[0].conPassword.value) {
-        alert('You have not confirmed your password. Please input your password again.');
-        return false;
-      } else if(document.forms[0].pin.value != document.forms[0].conPin.value) {
-        alert('You have not confirmed your pin. Please input your pin again.');
-        return false;
-      } else 
-      	return true;
-     }
-       
-		function setfocus() {
-		  document.updatearecord.user_name.focus();
-		  document.updatearecord.user_name.select();
+<script type="text/javascript">
+<!--
+	function setfocus(el) {
+		this.focus();
+		document.updatearecord.elements[el].focus();
+		document.updatearecord.elements[el].select();
+	}
+	function onsub() {
+		if (document.updatearecord.user_name.value=="") {
+			alert('<bean:message key="admin.securityrecord.formUserName" /> <bean:message key="admin.securityrecord.msgIsRequired"/>');
+			setfocus('user_name');
+			return false;
 		}
-    function onCancel() {
-		  document.location.href= "provideradmin.jsp";
-   	}
-    //-->
-    </script>
+		if (document.updatearecord.password.value=="") {
+			alert('<bean:message key="admin.securityrecord.formPassword" /> <bean:message key="admin.securityrecord.msgIsRequired"/>');
+			setfocus('password');
+			return false;
+		}
+		if (document.updatearecord.password.value != "*********" && !validatePassword(document.updatearecord.password.value)) {
+			setfocus('password');
+			return false;
+		}
+		if (document.forms[0].password.value != document.forms[0].conPassword.value) {
+			alert('<bean:message key="admin.securityrecord.msgPasswordNotConfirmed" />');
+			setfocus('conPassword');
+			return false;
+		}
+		if (document.updatearecord.provider_no.value=="") {
+			return false;
+		}
+		if (document.forms[0].b_ExpireSet.checked && document.forms[0].date_ExpireDate.value.length<10) {
+			alert('<bean:message key="admin.securityrecord.formDate" /> <bean:message key="admin.securityrecord.msgIsRequired"/>');
+			setfocus('date_ExpireDate');
+			return false;
+		}
+		if (document.forms[0].b_RemoteLockSet.checked || document.forms[0].b_LocalLockSet.checked) {
+			if (document.forms[0].pin.value=="") {
+				alert('<bean:message key="admin.securityrecord.formPIN" /> <bean:message key="admin.securityrecord.msgIsRequired"/>');
+				setfocus('pin');
+				return false;
+			}
+		}
+		if (document.forms[0].pin.value != "****" && !validatePin(document.forms[0].pin.value)) {
+			setfocus('pin');
+			return false;
+		}
+		if (document.forms[0].pin.value != document.forms[0].conPin.value) {
+			alert('<bean:message key="admin.securityrecord.msgPinNotConfirmed" />');
+			setfocus('conPin');
+			return false;
+		}
+		return true;
+	}
+//-->
+</script>
 </head>
 
 <body background="../images/gray_bg.jpg" bgproperties="fixed"
-	onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+	onLoad="setfocus('user_name')" topmargin="0" leftmargin="0" rightmargin="0">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#486ebd">
@@ -117,83 +137,98 @@
 <table cellspacing="0" cellpadding="2" width="100%" border="0">
 	<form method="post" action="admincontrol.jsp" name="updatearecord"
 		onsubmit="return onsub()">
-	<%
-  ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
-  if(rs==null) {%>
-	
+<%
+	List<Map> resultList = oscarSuperManager.find("adminDao", "security_search_detail", new Object[] {request.getParameter("keyword")});
+	if (resultList.size() == 0) {
+%>
 	<tr>
 		<td><bean:message key="admin.securityupdatesecurity.msgFailed" /></td>
 	</tr>
-	</form>
-	<%
-  } else {
-    while (rs.next()) {
-    // the cursor of ResultSet only goes through once from top
+<%
+	} else {
+		for (Map provider : resultList) {
 %>
 	<tr>
 		<td width="50%" align="right"><bean:message
 			key="admin.securityrecord.formUserName" />:</td>
-		<td><input type="text" name="user_name"
-			value="<%= apptMainBean.getString(rs,"user_name") %>"></td>
+		<td><input type="text" name="user_name" maxlength="30"
+			value="<%=provider.get("user_name")%>"></td>
 	</tr>
 	<tr>
 		<td align="right" nowrap><bean:message
-			key="admin.securityrecord.formPassword" /><font size='-2'>(<=10char)</font>:
-		</td>
-		<td><input type="text" name="password" value="*********">
-		<!-- apptMainBean.getString(rs,"password") --></td>
+			key="admin.securityrecord.formPassword" />:</td>
+		<td><input type="password" name="password" value="*********" maxlength="10"> <font size="-2">(<bean:message
+			key="admin.securityrecord.msgAtLeast" />
+			<%=op.getProperty("password_min_length")%> <bean:message
+			key="admin.securityrecord.msgSymbols" />)</font></td>
+	</tr>
+	<tr>
+		<td align="right"><bean:message
+			key="admin.securityrecord.formConfirm" />:</td>
+		<td><input type="password" name="conPassword" value="*********" maxlength="10"></td>
 	</tr>
 	<tr>
 		<td>
 		<div align="right"><bean:message
 			key="admin.securityrecord.formProviderNo" />:</div>
 		</td>
-		<td>
-		<% String provider_no = apptMainBean.getString(rs,"provider_no"); %> <%= provider_no %>
-		<input type="hidden" index="4" name="provider_no"
-			value="<%= apptMainBean.getString(rs,"provider_no") %>"></td>
+		<td><%=provider.get("provider_no")%>
+		<input type="hidden" name="provider_no"
+			value="<%=provider.get("provider_no")%>"></td>
 	</tr>
 	<!-- new security -->
 	<tr>
-		<td align="right" nowrap>Expiry Date:</td>
+		<td align="right" nowrap><bean:message
+			key="admin.securityrecord.formExpiryDate" />:</td>
 		<td><input type="checkbox" name="b_ExpireSet" value="1"
-			<%= rs.getInt("b_ExpireSet")==0?"":"checked" %>> Date: <input
+			<%= ((Integer)provider.get("b_ExpireSet"))==0?"":"checked" %>> <bean:message
+			key="admin.securityrecord.formDate" />: <input
 			type="text" name="date_ExpireDate" id="date_ExpireDate"
-			value="<%= apptMainBean.getString(rs,"date_ExpireDate")==null?"":apptMainBean.getString(rs,"date_ExpireDate") %>"
+			value="<%= provider.get("date_ExpireDate")==null?"":provider.get("date_ExpireDate") %>"
 			size="10" readonly /> <img src="../images/cal.gif"
 			id="date_ExpireDate_cal" /></td>
 	</tr>
 	<tr>
-		<td align="right" nowrap>Pin(remote) Enable:</td>
+		<td align="right" nowrap><bean:message
+			key="admin.securityrecord.formRemotePIN" />:</td>
 		<td><input type="checkbox" name="b_RemoteLockSet" value="1"
-			<%= rs.getInt("b_RemoteLockSet")==0?"":"checked" %>>
-		Pin(local) Enable: <input type="checkbox" name="b_LocalLockSet"
-			value="1" <%= rs.getInt("b_LocalLockSet")==0?"":"checked" %>>
+			<%= ((Integer)provider.get("b_RemoteLockSet"))==0?"":"checked" %>>
+		<bean:message
+			key="admin.securityrecord.formLocalPIN" />: <input type="checkbox" name="b_LocalLockSet"
+			value="1" <%= ((Integer)provider.get("b_LocalLockSet"))==0?"":"checked" %>>
 		</td>
 	</tr>
 	<!-- new security -->
 	<tr>
 		<td align="right" nowrap><bean:message
 			key="admin.securityrecord.formPIN" />:</td>
-		<td><input type="text" name="pin" value="****"> <!-- apptMainBean.getString(rs,"pin")==null?"":apptMainBean.getString(rs,"pin") -->
+		<td><input type="password" name="pin" value="****" size="6" maxlength="6"> <font size="-2">(<bean:message
+			key="admin.securityrecord.msgAtLeast" />
+			<%=op.getProperty("password_pin_min_length")%> <bean:message
+			key="admin.securityrecord.msgDigits" />)</font>
 		</td>
+	</tr>
+	<tr>
+		<td align="right"><bean:message
+			key="admin.securityrecord.formConfirm" />:</td>
+		<td><input type="password" name="conPin" value="****" size="6" maxlength="6" /></td>
 	</tr>
 	<tr>
 		<td colspan="2" align="center"><input type="hidden"
 			name="security_no"
-			value="<%= apptMainBean.getString(rs,"security_no")%>"> <input
+			value="<%=provider.get("security_no")%>"> <input
 			type="hidden" name="dboperation" value="security_update_record">
 		<input type="hidden" name="displaymode" value="Security_Update_Record">
 		<input type="submit" name="subbutton"
 			value='<bean:message key="admin.securityupdatesecurity.btnSubmit"/>'>
 		<input type="button"
 			value="<bean:message key="admin.securityupdatesecurity.btnDelete"/>"
-			onclick="window.location='admincontrol.jsp?keyword=<%=apptMainBean.getString(rs,"security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">
+			onclick="window.location='admincontrol.jsp?keyword=<%=provider.get("security_no")%>&displaymode=Security_Delete&dboperation=security_delete'">
 		</td>
 	</tr>
-	<%
-  }}
-  apptMainBean.closePstmtConn();
+<%
+		}
+	}
 %>
 	</form>
 </table>

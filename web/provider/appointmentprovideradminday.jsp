@@ -196,7 +196,8 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
 <c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">
-	<meta http-equiv="refresh" content="180;">
+<%! String refresh = oscar.OscarProperties.getInstance().getProperty("refresh.appointmentprovideradminday.jsp", "-1"); %>
+<%="-1".equals(refresh)?"":"<meta http-equiv=\"refresh\" content=\""+refresh+";\">"%>
 </c:if>
 
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
