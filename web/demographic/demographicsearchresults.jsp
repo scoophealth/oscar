@@ -332,8 +332,8 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 %>
 
 </table>
-<sup>*</sup>Sorts by demographic number<br>
-<sup>1</sup>Sorts by last name<br>
+<sup>*</sup><bean:message key="demographic.demographicsearchresults.msgSortDemographic"/>  <br>
+<sup>1</sup><bean:message key="demographic.demographicsearchresults.msgSortsLastName"/>   <br>
 
 <br>
 <%

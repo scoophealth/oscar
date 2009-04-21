@@ -1,18 +1,13 @@
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
-  if (session.getAttribute("user") == null)
-  {
+  if (session.getAttribute("user") == null){
   	response.sendRedirect("../logout.jsp");
   }
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("a.start_time") ;
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*"
-	errorPage="../appointment/errorpage.jsp"%>
-<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean"
-	scope="page" />
-<jsp:useBean id="providerBean" class="java.util.Properties"
-	scope="session" />
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp"%>
+<jsp:useBean id="daySheetBean" class="oscar.AppointmentMainBean" scope="page" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%@ include file="../admin/dbconnection.jsp"%>
 <% 
   String [][] dbQueries=new String[][] { 
@@ -31,7 +26,7 @@
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>OSCAR - Day Sheet</title>
+<title>OSCAR - <bean:message key="report.tabulardaysheetreport.title"/>=</title>
 <link rel="stylesheet" href="../media/css/oscar.css">
 <link rel="stylesheet" href="../media/css/reporting.css">
 <meta http-equiv="Cache-Control" content="no-cache">
@@ -53,11 +48,12 @@ function setfocus() {
 		<td height="40" width="25"></td>
 		<td width="90%" align="left">
 		<p><font color="#4D4D4D"><b><font size="4">oscar<font
-			size="3">Day Sheet (<%=createtime%>)</font></font></b></font></p>
+			size="3"><bean:message key="report.tabulardaysheetreport.msgTitle"/> (<%=createtime%>)</font></font></b></font></p>
 		</td>
-		<td><input type="button" name="Button" value="Print"
-			onClick="window.print()"><input type="button" name="Button"
-			value=" Exit " onClick="window.close()"></td>
+		<td><input type="button" name="Button" value="<bean:message key="report.tabulardaysheetreport.btnPrint"/>" onClick="window.print()">
+                    <input type="button" name="Button" value=" <bean:message key="report.tabulardaysheetreport.btnExit"/> " onClick="window.close()">
+                </td>
+    
 	</tr>
 </table>
 <%
@@ -147,16 +143,16 @@ function setfocus() {
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="0"
 	cellpadding="0" class="smallerTable">
 	<tr>
-		<td class="items"><b>Time</b></td>
-		<td class="items"><b>Chart #</b></td>
-		<td class="items"><b>Name</b></td>
-		<td class="items" align="center" width="79"><b>DoB</b></td>
-		<td class="items" align="center" width="55"><b>PHN</b></td>
-		<td class="items" align="center" width="55"><b>Fee1</b></td>
-		<td class="items" align="center" width="55"><b>Diag1</b></td>
-		<td class="items" align="center" width="55"><b>Diag2</b></td>
-		<td class="items" align="center" width="55"><b>Diag3</b></td>
-		<td class="items"><b>Description</b></td>
+		<td class="items"><b><bean:message key="report.tabulardaysheetreport.msgTime"/></b></td>
+		<td class="items"><b><bean:message key="report.tabulardaysheetreport.msgChart"/></b></td>
+		<td class="items"><b><bean:message key="report.tabulardaysheetreport.msgName"/></b></td>
+		<td class="items" align="center" width="79"><b><bean:message key="report.tabulardaysheetreport.msgDoB"/></b></td>
+		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgPHN"/></b></td>
+		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgFee1"/></b></td>
+		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag1"/></b></td>
+		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag2"/></b></td>
+		<td class="items" align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag3"/></b></td>
+		<td class="items"><b><bean:message key="report.tabulardaysheetreport.msgDescription"/></b></td>
 	</tr>
 	<%
     	}
@@ -245,16 +241,16 @@ function setfocus() {
 		<table width="100%" border="0" bgcolor="#ffffff" cellspacing="0"
 			cellpadding="0">
 			<tr>
-				<td><b>Time</b></td>
-				<td><b>Chart #</b></td>
-				<td><b>Name</b></td>
-				<td align="center" width="79"><b>DoB</b></td>
-				<td align="center" width="55"><b>PHN</b></td>
-				<td align="center" width="55"><b>Fee1</b></td>
-				<td align="center" width="55"><b>Diag1</b></td>
-				<td align="center" width="55"><b>Diag2</b></td>
-				<td align="center" width="55"><b>Diag3</b></td>
-				<td><b>Description</b></td>
+				<td><b><bean:message key="report.tabulardaysheetreport.msgTime"/></b></td>
+				<td><b><bean:message key="report.tabulardaysheetreport.msgChart"/></b></td>
+				<td><b><bean:message key="report.tabulardaysheetreport.msgName"/></b></td>
+				<td align="center" width="79"><b><bean:message key="report.tabulardaysheetreport.msgDoB"/></b></td>
+				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgPHN"/></b></td>
+				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgFee1"/></b></td>
+				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag1"/></b></td>
+				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag2"/></b></td>
+				<td align="center" width="55"><b><bean:message key="report.tabulardaysheetreport.msgDiag3"/></b></td>
+				<td><b><bean:message key="report.tabulardaysheetreport.msgDescription"/></b></td>
 			</tr>
 			<%
 		}
