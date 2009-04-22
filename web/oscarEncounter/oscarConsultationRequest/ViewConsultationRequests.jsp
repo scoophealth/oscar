@@ -236,12 +236,11 @@ function setOrder(val){
                             </select>                            
                             <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
                             <div style="margin: 0; padding: 0; ">
-                            Start:<html:text property="startDate" size="8" styleId="startDate"/><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
-                            End:<html:text property="endDate" size="8"   styleId="endDate"/><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
-                            Include Completed:<html:checkbox property="includeCompleted" value="include" />
-                            Search on
-                            Referal Date<html:radio property="searchDate" value="0" titleKey="Search on Referal Date"/>
-                            Appt. Date<html:radio property="searchDate" value="1" titleKey="Search on Appt. Date"/>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStart"/>:<html:text property="startDate" size="8" styleId="startDate"/><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEnd"/>:<html:text property="endDate" size="8"   styleId="endDate"/><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgIncludeCompleted"/>:<html:checkbox property="includeCompleted" value="include" />
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgSearchon"/><html:radio property="searchDate" value="0" titleKey="Search on Referal Date"/>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgApptDate"/><html:radio property="searchDate" value="1" titleKey="Search on Appt. Date"/>
                             <html:hidden property="currentTeam"/>
                             <html:hidden property="orderby"/>
                             <html:hidden property="desc"/>
@@ -259,7 +258,7 @@ function setOrder(val){
                                    </a>
                                 </th>
 				 <th align="left" class="VCRheads" width="10%">
-					Urgency
+					<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgUrgency"/>
                                 </th>
 
                                 <th align="left" class="VCRheads" width="75">
@@ -284,7 +283,7 @@ function setOrder(val){
                                 </th>
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('6'); return false;">
-                                   Appointment Date
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgAppointmentDate"/>
                                    </a>
                                 </th>
                             </tr>
