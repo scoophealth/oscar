@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!--  
 /*
  * 
@@ -44,14 +45,11 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 
-<jsp:useBean id="oscarVariables" class="java.util.Properties"
-	scope="page" />
-<%@ page
-	import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}"
-	scope="request" />
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
 <%
 for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
     String name = (String)e.nextElement();
@@ -291,12 +289,12 @@ function popup1(height, width, url, windowName){
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td>Documents</td>
+				<td><bean:message key="dms.documentReport.msgDocuments"/></td>
 				<td>&nbsp;</td>
 				<td style="text-align: right;"><a
-					href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | <a
-					href="javascript: popupStart(300, 400, 'About.jsp')">About</a> | <a
-					href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+					href="javascript: popupStart(300, 400, 'Help.jsp')"><bean:message key="global.help"/></a> | <a
+					href="javascript: popupStart(300, 400, 'About.jsp')"><bean:message key="global.about"/></a> | <a
+					href="javascript: popupStart(300, 400, 'License.jsp')"><bean:message key="global.license"/></a>
 				</td>
 			</tr>
 		</table>
@@ -347,20 +345,20 @@ function popup1(height, width, url, windowName){
 			<div class="docHeading">
 			<% if( i == 0 ) {
                          %> <span class="tabs" style="float: right">
-			View Status <select id="viewstatus" name="viewstatus"
+			<bean:message key="dms.documentReport.msgViewStatus"/> <select id="viewstatus" name="viewstatus"
 				style="text-size: 8px; margin-bottom: -4px;"
 				onchange="window.location.href='?function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus='+this.options[this.selectedIndex].value;">
 				<option value="all"
-					<%=viewstatus.equalsIgnoreCase("all") ? "selected":""%>>All</option>
+					<%=viewstatus.equalsIgnoreCase("all") ? "selected":""%>><bean:message key="dms.documentReport.msgAll"/></option>
 				<option value="deleted"
-					<%=viewstatus.equalsIgnoreCase("deleted") ? "selected":""%>>Deleted</option>
+					<%=viewstatus.equalsIgnoreCase("deleted") ? "selected":""%>><bean:message key="dms.documentReport.msgDeleted"/></option>
 				<option value="active"
-					<%=viewstatus.equalsIgnoreCase("active") ? "selected":""%>>Published</option>
+					<%=viewstatus.equalsIgnoreCase("active") ? "selected":""%>><bean:message key="dms.documentReport.msgPublished"/></option>
 			</select> </span> <%
                           }
                           %> <a id="plusminus<%=i%>"
 				href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
-			-- <%= currentkey%> </a> <span class="tabs"> View: <a
+			-- <%= currentkey%> </a> <span class="tabs"> <bean:message key="dms.documentReport.msgView"/>: <a
 				href="?function=<%=module%>&functionid=<%=moduleid%>">All</a> <% for (int i3=0; i3<doctypes.size(); i3++) { %>
 			| <a
 				href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
@@ -377,22 +375,22 @@ function popup1(height, width, url, windowName){
 						key="dms.documentReport.msgDocDesc" /></a></b></td>
 					<td width="8%"><b><a
 						href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
-						    Content</a></b></td>
+						    <bean:message key="dms.documentReport.msgContent"/></a></b></td>
 					<td width="8%"><b><a
 						href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
-						    Type</a></b></td>
+						    <bean:message key="dms.documentReport.msgType"/></a></b></td>
 					<td width="12%"><b><a
 						href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"><bean:message
 						key="dms.documentReport.msgCreator" /></a></b></td>
 					<td width="12%"><b><a
 						href="?sort=responsible&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
-						Responsible</a></b></td>
+						<bean:message key="dms.documentReport.msgResponsible"/></a></b></td>
 					<td width="10%"><a
 						href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>"
-						title="Observation Date"><b>Date</b></a></td>
+						title="Observation Date"><b><bean:message key="dms.documentReport.msgDate"/></b></a></td>
 					<td width="12%"><b><a
 						href="?sort=reviewer&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>&viewstatus=<%=viewstatus%>">
-						Reviewer</b></a></td>
+						<bean:message key="dms.documentReport.msgReviewer"/></b></a></td>
 					<td width="8%">&nbsp;</td>
 				</tr>
 
@@ -485,7 +483,7 @@ function popup1(height, width, url, windowName){
 				<%}
             if (category.size() == 0) {%>
 				<tr>
-					<td colspan="6">No documents to display</td>
+					<td colspan="6"><bean:message key="dms.documentReport.msgNoDocumentsToDisplay"/></td>
 				</tr>
 				<%}%>
 			</table>
@@ -499,7 +497,7 @@ function popup1(height, width, url, windowName){
 				onclick=self.close();> <input type="button" name="print"
 				value='<bean:message key="global.btnPrint"/>'
 				onClick="window.print()"> <input type="button"
-				value="Combine PDFs"
+				value="<bean:message key="dms.documentReport.btnCombinePDF"/>"
 				onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');" />
 			<%
                     if( module.equals("demographic") ) {
