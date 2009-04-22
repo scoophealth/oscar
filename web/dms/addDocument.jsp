@@ -206,14 +206,12 @@ function checkDefaultDate(object, defaultValue) {
 }
 </script>
 <div class="topplane">
-<div class="docHeading" style="background-color: #d1d5bd;"><a
-	id="plusminusAddDocA"
-	href="javascript: showhide('addDocDiv', 'plusminusAddDocA');"> +
-Add Document </a> <a id="plusminusLinkA"
-	href="javascript: showhide('addLinkDiv', 'plusminusLinkA')"> + Add
-Link </a> <a href="javascript:;"
-	onclick="popup(450, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">
-+ Add HTML </a></div>
+<div class="docHeading" style="background-color: #d1d5bd;">
+    <a id="plusminusAddDocA" href="javascript: showhide('addDocDiv', 'plusminusAddDocA');"> +<bean:message key="dms.addDocument.msgAddDocument"/></a> 
+    <%-- a id="plusminusAddDocA" href="undocumentReport2.jsp"> +<bean:message key="dms.addDocument.msgManageUploadDocument"/></a --%> 
+    <a id="plusminusLinkA" href="javascript: showhide('addLinkDiv', 'plusminusLinkA')"> +<bean:message key="dms.addDocument.AddLink"/> </a> 
+    <a href="javascript:;" onclick="popup(450, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">+<bean:message key="dms.addDocument.AddHTML"/></a>
+</div>
 <div id="addDocDiv" class="addDocDiv"
 	style="background-color: #f2f5e3; display: none;"><html:form
 	action="/dms/addEditDocument" method="POST"
@@ -234,8 +232,7 @@ Link </a> <a href="javascript:;"
 	<input type="hidden" name="curUser" value="<%=curUser%>">
 	<select name="docType" onchange="checkSel(this)"
 		<% if (docerrors.containsKey("typemissing")) {%> class="warning" <%}%>>
-		<option value=""><bean:message
-			key="dms.addDocument.formSelect" /></option>
+		<option value=""><bean:message key="dms.addDocument.formSelect" /></option>
 		<%
                                    for (int i=0; i<doctypes.size(); i++) {
                                       String doctype = (String) doctypes.get(i); %>
