@@ -78,7 +78,7 @@ cal.add(Calendar.MONTH,-months);
 <html>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Lab Requestion Report <%= mons %></title>
+<title><bean:message key="oscarReport.LabReqReport.msgLabReqReport"/> <%= mons %></title>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <script type="text/javascript">
@@ -112,27 +112,27 @@ cal.add(Calendar.MONTH,-months);
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn">Report</td>
+		<td class="MainTableTopRowLeftColumn"><bean:message key="oscarReport.LabReqReport.msgReport"/></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<form action="LabReqReport.jsp">
 			<tr>
-				<td>Lab Req Report</td>
+				<td><bean:message key="oscarReport.LabReqReport.msgLabReqReport"/></td>
 				<td><select name="numMonth">
-					<option value="1" <%=selled("1",mons)%>>1 Month</option>
-					<option value="2" <%=selled("2",mons)%>>2 Months</option>
-					<option value="3" <%=selled("3",mons)%>>3 Months</option>
-					<option value="4" <%=selled("4",mons)%>>4 Months</option>
-					<option value="5" <%=selled("5",mons)%>>5 Months</option>
-					<option value="6" <%=selled("6",mons)%>>6 Months</option>
-					<option value="7" <%=selled("7",mons)%>>7 Months</option>
-					<option value="8" <%=selled("8",mons)%>>8 Months</option>
-					<option value="9" <%=selled("9",mons)%>>9 Months</option>
-					<option value="10" <%=selled("10",mons)%>>10 Months</option>
-					<option value="11" <%=selled("11",mons)%>>11 Months</option>
-					<option value="12" <%=selled("12",mons)%>>12 Months</option>
+					<option value="1" <%=selled("1",mons)%>>1 <bean:message key="oscarReport.LabReqReport.msgMonth"/></option>
+					<option value="2" <%=selled("2",mons)%>>2 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="3" <%=selled("3",mons)%>>3 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="4" <%=selled("4",mons)%>>4 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="5" <%=selled("5",mons)%>>5 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="6" <%=selled("6",mons)%>>6 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="7" <%=selled("7",mons)%>>7 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="8" <%=selled("8",mons)%>>8 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="9" <%=selled("9",mons)%>>9 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="10" <%=selled("10",mons)%>>10 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="11" <%=selled("11",mons)%>>11 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
+					<option value="12" <%=selled("12",mons)%>>12 <bean:message key="oscarReport.LabReqReport.msgMonths"/></option>
 				</select> <select name="proNo">
-					<option value="-1" <%=selled("-1",pros)%>>ALL Providers</option>
+					<option value="-1" <%=selled("-1",pros)%>><bean:message key="oscarReport.LabReqReport.msgAllProviders"/></option>
 					<%
                                   for( int i = 0; i < proList.size(); i++){
                                      ArrayList w = (ArrayList) proList.get(i);
@@ -143,17 +143,17 @@ cal.add(Calendar.MONTH,-months);
 					<% 
                                   }
                               %>
-				</select> <input type=submit value="update report" /></td>
+				</select> <input type=submit value="<bean:message key="oscarReport.LabReqReport.msgUpdateReport" />"></td>
 				<td style="text-align: right"><a
-					href="javascript:popupStart(300,400,'Help.jsp')">Help</a> | <a
-					href="javascript:popupStart(300,400,'About.jsp')">About</a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')">License</a></td>
+					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message key="global.help"/></a> | <a
+					href="javascript:popupStart(300,400,'About.jsp')"><bean:message key="global.about"/></a> | <a
+					href="javascript:popupStart(300,400,'License.jsp')"><bean:message key="global.license"/></a></td>
 			</tr>
 			</form>
 		</table>
 		</td>
 	</tr>
-	<tr>
+	<tr>            
 		<td class="MainTableLeftColumn">&nbsp;</td>
 		<td class="MainTableRightColumn">
 		<table border=0 cellspacing=4 width=700>
@@ -166,16 +166,16 @@ demoData = (RptLabReportData.DemoLabDataStruct)  conData.demoList.get(i);
 				<td bgcolor="#eeeeff" width=700>
 				<table border=0 cellspacing=2>
 					<tr>
-						<td class="nameBox" colspan=3>Patient Name: <%= demoData.getDemographicName()%></td>
+						<td class="nameBox" colspan=3><bean:message key="oscarReport.LabReqReport.msgPatientName"/>: <%= demoData.getDemographicName()%></td>
 					</tr>
 					<tr>
 
 						<td valign=top width=300 class=sideLine>
 
 						<table border=0 cellspacing=3 width=100%>
-							<td colspan=4 class=nameBox>Laboratory Requisition</td>
+							<td colspan=4 class=nameBox><bean:message key="oscarReport.LabReqReport.msgLabReq"/></td>
 							<tr>
-								<th width=100 class="subTitles" align=left>Requisition Date</th>
+								<th width=100 class="subTitles" align=left><bean:message key="oscarReport.LabReqReport.msgReqDate"/></th>
 							</tr>
 							<%
                   RptLabReportData.DemoLabDataStruct.Consult demoLab;
@@ -196,12 +196,11 @@ demoData = (RptLabReportData.DemoLabDataStruct)  conData.demoList.get(i);
 						<td valign=top width=300>
 						<table border=0 cellspacing=3>
 							<tr>
-								<td class=nameBox colspan=2>Scanned Lab Documents</td>
+								<td class=nameBox colspan=2><bean:message key="oscarReport.LabReqReport.msgScannedLabDocs"/></td>
 							</tr>
 							<tr>
-								<th width=200 class="subTitles" align=left>Document
-								Description</th>
-								<th width=100 class="subTitles" align=left>Date</th>
+								<th width=200 class="subTitles" align=left><bean:message key="oscarReport.LabReqReport.msgDocumentDesc"/></th>
+								<th width=100 class="subTitles" align=left><bean:message key="oscarReport.LabReqReport.msgDate"/></th>
 							</tr>
 							<%
                   RptLabReportData.DemoLabDataStruct.ConLetter demoLetter;
@@ -226,12 +225,11 @@ demoData = (RptLabReportData.DemoLabDataStruct)  conData.demoList.get(i);
 						<td valign=top width=300>
 						<table border=0 cellspacing=3>
 							<tr>
-								<td class=nameBox colspan=2>Lab Documents</td>
+								<td class=nameBox colspan=2><bean:message key="oscarReport.LabReqReport.msgLabDocuments"/></td>
 							</tr>
 							<tr>
-								<th width=200 class="subTitles" align=left>Document
-								Description</th>
-								<th width=100 class="subTitles" align=left>Date</th>
+								<th width=200 class="subTitles" align=left><bean:message key="oscarReport.LabReqReport.msgDocumentDesc"/></th>
+								<th width=100 class="subTitles" align=left><bean:message key="oscarReport.LabReqReport.msgDate"/></th>
 							</tr>
 							<%
                     ArrayList  labRep = demoData.getLabReports(demoData.demoNo, cal.getTime()); 
