@@ -73,9 +73,7 @@
 <html:html locale="true">
 
     <head>
-        <title>
-Clinical Reports 
-        </title>
+        <title><bean:message key="report.ClinicalReports.title"/></title>
         <html:base/>
         <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
         <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
@@ -220,7 +218,7 @@ Clinical Reports
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn" width="100" >
-                Clinical Reports
+                <bean:message key="report.ClinicalReports.title"/>
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -245,18 +243,18 @@ Clinical Reports
             ArrayList<ReportEvaluator> arrList = (ArrayList) session.getAttribute("ClinicalReports");
             if (arrList != null) {
                 %>
-                <a href="ClinicalReports.jsp?clear=yes">Clear</a>
+                <a href="ClinicalReports.jsp?clear=yes"><bean:message key="report.ClinicalReports.msgClear"/></a>
                 <ul style="list-style-type:square; margin-left:1px;padding-left:4px;padding-top:2px;margin-top:2px;">
                     <%     for (int i = 0; i < arrList.size(); i++) {
                         ReportEvaluator re = arrList.get(i);
                     %>
                     <li title="<%=re.getName()%>"><%=re.getNumeratorCount()%> / <%=re.getDenominatorCount()%>&nbsp;
-                        <a style="text-decoration:none;" target="_blank" href="reportExport.jsp?id=<%=i%>" >csv</a>&nbsp;
-                        <a style="text-decoration:none;" href="RemoveClinicalReport.do?id=<%=i%>" >del</a>
+                        <a style="text-decoration:none;" target="_blank" href="reportExport.jsp?id=<%=i%>" ><bean:message key="report.ClinicalReports.msgCSV"/></a>&nbsp;
+                        <a style="text-decoration:none;" href="RemoveClinicalReport.do?id=<%=i%>" ><bean:message key="report.ClinicalReports.msgDel"/></a>
                     </li>
                     <%   }%>
                 </ul>
-                <a style="text-decoration:none;" target="_blank" href="reportExport.jsp" >csv</a>
+                <a style="text-decoration:none;" target="_blank" href="reportExport.jsp" ><bean:message key="report.ClinicalReports.msgCSV"/></a>
                 <%}%>  
                 
             </td>
@@ -268,7 +266,7 @@ Clinical Reports
                             <label for="asOfDate"  >As Of Date:</label><input type="text" name="asOfDate" id="asOfDate" value="<%=""%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
                            -->
                             <fieldset>
-                                <legend>Numerator</legend>
+                                <legend><bean:message key="report.ClinicalReports.msgNumerator"/></legend>
                                 
                                 <select name="numerator" id="numerator" onchange="javascript:processExtraFieldsNumerator(this)">
                                     <%for (Numerator n : numeratorList) {
@@ -293,14 +291,14 @@ Clinical Reports
                                         System.out.println("~~~~~~~~"+numer_val+" ========== "+request.getAttribute("numerator_measurements") );
                                     }
                                     %>
-                                    Value : <input type="text" name="numerator_value" value="<%=numer_val%>"><br> 
+                                    <bean:message key="report.ClinicalReports.msgValue"/> : <input type="text" name="numerator_value" value="<%=numer_val%>"><br> 
                                     
                                 </div>
                                 
                                 <br/>
                             </fieldset> 
                             <fieldset>
-                                <legend>Denominator</legend>
+                                <legend><bean:message key="report.ClinicalReports.msgDenominator"/></legend>
                                 
                                 <select id="denominator" name="denominator"  onchange="javascript:processExtraFields(this)">
                                     <%for (Denominator d : denominatorList) {
@@ -326,16 +324,16 @@ Clinical Reports
                             </fieldset>
                             
                             <fieldset>
-                                <legend>Fields to include</legend>
-                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "lastName")%>  value="lastName" >Last Name</input>
-                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "firstName")%> value="firstName">First Name</input>
-                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "sex")%> value="sex"      >Sex</input>
-                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "phone")%> value="phone"    >Phone #</input>
-                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "address")%> value="address"  >Address</input>
+                                <legend><bean:message key="report.ClinicalReports.Fieldstoinclude"/></legend>
+                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "lastName")%>  value="lastName" ><bean:message key="report.ClinicalReports.msgLastName"/></input>
+                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "firstName")%> value="firstName"><bean:message key="report.ClinicalReports.msgFirstName"/></input>
+                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "sex")%> value="sex"      ><bean:message key="report.ClinicalReports.msgSex"/></input>
+                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "phone")%> value="phone"    ><bean:message key="report.ClinicalReports.msgPhone"/></input>
+                                <input type="checkbox" name="showfields" <%=dchecked((String[]) request.getAttribute("showfields"), "address")%> value="address"  ><bean:message key="report.ClinicalReports.msgAddress"/></input>
                                 <br/>
                                 <%for (int rm = 0; rm < 3; rm++) {%>
                                 <select name="report_measurement<%=rm%>">
-                                    <option value="-1">No Measurement</option>
+                                    <option value="-1"><bean:message key="report.ClinicalReports.msgNoMeasurements"/></option>
                                     <% for (EctMeasurementTypesBean measurementTypes : vec) {%>
                                     <option value="<%=measurementTypes.getType()%>" <%=sel(measurementTypes.getType(), "" + request.getAttribute("report_measurement" + rm))%> ><%=measurementTypes.getTypeDisplayName()%> (<%=measurementTypes.getType()%>) </option>
                                     <% }%>
@@ -349,7 +347,7 @@ Clinical Reports
                             
                             <br/>
                             
-                            <input type="submit" value="Evaluate"/>
+                            <input type="submit" value="<bean:message key="report.ClinicalReports.btnEvaluate"/>"/>
                         </html:form>
                     </fieldset>
                     
@@ -357,11 +355,11 @@ Clinical Reports
                 
                 <% if (request.getAttribute("denominator") != null) {%>
                 <div>
-                    <H3>Results</H3> 
+                    <H3><bean:message key="report.ClinicalReports.msgResults"/></H3> 
                     <ul>
-                        <li>numerator:   <%=request.getAttribute("numerator")%></li>
-                        <li>denominator: <%=request.getAttribute("denominator")%></li>
-                        <li>percentage:  <%=request.getAttribute("percentage")%> %</li>
+                        <li><bean:message key="report.ClinicalReports.msgNumerator"/>:   <%=request.getAttribute("numerator")%></li>
+                        <li><bean:message key="report.ClinicalReports.msgDenominator"/>: <%=request.getAttribute("denominator")%></li>
+                        <li><bean:message key="report.ClinicalReports.msgPercentage"/>:  <%=request.getAttribute("percentage")%> %</li>
                     </ul>
                     CSV:<input type="text" size="30" value="<%=request.getAttribute("csv")%>"/>
                 </div>
@@ -460,8 +458,8 @@ Clinical Reports
             }
                 %>
                 <form  target="_new" action="ClinicalExport.jsp">
-                    <input type="submit" name="getCSV" value="Export to CSV">
-                    <input type="submit" name="getXLS" value="Export to XLS">
+                    <input type="submit" name="getCSV" value="<bean:message key="report.ClinicalReports.msgExporttoCSV"/>">
+                    <input type="submit" name="getXLS" value="<bean:message key="report.ClinicalReports.msgExporttoXLS"/>">
                 </form>
             </td>
         </tr>
