@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -6,7 +7,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties"%>
+<%@ page import="oscar.oscarRx.data.*,oscar.oscarProvider.data.ProviderMyOscarIdData,oscar.oscarDemographic.data.DemographicData,oscar.OscarProperties,oscar.log.*"%>
 <%@ page import="org.oscarehr.common.model.OscarAnnotation" %>
 
 
@@ -14,9 +15,11 @@
 	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"
-	reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" 
+reverse="<%=true%>">
 	<%
+        //LogAction.addLog((String) session.getAttribute("user"), LogConst.NORIGHT+LogConst.READ,  LogConst.CON_PRESCRIPTION, demographic$, request.getRemoteAddr(),demographic$);
+
 		response.sendRedirect("../noRights.html");
 	%>
 </security:oscarSec>
@@ -264,7 +267,7 @@ function load() {
 						<td></td>
 						<td><b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" /></td>
 						<td></td>
-						<td><b>Prefered Pharmacy :</b> <a href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
+						<td><b><bean:message key="SearchDrug.PreferedPharmacy"/> :</b> <a href="javascript: function myFunction() {return false; }" onClick="showpic('Layer1');" id="Calcs"><%=prefPharmacy%></a></td>
 					</tr>
 					<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 						<indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">
@@ -280,8 +283,8 @@ function load() {
 
 			<tr>
 				<td>
-					<div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>) &nbsp;&nbsp;(<a href="#"
-						onclick="$('reprint').toggle();return false;">Reprint</a>)</div>
+					<div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title" /> (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>) &nbsp;&nbsp;(<a href="#"
+						onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>)</div>
 				</td>
 			</tr>
 			<tr>
@@ -326,9 +329,9 @@ function load() {
 						<table width="100%" cellpadding="3">
 							<tr>
 								<th align="left"><b>Rx Date</b></th>
-								<th align="left"><b>Prescription</b></th>
-								<th align="center" width="100px"><b>Represcribe</b></th>
-								<th align="center" width="100px"><b>Delete</b></th>
+								<th align="left"><b><bean:message key="SearchDrug.msgPrescription"/></b></th>
+								<th align="center" width="100px"><b><bean:message key="SearchDrug.msgReprescribe"/></b></th>
+								<th align="center" width="100px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
 								<th align="center" width="20px">&nbsp;</th>
 								<%
 									Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
@@ -339,7 +342,7 @@ function load() {
 									if (integratorEnabled)
 									{
 										%>
-											<td align="center">Location<br />Prescribed</td>
+											<td align="center"><bean:message key="SearchDrug.msgLocationPrescribed"/></td>
 										<%
 									}
 								%>
@@ -452,18 +455,22 @@ function load() {
 									String show = "&show=all";
 										if (showall)
 										{
-								%> <a href="SearchDrug.jsp">Show Current</a> <%
+								%> <a href="SearchDrug.jsp"><bean:message key="SearchDrug.msgShowCurrent"/></a> <%
  	}
  		else
  		{
  			show = "";
- %> <a href="SearchDrug.jsp?show=all">Show All</a> <%
+ %> <a href="SearchDrug.jsp?show=all"><bean:message key="SearchDrug.msgShowAll"/></a> <%
  	}
- %> &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>">Active</a> - <a
-									href="SearchDrug.jsp?status=inactive<%=show%>">Inactive</a> - <a href="SearchDrug.jsp?status=all<%=show%>">All</a></td>
-								<td align="right"><span style="width: 350px; align: right"> <input type="button" name="cmdAllergies" value="View / Edit Allergies" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />
-								<input type="button" name="cmdRePrescribe" value="Represcribe" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" /> <input type="button" name="cmdDelete" value="Delete" class="ControlPushButton"
-									onclick="javascript:Delete();" style="width: 100px" /> </span></td>
+ %> &nbsp;&nbsp;&nbsp; <a href="SearchDrug.jsp?status=active<%=show%>"><bean:message key="SearchDrug.msgActive"/></a> - <a
+									href="SearchDrug.jsp?status=inactive<%=show%>"><bean:message key="SearchDrug.msgInactive"/></a> - <a href="SearchDrug.jsp?status=all<%=show%>"><bean:message key="SearchDrug.msgAll"/></a></td>
+								<td align="right">
+                                                                    <span style="width: 350px; align: right"> 
+                                                                       <input type="button" name="cmdAllergies" value="<bean:message key="SearchDrug.msgViewEditAllergies"/>" class="ControlPushButton" onclick="javascript:window.location.href='ShowAllergies.jsp';" style="width: 100px" />
+								       <input type="button" name="cmdRePrescribe" value="<bean:message key="SearchDrug.msgReprescribe"/>" class="ControlPushButton" onclick="javascript:RePrescribe();" style="width: 100px" /> 
+                                                                       <input type="button" name="cmdDelete" value="<bean:message key="SearchDrug.msgDelete"/>" class="ControlPushButton" onclick="javascript:Delete();" style="width: 100px" /> 
+                                                                    </span>
+                                                                </td>
 							</tr>
 						</table>
 						</div>
@@ -545,10 +552,10 @@ function load() {
 						<tr valign="center">
 							<td><bean:message key="SearchDrug.drugSearchTextBox" /><br>
 							<html:text styleId="searchString" property="searchString" size="16" maxlength="16" /></td>
-							<td width="100"><a href="javascript:goDOC();">Drug of Choice</a> <%
+							<td width="100"><a href="javascript:goDOC();"><bean:message key="SearchDrug.msgDrugOfChoice" /></a> <%
  	if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR"))
  			{
- %> <a href="javascript:goOMD();">OMD Lookup</a> <%
+ %> <a href="javascript:goOMD();"><bean:message key="SearchDrug.msgOMDLookup"/></a> <%
  	}
  %>
 							</td>
@@ -567,8 +574,10 @@ function load() {
 							</oscar:oscarPropertiesCheck></td>
 						</tr>
 						<tr>
-							<td colspan="3"><html:submit property="submit" value="Search" styleClass="ControlPushButton" /> &nbsp;&nbsp;&nbsp; <input type=button class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();"
-								value="Reset" /> <input type="button" class="ControlPushButton" onclick="customWarning();" value="Custom Drug" /></td>
+							<td colspan="3">
+                                                            <html:submit property="submit" styleClass="ControlPushButton"><bean:message key="SearchDrug.msgSearch"/></html:submit> &nbsp;&nbsp;&nbsp; 
+                                                            <input type=button class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="<bean:message key="SearchDrug.msgReset"/>" /> 
+                                                            <input type="button" class="ControlPushButton" onclick="customWarning();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" /></td>
 						</tr>
 					</table>
 				</html:form></td>
@@ -606,10 +615,10 @@ function load() {
 						%>
 						<logic:iterate id="rx" name="bean" property="stash" length="stashSize">
 							<tr>
-								<td><a href="javascript:submitPending(<%=i%>, 'edit');">Edit</a></td>
-								<td><a href="javascript:submitPending(<%=i%>, 'delete');">Delete</a></td>
+								<td><a href="javascript:submitPending(<%=i%>, 'edit');"><bean:message key="SearchDrug.msgEdit"/></a></td>
+								<td><a href="javascript:submitPending(<%=i%>, 'delete');"><bean:message key="SearchDrug.msgDelete"/></a></td>
 								<td><a href="javascript:submitPending(<%=i%>, 'edit');"> <bean:write name="rx" property="rxDisplay" /> </a></td>
-								<td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName()%>');">Info</a></td>
+								<td><a href="javascript:ShowDrugInfo('<%=((oscar.oscarRx.data.RxPrescriptionData.Prescription)rx).getGenericName()%>');"><bean:message key="SearchDrug.msgInfo"/></a></td>
 							</tr>
 							<%
 								i++;
@@ -618,7 +627,7 @@ function load() {
 					</table></element>
 					<br>
 
-					<input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="Save and Print" /></td>
+					<input type="button" class="ControlPushButton" onclick="javascript:window.location.href='viewScript.do';" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" /></td>
 				</tr>
 			</logic:notEqual>
 
@@ -664,54 +673,54 @@ function load() {
 	</tr>
 
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Name</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgName"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.name%></td>
 	</tr>
 
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Address</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgAddress"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.address%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">City</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgCity"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.city%></td>
 	</tr>
 
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Province</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgProvince"/></td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.province%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Postal Code :</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPostalCode"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.postalCode%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Phone 1 :</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone1"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.phone1%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Phone 2 :</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgPhone2"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.phone2%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Fax :</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgFax"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.fax%></td>
 	</tr>
 	<tr class="LightBG">
-		<td class="wcblayerTitle">Email :</td>
+		<td class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgEmail"/> :</td>
 		<td class="wcblayerItem">&nbsp;</td>
 		<td><%=pharmacy.email%></td>
 	</tr>
 	<tr class="LightBG">
-		<td colspan="3" class="wcblayerTitle">Notes :</td>
+		<td colspan="3" class="wcblayerTitle"><bean:message key="SearchDrug.pharmacy.msgNotes"/> :</td>
 	</tr>
 	<tr class="LightBG">
 		<td colspan="3"><%=pharmacy.notes%></td>

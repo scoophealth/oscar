@@ -1,4 +1,4 @@
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%/*
 <!--  
 /*
@@ -36,7 +36,7 @@
 
 <td width="10%" height="100%" valign="top">
 <div class="PropSheetMenu">
-<p class="PropSheetLevel1CurrentItem<%=alle%>">Allergies</p>
+<p class="PropSheetLevel1CurrentItem<%=alle%>"><bean:message key="oscarRx.sideLinks.msgAllergies"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%for (int j=0; j<allergies.length; j++){%>
 
@@ -46,7 +46,7 @@
 <%}%>
 </p>
 
-<p class="PropSheetLevel1CurrentItem">Favorites</p>
+<p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgFavorites"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%
         oscar.oscarRx.data.RxPrescriptionData.Favorite[] favorites = new oscar.oscarRx.data.RxPrescriptionData().getFavorites(bean2.getProviderNo());        
