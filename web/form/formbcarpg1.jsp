@@ -90,7 +90,22 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
 <html:base />
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<style type="text/css">
+<!--
+.demo  {color:#000033; background-color:#cccccc; layer-background-color:#cccccc;
+        position:absolute; top:150px; left:270px; width:120px; height:230px;
+        z-index:99;  visibility:hidden;}
+.demo1  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:40px; left:370px; width:190px; height:80px;
+        z-index:99;  visibility:hidden;}
+.demo2  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:40px; left:320px; width:150px; height:220px;
+        z-index:99;  visibility:hidden;}
+.demo3  {color:#000033; background-color:silver; layer-background-color:#cccccc;
+        position:absolute; top:460px; left:430px; width:180px; height:160px;
+        z-index:99;  visibility:hidden;}
+-->
+</style>
 </head>
 <script type="text/javascript">
 <!--
