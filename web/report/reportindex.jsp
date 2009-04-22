@@ -104,9 +104,11 @@ function go(r) {
   var u = document.report.asdate.value ;
   var v = document.report.aedate.value ;
   var y = document.report.sTime.value ;
-  var z = document.report.eTime.value ;
+  var z = document.report.eTime.value ;  
+  var ro = document.report.rosteredOnly.checked;
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
   var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
+  var x2 = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z + '&rosteredStatus=true';
   var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + document.report.tabDay.value.replace('/', '-');
 
 if (r=='tab')
@@ -117,7 +119,10 @@ else if(r=='new') {
     if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
 	  popupPage(600,750,w);
 	}
-  } else {
+ }
+ else if( ro == true ) {
+        popupPage(600,750,x2);
+  }else {
 	popupPage(600,750,x);
   }
 }
@@ -248,9 +253,9 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 	</tr>
 	<tr>
 		<td width="2"></td>
-		<td width="1">*</td>
-		<td width="300"><a HREF="#" ONCLICK="go('all')"><bean:message
-			key="report.reportindex.btnAllAppt" /></a></td>
+		<td width="1">&nbsp;</td>
+                        <td width="300"><sup>*</sup><a HREF="#" ONCLICK="go('all')"><bean:message
+			key="report.reportindex.btnAllAppt" /></a><br>&nbsp;&nbsp; Non Rostered Only <input type="checkbox" id="rosteredOnly" value="true"> </td>
 		<td><a HREF="#"
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')"><bean:message
 			key="report.reportindex.formFrom" /></a> <input type='text' name="asdate"
@@ -278,8 +283,8 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 	</tr>
 	<tr>
 		<td width="2"></td>
-		<td width="1">*</td>
-		<td width="300"><a HREF="#" ONCLICK="go('new')"
+		<td width="1">&nbsp;</td>
+                    <td width="300"><sup>*</sup><a HREF="#" ONCLICK="go('new')"
 			title="<bean:message key="report.reportindex.msgNewApptsOld"/>"><bean:message
 			key="report.reportindex.btnPrintDaySheet" /></a></td>
 		<td><select name="sdate">
@@ -448,7 +453,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<%
 		cal.add(cal.DATE, 0);
                 String NoShowEDate = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE);
-            	%> Start Date: <input name="nsdate" type="input" size="8"
+            	%> <bean:message key="report.reportindex.msgStart"/>: <input name="nsdate" type="input" size="8"
 			id="NoShowDate" <%=NoShowEDate%>> <a HREF="#"
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.nsdate.value")%>')"><img
 			title=Calendar " src="../images/cal.gif" alt="Calendar" border="0"><a>
@@ -522,7 +527,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		</td>
 		<td width="1"></td>
 		<td width="300"><a href="../oscarReport/demographicSetEdit.jsp"
-			target="_blank">Demographic Set Edit</a></td>
+			target="_blank"><bean:message key="report.reportindex.btnDemoSetEdit"/></a></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -537,8 +542,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		</td>
 		<td width="1"></td>
 		<td width="300"><a
-			href="../oscarPrevention/PreventionReporting.jsp" target="_blank">Prevention
-		Report i18n</a></td>
+			href="../oscarPrevention/PreventionReporting.jsp" target="_blank"><bean:message key="report.reportindex.btnReport18n"/></a></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -576,8 +580,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		</td>
 		<td width="1"></td>
 		<td width="300"><a
-			href="../oscarWaitingList/SetupDisplayWaitingList.do?waitingListId=">Waiting
-		List</a></td>
+			href="../oscarWaitingList/SetupDisplayWaitingList.do?waitingListId="><bean:message key="report.reportindex.btnWaiting"/></a></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -587,7 +590,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<%j++;%>
 		</td>
 		<td width="1"></td>
-		<td width="300"><a href="reportFormRecord.jsp">Form Report</a></td>
+		<td width="300"><a href="reportFormRecord.jsp"><bean:message key="report.reportindex.btnFormReport"/></a></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -600,8 +603,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<%j++;%>
 		</td>
 		<td width="1"></td>
-		<td width="300"><a href="reportBCARDemo.jsp">SCBP Demographic
-		Report</a></td>
+		<td width="300"><a href="reportBCARDemo.jsp"><bean:message key="report.reportindex.btnSCBPDemoRept"/></a></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -610,38 +612,30 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 %>
 
 
-	<tr>
-		<td width="2"><%=j%>
-		<%j++;%>
-		</td>
-		<td width="1"></td>
-		<td width="300"><a href="ClinicalReports.jsp">Clinical Report</a></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
+   <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="ClinicalReports.jsp"><bean:message key="report.reportindex.btnClinicalReport"/> </a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 
-	<tr>
-		<td width="2"><%=j%>
-		<%j++;%>
-		</td>
-		<td width="1"></td>
-		<td width="300"><a href="../oscarReport/InjectionReport2.jsp"
-			target="_blank">Injection Report</a></td>
-		<td></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
-
-	<tr>
-		<td colspan='3' align="left"><input type="button" name="Button"
-			value="<bean:message key="report.reportindex.btnCancel"/>"
-			onClick="window.close()"></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
+     <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="../oscarReport/InjectionReport2.jsp" target="_blank"><bean:message key="report.reportindex.btnInjectionReport"/></a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+        <tr>
+        <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
 </body>
 </form>

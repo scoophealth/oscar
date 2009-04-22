@@ -17,7 +17,7 @@
  * Yi Li
  */
 -->
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%@ page import="java.util.*, oscar.oscarDemographic.data.ProvinceNames"
 	errorPage="errorpage.jsp"%>
@@ -33,7 +33,7 @@
 <html lang="en">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Report List</title>
+<title><bean:message key="oscarReport.oscarReportscpbDemo.title" /></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
@@ -91,15 +91,15 @@
 	action="reportBCARDemo2.jsp">
 <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="80%">
 	<tr BGCOLOR="#CCFFFF">
-		<th>Client Database Report</th>
+		<th><bean:message key="oscarReport.oscarReportscpbDemo.msgHeader"/></th>
 	</tr>
 </table>
 </center>
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr bgcolor="silver">
 		<td><input type="hidden" name="demoReport" value="1"> <input
-			type="submit" name="submit" value="Report in HTML"> | <input
-			type="submit" name="submit" value="Report in CSV"> BCAR: <input
+			type="submit" name="submit" value="<bean:message key="oscarReport.oscarReportscpbDemo.btnHTML"/>"> | <input
+			type="submit" name="submit" value="<bean:message key="oscarReport.oscarReportscpbDemo.btnCSV"/>"> BCAR: <input
 			type="radio" name="bcartype" value="BCAR" /> BCAR2007: <input
 			type="radio" id="bcartype" checked name="bcartype" value="BCAR2007" />
 </table>
@@ -110,67 +110,67 @@
 
 		<table width="100%" border="0" cellspacing="2" cellpadding="0">
 			<tr bgcolor="#EEdddd">
-				<td colspan="2" align="center">Data Field</td>
+				<td colspan="2" align="center"><bean:message key="oscarReport.oscarReportscpbDemo.msgColHeader" /></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right" width="10%"><b><input type="checkbox"
 					name="last_name"></b></td>
-				<td>Last Name</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgLastName"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="first_name"></b></td>
-				<td>First Name</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgFirstName"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="date_joined"></b></td>
-				<td>Date Joined</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgDateJoined"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="hin"></b>
 				</td>
-				<td>PHN</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgPHN"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="hc_type"></b>
 				</td>
-				<td>Province</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgProvince"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="address"></b>
 				</td>
-				<td>Address</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgAddress"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="city"></b>
 				</td>
-				<td>City</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgCity"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="postal"></b>
 				</td>
-				<td>Postal Code</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgPostalCode"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="phone"></b>
 				</td>
-				<td>Phone (H)</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgHPhone"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="phone2"></b>
 				</td>
-				<td>Phone (W)</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgWPhone"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="email"></b>
 				</td>
-				<td>Email</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgEmail"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="prefer_language"></b></td>
-				<td nowrap>Preferred Language</td>
+				<td nowrap><bean:message key="oscarReport.oscarReportscpbDemo.msgPrefLang"/></td>
 			</tr>
 
 			<% if(oscarVariables.getProperty("demographicExt") != null) {
@@ -186,7 +186,7 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="c_EDD"></b>
 				</td>
-				<td>EDD</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgEDD"/></td>
 			</tr>
 			<!--  tr bgcolor="#EEEEFF">
             <td align="right">
@@ -199,12 +199,12 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="pg1_famPhy"></b></td>
-				<td>Family Physician</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgFamPhys"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="pg1_partnerName"></b></td>
-				<td>Partner's Name</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgPartner"/></td>
 			</tr>
 		</table>
 
@@ -212,12 +212,12 @@
 		<td valign="top"><!-- right hand -->
 		<table width="100%" border="0" cellspacing="2" cellpadding="2">
 			<tr bgcolor="#EEdddd">
-				<td colspan="3" align="center">Limitation</td>
+				<td colspan="3" align="center"><bean:message key="oscarReport.oscarReportscpbDemo.msgLimit"/></td>
 			</tr>
 			<tr bgcolor="#EEEEFF">
 				<td align="right" width="6%"><b><input type="checkbox"
 					name="filter_1" checked></b></td>
-				<td>Active Clients</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgActiveClient"/></td>
 				<td width="1%" align="right"><input type="hidden"
 					name="value_1" value="demographic.patient_status='AC'"> <input
 					type="hidden" name="position_1" value="sql"> <input
@@ -227,7 +227,7 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox" name="filter_2"></b>
 				</td>
-				<td>Inactive Clients</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgInActiveClient"/></td>
 				<td align="right"><input type="hidden" name="value_2"
 					value="demographic.patient_status='IN'"> <input
 					type="hidden" name="position_2" value="sql"> <input
@@ -237,7 +237,7 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="filter_3"></b>
 				</td>
-				<td>Delivered Clients</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgDeliveredClient"/></td>
 				<td align="right"><input type="hidden" name="value_3"
 					value="formBCAR.demographic_no in (select distinct demographic_no from formBCBirthSumMo)">
 				<input type="hidden" name="position_3" value="sql"> <input
@@ -247,9 +247,9 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox" name="filter_4"></b>
 				</td>
-				<td>Date of Birth between <input type="text" name="startDate4"
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgDOB"/> <input type="text" name="startDate4"
 					id="startDate4" value="" size="10" readonly><img
-					src="../images/cal.gif" id="startDate4_cal"> and <input
+					src="../images/cal.gif" id="startDate4_cal"> <bean:message key="oscarReport.oscarReportscpbDemo.msgAnd"/> <input
 					type="text" name="endDate4" id="endDate4" value="" size="10"
 					readonly><img src="../images/cal.gif" id="endDate4_cal">
 				</td>
@@ -262,9 +262,9 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox" name="filter_8"></b>
 				</td>
-				<td>EDD between <input type="text" name="startDate8"
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgEDDbetween"/> <input type="text" name="startDate8"
 					id="startDate8" value="" size="10" readonly><img
-					src="../images/cal.gif" id="startDate8_cal"> and <input
+					src="../images/cal.gif" id="startDate8_cal"> <bean:message key="oscarReport.oscarReportscpbDemo.msgAnd"/> <input
 					type="text" name="endDate8" id="endDate8" value="" size="10"
 					readonly><img src="../images/cal.gif" id="endDate8_cal">
 				</td>
@@ -277,9 +277,9 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox"
 					name="filter_12"></b></td>
-				<td>Individual Client Search: <font size="-1">(Last
-				Name) <input type="text" name="pLastName12" value="" size="15">,
-				(First Name) <input type="text" name="pFirstName12" value=""
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgIndyClientSearch"/>: <font size="-1"><bean:message key="oscarReport.oscarReportscpbDemo.msgLNameBracket"/>
+				 <input type="text" name="pLastName12" value="" size="15">,
+				<bean:message key="oscarReport.oscarReportscpbDemo.msgFNameBracket"/> <input type="text" name="pFirstName12" value=""
 					size="15"></font></td>
 				<td align="right"><input type="hidden" name="value_12"
 					value="demographic.last_name like '${pLastName12}%' and demographic.first_name like '${pFirstName12}%'">
@@ -290,7 +290,7 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="filter_14"></b></td>
-				<td>Primiparous (T=0 and P=0)</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgPrimiparous"/></td>
 				<td align="right"><input type="hidden" name="value_14"
 					value="formBCAR.pg1_term =0 and formBCAR.pg1_preterm =0"> <input
 					type="hidden" name="position_14" value="sql"> <input
@@ -310,7 +310,7 @@
 			<tr bgcolor="#EEEEFF">
 				<td align="right"><b><input type="checkbox"
 					name="filter_16"></b></td>
-				<td>Either (G>0)</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgEither"/></td>
 				<td align="right"><input type="hidden" name="value_16"
 					value="formBCAR.pg1_gravida >0"> <input type="hidden"
 					name="position_16" value="sql"> <input type="hidden"
@@ -320,9 +320,9 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox"
 					name="filter_100"></b></td>
-				<td>Approximate EDD between <input type="text"
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgApproxEDD"/> <input type="text"
 					name="startDate100" id="startDate100" value="" size="10" readonly><img
-					src="../images/cal.gif" id="startDate100_cal"> and <input
+					src="../images/cal.gif" id="startDate100_cal"> <bean:message key="oscarReport.oscarReportscpbDemo.msgAnd"/> <input
 					type="text" name="endDate100" id="endDate100" value="" size="10"
 					readonly><img src="../images/cal.gif" id="endDate100_cal">
 				</td>
@@ -357,7 +357,7 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox"
 					name="filter_200"></b></td>
-				<td>Province <select name="province">
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgProvince"/> <select name="province">
 					<option value="OT"
 						<%=prov.equals("") || prov.equals("OT")?" selected":""%>>Other</option>
 					<% if (pNames.isDefined()) {
@@ -407,8 +407,8 @@
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr bgcolor="silver">
 		<td><input type="hidden" name="id" value="1"> <input
-			type="submit" name="submit" value="Report in HTML"> | <input
-			type="submit" name="submit" value="Report in CSV"></td>
+			type="submit" name="submit" value="<bean:message key="oscarReport.oscarReportscpbDemo.btnHTML"/>"> | <input
+			type="submit" name="submit" value="<bean:message key="oscarReport.oscarReportscpbDemo.btnCSV"/>"></td>
 		</form>
 </table>
 

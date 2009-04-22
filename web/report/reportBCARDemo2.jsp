@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page
 	import="java.util.*, oscar.oscarReport.data.*, java.sql.*, oscar.login.*, java.net.*"
 	errorPage="../appointment/errorpage.jsp"%>
@@ -25,17 +26,18 @@ DBHelp dbObj = new DBHelp();
 Properties propDemoSelect = new Properties();
 Properties propSpecSelect = new Properties();
 Properties propARSelect = new Properties();
-propDemoSelect.setProperty("last_name", "Last Name");
-propDemoSelect.setProperty("first_name", "First Name");
-propDemoSelect.setProperty("date_joined", "Date Joined");
-propDemoSelect.setProperty("hin", "Health Ins.");
-propDemoSelect.setProperty("hc_type", "HC Type");
-propDemoSelect.setProperty("address", "Address");
-propDemoSelect.setProperty("city", "City");
-propDemoSelect.setProperty("postal", "Postal Code");
-propDemoSelect.setProperty("phone", "Phone (H)");
-propDemoSelect.setProperty("phone2", "Phone (W)");
-propDemoSelect.setProperty("email", "Email");
+ResourceBundle recprop = ResourceBundle.getBundle("oscarResources");
+propDemoSelect.setProperty("last_name", recprop.getString("oscarReport.oscarReportscpbDemo.msgLastName"));
+propDemoSelect.setProperty("first_name", recprop.getString("oscarReport.oscarReportscpbDemo.msgFirstName"));
+propDemoSelect.setProperty("date_joined", recprop.getString("oscarReport.oscarReportscpbDemo.msgDateJoined"));
+propDemoSelect.setProperty("hin", recprop.getString("oscarReport.oscarReportscpbDemo.msgHIN"));
+propDemoSelect.setProperty("hc_type", recprop.getString("oscarReport.oscarReportscpbDemo.msgHINType"));
+propDemoSelect.setProperty("address", recprop.getString("oscarReport.oscarReportscpbDemo.msgAddress"));
+propDemoSelect.setProperty("city", recprop.getString("oscarReport.oscarReportscpbDemo.msgCity"));
+propDemoSelect.setProperty("postal", recprop.getString("oscarReport.oscarReportscpbDemo.msgPostalCode"));
+propDemoSelect.setProperty("phone", recprop.getString("oscarReport.oscarReportscpbDemo.msgHPhone"));
+propDemoSelect.setProperty("phone2", recprop.getString("oscarReport.oscarReportscpbDemo.msgWPhone"));
+propDemoSelect.setProperty("email", recprop.getString("oscarReport.oscarReportscpbDemo.msgEmail"));
 Vector vecSeqDemoSelect = new Vector();
 vecSeqDemoSelect.add("last_name");
 vecSeqDemoSelect.add("first_name");
@@ -50,7 +52,7 @@ vecSeqDemoSelect.add("phone2");
 vecSeqDemoSelect.add("email");
 
 Vector vecSeqSpecSelect = new Vector();
-propSpecSelect.setProperty("prefer_language", "Preferred Language");
+propSpecSelect.setProperty("prefer_language", recprop.getString("oscarReport.oscarReportscpbDemo.msgPrefLang"));
 if(oscarVariables.getProperty("demographicExt") != null) {
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int i=0; i<propDemoExt.length; i++) {
@@ -59,17 +61,17 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 	}
 }
 
-propARSelect.setProperty("c_EDD", "EDD");
-propARSelect.setProperty("pg1_famPhy", "Family Physician");
-propARSelect.setProperty("pg1_partnerName", "Partner Name");
+propARSelect.setProperty("c_EDD", recprop.getString("oscarReport.oscarReportscpbDemo.msgEDD"));
+propARSelect.setProperty("pg1_famPhy", recprop.getString("oscarReport.oscarReportscpbDemo.msgFamPhys"));
+propARSelect.setProperty("pg1_partnerName", recprop.getString("oscarReport.oscarReportscpbDemo.msgPartner"));
 Vector vecSeqARSelect = new Vector();
 vecSeqARSelect.add("c_EDD");
 vecSeqARSelect.add("ga");
 vecSeqARSelect.add("pg1_famPhy");
 vecSeqARSelect.add("pg1_partnerName");
 
-propARSelect.setProperty("ga", "GA Today");
-propARSelect.setProperty("b_primiparous", "Primiparous");
+propARSelect.setProperty("ga", recprop.getString("oscarReport.oscarReportscpbDemo.msgGA"));
+propARSelect.setProperty("b_primiparous", recprop.getString("oscarReport.oscarReportscpbDemo.msgPrimiparous"));
 
 //get selection
 boolean bDemoSelect = false;
@@ -477,7 +479,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 <html lang="en">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Report List</title>
+<title><bean:message key="oscarReport.oscarReportscpbDemo.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <LINK REL="StyleSheet" HREF="../web.css" TYPE="text/css">
@@ -527,9 +529,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="90%">
 	<tr>
-		<th BGCOLOR="#CCFFFF">Client Database Report</th>
-		<th width="10%" nowrap><a href=# onclick="history.back();">Back
-		to Report</a></th>
+		<th BGCOLOR="#CCFFFF"><bean:message key="oscarReport.oscarReportscpbDemo.msgHeader"/></th>
+		<th width="10%" nowrap><a href=# onclick="history.back();">
+		<bean:message key="oscarReport.oscarReportscpbDemo.btnBack"/></a></th>
 	</tr>
 </table>
 
@@ -537,7 +539,7 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 	class="sortable tabular_list">
 	<thead>
 		<tr BGCOLOR="#66CCCC">
-			<th width="6%">No.</th>
+			<th width="6%"><bean:message key="oscarReport.oscarReportscpbDemo.msgNoHeader"/></th>
 			<% for(int i=0; i<vecFieldCaption.size(); i++) { %>
 			<th><%=(String) vecFieldCaption.get(i)%></th>
 			<% } %>
