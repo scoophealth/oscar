@@ -92,12 +92,11 @@ function setfocus() {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr bgcolor="#CCCCFF">
-		<th align=CENTER NOWRAP><font face="Helvetica"><bean:message
-			key="report.reportpatientchartlist.msgTitle" /></font></th>
-		<th width="10%" nowrap><input type="button" name="Button"
-			value="Print" onClick="window.print()"><input type="button"
-			name="Button" value="<bean:message key="global.btnExit" />"
-			onClick="window.close()"></th>
+		<th align=CENTER NOWRAP><font face="Helvetica"><bean:message key="report.reportpatientchartlist.msgTitle" /></font></th>
+		<th width="10%" nowrap>
+                    <input type="button" name="Button" value="<bean:message key="global.btnPrint"/>" onClick="window.print()">
+                    <input type="button" name="Button" value="<bean:message key="global.btnExit" />" onClick="window.close()">
+                </th>
 	</tr>
 </table>
 <%
