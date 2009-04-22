@@ -515,24 +515,20 @@ function popupAttachDemo(demographic){ // open a new popup window
 
 						<tr>
 							<td bgcolor="#B8B8FF"></td>
-							<td bgcolor="#B8B8FF"><font style="font-weight: bold">Link
-							this message to ...</font></td>
+							<td bgcolor="#B8B8FF"><font style="font-weight: bold"><bean:message key="oscarMessenger.CreateMessage.msgLinkThisMessage" /></font></td>
 						</tr>
-
+                                                        
 						<tr>
 							<td bgcolor="#EEEEFF"></td>
-							<td bgcolor="#EEEEFF"><input type="text" name="keyword"
-								size="30" /> <input type="hidden" name="demographic_no"
-								value="<%=demographic_no%>" /> <input type="button"
-								class="ControlPushButton" name="searchDemo"
-								value="Search Demographic"
-								onclick="popupSearchDemo(document.forms[0].keyword.value)" /></td>
+							<td bgcolor="#EEEEFF">
+                                                            <input type="text" name="keyword" size="30" /> <input type="hidden" name="demographic_no" value="<%=demographic_no%>" /> 
+                                                            <input type="button" class="ControlPushButton" name="searchDemo" value="<bean:message key="oscarMessenger.CreateMessage.msgSearchDemographic" />" onclick="popupSearchDemo(document.forms[0].keyword.value)" />
+                                                        </td>
 
 						</tr>
 						<tr>
 							<td bgcolor="#EEEEFF"></td>
-							<td bgcolor="#EEEEFF"><font style="font-weight: bold">Selected
-							Demographic</font></td>
+							<td bgcolor="#EEEEFF"><font style="font-weight: bold"><bean:message key="oscarMessenger.CreateMessage.msgSelectedDemographic" /></font></td>
 						</tr>
 
 						<%
@@ -556,10 +552,10 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                 }
                                             </script> <input type="button"
 								class="ControlPushButton" name="clearDemographic"
-								value="Clear selected demographic"
+								value="<bean:message key="oscarMessenger.CreateMessage.msgClearSelectedDemographic" />"
 								onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"' />
 							<input type="button" class="ControlPushButton" name="attachDemo"
-								value="Attach Demographic"
+								value="<bean:message key="oscarMessenger.CreateMessage.msgAttachDemographic" />"
 								onclick="popupAttachDemo(document.forms[0].demographic_no.value)"
 								style="display: " /></td>
 
