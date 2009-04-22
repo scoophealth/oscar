@@ -531,7 +531,7 @@ var beginD = "1900-01-01"
 
 
           <!-- -->
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Assigned To </b></font>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b><bean:message key="tickler.ticklerMain.msgAssignedTo"/></b></font>
         <select id="assignedTo" name="assignedTo">
         <option value="%" <%=assignedTo.equals("all")?"selected":""%>><bean:message key="tickler.ticklerMain.formAllProviders"/></option>
         <%
@@ -554,7 +554,7 @@ var beginD = "1900-01-01"
         <input type="hidden" name="Submit" value="">
         <input type="button" value="<bean:message key="tickler.ticklerMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
         &nbsp;
-        <input type="button" value="Save View" class="mbttn" onclick="saveView();">
+        <input type="button" value="<bean:message key="tickler.ticklerMain.msgSaveView"/>" class="mbttn" onclick="saveView();">
         </font>
         </td>
     </tr>
