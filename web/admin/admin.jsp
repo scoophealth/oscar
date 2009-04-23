@@ -261,27 +261,27 @@ div.logoutBox {
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
 			<li><a href="#"
-				onclick='popupPage(300,600,&quot;<html:rewrite page="/admin/providerAddRole.jsp"/>&quot;);return false;'>Add
-			A Role</a></li>
+				onclick='popupPage(300,600,&quot;<html:rewrite page="/admin/providerAddRole.jsp"/>&quot;);return false;'>
+			<bean:message key="admin.admin.addRole"/></a></li>
 		</security:oscarSec>
 		<li><a href="#"
-			onclick='popupPage(500,700,&quot;<html:rewrite page="/admin/providerRole.jsp"/>&quot;);return false;'>Assign
-		Role to Provider</a></li>
+			onclick='popupPage(500,700,&quot;<html:rewrite page="/admin/providerRole.jsp"/>&quot;);return false;'>
+		<bean:message key="admin.admin.assignRole"/></a></li>
 		<li><a href="#"
-			onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/providerPrivilege.jsp"/>&quot;);return false;'>Assign
-		Role/Rights to Object</a></li>
+			onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/providerPrivilege.jsp"/>&quot;);return false;'>
+		<bean:message key="admin.admin.assignRightsObject"/></a></li>
 
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_admin,_admin.securityLogReport" rights="r">
 			<li><a href="#"
-				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/logReport.jsp"/>?keyword=admin&quot;);return false;'>Security
-			Log Report</a></li>
+				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/logReport.jsp"/>?keyword=admin&quot;);return false;'>
+			<bean:message key="admin.admin.securityLogReport"/></a></li>
 		</security:oscarSec>
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_admin,_admin.unlockAccount" rights="r">
 			<li><a href="#"
-				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/unLock.jsp" />&quot;);return false;'>Unlock
-			Account</a></li>
+				onclick='popupPage(500,800,&quot;<html:rewrite page="/admin/unLock.jsp" />&quot;);return false;'>
+			<bean:message key="admin.admin.unlockAcct"/></a></li>
 		</security:oscarSec>
 	</ul>
 	</div>
@@ -291,32 +291,24 @@ div.logoutBox {
 	<security:oscarSec roleName="<%=roleName$%>"
 		objectName="_admin.cookieRevolver" rights="r">
 		<div class="adminBox">
-		<h3>&nbsp;2 Factor Authentication</h3>
+		<h3>&nbsp; <bean:message key="admin.admin.titleFactorAuth"/></h3>
 		<ul>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/ip/show');return false;">Set
-			IP filter (no super certificate)</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/ip/show');return false;"><bean:message key="admin.admin.ipFilter"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/cert/?act=super');return false;">Set
-			super certificate</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/cert/?act=super');return false;"><bean:message key="admin.admin.setCert"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/supercert');return false;">Generate
-			super certificate</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/supercert');return false;"><bean:message key="admin.admin.genCert"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/clear');return false;">Clear
-			user cookie and super-cert cookie</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/clear');return false;"><bean:message key="admin.admin.clearCookie"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/quest/adminQuestions');return false;">Administrate
-			security questions</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/quest/adminQuestions');return false;"><bean:message key="admin.admin.adminSecQuestions"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/policyadmin/select');return false;">Administrate
-			security policies</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/policyadmin/select');return false;"><bean:message key="admin.admin.adminSecPolicies"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/banremover/show');return false;">Remove
-			bans</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/banremover/show');return false;"><bean:message key="admin.admin.removeBans"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate
-			matrix cards</a></li>
+				onclick="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;"><bean:message key="admin.admin.genMatrixCards"/></a></li>
 		</ul>
 		</div>
 	</security:oscarSec>
@@ -334,8 +326,8 @@ div.logoutBox {
 			<li><html:link action="/SystemMessage.do">
 				<bean:message key="admin.admin.systemMessage" />
 			</html:link></li>
-			<li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
-			<li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
+			<li><html:link action="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></html:link></li>
+			<li><html:link action="/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor" /></html:link></li>
 			<li><html:link action="/issueAdmin.do?method=list">
 				<bean:message key="admin.admin.issueEditor" />
 			</html:link></li>
@@ -363,11 +355,11 @@ div.logoutBox {
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_admin.facilityMessage" rights="r" reverse="<%=false%>">
-				<li><html:link action="/FacilityMessage.do?">Facilities Messages</html:link></li>
+				<li><html:link action="/FacilityMessage.do?"><bean:message key="admin.admin.FacilitiesMsgs"/></html:link></li>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_admin.lookupFieldEditor" rights="r">
-				<li><html:link action="/Lookup/LookupTableList.do"> Lookup Field Editor</html:link></li>
+				<li><html:link action="/Lookup/LookupTableList.do"> <bean:message key="admin.admin.LookupFieldEditor"/></html:link></li>
 			</security:oscarSec>
 			<security:oscarSec roleName="<%=roleName$%>"
 				objectName="_admin.issueEditor" rights="r">
@@ -426,76 +418,57 @@ div.logoutBox {
 
 			<% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
 			<li><a href="#"
-				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/manageBillingform.jsp"/>&quot;);return false;'>Manage
-			Billing Form</a></li>
+				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/manageBillingform.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillFrm"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>&quot;);return false;'>Manage
-			Private Bill</a></li>
+				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManagePrivFrm"/></a></li>
 			<oscar:oscarPropertiesCheck property="BC_BILLING_CODE_MANAGEMENT"
 				value="yes">
 				<li><a href="#"
-					onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingCodeAdjust.jsp"/>&quot;);return false;'>Manage
-				Billing Codes</a></li>
+					onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillCodes"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<li><a href="#"
-				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/showServiceCodeAssocs.do"/>&quot;);return false;'>Manage
-			Service/Diagnostic Code Associations</a></li>
+				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/showServiceCodeAssocs.do"/>&quot;);return false;'><bean:message key="admin.admin.ManageServiceDiagnosticCodeAssoc"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(600,500,&quot;<html:rewrite page="/billing/CA/BC/supServiceCodeAssocAction.do"/>&quot;);return false;'>Manage
-			Procedure/Fee Code Associations</a></li>
+				onclick='popupPage(600,500,&quot;<html:rewrite page="/billing/CA/BC/supServiceCodeAssocAction.do"/>&quot;);return false;'><bean:message key="admin.admin.ManageProcedureFeeCodeAssoc"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/billingManageReferralDoc.jsp"/>&quot;);return false;'>Manage
-			Referral Doc</a></li>
+				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/billingManageReferralDoc.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageReferralDoc"/></a></li>
 			<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no"
 				defaultVal="true">
 				<li><a href="#"
-					onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/billingSim.jsp"/>&quot;);return false;'>Simulate
-				Submission File</a></li>
+					onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/billingSim.jsp"/>&quot;);return false;'><bean:message key="admin.admin.SimulateSubFile"/></a></li>
 				<li><a href="#"
-					onclick='popupPage(800,720,&quot;<html:rewrite page="/billing/CA/BC/billingTeleplanGroupReport.jsp"/>&quot;);return false;'>Generate
-				Teleplan File</a></li>
+					onclick='popupPage(800,720,&quot;<html:rewrite page="/billing/CA/BC/billingTeleplanGroupReport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.genTeleplanFile"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="yes">
 				<li><a href="#"
-					onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/TeleplanSimulation.jsp"/>&quot;);return false;'>Simulate
-				Submission File2</a></li>
+					onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/BC/TeleplanSimulation.jsp"/>&quot;);return false;'><bean:message key="admin.admin.simulateSubFile2"/></a></li>
 				<li><a href="#"
-					onclick='popupPage(800,720,&quot;<html:rewrite page="/billing/CA/BC/TeleplanSubmission.jsp"/>&quot;);return false;'>Generate
-				Teleplan File2</a></li>
+					onclick='popupPage(800,720,&quot;<html:rewrite page="/billing/CA/BC/TeleplanSubmission.jsp"/>&quot;);return false;'><bean:message key="admin.admin.genTeleplanFile2"/></a></li>
 				<li><a href="#"
-					onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>&quot;);return false;'>Manage
-				Teleplan</a></li>
+					onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>&quot;);return false;'><bean:message key="admin.admin.manageTeleplan"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no"
 				defaultVal="true">
 				<li><a href="#"
-					onclick='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/billingTA.jsp"/>&quot;);return false;'>Upload
-				Remittance Files</a></li>
+					onclick='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/billingTA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadRemittance"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<li><a href="#"
-				onclick='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/viewReconcileReports.jsp"/>&quot;);return false;'>MSP
-			Reconcilliation Reports</a></li>
+				onclick='popupPage(600,800,&quot;<html:rewrite page="/billing/CA/BC/viewReconcileReports.jsp"/>&quot;);return false;'><bean:message key="admin.admin.reconciliationReports"/></a></li>
 			<li><a href="#"
-				onclick='popUpBillStatus(375,425,&quot;<html:rewrite page="/billing/CA/BC/billingAccountReports.jsp"/>&quot;);return false;'>Accounting
-			Reports</a></li>
+				onclick='popUpBillStatus(375,425,&quot;<html:rewrite page="/billing/CA/BC/billingAccountReports.jsp"/>&quot;);return false;'><bean:message key="admin.admin.AccountingRpts"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'>Edit
-			Invoices</a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/BC/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.editInvoices"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(200,300,&quot;<html:rewrite page="/billing/CA/BC/settleBG.jsp"/>&quot;);return false;'>Settle
-			Over/Under paid Claims</a></li>
+				onclick='popupPage(200,300,&quot;<html:rewrite page="/billing/CA/BC/settleBG.jsp"/>&quot;);return false;'><bean:message key="admin.admin.settlePaidClaims"/></a></li>
 			<% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
 			<li><a href="#"
-				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>&quot;);return false;'>Upload
-			Schedule Of Benefits</a></li>
+				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.scheduleOfBenefits"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/addEditServiceCode.jsp"/>&quot;);return false;'>Manage
-			Billing Service Code</a></li>
+				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/addEditServiceCode.jsp"/>&quot;);return false;'><bean:message key="admin.admin.manageBillingServiceCode"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/billingONEditPrivateCode.jsp"/>&quot;);return false;'>Manage
-			Private Billing Code</a></li>
-			<li><html:link page="/admin/../admin/gstControl.jsp">Manage GST Control</html:link></li>
-			<li><html:link page="/admin/../admin/gstreport.jsp">GST Report</html:link></li>
+				onclick='popupPage(300,600,&quot;<html:rewrite page="/billing/CA/ON/billingONEditPrivateCode.jsp"/>&quot;);return false;'><bean:message key="admin.admin.managePrivBillingCode"/></a></li>
+			<li><html:link page="/admin/../admin/gstControl.jsp"><bean:message key="admin.admin.manageGSTControl"/></html:link></li>
+			<li><html:link page="/admin/../admin/gstreport.jsp"><bean:message key="admin.admin.gstReport"/></html:link></li>
 			<li><a href="#"
 				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/CA/ON/manageBillingLocation.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnAddBillingLocation" /></a></li>
@@ -515,16 +488,14 @@ div.logoutBox {
 				onclick='popupPage(700,640,&quot;<html:rewrite page="/billing/CA/ON/inr/reportINR.jsp"/>?provider_no=all&quot;);return false;'><bean:message
 				key="admin.admin.btnINRBatchBilling" /></a></li>
 			<li><a href="#"
-				onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingONUpload.jsp"/>&quot;);return false;'>Upload
-			MOH files</a></li>
+				onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingONUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadMOHFile"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/servlet/oscar.DocumentUploadServlet"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnBillingReconcilliation" /></a></li>
 			<!--  li><a href="#" onclick ='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/ON/billingRA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li-->
 			<!--  li><a href="#" onclick ='popupPage(600,1000,&quot;<html:rewrite page="/billing/CA/ON/billingOBECEA.jsp"/>&quot;);return false;'><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'>Invoice
-			Reports</a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/billing/CA/ON/billStatus.jsp"/>&quot;);return false;'><bean:message key="admin.admin.invoiceRpts"/></a></li>
 
 			<%}%>
 		</ul>
@@ -559,8 +530,7 @@ div.logoutBox {
 				key="admin.admin.btnQueryByExample" /></a></li>
 			<%}%>
 			<li><a href="#"
-				onclick='popup(600,900,&quot;<html:rewrite page="/oscarReport/reportByTemplate/homePage.jsp"/>&quot;, "reportbytemplate")'>Report
-			by Template</a></li>
+				onclick='popup(600,900,&quot;<html:rewrite page="/oscarReport/reportByTemplate/homePage.jsp"/>&quot;, "reportbytemplate")'><bean:message key="admin.admin.rptbyTemplate"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(600,900,&quot;<html:rewrite page="/oscarReport/dbReportAgeSex.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnAgeSexReport" /></a></li>
@@ -587,20 +557,17 @@ div.logoutBox {
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarSurveillance/ReportSurveillance.jsp"/>&quot;)"><bean:message
 				key="admin.admin.report.SurveillanceReport" /></a></li>
 			<li><a href="#"
-				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportRehabStudy.jsp"/>&quot;)">Rehab
-			Study</a></li>
+				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportRehabStudy.jsp"/>&quot;)"><bean:message key="admin.admin.rehabStudy"/></a></li>
 			<li><a href="#"
-				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/patientlist.jsp"/>&quot;)">Export
-			Patient List by Appointment Time</a></li>
-			<li><html:link page="/oscarReport/TrackedLinks.jsp">Link Tracking Report</html:link></li>
-			<li><html:link page="/PMmodule/reports/activity_report_form.jsp">Activity Report</html:link></li>
+				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/patientlist.jsp"/>&quot;)"><bean:message key="admin.admin.exportPatientbyAppt"/></a></li>
+			<li><html:link page="/oscarReport/TrackedLinks.jsp"><bean:message key="admin.admin.linkTrackingRpt"/></html:link></li>
+			<li><html:link page="/PMmodule/reports/activity_report_form.jsp"><bean:message key="admin.admin.activityRpt"/></html:link></li>
 			<li><html:link
-				page="/oscarReport/provider_service_report_form.jsp">Provider Service Report</html:link></li>
-			<li><html:link page="/PopulationReport.do">Population Report</html:link></li>
+				page="/oscarReport/provider_service_report_form.jsp"><bean:message key="admin.admin.providerServiceRpt"/></html:link></li>
+			<li><html:link page="/PopulationReport.do"><bean:message key="admin.admin.popRpt"/></html:link></li>
 			<oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
 				<li><a href="#"
-					onclick="popupPage(600,900, &quot;<html:rewrite page="/admin/oscarLogging.jsp"/>&quot;)">Server
-				Logging</a></li>
+					onclick="popupPage(600,900, &quot;<html:rewrite page="/admin/oscarLogging.jsp"/>&quot;)"><bean:message key="admin.admin.serverLog"/></a></li>
 			</oscar:oscarPropertiesCheck>
 		</ul>
 		</div>
@@ -649,7 +616,7 @@ div.logoutBox {
 			<li><html:link page="/admin/../eform/efmimagemanager.jsp">
 				<bean:message key="admin.admin.btnUploadImage" />
 			</html:link></li>
-			<li><html:link page="/admin/../eform/efmmanageformgroups.jsp">Form Groups</html:link></li>
+			<li><html:link page="/admin/../eform/efmmanageformgroups.jsp"><bean:message key="admin.admin.frmGroups"/></html:link></li>
 		</ul>
 		</div>
 	</security:oscarSec>
@@ -682,14 +649,11 @@ div.logoutBox {
 		<h3>&nbsp;<bean:message key="admin.admin.misc" /></h3>
 		<ul>
 			<li><a href="#"
-				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'>Clinic
-			Admin</a></li>
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/ManageClinic.do"/>&quot;);return false;'><bean:message key="admin.admin.clinicAdmin"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicExport.jsp"/>&quot;);return false;'>Demographic
-			Export <!-- I18N --></a></li>
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/demographic/demographicExport.jsp"/>&quot;);return false;'><bean:message key="admin.admin.DemoExport"/> <!-- I18N --></a></li>
 			<li><a href="#"
-				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/demographicmergerecord.jsp"/>&quot;);return false;'>Demographic
-			Merge Records</a></li>
+				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/demographicmergerecord.jsp"/>&quot;);return false;'><bean:message key="admin.admin.mergeRec"/></a></li>
 			<li><a href="#"
 				onclick='popupPage(550,800,&quot;<html:rewrite page="/admin/updatedemographicprovider.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnUpdatePatientProvider" /></a></li>
@@ -702,33 +666,28 @@ div.logoutBox {
 				key="admin.admin.btnStudy" /></a></li>
 			<%   if (oscarVariables.getProperty("billregion","").equals("ON")){  %>
 			<li><a href="#"
-				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilledphcp.jsp"/>&quot;);return false;'>PHCP</a>
+				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilledphcp.jsp"/>&quot;);return false;'><bean:message key="admin.admin.PHCP"/></a>
 			<span style="font-size: x-small;"> (Setting: <a href="#"
-				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilledvisitprovider.jsp"/>&quot;);return false;'>provider</a>,
+				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilledvisitprovider.jsp"/>&quot;);return false;'><bean:message key="admin.admin.provider"/></a>,
 			<a href="#"
-				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilleddxgrp.jsp"/>&quot;);return false;'>dx
+				onclick='popupPage(660,1000,&quot;<html:rewrite page="/report/reportonbilleddxgrp.jsp"/>&quot;);return false;'><bean:message key="admin.admin.dx"/>
 			category</a>) </span></li>
 			<% } } %>
 			<oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes"
 				defaultVal="false">
 				<li><a href="#"
-					onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/BC/LabUpload.jsp"/>&quot;);return false;'>Lab
-				Upload</a></li>
+					onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/BC/LabUpload.jsp"/>&quot;);return false;'><bean:message key="admin.admin.oldLabUpload"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/ALL/testUploader.jsp"/>&quot;);return false;'>HL7
-			Lab Upload</a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/lab/CA/ALL/testUploader.jsp"/>&quot;);return false;'><bean:message key="admin.admin.hl7LabUpload"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/oscarKeys/keyGen.jsp"/>&quot;);return false;'>Key
-			Pair Generator</a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/oscarKeys/keyGen.jsp"/>&quot;);return false;'><bean:message key="admin.admin.keyPairGen"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'>Lab
-			Forwarding Rules</a></li>
+				onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/labforwardingrules.jsp"/>&quot;);return false;'><bean:message key="admin.admin.labFwdRules"/></a></li>
 			<%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
 		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
 			<li><a href="#"
-				onclick='popupPage(400,600,&quot;<html:rewrite page="/admin/RecommitHSFO.do"/>?method=showSchedule&quot;);return false;'>schedule
-			HSFO XML resubmit</a></li>
+				onclick='popupPage(400,600,&quot;<html:rewrite page="/admin/RecommitHSFO.do"/>?method=showSchedule&quot;);return false;'><bean:message key="admin.admin.hsfoSubmit"/></a></li>
 			<%} %>
 
 		</ul>
