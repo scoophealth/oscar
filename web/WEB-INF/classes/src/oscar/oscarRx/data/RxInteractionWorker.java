@@ -31,7 +31,7 @@ package oscar.oscarRx.data;
 import java.util.Vector;
 
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 
 /**
  *
@@ -52,7 +52,7 @@ public class RxInteractionWorker extends Thread {
     public void run() {
         System.out.println("STARTING THREAD");
 
-        LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+        LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
         long start = System.currentTimeMillis();
 
@@ -75,7 +75,7 @@ public class RxInteractionWorker extends Thread {
             e.printStackTrace();
         }
         finally {
-    		LoggedInUserFilter.loggedInInfo.remove();
+    		LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         long end = System.currentTimeMillis() - start;

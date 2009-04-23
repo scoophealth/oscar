@@ -24,7 +24,7 @@
 package oscar.oscarMessenger.data;
 
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.comm.client.SendMessageClient;
 import oscar.oscarDB.DBHandler;
@@ -179,7 +179,7 @@ public  class MsgRemoteMessageData extends Thread{
 
          public void run(){
      		
-     		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+     		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
     		try {
                 int i = 0;
@@ -211,7 +211,7 @@ public  class MsgRemoteMessageData extends Thread{
                 }
             }
             finally {
-    			LoggedInUserFilter.loggedInInfo.remove();
+    			LoggedInInfo.loggedInInfo.remove();
                 DbConnectionFilter.releaseThreadLocalDbConnection();
             }
 

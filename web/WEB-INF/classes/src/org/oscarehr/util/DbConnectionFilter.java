@@ -51,7 +51,8 @@ public class DbConnectionFilter implements javax.servlet.Filter {
         if (c == null || c.isClosed()) {
             c = SpringUtils.getDbConnection();
             dbConnection.set(c);
-            debugMap.put(Thread.currentThread(), (new Exception()).getStackTrace());
+            Thread currentThread=Thread.currentThread();
+            debugMap.put(currentThread, currentThread.getStackTrace());
         }
 
         return(c);

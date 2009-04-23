@@ -31,14 +31,14 @@ import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 
@@ -69,7 +69,7 @@ public class BedProgramDischargeTask extends TimerTask {
 
 	@Override
 	public void run() {
-		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 		try {
             log.info("start bed program discharge task");
 
@@ -118,7 +118,7 @@ public class BedProgramDischargeTask extends TimerTask {
         	log.debug("BedProgramDischargeTask noticed shutdown signaled.");
         }
         finally {
-			LoggedInUserFilter.loggedInInfo.remove();
+			LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
 	}

@@ -16,7 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.LazyValidatorForm;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -121,7 +121,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
 
         public void execute(JobExecutionContext ctx) throws JobExecutionException {
 
-    		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+    		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
     		try {
                 XMLTransferUtil tfutil = new XMLTransferUtil();
@@ -171,7 +171,7 @@ public class RecommitHSFOAction extends DispatchActionSupport {
                 e.printStackTrace();
             }
             finally {
-    			LoggedInUserFilter.loggedInInfo.remove();
+    			LoggedInInfo.loggedInInfo.remove();
                 DbConnectionFilter.releaseThreadLocalDbConnection();
             }
         }

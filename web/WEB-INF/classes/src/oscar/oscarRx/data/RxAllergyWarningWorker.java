@@ -29,7 +29,7 @@
 package oscar.oscarRx.data;
 
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.oscarRx.pageUtil.RxSessionBean;
 
@@ -56,7 +56,7 @@ public class RxAllergyWarningWorker extends Thread {
     public void run() {
         System.out.println("STARTING THREAD - RxAllergyWarningWorker ");
 
-		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
         long start = System.currentTimeMillis();
 
@@ -79,7 +79,7 @@ public class RxAllergyWarningWorker extends Thread {
             e.printStackTrace();
         }
         finally {
-    		LoggedInUserFilter.loggedInInfo.remove();
+    		LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
         long end = System.currentTimeMillis() - start;

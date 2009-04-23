@@ -31,13 +31,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 
@@ -66,7 +66,7 @@ public class ErProgramDischargeTask extends TimerTask {
     }
 
     public void run() {
-		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
 		try {
             log.debug("running ErProgramDischargeTask");
@@ -134,7 +134,7 @@ public class ErProgramDischargeTask extends TimerTask {
         	log.debug("ErProgramDischargeTask noticed shutdown hook.");
         }
         finally {
-    		LoggedInUserFilter.loggedInInfo.remove();
+    		LoggedInInfo.loggedInInfo.remove();
             DbConnectionFilter.releaseThreadLocalDbConnection();
         }
     }

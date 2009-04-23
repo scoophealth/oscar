@@ -18,8 +18,7 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.oscarehr.util.LoggedInUserFilter;
-import org.oscarehr.util.LoggedInUserFilter.LoggedInInfo;
+import org.oscarehr.util.LoggedInInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -62,43 +61,20 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 
 		StringBuilder auditTrail = new StringBuilder();
 
-		LoggedInInfo loggedInInfo = LoggedInUserFilter.loggedInInfo.get();
-		if (loggedInInfo.internalThreadDescription != null) auditTrail.append("oscar_caisi.thread=").append(loggedInInfo.internalThreadDescription);
-
-		if (loggedInInfo.loggedInProvider != null) {
-			if (auditTrail.length() > 0) auditTrail.append(", ");
-
-			String callingUIPage = attemptToExtrapolateCallingUIPage();
-			if (callingUIPage != null) {
-				auditTrail.append(callingUIPage);
-				auditTrail.append(", ");
-			}
-
-			auditTrail.append("oscar_caisi.providerNo=");
-			auditTrail.append(loggedInInfo.loggedInProvider.getProviderNo());
-		}
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.initiatingCode != null) auditTrail.append("oscar_caisi.code=").append(loggedInInfo.initiatingCode);
 
 		if (loggedInInfo.currentFacility != null) {
 			if (auditTrail.length() > 0) auditTrail.append(", ");
+			auditTrail.append("oscar_caisi.facilityId=").append(loggedInInfo.currentFacility.getId());
+		}
 
-			auditTrail.append("oscar_caisi.facilityId=");
-			auditTrail.append(loggedInInfo.currentFacility.getId());
+		if (loggedInInfo.loggedInProvider != null) {
+			if (auditTrail.length() > 0) auditTrail.append(", ");
+			auditTrail.append("oscar_caisi.providerNo=").append(loggedInInfo.loggedInProvider.getProviderNo());
 		}
 
 		headers.add(createHeader(auditTrail.toString()));
-	}
-
-	private static String attemptToExtrapolateCallingUIPage() {
-		Exception exception = new Exception();
-		for (StackTraceElement stackLine : exception.getStackTrace()) {
-			String fullClassName = stackLine.getClass().getName();
-			String fileName = stackLine.getFileName();
-			if (fullClassName.startsWith("org.apache.jsp.") || fileName.endsWith("_jsp.java")) {
-				return (fullClassName + '.' + stackLine.getMethodName());
-			}
-		}
-
-		return (null);
 	}
 
 	private static Header createHeader(String value) {

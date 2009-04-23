@@ -83,7 +83,7 @@ import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
-import org.oscarehr.util.LoggedInUserFilter;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
@@ -151,7 +151,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	public void run() {
 		logger.debug("CaisiIntegratorUpdateTask starting");
 
-		LoggedInUserFilter.setLoggedInInfoToCurrentClassName();
+		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 
 		try {
 			pushAllFacilities();
@@ -160,7 +160,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		} catch (Exception e) {
 			logger.error("unexpected error occurred", e);
 		} finally {
-			LoggedInUserFilter.loggedInInfo.remove();
+			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 
 			logger.debug("CaisiIntegratorUpdateTask finished");

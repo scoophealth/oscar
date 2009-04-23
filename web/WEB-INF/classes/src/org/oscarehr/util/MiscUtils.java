@@ -152,9 +152,8 @@ public class MiscUtils {
 	 */
 	public static Logger getLogger()
 	{
-		Throwable t = new Throwable();
-		StackTraceElement[] ste = t.getStackTrace();
-		String caller = ste[1].getClassName();
+		StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+		String caller = ste[2].getClassName();
 		return(Logger.getLogger(caller));
 	}
 }
