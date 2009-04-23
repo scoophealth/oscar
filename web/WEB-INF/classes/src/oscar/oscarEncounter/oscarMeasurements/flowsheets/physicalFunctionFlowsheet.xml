@@ -25,7 +25,8 @@
            ds_rules="diab.drl" 
            dxcode_triggers="icd9:847,icd9:427,icd9:428,icd9:491,icd9:436,icd9:300,icd9:250,icd9:492,icd9:428,icd9:401,icd9:724,icd9:340,icd9:715,icd9:733,icd9:332,icd9:714,icd9:436" 
            warning_colour="#FF6160"
-           recommendation_colour="yellow">
+           recommendation_colour="yellow"
+           top_HTML="physicalFunction.html">
     
     <indicator key="LOW" colour="#9999FF"/>
     <indicator key="HIGH" colour="orange"/>
@@ -61,7 +62,7 @@
         measurement_type="TUG"
         display_name="Timed Up and Go"
         guideline="Time to stand up, walk 3m, turn around, walk back to chair,sit down"
-        graphable="no"
+        graphable="yes"
         value_name="# of Seconds"
         >   
          <rules>  
@@ -71,8 +72,8 @@
         </item>
         <item
         measurement_type="RPHR"
-        display_name="PHR Reviewed"
-        guideline=""
+        display_name="Personal Health Record reviewed"
+        guideline="Personal Health Record reviewed"
         graphable="no"
         value_name="PHR Reviewed"
         >   
@@ -81,10 +82,10 @@
             <recommendation strength="warning" monthrange="-1"/>
         </rules>
         </item>
-        
+       
         <item
         measurement_type="CDMP"
-        display_name="Attend CDSMP"
+        display_name="Attended CDM Self Management Program"
         guideline="Attend Chronic Disease Self-Management Program"
         graphable="no"
         value_name="Attend CDSMP"
