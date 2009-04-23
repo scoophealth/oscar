@@ -120,6 +120,7 @@
         <include name="**/*.txt" />
         <include name="**/*.pdf" />
         <include name="**/*.jrxml" />
+        <include name="**/*.html"/>
  </patternset> 
  
  <target name="web" depends="init">
