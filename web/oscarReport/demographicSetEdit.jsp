@@ -109,11 +109,11 @@ function disableifchecked(ele,nextDate){
 <!--  -->
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="100">demographic</td>
+		<td class="MainTableTopRowLeftColumn" width="100"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDemographic"/></td>
 		<td class="MainTableTopRowRightColumn">
 		<table class="TopStatusBar">
 			<tr>
-				<td>Set Edit</td>
+				<td><bean:message key="oscarReport.oscarReportDemoSetEdit.msgSetEdit"/></td>
 				<td>&nbsp;</td>
 				<td style="text-align: right"><a
 					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
@@ -130,32 +130,32 @@ function disableifchecked(ele,nextDate){
 		<td class="MainTableLeftColumn" valign="top">&nbsp;</td>
 		<td valign="top" class="MainTableRightColumn"><html:form
 			action="/report/DemographicSetEdit">
-			<div>Patient Set: <html:select property="patientSet">
-				<html:option value="-1">--Select Set--</html:option>
+			<div><bean:message key="oscarReport.oscarReportDemoSetEdit.msgPatientSet"/>: <html:select property="patientSet">
+				<html:option value="-1"><bean:message key="oscarReport.oscarReportDemoSetEdit.msgOptionSet"/></html:option>
 				<% for ( int i = 0 ; i < sets.size(); i++ ){  
                             String s = (String) sets.get(i);%>
 				<html:option value="<%=s%>"><%=s%></html:option>
 				<%}%>
-			</html:select> <input type="submit" value="Display Set" /></div>
+			</html:select> <input type="submit" value="<bean:message key="oscarReport.oscarReportDemoSetEdit.btnDisplaySet"/>" /></div>
 
 		</html:form> <%if( request.getAttribute("SET") != null ) {
                    ArrayList list = (ArrayList) request.getAttribute("SET");
                    String setName = (String) request.getAttribute("setname");%>
 		<div><html:form action="/report/SetEligibility">
-			<input type="submit" value="Set Ineligible" /> Check patients to set ineligible and click "Set Ineligible"<br>
-                        <input type="submit" name="delete" value="Delete"/>Check patients to Delete
+			<input type="submit" value="<bean:message key="oscarReport.oscarReportDemoSetEdit.btnSetIneligible"/>" /> <bean:message key="oscarReport.oscarReportDemoSetEdit.msgIneligible"/><br>
+                        <input type="submit" name="delete" value="<bean:message key="oscarReport.oscarReportDemoSetEdit.btnDelete"/>"/><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDelete"/>
                    <input type="hidden" name="setName"
 				value="<%=setName%>" />
 			<table class="ele">
 				<tr>
 					<th>&nbsp;</th>
-					<th>Demo #</th>
-					<th>Name</th>
-					<th>DOB</th>
-					<th>Age</th>
-					<th>Roster Status</th>
-					<th>Doctor</th>
-					<th>Eligibility</th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDemo"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgName"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDOB"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgAge"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgRoster"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgDoctor"/></th>
+					<th><bean:message key="oscarReport.oscarReportDemoSetEdit.msgEligibility" /></th>
 				</tr>
 				<%for (int i=0; i < list.size(); i++){ 
                      Hashtable h = (Hashtable) list.get(i);
@@ -190,9 +190,10 @@ function disableifchecked(ele,nextDate){
 </html:html>
 <%!
 String elle(Object s){
-    String ret = "Eligible";
+    ResourceBundle prop = ResourceBundle.getBundle("oscarResources");
+    String ret = prop.getString("oscarReport.oscarReportDemoSetEdit.msgStatusEligibile");
     if (s != null && s instanceof String && ((String) s).equals("1")){
-        ret = "Ineligible";
+        ret = prop.getString("oscarReport.oscarReportDemoSetEdit.msgStatusIneligibile");
     }
     return ret;
 }

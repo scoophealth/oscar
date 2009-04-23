@@ -25,7 +25,7 @@
  */
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -43,7 +43,7 @@
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName='<%="_demographic$"+demographic$%>' rights="o"
 	reverse="<%=false%>">
-You have no rights to access the data!
+<bean:message key="demographic.demographiceditdemographic.accessDenied"/>
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
@@ -60,7 +60,7 @@ You have no rights to access the data!
 	scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -240,7 +240,7 @@ function checkName() {
 	if(document.updatedelete.last_name.value!="" && document.updatedelete.first_name.value!="" && document.updatedelete.last_name.value!=" " && document.updatedelete.first_name.value!=" ") {
 	    typeInOK = true;
 	} else {
-		alert ("You must type in the following fields: Last Name, First Name.");
+		alert ("<bean:message key="demographic.demographiceditdemographic.msgNameRequired"/>");
     }
 	return typeInOK;
 }
@@ -272,11 +272,11 @@ function checkDob() {
 
 
 	if (!typeInOK){
-      alert ("You must type in the right DOB.");
+      alert ("<bean:message key="demographic.search.msgWrongDOB"/>");
    }
 
    if (!isValidDate(dd,mm,yyyy)){
-      alert ("DOB Date is an incorrect date");
+      alert ("<bean:message key="demographic.demographiceditdemographic.msgWrongDate"/>");
       typeInOK = false;
    }
    //alert( isValidDate(dd,mm,yyyy) );
@@ -298,7 +298,7 @@ function checkHin() {
 
 	if (!isValidHin(hin, province))
 	{
-		alert ("You must type in the right HIN.");
+		alert ("<bean:message key="demographic.demographiceditdemographic.msgWrongHIN"/>");
 		return(false);
 	}
 
@@ -330,7 +330,7 @@ function formatPhoneNum() {
 function checkONReferralNo() {
   var referralNo = document.updatedelete.r_doctor_ohip.value ;
   if (document.updatedelete.hc_type.value == 'ON' && referralNo.length > 0 && referralNo.length != 6) {
-    alert("The referral doctor's no. is wrong. Please correct it!") ;
+    alert("<bean:message key="demographic.demographiceditdemographic.msgWrongReferral"/>") ;
   }
 }
 
@@ -348,22 +348,22 @@ function referralScriptAttach2(elementName, name2) {
 }
 
 function newStatus() {
-    newOpt = prompt("Please enter the new status:", "");
+    newOpt = prompt("<bean:message key="demographic.demographiceditdemographic.msgPromptStatus"/>:", "");
     if (newOpt != "") {
         document.updatedelete.patient_status.options[document.updatedelete.patient_status.length] = new Option(newOpt, newOpt);
         document.updatedelete.patient_status.options[document.updatedelete.patient_status.length-1].selected = true;
     } else {
-        alert("Invalid entry");
+        alert("<bean:message key="demographic.demographiceditdemographic.msgInvalidEntry"/>");
     }
 }
 
 function newStatus1() {
-    newOpt = prompt("Please enter the new status:", "");
+    newOpt = prompt("<bean:message key="demographic.demographiceditdemographic.msgPromptStatus"/>:", "");
     if (newOpt != "") {
         document.updatedelete.roster_status.options[document.updatedelete.roster_status.length] = new Option(newOpt, newOpt);
         document.updatedelete.roster_status.options[document.updatedelete.roster_status.length-1].selected = true;
     } else {
-        alert("Invalid entry");
+        alert("<bean:message key="demographic.demographiceditdemographic.msgInvalidEntry"/>");
     }
 }
 
@@ -586,8 +586,8 @@ div.demographicWrapper {
                                                 if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
                         %> <%=apptMainBean.getString(rs,"last_name")%>,
 				<%=apptMainBean.getString(rs,"first_name")%> <%=apptMainBean.getString(rs,"sex")%>
-				<%=age%> years <span style="margin-left: 20px;"><i>Next
-				Appointment: <oscar:nextAppt
+				<%=age%> years <span style="margin-left: 20px;"><i>
+				 <bean:message key="demographic.demographiceditdemographic.msgNextAppt"/>: <oscar:nextAppt
 					demographicNo='<%=apptMainBean.getString(rs,"demographic_no")%>' /></i></span>
 				</td>
 			</tr>
@@ -598,7 +598,7 @@ div.demographicWrapper {
 		<td class="MainTableLeftColumn" valign="top">
 		<table border=0 cellspacing=0 width="100%">
 			<tr class="Header">
-				<td style="font-weight: bold">Appointment</td>
+				<td style="font-weight: bold"><bean:message key="demographic.demographiceditdemographic.msgAppt"/></td>
 			</tr>
 			<tr>
 				<td><a
@@ -615,8 +615,8 @@ div.demographicWrapper {
                 %>
 			<tr>
 				<td><a
-					href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>">Waiting
-				List</a></td>
+					href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>">
+				<bean:message key="demographic.demographiceditdemographic.msgWaitList"/></a></td>
 			</tr>
 			<%}%>
 			<tr class="Header">
@@ -632,12 +632,12 @@ div.demographicWrapper {
 				</th>
 				<% } else if("ON".equals(prov)) {%>
 				<a href="javascript: function myFunction() {return false; }"
-					onClick="popupPage(500,600,'../billing/CA/ON/billinghistory.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing
-				History</a>
+					onClick="popupPage(500,600,'../billing/CA/ON/billinghistory.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&last_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&first_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">
+				<bean:message key="demographic.demographiceditdemographic.msgBillHistory"/></a>
 				<%}else{%>
 				<a href="#"
-					onclick="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp?lastName=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&firstName=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&filterPatient=true&demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');return false;">Invoice
-				List</a>
+					onclick="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp?lastName=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&firstName=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&filterPatient=true&demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');return false;">
+				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/></a>
 				<%}%>
 				</td>
 			</tr>
@@ -646,7 +646,7 @@ div.demographicWrapper {
 				<td><a
 					href="javascript: function myFunction() {return false; }"
 					onClick="popupPage(700, 1000, '../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>%2C<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;"
-					title="bill a patient">Create Invoice</a></td>
+					title="<bean:message key="demographic.demographiceditdemographic.msgBillPatient"/>"><bean:message key="demographic.demographiceditdemographic.msgCreateInvoice"/></a></td>
 			</tr>
 			<%    if("ON".equals(prov)) {
                 	       String default_view = oscarVariables.getProperty("default_view", "");
@@ -656,21 +656,21 @@ div.demographicWrapper {
 				<td><a
 					href="javascript: function myFunction() {return false; }"
 					onClick="window.open('../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=apptMainBean.getString(rs,"demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>%2C<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&hin=<%=URLEncoder.encode(apptMainBean.getString(rs,"hin")!=null?apptMainBean.getString(rs,"hin"):"")%><%=URLEncoder.encode(apptMainBean.getString(rs,"ver")!=null?apptMainBean.getString(rs,"ver"):"")%>&demo_sex=<%=URLEncoder.encode(apptMainBean.getString(rs,"sex"))%>&demo_hctype=<%=URLEncoder.encode(apptMainBean.getString(rs,"hc_type")==null?"null":apptMainBean.getString(rs,"hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(apptMainBean.getString(rs,"year_of_birth")),Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")),Integer.parseInt(apptMainBean.getString(rs,"date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=720,height=500');return false;"
-					title='Add Flu Billing'>Flu Billing</a></td>
+					title='<bean:message key="demographic.demographiceditdemographic.msgAddFluBill"/>'><bean:message key="demographic.demographiceditdemographic.msgFluBilling"/></a></td>
 			</tr>
 			<% } %>
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
 					onClick="popupS('../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>%2C<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;"
-					title="bill a patient">Hospital Billing</a></td>
+					title="<bean:message key="demographic.demographiceditdemographic.msgBillPatient"/>"><bean:message key="demographic.demographiceditdemographic.msgHospitalBilling"/></a></td>
 			</tr>
 
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
 					onClick="window.open('../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid=<%=apptMainBean.getString(rs,"demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>%2C<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&hin=<%=URLEncoder.encode(apptMainBean.getString(rs,"hin")!=null?apptMainBean.getString(rs,"hin"):"")%><%=URLEncoder.encode(apptMainBean.getString(rs,"ver")!=null?apptMainBean.getString(rs,"ver"):"")%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(apptMainBean.getString(rs,"year_of_birth")),Integer.parseInt(apptMainBean.getString(rs,"month_of_birth")),Integer.parseInt(apptMainBean.getString(rs,"date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;"
-					title='Add INR Billing'>Add INR</a>
+					title='<bean:message key="demographic.demographiceditdemographic.msgAddINRBilling"/>'><bean:message key="demographic.demographiceditdemographic.msgAddINR"/></a>
 				</th>
 				</td>
 			</tr>
@@ -678,7 +678,7 @@ div.demographicWrapper {
 				<td><a
 					href="javascript: function myFunction() {return false; }"
 					onClick="window.open('../billing/CA/ON/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;"
-					title='INR Billing'>Bill INR</a>
+					title='<bean:message key="demographic.demographiceditdemographic.msgINRBilling"/>'><bean:message key="demographic.demographiceditdemographic.msgINRBill"/></a>
 				</th>
 				</td>
 			</tr>
@@ -716,27 +716,27 @@ div.demographicWrapper {
 						style="text-decoration: none;" href="#"
 						onmouseover="return !showMenu('1', event);">+</a>
 					<div id='menu1' class='menu' onclick='event.cancelBubble = true;'>
-					<h3 style='text-align: center'>Encounter Type</h3>
+					<h3 style='text-align: center'><bean:message key="demographic.demographiceditdemographic.msgEncType"/></h3>
 					<br>
 					<ul>
 						<li><a href="#" onmouseover='this.style.color="black"'
 							onmouseout='this.style.color="white"'
-							onclick="return add2url('face to face encounter with client');">face
-						to face encounter with client</a><br>
+							onclick="return add2url('<bean:message key="oscarEncounter.faceToFaceEnc.title"/>');"><bean:message key="oscarEncounter.faceToFaceEnc.title"/>
+						</a><br>
 						</li>
 						<li><a href="#" onmouseover='this.style.color="black"'
 							onmouseout='this.style.color="white"'
-							onclick="return add2url('telephone encounter with client');">telephone
-						encounter with client</a><br>
+							onclick="return add2url('<bean:message key="oscarEncounter.telephoneEnc.title"/>');"><bean:message key="oscarEncounter.telephoneEnc.title"/>
+						</a><br>
 						</li>
 						<li><a href="#" onmouseover='this.style.color="black"'
 							onmouseout='this.style.color="white"'
-							onclick="return add2url('encounter without client');">encounter
-						without client</a><br>
+							onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');">oscarEncounter.noClientEnc.title
+						</a><br>
 						</li>
 						<li><a href="#" onmouseover='this.style.color="black"'
 							onmouseout='this.style.color="white"'
-							onclick="return customReason();">Custom</a></li>
+							onclick="return customReason();"><bean:message key="demographic.demographiceditdemographic.msgCustom"/></a></li>
 						<li id="listCustom" style="display: none;"><input
 							id="txtCustom" type="text" size="16" maxlength="32"
 							onkeypress="return grabEnterCustomReason(event);"></li>
@@ -760,11 +760,11 @@ div.demographicWrapper {
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
-					onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>','msg')">Send
-				a Message</a></td>
+					onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>','msg')">
+				<bean:message key="demographic.demographiceditdemographic.msgSendMsg"/></a></td>
 			</tr>
                         <tr>
-                            <td> <a href="#" onclick="popup(300,300,'demographicCohort.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>', 'cohort'); return false;">Add Patient Set</a>
+                            <td> <a href="#" onclick="popup(300,300,'demographicCohort.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>', 'cohort'); return false;"><bean:message key="demographic.demographiceditdemographic.msgAddPatientSet"/></a>
                             </td>
                         </tr>
 			<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
@@ -774,7 +774,7 @@ div.demographicWrapper {
 						<td><a
 							href="javascript: function myFunction() {return false; }"
 							ONCLICK="popupOscarRx(600,900,'../phr//PhrMessage.do?method=createMessage&providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"
-							title="myOscar">Send Message to PHR</a></td>
+							title="myOscar"><bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/></a></td>
 					</tr>
 				</phr:indivoRegistered>
 			</oscar:oscarPropertiesCheck>
@@ -849,7 +849,7 @@ div.demographicWrapper {
                             if (vLocale.getCountry().equals("BR"))
                                 dboperation = "search_detail_ptbr";
                                 
-                            %><b>Record</b> ( <%if (head.equals(demographic_no)){
+                            %><b><bean:message key="demographic.demographiceditdemographic.msgRecord"/></b> ( <%if (head.equals(demographic_no)){
                                     %><%=demographic_no%>
 						<%
                                 }else{
@@ -876,7 +876,7 @@ div.demographicWrapper {
 						<div class="demographicWrapper" style="background-color: #EEEEFF;">
 						<div style="width: 49%; float: left;">
 						<div class="demographicSection" style="margin-top: 2px;">
-						<h3>&nbsp;Demographics</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgDemographic"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<li><bean:message
@@ -884,24 +884,24 @@ div.demographicWrapper {
 							<bean:message
 								key="demographic.demographiceditdemographic.formFirstName" />: <b>
 							<%=apptMainBean.getString(rs,"first_name")%></b></li>
-							<li>Title:<b><%=apptMainBean.getString(rs,"title")%></b> &nbsp;
+							<li><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>:<b><%=apptMainBean.getString(rs,"title")%></b> &nbsp;
 							    <bean:message key="demographic.demographiceditdemographic.formSex" />:<b><%=apptMainBean.getString(rs,"sex")%></b>
 							</li>
-							<li>Age:<b><%=age%></b> &nbsp; <bean:message
+							<li><bean:message key="demographic.demographiceditdemographic.msgDemoAge"/>:<b><%=age%></b> &nbsp; <bean:message
 								key="demographic.demographiceditdemographic.formDOB" />:<b>(<%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)</b>
 							</li>
-							<li>Language: <b><%= apptMainBean.getString(rs,"official_lang")%></b>
+							<li><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: <b><%= apptMainBean.getString(rs,"official_lang")%></b>
 						<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
                                                         CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
                                                         if  (countryCode != null){
-                                                    %> Country Of
-							Origin: <b><%=countryCode.getCountryName() %></b> <%      }
+                                                    %>
+							<bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: <b><%=countryCode.getCountryName() %></b> <%      }
                                                     }
                                                 %>
 							</li>
 						<% String sp_lang = apptMainBean.getString(rs,"spoken_lang");
 						   if (sp_lang!=null && sp_lang.length()>0) { %>
-							<li>Spoken Language: <b><%=sp_lang%></b>
+							<li><bean:message key="demographic.demographiceditdemographic.msgSpokenLang"/>: <b><%=sp_lang%></b>
 							</li>
 						<% }
 						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
@@ -918,10 +918,10 @@ div.demographicWrapper {
 						</div>
 
 						<div class="demographicSection">
-						<h3>&nbsp;Other Contacts: <b><a
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
-							onClick="popup(700,960,'AddAlternateContact.jsp?demo=<%=apptMainBean.getString(rs,"demographic_no")%>','AddRelation')">Add
-						Relation<!--i18n--></a></b></h3>
+							onClick="popup(700,960,'AddAlternateContact.jsp?demo=<%=apptMainBean.getString(rs,"demographic_no")%>','AddRelation')">
+						<bean:message key="demographic.demographiceditdemographic.msgAddRelation"/><!--i18n--></a></b></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<%DemographicRelationship demoRelation = new DemographicRelationship();
@@ -941,7 +941,7 @@ div.demographicWrapper {
 						</div>
 
 						<div class="demographicSection">
-						<h3>&nbsp;Clinic Status</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgClinicStatus"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<li><bean:message
@@ -993,7 +993,7 @@ if ( PatStat.equals(Dead) ) {%>
 						</div>
 						<div style="width: 49%; float: left; margin-left: 5px;">
 						<div class="demographicSection" style="margin-top: 2px;">
-						<h3>&nbsp;Contact Information</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgContactInfo"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<li><bean:message
@@ -1039,7 +1039,7 @@ if ( PatStat.equals(Dead) ) {%>
 						</div>
 
 						<div class="demographicSection">
-						<h3>&nbsp;Health Insurance</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<li><bean:message
@@ -1055,7 +1055,7 @@ if ( PatStat.equals(Dead) ) {%>
 						</div>
 
 						<div class="demographicSection">
-						<h3>&nbsp;Patient Clinic Status</h3>
+						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgPatientClinicStatus"/></h3>
 						<div style="background-color: #EEEEFF;">
 						<ul>
 							<li>
@@ -1133,30 +1133,30 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 							    <td align="left">
 					<% String title = apptMainBean.getString(rs,"title"); %>
 								<select name="title" onchange="checkTitleSex();">
-                                                                    <option value="" <%=title.equals("")?"selected":""%> >-Not Set-</option>
-								    <option value="MS" <%=title.equals("MS")?"selected":""%> >MS</option>
-								    <option value="MISS" <%=title.equals("MISS")?"selected":""%> >MISS</option>
-								    <option value="MRS" <%=title.equals("MRS")?"selected":""%> >MRS</option>
-								    <option value="MR" <%=title.equals("MR")?"selected":""%> >MR</option>
-								    <option value="MSSR" <%=title.equals("MSSR")?"selected":""%> >MSSR</option>
-								    <option value="PROF" <%=title.equals("PROF")?"selected":""%> >PROF</option>
-								    <option value="REEVE" <%=title.equals("REEVE")?"selected":""%> >REEVE</option>
-								    <option value="REV" <%=title.equals("REV")?"selected":""%> >REV</option>
-								    <option value="RT_HON" <%=title.equals("RT_HON")?"selected":""%> >RT_HON</option>
-								    <option value="SEN" <%=title.equals("SEN")?"selected":""%> >SEN</option>
-								    <option value="SGT" <%=title.equals("SGT")?"selected":""%> >SGT</option>
-								    <option value="SR" <%=title.equals("SR")?"selected":""%> >SR</option>
+                                                                    <option value="" <%=title.equals("")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
+								    <option value="MS" <%=title.equals("MS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMs"/></option>
+								    <option value="MISS" <%=title.equals("MISS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMiss"/></option>
+								    <option value="MRS" <%=title.equals("MRS")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMrs"/></option>
+								    <option value="MR" <%=title.equals("MR")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMr"/></option>
+								    <option value="MSSR" <%=title.equals("MSSR")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgMssr"/></option>
+								    <option value="PROF" <%=title.equals("PROF")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgProf"/></option>
+								    <option value="REEVE" <%=title.equals("REEVE")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgReeve"/></option>
+								    <option value="REV" <%=title.equals("REV")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgRev"/></option>
+								    <option value="RT_HON" <%=title.equals("RT_HON")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgRtHon"/></option>
+								    <option value="SEN" <%=title.equals("SEN")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgSen"/></option>
+								    <option value="SGT" <%=title.equals("SGT")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgSgt"/></option>
+								    <option value="SR" <%=title.equals("SR")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgSr"/></option>
 								</select>
 							    </td>
-							  <td align="right"><b>Language: </b> </td>
+							  <td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: </b> </td>
 							    <td align="left">
 					<% String lang = apptMainBean.getString(rs,"official_lang"); %>
 								<select name="official_lang">
-								    <option value="English" <%=lang.equals("English")?"selected":""%> >English</option>
-								    <option value="French" <%=lang.equals("French")?"selected":""%> >French</option>
+								    <option value="English" <%=lang.equals("English")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgEnglish"/></option>
+								    <option value="French" <%=lang.equals("French")?"selected":""%> ><bean:message key="demographic.demographiceditdemographic.msgFrench"/></option>
 								</select>
 								&nbsp;&nbsp;
-								<b>Spoken: </b>
+								<b><bean:message key="demographic.demographiceditdemographic.msgSpoken"/>: </b>
 								<input name="spoken_lang" size="15" value="<%=apptMainBean.getString(rs,"spoken_lang")%>"/>
 							    </td>
 							</tr>
@@ -1375,7 +1375,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left"><%-- // <input type="text" name="phone" size="30" value="<%=apptMainBean.getString(rs,"phone")!=null && apptMainBean.getString(rs,"phone").length()==10?apptMainBean.getString(rs,"phone").substring(0,3) + "-" + apptMainBean.getString(rs,"phone").substring(3,6) +"-"+  apptMainBean.getString(rs,"phone").substring(6):apptMainBean.getString(rs,"phone")%>">--%>
 								<input type="text" name="phone" onblur="formatPhoneNum();"
 									style="display: inline; width: auto;"
-									value="<%=apptMainBean.getString(rs,"phone")%>"> Ext:<input
+									value="<%=apptMainBean.getString(rs,"phone")%>"> <bean:message key="demographic.demographiceditdemographic.msgExt"/>:<input
 									type="text" name="hPhoneExt"
 									value="<%=apptMainBean.getString(demoExt.get("hPhoneExt"))%>"
 									size="4" /> <input type="hidden" name="hPhoneExtOrig"
@@ -1386,7 +1386,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<td align="left"><input type="text" name="phone2"
 									onblur="formatPhoneNum();"
 									style="display: inline; width: auto;"
-									value="<%=apptMainBean.getString(rs,"phone2")%>"> Ext:<input
+									value="<%=apptMainBean.getString(rs,"phone2")%>"> <bean:message key="demographic.demographiceditdemographic.msgExt"/>:<input
 									type="text" name="wPhoneExt"
 									value="<%=apptMainBean.getString(demoExt.get("wPhoneExt"))%>"
 									style="display: inline" size="4" /> <input type="hidden"
@@ -1404,9 +1404,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<input type="hidden" name="demo_cellOrig"
 									value="<%=apptMainBean.getString(demoExt.get("demo_cell"))%>" />
 								</td>
-								<td align="right"><b>Country Of Origin: </b></td>
+								<td align="right"><b><bean:message key="demographic.demographiceditdemographic.msgCountryOfOrigin"/>: </b></td>
 								<td align="left"><select name="countryOfOrigin">
-									<option value="-1">Not Set</option>
+									<option value="-1"><bean:message key="demographic.demographiceditdemographic.msgNotSet"/></option>
 									<%for(CountryCode cc : countryList){ %>
 									<option value="<%=cc.getCountryId()%>"
 										<% if ( apptMainBean.getString(rs,"country_of_origin").equals(cc.getCountryId())){out.print("SELECTED") ;}%>><%=cc.getCountryName() %></option>
@@ -1426,7 +1426,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<%if (apptMainBean.getString(rs,"pin")==null || apptMainBean.getString(rs,"pin").equals("")) {%>
 								<a href="javascript:"
 									onclick="popup(600, 650, '../phr/indivo/RegisterIndivo.jsp?demographicNo=<%=demographic_no%>', 'indivoRegistration');"><sub
-									style="white-space: nowrap;">Register for MyOSCAR</sub></a> <%}%>
+									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterMyOSCAR"/></sub></a> <%}%>
 								</td>
 							</tr>
 							<tr valign="top">
@@ -1519,7 +1519,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<% String hctype = apptMainBean.getString(rs,"hc_type")==null?"":apptMainBean.getString(rs,"hc_type"); %>
 								<select name="hc_type" style="width: 200px">
 									<option value="OT"
-										<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>>Other</option>
+										<%=(hctype.equals("OT") || hctype.equals("") || hctype.length() > 2)?" selected":""%>><bean:message key="demographic.demographiceditdemographic.optOther"/></option>
 									<% if (pNames.isDefined()) {
                                        for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String province = (String) li.next(); %>
@@ -1752,17 +1752,17 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<select name="roster_status" style="width: 120">
 									<option value=""></option>
 									<option value="RO"
-										<%=rosterStatus.equals("RO")?" selected":""%>>RO -
-									rostered</option>
+										<%=rosterStatus.equals("RO")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optRostered"/></option>
 									<option value="NR"
-										<%=rosterStatus.equals("NR")?" selected":""%>>NR -
-									not rostered</option>
+										<%=rosterStatus.equals("NR")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optNotRostered"/></option>
 									<option value="TE"
-										<%=rosterStatus.equals("TE")?" selected":""%>>TE -
-									terminated</option>
+										<%=rosterStatus.equals("TE")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optTerminated"/></option>
 									<option value="FS"
-										<%=rosterStatus.equals("FS")?" selected":""%>>FS -
-									fee for service</option>
+										<%=rosterStatus.equals("FS")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optFeeService"/></option>
 									<% ResultSet rsstatus1 = apptMainBean.queryResults("search_rsstatus");
                                      while (rsstatus1.next()) { %>
 									<option
@@ -1770,7 +1770,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                      rsstatus1.close();
                                    // end while %>
-								</select> <input type="button" onClick="newStatus1();" value="Add New">
+								</select> <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								</td>
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.DateJoined" />: </b></td>
@@ -1804,20 +1804,20 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 String patientStatus = apptMainBean.getString(rs,"patient_status"); %>
 								<select name="patient_status" style="width: 120">
 									<option value="AC"
-										<%=patientStatus.equals("AC")?" selected":""%>>AC -
-									Active</option>
+										<%=patientStatus.equals("AC")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optActive"/></option>
 									<option value="IN"
-										<%=patientStatus.equals("IN")?" selected":""%>>IN -
-									Inactive</option>
+										<%=patientStatus.equals("IN")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optInActive"/></option>
 									<option value="DE"
-										<%=patientStatus.equals("DE")?" selected":""%>>DE -
-									Deceased</option>
+										<%=patientStatus.equals("DE")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optDeceased"/></option>
 									<option value="MO"
-										<%=patientStatus.equals("MO")?" selected":""%>>MO -
-									Moved</option>
+										<%=patientStatus.equals("MO")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optMoved"/></option>
 									<option value="FI"
-										<%=patientStatus.equals("FI")?" selected":""%>>FI -
-									Fired</option>
+										<%=patientStatus.equals("FI")?" selected":""%>>
+									<bean:message key="demographic.demographiceditdemographic.optFired"/></option>
 									<% ResultSet rsstatus = apptMainBean.queryResults("search_ptstatus");
                                      while (rsstatus.next()) { %>
 									<option
@@ -1825,7 +1825,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                   rsstatus.close();
                                    // end while %>
-								</select> <input type="button" onClick="newStatus();" value="Add New">
+								</select> <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								<% } // end if...then...else %>
 								</td>
 								<td align="right"><b><bean:message
@@ -1863,8 +1863,8 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td colspan="4">
 								<table border="1" width="100%">
 									<tr>
-										<td align="right" width="16%" nowrap><b>Waiting
-										List:</b></td>
+										<td align="right" width="16%" nowrap><b>
+										<bean:message key="demographic.demographiceditdemographic.msgWaitList"/>:</b></td>
 										<td align="left" width="31%">
 										<%
                                 ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
@@ -1883,10 +1883,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                %> <input type="hidden" name="wlId"
 											value="<%=wlId%>"> <select name="list_id">
 											<%if(wLReadonly.equals("")){%>
-											<option value="0">--Select Waiting List--</option>
+											<option value="0"><bean:message key="demographic.demographiceditdemographic.optSelectWaitList"/></option>
 											<%}else{%>
-											<option value="0">--Please Create Waiting List Name
-											first--</option>
+											<option value="0">
+											<bean:message key="demographic.demographiceditdemographic.optCreateWaitList"/></option>
 											<%} %>
 											<%
                                       ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
@@ -1900,14 +1900,14 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                       rsWL.close();
                                     %>
 										</select></td>
-										<td align="right" nowrap><b>Waiting List Note: </b></td>
+										<td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.msgWaitListNote"/>: </b></td>
 										<td align="left"><input type="text"
 											name="waiting_list_note" value="<%=wlnote%>" size="34"
 											<%=wLReadonly%>></td>
 									</tr>
 									<tr>
 										<td colspan="2">&nbsp;</td>
-										<td align="right" nowrap><b>Date of request: </b></td>
+										<td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.msgDateOfReq"/>: </b></td>
 										<td align="left"><input type="text"
 											name="waiting_list_referral_date"
 											id="waiting_list_referral_date" size="11"
