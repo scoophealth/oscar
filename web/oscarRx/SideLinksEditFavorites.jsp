@@ -35,6 +35,7 @@
 <p class="PropSheetLevel1CurrentItem"><bean:message key="oscarRx.sideLinks.msgSpecial"/></p>
 <p class="PropSheetMenuItemLevel1"><a href="SelectPharmacy.jsp"><bean:message key="oscarRx.sideLinks.msgEditPharmacy"/></a></p>
 <p class="PropSheetMenuItemLevel1"><a href="EditFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgEditFavorites"/></a></p>
+<p class="PropSheetMenuItemLevel1"><a href="CopyFavorites.jsp"><bean:message key="oscarRx.sideLinks.msgCopyFavorites"/></a></p>
 <p class="PropSheetLevel1CurrentItem<%=alle%>"><bean:message key="oscarRx.sideLinks.msgAllergies"/></p>
 <p class="PropSheetMenuItemLevel1">
 <%

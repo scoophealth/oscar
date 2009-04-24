@@ -372,6 +372,7 @@
                 <form-bean name="CreateIndivoMessageActionForm" type="oscar.indivoMessenger.CreateIndivoMessageActionForm"/>
                 <form-bean name="DisplayIndivoMsgsActionForm" type="oscar.indivoMessenger.DisplayIndivoMsgsActionForm"/ -->
         <form-bean name="apptStatusEditForm" type="org.apache.struts.validator.LazyValidatorForm" /> 	
+        <form-bean name="rxCopyForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
         <form-bean name="mergeClientForm" type="org.apache.struts.validator.DynaValidatorForm">
                <form-property name="criteria" type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
@@ -1849,6 +1850,16 @@
             <forward name="success" path="/appointment/appointmentstatussetting.jsp"/>
             <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
         </action>
+        <action
+            path="/oscarRx/copyFavorite"
+            name="rxCopyForm"
+            type="org.springframework.web.struts.DelegatingActionProxy"
+            scope="request"
+            parameter="dispatch">
+            <forward name="success" path="/oscarRx/CopyFavorites.jsp"/>
+            <forward name="edit" path="/appointment/appointmentstatusedit.jsp"/>
+        </action>
+        
 	<action path="/PMmodule/MergeClient" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="mergeClientForm" scope="request">
             <forward name="view" path="page.pmm.client.merge" />
             <forward name="unmerge" path="/PMmodule/UnmergeClient.do" redirect="true" />
