@@ -1,0 +1,25 @@
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.apache.log4j.Logger"%>
+<%
+	Logger logger=MiscUtils.getLogger();
+
+	try
+	{
+		ErrorData errorData=pageContext.getErrorData();
+		if (errorData!=null)
+		{
+			String errorUri=errorData.getRequestURI();
+			if (errorUri!=null) logger.error("Errored Uri="+errorUri);
+
+			int errorCode=errorData.getStatusCode();
+			logger.error("Status Code = "+errorCode);
+			
+			Throwable throwable=errorData.getThrowable();
+			if (throwable!=null) logger.error(throwable);
+		}
+	}
+	catch (Exception e)
+	{
+		logger.error(e);
+	}
+%>
