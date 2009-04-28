@@ -796,7 +796,7 @@ if(props2.getProperty("clinicSatelliteCity") != null) {
 			<table border="0" width="100%" >
 			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
 			<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
-			<td>Remit To<br>
+			<td>Remit To [<a href=# onclick="scriptAttach('remitto'); return false;">Search</a>]<br>
 			<textarea name="remitto" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
 			</tr>
 			</table>
