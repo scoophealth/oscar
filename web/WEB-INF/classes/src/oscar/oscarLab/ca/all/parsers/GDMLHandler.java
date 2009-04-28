@@ -187,11 +187,13 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public boolean isOBXAbnormal(int i, int j){
-        if (getOBXAbnormalFlag(i, j).equals("A"))
-            return(true);
-        else
+        String abnormalFlag = getOBXAbnormalFlag(i, j);
+        if (abnormalFlag.equals("") || abnormalFlag.equals("N"))
             return(false);
+        else
+            return(true);
     }
+
     
     public String getOBXAbnormalFlag(int i, int j){
         
