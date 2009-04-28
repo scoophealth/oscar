@@ -168,10 +168,11 @@ if (message != null){
 			<tr>
 				<td>Lab type:</td>
 				<td><select name="type" id="selection" onClick="selectOther()">
-					<option value="MDS">MDS</option>
 					<option value="CML">CML</option>
+					<option value="GDML">GDML</option>
+					<option value="ICL">ICL</option>
+					<option value="MDS">MDS</option>
 					<option value="PATHL7">EXCELLERIS</option>
-					<option value="GDML">GDML -- TESTING DO NOT USE</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>

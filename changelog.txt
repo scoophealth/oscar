@@ -1,3 +1,6 @@
+2009-04-28 : Fixed "Abnormal" reporting for GDML labs (DavidD)
+2009-04-28 : Added support for HL7 labs from ICL (Intercounty Medical Labs) (DavidD)
+2009-04-28 : Added searchable "Remit To" in 3rd Party ON Billing (DavidD)
 2009-02-28 : Added ability to link a Document or Lab with a Tickler
 2009-01-28 : Changed how to edit existing notes in new encounter.  Click on edit link instead of note (Randy)
              Pass demographic numbers in post of form rather than in url for prevention report(Randy)

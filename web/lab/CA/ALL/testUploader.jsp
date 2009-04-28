@@ -1,4 +1,3 @@
-
 <% 
 if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 %>
@@ -102,11 +101,12 @@ if(outcome != null){
 			<tr>
 				<td>Lab type:</td>
 				<td><select name="type" onClick="selectOther()">
-					<option value="MDS">MDS</option>
 					<option value="CML">CML</option>
+					<option value="GDML">GDML</option>
+					<option value="ICL">ICL</option>
+					<option value="MDS">MDS</option>
 					<option value="PATHL7"
 						<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
-					<option value="GDML">GDML</option>
 					<option value="OTHER">Other</option>
 				</select></td>
 			</tr>
