@@ -56,7 +56,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
 
         //set lefthand module heading and link
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.NavBar.Issues"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.NavBar.Issues"));
         Dao.setLeftURL("$('check_issue').value='';document.caseManagementViewForm.submit();");
         
         //set righthand link to same as left so we have visual consistency with other modules

@@ -52,7 +52,7 @@ public class EctDisplayDxAction extends EctDisplayAction {
         //set lefthand module heading and link
         String winName = "Disease" + bean.demographicNo;
         String url = "popupPage(580,900,'" + winName + "','" + request.getContextPath() + "/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&quickList=')";        
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.DxRegistry"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.DxRegistry"));
         Dao.setLeftURL(url);
         
         //set righthand link to same as left so we have visual consistency with other modules
@@ -82,7 +82,7 @@ public class EctDisplayDxAction extends EctDisplayAction {
             try {
                 date = (Date)formatter.parse(dateStr);
                 Date sDate = (Date)formatter.parse(startDate);
-                serviceDateStr = DateUtils.getDate(sDate, dateFormat);  
+                serviceDateStr = DateUtils.getDate(sDate, dateFormat, request.getLocale());  
                 item.setDate(date);
             }
             catch(ParseException ex ) {

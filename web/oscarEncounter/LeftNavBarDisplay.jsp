@@ -213,7 +213,7 @@
                     if(item.getValue() != null && !item.getValue().trim().equals("")){
                         out.println(item.getValue());
                     }
-                    out.println(DateUtils.getDate(item.getDate(), dateFormat));
+                    out.println(DateUtils.getDate(item.getDate(), dateFormat, request.getLocale()));
                     out.println("</a>");
                     out.println("</span>");
                 } 

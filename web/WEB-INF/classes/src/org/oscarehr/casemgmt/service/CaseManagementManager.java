@@ -34,7 +34,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.Locale;
+    
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
@@ -1557,9 +1558,9 @@ public class CaseManagementManager {
 		return this.dxResearchDAO.getByDemographicNo(Integer.parseInt(demographicNo));
 	}
 
-	public String getSignature(String cproviderNo, String userName, String roleName, int type) {
+	public String getSignature(String cproviderNo, String userName, String roleName, Locale locale, int type) {
 
-		SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+		SimpleDateFormat dt = new SimpleDateFormat("dd-MMM-yyyy H:mm", locale);
 		Date now = new Date();
 		// add the time, signiture and role at the end of note
 		String rolename = "";
@@ -1571,7 +1572,7 @@ public class CaseManagementManager {
 		tempS = providerSignitureDao.getProviderSig(cproviderNo);
 		if (tempS != null && !"".equals(tempS.trim())) userName = tempS;
 
-		ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+		ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
 		String signature;
 		if (userName != null && !"".equals(userName.trim())) {
 			if (type == this.SIGNATURE_SIGNED) {

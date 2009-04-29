@@ -54,7 +54,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
         StringBuffer url = new StringBuffer("popupPage(600, 700, '" + winName + "', '" + request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo + "')");                               
 
         //set text for lefthand module title
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgForms")); 
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgForms")); 
         //set link for lefthand module title
         Dao.setLeftURL(url.toString());               
                 
@@ -99,7 +99,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     }
                     
                     if( date != null )
-                        serviceDateStr = DateUtils.getDate(date, dateFormat);
+                        serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
                     else
                         serviceDateStr = "";
                     

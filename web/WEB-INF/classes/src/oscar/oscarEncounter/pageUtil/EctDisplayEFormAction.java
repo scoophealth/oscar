@@ -52,7 +52,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         //set lefthand module heading and link
         String winName = "eForm" + bean.demographicNo;
         String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "')";        
-        Dao.setLeftHeading(messages.getMessage("global.eForms"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.eForms"));
         Dao.setLeftURL(url);
         
         //set the right hand heading link
@@ -88,7 +88,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             hash = Math.abs(winName.hashCode());            
             url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "&parentAjaxId=" + cmd + "');";            
             Date date = (Date)curform.get("formDateAsDate");
-            String formattedDate = DateUtils.getDate(date,dateFormat);
+            String formattedDate = DateUtils.getDate(date,dateFormat,request.getLocale());
             key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
             item.setLinkTitle((String)curform.get("formSubject"));
             key = StringEscapeUtils.escapeJavaScript(key);

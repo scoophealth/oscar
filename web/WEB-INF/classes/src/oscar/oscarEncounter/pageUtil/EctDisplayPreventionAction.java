@@ -53,7 +53,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         //set lefthand module heading and link
         String winName = "prevention" + bean.demographicNo;
         String url = "popupPage(700,960,'" + winName + "', '" + request.getContextPath() + "/oscarPrevention/index.jsp?demographic_no=" + bean.demographicNo + "')";        
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Prevent"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Prevent"));
         Dao.setLeftURL(url);
         
         //set righthand link to same as left so we have visual consistency with other modules
@@ -104,7 +104,7 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                         //item.setDate(defaultDate);
                     }
                     else {    
-                        serviceDateStr = DateUtils.getDate(date, dateFormat);
+                        serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
                         //item.setDate(date);
                     }
                     

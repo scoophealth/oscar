@@ -49,7 +49,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                              
                                                   
             //set text for lefthand module title
-            Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Messages"));
+            Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Messages"));
             
             //set link for lefthand module title
             String winName = "ViewMsg" + bean.demographicNo;
@@ -80,7 +80,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 try {                 
                     DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
                     date = (Date)formatter.parse(msgDate);
-                    msgDate = DateUtils.getDate(date, dateFormat);                                                                                
+                    msgDate = DateUtils.getDate(date, dateFormat, request.getLocale());                                                                                
                 }
                 catch(ParseException e ) {
                         System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());

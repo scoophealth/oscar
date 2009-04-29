@@ -55,7 +55,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     String url = "popupPage(500,1115,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
             "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "')";        
 
-    Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgDocuments"));
+    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.msgDocuments"));
     Dao.setLeftURL(url);
     
     
@@ -97,7 +97,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         NavBarDisplayDAO.Item item = Dao.Item();                        
         try {
             date = (Date)formatter.parse(dateStr);
-            serviceDateStr = DateUtils.getDate(date, dateFormat);            
+            serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());            
         }
         catch(ParseException ex ) {
             System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());

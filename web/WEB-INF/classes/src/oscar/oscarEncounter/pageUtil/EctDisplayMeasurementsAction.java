@@ -47,7 +47,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         String menuId = "3"; //div id for popup menu
        
         //set text for lefthand module title
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.measurements")); 
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.Index.measurements")); 
         
         //set link for lefthand module title
         String winName = "measurements" + bean.demographicNo;
@@ -117,7 +117,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 NavBarDisplayDAO.Item item = Dao.Item();
                 data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
                 Date date = data.getDateObservedAsDate();
-                String formattedDate = DateUtils.getDate(date,dateFormat);
+                String formattedDate = DateUtils.getDate(date,dateFormat, request.getLocale());
                 item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
                 title = padd(title, data.getDataField());
                 String tmp = "<span class=\"measureCol1\">" + title + "</span>";

@@ -55,7 +55,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             //set lefthand module heading and link
             String winName = "Consultation" + bean.demographicNo;
             String url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=" + bean.demographicNo + "')";            
-            Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Consult"));
+            Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Consult"));
             Dao.setLeftURL(url);
             
             //set the right hand heading link\
@@ -102,7 +102,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                 DateFormat formatter = new SimpleDateFormat(dbFormat);
                 try {
                     date = (Date)formatter.parse(dateStr);
-                    serviceDateStr = DateUtils.getDate(date, dateFormat);
+                    serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
                     //if we are after cut off date and not completed set to red
                     if( date.before(cutoffDate) && !status.equals("4") ) {
                         item.setColour(red);

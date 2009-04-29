@@ -2,17 +2,17 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 <%
 //Lists forms available to add to patient
-  
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no"); 
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
   String country = request.getLocale().getCountry();
   String parentAjaxId = request.getParameter("parentAjaxId");
-%>
+%>  
 
-<%@ page import="java.util.*, java.sql.*, oscar.eform.*"%>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <!--  
 /*
  * 
@@ -58,14 +58,12 @@ if (groupView == null) {
 <html:html locale="true">
 
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title><bean:message key="eform.myform.title" /></title>
-<link rel="stylesheet" type="text/css"
-	href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css"
-	href="../share/css/eformStyle.css">
-<script type="text/javascript" language="JavaScript"
-	src="../share/javascript/Oscar.js"></script>
+<title>
+<bean:message key="eform.myform.title"/>
+</title>
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="../share/css/eformStyle.css">
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" language="JavaScript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
@@ -80,76 +78,73 @@ function popupPage(varpage, windowname) {
     }
 }
 
+function updateAjax() {
+    var parentAjaxId = "<%=parentAjaxId%>";    
+    if( parentAjaxId != "null" ) {
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+        window.opener.updateNeeded = true;    
+    }
 
+}
 </script>
 </head>
 
 <body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
 <!--  -->
-<table class="MainTable" id="scrollNumber1" name="encounterTable">
-	<tr class="MainTableTopRow">
-		<td class="MainTableTopRowLeftColumn" width="175"><bean:message
-			key="eform.myform.msgEForm" /></td>
-		<td class="MainTableTopRowRightColumn">
-		<table class="TopStatusBar">
-			<tr>
-				<td><bean:message key="eform.myform.msgFormLib" /></td>
-				<td>&nbsp;</td>
-				<td style="text-align: right"><a
-					href="javascript:popupStart(300,400,'Help.jsp')"><bean:message
-					key="global.help" /></a> | <a
-					href="javascript:popupStart(300,400,'About.jsp')"><bean:message
-					key="global.about" /></a> | <a
-					href="javascript:popupStart(300,400,'License.jsp')"><bean:message
-					key="global.license" /></a></td>
-			</tr>
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableLeftColumn" valign="top"><a
-			href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"
-			class="current"> <bean:message key="eform.showmyform.btnAddEForm" /></a><br />
-		<%  if (country.equals("BR")) { %> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message
-			key="global.btnBack" /> &nbsp;</a> <%}else{%> <a
-			href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message
-			key="global.btnBack" /> &nbsp;</a> <%}%> <br>
-		<a
-			href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-			key="eform.calldeletedformdata.btnGoToForm" /></a><br />
-		<a
-			href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-			key="eform.showmyform.btnDeleted" /></a> <security:oscarSec
-			roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r"
-			reverse="<%=false%>">
-			<br />
-			<a href="#"
-				onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');"
-				style="color: #835921;">Manage eForms</a>
-		</security:oscarSec> <jsp:include page="efmviewgroups.jsp">
-			<jsp:param name="url" value="../eform/efmformslistadd.jsp" />
-			<jsp:param name="groupView" value="<%=groupView%>" />
-		</jsp:include></td>
-		<td class="MainTableRightColumn" style="vertical-align: top">
+    <table class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn" width="175">
+                <bean:message key="eform.myform.msgEForm"/>
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            <bean:message key="eform.myform.msgFormLib"/>
+                        </td>
+                        <td>&nbsp;
+							
+                        </td>   
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
+                <%  if (country.equals("BR")) { %>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}else{%>
+                    <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <%}%>
+                <br>
+                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
+                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
+                <br/>
+                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;"><bean:message key="eform.showmyform.msgManageEFrm"/></a>
+                </security:oscarSec>
+<jsp:include page="efmviewgroups.jsp">
+    <jsp:param name="url" value="../eform/efmformslistadd.jsp"/>
+    <jsp:param name="groupView" value="<%=groupView%>"/>
+</jsp:include>
+     
+            </td>
+            <td class="MainTableRightColumn" style="vertical-align: top">
 
-		<table class="elements" style="margin-left: 0px; margin-right: 0px;"
-			width="100%">
-			<tr bgcolor=<%=deepColor%>>
-				<th><a
-					href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message
-					key="eform.showmyform.btnFormName" /></a></th>
-				<th><a
-					href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_subject&parentAjaxId=<%=parentAjaxId%>"><bean:message
-					key="eform.showmyform.btnSubject" /></a></th>
-				<!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>-->
-				<th><a
-					href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_date&parentAjaxId=<%=parentAjaxId%>"><bean:message
-					key="eform.showmyform.formDate" /></a></th>
-				<!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.formTime"/></a></th> -->
-			</tr>
-
-			<%
+<table class="elements" style="margin-left: 0px; margin-right: 0px;" width="100%">
+      <tr bgcolor=<%=deepColor%>>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_subject&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>-->
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_date&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.formDate"/></a></th>
+      <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.formTime"/></a></th> -->
+      </tr>      
+      
+<%
   ArrayList eForms;
   if (groupView.equals("") || groupView.equals("default")) {
       eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
@@ -160,32 +155,31 @@ function popupPage(varpage, windowname) {
       for (int i=0; i<eForms.size(); i++) {
         Hashtable curForm = (Hashtable) eForms.get(i);
 %>
-			<tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
-				<td width="30%" style="padding-left: 7px"><a HREF="#"
-					ONCLICK="javascript: popupPage('efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>', '<%="FormA" + i%>'); return true;"
-					TITLE='Add This eForm'
-					OnMouseOver="window.status='Add This eForm' ; return true"> <%=curForm.get("formName")%>
-				</a></td>
-				<td style="padding-left: 7px"><%=curForm.get("formSubject")%></td>
-				<td nowrap align='center'><%=curForm.get("formDate")%></td>
-			</tr>
-			<%
+      <tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
+	    <td width="30%" style="padding-left: 7px">
+	    <a HREF="#" ONCLICK ="javascript: popupPage('efmformadd_data.jsp?fid=<%=curForm.get("fid")%>&demographic_no=<%=demographic_no%>', '<%="FormA" + i%>'); return true;"  TITLE='Add This eForm' OnMouseOver="window.status='Add This eForm' ; return true">
+            <%=curForm.get("formName")%>
+        </a></td>
+                <td style="padding-left: 7px"><%=curForm.get("formSubject")%></td>
+		<td nowrap align='center'><%=curForm.get("formDate")%></td>
+	  </tr>
+<%
      }  
  } else {
 %>
-			<tr>
-				<td colspan="3" align="center"><bean:message
-					key="eform.showmyform.msgNoData" /></td>
-			</tr>
-			<%}%>
-
-		</table>
-		</td>
-	</tr>
-	<tr>
-		<td class="MainTableBottomRowLeftColumn"></td>
-		<td class="MainTableBottomRowRightColumn"></td>
-	</tr>
+<tr><td colspan="3" align="center"><bean:message key="eform.showmyform.msgNoData"/></td></tr>
+<%}%>               
+ 
 </table>
+			</td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+
+            </td>
+        </tr>
+    </table>
 </body>
 </html:html>

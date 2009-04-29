@@ -558,7 +558,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     issueNames.append(cIssue.getIssue().getDescription() + "\n");                    
                 }
                 
-                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
+                strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy",request.getLocale()).format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
                 note.setNote(strNote);
                 removed = true;
             }
@@ -584,7 +584,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
                 //if we have removed an issue add it to message body
                 if( issueNames.length() > 0 ) {
-                    strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy").format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
+                    strNote += "\n" + new SimpleDateFormat("dd-MMM-yyyy", request.getLocale()).format(new Date()) + " " + props.getString("oscarEncounter.removedIssue.Msg") + ":\n" + issueNames.toString();
                     note.setNote(strNote);                    
                 }
 
@@ -986,7 +986,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String roleName = caseManagementMgr.getRoleName(providerNo, note.getProgram_no());
         
         if (verify != null && verify.equalsIgnoreCase("on")) {
-            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, caseManagementMgr.SIGNATURE_VERIFY);
+            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_VERIFY);
             
            String n = note.getNote() + "\n" + message;
            note.setNote(n);
@@ -995,7 +995,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
         }
         else if (note.isSigned()) {
-            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, caseManagementMgr.SIGNATURE_SIGNED);         
+            String message = caseManagementMgr.getSignature(providerNo, userName, roleName, request.getLocale(), caseManagementMgr.SIGNATURE_SIGNED);         
             
             String n = note.getNote() + "\n" + message;
             note.setNote(n);
@@ -1038,7 +1038,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String observationDate = cform.getObservation_date();
         ResourceBundle props = ResourceBundle.getBundle("oscarResources");
         if (observationDate != null && !observationDate.equals("")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
             Date dateObserve = formatter.parse(observationDate);
             if( dateObserve.getTime() > now.getTime() ) {
                 request.setAttribute("DateError", props.getString("oscarEncounter.futureDate.Msg"));
@@ -1156,7 +1156,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String observationDate = request.getParameter("obsDate");        
         ResourceBundle props = ResourceBundle.getBundle("oscarResources");
         if (observationDate != null && !observationDate.equals("")) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
             Date dateObserve = formatter.parse(observationDate);
             if( dateObserve.getTime() > now.getTime() ) {
                 request.setAttribute("DateError", props.getString("oscarEncounter.futureDate.Msg"));
@@ -2038,7 +2038,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("mrp", getMRP(request));
         String dob = getDemoDOB(demono);
-        dob = convertDateFmt(dob);
+        dob = convertDateFmt(dob,request);
         request.setAttribute("demoDOB", dob);
         String providerNo = getProviderNo(request);
 
@@ -2168,7 +2168,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         if (bean != null) {
             String encounterText = "";
-            String apptDate = convertDateFmt(bean.appointmentDate);
+            String apptDate = convertDateFmt(bean.appointmentDate, request);
             if (bean.eChartTimeStamp == null) {
                 encounterText = "\n[" + UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy", request.getLocale()) + " .: " + bean.reason + "] \n";
                 // encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
@@ -2199,14 +2199,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     }
 
-    protected String convertDateFmt(String strOldDate) {
+    protected String convertDateFmt(String strOldDate, HttpServletRequest request) {
         String strNewDate = "";
         if (strOldDate != null && strOldDate.length() > 0) {
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd",request.getLocale());
             try {
 
                 Date tempDate = fmt.parse(strOldDate);
-                strNewDate = new SimpleDateFormat("dd-MMM-yyyy").format(tempDate);
+                strNewDate = new SimpleDateFormat("dd-MMM-yyyy", request.getLocale()).format(tempDate);
 
             }
             catch (ParseException ex) {
