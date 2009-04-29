@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -95,6 +96,12 @@ public class DateUtils {
 
         return sdf.format(date);
 
+    }
+    
+    public static String getDate(Date date, String format, Locale locale) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format, locale);
+
+        return sdf.format(date);
     }
 
     public static String getDate(Date date, String format) {
