@@ -867,7 +867,12 @@ div.demographicWrapper {
 						<%
                                     }
                                 }
-                            %> ) <%= head.equals(demographic_no) ? "<a href=\"javascript: showHideDetail();\">Edit</a>" : ""%>
+                            %> ) 
+                            <%
+                                                    if( head.equals(demographic_no)) { 
+                                                    %>
+                                                        <a href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
+                                                   <% } %>
 						</td>
 					</tr>
 					<tr>
@@ -1129,7 +1134,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									onBlur="upCaseCtrl(this)"></td>
 							</tr>
 							<tr>
-							  <td align="right" <b>Title: </b></td>
+							  <td align="right" <b><bean:message key="demographic.demographiceditdemographic.msgDemoTitle"/>: </b></td>
 							    <td align="left">
 					<% String title = apptMainBean.getString(rs,"title"); %>
 								<select name="title" onchange="checkTitleSex();">
@@ -1734,7 +1739,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td align="left"><input type="text" name="r_doctor_ohip"
 									size="20" maxlength="6" value="<%=rdohip%>"> <% if("ON".equals(prov)) { %>
 								<a
-									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')">Search
+									href="javascript:referralScriptAttach2('r_doctor_ohip','r_doctor')"><bean:message key="demographic.demographiceditdemographic.btnSearch"/>
 								#</a> <% } %>
 								</td>
 							</tr>
@@ -1912,7 +1917,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 											name="waiting_list_referral_date"
 											id="waiting_list_referral_date" size="11"
 											value="<%=wlReferralDate%>" <%=wLReadonly%>><img
-											src="../images/cal.gif" id="referral_date_cal">(yyyy-mm-dd)
+											src="../images/cal.gif" id="referral_date_cal"><bean:message key="schedule.scheduletemplateapplying.msgDateFormat"/>
 										</td>
 
 									</tr>
@@ -2051,7 +2056,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									type="button" name="Button"
 									value="<bean:message key="global.btnCancel" />"
 									onclick=self.close();>
-								<br><input type="button" value="Export this Demographic"
+								<br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
 									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">																	
 								</td>
 								<td width="30%" align='center' valign="top"><input

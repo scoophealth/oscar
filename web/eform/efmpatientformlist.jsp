@@ -141,7 +141,7 @@ function updateAjax() {
 			<br />
 			<a href="#"
 				onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');"
-				style="color: #835921;">Manage eForms</a>
+				style="color: #835921;"><bean:message key="eform.showmyform.msgManageEForms"/></a>
 		</security:oscarSec> <jsp:include page="efmviewgroups.jsp">
 			<jsp:param name="url" value="../eform/efmpatientformlist.jsp" />
 			<jsp:param name="groupView" value="<%=groupView%>" />
@@ -177,8 +177,8 @@ function updateAjax() {
 			<tr bgcolor="<%= ((i%2) == 1)?"#F2F2F2":"white"%>">
 				<td><a href="#"
 					ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>', '<%="FormP" + i%>'); return false;"
-					TITLE="View Form"
-					onmouseover="window.status='View This Form'; return true"><%=curform.get("formName")%></a></td>
+					TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
+					onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 				<td><%=curform.get("formSubject")%></td>
 				<td align='center'><%=curform.get("formDate")%></td>
 				<td align='center'><a

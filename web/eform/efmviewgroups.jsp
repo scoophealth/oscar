@@ -26,6 +26,7 @@
 --%>
 <%@ page import="java.util.*, oscar.eform.*"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%   
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -58,10 +59,9 @@ if (patientGroups.equals("1")) {
 	type="hidden" name="demographic_no" value="<%=demographic_no%>">
 <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
 <div class="grouplist">
-<div class="grouplistHeader">View Group:</div>
+<div class="grouplistHeader"><bean:message key="eform.showmyform.msgViewGroup"/>:</div>
 <ul class="grouplist">
-	<li><a href="#" onclick="document.forms['groupselect'].submit()"><b>Show
-	All</b></a></li>
+	<li><a href="#" onclick="document.forms['groupselect'].submit()"><b><bean:message key="eform.showmyform.msgShowAll"/></b></a></li>
 	<%for (int i=0; i<groups.size(); i++) {        
                 String selected = "";
                 Hashtable curhash = (Hashtable) groups.get(i);
@@ -77,6 +77,6 @@ if (patientGroups.equals("1")) {
 	objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
 	<a href="#"
 		onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')"
-		style="color: #835921;">Edit Groups</a>
+		style="color: #835921;"><bean:message key="eform.showmyform.msgEditGroups"/></a>
 </security:oscarSec></div>
 </form>
