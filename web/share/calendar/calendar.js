@@ -12,7 +12,7 @@
  * Read the entire license text here: http://www.gnu.org/licenses/lgpl.html
  */
 
-// $Id: calendar.js,v 1.51 2005/03/07 16:44:31 mishoo Exp $
+// $Id: calendar.js,v 1.53 2006/02/11 12:32:59 mishoo Exp $
 
 /** The Calendar object constructor. */
 Calendar = function (firstDayOfWeek, dateStr, onSelected, onClose) {
@@ -552,6 +552,12 @@ Calendar.dayMouseOver = function(ev) {
 		Calendar.addClass(el, "hilite");
 		if (el.caldate) {
 			Calendar.addClass(el.parentNode, "rowhilite");
+			var cal = el.calendar;
+			if (cal && cal.getDateToolTip) {
+				var d = el.caldate;
+				window.status = d;
+				el.title = cal.getDateToolTip(d, d.getFullYear(), d.getMonth(), d.getDate());
+			}
 		}
 	}
 	return Calendar.stopEvent(ev);
@@ -567,7 +573,7 @@ Calendar.dayMouseOut = function(ev) {
 			removeClass(el.parentNode, "rowhilite");
 		if (el.calendar)
 			el.calendar.tooltips.innerHTML = _TT["SEL_DATE"];
-		return stopEvent(ev);
+		// return stopEvent(ev);
 	}
 };
 
@@ -592,7 +598,7 @@ Calendar.cellClick = function(el, ev) {
 		cal.date.setDateOnly(el.caldate);
 		date = cal.date;
 		var other_month = !(cal.dateClicked = !el.otherMonth);
-		if (!other_month && !cal.currentDateEl)
+		if (!other_month && !cal.currentDateEl && cal.multiple)
 			cal._toggleMultipleDate(new Date(date));
 		else
 			newdate = !el.disabled;
@@ -911,7 +917,9 @@ Calendar.prototype.create = function (_par) {
 				var y = date.getFullYear();
 				date.setHours(h);
 				date.setMinutes(parseInt(M.innerHTML, 10));
-				date.setFullYear(y, m, d);
+				date.setFullYear(y);
+				date.setMonth(m);
+				date.setDate(d);
 				this.dateClicked = false;
 				this.callHandler();
 			};
@@ -1147,11 +1155,6 @@ Calendar.prototype._init = function (firstDayOfWeek, date) {
 				dates[date.print("%Y%m%d")] = cell;
 			if (this.getDateStatus) {
 				var status = this.getDateStatus(date, year, month, iday);
-				if (this.getDateToolTip) {
-					var toolTip = this.getDateToolTip(date, year, month, iday);
-					if (toolTip)
-						cell.title = toolTip;
-				}
 				if (status === true) {
 					cell.className += " disabled";
 					cell.disabled = true;
@@ -1330,10 +1333,8 @@ Calendar.prototype.show = function () {
 		}
 	}
 	this.element.style.display = "block";
-        
 	this.hidden = false;
 	if (this.isPopup) {
-                this.element.style.zIndex = 1000;
 		window._dynarch_popupCalendar = this;
 		Calendar.addEvent(document, "keydown", Calendar._keyEvent);
 		Calendar.addEvent(document, "keypress", Calendar._keyEvent);
