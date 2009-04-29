@@ -77,7 +77,7 @@
     java.util.List noteList=(java.util.List)request.getAttribute("Notes");
     int noteSize = noteList != null ? noteList.size() : 0;
     
-    SimpleDateFormat jsfmt = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+    SimpleDateFormat jsfmt = new SimpleDateFormat("MMM dd, yyyy");
     Date dToday = new Date();
     String strToday = jsfmt.format(dToday);
         
@@ -394,7 +394,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                         Provider prov;
                         Iterator<Provider>iter = providers.iterator();
                         while(iter.hasNext()) {
-                        prov = iter.next();
+                    prov = iter.next();
                         providerNo = prov.getProviderNo();
                         %>
 		<li><html:multibox property="filter_providers"
@@ -721,7 +721,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                             
 				if( note.isLocked() ) {                                    
                             %> <span id="txt<%=note.getId()%>"><bean:message
-			key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></span>
+			key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat,request.getLocale()) + " " + note.getProviderName()%></span>
 		<%
                             }
                             else {                                      
@@ -769,7 +769,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		<div id="sumary<%=note.getId()%>">
 		<div id="observation<%=note.getId()%>"
 			style="float: right; margin-right: 3px;"><i>Date:&nbsp;<span
-			id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;<bean:message key="oscarEncounter.noteRev.title"/><a
+			id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat, request.getLocale())%></span>&nbsp;<bean:message key="oscarEncounter.noteRev.title"/><a
 			href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
 		<div><span style="float: left;"><bean:message key="oscarEncounter.editors.title"/>:</span>
 		<ul style="list-style: none inside none; margin: 0px;">
@@ -938,7 +938,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		title='<bean:message key="oscarEncounter.Index.btnDisplayIssues"/>'>&nbsp; <input tabindex="8" type="text"
 		id="issueAutocomplete" name="issueSearch" style="z-index: 2;"
 		onkeypress="return submitIssue(event);" size="25">&nbsp; <input
-		tabindex="9" type="button" id="asgnIssues" value="Assign">
+		tabindex="9" type="button" id="asgnIssues" value="<bean:message key="oscarEncounter.assign.title"/>">
 	<span id="busy" style="display: none"><img
 		style="position: absolute;"
 		src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"

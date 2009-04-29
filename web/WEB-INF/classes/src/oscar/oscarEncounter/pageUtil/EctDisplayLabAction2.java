@@ -53,7 +53,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         Collections.sort(labs);
         
         //set text for lefthand module title
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Labs"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.LeftNavBar.Labs"));
         
         //set link for lefthand module title
         String winName = "Labs" + bean.demographicNo;
@@ -107,7 +107,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         for (int j=0; j < labs.size(); j++){
             result = (LabResultData) labs.get(j);
             Date date = result.getDateObj();
-            String formattedDate = DateUtils.getDate(date,"dd-MMM-yyyy");
+            String formattedDate = DateUtils.getDate(date,"dd-MMM-yyyy", request.getLocale());
             //String formattedDate = DateUtils.getDate(date);
             func = new StringBuffer("popupPage(700,960,'");
             
