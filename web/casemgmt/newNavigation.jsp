@@ -23,6 +23,7 @@
  -->
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 
@@ -37,7 +38,7 @@
 <!--dummmy div to force browser to allocate space -->
 <div id="leftColLoader" class="leftBox" style="width: 100%">
 <h3 style="width: 100%; background-color: #CCCCFF;"><a href="#"
-	onclick="return false;">Loading...</a></h3>
+	onclick="return false;"><bean:message key="oscarEncounter.LeftNavBar.msgLoading"/></a></h3>
 </div>
 
 <form style="display: none;" name="dummyForm" action=""><input
