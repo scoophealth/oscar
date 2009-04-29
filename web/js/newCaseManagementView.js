@@ -73,17 +73,43 @@
                     measurementWindows[idx].parentChanged = true;
             }
             
-            //check to see if we need to back up case note
+            //check to see if we need to save            
             if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) ) {
-                autoSave(false);
+                tmpSaveNeeded = false;
+                //autoSave(false);
+                document.forms['caseManagementEntryForm'].sign.value='off'                                
+                document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
+                document.forms["caseManagementEntryForm"].ajax.value = false;
+                document.forms["caseManagementEntryForm"].chain.value = "";
+                document.forms["caseManagementEntryForm"].includeIssue.value = "off";
 
-                while(1) {
-                    
-                    if( okToClose ) {
-                        break;
-                    }
-                } //end while
-            } //end if tmpsave needed
+                var frm = document.forms["caseManagementEntryForm"];
+                var url = ctx + "/CaseManagementEntry.do";
+                var objAjax = new Ajax.Request (
+                    url,
+                    {
+                        method: 'post',                        
+                        postBody: Form.serialize(frm),
+                        asynchronous: false,
+                        onComplete: function(request) {  
+                            tmpSaveNeeded = false;
+                            okToClose = true;
+                        },
+                        onFailure: function(request) {
+                            if( request.status == 403 )
+                                alert(sessionExpiredError);
+                            else
+                                alert(request.status + " " + savingNoteError);
+                        }
+                     }
+                   );     
+
+                   while(1) {
+                        if( okToClose == true ) {
+                            break;
+                        }
+                   }
+            } //end if save needed
             
         }
         
@@ -1496,6 +1522,8 @@ function unlock_ajax(id) {
 }
 
 //display unlock note password text field and submit button
+var msgPasswd;
+var btnMsgUnlock;
 function unlockNote(e) {      
    var txt;
    var el;
@@ -1517,7 +1545,7 @@ function unlockNote(e) {
     var nId = txt.substr(1);
     var img = "<img id='quitImg" + nId + "' onclick='resetView(true, false, event)' style='float:right; margin-right:5px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
     new Insertion.Top(txt,img);
-    var lockForm = "<p id='passwdPara' class='passwd'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='Unlock'><\/p>";
+    var lockForm = "<p id='passwdPara' class='passwd'>" + msgPasswd + ":&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='" + btnMsgUnlock + "'><\/p>";
     new Insertion.Bottom(txt, lockForm);
     
     $(txt).style.height = "auto";
@@ -1754,18 +1782,45 @@ function filter(reset) {
     return false;
 }
 
+//find index of month
+function getMonthIdx(mnth) {
+    var idx;
+    var tmp;
+    
+    for( idx = 0; idx < month.length; ++idx) {
+        tmp = month[idx].toLowerCase();
+
+        if( mnth == tmp ) {
+            return idx;
+        }
+    }
+
+    return -1;
+}
+
 //make sure observation date is in the past
 var strToday;  //initialized in newCaseManagementView.jsp
 function validDate() {
     var strDate = $("observationDate").value;
     var day = strDate.substring(0,strDate.indexOf("-"));
     var mnth = strDate.substring(strDate.indexOf("-")+1, strDate.lastIndexOf("-"));
+    mnth = mnth.indexOf(".") != -1 ? mnth.substring(0, mnth.indexOf(".")) : mnth;
+    mnth = mnth.toLowerCase();
+    var mnthIdx = getMonthIdx(mnth);
     var year = strDate.substring(strDate.lastIndexOf("-")+1, strDate.indexOf(" "));
     var time = strDate.substr(strDate.indexOf(" ")+1);
-    var date = new Date( mnth + " " + day + ", " + year + " " + time);
-    var today = new Date(strToday);    
+    var timeArr = time.split(":");    
+    
+    var date = new Date();    
+    date.setMonth(mnthIdx);
+    date.setDate(day);
+    date.setYear(year);
+    date.setHours(timeArr[0]);
+    date.setMinutes(timeArr[1]);
+    
+    var today = new Date(strToday);       
     today.setHours(23);
-    today.setMinutes(59);
+    today.setMinutes(59);        
 
     if( date <= today )
         return true;
@@ -1865,6 +1920,7 @@ function savePage(method, chain) {
      
     var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
     tmpSaveNeeded = false;
+    
     caseMgtEntryfrm.submit(); 
 
     /*var frm = document.forms["caseManagementViewForm"];
@@ -2157,6 +2213,7 @@ function deleteAutoSave() {
                     );
 }
 var month=new Array(12);
+var msgDraftSaved;
 function autoSave(async) {    
     
     var url = ctx + "/CaseManagementEntry.do";
@@ -2185,7 +2242,7 @@ function autoSave(async) {
                                                 var min = d.getMinutes();
                                                 min = min < 10 ? "0" + min : min;
                                                 
-                                                var fmtDate = "<i>Draft Saved " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
+                                                var fmtDate = "<i>" + msgDraftSaved + " " + d.getDate() + "-" + month[d.getMonth()]  + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
                                                 $("autosaveTime").update(fmtDate);
                                                 
                                            }
