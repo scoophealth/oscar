@@ -361,6 +361,9 @@
         printDateOrderMsg = "<bean:message key="oscarEncounter.printDateOrder.msg"/>";
         nothing2PrintMsg = "<bean:message key="oscarEncounter.nothingToPrint.msg"/>";
         editUnsignedMsg = "<bean:message key="oscarEncounter.printDateOrder.msg"/>";
+        msgDraftSaved = "<bean:message key="oscarEncounter.draftSaved.msg"/>";
+        msgPasswd = "<bean:message key="Logon.passWord"/>";
+        btnMsgUnlock = "<bean:message key="oscarEncounter.Index.btnUnLock"/>";
         month[0] = "<bean:message key="share.CalendarPopUp.msgJan"/>";
         month[1] = "<bean:message key="share.CalendarPopUp.msgFeb"/>";
         month[2] = "<bean:message key="share.CalendarPopUp.msgMar"/>";
