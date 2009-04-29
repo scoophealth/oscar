@@ -27,8 +27,9 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script></head>
@@ -44,8 +45,10 @@
 </table>
 <%
   //if action is good, then congratulations
-  int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("keyword"), request.getParameter("dboperation"));
+  int rowsAffected = oscarSuperManager.update("adminDao", request.getParameter("dboperation"), new String[] {request.getParameter("keyword")});
   if (rowsAffected ==1) {
+	  LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_SECURITY,
+        		request.getParameter("keyword"), request.getRemoteAddr());
 %>
 <p>
 <h2><bean:message key="admin.securitydelete.msgDeletionSuccess" />:
@@ -54,9 +57,9 @@
   } else {
 %>
 <h1><bean:message key="admin.securitydelete.msgDeletionFailure" />:
-<%= request.getParameter("keyword") %>. <%  
+<%= request.getParameter("keyword") %>.</h1>
+<%  
   }
-  apptMainBean.closePstmtConn();
 %>
 <p></p>
 <%@ include file="footer2htm.jsp"%>

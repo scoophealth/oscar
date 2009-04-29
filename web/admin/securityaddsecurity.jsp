@@ -39,11 +39,8 @@
 <%@ page
 	import="java.sql.*, java.util.*,java.security.*,oscar.*,oscar.oscarDB.*,oscar.util.SqlUtils"
 	errorPage="errorpage.jsp"%>
-<%
-  //if(session.getValue("user") == null)  response.sendRedirect("../logout.jsp");
-%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
+<%@ include file="/common/webAppContextAndSuperMgr.jsp"%>
 
 <html:html locale="true">
 <head>
@@ -66,33 +63,29 @@
     byte[] btNewPasswd= md.digest(request.getParameter("password").getBytes());
     for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
 
-    DBPreparedHandlerParam[] param =new DBPreparedHandlerParam[8];
-	param[0]=new DBPreparedHandlerParam(request.getParameter("user_name"));
-	param[1]=new DBPreparedHandlerParam(sbTemp.toString());
-	param[2]=new DBPreparedHandlerParam(request.getParameter("provider_no"));
-	param[3]=new DBPreparedHandlerParam(request.getParameter("pin"));
-	param[4]=new DBPreparedHandlerParam(request.getParameter("b_ExpireSet")==null?"0":request.getParameter("b_ExpireSet"));
-	  
-	param[5]=new DBPreparedHandlerParam(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
-	  
-	param[6]=new DBPreparedHandlerParam(request.getParameter("b_LocalLockSet")==null?"0":request.getParameter("b_LocalLockSet"));
-	param[7]=new DBPreparedHandlerParam(request.getParameter("b_RemoteLockSet")==null?"0":request.getParameter("b_RemoteLockSet"));
+    Object[] param = new Object[8];
+	param[0]=request.getParameter("user_name");
+	param[1]=sbTemp.toString();
+	param[2]=request.getParameter("provider_no");
+	param[3]=request.getParameter("pin");
+	param[4]=request.getParameter("b_ExpireSet")==null?"0":request.getParameter("b_ExpireSet");
+	param[5]=MyDateFormat.getSysDate(request.getParameter("date_ExpireDate"));
+	param[6]=request.getParameter("b_LocalLockSet")==null?"0":request.getParameter("b_LocalLockSet");
+	param[7]=request.getParameter("b_RemoteLockSet")==null?"0":request.getParameter("b_RemoteLockSet");
 	int rowsAffected=0;
 	boolean duplicateError=false;
 	
-	try
-	{
-  		rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
-	}
-	catch (Exception e)
-	{
+	try {
+		rowsAffected = oscarSuperManager.update("adminDao", request.getParameter("dboperation"), param);
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY,
+        		request.getParameter("user_name"), request.getRemoteAddr());
+	} catch (Exception e) {
 		if (e.getMessage().toLowerCase().contains("duplicate")) duplicateError=true;
 		else e.printStackTrace();
 	}
-  
-  
+
+
   if (rowsAffected ==1) {
-  //System.out.println("********************");}
 %>
 <h1><bean:message
 	key="admin.securityaddsecurity.msgAdditionSuccess" /></h1>
@@ -108,7 +101,7 @@
 	key="admin.securityaddsecurity.msgAdditionFailure" /></h1>
 <%
   }
-  apptMainBean.closePstmtConn();
-%> <%@ include file="footer2htm.jsp"%></center>
+%>
+<%@ include file="footer2htm.jsp"%></center>
 </body>
 </html:html>

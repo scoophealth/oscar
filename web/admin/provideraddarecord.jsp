@@ -13,7 +13,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.sql.*, java.util.*, oscar.*"
 	errorPage="errorpage.jsp"%>
-<%@ page import="oscar.login.*"%>
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ page import="oscar.log.*, oscar.oscarDB.*"%>
 <%@ page
 	import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter,oscar.util.SqlUtils"%>
@@ -128,7 +128,7 @@ while ((!isOk) && retry < 3) {
 if (isOk) {
 	String proId = param[0];
 	String ip = request.getRemoteAddr();
-	LogAction.addLog(curUser_no, "add", "adminAddUser", proId, ip);
+	LogAction.addLog(curUser_no, LogConst.ADD, "adminAddUser", proId, ip);
 
 	ProviderBillCenter billCenter = new ProviderBillCenter();
 	billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 

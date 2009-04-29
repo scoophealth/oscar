@@ -18,8 +18,7 @@ public class LogConst {
     public static final String REVIEWED = "reviewed";
     public static final String ACK = "acknowledge";
     public static final String NORIGHT= "no right";
-    
-    
+
 
     public static final String CON_LOGIN = "login";
     public static final String CON_APPT = "appointment";
@@ -40,11 +39,6 @@ public class LogConst {
     public static final String CON_MDS_LAB = "mds lab";
     public static final String CON_PATHNET_LAB = "pathnet lab";
     public static final String CON_FLOWSHEET = "FLWST_";
-    
-    
-    
-    
-    
-    
+    public static final String CON_SECURITY = "securityRecord";
     
 }

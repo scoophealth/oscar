@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ page import="java.sql.*, java.util.*" errorPage="errorpage.jsp"%>
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <html:html locale="true">
@@ -45,6 +46,8 @@
   //if action is good, then congratulations
   int rowsAffected = apptMainBean.queryExecuteUpdate(request.getParameter("keyword"), request.getParameter("dboperation"));
   if (rowsAffected ==1) {
+	LogAction.addLog((String)session.getAttribute("user"), LogConst.DELETE, "adminDeleteUser",
+			request.getParameter("keyword"), request.getRemoteAddr());
 %>
 <p>
 <h2><bean:message key="admin.providerdelete.msgDeletionSuccess" />:

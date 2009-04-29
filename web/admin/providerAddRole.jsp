@@ -39,6 +39,7 @@ String curUser_no = (String)session.getAttribute("user");
   int ROLENAME_LENGTH = 30;
   String ip = request.getRemoteAddr();
   String msg = "Type in a role name and search it first to see if it is available.";
+  String role_name = request.getParameter("role_name");
   String action = "search"; // add/edit
   Properties	prop  = new Properties();
   DBHelp dbObj = new DBHelp();
@@ -46,16 +47,15 @@ String curUser_no = (String)session.getAttribute("user");
     // check the input data
     if(request.getParameter("action").startsWith("edit")) {
       	// update the code
-		String role_name = request.getParameter("role_name");
 		if(role_name.equals(request.getParameter("action").substring("edit".length()))) {
-			String	sql   = "update secRole set role_name='" + StringEscapeUtils.escapeSql(request.getParameter("role_name")) + "' ";
-			sql += "where role_name='" + StringEscapeUtils.escapeSql(request.getParameter("role_name")) + "'";
+			String	sql   = "update secRole set role_name='" + StringEscapeUtils.escapeSql(role_name) + "' ";
+			sql += "where role_name='" + StringEscapeUtils.escapeSql(role_name) + "'";
 			//System.out.println(sql);
 			if(dbObj.updateDBRecord(sql, curUser_no)) {
 	  			msg = role_name + " is updated.<br>" + "Type in a role name and search it first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("role_name", role_name);
-			    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, request.getParameter("role_name"), ip);
+			    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, role_name, ip);
 
 			} else {
 	  			msg = role_name + " is <font color='red'>NOT</font> updated. Action failed! Try edit it again." ;
@@ -69,7 +69,6 @@ String curUser_no = (String)session.getAttribute("user");
 		}
     } else if (request.getParameter("action").startsWith("add")) {
       	// insert into the role_name
-		String role_name = request.getParameter("role_name");
 		if(role_name.equals(request.getParameter("action").substring("add".length()))) {
 			String	sql   = "insert into secRole (role_name) values ('";
 			sql += StringEscapeUtils.escapeSql(role_name) + "' )";
@@ -77,7 +76,7 @@ String curUser_no = (String)session.getAttribute("user");
 	  			msg = role_name + " is added.<br>" + "Type in a role name and search it first to see if it is available.";
 	  			action = "search";
 			    prop.setProperty("role_name", role_name);
-			    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, request.getParameter("role_name"), ip);
+			    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, role_name, ip);
 			} else {
 	  			msg = role_name + " is <font color='red'>NOT</font> added. Action failed! Try edit it again." ;
 			    action = "add" + role_name;
@@ -93,10 +92,9 @@ String curUser_no = (String)session.getAttribute("user");
     }
   } else if (request.getParameter("submit") != null && request.getParameter("submit").equals("Search")) {
     // check the input data
-    if(request.getParameter("role_name") == null || request.getParameter("role_name").length() < 2) {
+    if(role_name == null || role_name.length() < 2) {
       msg = "Please type in a role name.";
     } else {
-        String role_name = request.getParameter("role_name");
 		String	sql   = "select * from secRole where role_name='" + StringEscapeUtils.escapeSql(role_name) + "'";
 		ResultSet rs = dbObj.searchDBRecord(sql);
 		//System.out.println(sql);

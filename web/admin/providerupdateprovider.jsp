@@ -4,6 +4,7 @@
 <%@ page
 	import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter"
 	errorPage="errorpage.jsp"%>
+<%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 
@@ -67,6 +68,8 @@ function setfocus() {
   if(rs==null) {
     out.println("failed");
   } else {
+	LogAction.addLog((String)session.getAttribute("user"), LogConst.UPDATE, "adminUpdateUser",
+			request.getParameter("keyword"), request.getRemoteAddr());
     while (rs.next()) {
 %>
 

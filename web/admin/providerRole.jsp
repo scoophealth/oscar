@@ -95,7 +95,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleOld + "</role_name>"  + "<role_id>" + roleId + "</role_id>" + "')";
     	dbObj.updateDBRecord(sql, curUser_no);
 
-    	LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld, ip);
+    	LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleOld +">"+ roleNew, ip);
             
             if( newCaseManagement )
                 updateCaisiPriv(dbObj, roleOld, roleNew, number, curUser_no);
