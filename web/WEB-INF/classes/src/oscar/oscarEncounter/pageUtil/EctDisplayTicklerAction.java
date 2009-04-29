@@ -60,7 +60,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     }
     
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";
-    Dao.setLeftHeading(messages.getMessage("global.viewTickler"));
+    Dao.setLeftHeading(messages.getMessage(request.getLocale(), "global.viewTickler"));
     Dao.setLeftURL(url);        
     
     //set right hand heading link
@@ -89,7 +89,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
             item.setColour("FF0000");
             
         itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                      
-        item.setLinkTitle(itemHeader+ " " + DateUtils.getDate(serviceDate,dateFormat));        
+        item.setLinkTitle(itemHeader+ " " + DateUtils.getDate(serviceDate,dateFormat,request.getLocale()));        
         item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(oscar.Misc.getString(rs,"message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = Math.abs(winName.hashCode());        

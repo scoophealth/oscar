@@ -47,7 +47,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
         //set lefthand module heading and link
         String winName = "Allergy" + bean.demographicNo;
         String url = "popupPage(580,900,'" + winName + "','" + request.getContextPath() + "/oscarRx/showAllergy.do?demographicNo=" + bean.demographicNo + "')";        
-        Dao.setLeftHeading(messages.getMessage("oscarEncounter.NavBar.Allergy"));
+        Dao.setLeftHeading(messages.getMessage(request.getLocale(), "oscarEncounter.NavBar.Allergy"));
         Dao.setLeftURL(url);
         
         //set righthand link to same as left so we have visual consistency with other modules
@@ -69,7 +69,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();                                    
                                      
             date = allergies[idx].getEntryDate();
-            serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
+            serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());                                        
       
             item.setDate(date);            
             String strTitle = StringUtils.maxLenString(allergies[idx].getAllergy().getDESCRIPTION(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
