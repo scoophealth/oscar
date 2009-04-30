@@ -26,7 +26,7 @@ DBHelp dbObj = new DBHelp();
 Properties propDemoSelect = new Properties();
 Properties propSpecSelect = new Properties();
 Properties propARSelect = new Properties();
-ResourceBundle recprop = ResourceBundle.getBundle("oscarResources");
+ResourceBundle recprop = ResourceBundle.getBundle("oscarResources",request.getLocale());
 propDemoSelect.setProperty("last_name", recprop.getString("oscarReport.oscarReportscpbDemo.msgLastName"));
 propDemoSelect.setProperty("first_name", recprop.getString("oscarReport.oscarReportscpbDemo.msgFirstName"));
 propDemoSelect.setProperty("date_joined", recprop.getString("oscarReport.oscarReportscpbDemo.msgDateJoined"));
