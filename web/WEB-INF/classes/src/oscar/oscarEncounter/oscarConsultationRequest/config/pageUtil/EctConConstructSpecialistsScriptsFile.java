@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.ResourceBundle;
+import java.util.Locale;
 
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData;
@@ -103,16 +105,17 @@ public class EctConConstructSpecialistsScriptsFile
         return retval;
     }
 
-    public void makeString()
+    public void makeString(Locale locale)
     {
         serviceId = new Vector();
         serviceDesc = new Vector();
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources", locale);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("function makeSpecialistslist(dec){\n");
         stringBuffer.append(" if(dec=='1') \n");
-        stringBuffer.append("{K(-1,\"----Choose a Service-------\");D(-1,\"--------Choose a Specialist-----\");}\n");
+        stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseServ") + "-------\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optChooseSpec") + "-----\");}\n");
         stringBuffer.append("else\n");
-        stringBuffer.append("{K(-1,\"----All Services-------\");D(-1,\"--------All Specialists-----\");}\n");
+        stringBuffer.append("{K(-1,\"----" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllServices") + "-------\");D(-1,\"--------" + props.getString("oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.optAllSpecs") + "-----\");}\n");
         try
         {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

@@ -61,7 +61,7 @@ public class EctConDisplayServiceAction extends Action {
          System.out.println(e.getMessage());
       }
       EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
-      constructSpecialistsScriptsFile.makeString();
+      constructSpecialistsScriptsFile.makeString(request.getLocale());
       return mapping.findForward("success");
    }
 }

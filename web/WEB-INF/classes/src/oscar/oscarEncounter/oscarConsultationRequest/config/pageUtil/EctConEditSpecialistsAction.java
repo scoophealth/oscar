@@ -72,7 +72,7 @@ public class EctConEditSpecialistsAction extends Action {
             }
          }
          EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
-         constructSpecialistsScriptsFile.makeString();
+         constructSpecialistsScriptsFile.makeString(request.getLocale());
          return mapping.findForward("delete");
       }
       String fName = new String();
@@ -121,7 +121,7 @@ public class EctConEditSpecialistsAction extends Action {
       request.setAttribute("upd", new Integer(updater));
       EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
       request.setAttribute("verd", constructSpecialistsScriptsFile.makeFile());
-      constructSpecialistsScriptsFile.makeString();
+      constructSpecialistsScriptsFile.makeString(request.getLocale());
       return mapping.findForward("success");
    }
 }
