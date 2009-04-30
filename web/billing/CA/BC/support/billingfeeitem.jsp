@@ -72,27 +72,28 @@
 
 <%
 
-	String form=request.getParameter("form");
+    String form=request.getParameter("form");
 
-   String field=request.getParameter("field");
+    String field=request.getParameter("field");
 
-   String info=request.getParameter("info");
+    String info=request.getParameter("info");
    
-   String feeField = request.getParameter("feeField");
+    String feeField=request.getParameter("feeField");
  
-   String searchStr = request.getParameter("searchStr");
-   System.out.println(searchStr);	
-   if (searchStr == null){
+    String searchStr=request.getParameter("searchStr");
 
-     searchStr = "%";
+    System.out.println(searchStr);
+    if (searchStr == null){
 
-   }else{
+        searchStr = "%";
 
-       searchStr = "%" +searchStr + "%";
+    } else {
 
-   }
+        searchStr = "%" +searchStr + "%";
 
-   searchStr = oscar.Misc.mysqlEscape(searchStr);
+    }
+
+    searchStr = oscar.Misc.mysqlEscape(searchStr);
 
 
 
@@ -155,7 +156,7 @@ function updateFeeCodeValues(code,description,fee){
 
 	</tr>
 
-	<%
+    <%
 
 	boolean color = false;
 
@@ -163,26 +164,27 @@ function updateFeeCodeValues(code,description,fee){
 
 	//java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice " + ((null == info) ? "WHERE service_code IN ('19937', '19938', '19939', '19940', '19941', '19943', '19944')" : "") + " ORDER BY service_code, description");
 
-   java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description,value FROM billingservice WHERE description like '"+searchStr+"' or service_code like '"+searchStr+"'  ORDER BY service_code, description");
-	while (rs.next()){
+    java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description,value FROM billingservice WHERE description like '"+searchStr+"' or service_code like '"+searchStr+"'  ORDER BY service_code, description");
 
-%>
+    while (rs.next()){
+
+    %>
 
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left"
 		valign="top">
 
 		<td class="SmallerText">
-		<%
-				if(request.getParameter("corrections") == null){
-			%> <a href=#
-			onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
-		<%}
-			  else{
-			%> <a href=#
-			onClick="updateFeeCodeValues('<%=db.getString(rs,"service_code")%>',' ','<%=db.getString(rs,"value")%>');"><%=db.getString(rs,"service_code")%></a>
-		<%
-			}
-			%>
+        <%
+            if(request.getParameter("corrections") == null){
+        %>
+
+            <a href=#onClick="posttoText('<%=db.getString(rs,"service_code")%>');"><%=db.getString(rs,"service_code")%></a>
+		
+        <%} else {%>
+
+            <a href=#onClick="updateFeeCodeValues('<%=db.getString(rs,"service_code")%>',' ','<%=db.getString(rs,"value")%>');"><%=db.getString(rs,"service_code")%></a>
+
+        <%}%>
 		</td>
 
 		<td class="SmallerText"><%=db.getString(rs,"description")%></td>
