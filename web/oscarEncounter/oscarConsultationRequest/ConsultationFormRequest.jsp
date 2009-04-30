@@ -725,7 +725,7 @@ function fetchAttached() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat" colspan="2">Created by:</td>
+							<td class="stat" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCreated" />:</td>
 						</tr>
 						<tr>
 							<td class="stat" colspan="2" align="right" nowrap><%=consultUtil.getProviderName(consultUtil.providerNo) %>
@@ -803,7 +803,7 @@ function fetchAttached() {
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc" /></a></td>
 						</tr>
 						<tr>
-							<td style="text-align: center">Currently Attached Files:</td>
+							<td style="text-align: center"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.curAttachDoc"/>:</td>
 						</tr>
 						<tr>
 							<td id="tdAttachedDocs"></td>
@@ -938,7 +938,8 @@ function fetchAttached() {
 								cols=20></textarea></td>
 						</tr>
 						<tr>
-							<td class="tite4">Patient Will Book:</td>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formPatientBook" />:</td>
 							<td align="right" class="tite3"><html:checkbox
 								property="patientWillBook" value="1"
 								onclick="disableDateFields()">
