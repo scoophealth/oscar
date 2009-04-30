@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    author JZhang 
+-->
+<hibernate-mapping>
+    <class name="com.quatro.model.Complaint" table="complaint">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" precision="10" scale="0" />
+			<generator class="native" />
+        </id>
+        <property name="source" type="java.lang.String">
+            <column name="source" length="100" />
+        </property>
+        <property name="method" type="java.lang.String">
+            <column name="method" length="20" />
+        </property>
+        <property name="firstname" type="java.lang.String">
+            <column name="firstName" length="30" />
+        </property>
+        <property name="lastname" type="java.lang.String">
+            <column name="lastName" length="30" />
+        </property>
+        <property name="standardsRelated" type="boolean">
+            <column name="standardsRelated" />
+        </property>
+        <property name="standards" type="java.lang.String">
+            <column name="standards" length="100" />
+        </property>
+        
+        <property name="description" type="java.lang.String">
+            <column name="description"/>
+        </property>
+        <property name="satisfiedWithOutcome" type="java.lang.String">
+            <column name="satisfiedWithOutcome" length="50" />
+        </property>
+        <property name="standardsBreached" type="java.lang.String">
+            <column name="standardsBreached" length="1" />
+        </property>
+        <property name="outstandingIssues" type="java.lang.String">
+            <column name="outstandingIssues" length="4000" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="status" length="1" />
+        </property>
+        <property name="completedDate" type="java.util.Calendar">
+            <column name="completedDate" length="7" />
+        </property>
+        <property name="createdDate" type="java.util.Calendar">
+            <column name="createdDate" length="7" />
+        </property>
+        <property name="duration" type="java.lang.String">
+            <column name="duration" length="10" />
+        </property>
+        <property name="person1" type="java.lang.String">
+            <column name="person1" length="60" />
+        </property>
+        <property name="title1" type="java.lang.String">
+            <column name="title1" length="20" />
+        </property>
+        <property name="date1" type="java.util.Calendar">
+            <column name="date1" length="7" />
+        </property>
+        <property name="person2" type="java.lang.String">
+            <column name="person2" length="60" />
+        </property>
+        <property name="title2" type="java.lang.String">
+            <column name="title2" length="20" />
+        </property>
+        <property name="date2" type="java.util.Calendar">
+            <column name="date2" length="7" />
+        </property>
+        <property name="person3" type="java.lang.String">
+            <column name="person3" length="60" />
+        </property>
+        <property name="title3" type="java.lang.String">
+            <column name="title3" length="20" />
+        </property>
+        <property name="date3" type="java.util.Calendar">
+            <column name="date3" length="7" />
+        </property>
+        <property name="person4" type="java.lang.String">
+            <column name="person4" length="60" />
+        </property>
+        <property name="title4" type="java.lang.String">
+            <column name="title4" length="20" />
+        </property>
+        <property name="date4" type="java.util.Calendar">
+            <column name="date4" length="7" />
+        </property>
+        <property name="clientId" type="java.lang.Integer">
+            <column name="clientId" precision="10" scale="0" />
+        </property>
+        <property name="programId" type="java.lang.Integer">
+            <column name="programId" precision="10" scale="0" />
+        </property>
+        <property name="lastUpdateUser" column="lastUpdateUser"></property>
+        <property name="lastUpdateDate" column="lastUpdateDate"></property>
+    </class>
+</hibernate-mapping>

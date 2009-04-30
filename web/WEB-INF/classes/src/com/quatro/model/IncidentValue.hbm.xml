@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    author JZhang
+-->
+<hibernate-mapping>
+    <class name="com.quatro.model.IncidentValue" table="INCIDENT" >
+        <id name="id" type="java.lang.Integer">
+            <column name="id" precision="10" scale="0" />
+			<generator class="native" />
+        </id>
+        <property name="createdDate" type="java.util.Calendar">
+            <column name="createdDate" length="7" />
+        </property>
+        <property name="providerNo" type="java.lang.String">
+            <column name="providerNo" length="6" />
+        </property>
+        <property name="incidentDate" type="java.util.Calendar">
+            <column name="incidentDate" length="7" />
+        </property>
+        <property name="incidentTime" type="java.lang.String">
+            <column name="incidentTime" length="8" />
+        </property>
+        <property name="clients" type="java.lang.String">
+            <column name="clients" length="1000" />
+        </property>
+        <property name="staff" type="java.lang.String">
+            <column name="staff" length="1000" />
+        </property>
+        <property name="witnesses" type="java.lang.String">
+            <column name="witnesses" length="1000" />
+        </property>
+        <property name="otherInvolved" type="java.lang.String">
+            <column name="otherInvolved" length="100" />
+        </property>
+        <property name="nature" type="java.lang.String">
+            <column name="nature" length="100" />
+        </property>
+        <property name="location" type="java.lang.String">
+            <column name="location" length="200" />
+        </property>
+        <property name="clientIssues" type="java.lang.String">
+            <column name="clientIssues" length="100" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="description" length="4000" />
+        </property>
+        <property name="disposition" type="java.lang.String">
+            <column name="disposition" length="100" />
+        </property>
+        <property name="restriction" type="java.lang.String">
+            <column name="restriction" length="1000" />
+        </property>
+        <property name="chargesLaid" type="java.lang.String">
+            <column name="chargesLaid" length="2" />
+        </property>
+        <property name="policeReportNo" type="java.lang.String">
+            <column name="policeReportNo" length="20" />
+        </property>
+        <property name="badgeNo" type="java.lang.String">
+            <column name="badgeNo" length="20" />
+        </property>
+        <property name="investigationRcmd" type="java.lang.String">
+            <column name="investigationRcmd" length="4000" />
+        </property>
+        <property name="investigationConductedby" type="java.lang.String">
+            <column name="investigationConductedBy" length="4000" />
+        </property>
+        <property name="investigationDate" type="java.util.Calendar">
+            <column name="investigationDate" length="7" />
+        </property>
+        <property name="followupInfo" type="java.lang.String">
+            <column name="followupInfo" length="1000" />
+        </property>
+        <property name="followupCompletedby" type="java.lang.String">
+            <column name="followupCompletedBy" length="200" />
+        </property>
+        <property name="followupDate" type="java.util.Calendar">
+            <column name="followupDate" length="7" />
+        </property>
+        <property name="reportCompleted" type="java.lang.String">
+            <column name="reportCompleted" length="1" />
+        </property>
+        <property name="programId" type="java.lang.Integer">
+            <column name="programId" precision="10" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

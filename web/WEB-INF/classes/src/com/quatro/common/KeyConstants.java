@@ -204,5 +204,5 @@ public class KeyConstants {
   public static final String AUTO_DISCHARGE_REASON="50";
   public static final String AUTO_DISCHARGE_DISPOSITION="7";
 
-  
+  public static final String ORG_ROOT = "R1";
  }

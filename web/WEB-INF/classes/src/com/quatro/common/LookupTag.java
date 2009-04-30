@@ -104,20 +104,33 @@ public class LookupTag extends BaseInputTag {
         
         results.append("<td");
         prepareAttribute(results, "style", "border:0px;");
-        prepareAttribute(results, "width", "35px");
+        prepareAttribute(results, "width", "70px");
         results.append(this.getElementClose());
         results.append("<a ");
-        prepareAttribute(results, "onclick", "showLookup('" + tableName + "', '', '', " +
+        prepareAttribute(results, "onclick", "return showLookup('" + tableName + "', '', '', " +
            "'" + formProperty  + "','" +  
            prepareName(codeProperty, name) + "','" + prepareName(bodyProperty, name) + "', true, '" + sRootPath + "');");        
+        prepareAttribute(results,"href","javascript:void1();");
         results.append(this.getElementClose());
         results.append("<img");
        	prepareAttribute(results, "src", "/" + sRootPath + "/images/microsoftsearch.gif");
+        prepareAttribute(results, "border", "0");
         results.append(this.getElementClose());
         results.append("</a>");
+
+        results.append("<a ");
+        prepareAttribute(results, "onclick", "return clearLookupValue('" + formProperty  + "','" +  
+              prepareName(codeProperty, name) + "','" + prepareName(bodyProperty, name) + "');");        
+        prepareAttribute(results, "href", "javascript:void1();");
+        results.append(this.getElementClose());
+        
         results.append("<img");
         prepareAttribute(results, "src", "/" + sRootPath + "/images/Reset16.gif");
+        prepareAttribute(results, "border", "0");
         results.append(this.getElementClose());
+
+        results.append("</a>");
+        
         results.append("</td></tr></table>");
 
         return results.toString();
@@ -166,7 +179,7 @@ public class LookupTag extends BaseInputTag {
           results.append(property);
           return results.toString();
        }
-       return property;
+       return pre_name + "_" + property;
     }
     
 /*	
