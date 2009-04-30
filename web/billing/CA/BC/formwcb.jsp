@@ -344,7 +344,7 @@ String fmtApptDate = fmt.format(new Date());
 			<%if(!haveClaims){%> <a
 				href="javascript: function myFunction() {return false; }"
 				onClick="showpic('claimLayer','claimId');" id="claimId"> <%}%> <b>WCB
-			Claim Number:</B> <html:text maxlength="25" property="w_wcbno" /> <%if(!haveClaims){%>
+			Claim Number:</B> <html:text maxlength="25" property="w_wcbno" /> *Can be left blank <%if(!haveClaims){%>
 			</a> <%}%>
 			</td>
 		</tr>
@@ -486,14 +486,14 @@ String fmtApptDate = fmt.format(new Date());
 		</tr>
 		<tr>
 			<td><a href="javascript: function myFunction() {return false; }"
-				onClick="showpic('Layer1','Calcs');" id="Calcs">WCB Fee Item: </a>
+				onClick="showpic('Layer1','Calcs');" id="Calcs">WCB code: </a>
 
 			</td>
 			<td><html:text maxlength="5" property="w_feeitem" size="5" /> <a
 				onClick="popFeeItemList('WCBForm','w_feeitem');">Search</a></td>
 		</tr>
 		<tr>
-			<td>Extra Fee Item:</td>
+			<td>Service code:</td>
 			<td><html:text maxlength="5" property="w_extrafeeitem" size="5" />
 			<a onClick="popFeeItemList('WCBForm','w_extrafeeitem');">Search</a></td>
 		</tr>
@@ -647,9 +647,9 @@ String fmtApptDate = fmt.format(new Date());
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 
 <div id="Layer1"
-	style="position: absolute; left: 1px; top: 1px; width: 350px; height: 311px; visibility: hidden; z-index: 1">
+	style="position: absolute; left: 1px; top: 1px; width: 400px; height: 311px; visibility: hidden; z-index: 1">
 <!--  This should be changed to automagically fill if this changes often -->
-<table width="98%" border="0" cellspacing="1" cellpadding="1"
+<table width="100%" border="1" cellspacing="0" cellpadding="1" style="font-size: 10px;"
 	align=center>
 	<tr class="SectionHead">
 		<td class="wcblayerTitle">Code</td>
@@ -682,8 +682,7 @@ String fmtApptDate = fmt.format(new Date());
 			onClick="quickPickWCBcode('19939');hidepic('Layer1');return false;">
 		19939 </a></td>
 		<td class="wcblayerItem">&nbsp;</td>
-		<td colspan="2" class="wcblayerItem">WCB TELEPLAN E-FORM 8 REC'D
-		WITHIN 10 DAYS OF FAX</td>
+		<td colspan="2" class="wcblayerItem">WCB TELEPLAN E-FORM 8 REC'D WITHIN 10 DAYS OF FAX</td>
 	</tr>
 
 	<tr class="SectionHead">
