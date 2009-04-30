@@ -300,7 +300,7 @@
 			<tr bgcolor="">
 				<td align="right"><b><input type="checkbox"
 					name="filter_15"></b></td>
-				<td>Multiparous (T>0 or P>0)</td>
+				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgMultiparous"/></td>
 				<td align="right"><input type="hidden" name="value_15"
 					value="(formBCAR.pg1_term >0 or formBCAR.pg1_preterm >0)">
 				<input type="hidden" name="position_15" value="sql"> <input
@@ -359,7 +359,7 @@
 					name="filter_200"></b></td>
 				<td><bean:message key="oscarReport.oscarReportscpbDemo.msgProvince"/> <select name="province">
 					<option value="OT"
-						<%=prov.equals("") || prov.equals("OT")?" selected":""%>>Other</option>
+						<%=prov.equals("") || prov.equals("OT")?" selected":""%>><bean:message key="global.other"/></option>
 					<% if (pNames.isDefined()) {
 	                   for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
 	                       String province = (String) li.next(); %>
@@ -367,27 +367,27 @@
 						<%=province.equals(prov)?" selected":""%>><%=li.next()%></option>
 					<% } %>
 					<% } else { %>
-					<option value="AB" <%=prov.equals("AB")?" selected":""%>>AB-Alberta</option>
-					<option value="BC" <%=prov.equals("BC")?" selected":""%>>BC-British
-					Columbia</option>
-					<option value="MB" <%=prov.equals("MB")?" selected":""%>>MB-Manitoba</option>
-					<option value="NB" <%=prov.equals("NB")?" selected":""%>>NB-New
-					Brunswick</option>
-					<option value="NL" <%=prov.equals("NL")?" selected":""%>>NL-Newfoundland
-					& Labrador</option>
-					<option value="NT" <%=prov.equals("NT")?" selected":""%>>NT-Northwest
-					Territory</option>
-					<option value="NS" <%=prov.equals("NS")?" selected":""%>>NS-Nova
-					Scotia</option>
-					<option value="NU" <%=prov.equals("NU")?" selected":""%>>NU-Nunavut</option>
-					<option value="ON" <%=prov.equals("ON")?" selected":""%>>ON-Ontario</option>
-					<option value="PE" <%=prov.equals("PE")?" selected":""%>>PE-Prince
-					Edward Island</option>
-					<option value="QC" <%=prov.equals("QC")?" selected":""%>>QC-Quebec</option>
-					<option value="SK" <%=prov.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-					<option value="YT" <%=prov.equals("YT")?" selected":""%>>YT-Yukon</option>
-					<option value="US" <%=prov.equals("US")?" selected":""%>>US
-					resident</option>
+					<option value="AB" <%=prov.equals("AB")?" selected":""%>><bean:message key="global.Alberta"/></option>
+					<option value="BC" <%=prov.equals("BC")?" selected":""%>><bean:message key="global.BC"/>
+					</option>
+					<option value="MB" <%=prov.equals("MB")?" selected":""%>><bean:message key="global.Manitoba"/></option>
+					<option value="NB" <%=prov.equals("NB")?" selected":""%>><bean:message key="global.NewBrun"/>
+					</option>
+					<option value="NL" <%=prov.equals("NL")?" selected":""%>><bean:message key="global.Nflnd"/>
+					</option>
+					<option value="NT" <%=prov.equals("NT")?" selected":""%>><bean:message key="global.NWTerr"/>
+					</option>
+					<option value="NS" <%=prov.equals("NS")?" selected":""%>><bean:message key="global.Nova"/>
+					</option>
+					<option value="NU" <%=prov.equals("NU")?" selected":""%>><bean:message key="global.Nunavut"/></option>
+					<option value="ON" <%=prov.equals("ON")?" selected":""%>><bean:message key="global.Ontario"/></option>
+					<option value="PE" <%=prov.equals("PE")?" selected":""%>><bean:message key="global.PEI"/>
+					</option>
+					<option value="QC" <%=prov.equals("QC")?" selected":""%>><bean:message key="global.Quebec"/></option>
+					<option value="SK" <%=prov.equals("SK")?" selected":""%>><bean:message key="global.Sask"/></option>
+					<option value="YT" <%=prov.equals("YT")?" selected":""%>><bean:message key="global.Yukon"/></option>
+					<option value="US" <%=prov.equals("US")?" selected":""%>><bean:message key="global.US"/>
+					</option>
 					<% } %>
 				</select></td>
 				<td align="right"><input type="hidden" name="value_200"

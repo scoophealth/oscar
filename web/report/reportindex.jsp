@@ -255,7 +255,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<td width="2"></td>
 		<td width="1">&nbsp;</td>
                         <td width="300"><sup>*</sup><a HREF="#" ONCLICK="go('all')"><bean:message
-			key="report.reportindex.btnAllAppt" /></a><br>&nbsp;&nbsp; Non Rostered Only <input type="checkbox" id="rosteredOnly" value="true"> </td>
+			key="report.reportindex.btnAllAppt" /></a><br>&nbsp;&nbsp; <bean:message key="report.reportindex.chkRostered"/> <input type="checkbox" id="rosteredOnly" value="true"> </td>
 		<td><a HREF="#"
 			onClick="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../report/reportindex.jsp&year=<%=now.get(Calendar.YEAR)%>&month=<%=now.get(Calendar.MONTH)+1%>&param=<%=URLEncoder.encode("&formdatebox=document.report.asdate.value")%>')"><bean:message
 			key="report.reportindex.formFrom" /></a> <input type='text' name="asdate"
@@ -309,8 +309,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<%j++;%>
 		</td>
 		<td width="1"></td>
-		<td width="300"><a href="#" ONCLICK="go('tab')">Tabular-style
-		Daysheet</a></td>
+		<td width="300"><a href="#" ONCLICK="go('tab')"><bean:message key="report.reportindex.btnDaySheetTable"/></a></td>
 		<td><input type='text' name="tabDay" VALUE="<%=today%>" size=10></td>
 		<td></td>
 		<td></td>
