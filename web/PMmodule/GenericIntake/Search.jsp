@@ -5,6 +5,8 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="java.util.HashMap"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
@@ -121,7 +123,7 @@
         	<c:out value="${x.demographicTransfer.lastName}" />, <c:out value="${x.demographicTransfer.firstName}" />
         </display-el:column>
         <display-el:column title="BirthDate">
-        	<c:out value="${x.demographicTransfer.birthDate.year}" />-<c:out value="${x.demographicTransfer.birthDate.month}" />-<c:out value="${x.demographicTransfer.birthDate.day}" />
+        	<%=DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate())%>
         </display-el:column>
         <display-el:column property="demographicTransfer.gender" title="Gender" />
         <display-el:column property="score" title="Matching Score" />
