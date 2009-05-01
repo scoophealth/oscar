@@ -830,7 +830,7 @@ ctlCount = 0;
 						<td>
 						<%
 				String admDate = "";
-				if(visitType.startsWith("02") ) {
+				if(visitType.startsWith("02")||visitType.startsWith("04") ) {
 					admDate = visitdate;
 				} %> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
 						<input type="text" name="xml_vdate" id="xml_vdate"
