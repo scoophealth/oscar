@@ -32,6 +32,7 @@ public class MsgDisplayMessage {
     public String status     = null;
     public String thesubject = null;
     public String thedate    = null;
+    public String theime    = null;
     public String sentby     = null;
     public String sentto     = null;
     public String attach     = null;

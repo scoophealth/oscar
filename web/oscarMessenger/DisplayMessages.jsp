@@ -438,6 +438,7 @@ function checkAll(formId){
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                     <%= dm.thedate  %>
+                                    <%= dm.theime %>
                                     </td>
                                 </tr>
                             <%}%>

@@ -42,6 +42,7 @@ public class MsgMessageData {
 
     private String messageSubject;
     private String messageDate;
+    private String messageTime;
 
     public MsgMessageData(){        
     }
@@ -52,12 +53,13 @@ public class MsgMessageData {
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
-            sql = "select thesubject, thedate from messagetbl where messageid='"+msgID+"'";
+            sql = "select thesubject, thedate, theime from messagetbl where messageid='"+msgID+"'";
             
             ResultSet rs = db.queryResults(sql);
             if(rs.next()){
                 this.messageSubject = db.getString(rs,"thesubject");
                 this.messageDate = db.getString(rs,"thedate");
+                this.messageTime = db.getString(rs,"theime");
             }
             db.closeConn();
         }
@@ -595,8 +597,12 @@ public class MsgMessageData {
   public String getSubject(){
       return this.messageSubject;
   }
+  
   public String getDate(){         
       return this.messageDate;
   }
 
+  public String getTime(){
+     return this.messageTime;
+  }
 }
