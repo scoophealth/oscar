@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
+<%@page  import="java.text.SimpleDateFormat, oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -37,20 +37,23 @@
   
   String providerName ="";
   String provider = (String) session.getValue("user");
-  String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
+  String dateFmt = "yyyy-MM-dd";
+  String prevDate = UtilDateUtilities.getToday(dateFmt);
   String completed = "0";
   String nextDate = "";
   String summary = "";
   boolean never = false;
   Hashtable extraData = new Hashtable();
+  PreventionData pd = new PreventionData();
   
   if (id != null){
-     PreventionData pd = new PreventionData();
+     
      existingPrevention = pd.getPreventionById(id);
 
      prevDate = (String) existingPrevention.get("preventionDate"); 
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
+     
      if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
         completed = "1";
      }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
@@ -82,6 +85,16 @@
   }
   
   ArrayList providers = ProviderData.getProviderList();  
+  
+  //calc age at time of prevention
+  Date dob = pd.getDemographicDateOfBirth(demographic_no);
+  SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
+  Date dateOfPrev = fmt.parse(prevDate);
+  String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
+  DemographicData demoData = new DemographicData();
+  String[] demoInfo = demoData.getNameAgeSexArray(demographic_no);
+  String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
+  
 %>
 
                          
@@ -258,7 +271,7 @@ clear: left;
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <oscar:nameage demographicNo="<%=demographic_no%>"/>
+                            <%=nameage%>
                         </td>
                         <td  >&nbsp;
 							
