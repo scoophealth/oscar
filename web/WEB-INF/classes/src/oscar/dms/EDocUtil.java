@@ -547,14 +547,32 @@ public class EDocUtil extends SqlUtilBaseS {
         // String nowDate = getDmsDateTime();
         // String sql = "UPDATE document SET status='D', updatedatetime='" + nowDate + "' WHERE document_no=" + documentNo;
         // runSQL(sql);
+        
+        
+        try {
+            String sql = "select status from ctl_document where document_no=" + documentNo;
+            String status = "";
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
+            ResultSet rs = db.GetSQL(sql);
+            if (rs.next()) {
+                status = rs.getString("status");
+            }
+            rs.close();
+            db.CloseConn();
+        
+            DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[2];
+            java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
+            param[0] = new DBPreparedHandlerParam(status);
+            param[1] = new DBPreparedHandlerParam(od1);            
 
-        DBPreparedHandlerParam[] param = new DBPreparedHandlerParam[1];
-        java.sql.Date od1 = MyDateFormat.getSysDate(getDmsDateTime());
-        param[0] = new DBPreparedHandlerParam(od1);
+            String updateSql = "UPDATE document SET status=?, updatedatetime=? WHERE document_no=" + documentNo;
 
-        String updateSql = "UPDATE document SET status='A', updatedatetime=? WHERE document_no=" + documentNo;
-
-        runPreparedSql(updateSql, param);
+            runPreparedSql(updateSql, param);
+        
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     
