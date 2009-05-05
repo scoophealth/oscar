@@ -6,4 +6,7 @@
 	<handler name="ICL" className="ICLHandler" />
 	<handler name="MDS" className="MDSHandler" />
 	<handler name="PATHL7" className="PATHL7Handler" />
+        <handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
+        <handler name="IHA" className="IHAHandler"/>
+        
 </message-configuration>
