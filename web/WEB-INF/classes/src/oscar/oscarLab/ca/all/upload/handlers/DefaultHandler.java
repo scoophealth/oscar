@@ -26,7 +26,12 @@ import oscar.oscarLab.ca.all.util.Utilities;
  */
 public class DefaultHandler implements MessageHandler {
     Logger logger = Logger.getLogger(DefaultHandler.class);
+    String hl7Type = null;
 
+    String getHl7Type(){
+        return hl7Type;
+    }
+    
     public String parse(String fileName,int fileId){
         Document xmlDoc = getXML(fileName);
         MessageUploader uploader = new MessageUploader();
@@ -45,7 +50,8 @@ public class DefaultHandler implements MessageHandler {
                     
                     if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
                         msgCount++;
-                        uploader.routeReport(null, hl7Body,fileId);
+                        logger.info("using xml HL7 Type "+getHl7Type());
+                        uploader.routeReport(getHl7Type(), hl7Body,fileId);
                     }
                 }
             }catch(Exception e){
@@ -60,7 +66,8 @@ public class DefaultHandler implements MessageHandler {
                 ArrayList messages = u.separateMessages(fileName);
                 for (i=0; i < messages.size(); i++){
                     String msg = (String) messages.get(i);
-                    uploader.routeReport(null, msg,fileId);
+                    logger.info("using HL7 Type "+getHl7Type());
+                    uploader.routeReport(getHl7Type(), msg,fileId);
                 }
             }catch(Exception e){
                 uploader.clean(fileId);
