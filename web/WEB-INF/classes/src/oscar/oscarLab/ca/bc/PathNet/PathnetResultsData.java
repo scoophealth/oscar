@@ -247,11 +247,14 @@ public class PathnetResultsData {
     
     
     public String justGetAccessionNumber(String s){
-        String[] ss = s.split("-");
-        if (ss.length == 3)
-            return ss[0];
-        else
-            return ss[1];
+        String[] nums = s.split("-");
+        if (nums.length == 3){
+            return nums[0];
+        }else if (nums.length == 5){
+            return nums[2];
+        }else{
+            return nums[1];
+        }
     }
     
     public String getMatchingLabs(String labId){
