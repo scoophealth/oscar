@@ -144,6 +144,15 @@ public interface MessageHandler {
     public String getOBXIdentifier( int i, int j);
     
     /**
+     * Return the obx value type 
+     * @param i
+     * @param j
+     * @return
+     */
+    public String getOBXValueType(int i, int j);
+    
+    
+    /**
      *  Return the name of the jth OBX segment of the ith OBR group. It is
      *  usually stored in the second component of the third field of the OBX
      *  segment.

@@ -35,9 +35,9 @@ public class DefaultGenericHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(DefaultGenericHandler.class);
     
-    Message msg = null;
-    Terser terser;
-    ArrayList obrGroups = null;
+    protected Message msg = null;
+    protected Terser terser;
+    protected ArrayList obrGroups = null;
     
     /** Creates a new instance of CMLHandler */
     public DefaultGenericHandler(){
@@ -206,6 +206,10 @@ public class DefaultGenericHandler implements MessageHandler {
     public int getOBXCount(int i){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         return(obxSegs.size());
+    }
+    
+    public String getOBXValueType(int i, int j){
+        return(getOBXField(i, j, 2, 0, 1));
     }
     
     public String getOBXIdentifier(int i, int j){
@@ -533,7 +537,7 @@ public class DefaultGenericHandler implements MessageHandler {
         return "";
     }
     
-    private String getOBXField(int i, int j, int field, int rep, int comp){
+    protected String getOBXField(int i, int j, int field, int rep, int comp){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         
         try{
@@ -603,7 +607,7 @@ public class DefaultGenericHandler implements MessageHandler {
     }
     
     
-    private String formatDateTime(String plain){
+    protected String formatDateTime(String plain){
         
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
@@ -614,7 +618,7 @@ public class DefaultGenericHandler implements MessageHandler {
         return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
-    private String getString(String retrieve){
+    protected String getString(String retrieve){
         if (retrieve != null){
             retrieve.replaceAll("^", " ");
             return(retrieve.trim().replaceAll("\\\\\\.br\\\\", "<br />"));

@@ -215,6 +215,11 @@ public class MDSHandler implements MessageHandler {
         return(getOBXField("3-1", i, j));
     }
     
+    
+    public String getOBXValueType(int i, int j){
+        return(getOBXField("2-1",i,j));
+    }
+    
     public String getOBXName(int i, int j){
         return(getOBXField("3-2", i, j));
     }

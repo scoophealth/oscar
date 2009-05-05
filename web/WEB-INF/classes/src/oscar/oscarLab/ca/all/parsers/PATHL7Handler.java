@@ -164,10 +164,13 @@ public class PATHL7Handler implements MessageHandler {
         try{
             String accessionNum = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getFillerOrderNumber().getEntityIdentifier().getValue());
             String[] nums = accessionNum.split("-");
-            if (nums.length == 3)
+            if (nums.length == 3){
                 return nums[0];
-            else
+            }else if (nums.length == 5){
+                return nums[2];
+            }else{
                 return nums[1];
+            }    
         }catch(Exception e){
             logger.error("Could not return accession number", e);
             
@@ -344,6 +347,14 @@ public class PATHL7Handler implements MessageHandler {
     public String getOBXIdentifier(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
+        }catch(Exception e){
+            return("");
+        }
+    }
+    
+    public String getOBXValueType(int i, int j){
+        try{
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()));
         }catch(Exception e){
             return("");
         }

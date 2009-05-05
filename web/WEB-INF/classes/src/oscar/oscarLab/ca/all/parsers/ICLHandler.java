@@ -29,7 +29,7 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 /*
  * @author David Daley, Ithream
  */
-public class ICLHandler implements MessageHandler {
+public class ICLHandler extends DefaultGenericHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(ICLHandler.class);
     ORU_R01 msg = null;
@@ -580,17 +580,9 @@ public class ICLHandler implements MessageHandler {
     }
     
     
-    private String formatDateTime(String plain){
-        String dateFormat = "yyyyMMddHHmmss";
-        dateFormat = dateFormat.substring(0, plain.length());
-        String stringFormat = "yyyy-MM-dd HH:mm:ss";
-        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
-        
-        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
-        return UtilDateUtilities.DateToString(date, stringFormat);
-    }
     
-    private String getString(String retrieve){
+    
+    protected String getString(String retrieve){
         if (retrieve != null){
             return(retrieve.trim().replaceAll("\\\\\\.br\\\\", "<br />"));
         }else{

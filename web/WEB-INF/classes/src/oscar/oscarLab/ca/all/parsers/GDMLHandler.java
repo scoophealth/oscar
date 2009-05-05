@@ -235,6 +235,19 @@ public class GDMLHandler implements MessageHandler {
         }
     }
     
+    
+    public String getOBXValueType(int i, int j){
+        String ret = "";
+        try{
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
+            ret = obxSeg.getValueType().getValue();
+        }catch(Exception e){
+            logger.error("Error returning OBX name", e);
+        }
+        
+        return ret;
+    }
+    
     public String getOBXName(int i, int j){
         String ret = "";
         try{
