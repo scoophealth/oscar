@@ -70,10 +70,12 @@ public class HandlerClassFactory {
             } catch (ClassNotFoundException e) {
                 logger.debug("Could not find message handler: "+msgHandler+
                         "\nUsing default message handler instead");
+                e.printStackTrace();
                 return(new DefaultHandler());
             } catch (Exception e1){
                 logger.error("Could not create message handler: "+msgHandler+
                         "\nUsing default message handler instead", e1);
+                e1.printStackTrace();
                 return(new DefaultHandler());
             }
         }
