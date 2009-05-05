@@ -1,4 +1,4 @@
-<!--
+<%--
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,7 +22,7 @@
  * Hamilton
  * Ontario, Canada
  */
--->
+--%>
 
 <%@ page language="java" import="java.util.HashMap, oscar.log.*"
 	errorPage="errorpage.jsp"%>
