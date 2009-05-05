@@ -41,6 +41,7 @@ public class LoginFilter implements Filter {
 
 	private static final String[] EXEMPT_URLS = { 
 		"/images/", 
+		"/signature_pad/", 
 		"/lab/CMLlabUpload.do", 
 		"/lab/newLabUpload.do", 
 		"/lab/CA/ON/uploadComplete.jsp",
