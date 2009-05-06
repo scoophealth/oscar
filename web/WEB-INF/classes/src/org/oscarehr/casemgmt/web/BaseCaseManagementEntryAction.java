@@ -138,7 +138,8 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	protected void SetChecked(CheckBoxBean[] checkedlist, int id) {
 		for (int i = 0; i < checkedlist.length; i++)
 		{
-			if ((checkedlist[i].getCommunityIssue() == null || !checkedlist[i].getCommunityIssue().isRemote()) &&(checkedlist[i].getCommunityIssue().getId().intValue() == id))
+			if(checkedlist[i] == null) { continue;}
+			if ((checkedlist[i].getCommunityIssue() == null || !checkedlist[i].getCommunityIssue().isRemote()) &&(checkedlist[i].getCommunityIssue().getId() != null && checkedlist[i].getCommunityIssue().getId().intValue() == id))
 			{
 				checkedlist[i].setChecked("on");
 				break;
