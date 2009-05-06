@@ -147,11 +147,9 @@
 </p>
 
 <p><a href="demographicaddarecordhtm.jsp"><b><font size="+1"><bean:message
-	key="demographic.search.btnCreateNew" /></font></b></a> <oscar:oscarPropertiesCheck
-	property="SHOW_FILE_IMPORT_SEARCH" value="yes">
-           &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font
-		size="+1">Import New Demographic</font></a>
-</oscar:oscarPropertiesCheck></p>
+	key="demographic.search.btnCreateNew" /></font></b></a> 
+           &nbsp;&nbsp;&nbsp;<a href="demographicImport.jsp"><b><font size="+1">Import New Demographic</font></a>
+</p>
 <p><!--a href="http://204.92.240.253:8080/test/slt/Search.jsp"><font size="+1"><bean:message key="demographic.search.btnELearning"/></font></a--></p>
 </center>
 </body>
