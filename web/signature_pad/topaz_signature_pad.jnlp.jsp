@@ -29,11 +29,15 @@
 		<property name="sessionCookieValue" value="<%=sessionCookie.getValue()%>" />
 		<property name="signaturePadUrlBase" value="<%=signaturePadUrlBase%>" />
 		<jar href="topaz_signature_pad-0.0-SNAPSHOT.jar" />
-		<jar href="comm-0.0.jar" />
-		<jar href="sigplus-2.52.jar" />
+		<jar href="comm-0.0_signed.jar" />
+		<jar href="sigplus-2.52_signed.jar" />
+		<jar href="commons-codec-1.3_signed.jar" />
+		<jar href="commons-logging-1.1.1_signed.jar" />
+		<jar href="httpclient-4.0-beta2_signed.jar" />
+		<jar href="httpcore-4.0-beta3_signed.jar" />
 	</resources>
 	<resources os="Linux">
-		<nativelib href="libSigUsb_linux_i386-2.52.jar" />
+		<nativelib href="libSigUsb-2.52_linux_i386_signed.jar" />
 	</resources>
 	<resources os="Windows">
 	</resources>
