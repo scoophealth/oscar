@@ -51,124 +51,130 @@ import oscar.oscarRx.util.RxUtil;
 
 public final class RxWriteScriptAction extends Action {
 	
-	private static final Logger logger=MiscUtils.getLogger();
-	
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, Exception {
+private static final Logger logger=MiscUtils.getLogger();
+    public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException, Exception {
 
-		// Setup variables
-		RxWriteScriptForm frm = (RxWriteScriptForm) form;
 
-		String fwd = "refresh";
+        // Setup variables
+        RxWriteScriptForm frm = (RxWriteScriptForm) form;
 
-		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
-		if (bean == null) {
-			response.sendRedirect("error.html");
-			return null;
-		}
+        String fwd = "refresh";
 
-		if (frm.getAction().startsWith("update")) {
+        oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
+        if (bean == null) {
+            response.sendRedirect("error.html");
+            return null;
+        }
 
-			RxDrugData drugData = new RxDrugData();
-			RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
-			RxPrescriptionData prescription = new RxPrescriptionData();
+        if (frm.getAction().startsWith("update")) {
 
-			if (frm.getGCN_SEQNO() != 0) { // not custom
-				if (frm.getBrandName().equals(rx.getBrandName()) == false) {
-					rx.setBrandName(frm.getBrandName());
-				} else {
-					rx.setGCN_SEQNO(frm.getGCN_SEQNO());
-				}
-			} else { // custom
-				rx.setBrandName(null);
-				rx.setGCN_SEQNO(0);
-				rx.setCustomName(frm.getCustomName());
-			}
+            RxDrugData drugData = new RxDrugData();
+            RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
+            RxPrescriptionData prescription = new RxPrescriptionData();
 
-			rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd"));
-			rx.setWrittenDate(RxUtil.StringToDate(frm.getWrittenDate(), "yyyy-MM-dd"));
-			rx.setTakeMin(frm.getTakeMinFloat());
-			rx.setTakeMax(frm.getTakeMaxFloat());
-			rx.setFrequencyCode(frm.getFrequencyCode());
-			rx.setDuration(frm.getDuration());
-			rx.setDurationUnit(frm.getDurationUnit());
-			rx.setQuantity(frm.getQuantity());
-			rx.setRepeat(frm.getRepeat());
-			rx.setLastRefillDate(RxUtil.StringToDate(frm.getLastRefillDate(), "yyyy-MM-dd"));
-			rx.setNosubs(frm.getNosubs());
-			rx.setPrn(frm.getPrn());
-			rx.setSpecial(frm.getSpecial());
-			rx.setAtcCode(frm.getAtcCode());
-			rx.setRegionalIdentifier(frm.getRegionalIdentifier());
-			rx.setUnit(frm.getUnit());
-			rx.setUnitName(frm.getUnitName());
-			rx.setMethod(frm.getMethod());
-			rx.setRoute(frm.getRoute());
-			rx.setCustomInstr(frm.getCustomInstr());
-			rx.setDosage(frm.getDosage());
-			rx.setOutsideProviderName(frm.getOutsideProviderName());
-			rx.setOutsideProviderOhip(frm.getOutsideProviderOhip());
-			rx.setLongTerm(frm.getLongTerm());
-			rx.setPastMed(frm.getPastMed());
-			rx.setPatientCompliance(frm.getPatientComplianceY(), frm.getPatientComplianceN());
-			rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
-			
-			logger.debug("SAVING STASH " + rx.getCustomInstr());
-			if (rx.getSpecial()==null) logger.error("Drug.special is null : "+rx.getSpecial()+" : "+frm.getSpecial());
-			else if (rx.getSpecial().length()<6) logger.warn("Drug.special appears to be empty : "+rx.getSpecial()+" : "+frm.getSpecial());
+            if (frm.getGCN_SEQNO() != 0) { // not custom            
+                if (frm.getBrandName().equals(rx.getBrandName()) == false) {
+                    rx.setBrandName(frm.getBrandName());
+                } else {
+                    rx.setGCN_SEQNO(frm.getGCN_SEQNO());
+                }
+            } else { // custom            
+                rx.setBrandName(null);
+                rx.setGCN_SEQNO(0);
+                rx.setCustomName(frm.getCustomName());
+            }
 
-			bean.setStashItem(bean.getStashIndex(), rx);
-			rx = null;
+            rx.setRxDate(RxUtil.StringToDate(frm.getRxDate(), "yyyy-MM-dd"));
+            rx.setWrittenDate(RxUtil.StringToDate(frm.getWrittenDate(), "yyyy-MM-dd"));
+            rx.setTakeMin(frm.getTakeMinFloat());
+            rx.setTakeMax(frm.getTakeMaxFloat());
+            rx.setFrequencyCode(frm.getFrequencyCode());
+            rx.setDuration(frm.getDuration());
+            rx.setDurationUnit(frm.getDurationUnit());
+            rx.setQuantity(frm.getQuantity());
+            rx.setRepeat(frm.getRepeat());
+            rx.setLastRefillDate(RxUtil.StringToDate(frm.getLastRefillDate(), "yyyy-MM-dd"));
+            rx.setNosubs(frm.getNosubs());
+            rx.setPrn(frm.getPrn());
+            rx.setSpecial(frm.getSpecial());
+            rx.setAtcCode(frm.getAtcCode());
+            rx.setRegionalIdentifier(frm.getRegionalIdentifier());
+            rx.setUnit(frm.getUnit());
+            rx.setUnitName(frm.getUnitName());
+            rx.setMethod(frm.getMethod());
+            rx.setRoute(frm.getRoute());
+            rx.setCustomInstr(frm.getCustomInstr());
+            rx.setDosage(frm.getDosage());
+            rx.setOutsideProviderName(frm.getOutsideProviderName());
+            rx.setOutsideProviderOhip(frm.getOutsideProviderOhip());
+            rx.setLongTerm(frm.getLongTerm());
+            rx.setPastMed(frm.getPastMed());
+            rx.setPatientCompliance(frm.getPatientComplianceY(), frm.getPatientComplianceN());
+            try {
+                rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
+            } catch (Exception e) {
+                logger.error("Unable to get DrugForm from drugref");
+            }
+            System.out.println("SAVING STASH " + rx.getCustomInstr());
 
-			if (bean.getStashSize() > bean.getAttributeNames().size()) {
-				String annotation_attrib = request.getParameter("annotation_attrib");
-				if (annotation_attrib == null) annotation_attrib = "";
-				bean.addAttributeName(annotation_attrib);
-			}
+	    logger.debug("SAVING STASH " + rx.getCustomInstr());
+	    if (rx.getSpecial()==null) logger.error("Drug.special is null : "+rx.getSpecial()+" : "+frm.getSpecial());
+	    else if (rx.getSpecial().length()<6) logger.warn("Drug.special appears to be empty : "+rx.getSpecial()+" : "+frm.getSpecial());
 
-			if (frm.getAction().equals("update")) {
-				fwd = "refresh";
-			}
-			if (frm.getAction().equals("updateAddAnother")) {
-				fwd = "addAnother";
-			}
-			if (frm.getAction().equals("updateAndPrint")) {
-				int i;
-				String scriptId = prescription.saveScript(bean);
+            bean.setStashItem(bean.getStashIndex(), rx);
+            rx = null;
 
-				@SuppressWarnings("unchecked")
-				ArrayList<String> attrib_names = bean.getAttributeNames();
-				for (i = 0; i < bean.getStashSize(); i++) {
-					rx = bean.getStashItem(i);
-					rx.Save(scriptId);
+            if (bean.getStashSize() > bean.getAttributeNames().size()) {
+                String annotation_attrib = request.getParameter("annotation_attrib");
+                if (annotation_attrib == null) {
+                    annotation_attrib = "";
+                }
+                bean.addAttributeName(annotation_attrib);
+            }
 
-					/* Save annotation */
-					HttpSession se = request.getSession();
-					WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
-					CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-					String attrib_name = attrib_names.get(i);
-					if (attrib_name != null) {
-						CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
-						if (cmn != null) {
-							cmm.saveNoteSimple(cmn);
-							CaseManagementNoteLink cml = new CaseManagementNoteLink();
-							cml.setTableName(CaseManagementNoteLink.DRUGS);
-							cml.setTableId((long) rx.getDrugId());
-							cml.setNoteId(cmn.getId());
-							cmm.saveNoteLink(cml);
+            if (frm.getAction().equals("update")) {
+                fwd = "refresh";
+            }
+            if (frm.getAction().equals("updateAddAnother")) {
+                fwd = "addAnother";
+            }
+            if (frm.getAction().equals("updateAndPrint")) {
+                int i;
+                String scriptId = prescription.saveScript(bean);
+                @SuppressWarnings("unchecked")
+                ArrayList<String> attrib_names = bean.getAttributeNames();
+                for (i = 0; i < bean.getStashSize(); i++) {
+                    rx = bean.getStashItem(i);
+                    rx.Save(scriptId);
 
-							se.removeAttribute(attrib_name);
-						}
-					}
-					rx = null;
-				}
+                    /* Save annotation */
+                    HttpSession se = request.getSession();
+                    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+                    CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+                    String attrib_name = attrib_names.get(i);
+                    if (attrib_name != null) {
+                        CaseManagementNote cmn = (CaseManagementNote) se.getAttribute(attrib_name);
+                        if (cmn != null) {
+                            cmm.saveNoteSimple(cmn);
+                            CaseManagementNoteLink cml = new CaseManagementNoteLink();
+                            cml.setTableName(CaseManagementNoteLink.DRUGS);
+                            cml.setTableId((long) rx.getDrugId());
+                            cml.setNoteId(cmn.getId());
+                            cmm.saveNoteLink(cml);
 
-				fwd = "viewScript";
-				String ip = request.getRemoteAddr();
-				request.setAttribute("scriptId", scriptId);
-				LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo());
+                            se.removeAttribute(attrib_name);
+                        }
+                    }
+                    rx = null;
+                }
 
-			}
-		}
-		return mapping.findForward(fwd);
-	}
+                fwd = "viewScript";
+                String ip = request.getRemoteAddr();
+                request.setAttribute("scriptId", scriptId);
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_PRESCRIPTION, scriptId, ip, "" + bean.getDemographicNo());
+
+            }
+        }
+        return mapping.findForward(fwd);
+    }
 }
