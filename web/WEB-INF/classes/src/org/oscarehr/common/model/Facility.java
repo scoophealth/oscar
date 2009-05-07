@@ -35,6 +35,7 @@ public class Facility implements Serializable {
     private boolean enableIntegratedReferrals=true;
     private boolean enableHealthNumberRegistry=true;
     private boolean allowSims = true;
+    private boolean enableDigitalSignatures=false;
     //private String lastUpdateUser;
     //private Date lastUpdateDate;
     
@@ -199,6 +200,14 @@ public boolean isAllowSims() {
 	public void setAllowSims(boolean allowSims) {
 		this.allowSims = allowSims;
 	}
+
+	public boolean isEnableDigitalSignatures() {
+    	return enableDigitalSignatures;
+    }
+
+	public void setEnableDigitalSignatures(boolean enableDigitalSignatures) {
+    	this.enableDigitalSignatures = enableDigitalSignatures;
+    }
 
 	/*
 	public String getLastUpdateUser() {

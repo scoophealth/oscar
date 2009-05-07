@@ -47,6 +47,11 @@
 		</tr>
 
 		<tr class="b">
+			<td width="20%">Digital Signatures Enabled:</td>
+			<td><c:out value="${facilityManagerForm.facility.enableDigitalSignatures}" /></td>
+		</tr>
+
+		<tr class="b">
 			<td width="20%">Integrator Enabled:</td>
 			<td><c:out
 				value="${facilityManagerForm.facility.integratorEnabled}" /> <c:if

@@ -17,7 +17,8 @@ create table Facility (
 	allowQuickConsent tinyint(1) not null,
 	enableIntegratedReferrals tinyint(1) not null,
 	enableHealthNumberRegistry tinyint(1) not null,
-        allowSims tinyint(1) unsigned NOT NULL default 1
+	allowSims tinyint(1) unsigned NOT NULL default 1,
+	enableDigitalSignatures tinyint(1) not null
 );
 
 

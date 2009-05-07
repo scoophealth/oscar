@@ -1,5 +1,9 @@
 <%@page contentType="application/x-java-jnlp-file"%>
 <%
+	// This jsp expects 2 parameters, requestingPage and clientId.
+	// requestingPage is just a simple string identifying the page making the request, chances are the simple jsp class name should be used, this is used in the signature filename to prevent conflicts between different pages. 
+	// the image expected to be stored in <java.temp.dir>/<requesting_page>_<provider_no>_<clientId>.jpg
+	
 	// original url something like http://127.0.0.1:8080/oscar/signature_pad/topaz_signature_pad.jnlp
 	// signaturePadUrlBase should be something like http://127.0.0.1:8080/oscar/signature_pad as that's where all the jars are
 	String signaturePadUrlBase=request.getRequestURL().toString();
@@ -28,6 +32,8 @@
 		<property name="sessionCookieKey" value="<%=sessionCookie.getName()%>" />
 		<property name="sessionCookieValue" value="<%=sessionCookie.getValue()%>" />
 		<property name="signaturePadUrlBase" value="<%=signaturePadUrlBase%>" />
+		<property name="requestingPage" value="<%=request.getParameter("requestingPage")%>" />
+		<property name="clientId" value="<%=request.getParameter("clientId")%>" />
 		<jar href="topaz_signature_pad-0.0-SNAPSHOT.jar" />
 		<jar href="comm-0.0_signed.jar" />
 		<jar href="sigplus-2.52_signed.jar" />

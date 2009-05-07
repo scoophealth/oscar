@@ -1,16 +1,32 @@
-
+<%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.io.FileOutputStream"%>
 <%@page import="java.io.InputStream"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%><%
-System.err.println("UPLOAD SIGNATURE");
-System.err.println("LOGGED IN USER "+LoggedInInfo.loggedInInfo.get().loggedInProvider);
-InputStream is=request.getInputStream();
-FileOutputStream fos=new FileOutputStream("/tmp/sigtestuploaded.jpg");
-int i=0;
-while ((i=is.read())!=-1)
-{
-	fos.write(i);
-}
-fos.flush();
-fos.close();
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%
+	try
+	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String filename=System.getProperty("java.temp.dir")+'/'+request.getParameter("requestingPage")+loggedInInfo.loggedInProvider.getProviderNo()+'_'+request.getParameter("clientId")+".jpg";
+		FileOutputStream fos=new FileOutputStream(filename);
+	
+		int i=0;
+		int counter=0;
+		InputStream is=request.getInputStream();
+		while ((i=is.read())!=-1)
+		{
+			fos.write(i);
+			counter++;
+		}
+		fos.flush();
+		fos.close();
+
+		MiscUtils.getLogger().debug("Signature uploaded : "+filename+", size="+counter);
+		
+		response.setStatus(HttpServletResponse.SC_OK);
+	}
+	catch (Exception e)
+	{
+		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		MiscUtils.getLogger().error("Error receiving signature : "+request.getQueryString(), e);
+	}
 %>
