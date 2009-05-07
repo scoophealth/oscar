@@ -115,8 +115,16 @@ function popupPageK(page) {
 	for(int j=0; j<forms.length; j++) {
 		EctFormData.Form frm = forms[j];
 		String table = frm.getFormTable();
+                table = org.apache.commons.lang.StringEscapeUtils.escapeSql(table);
 		//EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table, Integer.parseInt(strLimit1),Integer.parseInt(strLimit2));
-		EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
+                                
+		EctFormData.PatientForm[] pforms;
+                if( table.length() == 0 ) {
+                    pforms = new EctFormData.PatientForm[0];
+                }
+                else {
+                    pforms = new EctFormData().getPatientForms(demoNo, table);
+                }
 		int nItems = 0;
 
 		for(int i=0; i<pforms.length; i++) {
