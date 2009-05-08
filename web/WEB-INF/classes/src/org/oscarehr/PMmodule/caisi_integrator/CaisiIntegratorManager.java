@@ -256,7 +256,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<CachedProgram> getRemotePrograms(int facilityId) throws MalformedURLException {
+	public ArrayList<CachedProgram> getRemotePrograms(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
 		List<CachedProgram> results = (List<CachedProgram>) facilitySegmentedSimpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS");
 
@@ -270,6 +270,21 @@ public class CaisiIntegratorManager {
 		return (new ArrayList<CachedProgram>(results));
 	}
 
+	/**
+	 * @param facilityId the callers facilityId
+	 * @param type should not be null
+	 * @return a list of cached programs matching the program type
+	 */
+	public ArrayList<CachedProgram> getRemotePrograms(int facilityId, String type) throws MalformedURLException {
+		ArrayList<CachedProgram> results = new ArrayList<CachedProgram>();
+
+		for (CachedProgram cachedProgram : getRemotePrograms(facilityId)) {
+			if (type.equals(cachedProgram.getType())) results.add(cachedProgram);
+		}
+
+		return (results);
+	}
+	
 	public CachedProgram getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
 		List<CachedProgram> programs = getRemotePrograms(facilityId);
 
@@ -401,9 +416,5 @@ public class CaisiIntegratorManager {
 
 		HnrWs hnrWs = getHnrWs(facility.getId());
 		return(hnrWs.setHnrClientData(hnrClient));
-	}
-
-	private static String getProviderAuditString(Facility facility, Provider provider) {
-		return "facility=" + facility.getName() + ", provider=" + provider.getFormattedName();
 	}
 }
