@@ -9,9 +9,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageConsent {
@@ -23,22 +22,23 @@ public class ManageConsent {
 	private HashMap<Integer, IntegratorConsent> currentConsents = new HashMap<Integer, IntegratorConsent>();
 	private Integer showConsentId = null;
 
-	public ManageConsent(Facility facility, Provider provider, int clientId, Integer showConsentId) {
+	public ManageConsent(int clientId, Integer showConsentId) {
 		try {
-
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			
 			if (showConsentId != null) {
 				this.showConsentId = showConsentId;
 
 				IntegratorConsent consent = integratorConsentDao.find(showConsentId);
 				if (consent != null) {
 					currentConsents.put(consent.getIntegratorFacilityId(), consent);
-					allRemoteFacilities.add(caisiIntegratorManager.getRemoteFacility(facility.getId(), consent.getIntegratorFacilityId()));
+					allRemoteFacilities.add(caisiIntegratorManager.getRemoteFacility(loggedInInfo.currentFacility.getId(), consent.getIntegratorFacilityId()));
 				}
 			} else {
-				allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
+				allRemoteFacilities = caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId());
 
 				for (CachedFacility cachedFacility : allRemoteFacilities) {
-					IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
+					IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(loggedInInfo.currentFacility.getId(), clientId, cachedFacility.getIntegratorFacilityId());
 					if (consent != null) currentConsents.put(consent.getIntegratorFacilityId(), consent);
 				}
 			}
@@ -70,5 +70,9 @@ public class ManageConsent {
 
 	public boolean isReadOnly() {
 		return (showConsentId != null);
+	}
+
+	public boolean useDigitalSignatures() {
+		return (LoggedInInfo.loggedInInfo.get().currentFacility.isEnableDigitalSignatures());
 	}
 }

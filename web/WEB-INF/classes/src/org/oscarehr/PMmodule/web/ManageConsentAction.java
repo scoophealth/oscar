@@ -1,5 +1,7 @@
 package org.oscarehr.PMmodule.web;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,9 +11,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageConsentAction {
@@ -20,17 +21,20 @@ public class ManageConsentAction {
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 
 	private HashMap<Integer, IntegratorConsent> consents = new HashMap<Integer, IntegratorConsent>();
+	private String signatureRequestId = null;
 
-	public ManageConsentAction(Facility facility, Provider provider, Integer clientId, String formType) throws MalformedURLException {
+	public ManageConsentAction(Integer clientId, String formType) throws MalformedURLException {
 		try {
-			for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(facility.getId())) {
+			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+			for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
 				IntegratorConsent consent = new IntegratorConsent();
 				consent.setIntegratorFacilityId(cachedFacility.getIntegratorFacilityId());
 				consent.setFormVersion(formType);
 				consent.setCreatedDate(new Date());
 				consent.setDemographicId(clientId);
-				consent.setFacilityId(facility.getId());
-				consent.setProviderNo(provider.getProviderNo());
+				consent.setFacilityId(loggedInInfo.currentFacility.getId());
+				consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 				consents.put(cachedFacility.getIntegratorFacilityId(), consent);
 			}
 		} catch (Exception e) {
@@ -57,14 +61,27 @@ public class ManageConsentAction {
 		else logger.error("unexpected consent bit : " + s);
 	}
 
-	public void addHnrConsent()
-	{
+	public void addHnrConsent() {
 		for (IntegratorConsent consent : consents.values()) {
 			consent.setConsentToHealthNumberRegistry(true);
 		}
 	}
-	
+
 	public void storeAllConsents() {
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.currentFacility.isEnableDigitalSignatures()) {
+			try {
+				String filename = System.getProperty("java.io.tmpdir") + "/signature_" + signatureRequestId + ".jpg";
+				FileInputStream fileInputStream = new FileInputStream(filename);
+// @TODO write bytes to db
+			} catch (FileNotFoundException e) {
+// @TODO signature required, throw back to consent screen with error
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		for (IntegratorConsent consent : consents.values()) {
 			integratorConsentDao.persist(consent);
 		}
@@ -91,5 +108,9 @@ public class ManageConsentAction {
 			consent.setPrintedFormLocation(formLocation);
 			consent.setRefusedToSign(refusedToSign);
 		}
+	}
+
+	public void setSignatureRequestId(String signatureRequestId) {
+		this.signatureRequestId = signatureRequestId;
 	}
 }

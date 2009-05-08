@@ -6,7 +6,7 @@
 	try
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String filename=System.getProperty("java.temp.dir")+'/'+request.getParameter("requestingPage")+loggedInInfo.loggedInProvider.getProviderNo()+'_'+request.getParameter("clientId")+".jpg";
+		String filename=System.getProperty("java.io.tmpdir")+"/signature_"+request.getParameter("signatureRequestId")+".jpg";
 		FileOutputStream fos=new FileOutputStream(filename);
 	
 		int i=0;

@@ -4,16 +4,13 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
-<%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 
 <%
 	Integer currentDemographicId=new Integer(request.getParameter("demographicId"));
-	Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-	Provider provider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
-
-	ManageConsentAction manageConsentAction=new ManageConsentAction(facility, provider, currentDemographicId, "DETAILED");
-
+	ManageConsentAction manageConsentAction=new ManageConsentAction(currentDemographicId, "DETAILED");
+	manageConsentAction.setSignatureRequestId(request.getParameter("signatureRequestId"));
+	
 	if ("on".equals(request.getParameter("consent.hnr"))) manageConsentAction.addHnrConsent();
 	
 	@SuppressWarnings("unchecked")

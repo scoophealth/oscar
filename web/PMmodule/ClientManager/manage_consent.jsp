@@ -9,17 +9,16 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-	Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-	Provider provider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 
 	Integer showConsentId=null;
 	String tempString=request.getParameter("consentId");
 	if (tempString!=null) showConsentId=Integer.parseInt(tempString);
 	
-	ManageConsent manageConsent=new ManageConsent(facility, provider, currentDemographicId, showConsentId);
+	ManageConsent manageConsent=new ManageConsent(currentDemographicId, showConsentId);
 %>
 
-<h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
+
+<%@page import="org.oscarehr.util.LoggedInInfo"%><h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
 
 <h4>Legend</h4>
 <div style="font-size:smaller">
@@ -71,6 +70,17 @@
 		%>
 	</table>
 		
+	<%
+		if (manageConsent.useDigitalSignatures())
+		{
+			String signatureRequestId=""+LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+"_"+System.currentTimeMillis();
+			%>
+				<input type="hidden" name="signatureRequestId" value="<%=signatureRequestId%>" />
+				<input type="button" value="Get Digital Signature" onclick="document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?signatureRequestId=<%=signatureRequestId%>'"/>					
+			<%								
+		}
+	%>
+
 	<input type="submit" value="save" <%=manageConsent.isReadOnly()?"disabled=\"disabled\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
