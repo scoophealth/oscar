@@ -1,4 +1,5 @@
-<%@page import="org.oscarehr.util.MiscUtils"%>
+
+<%@page import="org.oscarehr.util.DigitalSignatureUtils"%><%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.io.FileOutputStream"%>
 <%@page import="java.io.InputStream"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
@@ -6,7 +7,7 @@
 	try
 	{
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		String filename=System.getProperty("java.io.tmpdir")+"/signature_"+request.getParameter("signatureRequestId")+".jpg";
+		String filename=DigitalSignatureUtils.getTempFilePath(request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
 		FileOutputStream fos=new FileOutputStream(filename);
 	
 		int i=0;

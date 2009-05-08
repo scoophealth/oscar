@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageConsentAction"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
@@ -9,7 +10,7 @@
 <%
 	Integer currentDemographicId=new Integer(request.getParameter("demographicId"));
 	ManageConsentAction manageConsentAction=new ManageConsentAction(currentDemographicId, "DETAILED");
-	manageConsentAction.setSignatureRequestId(request.getParameter("signatureRequestId"));
+	manageConsentAction.setSignatureRequestId(request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
 	
 	if ("on".equals(request.getParameter("consent.hnr"))) manageConsentAction.addHnrConsent();
 	
@@ -30,6 +31,5 @@
 	}
 
 	manageConsentAction.storeAllConsents();
-        
     response.sendRedirect(request.getContextPath()+"/PMmodule/ClientManager.do?id="+currentDemographicId);
 %>

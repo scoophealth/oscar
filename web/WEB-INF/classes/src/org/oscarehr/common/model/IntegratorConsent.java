@@ -30,7 +30,7 @@ public class IntegratorConsent {
 	private Integer demographicId = -1;
 	private String providerNo = null;
 	private Date createdDate = new Date();
-
+	
 	/** This is the facilityId on the integrator - for which these consents apply. */
 	private Integer integratorFacilityId = null;
 
@@ -44,6 +44,7 @@ public class IntegratorConsent {
 	private String formVersion = null;
 	private String printedFormLocation = null;
 	private boolean refusedToSign = false;
+	private Integer digitalSignatureId=null;
 
 	public Integer getFacilityId() {
 		return facilityId;
@@ -152,6 +153,14 @@ public class IntegratorConsent {
 	public Integer getId() {
 		return id;
 	}
+	
+	public Integer getDigitalSignatureId() {
+    	return digitalSignatureId;
+    }
+
+	public void setDigitalSignatureId(Integer digitalSignatureId) {
+    	this.digitalSignatureId = digitalSignatureId;
+    }
 
 	@PreRemove
 	protected void jpa_preventDelete() {

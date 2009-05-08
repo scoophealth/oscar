@@ -4,6 +4,8 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageConsent"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
@@ -18,7 +20,7 @@
 %>
 
 
-<%@page import="org.oscarehr.util.LoggedInInfo"%><h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
+<h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
 
 <h4>Legend</h4>
 <div style="font-size:smaller">
@@ -73,10 +75,10 @@
 	<%
 		if (manageConsent.useDigitalSignatures())
 		{
-			String signatureRequestId=""+LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+"_"+System.currentTimeMillis();
+			String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 			%>
-				<input type="hidden" name="signatureRequestId" value="<%=signatureRequestId%>" />
-				<input type="button" value="Get Digital Signature" onclick="document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?signatureRequestId=<%=signatureRequestId%>'"/>					
+				<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
+				<input type="button" value="Get Digital Signature" onclick="document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'"/>					
 			<%								
 		}
 	%>

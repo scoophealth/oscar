@@ -1,7 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,7 +10,9 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -22,10 +23,12 @@ public class ManageConsentAction {
 
 	private HashMap<Integer, IntegratorConsent> consents = new HashMap<Integer, IntegratorConsent>();
 	private String signatureRequestId = null;
-
+	private Integer clientId=null;
+	
 	public ManageConsentAction(Integer clientId, String formType) throws MalformedURLException {
 		try {
 			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+			this.clientId=clientId;
 
 			for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
 				IntegratorConsent consent = new IntegratorConsent();
@@ -67,22 +70,17 @@ public class ManageConsentAction {
 		}
 	}
 
-	public void storeAllConsents() {
+	/**
+	 * @throws IOException if expecting a signature but missing one
+	 */
+	public void storeAllConsents() throws IOException {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		if (loggedInInfo.currentFacility.isEnableDigitalSignatures()) {
-			try {
-				String filename = System.getProperty("java.io.tmpdir") + "/signature_" + signatureRequestId + ".jpg";
-				FileInputStream fileInputStream = new FileInputStream(filename);
-// @TODO write bytes to db
-			} catch (FileNotFoundException e) {
-// @TODO signature required, throw back to consent screen with error
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+
+		DigitalSignature digitalSignature=DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
 
 		for (IntegratorConsent consent : consents.values()) {
+			if (digitalSignature!=null) consent.setDigitalSignatureId(digitalSignature.getId());
 			integratorConsentDao.persist(consent);
 		}
 	}

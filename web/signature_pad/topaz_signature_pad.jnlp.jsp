@@ -1,6 +1,7 @@
+<%@page import="org.oscarehr.util.DigitalSignatureUtils"%>
 <%@page contentType="application/x-java-jnlp-file"%>
 <%
-	// This jsp expects a signatureRequestId parameter which helps distinguish what page is making this request, that way multple open pages etc won't clash. Just use a random number or something unique.
+	// This jsp expects a "signatureRequestId" parameter which helps distinguish what page is making this request, that way multple open pages etc won't clash. Just use a random number or something unique.
 	
 	// original url something like http://127.0.0.1:8080/oscar/signature_pad/topaz_signature_pad.jnlp
 	// signaturePadUrlBase should be something like http://127.0.0.1:8080/oscar/signature_pad as that's where all the jars are
@@ -30,7 +31,7 @@
 		<property name="sessionCookieKey" value="<%=sessionCookie.getName()%>" />
 		<property name="sessionCookieValue" value="<%=sessionCookie.getValue()%>" />
 		<property name="signaturePadUrlBase" value="<%=signaturePadUrlBase%>" />
-		<property name="signatureRequestId" value="<%=request.getParameter("signatureRequestId")%>" />
+		<property name="signatureRequestId" value="<%=request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY)%>" />
 		<jar href="topaz_signature_pad-0.0-SNAPSHOT.jar" />
 		<jar href="comm-0.0_signed.jar" />
 		<jar href="sigplus-2.52_signed.jar" />
@@ -38,11 +39,7 @@
 		<jar href="commons-logging-1.1.1_signed.jar" />
 		<jar href="httpclient-4.0-beta2_signed.jar" />
 		<jar href="httpcore-4.0-beta3_signed.jar" />
-	</resources>
-	<resources os="Linux">
-		<nativelib href="libSigUsb-2.52_linux_i386_signed.jar" />
-	</resources>
-	<resources os="Windows">
+		<nativelib href="libSigUsb-2.52_signed.jar" />
 	</resources>
 	<security>
 		<all-permissions />
