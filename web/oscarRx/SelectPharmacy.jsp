@@ -102,6 +102,8 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 				<% RxPharmacyData pharmacy = new RxPharmacyData(); 
                          ArrayList pharList = pharmacy.getAllPharmacies();
                        %>
+
+                <div style=" width:400px; height:400px; overflow:auto;">
 				<table>
 					<tr>
 						<td><bean:message key="SelectPharmacy.table.pharmacyName" /></td>
@@ -126,6 +128,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 					</tr>
 					<% } %>
 				</table>
+                </div>
 				</td>
 			</tr>
 
