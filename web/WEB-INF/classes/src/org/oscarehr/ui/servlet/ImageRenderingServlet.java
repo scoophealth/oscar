@@ -1,6 +1,8 @@
 package org.oscarehr.ui.servlet;
 
 import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketException;
 
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -17,6 +20,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
@@ -35,7 +39,7 @@ public class ImageRenderingServlet extends HttpServlet {
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 
 	public static enum Source {
-		local_client, hnr_client, integrator_client
+		local_client, hnr_client, integrator_client, signature_preview
 	}
 
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -52,6 +56,8 @@ public class ImageRenderingServlet extends HttpServlet {
 				renderHnrClient(request, response);
 			} else if (Source.integrator_client.name().equals(source)) {
 				renderIntegratorClient(request, response);
+			} else if (Source.signature_preview.name().equals(source)) {
+				renderSignaturePreview(request, response);
 			} else {
 				throw (new IllegalArgumentException("Unknown source type : " + source));
 			}
@@ -164,4 +170,43 @@ public class ImageRenderingServlet extends HttpServlet {
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
+	private void renderSignaturePreview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// this expects signatureRequestId as a parameter
+
+		// security check
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
+		try {
+			// get image
+			FileInputStream fileInputStream = null;
+			try {
+				String signatureRequestId = request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY);
+				String tempFilePath = DigitalSignatureUtils.getTempFilePath(signatureRequestId);
+				fileInputStream = new FileInputStream(tempFilePath);
+				byte[] imageBytes = new byte[1024 * 256];
+				fileInputStream.read(imageBytes);
+				renderImage(response, imageBytes, "jpeg");
+				return;
+			} catch (FileNotFoundException e) {
+				// no image, render a blank gif
+				String tempFilePath = getServletContext().getRealPath("/images/1x1.gif");
+				fileInputStream = new FileInputStream(tempFilePath);
+				byte[] imageBytes = new byte[1024 * 32];
+				fileInputStream.read(imageBytes);
+				renderImage(response, imageBytes, "gif");
+				return;
+			} finally {
+				IOUtils.closeQuietly(fileInputStream);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+		}
+
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
 }

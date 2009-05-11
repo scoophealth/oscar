@@ -20,7 +20,8 @@
 %>
 
 
-<h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
+
+<%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%><h3><%=manageConsent.isReadOnly()?"View Previous Consent":"Manage Consent"%></h3>
 
 <h4>Legend</h4>
 <div style="font-size:smaller">
@@ -76,13 +77,27 @@
 		if (manageConsent.useDigitalSignatures())
 		{
 			String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
+			String imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
 			%>
 				<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
-				<input type="button" value="Get Digital Signature" onclick="document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'"/>					
+				<img id="signature" src="<%=imageUrl%>" alt="digital_signature" />
+				<script type="text/javascript">
+					var POLL_TIME=1500;
+					var counter=0;
+
+					function refreshImage()
+					{
+						counter=counter+1;
+						var img=document.getElementById("signature");
+						img.src='<%=imageUrl%>&amp;rand='+counter;
+					}
+				</script>
+				<br />
+				<input type="button" value="Get Digital Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'"/>					
 			<%								
 		}
 	%>
-
+	<br />
 	<input type="submit" value="save" <%=manageConsent.isReadOnly()?"disabled=\"disabled\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
