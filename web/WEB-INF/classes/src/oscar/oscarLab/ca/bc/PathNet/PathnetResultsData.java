@@ -251,7 +251,7 @@ public class PathnetResultsData {
         if (nums.length == 3){
             return nums[0];
         }else if (nums.length == 5){
-            return nums[2];
+            return nums[0]+"-"+nums[1]+"-"+nums[2];
         }else{
             return nums[1];
         }
