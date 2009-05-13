@@ -2209,7 +2209,7 @@ public class RxPrescriptionData {
 
 					if (this.getFavoriteId() == 0) {
 						sql = "INSERT INTO favorites (provider_no, favoritename, " + "BN, GCN_SEQNO, customName, takemin, takemax, " + "freqcode, duration, durunit, quantity, "
-						        + "`repeat`, last_refill_date, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,drug_form,custom_instructions,dosage) " + "VALUES ('"
+						        + "`repeat`, nosubs, prn, special,GN,ATC,regional_identifier,unit,unitName,method,route,drug_form,custom_instructions,dosage) " + "VALUES ('"
 						        + this.getProviderNo()
 						        + "', '"
 						        + StringEscapeUtils.escapeSql(this.getFavoriteName())
