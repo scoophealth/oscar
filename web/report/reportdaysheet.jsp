@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     
     String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):("start_time") ;

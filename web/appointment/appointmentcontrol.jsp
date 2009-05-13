@@ -1,5 +1,5 @@
-<%@ page import="java.util.*, oscar.*, oscar.util.*"
-	errorPage="errorpage.jsp"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
