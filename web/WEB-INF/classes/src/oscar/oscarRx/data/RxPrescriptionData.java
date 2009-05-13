@@ -2253,7 +2253,7 @@ public class RxPrescriptionData {
 						        + this.getMethod()
 						        + "', '"
 						        + this.getRoute()
-						        + "', "
+						        + "', '"
 						        + this.getDrugForm()
 						        + "', "
 						        + this.getCustomInstr()
