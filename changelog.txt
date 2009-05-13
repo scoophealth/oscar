@@ -1,3 +1,4 @@
+2009-05-13 : Support for digital signature pads. (Starting with caisi integrator consent) (Ted)
 2009-04-28 : Expand form edited date to include time. (Dan Brow)
 2009-04-28 : Fixed "Abnormal" reporting for GDML labs (DavidD)
 2009-04-28 : Added support for HL7 labs from ICL (Intercounty Medical Labs) (DavidD)
