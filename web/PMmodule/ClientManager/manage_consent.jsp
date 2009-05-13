@@ -80,9 +80,9 @@
 			String imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
 			%>
 				<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
-				<img id="signature" src="<%=imageUrl%>" alt="digital_signature" />
+				Client Signature : <img style="border:solid gray 1px; width:500px; height:100px" id="signature" src="<%=imageUrl%>" alt="digital_signature" />
 				<script type="text/javascript">
-					var POLL_TIME=1500;
+					var POLL_TIME=2500;
 					var counter=0;
 
 					function refreshImage()
