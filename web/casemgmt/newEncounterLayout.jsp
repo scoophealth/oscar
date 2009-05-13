@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- 
 /*
 * 
@@ -319,7 +320,6 @@
             text-align: center;
         }
         
-
     </style>
 <!--[if IE]>
     <style type=text/css>
@@ -335,13 +335,26 @@
     <script type="text/javascript">
         
         //Text items used in newCaseManagementView.js
+        <%--
         socHistoryLabel = encodeURI("<bean:message key="oscarEncounter.socHistory.title"/>");
         medHistoryLabel = encodeURI("<bean:message key="oscarEncounter.medHistory.title"/>");
-        onGoingLabel = encodeURI("<bean:message key="oscarEncounter.onGoing.title"/>");
+        //onGoingLabel = "<bean:message key="oscarEncounter.onGoing.title"/>";
+        onGoingLabel = "<bean:message key="oscarEncounter.onGoing.title"/>";
+        console.log(onGoingLabel);
         remindersLabel = encodeURI("<bean:message key="oscarEncounter.reminders.title"/>");
         oMedsLabel = encodeURI("<bean:message key="oscarEncounter.oMeds.title"/>");
         famHistoryLabel = encodeURI("<bean:message key="oscarEncounter.famHistory.title"/>");
         riskFactorsLabel = encodeURI("<bean:message key="oscarEncounter.riskFactors.title"/>");
+        --%>
+            
+        socHistoryLabel = "oscarEncounter.socHistory.title";
+        medHistoryLabel = "oscarEncounter.medHistory.title";
+        onGoingLabel = "oscarEncounter.onGoing.title";;
+        remindersLabel = "oscarEncounter.reminders.title";
+        oMedsLabel = "oscarEncounter.oMeds.title";
+        famHistoryLabel = "oscarEncounter.famHistory.title";
+        riskFactorsLabel = "oscarEncounter.riskFactors.title";    
+            
         insertTemplateError = "<bean:message key="oscarEncounter.templateError.msg"/>";
         unsavedNoteWarning = "<bean:message key="oscarEncounter.unsavedNoteWarning.msg"/>";
         sessionExpiredError = "<bean:message key="oscarEncounter.sessionExpiredError.msg"/>";
@@ -376,7 +389,7 @@
         month[9] = "<bean:message key="share.CalendarPopUp.msgOct"/>";
         month[10] = "<bean:message key="share.CalendarPopUp.msgNov"/>";
         month[11] = "<bean:message key="share.CalendarPopUp.msgDec"/>";
-        
+
 function init() {       
         
     //console.log("Begin init");

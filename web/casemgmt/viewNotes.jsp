@@ -38,13 +38,12 @@
 <div style="width: 10%; float: right; text-align: center;">
 <h3 style="padding:0px; background-color:<c:out value="${param.hc}"/>"><a
 	href="#" title='Add Item'
-	onclick="return showEdit(event,'<c:out value="${param.title}"/>','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=request.getAttribute("cppIssue")%>','','<c:out value="${param.demographicNo}"/>');">+</a></h3>
+	onclick="return showEdit(event,'<bean-el:message key="${param.title}" />','',0,'','','','<%=request.getAttribute("addUrl")%>0', '<c:out value="${param.cmd}"/>','<%=request.getAttribute("identUrl")%>','<%=request.getAttribute("cppIssue")%>','','<c:out value="${param.demographicNo}"/>');">+</a></h3>
 </div>
 <div style="clear: left; float: left; width: 90%;">
 <h3 style="width:100%; background-color:<c:out value="${param.hc}"/>"><a
 	href="#"
-	onclick="return showIssueHistory('<c:out value="${param.demographicNo}"/>','<%=request.getAttribute("issueIds")%>');"><c:out
-	value="${param.title}" /></a></h3>
+        onclick="return showIssueHistory('<c:out value="${param.demographicNo}"/>','<%=request.getAttribute("issueIds")%>');"><bean-el:message key="${param.title}" /></a></h3>
 </div>
 <div style="clear: both; height: 63px; overflow: auto;">
 <ul style="margin-left: 5px;">
