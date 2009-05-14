@@ -95,9 +95,11 @@ if(props.getProperty("clinicSatelliteName") != null) {
     String[] temp4 = props.getProperty("clinicSatellitePostal", "").split("\\|");
     String[] temp5 = props.getProperty("clinicSatellitePhone", "").split("\\|");
     String[] temp6 = props.getProperty("clinicSatelliteFax", "").split("\\|");
+    java.util.ResourceBundle rb = java.util.ResourceBundle.getBundle("oscarResources",request.getLocale());
+ 
     for(int i=0; i<temp0.length; i++) {
         vecAddressName.add(temp0[i]);
-        vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>Tel: " + temp5[i] + "<br>Fax: " + temp6[i]);
+        vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>"+rb.getString("RxPreview.msgTel")+": " + temp5[i] + "<br>"+rb.getString("RxPreview.msgFax")+": " + temp6[i]);
     }
 }
 String comment = (String) request.getAttribute("comment");

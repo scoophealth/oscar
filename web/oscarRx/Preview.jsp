@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -39,7 +40,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Print Preview</title>
+<title><bean:message key="RxPreview.title"/></title>
 <html:base />
 
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -163,7 +164,7 @@ ProviderData user = new ProviderData(strUser);
 			<input type="hidden" name="patientCityPostal"
 				value="<%= StringEscapeUtils.escapeHtml(patient.getCity())+ " " + StringEscapeUtils.escapeHtml(patient.getPostal())%>" />
 			<input type="hidden" name="patientPhone"
-				value="<%= "Tel: " + StringEscapeUtils.escapeHtml(patient.getPhone()) %>" />
+				value="<bean:message key="RxPreview.msgTel"/><%=StringEscapeUtils.escapeHtml(patient.getPhone()) %>" />
 
 			<input type="hidden" name="rxDate"
 				value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy")) %>" />
@@ -177,15 +178,15 @@ ProviderData user = new ProviderData(strUser);
 					<%= provider.getClinicAddress() %><br>
 					<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         		    <%= provider.getClinicPostal() %><br>
-		            Tel: <%= provider.getClinicPhone() %><br>
-        		    Fax: <%= provider.getClinicFax() %><br>
+		            <bean:message key="RxPreview.msgTel"/>: <%= provider.getClinicPhone() %><br>
+        		    <bean:message key="RxPreview.msgFax"/>: <%= provider.getClinicFax() %><br>
 				</c:when>
 				<c:otherwise>
 					<c:out value="${infirmaryView_programAddress}" escapeXml="false" />
 					<br />
-        			Tel: <c:out value="${infirmaryView_programTel}" />
+        			<bean:message key="RxPreview.msgTel"/>: <c:out value="${infirmaryView_programTel}" />
 					<br />
-        			Fax: <c:out value="${infirmaryView_programFax}" />
+        			<bean:message key="RxPreview.msgFax"/>: <c:out value="${infirmaryView_programFax}" />
 				</c:otherwise>
 			</c:choose></td>
 		</tr>
@@ -201,7 +202,7 @@ ProviderData user = new ProviderData(strUser);
 					<b> <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
 					<bean:message key="oscar.oscarRx.hin" /><%= patient.getHin() %> <% } %>
 					</b></td>
-					<td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy") %>
+					<td align=right valign=top><b> <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy",request.getLocale()) %>
 					</b></td>
 				</tr>
 			</table>
@@ -242,12 +243,12 @@ ProviderData user = new ProviderData(strUser);
 					<td colspan="2" id="additNotes"></td>
                                 </tr>
                                 
-
+		
 				<% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
 
 
 				<tr valign=bottom>
-					<td height=25px width=25%>Signature:</td>
+					<td height=25px width=25%><bean:message key="RxPreview.msgSignature"/>:</td>
 					<td height=25px width=75%
 						style="border-width: 0; border-bottom-width: 1; border-style: solid;">
 					&nbsp;</td>
@@ -263,9 +264,9 @@ ProviderData user = new ProviderData(strUser);
 				</tr>
 				<% if( rePrint.equalsIgnoreCase("true") && rx != null ) { %>
 				<tr valign=bottom style="font-size: 6px;">
-                                    <td height=25px colspan="2">Reprint by <%=user.getProviderName(strUser)%><span style="float: left;">
-					Originally Printed:&nbsp;<%=rx.getPrintDate()%></span> <span
-						style="float: right;">Times Printed:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
+                                    <td height=25px colspan="2"><bean:message key="RxPreview.msgReprintBy"/> <%=user.getProviderName(strUser)%><span style="float: left;">
+					<bean:message key="RxPreview.msgOrigPrinted"/>:&nbsp;<%=rx.getPrintDate()%></span> <span
+						style="float: right;"><bean:message key="RxPreview.msgTimesPrinted"/>:&nbsp;<%=String.valueOf(rx.getNumPrints())%></span>
 					</td>
 					<input type="hidden" name="origPrintDate"
 						value="<%=rx.getPrintDate()%>">
