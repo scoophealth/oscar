@@ -1,3 +1,4 @@
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page
 	import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
@@ -42,6 +43,6 @@
 	integratorConsentComplexExitInterviewDao.persist(integratorConsentComplexExitInterview);
 %>
 <script>
-	window.opener.location=window.opener.location;
+	window.opener.location='<html:rewrite action="/PMmodule/ClientManager.do"/>?id=' + <%=request.getParameter("demographicId")%>;
 	window.close();
 </script>
