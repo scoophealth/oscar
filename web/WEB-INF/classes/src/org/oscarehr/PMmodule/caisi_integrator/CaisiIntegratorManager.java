@@ -308,11 +308,17 @@ public class CaisiIntegratorManager {
 	public List<CachedProgram> getRemoteProgramsAcceptingReferrals(int facilityId) throws MalformedURLException {
 		@SuppressWarnings("unchecked")
 		List<CachedProgram> results = (List<CachedProgram>) facilitySegmentedSimpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
-
+		List<CachedProgram> filteredResults = new ArrayList<CachedProgram>();
+		
 		if (results == null) {
 			ProgramWs programWs = getProgramWs(facilityId);
 			results = programWs.getAllProgramsAllowingIntegratedReferrals();
-			facilitySegmentedSimpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", results);
+			for(CachedProgram result:results) {
+				if(!result.getType().equals("community")) {
+						filteredResults.add(result);
+				}
+			}
+			facilitySegmentedSimpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", filteredResults);
 		}
 
 		// cloned so alterations don't affect the cached data
