@@ -1,6 +1,6 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java"%>
-<%@ page
-	import="oscar.oscarProvider.data.*, oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
+<%@ page import="oscar.oscarProvider.data.*, oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -249,10 +249,13 @@ function toggleView(form) {
 		<td width="100%"
 			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
 			height="0%" colspan="2">
-		<p class="HelpAboutLogout"><span class="FakeLink"><a
-			href="Help.htm">Help</a></span> <span> | </span> <span class="FakeLink"><a
-			href="About.htm">About</a></span><span> | </span><span class="FakeLink">
-		<a href="Disclaimer.htm">Disclaimer</a></span></p>
+		<p class="HelpAboutLogout">
+                    <span class="FakeLink"><a href="Help.htm"><bean:message key="ViewScript.msgHelp"/></a></span> 
+                    <span> | </span> 
+                    <span class="FakeLink"><a href="About.htm"><bean:message key="ViewScript.msgAbout"/></a></span>
+                    <span> | </span>
+                    <span class="FakeLink"><a href="Disclaimer.htm"><bean:message key="ViewScript.msgDisclaimer"/></a></span>
+                </p>
 		</td>
 	</tr>
 
@@ -263,9 +266,10 @@ function toggleView(form) {
 			<tr>
 				<td><span class="ScreenTitle"> oscarRx </span></td>
 				<td width=10px></td>
-				<td><span style="color: #FFFFFF"> <b> To print,
-				right click on prescription<br>
-				and select "print" from the menu. </b> </span></td>
+				<td><span style="color: #FFFFFF"> <b> <bean:message key="ViewScript.msgRightClick"/></b> </span></td>
+				<%-- right click on prescription<br>
+				and select "print" from the menu.
+                                --%>
 			</tr>
 		</table>
 		</td>
@@ -310,7 +314,7 @@ function toggleView(form) {
 				<table cellpadding=10 cellspacing=0>
 					<% if(vecAddress != null) { %>
 					<tr>
-						<td align="center" colspan=2>Address <select
+						<td align="center" colspan=2><bean:message key="ViewScript.msgAddress"/> <select
 							name="addressSel" id="addressSel" onChange="addressSelect()">
 							<% String rxAddr = (String) session.getAttribute("RX_ADDR");
                                                           for (int i =0; i < vecAddressName.size();i++){
@@ -326,31 +330,31 @@ function toggleView(form) {
 					</tr>
 					<% } %>
 					<tr>
-						<td colspan=2 style="font-weight: bold;"><span>Actions</span>
+						<td colspan=2 style="font-weight: bold;"><span><bean:message key="ViewScript.msgActions"/></span>
 						</td>
 					</tr>
 					<tr>
 						<td width=10px></td>
 						<td><span><input type=button
-							value="Create a New Prescription" class="ControlPushButton"
+							value="<bean:message key="ViewScript.msgCreateNewRx"/>" class="ControlPushButton"
 							style="width: 200px" onClick="<%=createAnewRx%>" /></span></td>
 					</tr>
 					<tr>
 						<td width=10px></td>
-						<td><span><input type=button value="Back to Oscar"
+						<td><span><input type=button value="<bean:message key="ViewScript.msgBackToOscar"/>"
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:clearPending('close');" /></span></td>
 					</tr>
 					<tr>
 						<td width=10px></td>
-						<td><span><input type=button value="Print"
+						<td><span><input type=button value="<bean:message key="ViewScript.msgPrint"/>"
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:printIframe();" /></span></td>
 					</tr>
 					<tr>
 						<td width=10px></td>
 						<td><span><input type=button
-							<%=reprint.equals("true")?"disabled='true'":""%>" value="Print & Paste into EMR"
+							<%=reprint.equals("true")?"disabled='true'":""%>" value="<bean:message key="ViewScript.msgPrintPasteEmr"/>"
 							class="ControlPushButton" style="width: 200px"
 							onClick="javascript:printPaste2Parent();" /></span></td>
 					</tr>
@@ -358,20 +362,19 @@ function toggleView(form) {
                                         <%if (request.getAttribute("rePrint") == null ){%>
                                         
                                         <tr>
-						<td colspan=2 style="font-weight: bold"><span>Additional Notes to add to Rx</span></td>
+						<td colspan=2 style="font-weight: bold"><span><bean:message key="ViewScript.msgAddNotesRx"/></span></td>
 					</tr>
                                         <tr>
                                                 <td width=10px></td>
                                                 <td>
                                                     <textarea id="additionalNotes" style="width: 200px" onchange="javascript:addNotes();" ></textarea>
-                                                    <input type="button" value="Add to Rx" onclick="javascript:addNotes();"/>			
+                                                    <input type="button" value="<bean:message key="ViewScript.msgAddToRx"/>" onclick="javascript:addNotes();"/>			
                                                 </td>
                                         </tr>
                                         
                                         <%}%>
 					<tr>
-						<td colspan=2 style="font-weight: bold"><span>Drug
-						Information</span></td>
+						<td colspan=2 style="font-weight: bold"><span><bean:message key="ViewScript.msgDrugInfo"/></span></td>
 					</tr>
 					<%
                         for(int i=0; i<bean.getStashSize(); i++){
