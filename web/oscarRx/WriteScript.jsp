@@ -1,4 +1,4 @@
-<%@ page language="java"%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -355,7 +355,7 @@ String annotation_attrib = "anno"+now;
                                 
                 //Replace units and frequency Unit  //TODO Pull this from Database
                 
-                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/;
+                var findUnitRegExp = /(Tabs|mL|Squirts|gm|mg|Âµg|Drops|Patch|Puffs|Units|Inhalations)/;
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -383,7 +383,7 @@ String annotation_attrib = "anno"+now;
                    addWarning("Could not find place to put "+frm.frequencyCode.value);
                 }
                 
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|Âµg|Drops|Patch|Puffs|Units|Inhalations)/,frm.unit.options[frm.unit.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/,frm.route.options[frm.route.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
@@ -988,13 +988,13 @@ int i;
                         <% if (! isCustom) { %>
                             <tr>
                                 <td colspan=2>
-                                    Generic Name:
+                                    <bean:message key="WriteScript.genericNameText"/>:
                                 </td>
                                 <td colspan=2>
                                     <html:hidden property="genericName"/>
                                     <b><%= thisForm.getGenericName() %></b>
                                     <%if ( compString != null ){%>
-                                    <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" >Components</a>
+                                    <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" ><bean:message key="WriteScript.msgComponents"/></a>
                                     <%}%>   
                                 </td>
                                  <td valign=top rowspan=9>
@@ -1010,7 +1010,7 @@ int i;
 
                             <tr>
                                 <td colspan=2>
-                                    Brand Name:
+                                    <bean:message key="WriteScript.brandNameText"/>:
                                 </td>
                                 <td colspan=2>                                                                        
                                             <html:hidden property="brandName" />
@@ -1045,7 +1045,7 @@ int i;
 						<% } /* Custom */ %>
 
 						<tr>
-							<td colspan=2>Start Date:</td>
+							<td colspan=2><bean:message key="WriteScript.startDate"/>:</td>
 							<td colspan=2><html:text property="rxDate" /></td>
 							<!--<td >
                                   &nbsp;
@@ -1087,7 +1087,7 @@ int i;
 								<html:option value="sqrt">Squirts</html:option>
 								<html:option value="gm">gm</html:option>
 								<html:option value="mg">mg</html:option>
-								<html:option value="micg">µg</html:option>
+								<html:option value="micg">Âµg</html:option>
 								<html:option value="drop">Drops</html:option>
 								<html:option value="patc">Patch</html:option>
 								<html:option value="puff">Puffs</html:option>
@@ -1138,7 +1138,7 @@ int i;
                                             frm.take.value = 'Other'; 
                                             frm.takeOther.style.display = '';
                                         }
-                                    </script> PRN:<html:checkbox property="prn"
+                                    </script> <bean:message key="WriteScript.prn"/><html:checkbox property="prn"
 								onchange="javascript:writeScriptDisplay();" /></td>
 							<!--<td>
                                     &nbsp;
@@ -1147,7 +1147,7 @@ int i;
 
 
 						<tr>
-							<td colspan=2>For:</td>
+							<td colspan=2><bean:message key="WriteScript.msgFor"/>:</td>
 							<td colspan=2><select name="cmbDuration" style="width: 72px"
 								onChange="javascript:calcQty();">
 								<%for(i=1; i<15; i++){%>
@@ -1161,9 +1161,9 @@ int i;
 								onchange="javascript:calcQty();" style="display: none" /> <html:select
 								property="durationUnit" style="width:80px"
 								onchange="javascript:calcQty();">
-								<html:option value="D">Days</html:option>
-								<html:option value="W">Weeks</html:option>
-								<html:option value="M">Months</html:option>
+								<html:option value="D"><bean:message key="WriteScript.msgDays"/></html:option>
+								<html:option value="W"><bean:message key="WriteScript.msgWeeks"/></html:option>
+								<html:option value="M"><bean:message key="WriteScript.msgMonths"/></html:option>
 							</html:select> <html:hidden property="duration" /> <script language=javascript>
                                         frm.txtDuration.value = frm.duration.value;
 
@@ -1179,7 +1179,7 @@ int i;
 						</tr>
 
 						<tr>
-							<td colspan=2>Quantity: auto<input type="checkbox"
+							<td colspan=2><bean:message key="WriteScript.quantity"/>: auto<input type="checkbox"
 								name="autoQty" /></td>
 							<td colspan=2 width=65%><html:text property="quantity"
 								size="8"
@@ -1187,7 +1187,7 @@ int i;
 								onkeypress="return validNum(event);"
 								onkeyup="customQty(this.value);" /> <input type=button
 								value="<<" onclick=" javascript:useQtyMax();" />
-							(Calculated:&nbsp;<span id="lblSugQty" style="font-weight: bold"></span>&nbsp;
+							(<bean:message key="WriteScript.msgCalculated"/>:&nbsp;<span id="lblSugQty" style="font-weight: bold"></span>&nbsp;
 							)&nbsp;<html:text property="unitName" size="5"
 								onchange="javascript:writeScriptDisplay();" /> <input
 								type=hidden name="sugQtyMin" /> <input type=hidden
@@ -1212,13 +1212,13 @@ int i;
 						</tr>
 
 						<tr>
-							<td colspan=2>Repeats:</td>
+							<td colspan=2><bean:message key="WriteScript.msgRepeats"/>:</td>
 							<td colspan=2><select name="cmbRepeat" style="width: 72px"
 								onChange="javascript:calcQty();">
 								<%for(i=0; i<9; i++){%>
 								<option value="<%= i%>"><%= i%></option>
 								<%}%>
-								<option value="Other">Other</option>
+								<option value="Other"><bean:message key="WriteScript.msgOther"/></option>
 							</select> <input type=text name="txtRepeat" size="5"
 								onchange="javascript:calcQty();" style="display: none" /> <html:hidden
 								property="repeat" /> <script language=javascript>
@@ -1231,22 +1231,23 @@ int i;
                                         }
                                     </script>
 				    &nbsp;
-                                    No Subs:<html:checkbox property="nosubs" onchange="javascript:writeScriptDisplay();" />
+                                    <bean:message key="WriteScript.noSubs"/>:<html:checkbox property="nosubs" onchange="javascript:writeScriptDisplay();" />
 				    &nbsp;
-				    Last Refill Date:<html:text property="lastRefillDate" onfocus="javascript:lastRefillDate.value='';" />
+				    <bean:message key="WriteScript.msgLastRefillDate"/>:<html:text property="lastRefillDate" onfocus="javascript:lastRefillDate.value='';" />
                                 </td>
-                            </tr>
+                            </tr>                          
 			    <tr>
 				<td colspan=4>
-				    Long Term Medcation:<html:checkbox property="longTerm" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
-				    Past Medication:<html:checkbox property="pastMed" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
-				    Patient Compliance: Yes<html:checkbox property="patientComplianceY" onchange="javascript:checkPatientCompliance('Y');" />
-							No<html:checkbox property="patientComplianceN" onchange="javascript:checkPatientCompliance('N');" />
+				    <bean:message key="WriteScript.msgLongTermMedication"/>:<html:checkbox property="longTerm" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
+				    <bean:message key="WriteScript.msgPastMedication"/>:<html:checkbox property="pastMed" onchange="javascript:writeScriptDisplay();" />&nbsp;&nbsp;
+				    <bean:message key="WriteScript.msgPatientCompliance"/>: 
+                                                <bean:message key="WriteScript.msgYes"/><html:checkbox property="patientComplianceY" onchange="javascript:checkPatientCompliance('Y');" />
+                                                <bean:message key="WriteScript.msgNo"/><html:checkbox property="patientComplianceN" onchange="javascript:checkPatientCompliance('N');" />
 				</td>
 			    </tr>
                             <tr>
                                 <td colspan=4>
-                                    Special Instructions: &nbsp; &nbsp; &nbsp; &nbsp; <html:checkbox property="customInstr" />Custom Instructions
+                                    <bean:message key="WriteScript.special"/>: &nbsp; &nbsp; &nbsp; &nbsp; <html:checkbox property="customInstr" /><bean:message key="WriteScript.msgCustomInstructions"/>
                                     <script language=javascript>
                                         function cmdSpecial_click(){
                                             var frm = document.forms.RxWriteScriptForm;
@@ -1265,7 +1266,7 @@ int i;
 										onclick="javascript:first = false; writeScriptDisplay(); clearWarning(); fillWarnings();" />
 									<div id="warningDiv" style="display: none;">
 									<ul id="warningList">
-										<li>warning</li>
+										<li><bean:message key="WriteScript.msgWarning"/></li>
 									</ul>
 									</div>
 									<oscar:oscarPropertiesCheck property="billregion" value="ON">
@@ -1305,15 +1306,15 @@ int i;
 						</tr>
 						<tr>
 						    <td colspan="5">
-							Prescribed by Outside Provider 
+							<bean:message key="WriteScript.msgPrescribedByOutsideProvider"/> 
 							<input type="checkbox" id="ocheck" onclick="javascript:showHideOutsideProvider();" /> &nbsp;
 							<span id="otext">
-							    <b>Name:</b> <html:text property="outsideProviderName" /> &nbsp;
-							    <b>OHIP No:</b> <html:text property="outsideProviderOhip" />
+							    <b><bean:message key="WriteScript.msgName"/>:</b> <html:text property="outsideProviderName" /> &nbsp;
+							    <b><bean:message key="WriteScript.msgOHIPNO"/>:</b> <html:text property="outsideProviderOhip" />
 							</span>
 						    </td>
 						</tr>
-						<tr><td colspan="5">Prescription Written Date: <html:text property="writtenDate" />
+						<tr><td colspan="5"><bean:message key="WriteScript.msgRxWrittenDate"/>: <html:text property="writtenDate" />
 					</table>
 					</td>
 				</tr>
@@ -1322,15 +1323,15 @@ int i;
 					<td><!--3a--> </html:form>
 					    <table width="100%"><tr><td>
 						<input type=button class="ControlPushButton" style="width: 55px" onclick="javascript:submitForm('update');"	
-						    value="Update" /> 
+						    value="<bean:message key="WriteScript.msgUpdate"/>" /> 
 						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAddAnother');" 
-						    value="Update and Get New Drug" /> 
+						    value="<bean:message key="WriteScript.msgUpdateAndGetNewDrug"/>" /> 
 						<input type=button class="ControlPushButton" style="width: 200px" onclick="javascript:submitForm('updateAndPrint');" 
-						    value="Update, Print and Save" />
+						    value="<bean:message key="WriteScript.msgUpdatePrintAndSave"/>" />
 					    </td>
 					    <td align="right">
 						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('/oscar/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&demo=<%=bean.getDemographicNo()%>&display=<%=annotation_display%>','anwin','width=400,height=250');"
-						    value="Annotation" />
+						    value="<bean:message key="WriteScript.msgAnnotation"/>" />
 					    </td></tr></table>
 		     <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
                          <input type=button class="ControlPushButton" style="width:200px" onclick="javascript:fillWarnings();" value="RunWarning" /
@@ -1418,17 +1419,11 @@ int i;
 										<% 
                             }
                             %>
-										<td><a href="javascript:submitPending(<%= i%>, 'edit');">Edit</a></td>
-										<td><a
-											href="javascript:submitPending(<%= i%>, 'delete');">Delete</a></td>
-										<td><a href="javascript:submitPending(<%= i%>, 'edit');">
-										<bean:write name="rx" property="rxDisplay" /> </a></td>
-										<td><a
-											href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');">Info</a>
-										</td>
-										<td><a
-											href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');">Add
-										to Favorites</a></td>
+										<td><a href="javascript:submitPending(<%= i%>, 'edit');"><bean:message key="WriteScript.msgEdit"/></a></td>
+										<td><a href="javascript:submitPending(<%= i%>, 'delete');"><bean:message key="WriteScript.msgDelete"/></a></td>
+										<td><a href="javascript:submitPending(<%= i%>, 'edit');"><bean:write name="rx" property="rxDisplay" /> </a></td>
+										<td><a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');"><bean:message key="WriteScript.msgInfo"/></a></td>
+										<td><a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');"><bean:message key="WriteScript.msgAddtoFavorites"/></a></td>
 									</tr>
 									<% i++; %>
 								</logic:iterate>
