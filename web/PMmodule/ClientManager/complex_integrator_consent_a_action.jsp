@@ -13,7 +13,7 @@
 	String formLocation=request.getParameter("location");
 	boolean refusedToSign=WebUtils.isChecked(request, "refusedToSign");
 	
-	ManageConsentAction manageConsentAction=new ManageConsentAction(facility,provider,demographicId, "FORM_A");	
+	ManageConsentAction manageConsentAction=new ManageConsentAction(demographicId, "FORM_A");	
 	manageConsentAction.setConsent(consent, formLocation, refusedToSign);
 	manageConsentAction.storeAllConsents();
 		
