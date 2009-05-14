@@ -60,6 +60,18 @@ public class RxUtil {
         }
     }
     
+    public static String DateToString(Date Expression, String pattern,Locale locale2) {
+        if(Expression!=null) {
+            SimpleDateFormat df = new SimpleDateFormat(pattern, locale2);
+            
+            return df.format(Expression);
+        }
+        else {
+            return "";
+        }
+    }
+    
+    
     public static Date Today() {
         return (java.util.GregorianCalendar.getInstance().getTime());
     }
