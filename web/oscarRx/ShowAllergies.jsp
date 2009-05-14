@@ -80,7 +80,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
         var name = document.getElementById('searchString').value;
         if(isEmpty() == true){
             name = name.toUpperCase();
-            alert(name);
             window.location="addReaction.do?ID=0&type=0&name="+name;
         }
     }
