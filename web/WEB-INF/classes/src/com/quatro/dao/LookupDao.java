@@ -228,6 +228,7 @@ public class LookupDao extends HibernateDaoSupport {
 	    try{
 	      return (LookupTableDefValue)getHibernateTemplate().find(sSQL ,params).get(0);
 	    }catch(Exception ex){
+	    	ex.printStackTrace();
 	    	return null;
 	    }
 	}

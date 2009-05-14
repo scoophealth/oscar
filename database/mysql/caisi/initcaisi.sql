@@ -2344,6 +2344,7 @@ create table app_lookuptable
   istree          tinyint(1),
   treecode_length int(10),
   activeyn        tinyint(1),
+  readonly	  tinyint(1),
   PRIMARY KEY  (tableid)
 );
 
@@ -2360,6 +2361,7 @@ create table app_lookuptable_fields
   uniqueyn    int(10),
   genericidx  int(10),
   autoyn      tinyint(1),
+  fieldlength int(10),
   primary key (tableid, fieldname)
 );
 

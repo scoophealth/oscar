@@ -14,7 +14,7 @@
 		<property name="readonly" column="readonly" />
 		<property name="tree" column="istree" />
 		<property name="treeCodeLength" column="treecode_length" />
-		<property name="moduleId" />
+		<property name="moduleId" column="moduleid"/>
 		<property name="moduleName"
 			formula="(select t.description from lst_field_category t where t.id=moduleId)" />
 		<property name="hasActive"
