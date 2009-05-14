@@ -2487,19 +2487,13 @@ create table IntegratorConsent
 	facilityId int not null, foreign key (facilityId) references Facility(id),
 	demographicId int not null, foreign key (demographicId) references demographic(demographic_no),
     providerNo varchar(6) not null, foreign key (providerNo) references provider(provider_no),
-	createdDate datetime not null,
+	createdDate datetime not null, index(createdDate),
 	
 	integratorFacilityId int not null,
-	restrictConsentToHic tinyint(1) NOT NULL,
 	
-	consentToSearches tinyint(1) NOT NULL,
-	consentToAllNonDomainData tinyint(1) NOT NULL,
-	consentToMentalHealthData tinyint(1) NOT NULL,
-	consentToHealthNumberRegistry tinyint(1) NOT NULL,
+	consentToShareData tinyint(1) NOT NULL,
+	excludeMentalHealthData tinyint(1) NOT NULL,
 
-	formVersion varchar(32),
-	printedFormLocation varchar(255),
-	refusedToSign tinyint(1) not null,
 	digitalSignatureId int, foreign key (digitalSignatureId) references DigitalSignature(id)
 );
 

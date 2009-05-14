@@ -9,10 +9,8 @@
 
 <%
 	Integer currentDemographicId=new Integer(request.getParameter("demographicId"));
-	ManageConsentAction manageConsentAction=new ManageConsentAction(currentDemographicId, "DETAILED");
+	ManageConsentAction manageConsentAction=new ManageConsentAction(currentDemographicId);
 	manageConsentAction.setSignatureRequestId(request.getParameter(DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY));
-	
-	if ("on".equals(request.getParameter("consent.hnr"))) manageConsentAction.addHnrConsent();
 	
 	@SuppressWarnings("unchecked")
 	Enumeration<String> e=request.getParameterNames();
@@ -22,7 +20,7 @@
 		{
 			String key=e.nextElement();
 			// must check for "on" because some versions of IE submit "off" or ""
-			if (key.startsWith("consent.") && !key.equals("consent.hnr") && "on".equals(request.getParameter(key))) manageConsentAction.addConsent(key);
+			if (key.startsWith("consent.") && "on".equals(request.getParameter(key))) manageConsentAction.addConsent(key);
 		}
 		catch (Exception ex)
 		{

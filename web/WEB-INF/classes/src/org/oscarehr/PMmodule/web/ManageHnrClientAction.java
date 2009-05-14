@@ -171,7 +171,8 @@ public class ManageHnrClientAction {
 				if (consents.size()>0) {
 					// only 1 hnr setting so using the latest is fine.
 					IntegratorConsent integratorConsent=consents.get(0);
-					hnrClient.setHidden(!integratorConsent.isConsentToHealthNumberRegistry());
+					// was asked to remove hnr consent and just apply the general consent setting to the hnr
+					hnrClient.setHidden(!integratorConsent.isConsentToShareData());
 					hnrClient.setHiddenConsentDate(integratorConsent.getCreatedDate());
 				}
 				

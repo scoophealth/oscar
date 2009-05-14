@@ -1499,7 +1499,6 @@ public class ClientManagerAction extends BaseAction {
 			for (IntegratorConsent x : consentTemp) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put("createdDate", DateFormatUtils.ISO_DATE_FORMAT.format(x.getCreatedDate()) + " " + DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(x.getCreatedDate()));
-				map.put("formVersion", x.getFormVersion());
 				Provider provider = providerDao.getProvider(x.getProviderNo());
 				map.put("provider", provider.getFormattedName());
 				map.put("consentId", x.getId());

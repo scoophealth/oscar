@@ -7,8 +7,6 @@ import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -18,31 +16,17 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageConsentAction {
 	private static Logger logger = LogManager.getLogger(ManageConsent.class);
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 
 	private HashMap<Integer, IntegratorConsent> consents = new HashMap<Integer, IntegratorConsent>();
 	private String signatureRequestId = null;
-	private Integer clientId=null;
-	
-	public ManageConsentAction(Integer clientId, String formType) throws MalformedURLException {
-		try {
-			LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-			this.clientId=clientId;
+	private Integer clientId = null;
+	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	/** the created date must be the same for all entries so they can be grouped in the display */
+	private Date createDate = new Date();
 
-			for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
-				IntegratorConsent consent = new IntegratorConsent();
-				consent.setIntegratorFacilityId(cachedFacility.getIntegratorFacilityId());
-				consent.setFormVersion(formType);
-				consent.setCreatedDate(new Date());
-				consent.setDemographicId(clientId);
-				consent.setFacilityId(loggedInInfo.currentFacility.getId());
-				consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-				consents.put(cachedFacility.getIntegratorFacilityId(), consent);
-			}
-		} catch (Exception e) {
-			logger.error("Unexpected Error.", e);
-		}
+	public ManageConsentAction(Integer clientId) throws MalformedURLException {
+		this.clientId = clientId;
 	}
 
 	/**
@@ -55,18 +39,25 @@ public class ManageConsentAction {
 		int remoteFacilityId = Integer.parseInt(splitTemp[1]);
 
 		IntegratorConsent consent = consents.get(remoteFacilityId);
+		if (consent == null) {
+			consent = new IntegratorConsent();
+			consent.setIntegratorFacilityId(remoteFacilityId);
+			// the created date must be the same for all entries so they can be grouped in the display
+			consent.setCreatedDate(createDate);
+			consent.setDemographicId(clientId);
+			consent.setFacilityId(loggedInInfo.currentFacility.getId());
+			consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+			consents.put(remoteFacilityId, consent);
+		}
 
-		if ("hic".equals(splitTemp[2])) consent.setRestrictConsentToHic(true);
-		else if ("search".equals(splitTemp[2])) consent.setConsentToSearches(true);
-		else if ("nonDomain".equals(splitTemp[2])) consent.setConsentToAllNonDomainData(true);
-		else if ("mental".equals(splitTemp[2])) consent.setConsentToMentalHealthData(true);
-		else if ("hnr".equals(splitTemp[2])) consent.setConsentToHealthNumberRegistry(true);
-		else logger.error("unexpected consent bit : " + s);
-	}
-
-	public void addHnrConsent() {
-		for (IntegratorConsent consent : consents.values()) {
-			consent.setConsentToHealthNumberRegistry(true);
+		if ("placeholder".equals(splitTemp[2])) {
+			// do nothing, the above initialisation is all we need
+		} else if ("consentToShareData".equals(splitTemp[2])) {
+			consent.setConsentToShareData(true);
+		} else if ("excludeMentalHealth".equals(splitTemp[2])) {
+			consent.setExcludeMentalHealthData(true);
+		} else {
+			logger.error("unexpected consent bit : " + s);
 		}
 	}
 
@@ -77,34 +68,11 @@ public class ManageConsentAction {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-		DigitalSignature digitalSignature=DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
+		DigitalSignature digitalSignature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
 
 		for (IntegratorConsent consent : consents.values()) {
-			if (digitalSignature!=null) consent.setDigitalSignatureId(digitalSignature.getId());
+			if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
 			integratorConsentDao.persist(consent);
-		}
-	}
-
-	/**
-	 * This method is meant to be called by the complex consent forms to set all consents on all agencies to 1 value.
-	 * 
-	 * @param complexSelection
-	 */
-	public void setConsent(String complexSelection, String formLocation, boolean refusedToSign) {
-		for (IntegratorConsent consent : consents.values()) {
-			if ("ALL".equals(complexSelection)) {
-				consent.setConsentToAll();
-			} else if ("HIC_ALL".equals(complexSelection)) {
-				consent.setConsentToAll();
-				consent.setRestrictConsentToHic(true);
-			} else if ("NONE".equals(complexSelection)) {
-				consent.setConsentToNone();
-			} else {
-				logger.error("Error, missing consent option. option=" + complexSelection);
-			}
-
-			consent.setPrintedFormLocation(formLocation);
-			consent.setRefusedToSign(refusedToSign);
 		}
 	}
 

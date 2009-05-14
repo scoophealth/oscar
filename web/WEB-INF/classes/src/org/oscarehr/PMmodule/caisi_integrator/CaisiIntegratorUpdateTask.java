@@ -361,11 +361,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
 				consentParameters.setIntegratorFacilityId(consent.getIntegratorFacilityId());
 				consentParameters.setCaisiDemographicId(demographicId);
-				consentParameters.setConsentToHealthNumberRegistry(consent.isConsentToHealthNumberRegistry());
-				consentParameters.setRestrictConsentToHic(consent.isRestrictConsentToHic());
-				consentParameters.setConsentToAllNonDomainData(consent.isConsentToAllNonDomainData());
-				consentParameters.setConsentToMentalHealthData(consent.isConsentToMentalHealthData());
-				consentParameters.setConsentToSearches(consent.isConsentToSearches());
+				consentParameters.setConsentToShareData(consent.isConsentToShareData());
+				consentParameters.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
 				consentParameters.setCreatedDate(consent.getCreatedDate());
 
 				demographicService.setCachedDemographicConsent(consentParameters);
@@ -374,7 +371,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
 				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
 				if (clientLinks.size() > 0) {
-					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToHealthNumberRegistry(), consent.getCreatedDate());
+					// was asked to remove hnr consent and just apply the general consent status to the hnr
+					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToShareData(), consent.getCreatedDate());
 				}
 			}
 		}

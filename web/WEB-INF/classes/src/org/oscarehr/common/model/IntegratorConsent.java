@@ -12,12 +12,6 @@ import javax.persistence.PreUpdate;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Here's my futile attempt at describing the consent requirements. 1) Consents are segmented by groups, these groups are "real world" data groupings of problems, they are not data-centric groupings. i.e. "mental health" is a group, where a "notes" is not,
- * the notes must actually be broken down into groupings like "physical health" and "mental health" 2) Consents are segmented by facilities, i.e. each facility must have it's own bit for each group. In other words consent is not just a 1D matrix of bits,
- * it's a 2D matrix, where one of the dimensions is the above groups, and the other is a list of facilities. 3) Consent is applied across all facilities with in the integrated community, but is set-able by any facility. i.e. any consent changes made on any
- * facility is reflected across all facilities. <br />
- * <br />
- * Each consent entity instance represents only 1D of the 2D consent matrix.
  */
 @Entity
 public class IntegratorConsent {
@@ -30,21 +24,14 @@ public class IntegratorConsent {
 	private Integer demographicId = -1;
 	private String providerNo = null;
 	private Date createdDate = new Date();
-	
+
 	/** This is the facilityId on the integrator - for which these consents apply. */
 	private Integer integratorFacilityId = null;
 
-	private boolean consentToHealthNumberRegistry = false;
+	private boolean consentToShareData = false;
+	private boolean excludeMentalHealthData = false;
 
-	private boolean restrictConsentToHic = false;
-	private boolean consentToSearches = false;
-	private boolean consentToAllNonDomainData = false;
-	private boolean consentToMentalHealthData = false;
-
-	private String formVersion = null;
-	private String printedFormLocation = null;
-	private boolean refusedToSign = false;
-	private Integer digitalSignatureId=null;
+	private Integer digitalSignatureId = null;
 
 	public Integer getFacilityId() {
 		return facilityId;
@@ -86,81 +73,33 @@ public class IntegratorConsent {
 		this.integratorFacilityId = integratorFacilityId;
 	}
 
-	public boolean isConsentToSearches() {
-		return consentToSearches;
-	}
-
-	public void setConsentToSearches(boolean consentToSearches) {
-		this.consentToSearches = consentToSearches;
-	}
-
-	public boolean isConsentToAllNonDomainData() {
-		return consentToAllNonDomainData;
-	}
-
-	public void setConsentToAllNonDomainData(boolean consentToAllNonDomainData) {
-		this.consentToAllNonDomainData = consentToAllNonDomainData;
-	}
-
-	public boolean isConsentToMentalHealthData() {
-		return consentToMentalHealthData;
-	}
-
-	public void setConsentToMentalHealthData(boolean consentToMentalHealthData) {
-		this.consentToMentalHealthData = consentToMentalHealthData;
-	}
-
-	public boolean isConsentToHealthNumberRegistry() {
-		return consentToHealthNumberRegistry;
-	}
-
-	public void setConsentToHealthNumberRegistry(boolean consentToHealthNumberRegistry) {
-		this.consentToHealthNumberRegistry = consentToHealthNumberRegistry;
-	}
-
-	public boolean isRestrictConsentToHic() {
-		return restrictConsentToHic;
-	}
-
-	public void setRestrictConsentToHic(boolean restrictConsentToHic) {
-		this.restrictConsentToHic = restrictConsentToHic;
-	}
-
-	public String getFormVersion() {
-		return formVersion;
-	}
-
-	public void setFormVersion(String formVersion) {
-		this.formVersion = StringUtils.trimToNull(formVersion);
-	}
-
-	public String getPrintedFormLocation() {
-		return printedFormLocation;
-	}
-
-	public void setPrintedFormLocation(String printedFormLocation) {
-		this.printedFormLocation = StringUtils.trimToNull(printedFormLocation);
-	}
-
-	public boolean isRefusedToSign() {
-		return refusedToSign;
-	}
-
-	public void setRefusedToSign(boolean refusedToSign) {
-		this.refusedToSign = refusedToSign;
-	}
-
 	public Integer getId() {
 		return id;
 	}
-	
+
+	public boolean isConsentToShareData() {
+		return consentToShareData;
+	}
+
+	public void setConsentToShareData(boolean consentToShareData) {
+		this.consentToShareData = consentToShareData;
+	}
+
+	public boolean isExcludeMentalHealthData() {
+		return excludeMentalHealthData;
+	}
+
+	public void setExcludeMentalHealthData(boolean excludeMentalHealthData) {
+		this.excludeMentalHealthData = excludeMentalHealthData;
+	}
+
 	public Integer getDigitalSignatureId() {
-    	return digitalSignatureId;
-    }
+		return digitalSignatureId;
+	}
 
 	public void setDigitalSignatureId(Integer digitalSignatureId) {
-    	this.digitalSignatureId = digitalSignatureId;
-    }
+		this.digitalSignatureId = digitalSignatureId;
+	}
 
 	@PreRemove
 	protected void jpa_preventDelete() {
@@ -170,30 +109,5 @@ public class IntegratorConsent {
 	@PreUpdate
 	protected void jpa_preventUpdate() {
 		throw (new UnsupportedOperationException("Update is not allowed for this type of item."));
-	}
-
-	public boolean isConsentToAll() {
-		return (consentToAllNonDomainData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && !restrictConsentToHic);
-	}
-
-	public boolean isConsentToAllButRestrictToHic() {
-		return (consentToAllNonDomainData && consentToHealthNumberRegistry && consentToMentalHealthData && consentToSearches && restrictConsentToHic);
-	}
-
-	public boolean isConsentToNone() {
-		return (!consentToAllNonDomainData && !consentToHealthNumberRegistry && !consentToMentalHealthData && !consentToSearches);
-	}
-
-	public void setConsentToAll() {
-		setAllConsents(true);
-		restrictConsentToHic = false;
-	}
-
-	public void setConsentToNone() {
-		setAllConsents(false);
-	}
-
-	private void setAllConsents(boolean b) {
-		consentToAllNonDomainData = consentToHealthNumberRegistry = consentToMentalHealthData = consentToSearches = b;
 	}
 }
