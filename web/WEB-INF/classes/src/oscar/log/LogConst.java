@@ -14,11 +14,14 @@ public class LogConst {
     public static final String ADD = "add";
     public static final String UPDATE = "update";
     public static final String DELETE = "delete";
+    public static final String ARCHIVE = "archive";
     public static final String REPRINT = "reprint";
     public static final String REVIEWED = "reviewed";
     public static final String ACK = "acknowledge";
     public static final String NORIGHT= "no right";
-
+    public static final String EDIT = "edit";
+    public static final String REPRESCRIBE = "represcribe";
+    public static final String ANNOTATE = "annotate";
 
     public static final String CON_LOGIN = "login";
     public static final String CON_APPT = "appointment";
@@ -40,5 +43,6 @@ public class LogConst {
     public static final String CON_PATHNET_LAB = "pathnet lab";
     public static final String CON_FLOWSHEET = "FLWST_";
     public static final String CON_SECURITY = "securityRecord";
+    public static final String CON_ANNOTATION = "annotation";
     
 }
