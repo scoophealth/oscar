@@ -18,6 +18,8 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.common.dao.DigitalSignatureDao;
+import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DigitalSignatureUtils;
@@ -37,9 +39,10 @@ public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
+	private static DigitalSignatureDao digitalSignatureDao = (DigitalSignatureDao) SpringUtils.getBean("digitalSignatureDao");
 
 	public static enum Source {
-		local_client, hnr_client, integrator_client, signature_preview
+		local_client, hnr_client, integrator_client, signature_preview, signature_stored
 	}
 
 	public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -58,6 +61,8 @@ public class ImageRenderingServlet extends HttpServlet {
 				renderIntegratorClient(request, response);
 			} else if (Source.signature_preview.name().equals(source)) {
 				renderSignaturePreview(request, response);
+			} else if (Source.signature_stored.name().equals(source)) {
+				renderSignatureStored(request, response);
 			} else {
 				throw (new IllegalArgumentException("Unknown source type : " + source));
 			}
@@ -202,6 +207,31 @@ public class ImageRenderingServlet extends HttpServlet {
 				return;
 			} finally {
 				IOUtils.closeQuietly(fileInputStream);
+			}
+		} catch (Exception e) {
+			logger.error("Unexpected error.", e);
+		}
+
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+	
+	private static final void renderSignatureStored(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// this expects digitalSignatureId as a parameter
+
+		// security check
+		HttpSession session = request.getSession();
+		Provider provider = (Provider) session.getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
+		if (provider == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;
+		}
+
+		try {
+			// get image
+			DigitalSignature digitalSignature = digitalSignatureDao.find(Integer.parseInt(request.getParameter("digitalSignatureId")));
+			if (digitalSignature != null) {
+				renderImage(response, digitalSignature.getSignatureImage(), "jpeg");
+				return;
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);

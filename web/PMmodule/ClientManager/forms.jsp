@@ -73,11 +73,11 @@ function createIntake(clientId,nodeId) {
 </script>
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Registration Intake</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Registration Intake</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
@@ -92,25 +92,23 @@ function createIntake(clientId,nodeId) {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><c:out value="${intake.intakeStatus}"/></td>
+			<td><c:out value="${intake.intakeStatus}" /></td>
 			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />','<c:out value="${intake.id}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
-		<td colspan="3">
-			<input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />
-		</td>
+		<td colspan="3"><input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 	</tr>
 </table>
 <br />
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Follow-up Intake</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Follow-up Intake</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
@@ -124,12 +122,10 @@ function createIntake(clientId,nodeId) {
 	<c:forEach var="intake" items="${indepthIntakes}">
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
-			<td><c:out value="${intake.node.label.label}"/></td>
+			<td><c:out value="${intake.node.label.label}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td>
-				<input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)"/>
-				<input type="button" value="Print Preview" onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" />
-			</td>
+			<td><input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)" /> <input type="button" value="Print Preview"
+				onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" /></td>
 		</tr>
 	</c:forEach>
 </table>
@@ -137,7 +133,7 @@ New Follow-up Intake:&nbsp;
 <select onchange="createIntake('<c:out value="${client.demographicNo}" />',this.options[this.selectedIndex].value);">
 	<option value="" selected></option>
 	<c:forEach var="node" items="${indepthIntakeNodes}">
-		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}"/></option>
+		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}" /></option>
 	</c:forEach>
 </select>
 
@@ -145,30 +141,28 @@ New Follow-up Intake:&nbsp;
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">General Forms</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">General Forms</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
 			<th>Date</th>
 			<th>Name</th>
-			<th>Staff</th>			
+			<th>Staff</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
 	<c:forEach var="intake" items="${generalIntakes}">
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
-			<td><c:out value="${intake.node.label.label}"/></td>
+			<td><c:out value="${intake.node.label.label}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td>
-				<input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)"/>				
-				<input type="button" value="Print Preview" onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" />
-			</td>
+			<td><input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)" /> <input type="button" value="Print Preview"
+				onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" /></td>
 		</tr>
 	</c:forEach>
 </table>
@@ -176,7 +170,7 @@ New General Form:&nbsp;
 <select onchange="createIntake('<c:out value="${client.demographicNo}" />',this.options[this.selectedIndex].value);">
 	<option value="" selected></option>
 	<c:forEach var="node" items="${generalIntakeNodes}">
-		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}"/></option>
+		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}" /></option>
 	</c:forEach>
 </select>
 <br />
@@ -220,15 +214,15 @@ New General Form:&nbsp;
 <br />
 -->
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">User Created Forms</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">User Created Forms</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
-		<tr>		
+		<tr>
 			<th>Form Name</th>
 			<th>Date</th>
 			<th>Staff</th>
@@ -236,13 +230,13 @@ New General Form:&nbsp;
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${surveys}">
-		<tr>			
+		<tr>
 			<td><c:out value="${form.description}" /></td>
 			<td><c:out value="${form.dateCreated}" /></td>
 			<td><c:out value="${form.username}" /></td>
 			<td><input type="button" value="Update" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(0);" />
 			<input type="button" value="Print Preview" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey(1);" /></td>
-		
+
 		</tr>
 	</c:forEach>
 </table>
@@ -255,34 +249,25 @@ New User Created Form:&nbsp;
 <br />
 
 <div class="tabs">
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th title="Programs">Consent History</th>
-		</tr>
-	</table>
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Consent History</th>
+	</tr>
+</table>
 </div>
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
-		<tr>		
+		<tr>
 			<th>Date</th>
-			<th>Form Name</th>
 			<th>Provider</th>
 			<th></th>
 		</tr>
 	</thead>
 	<c:forEach var="form" items="${consents}">
-		<tr>			
+		<tr>
 			<td><c:out value="${form.createdDate}" /></td>
-			<td><c:out value="${form.formVersion}" /></td>
-			<td><c:out value="${form.provider}" /></td>		
-			<td>
-				<c:if test="${form.formVersion != 'DETAILED'}">
-					<a target="_blank" href="ClientManager/view_consent_details.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
-				</c:if>
-				<c:if test="${form.formVersion == 'DETAILED'}">
-					<a href="ClientManager/manage_consent.jsp?consentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a>
-				</c:if>
-			</td>		
+			<td><c:out value="${form.provider}" /></td>
+			<td><a href="ClientManager/manage_consent.jsp?viewConsentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a></td>
 		</tr>
 	</c:forEach>
 </table>

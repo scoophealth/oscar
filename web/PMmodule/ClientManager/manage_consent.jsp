@@ -15,9 +15,12 @@
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	
 	ManageConsent manageConsent=new ManageConsent(currentDemographicId);
+
+	String viewConsentId=request.getParameter("viewConsentId");
+	manageConsent.setViewConsentId(viewConsentId);
 %>
 
-<h3>Manage Consent</h3>
+<h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
 <br />
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
@@ -38,7 +41,7 @@
 			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 		</tr>
 		<%
-			for (CachedFacility cachedFacility : manageConsent.getAllDirectlyLinkedFacilities())
+			for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
 			{
 				remoteFacilityId=cachedFacility.getIntegratorFacilityId();
 				%>
@@ -56,7 +59,11 @@
 		if (manageConsent.useDigitalSignatures())
 		{
 			String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
-			String imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+			
+			String imageUrl=null;
+			if (viewConsentId==null) imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&amp;"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+			else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+manageConsent.getConsentToView().getDigitalSignatureId();
+
 			%>
 				<br />
 				<input type="hidden" name="<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>" value="<%=signatureRequestId%>" />
@@ -73,13 +80,13 @@
 					}
 				</script>
 				<br />
-				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'"/>
+				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
 				<br />					
 			<%								
 		}
 	%>
 	<br />
-	<input type="submit" value="save" /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<input type="submit" value="save" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

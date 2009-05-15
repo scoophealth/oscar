@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.web;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1494,18 +1496,20 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("survey_list", surveyManager.getAllForms(facilityId,providerNo));
 			request.setAttribute("surveys", surveyManager.getForms(demographicNo, facilityId,providerNo));
 			
+			/* consent forms */
 			List<IntegratorConsent> consentTemp = integratorConsentDao.findByFacilityAndDemographic(facilityId, Integer.parseInt(demographicNo));
-			ArrayList<HashMap<String, Object>> consents = new ArrayList<HashMap<String, Object>>();
+			TreeMap<Date, HashMap<String, Object>> consents = new TreeMap<Date,HashMap<String, Object>>(Collections.reverseOrder());
 			for (IntegratorConsent x : consentTemp) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("createdDate", DateFormatUtils.ISO_DATE_FORMAT.format(x.getCreatedDate()) + " " + DateFormatUtils.ISO_TIME_NO_T_FORMAT.format(x.getCreatedDate()));
+				map.put("createdDate", DateFormatUtils.ISO_DATETIME_FORMAT.format(x.getCreatedDate()).replace('T', ' '));
 				Provider provider = providerDao.getProvider(x.getProviderNo());
 				map.put("provider", provider.getFormattedName());
 				map.put("consentId", x.getId());
-				consents.add(map);
+				
+				consents.put(x.getCreatedDate(), map);
 			}
 
-			request.setAttribute("consents", consents);
+			request.setAttribute("consents", consents.values());
 		}
 
 		/* refer */
