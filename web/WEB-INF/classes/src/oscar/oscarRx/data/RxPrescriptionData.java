@@ -1421,6 +1421,11 @@ public class RxPrescriptionData {
 
 			return ret;
 		}
+                
+                //function used for passing data to LogAction; maps to data column in log table
+                public String getAuditString() {
+                    return getFullOutLine();
+                }
 
 		public String getFullOutLine() {
 			return (RxPrescriptionData.getFullOutLine(getSpecial()));
