@@ -238,6 +238,40 @@ public class RxPatientData {
          return this.phone;         
       }
       
+      public Allergy getAllergy(int id) {
+           Allergy allergy = null;
+           try {            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            ResultSet rs;                        
+            
+            rs = db.GetSQL("SELECT * FROM allergies WHERE allergyid  = " + String.valueOf(id));
+            
+            if(rs.next()) {               
+               allergy = new Allergy(rs.getInt("allergyid"), rs.getDate("entry_date"),               
+               db.getString(rs,"DESCRIPTION"),
+               rs.getInt("HICL_SEQNO"), rs.getInt("HIC_SEQNO"),               
+               rs.getInt("AGCSP"), rs.getInt("AGCCS"),
+               rs.getInt("TYPECODE"));
+                              
+               allergy.getAllergy().setReaction(db.getString(rs,"reaction"));
+	       allergy.getAllergy().setStartDate(rs.getDate("start_date"));
+               allergy.getAllergy().setAgeOfOnset(db.getString(rs,"age_of_onset"));
+               allergy.getAllergy().setSeverityOfReaction(db.getString(rs,"severity_of_reaction"));
+               allergy.getAllergy().setOnSetOfReaction(db.getString(rs,"onset_of_reaction"));
+               allergy.getAllergy().setRegionalIdentifier(db.getString(rs,"regional_identifier"));
+                              
+            }            
+            rs.close();            
+            db.CloseConn();            
+            
+         }
+         catch (SQLException e) {            
+            System.out.println(e.getMessage());            
+         }  
+           
+         return allergy;
+      }
+      
       public Allergy[] getAllergies() {         
          Allergy[] arr = {};         
          LinkedList lst = new LinkedList();         
