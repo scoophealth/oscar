@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -384,6 +385,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("The End of Edit " + String.valueOf(current - beginning));
         start = current;
         
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(),demono, note.getAuditString());
+        
         String frmName = "caseManagementEntryForm" + demono;        
         System.out.println("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
         request.getSession().setAttribute(frmName, cform);        
@@ -456,36 +459,36 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if( noteId.equals("0") ) {                               
                 
                 note = new CaseManagementNote();
-                note.setDemographic_no(demo);
-                newNote = true;
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
+                note.setDemographic_no(demo);                
+                newNote = true;               
             }
             else {
-                note = this.caseManagementMgr.getNote(noteId);
-                //if note has not changed don't save
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.UPDATE, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
+                note = this.caseManagementMgr.getNote(noteId);                
+                //if note has not changed don't save                
                 if( strNote.equals(note.getNote()) && !issueChange.equals("true") )
                     return null;
             }
             
             note.setNote(strNote);
+            note.setProviderNo(providerNo);
             note.setSigning_provider_no(providerNo);
             note.setSigned(true);
-            
-            note.setProviderNo(providerNo);		
+                        		
             if( provider != null )
                 note.setProvider(provider);                        
-            
+
+            String logAction = "";
             String archived = request.getParameter("archived");
             if( archived == null || archived.equalsIgnoreCase("false") ) {
                 note.setArchived(false);
             }
             else {
                 note.setArchived(true);
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_CME_NOTE, noteId, request.getRemoteAddr(),demo);
+                System.out.println("Setting archived to true");
+                logAction = LogConst.ARCHIVE;                
             }
             
-            log.debug("Note archived " + note.isArchived());
+            System.out.println("Note archived " + note.isArchived());
             String programId = (String)request.getSession().getAttribute("case_program_id");			
             note.setProgram_no(programId);
                         
@@ -769,11 +772,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		    cml.setTableId(note.getId());
 		    cml.setNoteId(cmn.getId());
 		    caseManagementMgr.saveNoteLink(cml);
-
+                    LogAction.addLog(providerNo, LogConst.ANNOTATE, LogConst.CON_CME_NOTE, String.valueOf(cmn.getId()), request.getRemoteAddr(), demo, cmn.getNote());
 		    se.removeAttribute(attrib_name);
 		}
 	    }
             caseManagementMgr.getEditors(note);
+            
+            if( newNote ) {                
+                logAction = LogConst.ADD;                
+            }
+            else if( note.isArchived() ) {
+                logAction = LogConst.ARCHIVE;                
+            }
+            else {
+                logAction = LogConst.UPDATE;
+            }
+            
+            LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(),demo, note.getAuditString());
             
             ActionForward forward = mapping.findForward("listCPPNotes");
             StringBuffer path = new StringBuffer(forward.getPath());            
@@ -1037,7 +1052,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         String observationDate = cform.getObservation_date();
         ResourceBundle props = ResourceBundle.getBundle("oscarResources");
-        if (observationDate != null && !observationDate.equals("")) {
+        if (observationDate != null && !observationDate.equals("")) {                      
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
             Date dateObserve = formatter.parse(observationDate);
             if( dateObserve.getTime() > now.getTime() ) {
@@ -1052,7 +1067,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         note.setUpdate_date(now);
-        if (note.getCreate_date() == null) note.setCreate_date(now);
+        boolean newNote = false;
+        if (note.getCreate_date() == null) {
+            note.setCreate_date(now);
+            newNote = true;
+        }
         
         /* save note including add signature */
         String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
@@ -1069,7 +1088,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             log.warn(e);
         }
 
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD+" or "+LogConst.UPDATE, LogConst.CON_CME_NOTE, ""+Long.valueOf(note.getId()).intValue(), request.getRemoteAddr());
+        String logAction;
+        if( newNote ) {
+            logAction = LogConst.ADD;            
+        }
+        else {
+            logAction = LogConst.UPDATE;            
+        }
+        LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, ""+Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
         
         return note.getId();
     }
@@ -1140,17 +1166,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         CaseManagementNote note;
         String history;
         String noteId = request.getParameter("nId");
+        boolean newNote;
         Date now = new Date();
         if( noteId.substring(0,1).equals("0") ) {
             note = new CaseManagementNote();
             note.setDemographic_no(demo);          
             history = "";
+            newNote = true;
         }
         else {
             note = this.caseManagementMgr.getNote(request.getParameter("nId"));
             history = note.getHistory();
             history = "---------History Record---------" + history;
-            
+            newNote = false;
         }
         
         String observationDate = request.getParameter("obsDate");        
@@ -1270,8 +1298,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String varName = "newNote";
         request.getSession().setAttribute(varName, false);
         request.setAttribute("ajaxsave",note.getId());
-        request.setAttribute("origNoteId", noteId);        
+        request.setAttribute("origNoteId", noteId);                    
                 
+        String logAction;
+        if( newNote ) {
+            logAction = LogConst.ADD;            
+        }
+        else {
+            logAction = LogConst.UPDATE;            
+        }
+        
+        LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(),demo, note.getAuditString());
+        
         return mapping.findForward("issueList_ajax");
         /*CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
        
@@ -1977,7 +2015,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         cform.setCaseNote_history(note.getHistory());
         
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_CME_NOTE, ""+Integer.valueOf(noteid).intValue(), request.getRemoteAddr());
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_CME_NOTE, noteid, request.getRemoteAddr(), note.getAuditString());
         
         return mapping.findForward("historyview");
     }
