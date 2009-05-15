@@ -104,7 +104,7 @@ public final class RxAddAllergyAction extends Action {
             Allergy allerg = patient.addAllergy(oscar.oscarRx.util.RxUtil.Today(), allergy);      
             
             String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo());
+            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ALLERGY, ""+allerg.getAllergyId() , ip,""+patient.getDemographicNo(), allerg.getAllergy().getAuditString());
 
             return (mapping.findForward("success"));
     }
