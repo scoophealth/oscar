@@ -1091,6 +1091,7 @@ function resetView(frm, error, e) {
 var updatedNoteId = -1;  //used to store id of ajax saved note used below
 var selectBoxes = new Object();
 var unsavedNoteWarning;
+var editLabel;
 function changeToView(id) {
     var parent = $(id).parentNode.id;
     var nId = parent.substr(1);
@@ -1223,7 +1224,7 @@ function changeToView(id) {
             func = "editNote(event);";
         }
 
-        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
+        var editAnchor = "<a title='Edit' id='edit"+ nId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>" + editLabel + "</a>";
 
         new Insertion.Top(parent, input);
         new Insertion.Top(parent, editAnchor);            
@@ -1285,7 +1286,7 @@ function completeChangeToView(note,newId) {
         func = "editNote(event);";
     }
 
-    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>Edit</a>";
+    var anchor = "<a title='Edit' id='edit"+ newId + "' href='#' onclick='" + func + " return false;' style='float: right; margin-right: 5px; font-size:8px;'>" + editLabel + "</a>";
 
     new Insertion.Top(parent, input);    
     new Insertion.Top(parent, anchor);
