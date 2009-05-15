@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!--  
 /*
  * 
@@ -138,7 +138,7 @@
 							<td width="150"><bean:write name="data"
 								property="dateEntered" /></td>
 							<td width="10"><input type="checkbox" name="deleteCheckbox"
-								value="<bean:write name="data" property="id" />"</td>
+								value="<bean:write name="data" property="id" />"></td>
 						</tr>
 					</logic:present>
 					<logic:notPresent name="data" property="canPlot">
@@ -157,8 +157,9 @@
 								property="dateObserved" /></td>
 							<td width="150"><bean:write name="data"
 								property="dateEntered" /></td>
-							<td width="10"><input type="checkbox" name="deleteCheckbox"
-								value="<bean:write name="data" property="id" />"</td>
+							<td width="10">
+                                                            <input type="checkbox" name="deleteCheckbox" value="<bean:write name="data" property="id" />">
+                                                        </td>
 						</tr>
 					</logic:notPresent>
 				</logic:iterate>
