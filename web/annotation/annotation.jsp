@@ -36,6 +36,7 @@
 		org.oscarehr.casemgmt.service.CaseManagementManager,
 		oscar.oscarEncounter.data.EctProgram,
 		java.util.Date, java.util.List"%>
+<%@page import="oscar.log.LogAction, oscar.log.LogConst"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -88,6 +89,7 @@
 		cmn.setUuid(uuid); //assign same UUID to new annotation
 	    }
 	    if (tableName.equals(cml.CASEMGMTNOTE) || tableId.equals(0L)) {
+                System.out.println("NOT SAVING");
 		if (!attrib_name.equals("")) se.setAttribute(attrib_name, cmn);
 	    } else { //annotated subject exists
 		cmm.saveNoteSimple(cmn);
@@ -96,6 +98,7 @@
 		cml.setTableId(tableId);
 		cml.setNoteId(cmn.getId());
 		cmm.saveNoteLink(cml);
+                LogAction.addLog(user_no,LogConst.ANNOTATE, display, String.valueOf(tableId), request.getRemoteAddr(), demo, cmn.getNote());
 	    }
 	}
 	response.sendRedirect("../close.html");

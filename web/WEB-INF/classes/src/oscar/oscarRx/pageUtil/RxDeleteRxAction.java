@@ -87,7 +87,7 @@ public final class RxDeleteRxAction extends Action {
                 rxData.getPrescription(drugId);
                 
                 rx.Delete();
-                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo());
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.DELETE, LogConst.CON_PRESCRIPTION, drugArr[i], ip,""+bean.getDemographicNo(), rx.getAuditString());
        
             }
         }

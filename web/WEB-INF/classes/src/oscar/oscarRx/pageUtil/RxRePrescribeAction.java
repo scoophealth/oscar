@@ -68,17 +68,16 @@ public final class RxRePrescribeAction extends DispatchAction {
         String script_no = frm.getDrugList();
         
         
-        String ip = request.getRemoteAddr();
-        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip,""+beanRX.getDemographicNo());
-        
+        String ip = request.getRemoteAddr();                
         
         RxPrescriptionData rxData = new RxPrescriptionData();
         ArrayList<RxPrescriptionData.Prescription> list = rxData.getPrescriptionsByScriptNo(Integer.parseInt(script_no), sessionBeanRX.getDemographicNo());
         RxPrescriptionData.Prescription p = null;
-        
+        StringBuffer auditStr = new StringBuffer();
         for( int idx = 0; idx < list.size(); ++idx ) {
             p = list.get(idx);
             beanRX.setStashIndex(beanRX.addStashItem(p));
+            auditStr.append(p.getAuditString() + "\n");
         }
         
         //save print date/time
@@ -92,6 +91,8 @@ public final class RxRePrescribeAction extends DispatchAction {
         request.setAttribute("rePrint", "true");
         request.setAttribute("comment",comment);
 
+        LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRINT, LogConst.CON_PRESCRIPTION, script_no, ip,""+beanRX.getDemographicNo(), auditStr.toString());
+        
         return mapping.findForward("reprint");        
     }
     
@@ -109,7 +110,7 @@ public final class RxRePrescribeAction extends DispatchAction {
             return null;
         }
         RxDrugListForm frm = (RxDrugListForm)form;                                    
-        
+        StringBuffer auditStr = new StringBuffer();
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
             
@@ -135,18 +136,19 @@ public final class RxRePrescribeAction extends DispatchAction {
                     RxPrescriptionData.Prescription rx =
                         rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);                
                     beanRX.setStashIndex(beanRX.addStashItem(rx));
-                
+                auditStr.append(rx.getAuditString() + "\n");
                                 
                 request.setAttribute("BoxNoFillFirstLoad", "true");
                 
             }
-            
-            
+                        
         }
         catch (Exception e) {
             logger.error("Unexpected error occurred.", e);
         }             
-                
+        
+        String script_no = beanRX.getStashItem(beanRX.getStashIndex()).getScript_no();
+         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.REPRESCRIBE, LogConst.CON_PRESCRIPTION, script_no, request.getRemoteAddr(),""+beanRX.getDemographicNo(), auditStr.toString());
             return (mapping.findForward("success"));
         
     }
