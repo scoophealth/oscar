@@ -48,6 +48,7 @@ public class LogWorker extends Thread {
     String contentId = null;
     String ip = null;
     String demographic_no = null;
+    String data = null;
 
     public LogWorker() {
     }
@@ -70,6 +71,16 @@ public class LogWorker extends Thread {
         this.demographic_no = demographic;
     }
     
+    public LogWorker(String provider_no, String action, String content, String contentId, String ip,String demographic, String data) {
+        this.provider_no = provider_no;
+        this.action = action;
+        this.content = content;
+        this.contentId = contentId;
+        this.ip = ip;
+        this.demographic_no = demographic;
+        this.data = data;
+    }
+    
     public void run() {
         try {
             DBHelp db = new DBHelp(); 
@@ -78,9 +89,12 @@ public class LogWorker extends Thread {
             
             if (demographic_no != null){
                 sql = "insert into log (provider_no,action,content,contentId, ip,demographic_no) values('" + provider_no;
-                sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "','"+demographic_no+"')";
+                sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "','"+demographic_no+"')";                            
+            }
             
-                
+            if(data != null) {
+                sql = "insert into log (provider_no,action,content,contentId, ip,demographic_no, data) values('" + provider_no;
+                sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "','"+demographic_no+ "','" +  StringEscapeUtils.escapeSql(data) + "')";
             }
             
             try {
