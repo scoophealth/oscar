@@ -745,7 +745,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px; margin-top: 2px;'
 			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
-                        <a title="Edit" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event);":"editNote(event);"%> return false;" style='float:right; margin-right:5px; font-size:8px;'>Edit</a>
+                        <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event);":"editNote(event);"%> return false;" style='float:right; margin-right:5px; font-size:8px;'><bean:message key="oscarEncounter.edit.msgEdit"/></a>
 
 		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();

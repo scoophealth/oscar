@@ -377,6 +377,7 @@
         msgDraftSaved = "<bean:message key="oscarEncounter.draftSaved.msg"/>";
         msgPasswd = "<bean:message key="Logon.passWord"/>";
         btnMsgUnlock = "<bean:message key="oscarEncounter.Index.btnUnLock"/>";
+        editLabel = "<bean:message key="oscarEncounter.edit.msgEdit"/>";
         month[0] = "<bean:message key="share.CalendarPopUp.msgJan"/>";
         month[1] = "<bean:message key="share.CalendarPopUp.msgFeb"/>";
         month[2] = "<bean:message key="share.CalendarPopUp.msgMar"/>";
