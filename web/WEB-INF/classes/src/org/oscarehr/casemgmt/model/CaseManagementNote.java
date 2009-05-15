@@ -28,6 +28,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Iterator;
+import java.util.Calendar;
+import java.sql.Timestamp;
 
 import org.caisi.model.BaseObject;
 import org.oscarehr.common.model.Provider;
@@ -38,6 +41,7 @@ public class CaseManagementNote extends BaseObject {
 	private Date update_date;
 	private Date create_date;
 	private Date observation_date;
+        
 	private String demographic_no;
 	private String note;
 	private boolean signed = false;
@@ -54,7 +58,7 @@ public class CaseManagementNote extends BaseObject {
 	private String history;
 	private Provider provider;
 	private Set issues = new HashSet();
-    private Set extend = new HashSet();
+        private Set extend = new HashSet();
 	private List editors = new ArrayList();
 	private String roleName;
 	private String programName;
@@ -63,13 +67,13 @@ public class CaseManagementNote extends BaseObject {
 
 	private String password;
 	private boolean locked;
-    private boolean archived;
+        private boolean archived;
     
-    private boolean remote = false;
-    private String facilityName = "None Specified";
+        private boolean remote = false;
+        private String facilityName = "None Specified";
 
 	private int hashCode = Integer.MIN_VALUE;
-        private int position = 0;
+        private int position = 0;                
 
 	public boolean equals(Object obj) {
 		if (null == obj) return false;
@@ -99,7 +103,23 @@ public class CaseManagementNote extends BaseObject {
 	public CaseManagementNote() {
 		update_date = new Date();
 	}
-
+        
+        public String getAuditString() {
+            StringBuffer auditStr = new StringBuffer(getNote());
+            Iterator<CaseManagementIssue>iter = this.issues.iterator();
+            auditStr.append("\nIssues\n");
+            int idx = 0;
+            while( iter.hasNext() ) {                
+                auditStr.append(iter.next().getIssue().getDescription() + "\n");
+                ++idx;
+            }
+            if( idx == 0 ) {
+                auditStr.append("None");
+            }
+            return auditStr.toString();
+        }
+                        
+         
 	public String getBilling_code() {
 		return billing_code;
 	}
