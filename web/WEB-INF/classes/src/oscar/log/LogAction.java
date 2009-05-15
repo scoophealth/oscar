@@ -46,7 +46,11 @@ public class LogAction {
         LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip,demographicNo);
         logWorker.start();
     }
-    
+
+    public static void addLog(String provider_no, String action, String content, String contentId, String ip,String demographicNo, String data) {
+        LogWorker logWorker = new LogWorker(provider_no, action, content, contentId, ip,demographicNo, data);
+        logWorker.start();
+    }    
 
     public static boolean addALog(String provider_no, String action, String content, String contentId, String ip) {
         boolean ret = false;
