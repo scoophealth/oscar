@@ -142,6 +142,11 @@ public class RxAllergyData {
             this.TYPECODE=typecode;
         }
         
+        //Used for LogAction to insert into data column of log table
+        public String getAuditString() {
+            return getAllergyDisp();
+        }
+        
         public String getAllergyDisp() {
             return this.DESCRIPTION + " (" + this.getTypeDesc() + ")";
         }
