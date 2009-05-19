@@ -37,7 +37,7 @@
 				int remoteFacilityId=localCachedFacility.getIntegratorFacilityId();
 			%>
 			<td class="genericTableHeader"><%=localCachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
-			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareDate(remoteFacilityId)?"checked=\"on\"":""%> /></td>
+			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 		</tr>
 		<%
@@ -47,7 +47,7 @@
 				%>
 					<tr>
 						<td class="genericTableHeader"><%=cachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareDate(remoteFacilityId)?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 					</tr>
 				<%
@@ -62,7 +62,7 @@
 			
 			String imageUrl=null;
 			if (viewConsentId==null) imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&amp;"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
-			else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+manageConsent.getConsentToView().getDigitalSignatureId();
+			else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+manageConsent.getPreviousConsentDigitalSignatureId();
 
 			%>
 				<br />
