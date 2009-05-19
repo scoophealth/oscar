@@ -61,8 +61,16 @@
 			String signatureRequestId=DigitalSignatureUtils.generateSignatureRequestId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo());
 			
 			String imageUrl=null;
-			if (viewConsentId==null) imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&amp;"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
-			else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+manageConsent.getPreviousConsentDigitalSignatureId();
+			if (viewConsentId==null)
+			{
+				imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&amp;"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+			}
+			else
+			{
+				Integer previousDigitalSignatureId=manageConsent.getPreviousConsentDigitalSignatureId();
+				if (previousDigitalSignatureId==null) imageUrl=request.getContextPath()+"/images/1x1.gif";
+				else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+previousDigitalSignatureId;
+			}
 
 			%>
 				<br />
