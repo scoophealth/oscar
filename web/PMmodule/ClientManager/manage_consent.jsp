@@ -18,6 +18,9 @@
 
 	String viewConsentId=request.getParameter("viewConsentId");
 	manageConsent.setViewConsentId(viewConsentId);
+
+	CachedFacility localCachedFacility=manageConsent.getLocalCachedFacility();
+	int remoteFacilityId=localCachedFacility.getIntegratorFacilityId();
 %>
 
 <h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
@@ -25,20 +28,17 @@
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
+	<span style="font-weight:bold">Do not share my mental health data</span><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> />
+	<br />
+
 	<table class="genericTable" style="border:none">
 		<tr>
 			<td></td>
-			<td class="genericTableHeader" style="text-align:center">Consent to share all data</td>
-			<td class="genericTableHeader" style="text-align:center">Exclude mental health data</td>
+			<td class="genericTableHeader" style="text-align:center">Consent to share data</td>
 		</tr>
 		<tr>
-			<%
-				CachedFacility localCachedFacility=manageConsent.getLocalCachedFacility();
-				int remoteFacilityId=localCachedFacility.getIntegratorFacilityId();
-			%>
 			<td class="genericTableHeader"><%=localCachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
 			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
-			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 		</tr>
 		<%
 			for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
@@ -48,7 +48,6 @@
 					<tr>
 						<td class="genericTableHeader"><%=cachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
 					</tr>
 				<%
 			}

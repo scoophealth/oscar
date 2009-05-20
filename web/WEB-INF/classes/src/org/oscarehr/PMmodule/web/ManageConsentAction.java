@@ -21,6 +21,7 @@ public class ManageConsentAction {
 	private HashMap<Integer, IntegratorConsent> consents = new HashMap<Integer, IntegratorConsent>();
 	private String signatureRequestId = null;
 	private Integer clientId = null;
+	private boolean excludeMentalHealth=false;
 	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	/** the created date must be the same for all entries so they can be grouped in the display */
 	private Date createDate = new Date();
@@ -55,7 +56,7 @@ public class ManageConsentAction {
 		} else if ("consentToShareData".equals(splitTemp[2])) {
 			consent.setConsentToShareData(true);
 		} else if ("excludeMentalHealth".equals(splitTemp[2])) {
-			consent.setExcludeMentalHealthData(true);
+			excludeMentalHealth=true;
 		} else {
 			logger.error("unexpected consent bit : " + s);
 		}
@@ -71,7 +72,10 @@ public class ManageConsentAction {
 		DigitalSignature digitalSignature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
 
 		for (IntegratorConsent consent : consents.values()) {
+			consent.setExcludeMentalHealthData(excludeMentalHealth);
+			
 			if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
+			
 			integratorConsentDao.persist(consent);
 		}
 	}
