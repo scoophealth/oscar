@@ -28,7 +28,7 @@
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
-	<span style="font-weight:bold">Do not share my mental health data</span><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> />
+	<span style="font-weight:bold">Do not share my mental health data</span><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
 	<br />
 
 	<table class="genericTable" style="border:none">
@@ -38,7 +38,7 @@
 		</tr>
 		<tr>
 			<td class="genericTableHeader"><%=localCachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
-			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
+			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /></td>
 		</tr>
 		<%
 			for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
@@ -47,7 +47,7 @@
 				%>
 					<tr>
 						<td class="genericTableHeader"><%=cachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> /></td>
+						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /></td>
 					</tr>
 				<%
 			}
@@ -87,13 +87,13 @@
 					}
 				</script>
 				<br />
-				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
+				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=viewConsentId!=null?"disabled=\"disabled\" style=\"display:none\"":""%> />
 				<br />					
 			<%								
 		}
 	%>
 	<br />
-	<input type="submit" value="save" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<input type="submit" value="save" <%=viewConsentId!=null?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

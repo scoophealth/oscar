@@ -31,13 +31,10 @@ public class Facility implements Serializable {
     private String integratorPassword=null;
 	@Temporal(TemporalType.TIMESTAMP)
     private Date integratorLastPushTime=null;
-    private boolean allowQuickConsent=true;
     private boolean enableIntegratedReferrals=true;
     private boolean enableHealthNumberRegistry=true;
     private boolean allowSims = true;
     private boolean enableDigitalSignatures=false;
-    //private String lastUpdateUser;
-    //private Date lastUpdateDate;
     
     public boolean isEnableIntegratedReferrals() {
 		return enableIntegratedReferrals;
@@ -53,14 +50,6 @@ public class Facility implements Serializable {
 
 	public void setEnableIntegratedReferrals(boolean enableIntegratedReferrals) {
 		this.enableIntegratedReferrals = enableIntegratedReferrals;
-	}
-
-	public boolean isAllowQuickConsent() {
-		return allowQuickConsent;
-	}
-
-	public void setAllowQuickConsent(boolean allowQuickConsent) {
-		this.allowQuickConsent = allowQuickConsent;
 	}
 
 	public Facility() {

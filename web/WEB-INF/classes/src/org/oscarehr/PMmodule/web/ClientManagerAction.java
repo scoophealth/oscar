@@ -362,9 +362,6 @@ public class ClientManagerAction extends BaseAction {
 		request.getSession().setAttribute("clientAge", demographic.getAge());
 		request.getSession().setAttribute("demographicId", demographic.getDemographicNo());
 
-		// --- consent status ---
-		request.getSession().setAttribute("allowQuickConsent", facility.isAllowQuickConsent());
-
 		return mapping.findForward("edit");
 	}
 

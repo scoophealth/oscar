@@ -233,7 +233,7 @@ function openSurvey() {
 				<tr>
 					<th width="20%">Integrator Consent</th>
 					<td>
-						<input type="button" value="Change Consent (Quick/Detailed)" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 					</td>
 				</tr>
 				<tr>

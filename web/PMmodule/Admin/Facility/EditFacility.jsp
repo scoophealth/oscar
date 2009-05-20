@@ -128,10 +128,6 @@
 			<td><html:checkbox property="facility.allowSims" /></td>
 		</tr>
 		<tr class="b">
-			<td width="20%">Allow Quick/Detailed Consent:</td>
-			<td><html:checkbox property="facility.allowQuickConsent" /></td>
-		</tr>
-		<tr class="b">
 			<td width="20%">Enable Integrated Referrals:</td>
 			<td><html:checkbox property="facility.enableIntegratedReferrals" /></td>
 		</tr>
