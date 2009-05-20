@@ -233,11 +233,7 @@ function openSurvey() {
 				<tr>
 					<th width="20%">Integrator Consent</th>
 					<td>
-						<c:if test="${allowQuickConsent}">
-							<input type="button" value="Change Consent (Quick/Detailed)" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
-							&nbsp;&nbsp;
-						</c:if> 
-						<input type="button" value="Change Consent (Complex)" onclick="window.open('ClientManager/complex_integrator_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>')" />
+						<input type="button" value="Change Consent (Quick/Detailed)" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 					</td>
 				</tr>
 				<tr>
