@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -14,120 +15,123 @@ import javax.persistence.TemporalType;
 public class Facility implements Serializable {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    private String name;
-    private String description;
-    private String contactName;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	private String name;
+	private String description;
+	private String contactName;
 	private String contactEmail;
 	private String contactPhone;
-    private boolean hic;   
-    private boolean disabled;
-    private Integer orgId;
-    private Integer sectorId;
-    private boolean integratorEnabled=false;
-    private String integratorUrl=null;
-    private String integratorUser=null;
-    private String integratorPassword=null;
+	private boolean hic;
+	private boolean disabled;
+	private Integer orgId;
+	private Integer sectorId;
+	private boolean integratorEnabled = false;
+	private String integratorUrl = null;
+	private String integratorUser = null;
+	private String integratorPassword = null;
 	@Temporal(TemporalType.TIMESTAMP)
-    private Date integratorLastPushTime=null;
-    private boolean enableIntegratedReferrals=true;
-    private boolean enableHealthNumberRegistry=true;
-    private boolean allowSims = true;
-    private boolean enableDigitalSignatures=false;
-    
-    public boolean isEnableIntegratedReferrals() {
+	private Date integratorLastPushTime = null;
+	private boolean enableIntegratedReferrals = true;
+	private boolean enableHealthNumberRegistry = true;
+	private boolean allowSims = true;
+	private boolean enableDigitalSignatures = false;
+	private Date lastUpdate=new Date();
+	
+	
+	public boolean isEnableIntegratedReferrals() {
 		return enableIntegratedReferrals;
 	}
 
 	public boolean isEnableHealthNumberRegistry() {
-    	return enableHealthNumberRegistry;
-    }
+		return enableHealthNumberRegistry;
+	}
 
 	public void setEnableHealthNumberRegistry(boolean enableHealthNumberRegistry) {
-    	this.enableHealthNumberRegistry = enableHealthNumberRegistry;
-    }
+		this.enableHealthNumberRegistry = enableHealthNumberRegistry;
+	}
 
 	public void setEnableIntegratedReferrals(boolean enableIntegratedReferrals) {
 		this.enableIntegratedReferrals = enableIntegratedReferrals;
 	}
 
 	public Facility() {
-    }
+	}
 
-    public Facility(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+	public Facility(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
-    public String getNameJs() {
-        return oscar.Misc.getStringJs(name);
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getNameJs() {
+		return oscar.Misc.getStringJs(name);
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public boolean isDisabled() {
-        return disabled;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
+	public boolean isDisabled() {
+		return disabled;
+	}
 
-    public String getContactName() {
-        return contactName;
-    }
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
 
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
+	public String getContactName() {
+		return contactName;
+	}
 
-    public String getContactEmail() {
-        return contactEmail;
-    }
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
 
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
+	public String getContactEmail() {
+		return contactEmail;
+	}
 
-    public String getContactPhone() {
-        return contactPhone;
-    }
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
 
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
-    }
+	public String getContactPhone() {
+		return contactPhone;
+	}
 
-    public boolean isHic() {
-        return hic;
-    }
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
+	}
 
-    public void setHic(boolean hic) {
-        this.hic = hic;
-    }
-    
-    public Integer getOrgId() {
+	public boolean isHic() {
+		return hic;
+	}
+
+	public void setHic(boolean hic) {
+		this.hic = hic;
+	}
+
+	public Integer getOrgId() {
 		return orgId;
 	}
 
@@ -144,45 +148,46 @@ public class Facility implements Serializable {
 	}
 
 	public boolean isIntegratorEnabled() {
-        return integratorEnabled;
-    }
+		return integratorEnabled;
+	}
 
-    public void setIntegratorEnabled(boolean integratorEnabled) {
-        this.integratorEnabled = integratorEnabled;
-    }
+	public void setIntegratorEnabled(boolean integratorEnabled) {
+		this.integratorEnabled = integratorEnabled;
+	}
 
-    public String getIntegratorUrl() {
-        return integratorUrl;
-    }
+	public String getIntegratorUrl() {
+		return integratorUrl;
+	}
 
-    public void setIntegratorUrl(String integratorUrl) {
-        this.integratorUrl = integratorUrl;
-    }
+	public void setIntegratorUrl(String integratorUrl) {
+		this.integratorUrl = integratorUrl;
+	}
 
-    public String getIntegratorUser() {
-        return integratorUser;
-    }
+	public String getIntegratorUser() {
+		return integratorUser;
+	}
 
-    public void setIntegratorUser(String integratorUser) {
-        this.integratorUser = integratorUser;
-    }
+	public void setIntegratorUser(String integratorUser) {
+		this.integratorUser = integratorUser;
+	}
 
-    public String getIntegratorPassword() {
-        return integratorPassword;
-    }
+	public String getIntegratorPassword() {
+		return integratorPassword;
+	}
 
-    public void setIntegratorPassword(String integratorPassword) {
-        this.integratorPassword = integratorPassword;
-    }
+	public void setIntegratorPassword(String integratorPassword) {
+		this.integratorPassword = integratorPassword;
+	}
 
-    public Date getIntegratorLastPushTime() {
-        return integratorLastPushTime;
-    }
+	public Date getIntegratorLastPushTime() {
+		return integratorLastPushTime;
+	}
 
-    public void setIntegratorLastPushTime(Date integratorLastPushTime) {
-        this.integratorLastPushTime = integratorLastPushTime;
-    }
-public boolean isAllowSims() {
+	public void setIntegratorLastPushTime(Date integratorLastPushTime) {
+		this.integratorLastPushTime = integratorLastPushTime;
+	}
+
+	public boolean isAllowSims() {
 		return allowSims;
 	}
 
@@ -191,43 +196,40 @@ public boolean isAllowSims() {
 	}
 
 	public boolean isEnableDigitalSignatures() {
-    	return enableDigitalSignatures;
-    }
+		return enableDigitalSignatures;
+	}
 
 	public void setEnableDigitalSignatures(boolean enableDigitalSignatures) {
-    	this.enableDigitalSignatures = enableDigitalSignatures;
+		this.enableDigitalSignatures = enableDigitalSignatures;
+	}
+
+	public Date getLastUpdate() {
+    	return lastUpdate;
     }
 
-	/*
-	public String getLastUpdateUser() {
-		return lastUpdateUser;
-	}
-
-	public void setLastUpdateUser(String lastUpdateUser) {
-		this.lastUpdateUser = lastUpdateUser;
-	}
-
-	public Date getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-
-	public void setLastUpdateDate(Date lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
-*/	
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Facility facility = (Facility) o;
-
-        if (id != null ? !id.equals(facility.id) : facility.id != null) return false;
-
-        return true;
+	public void setLastUpdate(Date lastUpdate) {
+    	this.lastUpdate = lastUpdate;
     }
 
-    public int hashCode() {
-        return (id != null ? id.hashCode() : 0);
-    }
+	@PreUpdate
+	protected void jpaUpdateLastUpdateTime()
+	{
+		setLastUpdate(new Date());
+	}
+	
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Facility facility = (Facility) o;
+
+		if (id != null ? !id.equals(facility.id) : facility.id != null) return false;
+
+		return true;
+	}
+
+	public int hashCode() {
+		return (id != null ? id.hashCode() : 0);
+	}
 
 }
