@@ -474,9 +474,9 @@ function popup1(height, width, url, windowName){
 					       onclick="window.open('../annotation/annotation.jsp?display=<%=annotation_display%>&table_id=<%=curdoc.getDocId()%>&demo=<%=user_no%>','anwin','width=400,height=250');">
 					      <img src="../images/notes.gif" border="0">
 					    </a>
-                                            
+                          <% if(!moduleid.equals((String)session.getAttribute("user"))) {%>
                                             &nbsp;<a href="javascript:void(0);" title="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=curdoc.getDocId()%>&demographic_no=<%=moduleid%>','tickler')">T</a>
-                                  
+                          <%}%>
                                             </td>
 				</tr>
 
