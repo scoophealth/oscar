@@ -226,13 +226,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushFacility(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
-		CachedFacility cachedFacility = new CachedFacility();
-		BeanUtils.copyProperties(cachedFacility, facility);
+		if (facility.getIntegratorLastPushTime() == null || facility.getLastUpdate().after(facility.getIntegratorLastPushTime())) {
+			logger.debug("pushing facility record");
 
-		FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
+			CachedFacility cachedFacility = new CachedFacility();
+			BeanUtils.copyProperties(cachedFacility, facility);
 
-		logger.debug("pushing facility");
-		service.setMyFacility(cachedFacility);
+			FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
+			service.setMyFacility(cachedFacility);
+		}
+		else
+		{
+			logger.debug("skipping facility record (no changes)");
+		}			
 	}
 
 	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
