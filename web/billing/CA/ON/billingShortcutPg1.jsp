@@ -204,7 +204,7 @@
   }
   // clinic location
   Vector vecLocation = new Vector();
-  sql = "select * from clinic_location order by clinic_location_no";
+  sql = "select * from clinic_location where clinic_no = 1 order by clinic_location_no";
   rs = dbObj.searchDBRecord(sql);
   while (rs.next()) {
     propT = new Properties();
