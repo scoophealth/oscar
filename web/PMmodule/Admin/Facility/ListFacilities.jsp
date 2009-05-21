@@ -42,7 +42,7 @@
 			<a
 				onclick="return ConfirmDelete('<c:out value="${facility.name}"/>')"
 				href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=delete&id=<c:out value="${facility.id}"/>&name=<c:out value="${facility.name}"/>">
-			Delete </a>
+			Disable </a>
 		</display:column>
 
 

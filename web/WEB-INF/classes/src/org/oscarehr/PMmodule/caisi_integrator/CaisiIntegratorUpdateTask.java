@@ -242,11 +242,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
+		// all are always sent so program deletions have be proliferated.
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 
 		ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
 
 		for (Program program : programs) {
+			logger.debug("pushing program : "+program.getId()+':'+program.getName());
 			MiscUtils.checkShutdownSignaled();
 
 			CachedProgram cachedProgram = new CachedProgram();
