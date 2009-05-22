@@ -626,51 +626,9 @@ public class SqlUtils {
 		else throw (new IllegalArgumentException("Need a new databaseType added : " + databaseType));
 	}
 
-	public static List<Long> selectLongList(String sqlCommand) {
-		Connection c = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			ps = c.prepareStatement(sqlCommand);
-			rs = ps.executeQuery();
-
-			ArrayList<Long> al = new ArrayList<Long>();
-
-			while (rs.next())
-				al.add(rs.getLong(1));
-
-			return (al);
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, ps, rs);
-		}
-	}
-
-	public static int selectInt(String sqlCommand) {
-		Connection c = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			c = DbConnectionFilter.getThreadLocalDbConnection();
-			ps = c.prepareStatement(sqlCommand);
-			rs = ps.executeQuery();
-
-			rs.next();
-
-			return (rs.getInt(1));
-		}
-		catch (SQLException e) {
-			throw (new PersistenceException(e));
-		}
-		finally {
-			closeResources(c, ps, rs);
-		}
-	}
-
+	/**
+	 * @deprecated use jpa native queries instead 
+	 */
 	public static List<Integer> selectIntList(String sqlCommand) {
 		Connection c = null;
 		PreparedStatement ps = null;
@@ -695,6 +653,9 @@ public class SqlUtils {
 		}
 	}
 
+	/**
+	 * @deprecated use jpa native queries instead 
+	 */
 	public static List<String> selectStringList(String sqlCommand) {
 		Connection c = null;
 		PreparedStatement ps = null;
