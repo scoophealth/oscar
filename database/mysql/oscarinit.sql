@@ -6420,7 +6420,7 @@ CREATE TABLE professionalSpecialists (
 --
 
 CREATE TABLE provider (
-  provider_no varchar(6) NOT NULL default '',
+  provider_no varchar(6) NOT NULL primary key,
   last_name varchar(30) NOT NULL default '',
   first_name varchar(30) NOT NULL default '',
   provider_type varchar(15) NOT NULL default '',
@@ -6437,15 +6437,7 @@ CREATE TABLE provider (
   hso_no varchar(10) default NULL,
   status char(1) default NULL,
   comments text,
-  provider_activity char(3) default NULL,
-  practitionerNo varchar(20),
-  `init` varchar(10) default NULL,
-  `job_title` varchar(100) default NULL,
-  `email` varchar(60) default NULL,
-  `title` varchar(20) default NULL,
-  `lastUpdateUser` varchar(6) default NULL,
-  `lastUpdateDate` date default NULL,
-  PRIMARY KEY  (provider_no)
+  provider_activity char(3) default NULL
 );
 
 --

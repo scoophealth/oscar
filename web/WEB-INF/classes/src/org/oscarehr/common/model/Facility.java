@@ -36,7 +36,7 @@ public class Facility implements Serializable {
 	private boolean enableHealthNumberRegistry = true;
 	private boolean allowSims = true;
 	private boolean enableDigitalSignatures = false;
-	private Date lastUpdate=new Date();
+	private Date lastUpdated=new Date();
 	
 	
 	public boolean isEnableIntegratedReferrals() {
@@ -203,18 +203,13 @@ public class Facility implements Serializable {
 		this.enableDigitalSignatures = enableDigitalSignatures;
 	}
 
-	public Date getLastUpdate() {
-    	return lastUpdate;
-    }
-
-	public void setLastUpdate(Date lastUpdate) {
-    	this.lastUpdate = lastUpdate;
-    }
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
 
 	@PreUpdate
-	protected void jpaUpdateLastUpdateTime()
-	{
-		setLastUpdate(new Date());
+	protected void jpaUpdateLastUpdateTime() {
+		lastUpdated = new Date();
 	}
 	
 	public boolean equals(Object o) {

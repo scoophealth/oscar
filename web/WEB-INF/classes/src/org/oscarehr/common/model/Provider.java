@@ -25,66 +25,33 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.
  */
-@Entity
 public class Provider implements Serializable {
 
 	public static final String SYSTEM_PROVIDER_NO = "-1";
 
-	@Id
-	@Column(table="provider_no")
 	private String providerNo;
-
 	private String comments;
-
 	private String phone;
-
-	@Column(table="billing_no")
 	private String billingNo;
-	
-	@Column(table="work_phone")
 	private String workPhone;
-	
 	private String address;
 	private String team;
 	private String status;
-	
-	@Column(table="last_name")	
 	private String lastName;
-
-	@Column(table="provider_type")
 	private String providerType;
-	
 	private String sex;
-	
-	@Column(table="ohip_no")
 	private String ohipNo;
-	
 	private String specialty;
-	
-	@Temporal(TemporalType.DATE)
 	private Date dob;
-	
-	@Column(table="hso_no")
 	private String hsoNo;
-	
-	@Column(table="provider_activity")
 	private String providerActivity;
-	
-	@Column(table="first_name")
 	private String firstName;
-	
-	@Column(table="rma_no")
 	private String rmaNo;
-
+	private Date lastUpdated=new Date();
+	
 	// constructors
 	public Provider() {
 	}
@@ -260,6 +227,15 @@ public class Provider implements Serializable {
 	public void setRmaNo(String rmaNo) {
 		this.rmaNo = rmaNo;
 	}
+
+	public Date getLastUpdated() {
+    	return lastUpdated;
+    }
+
+
+	public void setLastUpdated(Date lastUpdated) {
+    	this.lastUpdated = lastUpdated;
+    }
 
 	public ComparatorName ComparatorName() {
 		return new ComparatorName();
