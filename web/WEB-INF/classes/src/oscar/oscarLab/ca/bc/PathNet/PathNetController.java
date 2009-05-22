@@ -99,34 +99,12 @@ public class PathNetController {
             System.out.println("Error connecting to pathnet");
             System.exit(1);
          }
-         //long sleep = Long.parseLong(OscarProperties.getInstance().getProperty("PathNetSleep")) * 60000;
-         //try {
-         //   Thread.sleep(sleep);
-         //}
-         //catch (Exception ex) {
-         //   System.err.println("Thread has failed to sleep. Thread will end until error corrected and restarted - oscar.PathNet.Controller - Message: "+ ex.getMessage());
-         //   //run = false;
-         //}
-      
-      ////      
       
    }
    
-   ///
    private static synchronized void init (String file) throws java.sql.SQLException, java.io.IOException  {
       Properties param = new Properties();
-      DBHandler db = null; 
       param.load(new FileInputStream(file)); 
-      DBHandler.init(param.getProperty("db_name"),param.getProperty("db_driver"),param.getProperty("db_uri") ,param.getProperty("db_username"),param.getProperty("db_password") );
-      db = new DBHandler(DBHandler.OSCAR_DATA);
    }
-
-	
-
-   
-   
-   ///
-   
-   
    
 }

@@ -36,8 +36,6 @@ import oscar.oscarDB.DBPreparedHandler;
 public class DAO {
 
     public DAO(Properties pvar) throws SQLException {
-		oscar.oscarDB.DBHandler.init(pvar.getProperty("db_name"),pvar.getProperty("db_driver"),pvar.getProperty("db_uri"),pvar.getProperty("db_username"),pvar.getProperty("db_password")  ) ;
-		
     }
 
     protected void close(ResultSet rs) {

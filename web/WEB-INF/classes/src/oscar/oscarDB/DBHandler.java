@@ -42,9 +42,6 @@ public class DBHandler {
         return true;
     }
 
-    public static void init(String db_name, String db_driver, String db_uri, String db_username, String db_password) {
-    }
-
     public DBHandler(String dbName) throws SQLException {
     }
 

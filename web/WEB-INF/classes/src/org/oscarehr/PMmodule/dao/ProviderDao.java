@@ -224,7 +224,6 @@ public class ProviderDao extends HibernateDaoSupport {
 	
 	public List getShelterIds(String provider_no)
 	{
-//	    return(SqlUtils.selectIntList("select facility_id from secUserRole where provider_no='"+provider_no+'\''));
 		/*
 		String sql = "select distinct substr(codetree,18,7) as shelter_id from lst_orgcd" ;
 		sql += " where code in (select orgcd from secuserrole where provider_no=?)";

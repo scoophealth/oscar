@@ -116,7 +116,6 @@ public class FrmStudyXMLClientSend {
 	private synchronized void init (String file, String url) throws java.sql.SQLException, java.io.IOException  {
 		URLService = url;
 		param.load(new FileInputStream(file)); 
-		DBHandler.init(param.getProperty("db_name"),param.getProperty("db_driver"),param.getProperty("db_uri") ,param.getProperty("db_username"),param.getProperty("db_password") );
         db = new DBHandler(DBHandler.OSCAR_DATA);
 
 		GregorianCalendar now=new GregorianCalendar();

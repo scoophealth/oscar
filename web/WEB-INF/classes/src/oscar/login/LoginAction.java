@@ -28,11 +28,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +40,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
-import oscar.oscarDB.DBHandler;
 import oscar.oscarSecurity.CRHelper;
 import oscar.util.AlertTimer;
 
@@ -127,9 +125,6 @@ public final class LoginAction extends DispatchAction {
             // initial db setting
             Properties pvar = cl.getOscarVariable();
             session.setAttribute("oscarVariables", pvar);
-            if (!DBHandler.isInit()) {
-                DBHandler.init(pvar.getProperty("db_name"), pvar.getProperty("db_driver"), pvar.getProperty("db_uri"), pvar.getProperty("db_username"), pvar.getProperty("db_password"));
-            }
 
             // get View Type
             String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());

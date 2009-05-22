@@ -147,10 +147,6 @@ public class LoginCheckLoginBean {
     private LoginSecurityBean getUserID() throws SQLException {
         LoginSecurityBean secBean = null;
         //try {
-            //if (!DBHandler.isInit())
-            //    DBHandler.init(oscarVariables.getProperty("db_name"), oscarVariables.getProperty("db_driver"),
-            //            oscarVariables.getProperty("db_uri"), oscarVariables.getProperty("db_username"),
-            //            oscarVariables.getProperty("db_password"));
 
             accessDB = new DBHelp();
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

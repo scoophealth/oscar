@@ -38,7 +38,6 @@ import javax.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import oscar.oscarDB.DBHandler;
 import oscar.oscarSurveillance.SurveillanceMaster;
 
 /**
@@ -109,20 +108,18 @@ public class Startup implements ServletContextListener {
 			}
 		}
 		try {
-			if (!DBHandler.isInit())
-				DBHandler.init(p.getProperty("db_name"), p.getProperty("db_driver"), p.getProperty("db_uri"), p.getProperty("db_username"), p.getProperty("db_password"));
-                        //Specify who will see new casemanagement screen
-                        ArrayList<String> listUsers;
-                        String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
-                        if( casemgmtscreen != null ) {
-                            String[] arrUsers = casemgmtscreen.split(",");
-                            listUsers = new ArrayList<String>(Arrays.asList(arrUsers));
-                            Collections.sort(listUsers);                            
-                        }
-                        else
-                            listUsers = new ArrayList<String>();
-                        
-                        sc.getServletContext().setAttribute("CaseMgmtUsers", listUsers);
+            //Specify who will see new casemanagement screen
+            ArrayList<String> listUsers;
+            String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
+            if( casemgmtscreen != null ) {
+                String[] arrUsers = casemgmtscreen.split(",");
+                listUsers = new ArrayList<String>(Arrays.asList(arrUsers));
+                Collections.sort(listUsers);                            
+            }
+            else
+                listUsers = new ArrayList<String>();
+            
+            sc.getServletContext().setAttribute("CaseMgmtUsers", listUsers);
                         
 			// Temporary Testing of new ECHART
 			// To be removed
