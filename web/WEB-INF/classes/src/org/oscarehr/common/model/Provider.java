@@ -23,33 +23,66 @@ package org.oscarehr.common.model;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.
  */
+@Entity
 public class Provider implements Serializable {
 
 	public static final String SYSTEM_PROVIDER_NO = "-1";
 
-	private int hashCode = Integer.MIN_VALUE;// primary key
+	@Id
+	@Column(table="provider_no")
+	private String providerNo;
 
-	private String providerNo;// fields
 	private String comments;
+
 	private String phone;
+
+	@Column(table="billing_no")
 	private String billingNo;
+	
+	@Column(table="work_phone")
 	private String workPhone;
+	
 	private String address;
 	private String team;
 	private String status;
+	
+	@Column(table="last_name")	
 	private String lastName;
+
+	@Column(table="provider_type")
 	private String providerType;
+	
 	private String sex;
+	
+	@Column(table="ohip_no")
 	private String ohipNo;
+	
 	private String specialty;
-	private java.util.Date dob;
+	
+	@Temporal(TemporalType.DATE)
+	private Date dob;
+	
+	@Column(table="hso_no")
 	private String hsoNo;
+	
+	@Column(table="provider_activity")
 	private String providerActivity;
+	
+	@Column(table="first_name")
 	private String firstName;
+	
+	@Column(table="rma_no")
 	private String rmaNo;
 
 	// constructors
@@ -90,7 +123,6 @@ public class Provider implements Serializable {
 
 	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
-		this.hashCode = Integer.MIN_VALUE;
 	}
 
 	public String getComments() {
@@ -233,30 +265,17 @@ public class Provider implements Serializable {
 		return new ComparatorName();
 	}
 
-	public boolean equals(Object obj) {
-		if (null == obj)
-			return false;
-		if (!(obj instanceof Provider))
-			return false;
-		else {
-			Provider mObj = (Provider) obj;
-			if (null == this.getProviderNo() || null == mObj.getProviderNo())
-				return false;
-			else
-				return (this.getProviderNo().equals(mObj.getProviderNo()));
+	public boolean equals(Provider provider) {
+		try {
+			return (providerNo.equals(provider.providerNo));
+		} catch (Exception e) {
+			return (false);
 		}
 	}
 
 	public int hashCode() {
-		if (Integer.MIN_VALUE == this.hashCode) {
-			if (null == this.getProviderNo())
-				return super.hashCode();
-			else {
-				String hashStr = this.getClass().getName() + ":" + this.getProviderNo().hashCode();
-				this.hashCode = hashStr.hashCode();
-			}
-		}
-		return this.hashCode;
+		if (providerNo==null) return(super.hashCode());
+		else return(providerNo.hashCode());
 	}
 
 	public class ComparatorName implements Comparator<Provider>, Serializable {
