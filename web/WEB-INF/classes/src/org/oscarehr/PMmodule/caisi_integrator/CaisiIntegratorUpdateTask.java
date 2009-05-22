@@ -363,7 +363,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<CachedFacility> remoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
 		for (CachedFacility remoteFacility : remoteFacilities) {
 			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), demographicId, remoteFacility.getIntegratorFacilityId());
-			if (consent != null) {
+			if (consent != null && consent.getCreatedDate().after(facility.getIntegratorLastPushTime())) {
 				ConsentParameters consentParameters = new ConsentParameters();
 
 				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
