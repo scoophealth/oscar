@@ -50,7 +50,6 @@ public class Provider implements Serializable {
 	private String providerActivity;
 	private String firstName;
 	private String rmaNo;
-	private Date lastUpdated=new Date();
 	
 	// constructors
 	public Provider() {
@@ -227,15 +226,6 @@ public class Provider implements Serializable {
 	public void setRmaNo(String rmaNo) {
 		this.rmaNo = rmaNo;
 	}
-
-	public Date getLastUpdated() {
-    	return lastUpdated;
-    }
-
-
-	public void setLastUpdated(Date lastUpdated) {
-    	this.lastUpdated = lastUpdated;
-    }
 
 	public ComparatorName ComparatorName() {
 		return new ComparatorName();
