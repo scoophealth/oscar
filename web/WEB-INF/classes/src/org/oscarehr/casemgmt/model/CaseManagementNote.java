@@ -218,10 +218,16 @@ public class CaseManagementNote extends BaseObject {
 		this.provider = provider;
 	}
 
+	/**
+	 * @deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 */
 	public Set getIssues() {
 		return issues;
 	}
 
+	/**
+	 * @deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 */
 	public void setIssues(Set issues) {
 		this.issues = issues;
 	}
