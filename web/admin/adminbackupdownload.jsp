@@ -39,7 +39,7 @@
   boolean bodd = false;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*"
+<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*,org.apache.commons.io.FileUtils"
 	errorPage="errorpage.jsp"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
@@ -98,7 +98,10 @@
       bodd = bodd?false:true ;
       if(contents[i].isDirectory() || contents[i].getName().equals("BackupClient.class")  || contents[i].getName().startsWith(".")) continue;
       out.println("<tr bgcolor='"+ (bodd?weakcolor:"white") +"'><td><a HREF='../servlet/BackupDownload?filename="+URLEncoder.encode(contents[i].getName())+"'>"+contents[i].getName()+"</a></td>") ;
-      out.println("<td align='right'>"+contents[i].length()+"</td></tr>"); //+System.getProperty("file.separator")
+      long bytes = contents[i].length( );
+      String display = FileUtils.byteCountToDisplaySize( bytes );
+
+      out.println("<td align='right' title=\""+bytes+" by\">"+display+"</td></tr>"); //+System.getProperty("file.separator")
     }
 %>
 </table>
