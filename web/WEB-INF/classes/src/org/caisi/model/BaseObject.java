@@ -31,10 +31,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
- * Base class for Model objects.  This is basically for the toString, equals
- * and hashCode methods.
- *
- * @author Matt Raible
+ * @deprecated this super class should not be used, both the equal hash code methods here
+ * are fairly inefficient and the equals method most like doesn't do what you want it to do
+ * as it checks all fields, not the ID of this model object, nor pointer reference.
  */
 public class BaseObject implements Serializable {
     public String toString() {
