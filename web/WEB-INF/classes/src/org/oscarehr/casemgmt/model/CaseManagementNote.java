@@ -26,22 +26,20 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.sql.Timestamp;
 
 import org.caisi.model.BaseObject;
 import org.oscarehr.common.model.Provider;
 
 public class CaseManagementNote extends BaseObject {
-	
+
 	private Long id;
 	private Date update_date;
 	private Date create_date;
 	private Date observation_date;
-        
+
 	private String demographic_no;
 	private String note;
 	private boolean signed = false;
@@ -58,7 +56,7 @@ public class CaseManagementNote extends BaseObject {
 	private String history;
 	private Provider provider;
 	private Set issues = new HashSet();
-        private Set extend = new HashSet();
+	private Set extend = new HashSet();
 	private List editors = new ArrayList();
 	private String roleName;
 	private String programName;
@@ -67,31 +65,27 @@ public class CaseManagementNote extends BaseObject {
 
 	private String password;
 	private boolean locked;
-        private boolean archived;
-    
-        private boolean remote = false;
-        private String facilityName = "None Specified";
+	private boolean archived;
+
+	private boolean remote = false;
+	private String facilityName = "None Specified";
 
 	private int hashCode = Integer.MIN_VALUE;
-        private int position = 0;                
+	private int position = 0;
 
 	public boolean equals(Object obj) {
 		if (null == obj) return false;
-		if (!(obj instanceof CaseManagementNote))
-			return false;
+		if (!(obj instanceof CaseManagementNote)) return false;
 		else {
 			CaseManagementNote mObj = (CaseManagementNote) obj;
-			if (null == this.getId() || null == mObj.getId())
-				return false;
-			else
-				return (this.getId().equals(mObj.getId()));
+			if (null == this.getId() || null == mObj.getId()) return false;
+			else return (this.getId().equals(mObj.getId()));
 		}
 	}
 
 	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
-			if (null == this.getId())
-				return super.hashCode();
+			if (null == this.getId()) return super.hashCode();
 			else {
 				String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
 				this.hashCode = hashStr.hashCode();
@@ -103,23 +97,22 @@ public class CaseManagementNote extends BaseObject {
 	public CaseManagementNote() {
 		update_date = new Date();
 	}
-        
-        public String getAuditString() {
-            StringBuffer auditStr = new StringBuffer(getNote());
-            Iterator<CaseManagementIssue>iter = this.issues.iterator();
-            auditStr.append("\nIssues\n");
-            int idx = 0;
-            while( iter.hasNext() ) {                
-                auditStr.append(iter.next().getIssue().getDescription() + "\n");
-                ++idx;
-            }
-            if( idx == 0 ) {
-                auditStr.append("None");
-            }
-            return auditStr.toString();
-        }
-                        
-         
+
+	public String getAuditString() {
+		StringBuffer auditStr = new StringBuffer(getNote());
+		Iterator<CaseManagementIssue> iter = this.issues.iterator();
+		auditStr.append("\nIssues\n");
+		int idx = 0;
+		while (iter.hasNext()) {
+			auditStr.append(iter.next().getIssue().getDescription() + "\n");
+			++idx;
+		}
+		if (idx == 0) {
+			auditStr.append("None");
+		}
+		return auditStr.toString();
+	}
+
 	public String getBilling_code() {
 		return billing_code;
 	}
@@ -232,14 +225,14 @@ public class CaseManagementNote extends BaseObject {
 	public void setIssues(Set issues) {
 		this.issues = issues;
 	}
-        
-        public Set getExtend() {
-            return extend;
-        }
-        
-        public void setExtend(Set extend) {
-            this.extend = extend;
-        }
+
+	public Set getExtend() {
+		return extend;
+	}
+
+	public void setExtend(Set extend) {
+		this.extend = extend;
+	}
 
 	public List getEditors() {
 		return this.editors;
@@ -366,7 +359,7 @@ public class CaseManagementNote extends BaseObject {
 
 	}
 
-	public static Comparator<CaseManagementNote> noteObservationDateComparator=new Comparator<CaseManagementNote>() {
+	public static Comparator<CaseManagementNote> noteObservationDateComparator = new Comparator<CaseManagementNote>() {
 		public int compare(CaseManagementNote note1, CaseManagementNote note2) {
 			if (note1 == null || note2 == null) {
 				return 0;
@@ -375,8 +368,6 @@ public class CaseManagementNote extends BaseObject {
 			return note2.getObservation_date().compareTo(note1.getObservation_date());
 		}
 	};
-        
-        
 
 	public boolean getHasHistory() {
 		if (getHistory() != null) {
@@ -398,14 +389,14 @@ public class CaseManagementNote extends BaseObject {
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
-        
-        public boolean isArchived() {
-            return archived;
-        }
-        
-        public void setArchived(boolean archived) {
-            this.archived = archived;
-        }
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
 
 	public void setPassword(String password) {
 		this.password = password;
@@ -415,8 +406,7 @@ public class CaseManagementNote extends BaseObject {
 		String status = "";
 		if (isSigned()) {
 			status = "Signed";
-		}
-		else {
+		} else {
 			status = "Unsigned";
 		}
 
@@ -424,35 +414,34 @@ public class CaseManagementNote extends BaseObject {
 			// locked note - can be temporarily unlocked
 			if (locked) {
 				status += "/Locked";
-			}
-			else {
+			} else {
 				status += "/Unlocked";
 			}
 		}
 		return status;
 	}
-        
-        public int getPosition() {
-            return position;
-        }
-        
-        public void setPosition(int position) {
-            this.position = position;
-        }
 
-		public boolean isRemote() {
-			return remote;
-		}
+	public int getPosition() {
+		return position;
+	}
 
-		public void setRemote(boolean isRemote) {
-			this.remote = isRemote;
-		}
+	public void setPosition(int position) {
+		this.position = position;
+	}
 
-		public String getFacilityName() {
-			return facilityName;
-		}
+	public boolean isRemote() {
+		return remote;
+	}
 
-		public void setFacilityName(String facilityName) {
-			this.facilityName = facilityName;
-		}
+	public void setRemote(boolean isRemote) {
+		this.remote = isRemote;
+	}
+
+	public String getFacilityName() {
+		return facilityName;
+	}
+
+	public void setFacilityName(String facilityName) {
+		this.facilityName = facilityName;
+	}
 }
