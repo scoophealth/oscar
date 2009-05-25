@@ -16,6 +16,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ page errorPage="errorpage.jsp"%>
 <%@ page import="java.util.*,java.net.*, java.sql.*, oscar.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
@@ -42,8 +43,9 @@
   int               curDay            = now.get(Calendar.DAY_OF_MONTH);
   int               dob_year          = 0, dob_month = 0, dob_date = 0, age = 0;
 
+  ResourceBundle res = ResourceBundle.getBundle("oscarResources", request.getLocale());
   BillingONDataHelp dbObj             = new BillingONDataHelp();
-  String            msg               = "You can select multiple dates from the calendar to bill. The default unit value is 1.";
+  String            msg               = res.getString("billing.hospitalBilling.msgDates");
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
@@ -343,6 +345,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
@@ -355,8 +358,7 @@
 <!-- main calendar program -->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <!-- language for the calendar -->
-<script type="text/javascript"
-	src="../../../share/calendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript"
@@ -580,8 +582,8 @@ function onDblClickServiceCode(item) {
 	align=center>
 	<tr bgcolor="#393764">
 		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2"
-			face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing
-		Form</b></font></td>
+			face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b><bean:message key="billing.billingform"/>
+		</b></font></td>
 		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#"
 			onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></td>
 	</tr>
@@ -612,8 +614,8 @@ int ctlCount = 0;
 <table width="98%" border="0" cellspacing="0" cellpadding="0"
 	align=center>
 	<tr>
-		<td width="18%"><b><font size="-2">Dx Code</font></b></td>
-		<td width="76%"><b><font size="-2">Description</font></b></td>
+		<td width="18%"><b><font size="-2"><bean:message key="billing.hospitalBilling.formDxCode"/></font></b></td>
+		<td width="76%"><b><font size="-2"><bean:message key="billing.billingCorrection.formDescription"/></font></b></td>
 		<td width="6%"><a href="#"
 			onClick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
@@ -651,10 +653,10 @@ ctlCount = 0;
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td><b>OscarBilling </b></td>
+				<td><b><bean:message key="billing.hospitalBilling.formOscarBilling"/> </b></td>
 				<td align="right"><input type="submit" name="submit"
-					value="Next" style="width: 120px;" /> <input type="button"
-					name="button" value="Exit" style="width: 120px;"
+					value="<bean:message key="billing.hospitalBilling.btnNext"/>" style="width: 120px;" /> <input type="button"
+					name="button" value="<bean:message key="global.btnExit"/>" style="width: 120px;"
 					onClick="self.close();" /></td>
 			</tr>
 		</table>
@@ -682,10 +684,10 @@ ctlCount = 0;
 					bgcolor="ivory">
 					<tr>
 						<td nowrap width="30%" align="center"><a id="trigger"
-							href="#">[Service Date]</a><br>
+							href="#">[<bean:message key="billing.servicedate"/>]</a><br>
 						<textarea name="billDate" cols="11" rows="5" readonly><%=request.getParameter("billDate")!=null?request.getParameter("billDate"):""%></textarea>
 						</td>
-						<td align="center" width="33%">Service Code x Unit<br>
+						<td nowrap align="center"><bean:message key="billing.billingCorrection.formServiceCode"/> x <bean:message key="billing.billingCorrection.formUnit"/><br>
 						<input type="text" name="serviceDate0" size="5" maxlength="5"
 							value="<%=request.getParameter("serviceDate0")!=null?request.getParameter("serviceDate0"):""%>">x
 						<input type="text" name="serviceUnit0" size="2" maxlength="2"
@@ -706,7 +708,7 @@ ctlCount = 0;
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
 							<tr>
 								<td><a href="#"
-									onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a><br>
+									onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;"><bean:message key="billing.hospitalBilling.formDx"/></a><br>
 								<input type="text" name="dxCode" size="5" maxlength="5"
 									onDblClick="dxScriptAttach('dxCode')"
 									value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
@@ -715,18 +717,18 @@ ctlCount = 0;
 								<select name="rulePerc">
 									<% String rulePerc= request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):""; %>
 									<option value="onlyAboveCode"
-										<%="onlyAboveCode".equals(rulePerc)?"selected":""%>>Only
-									Above</option>
+										<%="onlyAboveCode".equals(rulePerc)?"selected":""%>><bean:message key="billing.hospitalBilling.optAbove"/>
+									</option>
 									<option value="allAboveCode"
-										<%="allAboveCode".equals(rulePerc)?"selected":""%>>All</option>
+										<%="allAboveCode".equals(rulePerc)?"selected":""%>><bean:message key="billing.hospitalBilling.optAll"/></option>
 								</select></td>
 							</tr>
 						</table>
 
 						<hr>
 						<a
-							href="javascript:referralScriptAttach2('referralCode','referralDocName')">Refer.
-						Doctor #</a> <input type="text" name="referralCode" size="5"
+							href="javascript:referralScriptAttach2('referralCode','referralDocName')"><bean:message key="billing.hospitalBilling.btnReferral"/>
+                                                </a> <input type="text" name="referralCode" size="5"
 							maxlength="6"
 							value="<%=request.getParameter("referralCode")!=null?request.getParameter("referralCode"):r_doctor_ohip%>"><br>
 						<input type="text" name="referralDocName" size="22" maxlength="30"
@@ -742,8 +744,8 @@ ctlCount = 0;
 					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 					bgcolor="#EEEEFF">
 					<tr>
-						<td nowrap width="30%" align="center"><b>Billing
-						Physician</b></td>
+						<td nowrap width="30%" align="center"><b><bean:message key="billing.hospitalBilling.frmBillPhysician"/>
+						</b></td>
 						<td width="20%"><select name="xml_provider">
 							<%
 				if(vecProvider.size()==1) {
@@ -754,8 +756,8 @@ ctlCount = 0;
 							<%=propT.getProperty("first_name")%></b></option>
 							<%	} else { %>
 							<option value="000000"
-								<%=providerview.equals("000000")?"selected":""%>><b>Select
-							Provider</b></option>
+								<%=providerview.equals("000000")?"selected":""%>><b><bean:message key="billing.billingCorrection.msgSelectProvider"/>
+							</b></option>
 							<%
 				for(int i=0; i<vecProvider.size(); i++) {
 					propT = (Properties) vecProvider.get(i);
@@ -767,31 +769,31 @@ ctlCount = 0;
 				}
 				%>
 						</select></td>
-						<td nowrap width="30%" align="center"><b>Assig. Physician</b></td>
+						<td nowrap width="30%" align="center"><b><bean:message key="billing.hospitalBilling.frmAssgnPhysician"/></b></td>
 						<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
 						</td>
 					</tr>
 					<tr>
 
-						<td width="30%"><b>Visit Type</b></td>
+						<td width="30%"><b><bean:message key="billing.billingCorrection.formVisitType"/></b></td>
 						<td width="20%"><select name="xml_visittype">
 							<option value="00| Clinic Visit"
-								<%=visitType.startsWith("00")?"selected":""%>>00 |
-							Clinic Visit</option>
+								<%=visitType.startsWith("00")?"selected":""%>><bean:message key="billing.billingCorrection.formClinicVisit"/>
+							</option>
 							<option value="01| Outpatient Visit"
-								<%=visitType.startsWith("01")?"selected":""%>>01 |
-							Outpatient Visit</option>
+								<%=visitType.startsWith("01")?"selected":""%>><bean:message key="billing.billingCorrection.formOutpatientVisit"/>
+							</option>
 							<option value="02| Hospital Visit"
-								<%=visitType.startsWith("02")?"selected":""%>>02 |
-							Hospital Visit</option>
+								<%=visitType.startsWith("02")?"selected":""%>><bean:message key="billing.billingCorrection.formHospitalVisit"/>
+							</option>
 							<option value="03| ER"
-								<%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
+								<%=visitType.startsWith("03")?"selected":""%>><bean:message key="billing.billingCorrection.formER"/></option>
 							<option value="04| Nursing Home"
-								<%=visitType.startsWith("04")?"selected":""%>>04 |
-							Nursing Home</option>
+								<%=visitType.startsWith("04")?"selected":""%>><bean:message key="billing.billingCorrection.formNursingHome"/>
+							</option>
 							<option value="05| Home Visit"
-								<%=visitType.startsWith("05")?"selected":""%>>05 | Home
-							Visit</option>
+								<%=visitType.startsWith("05")?"selected":""%>><bean:message key="billing.billingCorrection.formHomeVisit"/>
+							</option>
 						</select></td>
 
 						<td width="30%"><b>Billing Type</b></td>
@@ -799,17 +801,17 @@ ctlCount = 0;
 						<% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
 						<select name="xml_billtype">
 							<option value="ODP | Bill OHIP"
-								<%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill
-							OHIP</option>
+								<%=srtBillType.startsWith("ODP")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeO"/>
+							</option>
 							<option value="PAT | Bill Patient"
-								<%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill
-							Patient</option>
+								<%=srtBillType.startsWith("PAT")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeP"/>
+							</option>
 							<option value="WCB | Worker's Compensation Board"
-								<%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
+								<%=srtBillType.startsWith("WCB")?"selected" : ""%>><bean:message key="billing.billingCorrection.formBillTypeW"/></option>
 						</select></td>
 					</tr>
 					<tr>
-						<td><b>Visit Location</b></td>
+						<td><b><bean:message key="billing.billingCorrection.msgVisitLocation"/></b></td>
 						<td colspan="3"><select name="xml_location">
 							<%
 				for(int i=0; i<vecLocation.size(); i++) {
@@ -826,7 +828,7 @@ ctlCount = 0;
 						</select></td>
 					</tr>
 					<tr>
-						<td><b>Admission Date</b></td>
+						<td><b><bean:message key="billing.admissiondate"/></b></td>
 						<td>
 						<%
 				String admDate = "";
@@ -838,8 +840,8 @@ ctlCount = 0;
 							size='10' maxlength='10'> <img
 							src="../../../images/cal.gif" id="xml_vdate_cal"></td>
 						<td colspan="2"><a href="#"
-							onClick="showHideLayers('Layer1','','show');return false;">Billing
-						form</a>:</font></b> <%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
+							onClick="showHideLayers('Layer1','','show');return false;"><bean:message key="billing.billingform"/>
+						</a>:</font></b> <%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
 						</td>
 
 					</tr>
@@ -960,8 +962,8 @@ ctlCount = 0;
 						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle3%>
 						</font></th>
 						<th width="70%" bgcolor="#CCCCFF"><font size="-1"
-							color="#000000">Description</font></th>
-						<th><font size="-1" color="#000000"> Fee</font></th>
+							color="#000000"><bean:message key="billing.service.desc"/></font></th>
+						<th><font size="-1" color="#000000"> <bean:message key="billing.service.fee"/></font></th>
 					</tr>
 					<%
 			for(int i=0; i<vecCodeCol3.size(); i++) {
@@ -1042,8 +1044,8 @@ ctlCount = 0;
 <table border="0" cellpadding="0" cellspacing="2" width="100%"
 	bgcolor="#CCCCFF">
 	<tr>
-		<td colspan="6" class="RowTop"><%= demoname %> - <b>Billing
-		History</b> (last 5 records)</td>
+		<td colspan="6" class="RowTop"><%= demoname %> - <b><bean:message key="billing.hospitalBilling.frmBillHistory"/>
+                </b> <bean:message key="billing.hospitalBilling.frmLastFive"/></td>
 	</tr>
 	<tr>
 		<td>
@@ -1051,12 +1053,12 @@ ctlCount = 0;
 			bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%"
 			bgcolor="#FFFFFF">
 			<tr bgcolor="#99CCCC" align="center">
-				<td nowrap>Serial No.</td>
-				<td nowrap>Billing Date</td>
-				<td nowrap>Appt/Adm Date</td>
-				<td nowrap>Service Code</td>
-				<td nowrap>Dx</td>
-				<td>Create Date</td>
+				<td nowrap><bean:message key="billing.hospitalBilling.frmSerial"/></td>
+				<td nowrap><bean:message key="billing.billingCorrection.msgBillingDate"/></td>
+				<td nowrap><bean:message key="billing.hospitalBilling.frmApptAdmDate"/></td>
+				<td nowrap><bean:message key="billing.billingCorrection.formServiceCode"/></td>
+				<td nowrap><bean:message key="billing.hospitalBilling.formDx"/></td>
+				<td><bean:message key="billing.hospitalBilling.frmCreateDate"/></td>
 			</tr>
 			<%
           for (int i = 0; i < vecHist.size(); i++) {
@@ -1082,20 +1084,20 @@ ctlCount = 0;
 <table border="0" cellpadding="1" cellspacing="2" width="100%"
 	class="myIvory">
 	<tr class="myYellow">
-		<td colspan="6"><%=demoname%> - <b>Billing History</b> (last 5
-		records)</td>
+		<td colspan="6"><%=demoname%> - <b><bean:message key="billing.hospitalBilling.frmBillHistory"/></b> <bean:message key="billing.hospitalBilling.frmLastFive"/>
+		</td>
 	</tr>
 	<tr>
 		<td>
 		<table border="1" cellspacing="0" cellpadding="1"
 			bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
 			<tr class="myYellow" align="center">
-				<th nowrap>Serial No.</th>
-				<th nowrap>Billing Date</th>
-				<th nowrap>Appt/Adm Date</th>
-				<th nowrap>Service Code</th>
-				<th nowrap>Dx</th>
-				<th>Create Date</th>
+				<th><bean:message key="billing.hospitalBilling.frmSerial"/></th>
+				<th><bean:message key="billing.billingCorrection.msgBillingDate"/></th>
+				<th><bean:message key="billing.hospitalBilling.frmApptAdmDate"/></th>
+				<th><bean:message key="billing.billingCorrection.formServiceCode"/></th>
+				<th><bean:message key="billing.hospitalBilling.formDx"/></th>
+				<th><bean:message key="billing.hospitalBilling.frmCreateDate"/></th>
 			</tr>
 			<%// new billing records
 			for (int i = 0; i < aL.size(); i = i + 2) {
