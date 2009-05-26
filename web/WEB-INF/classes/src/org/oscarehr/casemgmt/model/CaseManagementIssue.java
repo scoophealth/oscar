@@ -156,14 +156,14 @@ public class CaseManagementIssue extends BaseObject {
 	 * public boolean isMedical_diagnosis() { return medical_diagnosis; } public void setMedical_diagnosis(boolean medical_diagnosis) { this.medical_diagnosis = medical_diagnosis; }
 	 */
 	/**
-	 * @deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 * deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
 	 */
 	public Set getNotes() {
 		return notes;
 	}
 
 	/**
-	 * @deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
+	 * deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
 	 */
 	public void setNotes(Set notes) {
 		this.notes = notes;

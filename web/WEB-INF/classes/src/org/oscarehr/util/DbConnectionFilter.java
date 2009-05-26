@@ -47,7 +47,7 @@ public class DbConnectionFilter implements javax.servlet.Filter {
     public static Map<Thread, StackTraceElement[]> debugMap = Collections.synchronizedMap(new WeakHashMap<Thread, StackTraceElement[]>());
 
     /**
-     * @deprecated we should stop using raw jdbc connections. Don't write new code using raw jdbc, use JPA and native queries instead.
+     * deprecated we should stop using raw jdbc connections. Don't write new code using raw jdbc, use JPA and native queries instead.
      */
     public static Connection getThreadLocalDbConnection() throws SQLException {
         Connection c = dbConnection.get();

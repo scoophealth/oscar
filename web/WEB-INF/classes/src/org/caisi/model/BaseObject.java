@@ -31,7 +31,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 
 /**
- * @deprecated this super class should not be used, both the equal hash code methods here
+ * deprecated this super class should not be used, both the equal hash code methods here
  * are fairly inefficient and the equals method most like doesn't do what you want it to do
  * as it checks all fields, not the ID of this model object, nor pointer reference.
  */
