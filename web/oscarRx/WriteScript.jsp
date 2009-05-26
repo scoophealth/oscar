@@ -1,4 +1,5 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -1329,7 +1330,7 @@ int i;
 						    value="<bean:message key="WriteScript.msgUpdatePrintAndSave"/>" />
 					    </td>
 					    <td align="right">
-						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('/oscar/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&demo=<%=bean.getDemographicNo()%>&display=<%=annotation_display%>','anwin','width=400,height=250');"
+						<input type=button class="ControlPushButton" style="width: 100px" onclick="window.open('<c:out value="${pageContext.request.contextPath}"/>/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&demo=<%=bean.getDemographicNo()%>&display=<%=annotation_display%>','anwin','width=400,height=250');"
 						    value="<bean:message key="WriteScript.msgAnnotation"/>" />
 					    </td></tr></table>
 		     <!-- input type=button class="ControlPushButton" style="width:200px" onclick="javascript:replaceScriptDisplay();" value="REPLACE" />
