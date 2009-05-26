@@ -3,13 +3,10 @@ package org.oscarehr.PMmodule.web;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -53,7 +50,7 @@ public class ManageConsent {
 	}
 
 	public Collection<CachedFacility> getAllFacilitiesToDisplay() throws MalformedURLException {
-		if (previousConsentsToView == null) return (getAllDirectlyLinkedFacilities());
+		if (previousConsentsToView == null) return (getAllRemoteFacilities());
 		else return (getPreviousConsentFacilities());
 	}
 
@@ -72,19 +69,9 @@ public class ManageConsent {
 		return (results);
 	}
 
-	private Collection<CachedFacility> getAllDirectlyLinkedFacilities() throws MalformedURLException {
-		DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility.getId());
-		List<DemographicTransfer> linkedDemographics = demographicWs.getDirectlyLinkedDemographicsByDemographicId(clientId);
-		HashMap<Integer, CachedFacility> linkedFacilities = new HashMap<Integer, CachedFacility>();
-		for (DemographicTransfer demographicTransfer : linkedDemographics) {
-			Integer remoteFacilityId = demographicTransfer.getIntegratorFacilityId();
-			if (!linkedFacilities.containsKey(remoteFacilityId)) {
-				CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(loggedInInfo.currentFacility.getId(), remoteFacilityId);
-				linkedFacilities.put(remoteFacilityId, cachedFacility);
-			}
-		}
-
-		return (linkedFacilities.values());
+	private Collection<CachedFacility> getAllRemoteFacilities() throws MalformedURLException {
+		List<CachedFacility> results=caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId());
+		return(results);
 	}
 
 	public boolean displayAsCheckedConsentToShareData(int remoteFacilityId) throws MalformedURLException {
