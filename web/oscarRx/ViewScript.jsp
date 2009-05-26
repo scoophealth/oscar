@@ -116,7 +116,7 @@ function setComment(){
 
 function setDefaultAddr(){
     var url = "setDefaultAddr.jsp";
-    var ran_number=Math.round(Math.random()*1000000);
+    var ran_number=Math.round(Math.random()*1000000);    
     var addr = encodeURIComponent(document.getElementById('addressSel').value);
     var params = "addr="+addr+"&rand="+ran_number;  //]
     new Ajax.Request(url, {method: 'post',parameters:params});
@@ -170,10 +170,10 @@ function printPaste2Parent(){
 
 
 
-function addressSelect() {
-    setDefaultAddr();
-   <% if(vecAddressName != null) {
-         for(int i=0; i<vecAddressName.size(); i++) {%>
+function addressSelect() {    
+   <% if(vecAddressName != null) { %>
+        setDefaultAddr();
+   <%      for(int i=0; i<vecAddressName.size(); i++) {%>
 	    if(document.getElementById("addressSel").value=="<%=i%>") {
     	       frames['preview'].document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
             } 
