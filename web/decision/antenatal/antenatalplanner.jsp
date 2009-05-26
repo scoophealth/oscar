@@ -25,7 +25,7 @@
 -->
 
 <%
-  
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
   String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;
@@ -34,16 +34,12 @@
   //System.out.println("demo "+demographic_no+" form_no "+form_no+" queryname "+query_name+" curUser "+curUser_no);
   
 %>
-<%@ page
-	import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*"%>
-<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean"
-	scope="page" />
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" %>
+<jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
 <jsp:useBean id="riskDataBean" class="java.util.Properties" scope="page" />
-<jsp:useBean id="risks"
-	class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
-<jsp:useBean id="checklist"
-	class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
-<%@ include file="../../admin/dbconnection.jsp"%>
+<jsp:useBean id="risks" class="oscar.decision.DesAntenatalPlannerRisks_99_12" scope="page" />
+<jsp:useBean id="checklist" class="oscar.decision.DesAntenatalPlannerChecklist_99_12" scope="page" />
+<%@ include file="../../admin/dbconnection.jsp" %>
 <% 
 String [][] dbQueries=new String[][] { 
 {"search_formarrisk", "select * from formAR where ID = ?" }, 
@@ -54,15 +50,79 @@ String [][] dbQueries=new String[][] {
 plannerBean.doConfigure(dbParams,dbQueries);
 //System.out.println("TOP");
 %>
-
+ 
 <html>
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
-<title>Antenatal Planner</title>
+    <title>Antenatal Planner</title>
 <script type="text/javascript" language="Javascript">
+function onExit() {
+  if(confirm("Are you sure you wish to exit without saving your changes?")==true)  {
+    window.close();
+  }
+  return(false);
+}
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=5,left=5";//360,680
+  var popup=window.open(page, "editxml", windowprops);
+}
+</script>
+</head>
+<body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<form name="planner" method="post" action="antenatalplanner.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>" >
+<%-- @ include file="zgetarriskdata.jsp" --%> 
+<%
+  //save risk&checklist data if required
+  if(request.getParameter("submit")!=null && (request.getParameter("submit").equals(" Save ") || request.getParameter("submit").equals("Save and Exit")) ) {
+    GregorianCalendar now=new GregorianCalendar();
+    String form_date =now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
+    String form_time =now.get(Calendar.HOUR_OF_DAY)+":"+now.get(Calendar.MINUTE)+":"+now.get(Calendar.SECOND);
+    String risk_content="", checklist_content="";
+    risk_content=SxmlMisc.createXmlDataString(request, "risk_");
+    checklist_content=SxmlMisc.createXmlDataString(request, "checklist_");
+    String[] param = {form_date,form_time,curUser_no,risk_content,checklist_content,demographic_no,form_no};
+    int rowsAffected = plannerBean.queryExecuteUpdate(param, "save_desaprisk" );
+  }
 
+  //save & exit if required
+  if(request.getParameter("submit")!=null && request.getParameter("submit").equals("Save and Exit") ) {
+    out.print("<script type='text/javascript' language='Javascript'>window.close();</script>");
+    return;
+  }
 
+  //initial prop bean with "0" 
+  //for(int i=0;i<riskdataname.length;i++) {
+	//  riskDataBean.setProperty(riskdataname[i][0],"0");
+  //}
+//System.out.println("HERHE 2");
+  //get the risk data from formAR1
+  String finalEDB = null, wt=null, ht=null;
+  
+  ResultSet rsdemo = null ;
+  if(!form_no.equals("0")) {
+      //if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
+          rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
+      //} else {
+     //         rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");                  
+     // }
+          
+      ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
+      while (rsdemo.next()) { 
+          finalEDB = rsdemo.getString("c_finalEDB");              
+	      wt = rsdemo.getString("pg1_wt");
+	      ht = rsdemo.getString("pg1_ht");
+          for(int k = 1; k <= resultsetmetadata.getColumnCount(); k++) {
+              //String name = resultsetmetadata.getColumnName(k);
+              //String value = null;
+              if(resultsetmetadata.getColumnTypeName(k).equalsIgnoreCase("TINY")) {
+                  if(rsdemo.getInt(k) == 1) riskDataBean.setProperty(resultsetmetadata.getColumnName(k), "checked"); //"55", "risk_cinca"
+              	       
+%>
+<input type="hidden" name="<%=resultsetmetadata.getColumnName(k)%>" value="checked" >
+<%            }
+          }
+      }
   }
 //System.out.println("ABOVE HASHMAP form "+form_no+ " demographic " +demographic_no);
   //get the risk data from table desaprisk for other risk factors
@@ -109,26 +169,24 @@ plannerBean.doConfigure(dbParams,dbQueries);
   plannerBean.closePstmtConn();
 %>
 <table bgcolor='silver' width='100%'>
-	<tr>
-		<td align="left"><input type="submit" name="submit"
-			value=" Save " /> <input type="submit" name="submit"
-			value="Save and Exit" /> <input type="button" value="  Exit  "
-			onclick="javascript:return onExit();" /> <input type="button"
-			name="submit" value="Print"
-			onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-		</td>
-		<td align="right"><a href=#
-			onClick="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit
-		OB Risks</a> | <a href=#
-			onClick="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit
-		CheckList</a></td>
-	</tr>
+  <tr>
+    <td align="left">
+    <input type="submit" name="submit" value=" Save "  />
+    <input type="submit" name="submit" value="Save and Exit"  />
+    <input type="button" value="  Exit  "  onclick="javascript:return onExit();" />
+    <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+    </td>
+    <td align="right">
+      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> | 
+      <a href=# onClick ="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit CheckList</a>
+    </td>
+  </tr>
 </table>
 
 <table bgcolor='silver' width='100%'>
-	<tr>
-		<td width="10%" valign='top'>
-		<%
+  <tr>
+    <td width="10%" valign='top'>
+<%
     String riskFilePath = "../webapps/"+oscarVariables.getProperty("project_home")+"/decision/antenatal/desantenatalplannerrisks_99_12.xml";
 
     File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"/desantenatalplannerrisks_99_12.xml");
@@ -140,9 +198,8 @@ plannerBean.doConfigure(dbParams,dbQueries);
     //System.out.println("riskFilePAth "+riskFilePath);
     out.println(risks.doStuff(new String(riskFilePath)));
 %>
-		</td>
-		<td>
-		<%
+    </td><td>
+<%
 if(finalEDB==null || finalEDB=="") out.println("************No EDB, no check list!**************");
 else {
   riskDataBean.setProperty("finalEDB", finalEDB);
@@ -181,29 +238,26 @@ else {
     //System.out.println("CHECJ "+checkListFilePath);
   out.println(checklist.doStuff(new String(checkListFilePath), riskDataBean));
 }
-%>
-		
-	</tr>
+%>    
+  </tr>
 </table>
 <table bgcolor='silver' width='100%'>
-	<tr>
-		<td align="left"><input type="submit" name="submit"
-			value=" Save " /> <input type="submit" name="submit"
-			value="Save and Exit" /> <input type="button" value="  Exit  "
-			onclick="javascript:return onExit();" /> <input type="button"
-			name="submit" value="Print"
-			onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
-		</td>
-		<td align="right"><a href=#
-			onClick="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit
-		OB Risks</a> | <a href=#
-			onClick="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit
-		CheckList</a></td>
-	</tr>
+  <tr>
+    <td align="left">
+    <input type="submit" name="submit" value=" Save "  />
+    <input type="submit" name="submit" value="Save and Exit"  />
+    <input type="button" value="  Exit  "  onclick="javascript:return onExit();" />
+    <input type="button" name="submit" value="Print" onclick="popupPage(700,800,'antenatalplannerprint.jsp?demographic_no=<%=demographic_no%>&formId=<%=form_no%>');return false;" />
+    </td>
+    <td align="right">
+      <a href=# onClick ="popupPage(600,930,'obarriskedit_99_12.jsp');return false;">Edit OB Risks</a> | 
+      <a href=# onClick ="popupPage(600,930,'obarchecklistedit_99_12.jsp');return false;">Edit CheckList</a>
+    </td>
+  </tr>
 </table>
 
 </form>
-<script type="text/javascript">
+    <script type="text/javascript">
         // code for IE
         //console.log(xmlText);
 if (window.ActiveXObject)
