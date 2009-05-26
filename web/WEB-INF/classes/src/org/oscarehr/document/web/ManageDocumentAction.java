@@ -170,7 +170,13 @@ public class ManageDocumentAction extends DispatchAction {
         return null;//execute2(mapping, form, request, response);
     }
     private File getDocumentCacheDir(String docdownload){
-        File cacheDir = new File(docdownload+"_cache");
+        //File cacheDir = new File(docdownload+"_cache");
+        File docDir = new File(docdownload);
+        String documentDirName = docDir.getName();
+        File parentDir = docDir.getParentFile();
+        
+        File cacheDir = new File(parentDir,documentDirName+"_cache");
+        
         if(!cacheDir.exists()){
             cacheDir.mkdir();
         }
@@ -186,7 +192,7 @@ public class ManageDocumentAction extends DispatchAction {
         return outfile;
     }
     
-    private File createCacheVersion(Document d) throws Exception{
+    public File createCacheVersion(Document d) throws Exception{
         
         String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         File documentDir = new File(docdownload);
@@ -347,10 +353,18 @@ public class ManageDocumentAction extends DispatchAction {
         
         Document d = documentDAO.getDocument(doc_no); 
         log.debug("Document Name :"+d.getDocfilename());
+        String docxml = d.getDocxml();
         
+        String contentType = d.getContenttype();
+        if (docxml != null && !docxml.trim().equals("")){
+            ServletOutputStream outs = response.getOutputStream();
+            outs.write(docxml.getBytes());
+            outs.flush();
+            outs.close();
+            return null;
+        }
         
         //TODO: Right now this assumes it's a pdf which it shouldn't
-        String contentType = d.getContenttype();
         if (contentType == null){
             contentType = "application/pdf";
         }
