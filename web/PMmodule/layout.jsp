@@ -24,8 +24,9 @@
 	href='<html:rewrite page="/css/tigris.css" />' />
 <link rel="stylesheet" type="text/css"
 	href='<html:rewrite page="/css/displaytag.css" />' />
+	
 <link rel="stylesheet" type="text/css"
-	href='<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />' />
+	href='<html:rewrite page="/share/calendar/skins/aqua/theme.css" />' />
 
 <!--   style type="text/css">
 			@import "<html:rewrite page="/css/tigris.css" />";
@@ -33,11 +34,11 @@
 			@import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
 		</style -->
 <script type="text/javascript"
-	src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
+	src="<html:rewrite page="/share/calendar/calendar.js" />" /></script>
 <script type="text/javascript"
-	src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
+	src="<html:rewrite page="/share/calendar/lang/calendar-en.js" />"></script>
 <script type="text/javascript"
-	src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
+	src="<html:rewrite page="/share/calendar/calendar-setup.js" />"></script>
 
 <script type="text/javascript">
 			var djConfig = {
