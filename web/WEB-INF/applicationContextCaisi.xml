@@ -130,7 +130,7 @@
 			<list>
 				<ref bean="scheduledBedProgramDischargeTask" />
 				<!--            <ref bean="scheduledErProgramDischargeTask"/> -->
-				<ref bean="scheduledOcanSubmissionTask" />
+				<!-- ref bean="scheduledOcanSubmissionTask" /-->
 			</list>
 		</property>
 	</bean>
