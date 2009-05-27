@@ -111,11 +111,26 @@
 		<property name="delay" value="180000" />
 		<property name="period" value="300000" />
 	</bean>
+
+	<bean id="scheduledOcanSubmissionTask" class="org.springframework.scheduling.timer.ScheduledTimerTask" lazy-init="default" dependency-check="default">
+		<property name="timerTask">
+			<bean class="oscar.ocan.task.OcanSubmissionTask" lazy-init="default" dependency-check="default">
+				<property name="genericIntakeManager" ref="genericIntakeManager" />
+				<property name="ocanDataProcessor" ref="ocanDataProcessor" />
+				<property name="useTestData" value="true" />
+				<property name="testDataPath" value="C:/TEMP/ocan_test" />
+			</bean>
+		</property>
+		<property name="delay" value="60000" />
+		<property name="period" value="36000000" />
+	</bean>
+
 	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean" lazy-init="default" dependency-check="default">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref bean="scheduledBedProgramDischargeTask" />
 				<!--            <ref bean="scheduledErProgramDischargeTask"/> -->
+				<ref bean="scheduledOcanSubmissionTask" />
 			</list>
 		</property>
 	</bean>

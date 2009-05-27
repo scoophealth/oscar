@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter {
+abstract public class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter {
 
 	protected AbstractAnswerScalarHtmlAdapter(int indent, IntakeNode node, Intake intake) {
 		super(indent, node, intake);

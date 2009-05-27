@@ -21,7 +21,7 @@ package org.oscarehr.PMmodule.web.adapter;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
+abstract public class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 	
 	protected AbstractAnswerHtmlAdapter(int indent, IntakeNode node, Intake intake) {
 	    super(indent, node, intake);

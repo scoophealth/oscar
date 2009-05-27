@@ -1,0 +1,1823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="OCAN_Staff_Assessment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CHeader"/>
+        <xs:element ref="CReason_for_Assessment__Select_One_"/>
+        <xs:element ref="CDoctor"/>
+        <xs:element ref="CPsychiatrist"/>
+        <xs:element maxOccurs="unbounded" ref="COther_Contact"/>
+        <xs:element ref="COther_Agency"/>
+        <xs:element ref="CService_Information"/>
+        <xs:element ref="CGender__Select_One_"/>
+        <xs:element ref="CMarital_Status__Select_One_"/>
+        <xs:element ref="CClient_Capacity_Status__check_all_that_apply_"/>
+        <xs:element ref="CWho_referred_you_to_this_service___select_one_"/>
+        <xs:element ref="CWhat_culture_do_you_identify_with_"/>
+        <xs:element ref="CAboriginal_Origin__select_one_"/>
+        <xs:element ref="CCitizenship_Status__select_one_"/>
+        <xs:element ref="CLength_of_time_lived_in_Canada"/>
+        <xs:element ref="CCan_you_tell_me_about_your_immigration_experience_"/>
+        <xs:element ref="CDo_you_have_any_issues_with_your_immigration_experience___check_all_that_apply_"/>
+        <xs:element ref="CExperience_of_Discrimination__check_all_that_apply_"/>
+        <xs:element ref="CService_Recipient_Preferred_Language_"/>
+        <xs:element ref="CLanguage_of_Service_Provision_"/>
+        <xs:element ref="CDo_you_have_any_legal_issues___select_one_"/>
+        <xs:element ref="CLegal_Status__check_all_that_apply_"/>
+        <xs:element ref="CExit_Disposition___select_one_if_applicable_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CQuestions_and_Answer_Key"/>
+        <xs:element ref="C1__Accommodation__What_kind_of_place_do_you_live_in__What_sort_of_place_is_it_"/>
+        <xs:element ref="C2__Food__What_kind_of_food_fo_you_eat__Are_you_able_to_prepare_your_own_meals_and_do_your_own_s"/>
+        <xs:element ref="C3__Looking_after_the_home__Are_you_able_to_look_after_your_home__Does_anyone_help_you_"/>
+        <xs:element ref="C4__Self_care__Do_you_have_problems_keeping_clean_and_tidy__Do_you_ever_need_reminding__Who_by_"/>
+        <xs:element ref="C5__Daytime_Activities__How_do_you_spend_your_day__Do_you_have_enough_to_do_"/>
+        <xs:element ref="C6__Physical_Health__How_well_do_you_feel_physically__Are_you_getting_any_treatment_for_physical"/>
+        <xs:element ref="C7__Psychotic_symptoms__Do_you_ever_hear_voices__or_have_problems_with_your_thoughts__Are_you_on"/>
+        <xs:element ref="C8__Information_on_condition_and_treatment__Have_you_been_given_clear_information_about_your_med"/>
+        <xs:element ref="C9__Psychological_distress__Have_you_recently_felt_very_sad_or_low__Have_you_felt_overly_anxious"/>
+        <xs:element ref="C10__Safety_to_self__Do_you_ever_have_thoughts_of_harming_yourself__or_actually_harming_yourself"/>
+        <xs:element ref="C11__Safety_to_others__Do_you_think_you_could_be_a_danger_to_other_people_s_safety__Do_you_ever_"/>
+        <xs:element ref="C12__Alcohol__Does_drinking_cause_you_any_problems__Do_you_wish_you_could_cut_down_on_your_drink"/>
+        <xs:element ref="C13__Drugs__Do_you_take_drugs_that_aren_t_prescribed__Are_there_any_drugs_you_would_find_hard_to"/>
+        <xs:element ref="C14__Other_addictions__Do_you_have_an_addiction__Is_your_addiction_a_problem_"/>
+        <xs:element ref="C15__Company__Are_you_happy_with_your_social_life__Do_you_wish_you_had_more_contact_with_others_"/>
+        <xs:element ref="C16__Intimate_relationships__Do_you_have_a_partner__Do_you_have_problems_in_your_partnership_mar"/>
+        <xs:element ref="C17__Sexual_expression__How_is_your_sex_life_"/>
+        <xs:element ref="C18__Child_care__Do_you_have_any_children_under_18__Do_you_have_any_difficult_in_looking_after_t"/>
+        <xs:element ref="C19__Other_dependents__Do_you_have_any_dependents_other_than_children_under_18__such_as_an_elder"/>
+        <xs:element ref="C20__Basic_education__Do_you_have_difficulty_in_reading__writing__speaking_or_understanding_Engl"/>
+        <xs:element ref="C21__Telephone__Do_you_know_how_to_use_a_telephone__Is_it_easy_to_find_one_that_you_can_use_"/>
+        <xs:element ref="C22__Transport__Do_you_have_access_to_transportation__Do_you_have_access_to_other_affordable_tra"/>
+        <xs:element ref="C23__Money__How_do_you_find_budgeting_your_money__Do_you_manage_to_pay_your_bills_"/>
+        <xs:element ref="C24__Benefits__Are_you_sure_that_you_are_getting_all_the_money_that_you_are_entitled_to_"/>
+        <xs:element ref="CWhat_are_your_hopes_for_the_future_"/>
+        <xs:element ref="CWhat_do_you_think_you_need_in_order_to_get_there_"/>
+        <xs:element ref="CHow_do_you_view_your_mental_health_"/>
+        <xs:element ref="CIs_spirituality_an_important_part_of_your_life_"/>
+        <xs:element ref="CIs_culture_and_important_part_of_your_life_"/>
+        <xs:element ref="CPresenting_Issues"/>
+        <xs:element ref="CSummary_of_Actions"/>
+        <xs:element ref="CSummary_of_Referrals"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CService_Organization_Name_"/>
+        <xs:element ref="CService_Organization_Number_"/>
+        <xs:element ref="CProgram_Name_"/>
+        <xs:element ref="CProgram_Number_"/>
+        <xs:element ref="CFunction__MIS_Functional_Centre__"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CService_Organization_Name_" type="xs:string"/>
+  <xs:element name="CService_Organization_Number_" type="xs:string"/>
+  <xs:element name="CProgram_Name_" type="xs:string"/>
+  <xs:element name="CProgram_Number_" type="xs:string"/>
+  <xs:element name="CFunction__MIS_Functional_Centre__" type="xs:string"/>
+  <xs:element name="CReason_for_Assessment__Select_One_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CInitial_assessment"/>
+        <xs:element ref="CReassessment_at_6_months"/>
+        <xs:element ref="C_Prior_to__discharge"/>
+        <xs:element ref="COther__significant_change__client_request_"/>
+        <xs:element ref="CSpecify_other_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CInitial_assessment" type="xs:string"/>
+  <xs:element name="CReassessment_at_6_months" type="xs:string"/>
+  <xs:element name="C_Prior_to__discharge" type="xs:string"/>
+  <xs:element name="COther__significant_change__client_request_" type="xs:string"/>
+  <xs:element name="CSpecify_other_" type="xs:string"/>
+  <xs:element name="CDoctor">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CNone_available"/>
+        <xs:element ref="CContact_Information_"/>
+        <xs:element ref="CLast_Seen_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPsychiatrist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CNone_available"/>
+        <xs:element ref="CContact_Information_"/>
+        <xs:element ref="CLast_Seen_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COther_Contact">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CContact_Information_"/>
+        <xs:element ref="CLast_Seen_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COther_Agency">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CContact_Information_"/>
+        <xs:element ref="CLast_Seen_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CService_Information">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CService_Recipient_Location__county__district__municipality__"/>
+        <xs:element ref="CService_Recipient_LHIN_"/>
+        <xs:element ref="CService_Delivery_LHIN_"/>
+        <xs:element ref="CDate_of_Birth__Age_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CService_Recipient_Location__county__district__municipality__" type="xs:string"/>
+  <xs:element name="CService_Recipient_LHIN_" type="xs:string"/>
+  <xs:element name="CService_Delivery_LHIN_" type="xs:string"/>
+  <xs:element name="CDate_of_Birth__Age_" type="xs:string"/>
+  <xs:element name="CGender__Select_One_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CFemale"/>
+        <xs:element ref="CMale"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CFemale" type="xs:string"/>
+  <xs:element name="CMale" type="xs:string"/>
+  <xs:element name="CMarital_Status__Select_One_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CSingle"/>
+        <xs:element ref="CMarried_or_in_common_law_relationship"/>
+        <xs:element ref="CPartner_of_significant_other"/>
+        <xs:element ref="CWiddowed"/>
+        <xs:element ref="CSeparated"/>
+        <xs:element ref="CDivorced"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CSingle" type="xs:string"/>
+  <xs:element name="CMarried_or_in_common_law_relationship" type="xs:string"/>
+  <xs:element name="CPartner_of_significant_other" type="xs:string"/>
+  <xs:element name="CWiddowed" type="xs:string"/>
+  <xs:element name="CSeparated" type="xs:string"/>
+  <xs:element name="CDivorced" type="xs:string"/>
+  <xs:element name="CClient_Capacity_Status__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CDoes_the_client_have_a_Power_of_Attorney_for_property_"/>
+        <xs:element ref="CDoes_the_client_have_a_Power_of_Attorney_or_a_substitute_decision_maker_for_person_care_"/>
+        <xs:element ref="CDoes_the_client_have_a_court_appointed_guardian_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDoes_the_client_have_a_Power_of_Attorney_for_property_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="CContact_Information_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDoes_the_client_have_a_Power_of_Attorney_or_a_substitute_decision_maker_for_person_care_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="CContact_Information_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDoes_the_client_have_a_court_appointed_guardian_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="CContact_Information_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CWho_referred_you_to_this_service___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CGeneral_hospital"/>
+        <xs:element ref="CFamily_physicians"/>
+        <xs:element ref="CPsychiatric_hospital"/>
+        <xs:element ref="CPsychiatrists"/>
+        <xs:element ref="COther_institution"/>
+        <xs:element ref="CMental_health_worker"/>
+        <xs:element ref="CCommunity_Mental_Health_and_Addiction_organization"/>
+        <xs:element ref="CCriminal_justice_worker"/>
+        <xs:element ref="COther_community_agencies"/>
+        <xs:element ref="CSelf__family_or_friend"/>
+        <xs:element ref="COther"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CFamily_physicians" type="xs:string"/>
+  <xs:element name="CPsychiatrists" type="xs:string"/>
+  <xs:element name="COther_institution" type="xs:string"/>
+  <xs:element name="CMental_health_worker" type="xs:string"/>
+  <xs:element name="CCommunity_Mental_Health_and_Addiction_organization" type="xs:string"/>
+  <xs:element name="CCriminal_justice_worker" type="xs:string"/>
+  <xs:element name="COther_community_agencies" type="xs:string"/>
+  <xs:element name="CSelf__family_or_friend" type="xs:string"/>
+  <xs:element name="CWhat_culture_do_you_identify_with_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAboriginal_Origin__select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAboriginal"/>
+        <xs:element ref="CNon_aboriginal"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAboriginal" type="xs:string"/>
+  <xs:element name="CNon_aboriginal" type="xs:string"/>
+  <xs:element name="CCitizenship_Status__select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CCanadian_citizen"/>
+        <xs:element ref="CPermanent_resident"/>
+        <xs:element ref="CTemporary_resident"/>
+        <xs:element ref="CRefugee"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CCanadian_citizen" type="xs:string"/>
+  <xs:element name="CPermanent_resident" type="xs:string"/>
+  <xs:element name="CTemporary_resident" type="xs:string"/>
+  <xs:element name="CRefugee" type="xs:string"/>
+  <xs:element name="CLength_of_time_lived_in_Canada">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNumber_of_years_months_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNumber_of_years_months_" type="xs:string"/>
+  <xs:element name="CCan_you_tell_me_about_your_immigration_experience_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDo_you_have_any_issues_with_your_immigration_experience___check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNone"/>
+        <xs:element ref="CLack_of_understanding_of_the_Canadian_system_resources"/>
+        <xs:element ref="CApplying_previous_work_experience_professional_qualifications"/>
+        <xs:element ref="CSeparation_from_family_members_significant_others"/>
+        <xs:element ref="CFamily_left_behind_in_refugee_camp"/>
+        <xs:element ref="CExperience_with_war_incarceration_torture"/>
+        <xs:element ref="CRefugee_camp"/>
+        <xs:element ref="CExperience_with_other_trauma"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="COther_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CLack_of_understanding_of_the_Canadian_system_resources" type="xs:string"/>
+  <xs:element name="CApplying_previous_work_experience_professional_qualifications" type="xs:string"/>
+  <xs:element name="CSeparation_from_family_members_significant_others" type="xs:string"/>
+  <xs:element name="CFamily_left_behind_in_refugee_camp" type="xs:string"/>
+  <xs:element name="CExperience_with_war_incarceration_torture" type="xs:string"/>
+  <xs:element name="CRefugee_camp" type="xs:string"/>
+  <xs:element name="CExperience_with_other_trauma" type="xs:string"/>
+  <xs:element name="CExperience_of_Discrimination__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CDisability"/>
+        <xs:element ref="CEthnicity"/>
+        <xs:element ref="CGender"/>
+        <xs:element ref="CImmigration"/>
+        <xs:element ref="CMental_Illness"/>
+        <xs:element ref="CRace"/>
+        <xs:element ref="CReligion"/>
+        <xs:element ref="CSexual_orientation"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="COther_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDisability" type="xs:string"/>
+  <xs:element name="CEthnicity" type="xs:string"/>
+  <xs:element name="CGender" type="xs:string"/>
+  <xs:element name="CImmigration" type="xs:string"/>
+  <xs:element name="CMental_Illness" type="xs:string"/>
+  <xs:element name="CRace" type="xs:string"/>
+  <xs:element name="CReligion" type="xs:string"/>
+  <xs:element name="CSexual_orientation" type="xs:string"/>
+  <xs:element name="CService_Recipient_Preferred_Language_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CLanguage_of_Service_Provision_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDo_you_have_any_legal_issues___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CCivil"/>
+        <xs:element ref="CCriminal"/>
+        <xs:element ref="CNone"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CCivil" type="xs:string"/>
+  <xs:element name="CCriminal" type="xs:string"/>
+  <xs:element name="CLegal_Status__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPre_Charge"/>
+        <xs:element ref="CPre_Trial"/>
+        <xs:element ref="CCustody_Status"/>
+        <xs:element ref="COutcomes"/>
+        <xs:element ref="COther"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPre_Charge">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPre_charge_Diversion"/>
+        <xs:element ref="CCourt_Diversion_Program"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPre_charge_Diversion" type="xs:string"/>
+  <xs:element name="CCourt_Diversion_Program" type="xs:string"/>
+  <xs:element name="CPre_Trial">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAwaiting_fitness_assessment"/>
+        <xs:element ref="CAwaiting_trial__with_or_without_bail_"/>
+        <xs:element ref="CAwaiting_Criminal_Responsibility_Assessment__NCR_"/>
+        <xs:element ref="CIn_community_on_own_recognizance"/>
+        <xs:element ref="CUnfit_to_stand_trial"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAwaiting_fitness_assessment" type="xs:string"/>
+  <xs:element name="CAwaiting_trial__with_or_without_bail_" type="xs:string"/>
+  <xs:element name="CAwaiting_Criminal_Responsibility_Assessment__NCR_" type="xs:string"/>
+  <xs:element name="CIn_community_on_own_recognizance" type="xs:string"/>
+  <xs:element name="CUnfit_to_stand_trial" type="xs:string"/>
+  <xs:element name="CCustody_Status">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CORB_detained__community_access"/>
+        <xs:element ref="CORB_conditional_discharge"/>
+        <xs:element ref="COn_parole"/>
+        <xs:element ref="COn_probation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CORB_detained__community_access" type="xs:string"/>
+  <xs:element name="CORB_conditional_discharge" type="xs:string"/>
+  <xs:element name="COn_parole" type="xs:string"/>
+  <xs:element name="COn_probation" type="xs:string"/>
+  <xs:element name="COutcomes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CCharges_withdrawn"/>
+        <xs:element ref="CStay_of_proceedings"/>
+        <xs:element ref="CAwaiting_sentence"/>
+        <xs:element ref="CNCR"/>
+        <xs:element ref="CConditional_Discharge"/>
+        <xs:element ref="CConditional_Sentence"/>
+        <xs:element ref="CRestraining_order"/>
+        <xs:element ref="CPeace_bond"/>
+        <xs:element ref="CSuspended_sentence"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CCharges_withdrawn" type="xs:string"/>
+  <xs:element name="CStay_of_proceedings" type="xs:string"/>
+  <xs:element name="CAwaiting_sentence" type="xs:string"/>
+  <xs:element name="CNCR" type="xs:string"/>
+  <xs:element name="CConditional_Discharge" type="xs:string"/>
+  <xs:element name="CConditional_Sentence" type="xs:string"/>
+  <xs:element name="CRestraining_order" type="xs:string"/>
+  <xs:element name="CPeace_bond" type="xs:string"/>
+  <xs:element name="CSuspended_sentence" type="xs:string"/>
+  <xs:element name="CExit_Disposition___select_one_if_applicable_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CCompletion_without_referral"/>
+        <xs:element ref="CCompletion_with_referral"/>
+        <xs:element ref="CSuicides"/>
+        <xs:element ref="CDeath"/>
+        <xs:element ref="CRelocation"/>
+        <xs:element ref="CWithdrawal"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CCompletion_without_referral" type="xs:string"/>
+  <xs:element name="CCompletion_with_referral" type="xs:string"/>
+  <xs:element name="CSuicides" type="xs:string"/>
+  <xs:element name="CDeath" type="xs:string"/>
+  <xs:element name="CRelocation" type="xs:string"/>
+  <xs:element name="CWithdrawal" type="xs:string"/>
+  <xs:element name="CQuestions_and_Answer_Key">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNEED__Q1___0_No_problem__1__No_Moderate_problem_due_to_help_given__2_Serious_problem__9__Not_Kn"/>
+        <xs:element ref="CHELP__Q2_and_3_a_b___0_None__1__Low_Help__2_Moderate_help__3__High_help__9___Unknown"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNEED__Q1___0_No_problem__1__No_Moderate_problem_due_to_help_given__2_Serious_problem__9__Not_Kn">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CHELP__Q2_and_3_a_b___0_None__1__Low_Help__2_Moderate_help__3__High_help__9___Unknown">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="C1__Accommodation__What_kind_of_place_do_you_live_in__What_sort_of_place_is_it_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_lack_a_current_place_to_stay___If_rated_0_or_9__skip_questions_2___3_and_pro"/>
+        <xs:element ref="C2__How_much_help_with_accommodation_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_getting_enough_to_eat_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_getting_enough_to_eat_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CWhere_do_you_live___select_one_"/>
+        <xs:element ref="CDo_you_receive_any_support___select_one_"/>
+        <xs:element ref="CDo_you_live_with_anyone___select_one_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_lack_a_current_place_to_stay___If_rated_0_or_9__skip_questions_2___3_and_pro" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_accommodation_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="CWhere_do_you_live___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CApproved_Homes_and_Homes_for_Special_Care"/>
+        <xs:element ref="CCorrectional_Probation_facility"/>
+        <xs:element ref="CDomiciliary_hostel"/>
+        <xs:element ref="CGeneral_hospital"/>
+        <xs:element ref="CPsychiatric_hospital"/>
+        <xs:element ref="COther_specialty_hospital"/>
+        <xs:element ref="CNo_fixed_address"/>
+        <xs:element ref="CHostel_shelter"/>
+        <xs:element ref="CLong_term_care_facility_nursing_home"/>
+        <xs:element ref="CMunicipal_non_profit_housing"/>
+        <xs:element ref="CPrivate_non_profit_housing"/>
+        <xs:element ref="CPrivate_House_Apt__SR_owned_market_rent"/>
+        <xs:element ref="CPrivate_House_Apt__Other_subsidized"/>
+        <xs:element ref="CRooming_boarding_house"/>
+        <xs:element ref="CSupportive_Housing__Congregate_living"/>
+        <xs:element ref="CSupportive_Housing__Assisted_living"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CApproved_Homes_and_Homes_for_Special_Care" type="xs:string"/>
+  <xs:element name="CCorrectional_Probation_facility" type="xs:string"/>
+  <xs:element name="CDomiciliary_hostel" type="xs:string"/>
+  <xs:element name="COther_specialty_hospital" type="xs:string"/>
+  <xs:element name="CNo_fixed_address" type="xs:string"/>
+  <xs:element name="CHostel_shelter" type="xs:string"/>
+  <xs:element name="CLong_term_care_facility_nursing_home" type="xs:string"/>
+  <xs:element name="CMunicipal_non_profit_housing" type="xs:string"/>
+  <xs:element name="CPrivate_non_profit_housing" type="xs:string"/>
+  <xs:element name="CPrivate_House_Apt__SR_owned_market_rent" type="xs:string"/>
+  <xs:element name="CPrivate_House_Apt__Other_subsidized" type="xs:string"/>
+  <xs:element name="CRooming_boarding_house" type="xs:string"/>
+  <xs:element name="CSupportive_Housing__Congregate_living" type="xs:string"/>
+  <xs:element name="CSupportive_Housing__Assisted_living" type="xs:string"/>
+  <xs:element name="CDo_you_receive_any_support___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CIndependent"/>
+        <xs:element ref="CAssisted_supported"/>
+        <xs:element ref="CSupervised_non_facility"/>
+        <xs:element ref="CSupervised_facility"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIndependent" type="xs:string"/>
+  <xs:element name="CAssisted_supported" type="xs:string"/>
+  <xs:element name="CSupervised_non_facility" type="xs:string"/>
+  <xs:element name="CSupervised_facility" type="xs:string"/>
+  <xs:element name="CDo_you_live_with_anyone___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CSelf"/>
+        <xs:element ref="CSpouse_partner"/>
+        <xs:element ref="CSpouse_partner_and_others"/>
+        <xs:element ref="CChildren"/>
+        <xs:element ref="CParents"/>
+        <xs:element ref="CRelatives"/>
+        <xs:element ref="CNon_relatives"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CSelf" type="xs:string"/>
+  <xs:element name="CSpouse_partner" type="xs:string"/>
+  <xs:element name="CSpouse_partner_and_others" type="xs:string"/>
+  <xs:element name="CChildren" type="xs:string"/>
+  <xs:element name="CParents" type="xs:string"/>
+  <xs:element name="CRelatives" type="xs:string"/>
+  <xs:element name="CNon_relatives" type="xs:string"/>
+  <xs:element name="C2__Food__What_kind_of_food_fo_you_eat__Are_you_able_to_prepare_your_own_meals_and_do_your_own_s">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_getting_enough_to_eat___If_rated_0_or_9__go_to_the_next_doma"/>
+        <xs:element ref="C2__How_much_help_with_getting_enough_to_eat_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_getting_enough_to_eat_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_getting_enough_to_eat_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_getting_enough_to_eat___If_rated_0_or_9__go_to_the_next_doma" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_getting_enough_to_eat_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3__Looking_after_the_home__Are_you_able_to_look_after_your_home__Does_anyone_help_you_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_looking_after_the_home___If_rated_0_or_9__go_to_the_next_dom"/>
+        <xs:element ref="C2__How_much_help_with_looking_after_the_home_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_looking_after_the_home_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_looking_after_the_home_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_looking_after_the_home___If_rated_0_or_9__go_to_the_next_dom" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_looking_after_the_home_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_looking_after_the_home_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_looking_after_the_home_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="C4__Self_care__Do_you_have_problems_keeping_clean_and_tidy__Do_you_ever_need_reminding__Who_by_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_wit_self_care___If_rated_0_or_9__go_to_the_next_domain_"/>
+        <xs:element ref="C2__How_much_help_with_self_care_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_self_care_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_self_care_foes_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_wit_self_care___If_rated_0_or_9__go_to_the_next_domain_" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_self_care_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_self_care_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_self_care_foes_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="C5__Daytime_Activities__How_do_you_spend_your_day__Do_you_have_enough_to_do_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_with_regular__appropriate_daytime_activities___If_rated_0_or"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_finding_and_keeping_regul"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_in_finding_and_keeping_regular_an"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_in_finding_and_keeping_regular_and_a"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CWhat_is_your_current_employment_status___select_one_"/>
+        <xs:element ref="CAre_you_currently_in_school___select_one_"/>
+        <xs:element ref="CAre_you_at_risk_of_unemployment_or_disruped_education___check_all_that_apply_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_with_regular__appropriate_daytime_activities___If_rated_0_or" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_finding_and_keeping_regul" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_in_finding_and_keeping_regular_an" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_in_finding_and_keeping_regular_and_a" type="xs:integer"/>
+  <xs:element name="CWhat_is_your_current_employment_status___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CIndependent_competitive"/>
+        <xs:element ref="CAssisted_supportive"/>
+        <xs:element ref="CAlternative_businesses"/>
+        <xs:element ref="CSheltered_workshop"/>
+        <xs:element ref="CNon_paid_work_experience"/>
+        <xs:element ref="CNo_employment__other_activity"/>
+        <xs:element ref="CCasual_sporadic"/>
+        <xs:element ref="CNo_employment_of_any_kind"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIndependent_competitive" type="xs:string"/>
+  <xs:element name="CAssisted_supportive" type="xs:string"/>
+  <xs:element name="CAlternative_businesses" type="xs:string"/>
+  <xs:element name="CSheltered_workshop" type="xs:string"/>
+  <xs:element name="CNon_paid_work_experience" type="xs:string"/>
+  <xs:element name="CNo_employment__other_activity" type="xs:string"/>
+  <xs:element name="CCasual_sporadic" type="xs:string"/>
+  <xs:element name="CNo_employment_of_any_kind" type="xs:string"/>
+  <xs:element name="CAre_you_currently_in_school___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNot_in_school"/>
+        <xs:element ref="CElementary_Junior_High_School"/>
+        <xs:element ref="CSecondary_High_School"/>
+        <xs:element ref="CTrade_School"/>
+        <xs:element ref="CVocational_training_school"/>
+        <xs:element ref="CAdult_education"/>
+        <xs:element ref="CCommunity_college"/>
+        <xs:element ref="CUniversity"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNot_in_school" type="xs:string"/>
+  <xs:element name="CTrade_School" type="xs:string"/>
+  <xs:element name="CVocational_training_school" type="xs:string"/>
+  <xs:element name="CAdult_education" type="xs:string"/>
+  <xs:element name="CCommunity_college" type="xs:string"/>
+  <xs:element name="CUniversity" type="xs:string"/>
+  <xs:element name="CAre_you_at_risk_of_unemployment_or_disruped_education___check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CDifficulty_in_getting_to_work_school_on_time"/>
+        <xs:element ref="CProblems_difficulty_in_work_school"/>
+        <xs:element ref="CLooking_to_quit_work_school"/>
+        <xs:element ref="CFrequent_changes_in_work_school"/>
+        <xs:element ref="CNone_or_not_applicable"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDifficulty_in_getting_to_work_school_on_time" type="xs:string"/>
+  <xs:element name="CProblems_difficulty_in_work_school" type="xs:string"/>
+  <xs:element name="CLooking_to_quit_work_school" type="xs:string"/>
+  <xs:element name="CFrequent_changes_in_work_school" type="xs:string"/>
+  <xs:element name="CNone_or_not_applicable" type="xs:string"/>
+  <xs:element name="C6__Physical_Health__How_well_do_you_feel_physically__Are_you_getting_any_treatment_for_physical">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_any_physical_disability_or_any_physical_illness___If_rated__0_or_9__ski"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_physical_health_problems"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_for_physical_health_problems_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_for_physical_health_problems_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CMedical_conditions__check_all_that_apply_"/>
+        <xs:element ref="CDo_you_have_any_concerns_about_your_physical_health_"/>
+        <xs:element ref="CIf_yes__please_indicate_the_areas_where_you_have_concerns__check_all_that_apply_"/>
+        <xs:element ref="CList_of_all_current_medications__including_prescribed_and_alternative_over_the_counter_medicati"/>
+        <xs:element ref="CMedications__Additional_Information"/>
+        <xs:element ref="CReports_side_effects___select_one_"/>
+        <xs:element ref="CDo_these_side_effects_affect_your_daily_living___select_one_"/>
+        <xs:element ref="CDescription_of_side_effects__check_all_that_apply_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_any_physical_disability_or_any_physical_illness___If_rated__0_or_9__ski" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_physical_health_problems" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_for_physical_health_problems_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_for_physical_health_problems_" type="xs:integer"/>
+  <xs:element name="CMedical_conditions__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAcquired_Brain_Injury__ABI_"/>
+        <xs:element ref="CArthritis"/>
+        <xs:element ref="CAutism"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="COther"/>
+          <xs:element ref="CSpecify"/>
+          <xs:element ref="CBreathing_problems"/>
+          <xs:element ref="CCancer"/>
+          <xs:element ref="CCirrhosis"/>
+          <xs:element ref="CCommunicable_health_disease"/>
+          <xs:element ref="CDiabetes_Type_1"/>
+          <xs:element ref="CDiabetes_Type_2"/>
+          <xs:element ref="CDiabetes_Type_3"/>
+          <xs:element ref="CEating_disorder"/>
+          <xs:element ref="CEpilepsy"/>
+          <xs:element ref="CHIV"/>
+          <xs:element ref="CHearing_Impairment"/>
+          <xs:element ref="CHeart_Condition"/>
+          <xs:element ref="CHepatitis_A"/>
+          <xs:element ref="CHepatitis_B"/>
+          <xs:element ref="CHepatitis_C"/>
+          <xs:element ref="CHigh_blood_pressure"/>
+          <xs:element ref="CHigh_cholesterol"/>
+          <xs:element ref="CIntellectual_disability"/>
+          <xs:element ref="CLow_blood_pressure"/>
+          <xs:element ref="CMRSA__C_Difficile"/>
+          <xs:element ref="CObesity"/>
+          <xs:element ref="COsteoporosis"/>
+          <xs:element ref="CPregnancy"/>
+          <xs:element ref="CSeizure"/>
+          <xs:element ref="CSexually_Transmitted_Disease__STD_"/>
+          <xs:element ref="CSkin_conditions"/>
+          <xs:element ref="CStroke"/>
+          <xs:element ref="CThyroid"/>
+          <xs:element ref="CVision_impairment"/>
+        </xs:choice>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAcquired_Brain_Injury__ABI_" type="xs:string"/>
+  <xs:element name="CArthritis" type="xs:string"/>
+  <xs:element name="CAutism" type="xs:string"/>
+  <xs:element name="CBreathing_problems" type="xs:string"/>
+  <xs:element name="CCancer" type="xs:string"/>
+  <xs:element name="CCirrhosis" type="xs:string"/>
+  <xs:element name="CCommunicable_health_disease" type="xs:string"/>
+  <xs:element name="CDiabetes_Type_1" type="xs:string"/>
+  <xs:element name="CDiabetes_Type_2" type="xs:string"/>
+  <xs:element name="CDiabetes_Type_3" type="xs:string"/>
+  <xs:element name="CEating_disorder" type="xs:string"/>
+  <xs:element name="CEpilepsy" type="xs:string"/>
+  <xs:element name="CHIV" type="xs:string"/>
+  <xs:element name="CHearing_Impairment" type="xs:string"/>
+  <xs:element name="CHeart_Condition" type="xs:string"/>
+  <xs:element name="CHepatitis_A" type="xs:string"/>
+  <xs:element name="CHepatitis_B" type="xs:string"/>
+  <xs:element name="CHepatitis_C" type="xs:string"/>
+  <xs:element name="CHigh_blood_pressure" type="xs:string"/>
+  <xs:element name="CHigh_cholesterol" type="xs:string"/>
+  <xs:element name="CIntellectual_disability" type="xs:string"/>
+  <xs:element name="CLow_blood_pressure" type="xs:string"/>
+  <xs:element name="CMRSA__C_Difficile" type="xs:string"/>
+  <xs:element name="CObesity" type="xs:string"/>
+  <xs:element name="COsteoporosis" type="xs:string"/>
+  <xs:element name="CPregnancy" type="xs:string"/>
+  <xs:element name="CSeizure" type="xs:string"/>
+  <xs:element name="CSexually_Transmitted_Disease__STD_" type="xs:string"/>
+  <xs:element name="CSkin_conditions" type="xs:string"/>
+  <xs:element name="CStroke" type="xs:string"/>
+  <xs:element name="CThyroid" type="xs:string"/>
+  <xs:element name="CVision_impairment" type="xs:string"/>
+  <xs:element name="CDo_you_have_any_concerns_about_your_physical_health_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIf_yes__please_indicate_the_areas_where_you_have_concerns__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CHead_and_neck"/>
+        <xs:element ref="CChest"/>
+        <xs:element ref="CAbdomen"/>
+        <xs:element ref="CExtremities__arms__legs__hands__feet_"/>
+        <xs:element ref="CGenital_urinary"/>
+        <xs:element ref="CSkin"/>
+        <xs:element ref="CJoints"/>
+        <xs:element ref="CMobility"/>
+        <xs:element ref="CNeurological"/>
+        <xs:element ref="CHearing"/>
+        <xs:element ref="CVision"/>
+        <xs:element ref="COther"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHead_and_neck" type="xs:string"/>
+  <xs:element name="CChest" type="xs:string"/>
+  <xs:element name="CAbdomen" type="xs:string"/>
+  <xs:element name="CExtremities__arms__legs__hands__feet_" type="xs:string"/>
+  <xs:element name="CGenital_urinary" type="xs:string"/>
+  <xs:element name="CSkin" type="xs:string"/>
+  <xs:element name="CJoints" type="xs:string"/>
+  <xs:element name="CMobility" type="xs:string"/>
+  <xs:element name="CNeurological" type="xs:string"/>
+  <xs:element name="CHearing" type="xs:string"/>
+  <xs:element name="CVision" type="xs:string"/>
+  <xs:element name="CList_of_all_current_medications__including_prescribed_and_alternative_over_the_counter_medicati">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Medication_"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="C2__Medication_"/>
+          <xs:element ref="C3__Medication_"/>
+          <xs:element ref="C4__Medication_"/>
+          <xs:element ref="C5__Medication_"/>
+          <xs:element ref="CDosage_"/>
+          <xs:element ref="CHelp_is_needed_"/>
+          <xs:element ref="CHelp_is_provided_"/>
+          <xs:element ref="CTaken_as_prescribed_"/>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Medication_" type="xs:string"/>
+  <xs:element name="C2__Medication_" type="xs:string"/>
+  <xs:element name="C3__Medication_" type="xs:string"/>
+  <xs:element name="C4__Medication_" type="xs:string"/>
+  <xs:element name="C5__Medication_" type="xs:string"/>
+  <xs:element name="CDosage_" type="xs:string"/>
+  <xs:element name="CHelp_is_needed_" type="xs:string"/>
+  <xs:element name="CHelp_is_provided_" type="xs:string"/>
+  <xs:element name="CTaken_as_prescribed_" type="xs:string"/>
+  <xs:element name="CMedications__Additional_Information">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CReports_side_effects___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDo_these_side_effects_affect_your_daily_living___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDescription_of_side_effects__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNone"/>
+        <xs:element ref="Cblurred_dimmed_vision"/>
+        <xs:element ref="CChanges_in_appetite"/>
+        <xs:element ref="CDizziness_spinning"/>
+        <xs:element ref="CDrowsiness_sedation"/>
+        <xs:element ref="CDry_mouth"/>
+        <xs:element ref="CFatigue_weakness"/>
+        <xs:element ref="CFast_heart_beat"/>
+        <xs:element ref="CGastrointestinal_distress"/>
+        <xs:element ref="CHeadache"/>
+        <xs:element ref="CInsomnia"/>
+        <xs:element ref="CMenstrual_changes"/>
+        <xs:element ref="CMilky_discharge_from_breasts"/>
+        <xs:element ref="CMuscle_spasms"/>
+        <xs:element ref="CNumbness_tingling"/>
+        <xs:element ref="CRestlessness"/>
+        <xs:element ref="CSexual_disturbance"/>
+        <xs:element ref="CTremors_rigidity_balance_problems"/>
+        <xs:element ref="CWeight_gain"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="COther_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Cblurred_dimmed_vision" type="xs:string"/>
+  <xs:element name="CChanges_in_appetite" type="xs:string"/>
+  <xs:element name="CDizziness_spinning" type="xs:string"/>
+  <xs:element name="CDrowsiness_sedation" type="xs:string"/>
+  <xs:element name="CDry_mouth" type="xs:string"/>
+  <xs:element name="CFatigue_weakness" type="xs:string"/>
+  <xs:element name="CFast_heart_beat" type="xs:string"/>
+  <xs:element name="CGastrointestinal_distress" type="xs:string"/>
+  <xs:element name="CHeadache" type="xs:string"/>
+  <xs:element name="CInsomnia" type="xs:string"/>
+  <xs:element name="CMenstrual_changes" type="xs:string"/>
+  <xs:element name="CMilky_discharge_from_breasts" type="xs:string"/>
+  <xs:element name="CMuscle_spasms" type="xs:string"/>
+  <xs:element name="CNumbness_tingling" type="xs:string"/>
+  <xs:element name="CRestlessness" type="xs:string"/>
+  <xs:element name="CSexual_disturbance" type="xs:string"/>
+  <xs:element name="CTremors_rigidity_balance_problems" type="xs:string"/>
+  <xs:element name="CWeight_gain" type="xs:string"/>
+  <xs:element name="C7__Psychotic_symptoms__Do_you_ever_hear_voices__or_have_problems_with_your_thoughts__Are_you_on">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_any_psychotic_symptoms_"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_these_psychotic_symptoms"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_for_these_psychotic_symptoms_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_for_these_psychotic_symptoms_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="CCommunity_Treatment_Order"/>
+          <xs:element ref="CPsychiatric_History"/>
+        </xs:choice>
+        <xs:element ref="CSymptom_checklist"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_any_psychotic_symptoms_" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_these_psychotic_symptoms" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_for_these_psychotic_symptoms_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_for_these_psychotic_symptoms_" type="xs:integer"/>
+  <xs:element name="CCommunity_Treatment_Order">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CIssued_CTO"/>
+        <xs:element ref="CNo_CTO"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIssued_CTO" type="xs:string"/>
+  <xs:element name="CNo_CTO" type="xs:string"/>
+  <xs:element name="CPsychiatric_History">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="CAdditional_information_"/>
+        <xs:sequence>
+          <xs:element ref="CHave_you_been_hospitalized_due_to_your_mental_health_during_the_past_two_years_"/>
+          <xs:element ref="CIf_yes__total_number_of_admission__last_two_years__"/>
+          <xs:element ref="CIf_yes__total_number_of_hospitalization_days__last_two_years__"/>
+        </xs:sequence>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAdditional_information_" type="xs:string"/>
+  <xs:element name="CHave_you_been_hospitalized_due_to_your_mental_health_during_the_past_two_years_" type="xs:string"/>
+  <xs:element name="CIf_yes__total_number_of_admission__last_two_years__" type="xs:integer"/>
+  <xs:element name="CIf_yes__total_number_of_hospitalization_days__last_two_years__" type="xs:integer"/>
+  <xs:element name="CSymptom_checklist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNone"/>
+        <xs:element ref="CAbnormal_affect"/>
+        <xs:element ref="CAbnormal_thought_process_form"/>
+        <xs:element ref="CAnger"/>
+        <xs:element ref="CAnxiety"/>
+        <xs:element ref="CCommand_hallucinations"/>
+        <xs:element ref="CCompulsive_behaviour"/>
+        <xs:element ref="CDecreased_energy"/>
+        <xs:element ref="CDelusions"/>
+        <xs:element ref="CEpisodes_of_panic"/>
+        <xs:element ref="CFears"/>
+        <xs:element ref="CGuilt_shame"/>
+        <xs:element ref="CHallucinations"/>
+        <xs:element ref="CHopelessness"/>
+        <xs:element ref="CHygiene"/>
+        <xs:element ref="CInability_t_o_experience_joy_pleasure"/>
+        <xs:element ref="CInflated_self_worth"/>
+        <xs:element ref="CIntrusive_thoughts"/>
+        <xs:element ref="CIrritability"/>
+        <xs:element ref="CObsessive_thoughts"/>
+        <xs:element ref="CPhobias"/>
+        <xs:element ref="CPressured_speech"/>
+        <xs:element ref="CRacing_thoughts"/>
+        <xs:element ref="CRapid_mood_changes"/>
+        <xs:element ref="CReliving_traumatic_memories"/>
+        <xs:element ref="CSelf_deprecation"/>
+        <xs:element ref="CSleep_problems"/>
+        <xs:element ref="CTearfulness"/>
+        <xs:element ref="CUnusual_or_abnormal_physical_movements"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CSpecify"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAbnormal_affect" type="xs:string"/>
+  <xs:element name="CAbnormal_thought_process_form" type="xs:string"/>
+  <xs:element name="CAnger" type="xs:string"/>
+  <xs:element name="CAnxiety" type="xs:string"/>
+  <xs:element name="CCommand_hallucinations" type="xs:string"/>
+  <xs:element name="CCompulsive_behaviour" type="xs:string"/>
+  <xs:element name="CDecreased_energy" type="xs:string"/>
+  <xs:element name="CDelusions" type="xs:string"/>
+  <xs:element name="CEpisodes_of_panic" type="xs:string"/>
+  <xs:element name="CFears" type="xs:string"/>
+  <xs:element name="CGuilt_shame" type="xs:string"/>
+  <xs:element name="CHallucinations" type="xs:string"/>
+  <xs:element name="CHopelessness" type="xs:string"/>
+  <xs:element name="CHygiene" type="xs:string"/>
+  <xs:element name="CInability_t_o_experience_joy_pleasure" type="xs:string"/>
+  <xs:element name="CInflated_self_worth" type="xs:string"/>
+  <xs:element name="CIntrusive_thoughts" type="xs:string"/>
+  <xs:element name="CIrritability" type="xs:string"/>
+  <xs:element name="CObsessive_thoughts" type="xs:string"/>
+  <xs:element name="CPhobias" type="xs:string"/>
+  <xs:element name="CPressured_speech" type="xs:string"/>
+  <xs:element name="CRacing_thoughts" type="xs:string"/>
+  <xs:element name="CRapid_mood_changes" type="xs:string"/>
+  <xs:element name="CReliving_traumatic_memories" type="xs:string"/>
+  <xs:element name="CSelf_deprecation" type="xs:string"/>
+  <xs:element name="CSleep_problems" type="xs:string"/>
+  <xs:element name="CTearfulness" type="xs:string"/>
+  <xs:element name="CUnusual_or_abnormal_physical_movements" type="xs:string"/>
+  <xs:element name="C8__Information_on_condition_and_treatment__Have_you_been_given_clear_information_about_your_med">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Has_the_person_had_clear_verbal_or_written_information_about_condition_and_treatment___If_ra"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_obtaining_such_informatio"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_in_obtaining_such_information_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_in_obtaining_such_information_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CDiagnostic_categories__check_all_that_apply_"/>
+        <xs:element ref="COther_Illness_Information__check_all_that_apply_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Has_the_person_had_clear_verbal_or_written_information_about_condition_and_treatment___If_ra" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_obtaining_such_informatio" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_in_obtaining_such_information_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_in_obtaining_such_information_" type="xs:integer"/>
+  <xs:element name="CDiagnostic_categories__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAdjustment_Disorders"/>
+        <xs:element ref="CAnxiety_Disorder"/>
+        <xs:element ref="CDelirium__Dementia__and_Amnestic_and_Cognitive_Disorders"/>
+        <xs:element ref="CDisorder_of_Childhood_Adolescence"/>
+        <xs:element ref="CDissociative_Disorders"/>
+        <xs:element ref="CEating_Disorders"/>
+        <xs:element ref="CFactitious_Disorders"/>
+        <xs:element ref="CImpulse_Control_Disorders_not_elsewhere_classified"/>
+        <xs:element ref="CMental_Disorders_due_to_General_Medical_Conditions"/>
+        <xs:element ref="CMood_Disorder"/>
+        <xs:element ref="CPersonality_Disorders"/>
+        <xs:element ref="CSchizophernia_and_other_psychotic_disorders"/>
+        <xs:element ref="CSexual_and_Gender_Identity_Disorders"/>
+        <xs:element ref="CSleep_Disorders"/>
+        <xs:element ref="CSomatoform_Disorders"/>
+        <xs:element ref="CSubstance_Related_Disorders"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAdjustment_Disorders" type="xs:string"/>
+  <xs:element name="CAnxiety_Disorder" type="xs:string"/>
+  <xs:element name="CDelirium__Dementia__and_Amnestic_and_Cognitive_Disorders" type="xs:string"/>
+  <xs:element name="CDisorder_of_Childhood_Adolescence" type="xs:string"/>
+  <xs:element name="CDissociative_Disorders" type="xs:string"/>
+  <xs:element name="CEating_Disorders" type="xs:string"/>
+  <xs:element name="CFactitious_Disorders" type="xs:string"/>
+  <xs:element name="CImpulse_Control_Disorders_not_elsewhere_classified" type="xs:string"/>
+  <xs:element name="CMental_Disorders_due_to_General_Medical_Conditions" type="xs:string"/>
+  <xs:element name="CMood_Disorder" type="xs:string"/>
+  <xs:element name="CPersonality_Disorders" type="xs:string"/>
+  <xs:element name="CSchizophernia_and_other_psychotic_disorders" type="xs:string"/>
+  <xs:element name="CSexual_and_Gender_Identity_Disorders" type="xs:string"/>
+  <xs:element name="CSleep_Disorders" type="xs:string"/>
+  <xs:element name="CSomatoform_Disorders" type="xs:string"/>
+  <xs:element name="CSubstance_Related_Disorders" type="xs:string"/>
+  <xs:element name="COther_Illness_Information__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CConcurrent_Disorder__substance_abuse_"/>
+        <xs:element ref="CDual_Diagnosis__developmental_disability_"/>
+        <xs:element ref="COther_chronic_illnesses_and_or_physical_disabilities"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CConcurrent_Disorder__substance_abuse_" type="xs:string"/>
+  <xs:element name="CDual_Diagnosis__developmental_disability_" type="xs:string"/>
+  <xs:element name="COther_chronic_illnesses_and_or_physical_disabilities" type="xs:string"/>
+  <xs:element name="C9__Psychological_distress__Have_you_recently_felt_very_sad_or_low__Have_you_felt_overly_anxious">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_suffer_from_current_psychological_distress___If_rated_0_or_9__go_to_the_next"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_this_distress_"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_for_this_distress_"/>
+        <xs:element ref="C3b__How_much_help_does_this_person_need_from_local_services_for_this_distress_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_suffer_from_current_psychological_distress___If_rated_0_or_9__go_to_the_next" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_this_distress_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_for_this_distress_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_this_person_need_from_local_services_for_this_distress_" type="xs:integer"/>
+  <xs:element name="C10__Safety_to_self__Do_you_ever_have_thoughts_of_harming_yourself__or_actually_harming_yourself">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Is_the_person_a_danger_to_him_or_herself___If_rated_0_or_9__skip_questions_2___3_and_proceed"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_reduce_the_risk_of_self_h"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_to_reduce_the_risk_of_self_harm_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_to_reduce_the_risk_of_self_harm_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CHave_you_attempted_suicide_in_the_past___select_one_"/>
+        <xs:element ref="CDo_you_currently_have_suicidal_thoughts___select_one_"/>
+        <xs:element ref="CDo_you_have_any_concerns_fro_your_own_safety___select_one_"/>
+        <xs:element ref="CRisks__select_all_that_apply_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Is_the_person_a_danger_to_him_or_herself___If_rated_0_or_9__skip_questions_2___3_and_proceed" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_reduce_the_risk_of_self_h" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_to_reduce_the_risk_of_self_harm_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_to_reduce_the_risk_of_self_harm_" type="xs:integer"/>
+  <xs:element name="CHave_you_attempted_suicide_in_the_past___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDo_you_currently_have_suicidal_thoughts___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDo_you_have_any_concerns_fro_your_own_safety___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CRisks__select_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CAbuse_neglect"/>
+        <xs:element ref="CAccidental_self_harm"/>
+        <xs:element ref="CDeliberate_self_harm"/>
+        <xs:element ref="CExploitation_risk"/>
+        <xs:element ref="COther_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CAbuse_neglect" type="xs:string"/>
+  <xs:element name="CAccidental_self_harm" type="xs:string"/>
+  <xs:element name="CDeliberate_self_harm" type="xs:string"/>
+  <xs:element name="CExploitation_risk" type="xs:string"/>
+  <xs:element name="C11__Safety_to_others__Do_you_think_you_could_be_a_danger_to_other_people_s_safety__Do_you_ever_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Is_the_person_a_current_or_potential_risk_to_other_people_s_safety___If_rated_0_or_9__go_to_"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_reduce_the_risk_that_he_o"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_to_reduce_the_risk_that_he_or_she"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_to_reduce_the_risk_that_he_or_she_mi"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CBy_whom_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Is_the_person_a_current_or_potential_risk_to_other_people_s_safety___If_rated_0_or_9__go_to_" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_reduce_the_risk_that_he_o" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_to_reduce_the_risk_that_he_or_she" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_to_reduce_the_risk_that_he_or_she_mi" type="xs:integer"/>
+  <xs:element name="C12__Alcohol__Does_drinking_cause_you_any_problems__Do_you_wish_you_could_cut_down_on_your_drink">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_drink_excessively__or_have_a_problem_controlling_his_or_her_drinking___If_ra"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_this_drinking_"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_for_this_drinking_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_for_this_drinking_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CHow_often_do_you_drink_alcohol___i_e__number_of_drinks__"/>
+        <xs:element ref="CIndicate_the_stage_of_change_client_is_at__Optional__select_one_"/>
+        <xs:element ref="CHow_has_drinking_had_an_impact_on_your_life_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_drink_excessively__or_have_a_problem_controlling_his_or_her_drinking___If_ra" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_for_this_drinking_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_for_this_drinking_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_for_this_drinking_" type="xs:integer"/>
+  <xs:element name="CHow_often_do_you_drink_alcohol___i_e__number_of_drinks__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CDrinks_monthly_"/>
+        <xs:element ref="CDrinks_weekly_"/>
+        <xs:element ref="CDrinks_2_3_times_weekly_"/>
+        <xs:element ref="CDrinks_daily_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDrinks_monthly_" type="xs:integer"/>
+  <xs:element name="CDrinks_weekly_" type="xs:integer"/>
+  <xs:element name="CDrinks_2_3_times_weekly_" type="xs:integer"/>
+  <xs:element name="CDrinks_daily_" type="xs:integer"/>
+  <xs:element name="CHow_has_drinking_had_an_impact_on_your_life_" type="xs:string"/>
+  <xs:element name="C13__Drugs__Do_you_take_drugs_that_aren_t_prescribed__Are_there_any_drugs_you_would_find_hard_to">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_problems_with_drug_misuse___If_rated_0_or_9__skip_questions_2___3_and_p"/>
+        <xs:element ref="C2__How_much_help_with_drug_misuse_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_drug_misuse_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_drug_misuse_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CWhich_of_the_following_drugs_have_you_used___check_all_that_apply_"/>
+        <xs:element ref="CIndicate_the_stage_of_change_client_is_at__Optional__select_one_"/>
+        <xs:element ref="CHow_has_the_substance_s__of_choice_had_an_impact_on_your_life_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_problems_with_drug_misuse___If_rated_0_or_9__skip_questions_2___3_and_p" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_drug_misuse_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_drug_misuse_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_drug_misuse_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="CWhich_of_the_following_drugs_have_you_used___check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CMarijuana"/>
+        <xs:element ref="CCocaine__crack"/>
+        <xs:element ref="CHallucinogens__e_g__LSD__PCP_"/>
+        <xs:element ref="CStimulants__e_g__amphetamines_"/>
+        <xs:element ref="COpiates__e_g__heroin_"/>
+        <xs:element ref="CSedatives__not_prescribed_or_not_taken_as_prescribed_e_g__Valium_"/>
+        <xs:element ref="COver_the_counter"/>
+        <xs:element ref="CSolvents"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CHas_the_substance_been_injected_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CMarijuana">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CCocaine__crack">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHallucinogens__e_g__LSD__PCP_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CStimulants__e_g__amphetamines_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COpiates__e_g__heroin_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CSedatives__not_prescribed_or_not_taken_as_prescribed_e_g__Valium_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COver_the_counter">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CSolvents">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHas_the_substance_been_injected_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CEver"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHow_has_the_substance_s__of_choice_had_an_impact_on_your_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C14__Other_addictions__Do_you_have_an_addiction__Is_your_addiction_a_problem_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_problems_with_addictions___If_rated_0_or_9__go_to_the_next_domain_"/>
+        <xs:element ref="C2__How_much_help_with_addictions_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_addictions_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_muc_help_with_addictions_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CType_of_addiction__check_all_that_apply_"/>
+        <xs:element ref="CIndicate_the_stage_of_change_client_is_at__Optional__select_one_"/>
+        <xs:element ref="CHow_has_the_addiction_had_an_impact_on_your_life_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_problems_with_addictions___If_rated_0_or_9__go_to_the_next_domain_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_addictions_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_muc_help_with_addictions_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="CType_of_addiction__check_all_that_apply_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CGambling"/>
+        <xs:element ref="CNicotine"/>
+        <xs:element ref="COther_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CGambling" type="xs:string"/>
+  <xs:element name="CNicotine" type="xs:string"/>
+  <xs:element name="CHow_has_the_addiction_had_an_impact_on_your_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C15__Company__Are_you_happy_with_your_social_life__Do_you_wish_you_had_more_contact_with_others_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_need_help_with_social_contact___If_rated_0_or_9__skip_questions_2___3_and_pr"/>
+        <xs:element ref="C2__How_much_help_with_addictions_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_in_organizing_social_contact_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_in_organizing_social_contact_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CHave_there_been_any_changes_to_your_social_patterns_recently_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_need_help_with_social_contact___If_rated_0_or_9__skip_questions_2___3_and_pr" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_in_organizing_social_contact_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_in_organizing_social_contact_" type="xs:integer"/>
+  <xs:element name="CHave_there_been_any_changes_to_your_social_patterns_recently_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CYes"/>
+        <xs:element ref="CNo"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C16__Intimate_relationships__Do_you_have_a_partner__Do_you_have_problems_in_your_partnership_mar">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_this_person_have_any_difficulty_in_finding_a_partner_or_in_maintaining_a_close_relation"/>
+        <xs:element ref="C2__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_receive_from_"/>
+        <xs:element ref="C3a__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_receive_from"/>
+        <xs:element ref="C3b__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_need_from_lo"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_this_person_have_any_difficulty_in_finding_a_partner_or_in_maintaining_a_close_relation" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_receive_from_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_receive_from" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_forming_and_maintaining_close_relationships_does_the_person_need_from_lo" type="xs:integer"/>
+  <xs:element name="C17__Sexual_expression__How_is_your_sex_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_problems_with_his_or_her_sex_life___If_rated_0_or_9__go_to_the_next_dom"/>
+        <xs:element ref="C2__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_receive_from_friends_or_r"/>
+        <xs:element ref="C3a__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_receive_from_local_servi"/>
+        <xs:element ref="C3b__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_need_from_local_services"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_problems_with_his_or_her_sex_life___If_rated_0_or_9__go_to_the_next_dom" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_receive_from_friends_or_r" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_receive_from_local_servi" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_problems_in_his_or_her_sex_life_does_the_person_need_from_local_services" type="xs:integer"/>
+  <xs:element name="C18__Child_care__Do_you_have_any_children_under_18__Do_you_have_any_difficult_in_looking_after_t">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_looking_after_his_or_her_children___If_rated_0_or_9__go_to_t"/>
+        <xs:element ref="C2__How_much_help_with_looking_after_the_children_does_the_person_receive_from_friends_or_relati"/>
+        <xs:element ref="C3a__How_much_help_with_looking_after_the_children_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_looking_after_the_children_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_looking_after_his_or_her_children___If_rated_0_or_9__go_to_t" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_looking_after_the_children_does_the_person_receive_from_friends_or_relati" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_looking_after_the_children_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_looking_after_the_children_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="C19__Other_dependents__Do_you_have_any_dependents_other_than_children_under_18__such_as_an_elder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_looking_after_other_dependents___If_rates_0_or_9__go_to_the_"/>
+        <xs:element ref="C2__How_much_help_with_looking_after_other_dependents_does_the_person_receive_from_friends_or_re"/>
+        <xs:element ref="C3a__How_much_help_with_looking_after_other_dependents_does_the_person_receive_from_local_servic"/>
+        <xs:element ref="C3b__How_much_help_with_looking_after_other_dependents_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_looking_after_other_dependents___If_rates_0_or_9__go_to_the_" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_looking_after_other_dependents_does_the_person_receive_from_friends_or_re" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_looking_after_other_dependents_does_the_person_receive_from_local_servic" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_looking_after_other_dependents_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="C20__Basic_education__Do_you_have_difficulty_in_reading__writing__speaking_or_understanding_Engl">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_lack_basic_skills_in_numeracy_and_literacy___If_rated_0_or_9__skip_questions"/>
+        <xs:element ref="C2__How_much_help_with_numeracy_and_literacy_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_numeracy_and_literacy_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_numeracy_and_literacy_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CWhat_is_your_highest_level_of_education___select_one_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_lack_basic_skills_in_numeracy_and_literacy___If_rated_0_or_9__skip_questions" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_numeracy_and_literacy_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_numeracy_and_literacy_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_numeracy_and_literacy_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="CWhat_is_your_highest_level_of_education___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNo_formal_schooling"/>
+        <xs:element ref="CSome_Elementary_Junior_High_School"/>
+        <xs:element ref="CElementary_Junior_High_School"/>
+        <xs:element ref="CSome_Secondary_High_School"/>
+        <xs:element ref="CSecondary_High_School"/>
+        <xs:element ref="CSome_College_University"/>
+        <xs:element ref="CCollege_University"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNo_formal_schooling" type="xs:string"/>
+  <xs:element name="CSome_Elementary_Junior_High_School" type="xs:string"/>
+  <xs:element name="CSome_Secondary_High_School" type="xs:string"/>
+  <xs:element name="CSome_College_University" type="xs:string"/>
+  <xs:element name="CCollege_University" type="xs:string"/>
+  <xs:element name="C21__Telephone__Do_you_know_how_to_use_a_telephone__Is_it_easy_to_find_one_that_you_can_use_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_difficulty_in_getting_access_to_or_using_a_telephone___If_rated_0_or_9_"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_make_telephone_calls_"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_to_make_telephone_calls_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_to_make_telephone_calls_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_difficulty_in_getting_access_to_or_using_a_telephone___If_rated_0_or_9_" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_to_make_telephone_calls_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_to_make_telephone_calls_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_to_make_telephone_calls_" type="xs:integer"/>
+  <xs:element name="C22__Transport__Do_you_have_access_to_transportation__Do_you_have_access_to_other_affordable_tra">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_any_problems_using_public_transport___If_rated_0_or_9__go_to_the_next_d"/>
+        <xs:element ref="C2__How_much_help_with_travelling_does_the_person_receive_from_friends_or_relatives_"/>
+        <xs:element ref="C3a__How_much_help_with_travelling_does_the_person_receive_from_local_services_"/>
+        <xs:element ref="C3b__How_much_help_with_travelling_does_the_person_need_from_local_services_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_any_problems_using_public_transport___If_rated_0_or_9__go_to_the_next_d" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_with_travelling_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_with_travelling_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_travelling_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="C23__Money__How_do_you_find_budgeting_your_money__Do_you_manage_to_pay_your_bills_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Does_the_person_have_problems_budgeting_his_or_her_money___If_rated_0_or_9__skip_questions_2"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_managing_his_or_her_money"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_in_managing_his_or_her_money_"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_in_managing_his_or_her_money_"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+        <xs:element ref="CWhat_is_your_primary_source_of_income___select_one_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Does_the_person_have_problems_budgeting_his_or_her_money___If_rated_0_or_9__skip_questions_2" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_managing_his_or_her_money" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_in_managing_his_or_her_money_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_in_managing_his_or_her_money_" type="xs:integer"/>
+  <xs:element name="CWhat_is_your_primary_source_of_income___select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CEmployment"/>
+        <xs:element ref="CEmployment_insurance"/>
+        <xs:element ref="CPension"/>
+        <xs:element ref="CODSP"/>
+        <xs:element ref="CSocial_Assistance"/>
+        <xs:element ref="CDisability_Assistance"/>
+        <xs:element ref="CFamily"/>
+        <xs:element ref="CNo_source_of_income"/>
+        <xs:element ref="COther"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CClient_declined_to_answer"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CEmployment" type="xs:string"/>
+  <xs:element name="CEmployment_insurance" type="xs:string"/>
+  <xs:element name="CPension" type="xs:string"/>
+  <xs:element name="CODSP" type="xs:string"/>
+  <xs:element name="CSocial_Assistance" type="xs:string"/>
+  <xs:element name="CDisability_Assistance" type="xs:string"/>
+  <xs:element name="CFamily" type="xs:string"/>
+  <xs:element name="CNo_source_of_income" type="xs:string"/>
+  <xs:element name="C24__Benefits__Are_you_sure_that_you_are_getting_all_the_money_that_you_are_entitled_to_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Is_the_person_definitely_receiving_all_the_benefits_that_he_or_she_is_entitled_to___if_rated"/>
+        <xs:element ref="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_obtaining_the_full_benefi"/>
+        <xs:element ref="C3a__How_much_help_does_the_person_receive_from_local_services_in_obtaining_the_full_benefit_ent"/>
+        <xs:element ref="C3b__How_much_help_does_the_person_need_from_local_services_in_obtaining_full_benefit_entitlemen"/>
+        <xs:element ref="CComments_"/>
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CBy_whom_"/>
+        <xs:element ref="CReview_date_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Is_the_person_definitely_receiving_all_the_benefits_that_he_or_she_is_entitled_to___if_rated" type="xs:integer"/>
+  <xs:element name="C2__How_much_help_does_the_person_receive_from_friends_or_relatives_in_obtaining_the_full_benefi" type="xs:integer"/>
+  <xs:element name="C3a__How_much_help_does_the_person_receive_from_local_services_in_obtaining_the_full_benefit_ent" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_does_the_person_need_from_local_services_in_obtaining_full_benefit_entitlemen" type="xs:integer"/>
+  <xs:element name="CWhat_are_your_hopes_for_the_future_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CWhat_do_you_think_you_need_in_order_to_get_there_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CHow_do_you_view_your_mental_health_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIs_spirituality_an_important_part_of_your_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CIs_culture_and_important_part_of_your_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPresenting_Issues">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CThreat_to_others_attempted_suicide"/>
+        <xs:element ref="CSpecific_symptom_of_serious_mental_illness"/>
+        <xs:element ref="CPhysical_sexual_abuse"/>
+        <xs:element ref="CEducational"/>
+        <xs:element ref="COccupational_Employment_Vocational"/>
+        <xs:element ref="CHousing"/>
+        <xs:element ref="CFinancial"/>
+        <xs:element ref="CLegal"/>
+        <xs:element ref="CProblems_with_relationships"/>
+        <xs:element ref="CProblems_with_substance_abuse_addictions"/>
+        <xs:element ref="CActivities_of_daily_living"/>
+        <xs:element ref="COther"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CThreat_to_others_attempted_suicide" type="xs:string"/>
+  <xs:element name="CSpecific_symptom_of_serious_mental_illness" type="xs:string"/>
+  <xs:element name="CPhysical_sexual_abuse" type="xs:string"/>
+  <xs:element name="CEducational" type="xs:string"/>
+  <xs:element name="COccupational_Employment_Vocational" type="xs:string"/>
+  <xs:element name="CHousing" type="xs:string"/>
+  <xs:element name="CFinancial" type="xs:string"/>
+  <xs:element name="CLegal" type="xs:string"/>
+  <xs:element name="CProblems_with_relationships" type="xs:string"/>
+  <xs:element name="CProblems_with_substance_abuse_addictions" type="xs:string"/>
+  <xs:element name="CActivities_of_daily_living" type="xs:string"/>
+  <xs:element name="CSummary_of_Actions">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="CActions_"/>
+        <xs:element ref="CDomain_"/>
+        <xs:element ref="CPriority_"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CDomain_" type="xs:string"/>
+  <xs:element name="CPriority_" type="xs:integer"/>
+  <xs:element name="CSummary_of_Referrals">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="CSpecify"/>
+        <xs:element ref="CActual_Referral_"/>
+        <xs:element ref="COptimal_Referral_"/>
+        <xs:element ref="CReasons_for_Difference_"/>
+        <xs:element ref="CReferral_Status_"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CActual_Referral_" type="xs:string"/>
+  <xs:element name="COptimal_Referral_" type="xs:string"/>
+  <xs:element name="CReasons_for_Difference_" type="xs:string"/>
+  <xs:element name="CReferral_Status_" type="xs:string"/>
+  <xs:element name="CYes" type="xs:string"/>
+  <xs:element name="CNo" type="xs:string"/>
+  <xs:element name="CNone_available" type="xs:string"/>
+  <xs:element name="CContact_Information_" type="xs:string"/>
+  <xs:element name="CLast_Seen_" type="xs:string"/>
+  <xs:element name="COther">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="CClient_declined_to_answer"/>
+        <xs:element ref="CEver"/>
+        <xs:element ref="CPast_6_months"/>
+        <xs:element ref="CUnknown"/>
+        <xs:element ref="CNo_legal_problems__includes_absolute_discharge_and_time_served__end_of_custody_"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNo_legal_problems__includes_absolute_discharge_and_time_served__end_of_custody_" type="xs:string"/>
+  <xs:element name="CUnknown" type="xs:string"/>
+  <xs:element name="CClient_declined_to_answer" type="xs:string"/>
+  <xs:element name="CGeneral_hospital" type="xs:string"/>
+  <xs:element name="CPsychiatric_hospital" type="xs:string"/>
+  <xs:element name="C" type="xs:string"/>
+  <xs:element name="CNone" type="xs:string"/>
+  <xs:element name="COther_" type="xs:string"/>
+  <xs:element name="CComments_">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="C"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C3a__How_much_help_with_getting_enough_to_eat_does_the_person_receive_from_local_services_" type="xs:integer"/>
+  <xs:element name="C3b__How_much_help_with_getting_enough_to_eat_does_the_person_need_from_local_services_" type="xs:integer"/>
+  <xs:element name="CActions_" type="xs:string"/>
+  <xs:element name="CBy_whom_" type="xs:string"/>
+  <xs:element name="CReview_date_" type="xs:string"/>
+  <xs:element name="CElementary_Junior_High_School" type="xs:string"/>
+  <xs:element name="CSecondary_High_School" type="xs:string"/>
+  <xs:element name="CSpecify" type="xs:string"/>
+  <xs:element name="CIndicate_the_stage_of_change_client_is_at__Optional__select_one_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CPrecontemplation"/>
+        <xs:element ref="CContemplation"/>
+        <xs:element ref="CAction"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="CMaintenance"/>
+          <xs:element ref="CRelapse_Prevention"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPrecontemplation" type="xs:string"/>
+  <xs:element name="CContemplation" type="xs:string"/>
+  <xs:element name="CAction" type="xs:string"/>
+  <xs:element name="CMaintenance" type="xs:string"/>
+  <xs:element name="CRelapse_Prevention" type="xs:string"/>
+  <xs:element name="CPast_6_months" type="xs:string"/>
+  <xs:element name="CEver" type="xs:string"/>
+  <xs:element name="C2__How_much_help_with_addictions_does_the_person_receive_from_friends_or_relatives_" type="xs:integer"/>
+</xs:schema>

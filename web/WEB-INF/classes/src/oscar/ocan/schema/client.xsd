@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="OCAN_Client_Self_Assessment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CInstructions"/>
+        <xs:element ref="CQuestions"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CInstructions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CStart_Date__"/>
+        <xs:element ref="CEnd_Date__"/>
+        <xs:element ref="CWhen_you_have_completed_this_assessment__your_worker_will_have_a_conversation_with_you_about_yo"/>
+        <xs:element ref="CPlease_please_a_check_mark_in_each_row__24_in_total__using_the_following_key__"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CStart_Date__" type="xs:string"/>
+  <xs:element name="CEnd_Date__" type="xs:string"/>
+  <xs:element name="CWhen_you_have_completed_this_assessment__your_worker_will_have_a_conversation_with_you_about_yo">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CPlease_please_a_check_mark_in_each_row__24_in_total__using_the_following_key__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNo_Need___This_area_is_not_a_serious_problem_for_me_at_all"/>
+        <xs:element ref="CMet_Need___This_area_is_not_a_serious_problem_for_me_because_of_the_help_I_am_given"/>
+        <xs:element ref="CUnmet_Need___This_area_remains_a_serious_problem_for_me_despite_any_help_that_I_am_given"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNo_Need___This_area_is_not_a_serious_problem_for_me_at_all">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CMet_Need___This_area_is_not_a_serious_problem_for_me_because_of_the_help_I_am_given">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CUnmet_Need___This_area_remains_a_serious_problem_for_me_despite_any_help_that_I_am_given">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="CQuestions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="C1__Accommodation__What_kind_of_place_do_you_live_in_"/>
+        <xs:element ref="C2__Food__Do_you_get_enough_to_eat_"/>
+        <xs:element ref="C3__Looking_after_the_home__Are_you_able_to_look_after_your_home__"/>
+        <xs:element ref="C4__Self_Care__Do_you_have_problems_keeping_clean_and_tidy__"/>
+        <xs:element ref="C5__Daytime_activities__How_do_you_spend_your_day__"/>
+        <xs:element ref="C6__Physical_Health__How_well_do_you_feel_physically__"/>
+        <xs:element ref="C7__Psychotic_symptoms__Do_you_ever_hear_voices_or_have_problems_with_your_thoughts__"/>
+        <xs:element ref="C8__Information_on_condition_and_treatment__Have_you_been_given_clear_information_about_your_med"/>
+        <xs:element ref="C9__Psychological_distress__Have_you_recently_felt_very_sad_or_low__"/>
+        <xs:element ref="C10__Safety_to_Self__Do_you_ever_have_thoughts_of_harming_yourself__"/>
+        <xs:element ref="C11__Safety_to_others__Do_you_think_you_could_be_a_danger_to_other_people_s_safety__"/>
+        <xs:element ref="C12__Alcohol__Does_drinking_cause_you_any_problems__"/>
+        <xs:element ref="C13__Drugs__Do_you_take_any_drugs_that_aren_t_prescribed__"/>
+        <xs:element ref="COther_Addictions__Do_you_have_any_other_addictions__such_as_gambling__"/>
+        <xs:element ref="C15__Company__Are_you_happy_with_your_social_life__"/>
+        <xs:element ref="C16__Intimate_relationships__Do_you_have_a_partner_"/>
+        <xs:element ref="C17__Sexual_expression__How_is_you_sex_life_"/>
+        <xs:element ref="C18__Child_care__Do_you_have_any_children_under_18__"/>
+        <xs:element ref="C19__Other_dependents__Do_you_have_any_dependents_other_than_children_under_18__such_as_an_elder"/>
+        <xs:element ref="C20__Basic_education__Any_difficulty_in_reading__writing_or_understanding_English__"/>
+        <xs:element ref="C21__Telephone__Do_you_know_how_to_use_a_telephone_"/>
+        <xs:element ref="C22__Transport__How_do_you_find_using_the_bus__streetcar_or_train__"/>
+        <xs:element ref="C23__Money__How_do_you_find_budgeting_your_money__"/>
+        <xs:element ref="C24__Benefits__Are_you_getting_all_the_money_you_are_entitled_to__"/>
+        <xs:element ref="CPlease_write_a_few_sentences_to_answer_the_following_questions_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C1__Accommodation__What_kind_of_place_do_you_live_in_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C2__Food__Do_you_get_enough_to_eat_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C3__Looking_after_the_home__Are_you_able_to_look_after_your_home__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C4__Self_Care__Do_you_have_problems_keeping_clean_and_tidy__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C5__Daytime_activities__How_do_you_spend_your_day__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C6__Physical_Health__How_well_do_you_feel_physically__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C7__Psychotic_symptoms__Do_you_ever_hear_voices_or_have_problems_with_your_thoughts__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C8__Information_on_condition_and_treatment__Have_you_been_given_clear_information_about_your_med">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C9__Psychological_distress__Have_you_recently_felt_very_sad_or_low__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C10__Safety_to_Self__Do_you_ever_have_thoughts_of_harming_yourself__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C11__Safety_to_others__Do_you_think_you_could_be_a_danger_to_other_people_s_safety__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C12__Alcohol__Does_drinking_cause_you_any_problems__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C13__Drugs__Do_you_take_any_drugs_that_aren_t_prescribed__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="COther_Addictions__Do_you_have_any_other_addictions__such_as_gambling__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C15__Company__Are_you_happy_with_your_social_life__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C16__Intimate_relationships__Do_you_have_a_partner_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C17__Sexual_expression__How_is_you_sex_life_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C18__Child_care__Do_you_have_any_children_under_18__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C19__Other_dependents__Do_you_have_any_dependents_other_than_children_under_18__such_as_an_elder">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C20__Basic_education__Any_difficulty_in_reading__writing_or_understanding_English__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C21__Telephone__Do_you_know_how_to_use_a_telephone_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C22__Transport__How_do_you_find_using_the_bus__streetcar_or_train__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C23__Money__How_do_you_find_budgeting_your_money__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="C24__Benefits__Are_you_getting_all_the_money_you_are_entitled_to__">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AnswerGroup" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CPlease_write_a_few_sentences_to_answer_the_following_questions_">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CWhat_are_your_hopes_for_the_future_"/>
+        <xs:element ref="CWhat_do_you_think_you_need_in_order_to_get_there_"/>
+        <xs:element ref="CHow_do_you_view_your_mental_health_"/>
+        <xs:element ref="CIs_spirituality_an_important_part_of_your_life_"/>
+        <xs:element ref="CIs_culture__heritage__an_important_part_of_your_life_"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CWhat_are_your_hopes_for_the_future_" type="xs:string"/>
+  <xs:element name="CWhat_do_you_think_you_need_in_order_to_get_there_" type="xs:string"/>
+  <xs:element name="CHow_do_you_view_your_mental_health_" type="xs:string"/>
+  <xs:element name="CIs_spirituality_an_important_part_of_your_life_" type="xs:string"/>
+  <xs:element name="CIs_culture__heritage__an_important_part_of_your_life_" type="xs:string"/>
+  <xs:element name="AnswerGroup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CNo_Need" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="CMet_Need" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="CUnmet_Need" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="CI_don_t_want_to_answer" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="CComments__" minOccurs="1" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CNo_Need" type="xs:string"/>
+  <xs:element name="CMet_Need" type="xs:string"/>
+  <xs:element name="CUnmet_Need" type="xs:string"/>
+  <xs:element name="CI_don_t_want_to_answer" type="xs:string"/>
+  <xs:element name="CComments__" type="xs:string"/>
+</xs:schema>

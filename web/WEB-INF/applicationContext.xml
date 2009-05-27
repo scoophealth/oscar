@@ -107,6 +107,12 @@
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
 
+	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
+    <bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
+		<property name="serviceOrganizationNumber" value="1001" />
+		<property name="submissionFileLocation" value="C:/TEMP/ocan_test" />
+	</bean>
+
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
 

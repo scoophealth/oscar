@@ -21,7 +21,9 @@ package org.oscarehr.PMmodule.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -817,6 +819,14 @@ public class GenericIntakeManager {
 	
 	public List<IntakeNode> getIntakeNodesByType(Integer formType) {
 		return genericIntakeDAO.getIntakeNodesByType(formType);
+	}
+
+
+	public List<Map<String, Intake>> getIntakeListforOcan() {
+		Map<String, Intake> map = new HashMap<String, Intake>();
+		List<Map<String, Intake>> list = new ArrayList<Map<String,Intake>>();
+		list.add(map);
+		return list;
 	}
 
 	/*

@@ -24,7 +24,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
+abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 
 	protected static final String TAB = "\t";
 	protected static final String SPACE = " ";
@@ -55,7 +55,6 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
 	 */
 	public StringBuilder getPreBuilder() {
-		StringBuilder builder = new StringBuilder();
 		return new StringBuilder();
 	}
 	
@@ -98,6 +97,43 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 	
 	protected String getLabel() {
 		return node.getLabelStr();
+	}
+	
+	protected String getLabelOcanXML() {
+		String label = 'C' + node.getLabelStr().trim().
+			replace(' ', '_').
+			replace('.', '_').
+			replace(',', '_').
+			replace(':', '_').
+			replace(';', '_').
+			replace('\'', '_').
+			replace('"', '_').
+			replace('(', '_').
+			replace(')', '_').
+			replace('<', '_').
+			replace('>', '_').
+			replace('`', '_').
+			replace('~', '_').
+			replace('@', '_').
+			replace('#', '_').
+			replace('$', '_').
+			replace('%', '_').
+			replace('^', '_').
+			replace('&', '_').
+			replace('*', '_').
+			replace('-', '_').
+			replace('+', '_').
+			replace('=', '_').
+			replace('[', '_').
+			replace(']', '_').
+			replace('{', '_').
+			replace('}', '_').
+			replace('/', '_').
+			replace('\\', '_').
+			replace('|', '_').
+			replace('!', '_').
+			replace('?', '_');
+		return label.substring(0, Math.min(label.length(), 96));
 	}
 	
 	protected boolean getMandatory() {
