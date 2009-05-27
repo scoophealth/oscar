@@ -194,6 +194,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 		<td width="20%">Allow Batch Discharges:</td>
 		<td><html:checkbox property="program.allowBatchDischarge" /></td>
 	</tr>
+	<!-- 
 	<tr class="b">
 		<td width="20%">Link to Bed Program:</td>
 		<td><html-el:select property="program.bedProgramLinkId">
@@ -205,6 +206,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 			</c:forEach>
 		</html-el:select></td>
 	</tr>
+	-->
 	<tr class="b">
 		<td width="20%">Man or Woman:</td>
 		<td><html:select property="program.manOrWoman">
