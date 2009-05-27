@@ -14,6 +14,34 @@
 -->
 <%@ include file="/taglibs.jsp"%>
 
+<script>
+
+	function validateAndSubmit() {
+		var roomIdVal = document.clientManagerForm.elements['roomId'].value;
+		if(roomIdVal == '' || roomIdVal == '0') {
+			alert('Please choose a room');
+			return false;
+		}
+
+		var bedIdVal = document.clientManagerForm.elements['bedDemographic.bedId'].value;
+		if(bedIdVal == '' || bedIdVal == '0') {
+			alert('Please choose a bed');
+			return false;
+		}
+
+		var untilVal = document.clientManagerForm.elements['strReservationEnd_field'].value;
+		if(untilVal == '') {
+			alert('Please choose an end date');
+			return false;
+		}
+		
+		                            	
+		clientManagerForm.method.value='saveBedReservation';
+		return true;
+	}
+
+</script>
+
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -165,7 +193,7 @@
 <table>
 	<tr>
 		<td><html:submit
-			onclick="clientManagerForm.method.value='saveBedReservation';">Save</html:submit>
+			onclick="return validateAndSubmit();">Save</html:submit>
 		</td>
 		<td><html:reset>Reset</html:reset></td>
 	</tr>
