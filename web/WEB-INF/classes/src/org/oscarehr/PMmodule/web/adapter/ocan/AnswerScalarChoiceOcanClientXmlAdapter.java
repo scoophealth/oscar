@@ -31,7 +31,7 @@ public class AnswerScalarChoiceOcanClientXmlAdapter extends AbstractAnswerScalar
 		StringBuilder preBuilder = super.getPreBuilder();
 		
 		if (isAnswerBoolean()) {
-			String labelXML = getLabelOcanXML();
+			String labelXML = getLabelOcanClientXML();
 			if ("CNo_Need".equals(labelXML)) {
 				preBuilder.
 				append("<AnswerGroup>");
@@ -46,7 +46,7 @@ public class AnswerScalarChoiceOcanClientXmlAdapter extends AbstractAnswerScalar
 			append(">").
 			append(EOL);
 		} else {
-			String labelXML = getLabelOcanXML();
+			String labelXML = getLabelOcanClientXML();
 			preBuilder.
 			append("<").
 			append(labelXML).

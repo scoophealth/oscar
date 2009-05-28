@@ -21,47 +21,24 @@ package org.oscarehr.PMmodule.web.adapter.ocan;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.web.adapter.AbstractHtmlAdapter;
 
-public class IntakeOcanClientXmlAdapter extends AbstractHtmlAdapter {
-
-	public IntakeOcanClientXmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
-	}
+public class QuestionOcanClientXmlAdapter extends AbstractHtmlAdapter {
 	
 	@Override
-	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		String labelOcanXML = getLabelOcanClientXML();
-		preBuilder.
-		append("<").
-		append((labelOcanXML.indexOf("OCAN_Client_Self_Assessment") > -1)?"OCAN_Client_Self_Assessment":labelOcanXML).
-		append(">").
-		append(EOL);
-
-		/*		
-		if (hasPages()) {
-			preBuilder.append("<div dojoType=\"TabContainer\" class=\"intakePageContainer\" >").append(EOL);
-			beginTag();
-		}
-*/		
-		return preBuilder;
-	}
-
 	public StringBuilder getPostBuilder() {
 		StringBuilder postBuilder = super.getPostBuilder();
-
-		String labelOcanXML = getLabelOcanClientXML();
-		postBuilder.
-		append("</").
-		append((labelOcanXML.indexOf("OCAN_Client_Self_Assessment") > -1)?"OCAN_Client_Self_Assessment":labelOcanXML).
-		append(">").
-		append(EOL);
-/*		
-		if (hasPages()) {
-			endTag();
-			indent(postBuilder).append("</div> <!-- End Page Container -->").append(EOL);
-		}
-*/
-		return postBuilder;
+		return postBuilder.append("</").append(getLabelOcanClientXML()).append(">").append(EOL);
 	}
+
+	public QuestionOcanClientXmlAdapter(int indent, IntakeNode node) {
+	    super(indent, node);
+    }
+
+	/**
+	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
+	 */
+	public StringBuilder getPreBuilder() {
+		StringBuilder preBuilder = super.getPreBuilder();
+		return preBuilder.append("<").append(getLabelOcanClientXML()).append(">").append(EOL);
+    }
+	
 }

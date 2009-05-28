@@ -12,11 +12,11 @@ public class OcanXmlAdapterFactory {
 		if (node.isIntake()) {
 			xmlAdapter = new IntakeOcanClientXmlAdapter(indent, node);
 		} else if (node.isPage()) {
-			xmlAdapter = new PageOcanXmlAdapter(indent, node);
+			xmlAdapter = new PageOcanClientXmlAdapter(indent, node);
 		} else if (node.isSection()) {
-			xmlAdapter = new SectionOcanXmlAdapter(indent, node);
+			xmlAdapter = new SectionOcanClientXmlAdapter(indent, node);
 		} else if (node.isQuestion()) {
-			xmlAdapter = new QuestionOcanXmlAdapter(indent, node);
+			xmlAdapter = new QuestionOcanClientXmlAdapter(indent, node);
 		} else if (node.isAnswerCompound()) {
 			xmlAdapter = new AnswerCompoundOcanXmlAdapter(indent, node);
 		} else if (node.isAnswerChoice()) {
@@ -38,11 +38,11 @@ public class OcanXmlAdapterFactory {
 		if (node.isIntake()) {
 			xmlAdapter = new IntakeOcanStaffXmlAdapter(indent, node);
 		} else if (node.isPage()) {
-			xmlAdapter = new PageOcanXmlAdapter(indent, node);
+			xmlAdapter = new PageOcanStaffXmlAdapter(indent, node);
 		} else if (node.isSection()) {
-			xmlAdapter = new SectionOcanXmlAdapter(indent, node);
+			xmlAdapter = new SectionOcanStaffXmlAdapter(indent, node);
 		} else if (node.isQuestion()) {
-			xmlAdapter = new QuestionOcanXmlAdapter(indent, node);
+			xmlAdapter = new QuestionOcanStaffXmlAdapter(indent, node);
 		} else if (node.isAnswerCompound()) {
 			xmlAdapter = new AnswerCompoundOcanXmlAdapter(indent, node);
 		} else if (node.isAnswerChoice()) {

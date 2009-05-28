@@ -21,7 +21,7 @@ package org.oscarehr.PMmodule.web.adapter.ocan;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.web.adapter.AbstractHtmlAdapter;
 
-public class QuestionOcanXmlAdapter extends AbstractHtmlAdapter {
+public class QuestionOcanStaffXmlAdapter extends AbstractHtmlAdapter {
 	
 	@Override
 	public StringBuilder getPostBuilder() {
@@ -29,7 +29,7 @@ public class QuestionOcanXmlAdapter extends AbstractHtmlAdapter {
 		return postBuilder.append("</").append(getLabelOcanXML()).append(">").append(EOL);
 	}
 
-	public QuestionOcanXmlAdapter(int indent, IntakeNode node) {
+	public QuestionOcanStaffXmlAdapter(int indent, IntakeNode node) {
 	    super(indent, node);
     }
 

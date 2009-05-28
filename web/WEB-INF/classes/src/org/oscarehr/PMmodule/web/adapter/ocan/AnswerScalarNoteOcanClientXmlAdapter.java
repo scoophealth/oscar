@@ -31,7 +31,7 @@ public class AnswerScalarNoteOcanClientXmlAdapter extends AbstractAnswerScalarHt
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		String labelXML = getLabelOcanXML();
+		String labelXML = getLabelOcanClientXML();
 		preBuilder.
 		append("<").
 		append(labelXML).

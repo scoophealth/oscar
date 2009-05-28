@@ -99,6 +99,43 @@ abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getLabelStr();
 	}
 	
+	protected String getLabelOcanClientXML() {
+		String label = 'C' + node.getLabelStr().
+			replace(' ', '_').
+			replace('.', '_').
+			replace(',', '_').
+			replace(':', '_').
+			replace(';', '_').
+			replace('\'', '_').
+			replace('"', '_').
+			replace('(', '_').
+			replace(')', '_').
+			replace('<', '_').
+			replace('>', '_').
+			replace('`', '_').
+			replace('~', '_').
+			replace('@', '_').
+			replace('#', '_').
+			replace('$', '_').
+			replace('%', '_').
+			replace('^', '_').
+			replace('&', '_').
+			replace('*', '_').
+			replace('-', '_').
+			replace('+', '_').
+			replace('=', '_').
+			replace('[', '_').
+			replace(']', '_').
+			replace('{', '_').
+			replace('}', '_').
+			replace('/', '_').
+			replace('\\', '_').
+			replace('|', '_').
+			replace('!', '_').
+			replace('?', '_');
+		return label.substring(0, Math.min(label.length(), 96));
+	}
+	
 	protected String getLabelOcanXML() {
 		String label = 'C' + node.getLabelStr().trim().
 			replace(' ', '_').

@@ -57,6 +57,14 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 	private static final Log LOG = LogFactory.getLog(GenericIntakeDAO.class);
 
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getOcanIntakesAfterDate(Calendar after) {
+		return getHibernateTemplate().find("from Intake i, IntakeNode n, IntakeNodeLabel l where " +
+			"i.createdOn > ? and i.node.id = n.id and n.label.id = l.id and " +
+			"(l.label like '%OCAN Staff Assessment%' or l.label like '%OCAN Client Self Assessment%') order by i.createdOn desc",
+			new Object[] { after });
+	}
+
 	/**
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntake(IntakeNode, java.lang.Integer, Integer)
 	 */

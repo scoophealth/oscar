@@ -21,47 +21,58 @@ package org.oscarehr.PMmodule.web.adapter.ocan;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.web.adapter.AbstractHtmlAdapter;
 
-public class IntakeOcanClientXmlAdapter extends AbstractHtmlAdapter {
+public class PageOcanStaffXmlAdapter extends AbstractHtmlAdapter {
 
-	public IntakeOcanClientXmlAdapter(int indent, IntakeNode node) {
+	public PageOcanStaffXmlAdapter(int indent, IntakeNode node) {
 		super(indent, node);
 	}
-	
-	@Override
+
+	/**
+	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
+	 */
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		String labelOcanXML = getLabelOcanClientXML();
 		preBuilder.
 		append("<").
-		append((labelOcanXML.indexOf("OCAN_Client_Self_Assessment") > -1)?"OCAN_Client_Self_Assessment":labelOcanXML).
+		append(getLabelOcanXML()).
 		append(">").
 		append(EOL);
 
-		/*		
-		if (hasPages()) {
-			preBuilder.append("<div dojoType=\"TabContainer\" class=\"intakePageContainer\" >").append(EOL);
+/*
+		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" class=\"intakePage\" >").append(EOL);
+		beginTag();
+		
+		if (!hasSections()) {
+			indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);
 			beginTag();
 		}
-*/		
+*/
 		return preBuilder;
 	}
 
+	/**
+	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
+	 */
 	public StringBuilder getPostBuilder() {
 		StringBuilder postBuilder = super.getPostBuilder();
 
-		String labelOcanXML = getLabelOcanClientXML();
 		postBuilder.
 		append("</").
-		append((labelOcanXML.indexOf("OCAN_Client_Self_Assessment") > -1)?"OCAN_Client_Self_Assessment":labelOcanXML).
+		append(getLabelOcanXML()).
 		append(">").
 		append(EOL);
-/*		
-		if (hasPages()) {
+
+/*
+		if (!hasSections()) {
 			endTag();
-			indent(postBuilder).append("</div> <!-- End Page Container -->").append(EOL);
+			indent(postBuilder).append("</table> <!-- End Question Table -->").append(EOL);
 		}
+
+		endTag();
+		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);
 */
 		return postBuilder;
 	}
+
 }

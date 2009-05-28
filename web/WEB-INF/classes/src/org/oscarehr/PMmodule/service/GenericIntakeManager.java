@@ -21,7 +21,6 @@ package org.oscarehr.PMmodule.service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -48,6 +47,8 @@ import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
+import org.oscarehr.PMmodule.web.adapter.ocan.OcanXmlAdapterFactory;
 import org.oscarehr.common.model.ReportStatistic;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,7 @@ public class GenericIntakeManager {
 	private GenericIntakeDAO genericIntakeDAO;
 	private ProgramDao programDao;
 	private AdmissionDao admissionDao;
+	private OcanXmlAdapterFactory adapterFactory = new OcanXmlAdapterFactory();
 
 	public void setGenericIntakeNodeDAO(
 			GenericIntakeNodeDAO genericIntakeNodeDAO) {
@@ -821,12 +823,82 @@ public class GenericIntakeManager {
 		return genericIntakeDAO.getIntakeNodesByType(formType);
 	}
 
+	public List<Map<String, String>> getIntakeListforOcan(Calendar after) {
+		Map<Integer, Map<String, Intake>> pairs = new HashMap<Integer, Map<String, Intake>>();
 
-	public List<Map<String, Intake>> getIntakeListforOcan() {
-		Map<String, Intake> map = new HashMap<String, Intake>();
-		List<Map<String, Intake>> list = new ArrayList<Map<String,Intake>>();
-		list.add(map);
+		List<Object[]> triads = genericIntakeDAO.getOcanIntakesAfterDate(after);
+		for (Object[] triad : triads) {
+			Intake i = (Intake) triad[0];
+			IntakeNode n = (IntakeNode) triad[1];
+			IntakeNodeLabel l = (IntakeNodeLabel) triad[2];
+			String key = l.getLabel().indexOf("Client") > -1 ? "client" : "staff";
+			i.setNode(n);
+			if (!pairs.containsKey(i.getClientId())) {
+				// new client
+				Map<String, Intake> pair = new HashMap<String, Intake>();
+				pair.put(key, i);
+				pairs.put(i.getClientId(), pair);
+			} else if (!pairs.get(i.getClientId()).containsKey(key)) {
+				// new key
+				Map<String, Intake> pair = pairs.get(i.getClientId());
+				pair.put(key, i);
+			}
+		}
+
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		for (Integer clientId : pairs.keySet()) {
+			Map<String, Intake> pair = pairs.get(clientId);
+			if (pair.size() == 2) {
+				// need both client and staff
+				Map<String, String> entry = new HashMap<String, String>();
+				entry.put("clientId", clientId.toString());
+				entry.put("client", toXml(pair, "client"));
+				entry.put("staff", toXml(pair, "staff"));
+				list.add(entry);
+			}
+		}
+
 		return list;
+	}
+
+	private String toXml(Map<String, Intake> intakeMap, String type) {
+		StringBuilder xml = new StringBuilder();
+		Intake intake = intakeMap.get(type);
+		if ("client".equals(type)) {
+			toClientXml(xml, intake, intake.getNode());
+		} else {
+			toStaffXml(xml, intake, intake.getNode());
+		}
+		return xml.toString();
+	}
+
+	private void toClientXml(StringBuilder builder, Intake intake, IntakeNode node) {
+		if (node == null)
+			return;
+		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getOcanClientXmlAdapter(0, node, intake);
+
+		builder.append(htmlAdapter.getPreBuilder());
+
+		for (IntakeNode child : node.getChildren()) {
+			toClientXml(builder, intake, child);
+		}
+
+		builder.append(htmlAdapter.getPostBuilder());
+	}
+
+	private void toStaffXml(StringBuilder builder, Intake intake, IntakeNode node) {
+		if (node == null)
+			return;
+		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getOcanStaffXmlAdapter(0, node, intake);
+
+		builder.append(htmlAdapter.getPreBuilder());
+
+		for (IntakeNode child : node.getChildren()) {
+			toStaffXml(builder, intake, child);
+		}
+
+		builder.append(htmlAdapter.getPostBuilder());
 	}
 
 	/*

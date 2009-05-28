@@ -21,9 +21,9 @@ package org.oscarehr.PMmodule.web.adapter.ocan;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.web.adapter.AbstractHtmlAdapter;
 
-public class SectionOcanXmlAdapter extends AbstractHtmlAdapter {
+public class SectionOcanClientXmlAdapter extends AbstractHtmlAdapter {
 	
-	public SectionOcanXmlAdapter(int indent, IntakeNode node) {
+	public SectionOcanClientXmlAdapter(int indent, IntakeNode node) {
 		super(indent, node);
 	}
 
@@ -33,7 +33,7 @@ public class SectionOcanXmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		String labelXML = getLabelOcanXML();
+		String labelXML = getLabelOcanClientXML();
 		if ("C".equals(labelXML)) {
 			labelXML = "CHeader";
 		}
@@ -64,7 +64,7 @@ public class SectionOcanXmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPostBuilder() {
 		StringBuilder postBuilder = super.getPostBuilder();
 
-		String labelXML = getLabelOcanXML();
+		String labelXML = getLabelOcanClientXML();
 		if ("C".equals(labelXML)) {
 			labelXML = "CHeader";
 		}

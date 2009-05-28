@@ -123,12 +123,12 @@ public class OcanDataProcessor {
 	}
 
 	public OCANSubmissionRecord createOcanRecord(OcanProcess process, InputStream clientIs,
-			InputStream staffIs, Integer orgClientId) throws ParseException, NumberFormatException, JAXBException {
+			InputStream staffIs, String orgClientId) throws ParseException, NumberFormatException, JAXBException {
 
 		OCANClientSelfAssessment client = unmarshal(OCANClientSelfAssessment.class, clientIs);
 		OCANStaffAssessment staff = unmarshal(OCANStaffAssessment.class, staffIs);
 
-		return createSubmissionRecord(process, client, staff, orgClientId.toString());
+		return createSubmissionRecord(process, client, staff, orgClientId);
 	}
 
 	private OCANSubmissionRecord createSubmissionRecord(OcanProcess process, OCANClientSelfAssessment client,
@@ -1990,7 +1990,7 @@ public class OcanDataProcessor {
 		} else if ("T".equals(_nrc.getCMetNeed())) {
 			b_nrc = 2;
 		} else if ("T".equals(_nrc.getCUnmetNeed())) {
-			b_nrc = 3;
+			b_nrc = 9;
 		} else {
 			b_nrc = -1;
 		}

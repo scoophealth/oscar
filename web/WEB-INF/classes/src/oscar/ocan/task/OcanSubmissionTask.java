@@ -25,6 +25,9 @@ package oscar.ocan.task;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimerTask;
@@ -33,11 +36,7 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
-import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.ocan.OcanXmlAdapterFactory;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -52,7 +51,6 @@ public class OcanSubmissionTask extends TimerTask {
 
 	private GenericIntakeManager genericIntakeManager;
 	private OcanDataProcessor ocanDataProcessor;
-	private OcanXmlAdapterFactory adapterFactory = new OcanXmlAdapterFactory();
 
 	private boolean useTestData;
 	private String testDataPath;
@@ -71,89 +69,63 @@ public class OcanSubmissionTask extends TimerTask {
 		try {
 			log.info("start ocan submission task");
 
-			List<Map<String, Intake>> intakes = genericIntakeManager.getIntakeListforOcan();
-
-			if (intakes == null || intakes.size() == 0) {
-				log.warn("getIntakeListforOcan() returned null or empty list");
-				return;
-			}
-
 			OcanProcess process = ocanDataProcessor.createOcanProcess();
 
-			for (Map<String, Intake> intakeMap : intakes) {
-				MiscUtils.checkShutdownSignaled();
+			if (useTestData) {
 
-				try {
-					if (useTestData) {
+				ocanDataProcessor.createOcanRecord(process,
+						new FileInputStream(testDataPath + "/client.xml"),
+						new FileInputStream(testDataPath + "/staff.xml"),
+						"1001");
+			} else {
+
+				Calendar after  = new GregorianCalendar();
+				after.roll(Calendar.MONTH, -1);
+
+				List<Map<String, String>> intakes = genericIntakeManager.getIntakeListforOcan(after);
+
+				if (intakes == null || intakes.size() == 0) {
+					log.warn("getIntakeListforOcan() returned null or empty list - no data for submission.");
+					return;
+				}
+
+				for (Map<String, String> intakeMap : intakes) {
+					MiscUtils.checkShutdownSignaled();
+
+//					log.info("client:\n" + intakeMap.get("client"));
+//					log.info("staff:\n" + intakeMap.get("staff"));
+
+					try {
 						ocanDataProcessor.createOcanRecord(process,
-								new FileInputStream(testDataPath + "/client.xml"),
-								new FileInputStream(testDataPath + "/staff.xml"),
-								Integer.MAX_VALUE);
-					} else {
-						ocanDataProcessor.createOcanRecord(process,
-								new ByteArrayInputStream(toXml(intakeMap, "client").getBytes()),
-								new ByteArrayInputStream(toXml(intakeMap, "staff").getBytes()),
-								intakeMap.get("client").getClientId());
+								new ByteArrayInputStream(intakeMap.get("client").getBytes()),
+								new ByteArrayInputStream(intakeMap.get("staff").getBytes()),
+								intakeMap.get("clientId"));
+
+					} catch (Exception e) {
+						log.error("createOcanRecord() thrown an exception, skipping the record.", e);
+						continue;
 					}
-
-				} catch (Exception e) {
-					log.error("createOcanRecord() thrown an exception, skipping the record.", e);
-					continue;
 				}
 			}
 
 			ocanDataProcessor.finishOcanProcess(process);
 
 			log.info("finish ocan submission task");
+
 		} catch (ShutdownException e) {
 			log.debug("OcanSubmissionTask noticed shutdown signaled.");
 		} catch (FileNotFoundException e) {
 			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} catch (JAXBException e) {
 			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+		} catch (NumberFormatException e) {
+			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
+		} catch (ParseException e) {
+			log.error("finishOcanProcess() thrown an exception, terminating the submission.", e);
 		} finally {
 			LoggedInInfo.loggedInInfo.remove();
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
-	}
-
-	private String toXml(Map<String, Intake> intakeMap, String type) {
-		StringBuilder xml = new StringBuilder();
-		Intake intake = intakeMap.get(type);
-		if ("client".equals(type)) {
-			toClientXml(xml, intake, intake.getNode());
-		} else {
-			toStaffXml(xml, intake, intake.getNode());
-		}
-		return xml.toString();
-	}
-
-	private void toClientXml(StringBuilder builder, Intake intake, IntakeNode node) {
-		if (node == null)
-			return;
-		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getOcanClientXmlAdapter(0, node, intake);
-
-		builder.append(htmlAdapter.getPreBuilder());
-
-		for (IntakeNode child : node.getChildren()) {
-			toClientXml(builder, intake, child);
-		}
-
-		builder.append(htmlAdapter.getPostBuilder());
-	}
-
-	private void toStaffXml(StringBuilder builder, Intake intake, IntakeNode node) {
-		if (node == null)
-			return;
-		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getOcanStaffXmlAdapter(0, node, intake);
-
-		builder.append(htmlAdapter.getPreBuilder());
-
-		for (IntakeNode child : node.getChildren()) {
-			toStaffXml(builder, intake, child);
-		}
-
-		builder.append(htmlAdapter.getPostBuilder());
 	}
 
 	public void setUseTestData(boolean useTestData) {

@@ -21,9 +21,9 @@ package org.oscarehr.PMmodule.web.adapter.ocan;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.web.adapter.AbstractHtmlAdapter;
 
-public class PageOcanXmlAdapter extends AbstractHtmlAdapter {
+public class PageOcanClientXmlAdapter extends AbstractHtmlAdapter {
 
-	public PageOcanXmlAdapter(int indent, IntakeNode node) {
+	public PageOcanClientXmlAdapter(int indent, IntakeNode node) {
 		super(indent, node);
 	}
 
@@ -35,7 +35,7 @@ public class PageOcanXmlAdapter extends AbstractHtmlAdapter {
 
 		preBuilder.
 		append("<").
-		append(getLabelOcanXML()).
+		append(getLabelOcanClientXML()).
 		append(">").
 		append(EOL);
 
@@ -59,7 +59,7 @@ public class PageOcanXmlAdapter extends AbstractHtmlAdapter {
 
 		postBuilder.
 		append("</").
-		append(getLabelOcanXML()).
+		append(getLabelOcanClientXML()).
 		append(">").
 		append(EOL);
 
