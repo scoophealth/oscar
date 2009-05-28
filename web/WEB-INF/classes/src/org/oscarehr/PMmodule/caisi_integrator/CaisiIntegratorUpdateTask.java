@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map.Entry;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.WebServiceException;
@@ -50,9 +51,10 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.ConsentParameters;
+import org.oscarehr.caisi_integrator.ws.ConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
 import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
@@ -69,19 +71,18 @@ import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
-import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.PreventionDao;
-import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -109,10 +110,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
-	private ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
-
-	// private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
 
 	static {
 		// ensure cxf uses log4j
@@ -357,35 +355,42 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushDemographicConsent(Facility facility, DemographicWs demographicService, HnrWs hnrService, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
 
-//		// get a list of all remove facilities
-//		// for each remote facility get the latest consent
-//		// then send the latest consent to the integrator
-//		List<CachedFacility> remoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
-//		for (CachedFacility remoteFacility : remoteFacilities) {
-//			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographic(facility.getId(), demographicId);
-//			if (consent != null && consent.getCreatedDate().after(facility.getIntegratorLastPushTime())) {
-//				ConsentParameters consentParameters = new ConsentParameters();
-//
-//				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
-//				consentParameters.setIntegratorFacilityId(consent.getIntegratorFacilityId());
-//				consentParameters.setCaisiDemographicId(demographicId);
-//				consentParameters.setConsentToShareData(consent.isConsentToShareData());
-//				consentParameters.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-//				consentParameters.setCreatedDate(consent.getCreatedDate());
-//
-//				demographicService.setCachedDemographicConsent(consentParameters);
-//
-//				// deal with hnr consent
-//				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
-//				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
-//				if (clientLinks.size() > 0) {
-//					// was asked to remove hnr consent and just apply the general consent status to the hnr
-//					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToShareData(), consent.getCreatedDate());
-//				}
-//			}
-//		}
+		// find the latest relvent consent that needs to be pushed.
+		List<IntegratorConsent> tempConsents=integratorConsentDao.findByFacilityAndDemographic(facility.getId(), demographicId);
+
+		for (IntegratorConsent tempConsent : tempConsents)
+		{
+			if (tempConsent.getCreatedDate().before(facility.getIntegratorLastPushTime())) break;
+
+			if (tempConsent.getClientConsentStatus()==ConsentStatus.GIVEN || tempConsent.getClientConsentStatus()==ConsentStatus.REVOKED)
+			{
+				ConsentTransfer consentTransfer=makeConsentTransfer(tempConsent);				
+				demographicService.setCachedDemographicConsent(consentTransfer);
+				logger.debug("pushDemographicConsent:"+tempConsent.getId()+","+tempConsent.getFacilityId()+","+tempConsent.getDemographicId());
+				return;
+			}
+		}
 	}
 
+	private ConsentTransfer makeConsentTransfer(IntegratorConsent consent)
+	{
+		ConsentTransfer consentTransfer=new ConsentTransfer();
+		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
+		consentTransfer.setCreatedDate(consent.getCreatedDate());
+		consentTransfer.setDemographicId(consent.getDemographicId());
+		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
+		
+		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet())
+		{
+			FacilityConsentPair pair=new FacilityConsentPair();
+			pair.setRemoteFacilityId(entry.getKey());
+			pair.setShareData(entry.getValue());
+			consentTransfer.getConsentToShareData().add(pair);
+		}
+		
+		return(consentTransfer);
+	}
+	
 	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, ShutdownException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
