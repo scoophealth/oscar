@@ -280,11 +280,17 @@ function validateDate(year, month, day)
 	// This happens because today's day is 31st and September only has 30 days
 	// so date is normalized to 2009 October 01 when setMonth() is called.
 */
-	date.setFullYear(year, month-1, day);
+	var iYear = parseInt(year);
+	var iMonth = parseInt(month);
+	var iDay = parseInt(day);
 
-	if (year!=date.getFullYear()) return(false);
-	if (month!=date.getMonth()+1) return(false);
-	if (day!=date.getDate()) return(false);
+	date.setFullYear(iYear, iMonth-1, iDay);
+	date.setMonth(iMonth-1);
+	date.setDate(iDay);
+
+        if (iYear!=date.getFullYear()) return(false);
+        if (iMonth!=date.getMonth()+1) return(false);
+        if (iDay!=date.getDate()) return(false);
 	
 	return(true);
 }

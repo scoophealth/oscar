@@ -1574,7 +1574,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             Issue issue = (Issue) filteredSearchResults.get(i);
         	issueList[i] = new CheckIssueBoxBean();
             issueList[i].setIssue(issue);
-            if(communityIssueCodes.contains(issue.getCode()))
+            if(communityIssueCodes != null && communityIssueCodes.contains(issue.getCode()))
             {
             	issueList[i].setCommunity(true);
             }
@@ -1667,10 +1667,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             caseIssueList[i].setChecked(oldList[i].getChecked());
             caseIssueList[i].setUsed(oldList[i].isUsed());
             caseIssueList[i].setIssue(oldList[i].getIssue());
+            caseIssueList[i].setCommunityIssue(oldList[i].getCommunityIssue());
         }
         k = 0;
 
-        String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+                
+   String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
         Integer programId=null;
         if (programIdStr!=null) programId=Integer.valueOf(programIdStr);
 

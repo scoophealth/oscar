@@ -493,6 +493,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				continue;
 			}
 			// filter out notes from a programs attached to different facilities
+			try {
+				Integer.parseInt(localNote.getProgram_no());
+			} catch(NumberFormatException e) {
+				logger.debug("Note " + localNote.getId() + " has no programNo, skipping");
+				continue;
+			}
 			Program noteProgram = programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
 			if (noteProgram.getFacilityId() != facility.getId()) {
 				logger.debug("Note " + localNote.getId() + " is attached to Program " + localNote.getProgram_no() + " from " + noteProgram.getFacilityId() + ", NOT " + facility.getId() + ", skipping");
