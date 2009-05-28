@@ -2499,12 +2499,16 @@ create table IntegratorConsent
     providerNo varchar(6) not null, foreign key (providerNo) references provider(provider_no),
 	createdDate datetime not null, index(createdDate),
 	
-	integratorFacilityId int not null,
-	
-	consentToShareData tinyint(1) NOT NULL,
 	excludeMentalHealthData tinyint(1) NOT NULL,
+	clientConsentStatus varchar(32) NOT NULL,
 
 	digitalSignatureId int, foreign key (digitalSignatureId) references DigitalSignature(id)
 );
 
+create table IntegratorConsentShareDataMap
+(
+	IntegratorConsent_id int not null,
+	mapkey int not null,
+	element tinyint(1) not null
+);
 

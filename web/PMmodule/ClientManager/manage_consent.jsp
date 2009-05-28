@@ -1,6 +1,7 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.dao.*"%>
 <%@page import="org.oscarehr.common.model.*"%>
+<%@page import="org.oscarehr.common.model.IntegratorConsent.ConsentStatus"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageConsent"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
@@ -18,9 +19,6 @@
 
 	String viewConsentId=request.getParameter("viewConsentId");
 	manageConsent.setViewConsentId(viewConsentId);
-
-	CachedFacility localCachedFacility=manageConsent.getLocalCachedFacility();
-	int remoteFacilityId=localCachedFacility.getIntegratorFacilityId();
 %>
 
 <h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
@@ -28,32 +26,35 @@
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
-	<span style="font-weight:bold">Do not share my mental health data</span><input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
-	<br />
+	<span style="font-weight:bold">Do not share clients mental health data</span><input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
+	<br /><br />
 
 	<table class="genericTable" style="border:none">
 		<tr>
 			<td></td>
-			<td class="genericTableHeader" style="text-align:center">Consent to share data</td>
-		</tr>
-		<tr>
-			<td class="genericTableHeader"><%=localCachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
-			<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /></td>
+			<td class="genericTableHeader" style="text-align:center">Share data from</td>
 		</tr>
 		<%
 			for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
 			{
-				remoteFacilityId=cachedFacility.getIntegratorFacilityId();
+				int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
 				%>
 					<tr>
-						<td class="genericTableHeader"><%=cachedFacility.getName()%><input type="hidden" name="consent.<%=remoteFacilityId%>.placeholder" value="on" /></td>
+						<td class="genericTableHeader"><%=cachedFacility.getName()%></td>
 						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /></td>
 					</tr>
 				<%
 			}
 		%>
 	</table>
-		
+	<br />		
+	<div style="font-weight:bold">Client consent</div>
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /> given <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /> revoked <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /> deferred <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /> refused to sign <br />
+	<br />
+
 	<%
 		if (manageConsent.useDigitalSignatures())
 		{

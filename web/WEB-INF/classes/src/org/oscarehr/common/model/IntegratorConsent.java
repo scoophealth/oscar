@@ -1,21 +1,32 @@
 package org.oscarehr.common.model;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.CollectionOfElements;
 
 /**
  */
 @Entity
 public class IntegratorConsent {
 
+	public enum ConsentStatus {
+		GIVEN, REVOKED, DEFERRED, REFUSED_TO_SIGN
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id = null;
@@ -25,11 +36,17 @@ public class IntegratorConsent {
 	private String providerNo = null;
 	private Date createdDate = new Date();
 
-	/** This is the facilityId on the integrator - for which these consents apply. */
-	private Integer integratorFacilityId = null;
+	/**
+	 * (Integer,Boolean) is (IntegratorFacilityId,ShareData).
+	 */
+	@CollectionOfElements(fetch = FetchType.EAGER)
+	@JoinTable(name = "IntegratorConsentShareDataMap")
+	private Map<Integer, Boolean> consentToShareData = new HashMap<Integer, Boolean>();
 
-	private boolean consentToShareData = false;
 	private boolean excludeMentalHealthData = false;
+	
+	@Enumerated(EnumType.STRING)
+	private ConsentStatus clientConsentStatus = null;
 
 	private Integer digitalSignatureId = null;
 
@@ -65,23 +82,15 @@ public class IntegratorConsent {
 		this.createdDate = createdDate;
 	}
 
-	public Integer getIntegratorFacilityId() {
-		return integratorFacilityId;
-	}
-
-	public void setIntegratorFacilityId(Integer integratorFacilityId) {
-		this.integratorFacilityId = integratorFacilityId;
-	}
-
 	public Integer getId() {
 		return id;
 	}
 
-	public boolean isConsentToShareData() {
+	public Map<Integer, Boolean> getConsentToShareData() {
 		return consentToShareData;
 	}
 
-	public void setConsentToShareData(boolean consentToShareData) {
+	public void setConsentToShareData(Map<Integer, Boolean> consentToShareData) {
 		this.consentToShareData = consentToShareData;
 	}
 
@@ -99,6 +108,14 @@ public class IntegratorConsent {
 
 	public void setDigitalSignatureId(Integer digitalSignatureId) {
 		this.digitalSignatureId = digitalSignatureId;
+	}
+
+	public ConsentStatus getClientConsentStatus() {
+		return clientConsentStatus;
+	}
+
+	public void setClientConsentStatus(ConsentStatus clientConsentStatus) {
+		this.clientConsentStatus = clientConsentStatus;
 	}
 
 	@PreRemove

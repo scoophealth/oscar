@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -17,14 +17,12 @@ public class ManageConsent {
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 
-	private CachedFacility localCachedFacility = null;
 	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	private int clientId = -1;
 	/**
-	 * consentToView is null if editing consent, if viewing consent it should have the consent to view. In reality it will view all consents done at the same date as the consent specified so any consent at the given time will produce the same viewed set of
-	 * results.
+	 * consentToView is null if editing consent, if viewing consent it should have the consent to view.
 	 */
-	private List<IntegratorConsent> previousConsentsToView = null;
+	private IntegratorConsent previousConsentToView = null;
 
 	public ManageConsent(int clientId) {
 		this.clientId = clientId;
@@ -35,108 +33,57 @@ public class ManageConsent {
 	 */
 	public void setViewConsentId(String consentId) {
 		if (consentId != null) {
-			IntegratorConsent consentToView = integratorConsentDao.find(Integer.parseInt(consentId));
-			previousConsentsToView = integratorConsentDao.findByFacilityDemographicAndDate(loggedInInfo.currentFacility.getId(), clientId, consentToView.getCreatedDate());
+			previousConsentToView = integratorConsentDao.find(Integer.parseInt(consentId));
 		}
-	}
-
-	public CachedFacility getLocalCachedFacility() throws MalformedURLException {
-		if (localCachedFacility == null) {
-			FacilityWs facilityWs = caisiIntegratorManager.getFacilityWs(loggedInInfo.currentFacility.getId());
-			localCachedFacility = facilityWs.getMyFacility();
-		}
-
-		return (localCachedFacility);
 	}
 
 	public Collection<CachedFacility> getAllFacilitiesToDisplay() throws MalformedURLException {
-		if (previousConsentsToView == null) return (getAllRemoteFacilities());
+		if (previousConsentToView == null) return (getAllRemoteFacilities());
 		else return (getPreviousConsentFacilities());
 	}
 
 	private Collection<CachedFacility> getPreviousConsentFacilities() throws MalformedURLException {
 		ArrayList<CachedFacility> results = new ArrayList<CachedFacility>();
 
-		CachedFacility localCachedFacility = getLocalCachedFacility();
-
-		for (IntegratorConsent consent : previousConsentsToView) {
-			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(loggedInInfo.currentFacility.getId(), consent.getIntegratorFacilityId());
-			if (!cachedFacility.getIntegratorFacilityId().equals(localCachedFacility.getIntegratorFacilityId())) {
-				results.add(cachedFacility);
-			}
+		for (Integer remoteFacilityId : previousConsentToView.getConsentToShareData().keySet()) {
+			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(loggedInInfo.currentFacility.getId(), remoteFacilityId);
+			results.add(cachedFacility);
 		}
 
 		return (results);
 	}
 
 	private Collection<CachedFacility> getAllRemoteFacilities() throws MalformedURLException {
-		List<CachedFacility> results=caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId());
-		return(results);
+		List<CachedFacility> results = caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId());
+		return (results);
 	}
 
 	public boolean displayAsCheckedConsentToShareData(int remoteFacilityId) throws MalformedURLException {
-		if (previousConsentsToView == null) return (displayAsCheckedConsentToShareDataMostRecent(remoteFacilityId));
-		else return (displayAsCheckedConsentToShareDataPrevious(remoteFacilityId));
-	}
-
-	private boolean displayAsCheckedConsentToShareDataPrevious(int remoteFacilityId) {
-		// get the local consent for this remote facility
-		for (IntegratorConsent consent : previousConsentsToView) {
-			if (consent.getIntegratorFacilityId().equals(remoteFacilityId)) {
-				return (consent.isConsentToShareData());
+		if (previousConsentToView == null) {
+			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
+			if (result != null) {
+				Boolean checked=result.getConsentToShareData().get(remoteFacilityId);
+				if (checked==null) return(true);
+				else return(checked);
 			}
-		}
 
-		throw (new IllegalStateException("This should not be possible. Previous consent is missing data. remoteFacilityId=" + remoteFacilityId + ", prevConsentId(group)=" + previousConsentsToView.get(0).getId()));
+			return (true);
+		} else {
+			return (previousConsentToView.getConsentToShareData().get(remoteFacilityId));
+		}
 	}
 
-	public boolean displayAsCheckedConsentToShareDataMostRecent(int remoteFacilityId) throws MalformedURLException {
-		// get the local consent for this remote facility
-		IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(loggedInInfo.currentFacility.getId(), clientId, remoteFacilityId);
-		if (result != null) {
-			return (result.isConsentToShareData());
-		}
-
-		// try to get the local consent for the local facility as the default (specifically requested feature, not my design decision)
-		result = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(loggedInInfo.currentFacility.getId(), clientId, getLocalCachedFacility().getIntegratorFacilityId());
-		if (result != null) {
-			return (result.isConsentToShareData());
-		}
-
-		// specifically requested to default general consent to true, not my design decision
-		return (true);
-	}
-
-	public boolean displayAsCheckedExcludeMentalHealthData(int remoteFacilityId) throws MalformedURLException {
-		if (previousConsentsToView == null) return (displayAsCheckedExcludeMentalHealthDataMostRecent(remoteFacilityId));
-		else return (displayAsCheckedExcludeMentalHealthDataPrevious(remoteFacilityId));
-	}
-
-	public boolean displayAsCheckedExcludeMentalHealthDataPrevious(int remoteFacilityId) throws MalformedURLException {
-		// get the local consent for this remote facility
-		for (IntegratorConsent consent : previousConsentsToView) {
-			if (consent.getIntegratorFacilityId().equals(remoteFacilityId)) {
-				return (consent.isExcludeMentalHealthData());
+	public boolean displayAsCheckedExcludeMentalHealthData() throws MalformedURLException {
+		if (previousConsentToView == null) {
+			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
+			if (result != null) {
+				return (result.isExcludeMentalHealthData());
 			}
+
+			return (false);
+		} else {
+			return (previousConsentToView.isExcludeMentalHealthData());
 		}
-
-		throw (new IllegalStateException("This should not be possible. Previous consent is missing data. remoteFacilityId=" + remoteFacilityId + ", prevConsentId(group)=" + previousConsentsToView.get(0).getId()));
-	}
-
-	public boolean displayAsCheckedExcludeMentalHealthDataMostRecent(int remoteFacilityId) throws MalformedURLException {
-		// get the
-		IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(loggedInInfo.currentFacility.getId(), clientId, remoteFacilityId);
-		if (result != null) {
-			return (result.isExcludeMentalHealthData());
-		}
-
-		// try to get the local consent for the local facility as the default (specifically requested feature, not my design decision)
-		result = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(loggedInInfo.currentFacility.getId(), clientId, getLocalCachedFacility().getIntegratorFacilityId());
-		if (result != null) {
-			return (result.isExcludeMentalHealthData());
-		}
-
-		return (false);
 	}
 
 	public boolean useDigitalSignatures() {
@@ -144,6 +91,12 @@ public class ManageConsent {
 	}
 
 	public Integer getPreviousConsentDigitalSignatureId() {
-		return (previousConsentsToView.get(0).getDigitalSignatureId());
+		return (previousConsentToView.getDigitalSignatureId());
+	}
+	
+	public boolean displayAsCheckedConsentStatus(ConsentStatus status)
+	{
+		if (previousConsentToView==null) return(status==ConsentStatus.REVOKED);
+		else return(previousConsentToView.getClientConsentStatus()==status);
 	}
 }

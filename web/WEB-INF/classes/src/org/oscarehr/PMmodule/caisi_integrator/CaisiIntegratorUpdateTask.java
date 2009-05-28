@@ -357,33 +357,33 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushDemographicConsent(Facility facility, DemographicWs demographicService, HnrWs hnrService, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
 
-		// get a list of all remove facilities
-		// for each remote facility get the latest consent
-		// then send the latest consent to the integrator
-		List<CachedFacility> remoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
-		for (CachedFacility remoteFacility : remoteFacilities) {
-			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographicAndRemoteFacility(facility.getId(), demographicId, remoteFacility.getIntegratorFacilityId());
-			if (consent != null && consent.getCreatedDate().after(facility.getIntegratorLastPushTime())) {
-				ConsentParameters consentParameters = new ConsentParameters();
-
-				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
-				consentParameters.setIntegratorFacilityId(consent.getIntegratorFacilityId());
-				consentParameters.setCaisiDemographicId(demographicId);
-				consentParameters.setConsentToShareData(consent.isConsentToShareData());
-				consentParameters.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-				consentParameters.setCreatedDate(consent.getCreatedDate());
-
-				demographicService.setCachedDemographicConsent(consentParameters);
-
-				// deal with hnr consent
-				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
-				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
-				if (clientLinks.size() > 0) {
-					// was asked to remove hnr consent and just apply the general consent status to the hnr
-					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToShareData(), consent.getCreatedDate());
-				}
-			}
-		}
+//		// get a list of all remove facilities
+//		// for each remote facility get the latest consent
+//		// then send the latest consent to the integrator
+//		List<CachedFacility> remoteFacilities = caisiIntegratorManager.getRemoteFacilities(facility.getId());
+//		for (CachedFacility remoteFacility : remoteFacilities) {
+//			IntegratorConsent consent = integratorConsentDao.findLatestByFacilityDemographic(facility.getId(), demographicId);
+//			if (consent != null && consent.getCreatedDate().after(facility.getIntegratorLastPushTime())) {
+//				ConsentParameters consentParameters = new ConsentParameters();
+//
+//				// copy consent manually because it's kinda dangerous to use bean copy for these objects, too large with too many unrelated variables
+//				consentParameters.setIntegratorFacilityId(consent.getIntegratorFacilityId());
+//				consentParameters.setCaisiDemographicId(demographicId);
+//				consentParameters.setConsentToShareData(consent.isConsentToShareData());
+//				consentParameters.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
+//				consentParameters.setCreatedDate(consent.getCreatedDate());
+//
+//				demographicService.setCachedDemographicConsent(consentParameters);
+//
+//				// deal with hnr consent
+//				List<ClientLink> clientLinks = clientLinkDao.findByFacilityIdClientIdType(facility.getId(), demographicId, true, ClientLink.Type.HNR);
+//				if (clientLinks.size() > 1) logger.warn("HNR link should only be 1 link. Links found :" + clientLinks.size());
+//				if (clientLinks.size() > 0) {
+//					// was asked to remove hnr consent and just apply the general consent status to the hnr
+//					hnrService.setHnrClientHidden(clientLinks.get(0).getRemoteLinkId(), !consent.isConsentToShareData(), consent.getCreatedDate());
+//				}
+//			}
+//		}
 	}
 
 	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, ShutdownException {

@@ -19,7 +19,6 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -37,11 +36,10 @@ public class IntegratorConsentDao extends AbstractDao {
     /**
      * results are ordered by newest first
      */
-    public IntegratorConsent findLatestByFacilityDemographicAndRemoteFacility(int facilityId, int demographicId, int remoteFacilityId) {
-    	Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 and integratorFacilityId=?3 order by x.createdDate desc");
+    public IntegratorConsent findLatestByFacilityDemographic(int facilityId, int demographicId) {
+    	Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
 		query.setParameter(1, facilityId);
 		query.setParameter(2, demographicId);
-		query.setParameter(3, remoteFacilityId);
 		query.setMaxResults(1);
 
 		return((IntegratorConsent)getSingleResultOrNull(query));
@@ -54,18 +52,6 @@ public class IntegratorConsentDao extends AbstractDao {
 		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 order by x.createdDate desc");
 		query.setParameter(1, facilityId);
 		query.setParameter(2, demographicId);
-
-	    @SuppressWarnings("unchecked")
-		List<IntegratorConsent> results=query.getResultList();
-		
-		return(results);
-    }
-
-	public List<IntegratorConsent> findByFacilityDemographicAndDate(int facilityId, int demographicId, Date createdDate) {
-		Query query = entityManager.createQuery("select x from IntegratorConsent x where x.facilityId=?1 and x.demographicId=?2 and createdDate=?3");
-		query.setParameter(1, facilityId);
-		query.setParameter(2, demographicId);
-		query.setParameter(3, createdDate);
 
 	    @SuppressWarnings("unchecked")
 		List<IntegratorConsent> results=query.getResultList();

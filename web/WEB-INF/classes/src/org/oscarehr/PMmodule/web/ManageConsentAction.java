@@ -3,10 +3,11 @@ package org.oscarehr.PMmodule.web;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.HashMap;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.IntegratorConsent;
@@ -15,19 +16,29 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageConsentAction {
-	private static Logger logger = LogManager.getLogger(ManageConsent.class);
+	private static Logger logger = LogManager.getLogger(ManageConsentAction.class);
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
+	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 
-	private HashMap<Integer, IntegratorConsent> consents = new HashMap<Integer, IntegratorConsent>();
+	private IntegratorConsent consent = new IntegratorConsent();
 	private String signatureRequestId = null;
 	private Integer clientId = null;
-	private boolean excludeMentalHealth=false;
 	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	/** the created date must be the same for all entries so they can be grouped in the display */
 	private Date createDate = new Date();
 
 	public ManageConsentAction(Integer clientId) throws MalformedURLException {
 		this.clientId = clientId;
+
+		consent.setCreatedDate(createDate);
+		consent.setDemographicId(clientId);
+		consent.setFacilityId(loggedInInfo.currentFacility.getId());
+		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
+		
+		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId()))
+		{
+			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), false);
+		}
 	}
 
 	/**
@@ -39,24 +50,8 @@ public class ManageConsentAction {
 		String[] splitTemp = s.split("\\.");
 		int remoteFacilityId = Integer.parseInt(splitTemp[1]);
 
-		IntegratorConsent consent = consents.get(remoteFacilityId);
-		if (consent == null) {
-			consent = new IntegratorConsent();
-			consent.setIntegratorFacilityId(remoteFacilityId);
-			// the created date must be the same for all entries so they can be grouped in the display
-			consent.setCreatedDate(createDate);
-			consent.setDemographicId(clientId);
-			consent.setFacilityId(loggedInInfo.currentFacility.getId());
-			consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-			consents.put(remoteFacilityId, consent);
-		}
-
-		if ("placeholder".equals(splitTemp[2])) {
-			// do nothing, the above initialisation is all we need
-		} else if ("consentToShareData".equals(splitTemp[2])) {
-			consent.setConsentToShareData(true);
-		} else if ("excludeMentalHealth".equals(splitTemp[2])) {
-			excludeMentalHealth=true;
+		if ("consentToShareData".equals(splitTemp[2])) {
+			consent.getConsentToShareData().put(remoteFacilityId, true);
 		} else {
 			logger.error("unexpected consent bit : " + s);
 		}
@@ -70,17 +65,20 @@ public class ManageConsentAction {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		DigitalSignature digitalSignature = DigitalSignatureUtils.storeDigitalSignatureFromTempFileToDB(loggedInInfo, signatureRequestId, clientId);
+		if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
 
-		for (IntegratorConsent consent : consents.values()) {
-			consent.setExcludeMentalHealthData(excludeMentalHealth);
-			
-			if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
-			
-			integratorConsentDao.persist(consent);
-		}
+		integratorConsentDao.persist(consent);
 	}
 
+	public void setExcludeMentalHealthData(Boolean b) {
+		consent.setExcludeMentalHealthData(b);
+	}
+
+	public void setConsentStatus(String s) {
+		consent.setClientConsentStatus(IntegratorConsent.ConsentStatus.valueOf(s));
+	}
+	
 	public void setSignatureRequestId(String signatureRequestId) {
 		this.signatureRequestId = signatureRequestId;
-	}
+	}	
 }
