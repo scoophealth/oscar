@@ -26,40 +26,49 @@
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
-	<span style="font-weight:bold">Do not share clients mental health data</span><input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> />
+	<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
 	<br /><br />
 
-	<table class="genericTable" style="border:none">
-		<tr>
-			<td></td>
-			<td class="genericTableHeader" style="text-align:center">Share data from</td>
-		</tr>
-		<%
-			for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
-			{
-				int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
-				%>
-					<tr>
-						<td class="genericTableHeader"><%=cachedFacility.getName()%></td>
-						<td class="genericTableData" style="text-align:center"><input type="checkbox" name="consent.<%=remoteFacilityId%>.consentToShareData" <%=manageConsent.displayAsCheckedConsentToShareData(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /></td>
-					</tr>
-				<%
-			}
-		%>
-	</table>
+	I do not wish records from the following agencies to be seen in other agencies that provide me care.
+	<br />
+	Check to indicate which agencies to exclude
+	<br />
+	<%
+		for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
+		{
+			int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
+			%>
+				<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
+			<%
+		}
+	%>
 	<br />		
 	<div style="font-weight:bold">Client consent</div>
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /> given <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /> revoked <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /> deferred <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /> refused to sign <br />
+	<table>
+		<tr>
+			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
+			<td>I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies. I consent to the integration of my information for the purposes described above.</td>
+		</tr>
+		<tr>
+			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /></td>
+			<td>I do not consent to the integration of my information for the integration purposes described above.</td>
+		</tr>
+		<tr>
+			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /></td>
+			<td>Deferred : staff decided that collection of consent not appropriate at this time.</td>
+		</tr>
+		<tr>
+			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /></td>
+			<td>Refused to sign : client is not interested in integration.</td>
+		</tr>
+	</table>
 	<br />
 	<div style="font-weight:bold">Consent expiry : </div>
 	<select name="consentExpiry" <%=viewConsentId!=null?"disabled=\"disabled\"":""%>>
-		<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">Does not expire</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">Expires in 6 months</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">Expires in 12 months</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">Expires in 60 months</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">I do not wish this consent to expire at a predefined time</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">I wish this consent to expire and require a new consent in 6 months.</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">I wish this consent to expire and require a new consent in 12 months.</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">I wish this consent to expire and require a new consent in 60 months.</option>
 	</select>
 	<br />
 

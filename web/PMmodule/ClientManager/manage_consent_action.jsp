@@ -22,7 +22,7 @@
 	{
 		String key=e.nextElement();
 		// must check for "on" because some versions of IE submit "off" or ""
-		if (key.startsWith("consent.") && "on".equals(request.getParameter(key))) manageConsentAction.addConsent(key);
+		if (key.startsWith("consent.") && "on".equals(request.getParameter(key))) manageConsentAction.addExclude(key);
 	}
 	
 	manageConsentAction.storeAllConsents();

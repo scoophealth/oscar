@@ -34,7 +34,7 @@ public class ManageConsentAction {
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
 		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
-			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), false);
+			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);
 		}
 	}
 
@@ -43,12 +43,12 @@ public class ManageConsentAction {
 	 * 
 	 * @param s is of the format "consent.<remoteFacilityId>.<consentField>", i.e. "consent.1.hic"
 	 */
-	public void addConsent(String s) {
+	public void addExclude(String s) {
 		String[] splitTemp = s.split("\\.");
 		int remoteFacilityId = Integer.parseInt(splitTemp[1]);
 
-		if ("consentToShareData".equals(splitTemp[2])) {
-			consent.getConsentToShareData().put(remoteFacilityId, true);
+		if ("excludeShareData".equals(splitTemp[2])) {
+			consent.getConsentToShareData().put(remoteFacilityId, false);
 		} else {
 			logger.error("unexpected consent bit : " + s);
 		}

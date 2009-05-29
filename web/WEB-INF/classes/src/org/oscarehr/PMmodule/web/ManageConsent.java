@@ -61,18 +61,18 @@ public class ManageConsent {
 		return (results);
 	}
 
-	public boolean displayAsCheckedConsentToShareData(int remoteFacilityId) throws MalformedURLException {
+	public boolean displayAsCheckedExcludeFacility(int remoteFacilityId) throws MalformedURLException {
 		if (previousConsentToView == null) {
 			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
 			if (result != null) {
 				Boolean checked=result.getConsentToShareData().get(remoteFacilityId);
-				if (checked==null) return(true);
-				else return(checked);
+				if (checked==null) return(false);
+				else return(!checked);
 			}
 
-			return (true);
+			return (false);
 		} else {
-			return (previousConsentToView.getConsentToShareData().get(remoteFacilityId));
+			return (!previousConsentToView.getConsentToShareData().get(remoteFacilityId));
 		}
 	}
 
