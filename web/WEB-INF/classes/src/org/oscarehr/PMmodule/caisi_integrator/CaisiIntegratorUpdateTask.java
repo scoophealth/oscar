@@ -379,6 +379,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		consentTransfer.setCreatedDate(consent.getCreatedDate());
 		consentTransfer.setDemographicId(consent.getDemographicId());
 		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
+		consentTransfer.setExpiry(consent.getExpiry());
 		
 		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet())
 		{
