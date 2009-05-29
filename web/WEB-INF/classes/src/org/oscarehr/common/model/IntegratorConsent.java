@@ -47,7 +47,8 @@ public class IntegratorConsent {
 	
 	@Enumerated(EnumType.STRING)
 	private ConsentStatus clientConsentStatus = null;
-
+	private Date expiry=null;
+	
 	private Integer digitalSignatureId = null;
 
 	public Integer getFacilityId() {
@@ -117,6 +118,14 @@ public class IntegratorConsent {
 	public void setClientConsentStatus(ConsentStatus clientConsentStatus) {
 		this.clientConsentStatus = clientConsentStatus;
 	}
+
+	public Date getExpiry() {
+    	return expiry;
+    }
+
+	public void setExpiry(Date expiry) {
+    	this.expiry = expiry;
+    }
 
 	@PreRemove
 	protected void jpa_preventDelete() {

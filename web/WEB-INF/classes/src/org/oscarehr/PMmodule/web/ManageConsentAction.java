@@ -2,7 +2,8 @@ package org.oscarehr.PMmodule.web;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,19 +25,15 @@ public class ManageConsentAction {
 	private String signatureRequestId = null;
 	private Integer clientId = null;
 	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-	/** the created date must be the same for all entries so they can be grouped in the display */
-	private Date createDate = new Date();
 
 	public ManageConsentAction(Integer clientId) throws MalformedURLException {
 		this.clientId = clientId;
 
-		consent.setCreatedDate(createDate);
 		consent.setDemographicId(clientId);
 		consent.setFacilityId(loggedInInfo.currentFacility.getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
-		
-		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId()))
-		{
+
+		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), false);
 		}
 	}
@@ -77,8 +74,20 @@ public class ManageConsentAction {
 	public void setConsentStatus(String s) {
 		consent.setClientConsentStatus(IntegratorConsent.ConsentStatus.valueOf(s));
 	}
-	
+
+	public void setExpiry(String s) {
+		int months = Integer.parseInt(s);
+
+		if (months == -1) consent.setExpiry(null);
+		else {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(consent.getCreatedDate());
+			cal.add(Calendar.MONTH, months);
+			consent.setExpiry(cal.getTime());
+		}
+	}
+
 	public void setSignatureRequestId(String signatureRequestId) {
 		this.signatureRequestId = signatureRequestId;
-	}	
+	}
 }

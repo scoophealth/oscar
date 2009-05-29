@@ -2,9 +2,12 @@ package org.oscarehr.PMmodule.web;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
@@ -94,9 +97,26 @@ public class ManageConsent {
 		return (previousConsentToView.getDigitalSignatureId());
 	}
 	
-	public boolean displayAsCheckedConsentStatus(ConsentStatus status)
+	public boolean displayAsSelectedConsentStatus(ConsentStatus status)
 	{
 		if (previousConsentToView==null) return(status==ConsentStatus.REVOKED);
 		else return(previousConsentToView.getClientConsentStatus()==status);
+	}
+	
+	public boolean displayAsSelectedExpiry(int months)
+	{
+		if (previousConsentToView==null) return(months==-1);
+		else 
+		{
+			if (previousConsentToView.getExpiry()==null) return(months==-1);
+			else
+			{
+				GregorianCalendar cal1=new GregorianCalendar();
+				cal1.setTime(previousConsentToView.getCreatedDate());
+				cal1.add(Calendar.MONTH, months);
+								
+				return(DateUtils.isSameDay(cal1.getTime(), previousConsentToView.getExpiry()));
+			}
+		}
 	}
 }

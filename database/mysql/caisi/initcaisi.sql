@@ -2501,6 +2501,7 @@ create table IntegratorConsent
 	
 	excludeMentalHealthData tinyint(1) NOT NULL,
 	clientConsentStatus varchar(32) NOT NULL,
+	expiry date,
 
 	digitalSignatureId int, foreign key (digitalSignatureId) references DigitalSignature(id)
 );

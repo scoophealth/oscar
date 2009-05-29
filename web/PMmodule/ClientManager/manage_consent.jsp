@@ -49,10 +49,18 @@
 	</table>
 	<br />		
 	<div style="font-weight:bold">Client consent</div>
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /> given <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /> revoked <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /> deferred <br />
-	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsCheckedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /> refused to sign <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /> given <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /> revoked <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /> deferred <br />
+	<input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /> refused to sign <br />
+	<br />
+	<div style="font-weight:bold">Consent expiry : </div>
+	<select name="consentExpiry" <%=viewConsentId!=null?"disabled=\"disabled\"":""%>>
+		<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">Does not expire</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">Expires in 6 months</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">Expires in 12 months</option>
+		<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">Expires in 60 months</option>
+	</select>
 	<br />
 
 	<%
