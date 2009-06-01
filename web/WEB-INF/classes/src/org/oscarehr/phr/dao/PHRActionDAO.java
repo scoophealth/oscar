@@ -43,9 +43,9 @@ public interface PHRActionDAO {
     public PHRAction getActionById(String id);
     
     //actionType = -1 for all actions
-    @Deprecated
+    //@Deprecated
     public List<PHRAction> getPendingActionsByProvider(String classification, int actionType, String providerNo);
-    @Deprecated
+    //@Deprecated
     public List<PHRAction> getPendingActionsByProvider(int actionType, String providerNo);
     public List<PHRAction> getActionsByStatus(int status, String providerNo);
     public List<PHRAction> getActionsByStatus(int status, String providerNo, String classification);
