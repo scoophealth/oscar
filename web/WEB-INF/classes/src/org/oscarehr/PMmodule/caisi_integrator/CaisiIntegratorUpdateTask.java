@@ -51,7 +51,6 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.ConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
@@ -64,6 +63,7 @@ import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
+import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
@@ -364,7 +364,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			if (tempConsent.getClientConsentStatus()==ConsentStatus.GIVEN || tempConsent.getClientConsentStatus()==ConsentStatus.REVOKED)
 			{
-				ConsentTransfer consentTransfer=makeConsentTransfer(tempConsent);				
+				SetConsentTransfer consentTransfer=makeSetConsentTransfer(tempConsent);				
 				demographicService.setCachedDemographicConsent(consentTransfer);
 				logger.debug("pushDemographicConsent:"+tempConsent.getId()+","+tempConsent.getFacilityId()+","+tempConsent.getDemographicId());
 				return;
@@ -372,9 +372,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private ConsentTransfer makeConsentTransfer(IntegratorConsent consent)
+	private SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent)
 	{
-		ConsentTransfer consentTransfer=new ConsentTransfer();
+		SetConsentTransfer consentTransfer=new SetConsentTransfer();
 		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
 		consentTransfer.setCreatedDate(consent.getCreatedDate());
 		consentTransfer.setDemographicId(consent.getDemographicId());

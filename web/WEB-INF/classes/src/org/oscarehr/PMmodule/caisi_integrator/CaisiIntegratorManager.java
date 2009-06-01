@@ -41,6 +41,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWsService;
+import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.HnrWsService;
 import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
@@ -59,6 +60,7 @@ import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.FacilityProviderSegmentedTimeClearedHashMap;
 import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
+import org.oscarehr.util.LoggedInInfo;
 
 import oscar.OscarProperties;
 
@@ -94,6 +96,11 @@ public class CaisiIntegratorManager {
 	 * This caching mechanism uses the key=hnrClient.linkingId, value=hnrClient. Note for auditing purposes the cache must be segmented by facility and provider.
 	 */
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.Client> hnrClientCache = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.hnr.ws.Client>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+
+	/**
+	 * This caching mechanism uses the key=demographicId
+	 */
+	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
@@ -423,4 +430,37 @@ public class CaisiIntegratorManager {
 		HnrWs hnrWs = getHnrWs(facility.getId());
 		return(hnrWs.setHnrClientData(hnrClient));
 	}
+
+	public CachedFacility getCurrentRemoteFacility() throws MalformedURLException
+	{
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		int currentFacilityId=loggedInInfo.currentFacility.getId();
+
+		CachedFacility cachedFacility=(CachedFacility) facilitySegmentedSimpleTimeCache.get(currentFacilityId, "MY_REMOTE_FACILITY");
+		
+		if (cachedFacility == null) {
+			FacilityWs facilityWs=getFacilityWs(currentFacilityId);
+			cachedFacility=facilityWs.getMyFacility();
+			if (cachedFacility != null) facilitySegmentedSimpleTimeCache.put(currentFacilityId, "MY_REMOTE_FACILITY", cachedFacility);
+		}
+
+		return (cachedFacility);
+	}
+	
+	public GetConsentTransfer getConsentState(Integer demographicId) throws MalformedURLException {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		int currentFacilityId=loggedInInfo.currentFacility.getId();
+		String loggedInProviderNo=loggedInInfo.loggedInProvider.getProviderNo();
+		
+		GetConsentTransfer getConsentTransfer = integratorConsentState.get(currentFacilityId, loggedInProviderNo, demographicId);
+
+		if (getConsentTransfer == null) {
+			DemographicWs demographicWs = getDemographicWs(currentFacilityId);
+			getConsentTransfer = demographicWs.getConsentState(demographicId);
+			if (getConsentTransfer != null) integratorConsentState.put(currentFacilityId, loggedInProviderNo, demographicId, getConsentTransfer);
+		}
+
+		return (getConsentTransfer);
+	}
+
 }

@@ -14,6 +14,7 @@
 <%@page import="org.oscarehr.common.model.IntegratorConsent"%>
 <%@page import="org.oscarehr.ui.servlet.ImageRenderingServlet"%>
 <%@page import="oscar.OscarProperties"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.GetConsentTransfer"%>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
@@ -25,7 +26,10 @@
 
 
 
-<input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
+<%@page import="org.apache.commons.lang.time.DateUtils"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -233,7 +237,33 @@ function openSurvey() {
 				<tr>
 					<th width="20%">Integrator Consent</th>
 					<td>
-						<input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<%
+							String consentString="none";
+	
+							GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
+							
+							if (remoteConsent!=null)
+							{
+								StringBuilder sb=new StringBuilder();
+								
+								if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("all ");
+								if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("limited ");
+								if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("none ");
+								
+								CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
+								if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
+								{
+									sb.append("set locally on ");
+								}
+								else
+								{
+									sb.append("set by another facility on ");
+								}
+								
+								sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(remoteConsent.getConsentDate()));
+							}
+						%>
+						current consent : <%=consentString%> <input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 					</td>
 				</tr>
 				<tr>
