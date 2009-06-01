@@ -32,7 +32,7 @@ import java.util.Hashtable;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
-import org.oscarehr.phr.model.PHRAction;
+import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 
 import oscar.dms.EDoc;
@@ -72,5 +72,8 @@ public interface PHRService {
     public void sendUserRegistration(Hashtable phrRegistrationForm, String whoIsAdding) throws Exception;
     public PHRActionDAO getPhrActionDao();
     public PHRDocumentDAO getPhrDocumentDAO();
+    
+    public void sendAddDocument(PHRDocument document, String oscarId);
+    public void sendUpdateDocument(PHRDocument document, String phrIndex, String oscarIndex);
     
 }
