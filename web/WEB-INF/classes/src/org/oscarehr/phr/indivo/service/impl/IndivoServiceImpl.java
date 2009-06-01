@@ -209,6 +209,22 @@ public class IndivoServiceImpl  implements PHRService{
         //write action to phr_actions table
         phrActionDAO.save(action);
     }
+
+    public void sendAddDocument(PHRDocument document, String oscarId) {
+        PHRAction action = document.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
+        action.setOscarId(oscarId);
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+
+    public void sendUpdateDocument(PHRDocument document, String phrIndex, String oscarIndex) {
+        PHRAction action = document.getAction(PHRAction.ACTION_UPDATE, PHRAction.STATUS_SEND_PENDING);
+        //set which phrIndex to update
+        action.setPhrIndex(phrIndex);
+        action.setOscarId(oscarIndex);
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
     
      public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception{
         PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId);

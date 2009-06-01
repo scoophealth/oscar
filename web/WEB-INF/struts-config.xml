@@ -902,6 +902,9 @@
         <action path="/oscarEncounter/oscarMeasurements/SetupHistoryIndex" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupHistoryIndexAction">
             <forward name="continue" path="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp" />
         </action>
+        <action input="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp" name="FrmForm" path="/oscarEncounter/oscarMeasurements/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"></forward>
+        </action>
         <action name="EctDeleteDataForm" path="/oscarEncounter/oscarMeasurements/DeleteData" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction">
             <forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do" />
         </action>

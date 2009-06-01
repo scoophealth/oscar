@@ -31,7 +31,14 @@ package org.oscarehr.phr.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Map;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import org.indivo.xml.phr.contact.ConciseContactInformation;
+import org.indivo.xml.phr.contact.ConciseContactInformationType;
+import oscar.oscarClinic.ClinicData;
 /**
  *
  * @author jay
@@ -110,6 +117,23 @@ public class PHRDocument implements Serializable{
         action.setPhrIndex(this.getPhrIndex());
         action.setStatus(actionStatus);
         return action;
+    }
+
+    protected static XMLGregorianCalendar dateToXmlGregorianCalendar(Date date) throws DatatypeConfigurationException {
+        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(date);
+        return datatypeFactory.newXMLGregorianCalendar(gregorianCalendar);
+    }
+
+    //not sure what to send here, just sending clinic name for tracking puproses
+    protected static ConciseContactInformationType getClinicOrigin() {
+        ConciseContactInformationType ccit = new ConciseContactInformationType();
+        ClinicData clinic = new ClinicData();
+        clinic.refreshClinicData();
+        String clinicName = clinic.getClinicName();
+        ccit.setOrganizationName(clinicName);
+        return ccit;
     }
 
     public int getId() {

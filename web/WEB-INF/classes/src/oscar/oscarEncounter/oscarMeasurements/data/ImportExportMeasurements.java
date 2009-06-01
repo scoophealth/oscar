@@ -167,9 +167,28 @@ public class ImportExportMeasurements {
 		exts.setKeyVal(rs.getString("keyval"));
 		exts.setVal(rs.getString("val"));
 		extsList.add(exts);
+                
 	    }
 	}
 	return extsList;
+    }
+    
+    public static MeasurementsExt getMeasurementsExtByKeyval(Long measurementId, String keyval) throws SQLException {
+	MeasurementsExt measurementsExt = null;
+	if (measurementId!=null) {
+	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    String sql = "SELECT * FROM measurementsExt WHERE measurement_id=" + measurementId + " AND keyval='" + keyval + "'";
+	    ResultSet rs = db.GetSQL(sql);
+
+	    if (rs.next()) {
+		measurementsExt = new MeasurementsExt(measurementId);
+		measurementsExt.setId(rs.getLong("id"));
+		measurementsExt.setMeasurementId(rs.getLong("measurement_id"));
+		measurementsExt.setKeyVal(rs.getString("keyval"));
+		measurementsExt.setVal(rs.getString("val"));
+	    }
+	}
+	return measurementsExt;
     }
     
     private static boolean filled(String s) {

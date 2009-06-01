@@ -54,5 +54,7 @@ public class IndivoConstantsImpl implements PHRConstants {
     public String DOCTYPE_ACCESSPOLICIES() {
         return org.indivo.xml.urns.DocumentClassificationUrns.ACCESS_POLICIES;
     }
-    
+    public String DOCTYPE_MEASUREMENT() {
+        return DocumentClassificationUrns.VITAL;
+    }
 }

@@ -26,8 +26,10 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -232,6 +234,39 @@ public class EctMeasurementsDataBeanHandler {
                 +" FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no, measurementType mt "
                 +" WHERE m.id = '"+id+"' AND m.type = mt.type ";
         return getHashfromSQL(sql);
+    }
+    
+    public static List<EctMeasurementsDataBean> getMeasurementObjectByType(String type, String demographicNo) {
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT m.id, m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction, m.comments," +
+                    " m.dateObserved, m.dateEntered, mt.typeDisplayName, mt.typeDescription, p.first_name AS provider_first," +
+                    " p.last_name AS provider_last FROM measurements m LEFT JOIN provider p ON m.providerNo=p.provider_no," +
+                    " measurementType mt WHERE m.type = mt.type AND m.type = '" + type + "' AND m.demographicNo = " + demographicNo;
+            System.out.println("Measurements retreival sql: " + sql);
+            ResultSet rs;
+            
+            ArrayList<EctMeasurementsDataBean> measurements = new ArrayList();
+            for (rs = db.GetSQL(sql); rs.next(); ) {
+                EctMeasurementsDataBean measurement = new EctMeasurementsDataBean();
+                measurement.setId(Integer.parseInt(rsGetString(rs, "id")));
+                measurement.setMeasuringInstrc(rsGetString(rs, "measuringInstruction"));
+                measurement.setType(rsGetString(rs, "type"));
+                measurement.setProviderFirstName(rsGetString(rs, "provider_first"));
+                measurement.setProviderLastName(rsGetString(rs, "provider_last"));
+                measurement.setDataField(rsGetString(rs, "dataField"));
+                measurement.setComments(rsGetString(rs, "comments"));
+                measurement.setDateObservedAsDate(rs.getDate("dateObserved"));
+                measurement.setDateEnteredAsDate(rs.getDate("dateEntered"));
+                measurements.add(measurement);
+            }
+            rs.close();
+            db.CloseConn();
+            return measurements;
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        return null;
     }
     
     public static Hashtable getLast(String demo, String type) {

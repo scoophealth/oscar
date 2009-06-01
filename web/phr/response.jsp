@@ -41,11 +41,11 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
 
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="../phr/phr.css"/>
+        <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/phr/phr.css"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PHR Call</title>
-        <script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
-        <script type="text/javascript" language="JavaScript" src="../phr/phr.js"></script>
+        <script type="text/javascript" language="JavaScript" src="<%=request.getContextPath()%>/share/javascript/prototype.js"></script>
+        <script type="text/javascript" language="JavaScript" src="<%=request.getContextPath()%>/phr/phr.js"></script>
         <script type="text/javascript" language="JavaScript">
             function startWindowTimeout() {
                 var sec=1500;
@@ -120,7 +120,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                    </logic:present>
                    <logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                         <div class="myoscarLoginElementNoAuth">
-                            <form action="../phr/Login.do" name="phrLogin" method="POST" style="margin-bottom: 0px;">
+                            <form action="<%=request.getContextPath()%>/phr/Login.do" name="phrLogin" method="POST" style="margin-bottom: 0px;">
                                 <%request.setAttribute("phrUserLoginErrorMsg", request.getParameter("phrUserLoginErrorMsg"));
                                 request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg"));%>
                                 <logic:present name="phrUserLoginErrorMsg">
@@ -142,10 +142,10 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                
             <%}%>
         </div>
-        <script type="text/javascript" src="../share/javascript/boxover.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
         <phr:IfTimeToExchange>
             <script type="text/javascript">
-            phrExchangeGo('../phrExchange.do');
+            phrExchangeGo('<%=request.getContextPath()%>/phrExchange.do');
             </script>
         </phr:IfTimeToExchange>
     </body>

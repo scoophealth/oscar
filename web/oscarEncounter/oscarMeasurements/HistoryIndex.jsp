@@ -31,20 +31,31 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.data.*"%>
 <%@ page import="java.util.Vector"%>
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
+    EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
+    MeasurementMapConfig measurementMapConfig = new MeasurementMapConfig();
 %>
 
+    <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+            <indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=String.valueOf(request.getSession().getAttribute(\"user\"))%>">
+            <bean:define id="myoscar" value="true"/>
+            </indivo:indivoRegistered>
+    </oscar:oscarPropertiesCheck>
 <html:html locale="true">
 
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/phr/phr.js"></script>
 <title><bean:message key="oscarEncounter.Index.oldMeasurements" />
 </title>
 <html:base />
@@ -53,14 +64,27 @@
 
 
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<script type="text/javascript" language=javascript>
+<style type="text/css" media="print">
+    .noprint {
+        display: none;
+    }
     
+</style>
+<script type="text/javascript" language=javascript>
+    function submitSendPhr() {
+        phrActionPopup('about:blank', 'sendPhrPopup');
+        document.sendPhrForm.submit();
+    }
 </script>
 <body topmargin="0" leftmargin="0" vlink="#0000FF"
 	onload="window.focus();">
 <html:errors />
-<html:form action="/oscarEncounter/oscarMeasurements/DeleteData">
-	<table>
+<!--html:form action="/oscarEncounter/oscarMeasurements/DeleteData"-->
+<!-- WHAT IS THIS FORM FOR??? THERE IS NO DELETE BUTTON???? -->
+
+<form action="<%=request.getContextPath()%>/oscarEncounter/oscarMeasurements/SendToPhr.do" name="sendPhrForm" target="sendPhrPopup">
+<input type="hidden" name="demographicNo" value="<%=String.valueOf(bean.getDemographicNo())%>">
+        <table>
 		<tr>
 			<td>
 			<table>
@@ -68,6 +92,9 @@
 					<th colspan='3'>Old Measurements Index</th>
 				</tr>
 				<tr>
+                    <logic:present name="myoscar">
+                    <th align="left" class="Header">PHR</th>
+                    </logic:present>
 					<th align="left" class="Header" width="20"><bean:message
 						key="oscarEncounter.oscarMeasurements.displayHistory.headingType" />
 					</th>
@@ -76,9 +103,17 @@
 				</tr>
 				<logic:present name="measurementsData">
 					<logic:iterate id="data" name="measurementsData"
-						property="measurementsDataVector" indexId="ctr">
+                    property="measurementsDataVector" type="oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean" indexId="ctr">
 						<tr class="data">
-							<td width="20"><bean:write name="data" property="type" /></td>
+                                                    <logic:present name="myoscar">
+                                                        <td width="20" class="noprint">
+                                                            <%if (measurementMapConfig.isTypeMappedToLoinc(data.getType()) || data.getType().equalsIgnoreCase("bp")) {%>
+                                                            <input type="checkbox" name="measurementTypeList" value="<bean:write name="data" property="type"/>">
+                                                            <%}%>
+                                                        </td>
+                                                    </logic:present>
+                                                  
+                                                        <td width="20"><bean:write name="data" property="type" /></td>
 							<td width="200"><bean:write name="data"
 								property="typeDescription" /></td>
 							<td width="50"><a href="#"
@@ -89,7 +124,13 @@
 				</logic:present>
 			</table>
 			<table>
-				<tr>
+				<tr>    
+                                        <logic:present name="myoscar">
+                                            <td>
+
+                                                <input type="button" onclick="submitSendPhr()" value="Send Selected to PHR">
+                                            </td>
+                                        </logic:present>
 					<td><input type="button" name="Button"
 						value="<bean:message key="global.btnPrint"/>"
 						onClick="window.print()"></td>
@@ -105,7 +146,7 @@
 			</td>
 		</tr>
 	</table>
-</html:form>
+</form>
 </body>
 </html:html>
 
