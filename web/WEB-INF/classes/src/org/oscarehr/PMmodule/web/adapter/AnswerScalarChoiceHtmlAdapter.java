@@ -40,7 +40,13 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 			    indent(preBuilder).append("<input type=\"hidden\" name=\""+mquest+getPos()+pId+"\" value=\"intake.answerMapped("+getId()+").value\">").append(EOL);
 			}
 		} else {
-			indent(preBuilder).append(startLabel(true)).append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() })).append(EOL);
+			indent(preBuilder)
+				.append("<tr><td>")
+				.append(startLabel(true))
+				.append(endLabel(false))
+				.append("<td>")
+				.append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() }))
+				.append(EOL);
 			beginTag();
 
 			indent(preBuilder).append(createOption("", "Declined")).append(EOL);
@@ -53,7 +59,13 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 			}
 
 			endTag();
-			indent(preBuilder).append("</select>").append(endLabel(false)).append(EOL);
+			indent(preBuilder)
+				.append("</select>")
+				.append("</td>")
+				//.append(endLabel(false))
+				.append("</td></tr>")
+				.append(EOL);
+			
 			String mquest = "mquests";
 			if (getNoOfSibling()>1) mquest = "mquestm";
 			String pId = "_" + getParent().getId();
