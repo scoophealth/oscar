@@ -23,6 +23,8 @@
 
 <h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
 <br />
+<h2>PLACE HOLDER FOR CONSENT TEXT</h2>
+<br />
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
