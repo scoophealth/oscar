@@ -65,6 +65,8 @@ public class ManageConsentAction {
 		if (digitalSignature != null) consent.setDigitalSignatureId(digitalSignature.getId());
 
 		integratorConsentDao.persist(consent);
+		
+		caisiIntegratorManager.pushConsent(consent);
 	}
 
 	public void setExcludeMentalHealthData(Boolean b) {

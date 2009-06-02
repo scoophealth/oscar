@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
@@ -37,6 +38,7 @@ import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
+import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
@@ -53,9 +55,12 @@ import org.oscarehr.caisi_integrator.ws.ProviderWs;
 import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
+import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.FacilityProviderSegmentedTimeClearedHashMap;
@@ -100,7 +105,8 @@ public class CaisiIntegratorManager {
 	/**
 	 * This caching mechanism uses the key=demographicId
 	 */
-	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(
+	        DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
@@ -182,24 +188,21 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<IssueTransfer> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException
-	{
-		try
-		{
+	public List<IssueTransfer> getRemoteIssues(int facilityId, int demographicId) throws MalformedURLException {
+		try {
 			DemographicWs demographicWs = getDemographicWs(facilityId);
-			List<IssueTransfer> results = (List<IssueTransfer>)demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId,OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
-			
+			List<IssueTransfer> results = (List<IssueTransfer>) demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
+
 			// this is done for cached lists
 			// cloned so alterations don't affect the cached data
 			return (new ArrayList<IssueTransfer>(results));
-		}
-		catch(Exception e) // remote issues unavailable for some reason
+		} catch (Exception e) // remote issues unavailable for some reason
 		{
 			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
 			return new ArrayList<IssueTransfer>();
 		}
 	}
-	
+
 	public CommunityIssueWs getCommunityIssueWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
@@ -212,45 +215,34 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) throws MalformedURLException
-	{
+	public ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) throws MalformedURLException {
 		Facility facility = facilityDao.find(facilityId);
-		if (facility.isIntegratorEnabled())
-		{
-			try
-			{
+		if (facility.isIntegratorEnabled()) {
+			try {
 				CommunityIssueWs communityIssueWs = getCommunityIssueWs(facilityId);
-				return (ArrayList<String>)communityIssueWs.getCommunityIssueCodeList(type);
-			}
-			catch(Exception e)
-			{
+				return (ArrayList<String>) communityIssueWs.getCommunityIssueCodeList(type);
+			} catch (Exception e) {
 				log.error("Unable to retrieve community issue code list", e);
 				return null;
 			}
-		}
-		else 
-		{
+		} else {
 			return null;
 		}
 	}
-	
-	public List<NoteTransfer> getRemoteNotes(int facilityId, int demographicId, List<IssueTransfer> remoteIssues) throws MalformedURLException
-	{
-		try
-		{
+
+	public List<NoteTransfer> getRemoteNotes(int facilityId, int demographicId, List<IssueTransfer> remoteIssues) throws MalformedURLException {
+		try {
 			DemographicWs demographicWs = getDemographicWs(facilityId);
-			List<NoteTransfer> notes = (List<NoteTransfer>)demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
-			
+			List<NoteTransfer> notes = (List<NoteTransfer>) demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
+
 			return notes;
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
 			return new ArrayList<NoteTransfer>();
 		}
-			
+
 	}
-	
+
 	public ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
 		Facility facility = getLocalFacility(facilityId);
 
@@ -291,7 +283,7 @@ public class CaisiIntegratorManager {
 
 		return (results);
 	}
-	
+
 	public CachedProgram getRemoteProgram(int facilityId, FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
 		List<CachedProgram> programs = getRemotePrograms(facilityId);
 
@@ -316,13 +308,13 @@ public class CaisiIntegratorManager {
 		@SuppressWarnings("unchecked")
 		List<CachedProgram> results = (List<CachedProgram>) facilitySegmentedSimpleTimeCache.get(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS");
 		List<CachedProgram> filteredResults = new ArrayList<CachedProgram>();
-		
+
 		if (results == null) {
 			ProgramWs programWs = getProgramWs(facilityId);
 			results = programWs.getAllProgramsAllowingIntegratedReferrals();
-			for(CachedProgram result:results) {
-				if(!result.getType().equals("community")) {
-						filteredResults.add(result);
+			for (CachedProgram result : results) {
+				if (!result.getType().equals("community")) {
+					filteredResults.add(result);
 				}
 			}
 			facilitySegmentedSimpleTimeCache.put(facilityId, "ALL_REMOTE_PROGRAMS_ACCEPTING_REFERRALS", filteredResults);
@@ -425,33 +417,32 @@ public class CaisiIntegratorManager {
 	}
 
 	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException {
-		if (hnrClient.getLinkingId()!=null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
+		if (hnrClient.getLinkingId() != null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
 
 		HnrWs hnrWs = getHnrWs(facility.getId());
-		return(hnrWs.setHnrClientData(hnrClient));
+		return (hnrWs.setHnrClientData(hnrClient));
 	}
 
-	public CachedFacility getCurrentRemoteFacility() throws MalformedURLException
-	{
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		int currentFacilityId=loggedInInfo.currentFacility.getId();
+	public CachedFacility getCurrentRemoteFacility() throws MalformedURLException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		int currentFacilityId = loggedInInfo.currentFacility.getId();
 
-		CachedFacility cachedFacility=(CachedFacility) facilitySegmentedSimpleTimeCache.get(currentFacilityId, "MY_REMOTE_FACILITY");
-		
+		CachedFacility cachedFacility = (CachedFacility) facilitySegmentedSimpleTimeCache.get(currentFacilityId, "MY_REMOTE_FACILITY");
+
 		if (cachedFacility == null) {
-			FacilityWs facilityWs=getFacilityWs(currentFacilityId);
-			cachedFacility=facilityWs.getMyFacility();
+			FacilityWs facilityWs = getFacilityWs(currentFacilityId);
+			cachedFacility = facilityWs.getMyFacility();
 			if (cachedFacility != null) facilitySegmentedSimpleTimeCache.put(currentFacilityId, "MY_REMOTE_FACILITY", cachedFacility);
 		}
 
 		return (cachedFacility);
 	}
-	
+
 	public GetConsentTransfer getConsentState(Integer demographicId) throws MalformedURLException {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		int currentFacilityId=loggedInInfo.currentFacility.getId();
-		String loggedInProviderNo=loggedInInfo.loggedInProvider.getProviderNo();
-		
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		int currentFacilityId = loggedInInfo.currentFacility.getId();
+		String loggedInProviderNo = loggedInInfo.loggedInProvider.getProviderNo();
+
 		GetConsentTransfer getConsentTransfer = integratorConsentState.get(currentFacilityId, loggedInProviderNo, demographicId);
 
 		if (getConsentTransfer == null) {
@@ -463,4 +454,34 @@ public class CaisiIntegratorManager {
 		return (getConsentTransfer);
 	}
 
+	public void pushConsent(IntegratorConsent consent) throws MalformedURLException	{
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		int currentFacilityId = loggedInInfo.currentFacility.getId();
+		
+		if (consent.getClientConsentStatus()==ConsentStatus.GIVEN || consent.getClientConsentStatus()==ConsentStatus.REVOKED)
+		{
+			SetConsentTransfer consentTransfer=makeSetConsentTransfer(consent);				
+			getDemographicWs(currentFacilityId).setCachedDemographicConsent(consentTransfer);
+		}
+		
+		integratorConsentState.remove(currentFacilityId, loggedInInfo.loggedInProvider.getProviderNo(), consent.getDemographicId());
+	}
+
+	protected static SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent) {
+		SetConsentTransfer consentTransfer = new SetConsentTransfer();
+		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
+		consentTransfer.setCreatedDate(consent.getCreatedDate());
+		consentTransfer.setDemographicId(consent.getDemographicId());
+		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
+		consentTransfer.setExpiry(consent.getExpiry());
+
+		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
+			FacilityConsentPair pair = new FacilityConsentPair();
+			pair.setRemoteFacilityId(entry.getKey());
+			pair.setShareData(entry.getValue());
+			consentTransfer.getConsentToShareData().add(pair);
+		}
+
+		return (consentTransfer);
+	}
 }
