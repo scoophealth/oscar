@@ -238,7 +238,7 @@ function openSurvey() {
 					<th width="20%">Integrator Consent</th>
 					<td>
 						<%
-							String consentString="none";
+							String consentString="Not yet asked";
 	
 							GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
 							
@@ -246,9 +246,9 @@ function openSurvey() {
 							{
 								StringBuilder sb=new StringBuilder();
 								
-								if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("all ");
-								if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("limited ");
-								if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("none ");
+								if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all ");
+								if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent");
+								if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent ");
 								
 								CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
 								if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
@@ -261,9 +261,10 @@ function openSurvey() {
 								}
 								
 								sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(remoteConsent.getConsentDate()));
+								consentString=sb.toString();
 							}
 						%>
-						current consent : <%=consentString%> <input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<%=consentString%> <input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
 					</td>
 				</tr>
 				<tr>
