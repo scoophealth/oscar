@@ -264,7 +264,7 @@ function openSurvey() {
 								consentString=sb.toString();
 							}
 						%>
-						<%=consentString%> <input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
+						<input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /> <%=consentString%>
 					</td>
 				</tr>
 				<tr>
