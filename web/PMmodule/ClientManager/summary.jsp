@@ -238,30 +238,41 @@ function openSurvey() {
 					<th width="20%">Integrator Consent</th>
 					<td>
 						<%
-							String consentString="Not yet asked";
+							String consentString="Not available";
 	
-							GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
-							
-							if (remoteConsent!=null)
+							try
 							{
-								StringBuilder sb=new StringBuilder();
+								GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
 								
-								if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all ");
-								if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent");
-								if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent ");
-								
-								CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
-								if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
+								if (remoteConsent!=null)
 								{
-									sb.append("set locally on ");
+									StringBuilder sb=new StringBuilder();
+									
+									if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all ");
+									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent");
+									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent ");
+									
+									CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
+									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
+									{
+										sb.append("set locally on ");
+									}
+									else
+									{
+										sb.append("set by another facility on ");
+									}
+									
+									sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(remoteConsent.getConsentDate()));
+									consentString=sb.toString();
 								}
 								else
 								{
-									sb.append("set by another facility on ");
+									consentString="Not yet asked";								
 								}
-								
-								sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(remoteConsent.getConsentDate()));
-								consentString=sb.toString();
+							}
+							catch (Exception e)
+							{
+								e.printStackTrace();
 							}
 						%>
 						<input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /> <%=consentString%>
