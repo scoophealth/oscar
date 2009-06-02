@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Map.Entry;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.WebServiceException;
@@ -53,7 +52,6 @@ import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
-import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
 import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
@@ -364,32 +362,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			if (tempConsent.getClientConsentStatus()==ConsentStatus.GIVEN || tempConsent.getClientConsentStatus()==ConsentStatus.REVOKED)
 			{
-				SetConsentTransfer consentTransfer=makeSetConsentTransfer(tempConsent);				
+				SetConsentTransfer consentTransfer=CaisiIntegratorManager.makeSetConsentTransfer(tempConsent);				
 				demographicService.setCachedDemographicConsent(consentTransfer);
 				logger.debug("pushDemographicConsent:"+tempConsent.getId()+","+tempConsent.getFacilityId()+","+tempConsent.getDemographicId());
 				return;
 			}
 		}
-	}
-
-	private SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent)
-	{
-		SetConsentTransfer consentTransfer=new SetConsentTransfer();
-		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
-		consentTransfer.setCreatedDate(consent.getCreatedDate());
-		consentTransfer.setDemographicId(consent.getDemographicId());
-		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-		consentTransfer.setExpiry(consent.getExpiry());
-		
-		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet())
-		{
-			FacilityConsentPair pair=new FacilityConsentPair();
-			pair.setRemoteFacilityId(entry.getKey());
-			pair.setShareData(entry.getValue());
-			consentTransfer.getConsentToShareData().add(pair);
-		}
-		
-		return(consentTransfer);
 	}
 	
 	private void pushDemographicIssues(Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, ShutdownException {
