@@ -108,6 +108,8 @@ public class CaisiIntegratorManager {
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(
 	        DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
+	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+	
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
 		if (facility != null && facility.isIntegratorEnabled() == true) return (true);
@@ -424,7 +426,6 @@ public class CaisiIntegratorManager {
 	}
 
 	public CachedFacility getCurrentRemoteFacility() throws MalformedURLException {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		int currentFacilityId = loggedInInfo.currentFacility.getId();
 
 		CachedFacility cachedFacility = (CachedFacility) facilitySegmentedSimpleTimeCache.get(currentFacilityId, "MY_REMOTE_FACILITY");
@@ -439,7 +440,6 @@ public class CaisiIntegratorManager {
 	}
 
 	public GetConsentTransfer getConsentState(Integer demographicId) throws MalformedURLException {
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		int currentFacilityId = loggedInInfo.currentFacility.getId();
 		String loggedInProviderNo = loggedInInfo.loggedInProvider.getProviderNo();
 
@@ -455,7 +455,6 @@ public class CaisiIntegratorManager {
 	}
 
 	public void pushConsent(IntegratorConsent consent) throws MalformedURLException	{
-		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		int currentFacilityId = loggedInInfo.currentFacility.getId();
 		
 		if (consent.getClientConsentStatus()==ConsentStatus.GIVEN || consent.getClientConsentStatus()==ConsentStatus.REVOKED)
