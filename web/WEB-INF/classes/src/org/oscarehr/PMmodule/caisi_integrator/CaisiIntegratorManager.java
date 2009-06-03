@@ -108,8 +108,6 @@ public class CaisiIntegratorManager {
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(
 	        DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
-	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-	
 	public boolean isIntegratorEnabled(int facilityId) {
 		Facility facility = getLocalFacility(facilityId);
 		if (facility != null && facility.isIntegratorEnabled() == true) return (true);
@@ -406,55 +404,60 @@ public class CaisiIntegratorManager {
 		return (potentialMatches);
 	}
 
-	public org.oscarehr.hnr.ws.Client getHnrClient(Facility facility, Provider provider, Integer linkingId) throws MalformedURLException {
-		org.oscarehr.hnr.ws.Client client = hnrClientCache.get(facility.getId(), provider.getProviderNo(), linkingId);
+	public org.oscarehr.hnr.ws.Client getHnrClient(Integer linkingId) throws MalformedURLException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
+		org.oscarehr.hnr.ws.Client client = hnrClientCache.get(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), linkingId);
 
 		if (client == null) {
-			HnrWs hnrWs = getHnrWs(facility.getId());
+			HnrWs hnrWs = getHnrWs(loggedInInfo.currentFacility.getId());
 			client = hnrWs.getHnrClient(linkingId);
-			if (client != null) hnrClientCache.put(facility.getId(), provider.getProviderNo(), linkingId, client);
+			if (client != null) hnrClientCache.put(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), linkingId, client);
 		}
 
 		return (client);
 	}
 
-	public Integer setHnrClient(Facility facility, Provider provider, org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException {
-		if (hnrClient.getLinkingId() != null) hnrClientCache.remove(facility.getId(), provider.getProviderNo(), hnrClient.getLinkingId());
+	public Integer setHnrClient(org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
+		if (hnrClient.getLinkingId() != null) hnrClientCache.remove(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), hnrClient.getLinkingId());
 
-		HnrWs hnrWs = getHnrWs(facility.getId());
+		HnrWs hnrWs = getHnrWs(loggedInInfo.currentFacility.getId());
 		return (hnrWs.setHnrClientData(hnrClient));
 	}
 
 	public CachedFacility getCurrentRemoteFacility() throws MalformedURLException {
-		int currentFacilityId = loggedInInfo.currentFacility.getId();
-
-		CachedFacility cachedFacility = (CachedFacility) facilitySegmentedSimpleTimeCache.get(currentFacilityId, "MY_REMOTE_FACILITY");
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
+		CachedFacility cachedFacility = (CachedFacility) facilitySegmentedSimpleTimeCache.get(loggedInInfo.currentFacility.getId(), "MY_REMOTE_FACILITY");
 
 		if (cachedFacility == null) {
-			FacilityWs facilityWs = getFacilityWs(currentFacilityId);
+			FacilityWs facilityWs = getFacilityWs(loggedInInfo.currentFacility.getId());
 			cachedFacility = facilityWs.getMyFacility();
-			if (cachedFacility != null) facilitySegmentedSimpleTimeCache.put(currentFacilityId, "MY_REMOTE_FACILITY", cachedFacility);
+			if (cachedFacility != null) facilitySegmentedSimpleTimeCache.put(loggedInInfo.currentFacility.getId(), "MY_REMOTE_FACILITY", cachedFacility);
 		}
 
 		return (cachedFacility);
 	}
 
 	public GetConsentTransfer getConsentState(Integer demographicId) throws MalformedURLException {
-		int currentFacilityId = loggedInInfo.currentFacility.getId();
-		String loggedInProviderNo = loggedInInfo.loggedInProvider.getProviderNo();
-
-		GetConsentTransfer getConsentTransfer = integratorConsentState.get(currentFacilityId, loggedInProviderNo, demographicId);
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
+		GetConsentTransfer getConsentTransfer = integratorConsentState.get(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), demographicId);
 
 		if (getConsentTransfer == null) {
-			DemographicWs demographicWs = getDemographicWs(currentFacilityId);
+			DemographicWs demographicWs = getDemographicWs(loggedInInfo.currentFacility.getId());
 			getConsentTransfer = demographicWs.getConsentState(demographicId);
-			if (getConsentTransfer != null) integratorConsentState.put(currentFacilityId, loggedInProviderNo, demographicId, getConsentTransfer);
+			if (getConsentTransfer != null) integratorConsentState.put(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), demographicId, getConsentTransfer);
 		}
 
 		return (getConsentTransfer);
 	}
 
 	public void pushConsent(IntegratorConsent consent) throws MalformedURLException	{
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		
 		int currentFacilityId = loggedInInfo.currentFacility.getId();
 		
 		if (consent.getClientConsentStatus()==ConsentStatus.GIVEN || consent.getClientConsentStatus()==ConsentStatus.REVOKED)
