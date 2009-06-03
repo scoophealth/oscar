@@ -8,15 +8,18 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageConsent {
+	private static Logger logger=MiscUtils.getLogger();
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 
@@ -40,9 +43,14 @@ public class ManageConsent {
 		}
 	}
 
-	public Collection<CachedFacility> getAllFacilitiesToDisplay() throws MalformedURLException {
-		if (previousConsentToView == null) return (getAllRemoteFacilities());
-		else return (getPreviousConsentFacilities());
+	public Collection<CachedFacility> getAllFacilitiesToDisplay() {
+		try {
+			if (previousConsentToView == null) return (getAllRemoteFacilities());
+			else return (getPreviousConsentFacilities());
+		} catch (Exception e) {
+			logger.error(e);
+			return (null);
+		}
 	}
 
 	private Collection<CachedFacility> getPreviousConsentFacilities() throws MalformedURLException {
@@ -65,9 +73,9 @@ public class ManageConsent {
 		if (previousConsentToView == null) {
 			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
 			if (result != null) {
-				Boolean checked=result.getConsentToShareData().get(remoteFacilityId);
-				if (checked==null) return(false);
-				else return(!checked);
+				Boolean checked = result.getConsentToShareData().get(remoteFacilityId);
+				if (checked == null) return (false);
+				else return (!checked);
 			}
 
 			return (false);
@@ -96,26 +104,22 @@ public class ManageConsent {
 	public Integer getPreviousConsentDigitalSignatureId() {
 		return (previousConsentToView.getDigitalSignatureId());
 	}
-	
-	public boolean displayAsSelectedConsentStatus(ConsentStatus status)
-	{
-		if (previousConsentToView==null) return(status==ConsentStatus.REVOKED);
-		else return(previousConsentToView.getClientConsentStatus()==status);
+
+	public boolean displayAsSelectedConsentStatus(ConsentStatus status) {
+		if (previousConsentToView == null) return (status == ConsentStatus.REVOKED);
+		else return (previousConsentToView.getClientConsentStatus() == status);
 	}
-	
-	public boolean displayAsSelectedExpiry(int months)
-	{
-		if (previousConsentToView==null) return(months==-1);
-		else 
-		{
-			if (previousConsentToView.getExpiry()==null) return(months==-1);
-			else
-			{
-				GregorianCalendar cal1=new GregorianCalendar();
+
+	public boolean displayAsSelectedExpiry(int months) {
+		if (previousConsentToView == null) return (months == -1);
+		else {
+			if (previousConsentToView.getExpiry() == null) return (months == -1);
+			else {
+				GregorianCalendar cal1 = new GregorianCalendar();
 				cal1.setTime(previousConsentToView.getCreatedDate());
 				cal1.add(Calendar.MONTH, months);
-								
-				return(DateUtils.isSameDay(cal1.getTime(), previousConsentToView.getExpiry()));
+
+				return (DateUtils.isSameDay(cal1.getTime(), previousConsentToView.getExpiry()));
 			}
 		}
 	}

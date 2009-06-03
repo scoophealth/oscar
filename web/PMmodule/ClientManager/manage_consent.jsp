@@ -42,12 +42,23 @@
 				Check to indicate which agencies to exclude
 				<br />
 				<%
-					for (CachedFacility cachedFacility : manageConsent.getAllFacilitiesToDisplay())
+					List<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay();
+				
+					if (facilitiesToDisplay!=null)
 					{
-						int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
+						for (CachedFacility cachedFacility : facilitiesToDisplay)
+						{
+							int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
+							%>
+								<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
+							<%
+						}
+					}
+					else
+					{
 						%>
-							<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
-						<%
+							<h3>System is unavailable.</h3>
+						<%						
 					}
 				%>
 				<br />		

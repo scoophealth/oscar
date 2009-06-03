@@ -238,7 +238,7 @@ function openSurvey() {
 					<th width="20%">Integrator Consent</th>
 					<td>
 						<%
-							String consentString="Not available";
+							String consentString="System is unavailable";
 	
 							try
 							{
@@ -249,7 +249,7 @@ function openSurvey() {
 									StringBuilder sb=new StringBuilder();
 									
 									if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all ");
-									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent");
+									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent ");
 									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent ");
 									
 									CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
