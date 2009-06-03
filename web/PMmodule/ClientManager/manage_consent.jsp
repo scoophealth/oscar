@@ -32,36 +32,38 @@
 	<table>
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
-			<td style="border:solid silver 1px">
+			<td>
 				I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies. I consent to the integration of my information for the purposes described above.
-				<br /><br />
-				<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
-				<br /><br />
-				I do not wish records from the following agencies to be seen in other agencies that provide me care.
-				<br />
-				Check to indicate which agencies to exclude
-				<br />
-				<%
-					List<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay();
-				
-					if (facilitiesToDisplay!=null)
-					{
-						for (CachedFacility cachedFacility : facilitiesToDisplay)
+				<%-- removed until further notice
+					<br /><br />
+					<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
+					<br /><br />
+					I do not wish records from the following agencies to be seen in other agencies that provide me care.
+					<br />
+					Check to indicate which agencies to exclude
+					<br />
+					<%
+						Collection<CachedFacility> facilitiesToDisplay=manageConsent.getAllFacilitiesToDisplay();
+					
+						if (facilitiesToDisplay!=null)
 						{
-							int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
-							%>
-								<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
-							<%
+							for (CachedFacility cachedFacility : facilitiesToDisplay)
+							{
+								int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
+								%>
+									<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
+								<%
+							}
 						}
-					}
-					else
-					{
-						%>
-							<h3>System is unavailable.</h3>
-						<%						
-					}
-				%>
-				<br />		
+						else
+						{
+							%>
+								<h3 style="color:red">System is unavailable.</h3>
+							<%						
+						}
+					%>
+					<br />	
+				--%>	
 			</td>
 		</tr>
 		<tr>
@@ -77,16 +79,17 @@
 			<td>Refused to sign : client is not interested in integration.</td>
 		</tr>
 	</table>
+	<%--
 	<br />
-	<div style="font-weight:bold">Consent expiry : </div>
-	<select name="consentExpiry" <%=viewConsentId!=null?"disabled=\"disabled\"":""%>>
-		<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">I do not wish this consent to expire at a predefined time</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">I wish this consent to expire and require a new consent in 6 months.</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">I wish this consent to expire and require a new consent in 12 months.</option>
-		<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">I wish this consent to expire and require a new consent in 60 months.</option>
-	</select>
+		<div style="font-weight:bold">Consent expiry : </div>
+		<select name="consentExpiry" <%=viewConsentId!=null?"disabled=\"disabled\"":""%>>
+			<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">I do not wish this consent to expire at a predefined time</option>
+			<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">I wish this consent to expire and require a new consent in 6 months.</option>
+			<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">I wish this consent to expire and require a new consent in 12 months.</option>
+			<option <%=manageConsent.displayAsSelectedExpiry(60)?"selected=\"selected\"":""%> value="60">I wish this consent to expire and require a new consent in 60 months.</option>
+		</select>
 	<br />
-
+	--%>
 	<%
 		if (manageConsent.useDigitalSignatures())
 		{
