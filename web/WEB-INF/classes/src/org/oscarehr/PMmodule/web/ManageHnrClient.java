@@ -13,10 +13,9 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.HnrDataValidationDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.HnrDataValidation;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.ui.servlet.ImageRenderingServlet;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClient {
@@ -34,32 +33,33 @@ public class ManageHnrClient {
 	private boolean pictureValidated = false;
 	private boolean hcInfoValidated = false;
 	private boolean otherValidated = false;
-
-	public ManageHnrClient(Facility currentFacility, Provider currentProvider, Integer demographicId) {
+	private LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+	
+	public ManageHnrClient(Integer demographicId) {
 		demographic = demographicDao.getDemographicById(demographicId);
 		clientImage = clientImageDAO.getClientImage(demographicId);
 
 		// we're only dealing with 1 hnr entry even if there's multiple because there should
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
-		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
+		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 
-		if (caisiIntegratorManager.isEnableHealthNumberRegistry(currentFacility.getId()) && clientLink != null) {
+		if (caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInInfo.currentFacility.getId()) && clientLink != null) {
 			try {
-				hnrClient = caisiIntegratorManager.getHnrClient(currentFacility, currentProvider, clientLink.getRemoteLinkId());
+				hnrClient = caisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);
 			}
 		}
 
-		HnrDataValidation tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.PICTURE);
+		HnrDataValidation tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.PICTURE);
 		pictureValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(clientImage.getImage_data()));
 
-		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.HC_INFO);
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.HC_INFO);
 		hcInfoValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getHcInfoValidationBytes(demographic)));
 
-		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(currentFacility.getId(), demographicId, HnrDataValidation.Type.OTHER);
+		tempValidation = hnrDataValidationDao.findMostCurrentByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, HnrDataValidation.Type.OTHER);
 		otherValidated = (tempValidation != null && tempValidation.isValidAndMatchingCrc(HnrDataValidation.getOtherInfoValidationBytes(demographic)));
 	}
 

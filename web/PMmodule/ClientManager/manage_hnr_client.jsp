@@ -10,10 +10,8 @@
 
 <%
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-	Facility currentFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-	Provider currentProvider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	
-	ManageHnrClient manageHnrClient=new ManageHnrClient(currentFacility, currentProvider, currentDemographicId);
+	ManageHnrClient manageHnrClient=new ManageHnrClient(currentDemographicId);
 	Demographic demographic=manageHnrClient.getDemographic();
 	org.oscarehr.hnr.ws.Client hnrClient=manageHnrClient.getHnrClient();
 %>

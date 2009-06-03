@@ -19,46 +19,46 @@
 	{
 		try
 		{
-			ManageHnrClientAction.copyLocalValidatedToHnr(currentFacility, currentProvider, currentDemographicId);
+			ManageHnrClientAction.copyLocalValidatedToHnr(currentDemographicId);
 		}
 		catch (DuplicateHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
-			ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
+			ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
 		}
 		catch (InvalidHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN you provided does not pass validation. Please check the HIN and it's Type.");
-			ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
+			ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
 		}
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.copyHnrToLocal(currentFacility, currentProvider, currentDemographicId);
+		ManageHnrClientAction.copyHnrToLocal(currentDemographicId);
 	}
 	else if ("validatePicture".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setPictureValidation(currentFacility, currentProvider, currentDemographicId, true);
+		ManageHnrClientAction.setPictureValidation(currentDemographicId, true);
 	}
 	else if ("invalidatePicture".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setPictureValidation(currentFacility, currentProvider, currentDemographicId, false);
+		ManageHnrClientAction.setPictureValidation(currentDemographicId, false);
 	}
 	else if ("validateHcInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, true);
+		ManageHnrClientAction.setHcInfoValidation(currentDemographicId, true);
 	}
 	else if ("invalidateHcInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setHcInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
+		ManageHnrClientAction.setHcInfoValidation(currentDemographicId, false);
 	}
 	else if ("validateOtherInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setOtherInfoValidation(currentFacility, currentProvider, currentDemographicId, true);
+		ManageHnrClientAction.setOtherInfoValidation(currentDemographicId, true);
 	}
 	else if ("invalidateOtherInfo".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.setOtherInfoValidation(currentFacility, currentProvider, currentDemographicId, false);
+		ManageHnrClientAction.setOtherInfoValidation(currentDemographicId, false);
 	}
 	else
 	{

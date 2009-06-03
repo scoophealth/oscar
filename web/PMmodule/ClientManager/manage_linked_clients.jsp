@@ -18,11 +18,9 @@
 	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-	Facility currentFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-	Provider currentProvider = (Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER);
 	
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
-	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentFacility, currentProvider, currentDemographicId);
+	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentDemographicId);
 %>
 
 
