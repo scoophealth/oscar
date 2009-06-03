@@ -24,7 +24,7 @@ import org.hibernate.annotations.CollectionOfElements;
 public class IntegratorConsent {
 
 	public enum ConsentStatus {
-		GIVEN, REVOKED, DEFERRED, REFUSED_TO_SIGN
+		GIVEN, REVOKED, DEFERRED_NOT_APPROPRIATE, DEFERRED_CONSIDER_LATER, REFUSED_TO_SIGN
 	}
 	
 	@Id

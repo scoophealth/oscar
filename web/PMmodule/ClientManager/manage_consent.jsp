@@ -31,12 +31,12 @@
 	<div style="font-weight:bold">Client consent</div>
 	<table>
 		<tr>
-			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
+			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
 			<td>
 				I understand the purpose of CAISI, and the benefits and risks associated with consenting to integrate my personal information, including personal health information, among the participating CAISI integrating agencies. I consent to the integration of my information for the purposes described above.
 				<%-- removed until further notice
 					<br /><br />
-					<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
+					<input type="checkbox" name="excludeMentalHealth" <%=manageConsent.displayAsCheckedExcludeMentalHealthData()?"checked=\"on\"":""%> <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> /><span style="font-weight:bold">I choose to exclude my mental health record from the integration of my information.</span>
 					<br /><br />
 					I do not wish records from the following agencies to be seen in other agencies that provide me care.
 					<br />
@@ -51,7 +51,7 @@
 							{
 								int remoteFacilityId=cachedFacility.getIntegratorFacilityId();
 								%>
-									<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=viewConsentId!=null?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
+									<input type="checkbox" name="consent.<%=remoteFacilityId%>.excludeShareData" <%=manageConsent.displayAsCheckedExcludeFacility(remoteFacilityId)?"checked=\"on\"":""%> <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> /><%=cachedFacility.getName()%><br />
 								<%
 							}
 						}
@@ -67,22 +67,26 @@
 			</td>
 		</tr>
 		<tr>
-			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /></td>
+			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REVOKED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REVOKED)?"checked=\"on\"":""%> /></td>
 			<td>I do not consent to the integration of my information for the integration purposes described above.</td>
 		</tr>
 		<tr>
-			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED)?"checked=\"on\"":""%> /></td>
+			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED_CONSIDER_LATER%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_CONSIDER_LATER)?"checked=\"on\"":""%> /></td>
+			<td>Deferred : client wishes to consider consent at a future date.</td>
+		</tr>
+		<tr>
+			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.DEFERRED_NOT_APPROPRIATE%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.DEFERRED_NOT_APPROPRIATE)?"checked=\"on\"":""%> /></td>
 			<td>Deferred : staff decided that collection of consent not appropriate at this time.</td>
 		</tr>
 		<tr>
-			<td><input type="radio" name="consentStatus" <%=viewConsentId!=null?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /></td>
+			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.REFUSED_TO_SIGN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.REFUSED_TO_SIGN)?"checked=\"on\"":""%> /></td>
 			<td>Refused to sign : client is not interested in integration.</td>
 		</tr>
 	</table>
 	<%--
 	<br />
 		<div style="font-weight:bold">Consent expiry : </div>
-		<select name="consentExpiry" <%=viewConsentId!=null?"disabled=\"disabled\"":""%>>
+		<select name="consentExpiry" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%>>
 			<option <%=manageConsent.displayAsSelectedExpiry(-1)?"selected=\"selected\"":""%> value="-1">I do not wish this consent to expire at a predefined time</option>
 			<option <%=manageConsent.displayAsSelectedExpiry(6)?"selected=\"selected\"":""%> value="6">I wish this consent to expire and require a new consent in 6 months.</option>
 			<option <%=manageConsent.displayAsSelectedExpiry(12)?"selected=\"selected\"":""%> value="12">I wish this consent to expire and require a new consent in 12 months.</option>
@@ -123,13 +127,13 @@
 					}
 				</script>
 				<br />
-				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=viewConsentId!=null?"disabled=\"disabled\" style=\"display:none\"":""%> />
+				<input type="button" value="Sign Signature" onclick="setInterval('refreshImage()', POLL_TIME); document.location='<%=request.getContextPath()%>/signature_pad/topaz_signature_pad.jnlp.jsp?<%=DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY%>=<%=signatureRequestId%>'" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> />
 				<br />					
 			<%								
 		}
 	%>
 	<br />
-	<input type="submit" value="save" <%=viewConsentId!=null?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<input type="submit" value="save" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

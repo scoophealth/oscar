@@ -239,7 +239,8 @@ function openSurvey() {
 					<td>
 						<%
 							String consentString="System is unavailable";
-	
+							boolean isIntegratorContactable=false;
+						
 							try
 							{
 								GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
@@ -248,9 +249,9 @@ function openSurvey() {
 								{
 									StringBuilder sb=new StringBuilder();
 									
-									if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all ");
-									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent ");
-									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent ");
+									if (remoteConsent.getConsentState()==ConsentState.ALL) sb.append("Consented to all, ");
+									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent, ");
+									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent, ");
 									
 									CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
 									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
@@ -269,18 +270,20 @@ function openSurvey() {
 								{
 									consentString="Not yet asked";								
 								}
+								
+								isIntegratorContactable=true;
 							}
 							catch (Exception e)
 							{
 								e.printStackTrace();
 							}
 						%>
-						<input type="button" value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /> <%=consentString%>
+						<input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /> <%=consentString%>
 					</td>
 				</tr>
 				<tr>
 					<th width="20%">Linked clients</th>
-				 	<td><input type="button" value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
+				 	<td><input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Manage Linked Clients" onclick="document.location='ClientManager/manage_linked_clients.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /></td>
 				</tr>
 			<%
 		}

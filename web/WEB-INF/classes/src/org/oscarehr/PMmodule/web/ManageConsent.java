@@ -29,6 +29,8 @@ public class ManageConsent {
 	 * consentToView is null if editing consent, if viewing consent it should have the consent to view.
 	 */
 	private IntegratorConsent previousConsentToView = null;
+	
+	private boolean integratorServerError=false;
 
 	public ManageConsent(int clientId) {
 		this.clientId = clientId;
@@ -48,6 +50,7 @@ public class ManageConsent {
 			if (previousConsentToView == null) return (getAllRemoteFacilities());
 			else return (getPreviousConsentFacilities());
 		} catch (Exception e) {
+			integratorServerError=true;
 			logger.error(e);
 			return (null);
 		}
@@ -122,5 +125,12 @@ public class ManageConsent {
 				return (DateUtils.isSameDay(cal1.getTime(), previousConsentToView.getExpiry()));
 			}
 		}
+	}
+	
+	public boolean disableEdit()
+	{
+		if (previousConsentToView!=null) return(true);
+		
+		return(integratorServerError);
 	}
 }
