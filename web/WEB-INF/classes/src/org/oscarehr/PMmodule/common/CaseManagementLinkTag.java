@@ -20,6 +20,9 @@ package org.oscarehr.PMmodule.common;
 
 import java.io.IOException;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -49,7 +52,17 @@ public class CaseManagementLinkTag extends TagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
+                
+                Date date = new Date();
+               
+                Format formatterDate = new SimpleDateFormat("yyyy-M-d");
+                Format formatterTime = new SimpleDateFormat("HH:mm");
+    
+                String placeDate = formatterDate.format(date);
+                String placeTime = formatterTime.format(date);
 
+                        
+                        
 		try {
 			StringBuilder builder = new StringBuilder();
 
@@ -65,9 +78,9 @@ public class CaseManagementLinkTag extends TagSupport {
 			builder.append("curProviderNo=").append(providerNo).append("&");
 			builder.append("reason=").append("&");
 			builder.append("userName=").append(providerName).append("&");
-			builder.append("curDate=").append(PLACEHOLDER_DATE).append("&");
-			builder.append("appointmentDate=").append(PLACEHOLDER_DATE).append("&");
-			builder.append("startTime=").append(PLACEHOLDER_TIME).append("&");
+			builder.append("curDate=").append(placeDate).append("&");
+			builder.append("appointmentDate=").append(placeDate).append("&");
+			builder.append("startTime=").append(placeTime).append("&");
 			builder.append("status=").append("T");
 			
 			pageContext.getOut().write(builder.toString());
