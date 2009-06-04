@@ -25,6 +25,7 @@ import org.oscarehr.PMmodule.web.FacilityDischargedClients;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.WebUtils;
 
@@ -201,8 +202,8 @@ public class FacilityManagerAction extends BaseAction {
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);
 
-			Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-			if (currentFacilityId.equals(facility.getId())) request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+			if (loggedInInfo.currentFacility.getIntegratorLastPushTime().equals(facility.getId())) request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
 
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("facility.saved", facility.getName()));
