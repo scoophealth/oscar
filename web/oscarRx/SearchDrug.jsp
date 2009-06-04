@@ -92,7 +92,8 @@ reverse="<%=true%>">
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.casemgmt.web.PrescriptDrug"%>
-<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%><html:html locale="true">
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%><html:html locale="true">
 <head>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <title><bean:message key="SearchDrug.title" /></title>
@@ -334,10 +335,7 @@ function load() {
 								<th align="center" width="100px"><b><bean:message key="SearchDrug.msgDelete"/></b></th>
 								<th align="center" width="20px">&nbsp;</th>
 								<%
-									Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-	
-									CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-									boolean integratorEnabled=caisiIntegratorManager.isIntegratorEnabled(currentFacilityId);
+									boolean integratorEnabled=LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled();
 								
 									if (integratorEnabled)
 									{
@@ -350,7 +348,7 @@ function load() {
 
 							<%
 								CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-								List<PrescriptDrug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall, currentFacilityId);
+								List<PrescriptDrug> prescriptDrugs=caseManagementManager.getPrescriptions(patient.getDemographicNo(), showall);
 
 								long now = System.currentTimeMillis();
 								long month = 1000L * 60L * 60L * 24L * 30L;
@@ -576,7 +574,7 @@ function load() {
 						<tr>
 							<td colspan="3">
                                                             <html:submit property="submit" styleClass="ControlPushButton"><bean:message key="SearchDrug.msgSearch"/></html:submit> &nbsp;&nbsp;&nbsp; 
-                                                            <input type=button class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="<bean:message key="SearchDrug.msgReset"/>" /> 
+                                                            <input type="button" class="ControlPushButton" onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="<bean:message key="SearchDrug.msgReset"/>" /> 
                                                             <input type="button" class="ControlPushButton" onclick="customWarning();" value="<bean:message key="SearchDrug.msgCustomDrug"/>" /></td>
 						</tr>
 					</table>

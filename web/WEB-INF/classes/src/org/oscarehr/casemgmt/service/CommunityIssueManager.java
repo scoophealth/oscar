@@ -15,6 +15,7 @@ import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -40,8 +41,10 @@ public class CommunityIssueManager {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public List<CaseManagementCommunityIssue> getCommunityIssues(String providerNo, String demographicNo, String programId, Integer facilityId, boolean getRemote, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
+	public List<CaseManagementCommunityIssue> getCommunityIssues(String providerNo, String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
     {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
     	List<CaseManagementIssue> localIssues = null;
     	if (!active) {
 			localIssues = cMan.getIssues(providerNo, demographicNo);
@@ -50,14 +53,14 @@ public class CommunityIssueManager {
 			localIssues = cMan.getActiveIssues(providerNo, demographicNo);
 		}
     	//filter out issues from other facilities in this CAISI instance
-    	localIssues = cMan.filterIssues(localIssues, providerNo, programId, facilityId);
+    	localIssues = cMan.filterIssues(localIssues, providerNo, programId, loggedInInfo.currentFacility.getId());
     	List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
 		// check facility integrator status
-    	if(getRemote)
+    	if(loggedInInfo.currentFacility.isIntegratorEnabled())
 		{
 			// get remote issues
 			CaisiIntegratorManager ciMan = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-			remoteIssues = ciMan.getRemoteIssues(facilityId, Integer.valueOf(demographicNo));
+			remoteIssues = ciMan.getRemoteIssues(loggedInInfo.currentFacility.getId(), Integer.valueOf(demographicNo));
 		}
 		
 		// combine local and remote
@@ -65,7 +68,7 @@ public class CommunityIssueManager {
 		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
 		
 		//logger.debug("Filter Issues");
-		communityIssues = cMan.filterCommunityIssues(communityIssues, providerNo, programId, facilityId);
+		communityIssues = cMan.filterCommunityIssues(communityIssues, providerNo, programId, loggedInInfo.currentFacility.getId());
 		this.assignCheckboxID(communityIssues);
     	return communityIssues;
     }

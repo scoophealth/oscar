@@ -49,6 +49,7 @@ import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 
@@ -149,7 +150,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		intakeSearchBean.setSearchPerformed(true);
 		request.setAttribute("genders", getGenders());
 
-		if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			createRemoteList(request, intakeSearchBean, currentFacilityId);
 		}
 
@@ -199,7 +200,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 			request.setAttribute("remoteMatches", integratedMatches);
 
-			List<CachedFacility> allFacilities = caisiIntegratorManager.getRemoteFacilities(currentFacilityId);
+			List<CachedFacility> allFacilities = caisiIntegratorManager.getRemoteFacilities();
 			HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
 			for (CachedFacility cachedFacility : allFacilities)
 				facilitiesNameMap.put(cachedFacility.getIntegratorFacilityId(), cachedFacility.getName());

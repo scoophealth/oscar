@@ -423,7 +423,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(facilityId, remoteReferral.getSourceIntegratorFacilityId());
+			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
 			sb.append(cachedFacility.getName());
 

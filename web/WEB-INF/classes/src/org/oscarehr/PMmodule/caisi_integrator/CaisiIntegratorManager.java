@@ -108,22 +108,14 @@ public class CaisiIntegratorManager {
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(
 	        DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
-	public boolean isIntegratorEnabled(int facilityId) {
-		Facility facility = getLocalFacility(facilityId);
-		if (facility != null && facility.isIntegratorEnabled() == true) return (true);
-		else return (false);
+	public boolean isEnableIntegratedReferrals() {
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
 	}
 
-	public boolean isEnableIntegratedReferrals(int facilityId) {
-		Facility facility = getLocalFacility(facilityId);
-		if (facility != null && facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals() == true) return (true);
-		else return (false);
-	}
-
-	public boolean isEnableHealthNumberRegistry(int facilityId) {
-		Facility facility = getLocalFacility(facilityId);
-		if (facility != null && facility.isIntegratorEnabled() && facility.isEnableHealthNumberRegistry() == true) return (true);
-		else return (false);
+	public boolean isEnableHealthNumberRegistry() {
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
+		return(facility.isIntegratorEnabled() && facility.isEnableHealthNumberRegistry());
 	}
 
 	private Facility getLocalFacility(int facilityId) {
@@ -150,26 +142,28 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public void flushCachedFacilityInfo(int facilityId) {
-		facilitySegmentedSimpleTimeCache.remove(facilityId, "ALL_REMOTE_FACILITIES");
+	public void flushCachedFacilityInfo() {
+		facilitySegmentedSimpleTimeCache.remove(LoggedInInfo.loggedInInfo.get().currentFacility.getId(), "ALL_REMOTE_FACILITIES");
 	}
 
-	public List<CachedFacility> getRemoteFacilities(int facilityId) throws MalformedURLException {
+	public List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
 		@SuppressWarnings("unchecked")
-		List<CachedFacility> results = (List<CachedFacility>) facilitySegmentedSimpleTimeCache.get(facilityId, "ALL_REMOTE_FACILITIES");
+		List<CachedFacility> results = (List<CachedFacility>) facilitySegmentedSimpleTimeCache.get(loggedInInfo.currentFacility.getId(), "ALL_REMOTE_FACILITIES");
 
 		if (results == null) {
-			FacilityWs facilityWs = getFacilityWs(facilityId);
+			FacilityWs facilityWs = getFacilityWs(loggedInInfo.currentFacility.getId());
 			results = facilityWs.getAllFacility();
-			facilitySegmentedSimpleTimeCache.put(facilityId, "ALL_REMOTE_FACILITIES", results);
+			facilitySegmentedSimpleTimeCache.put(loggedInInfo.currentFacility.getId(), "ALL_REMOTE_FACILITIES", results);
 		}
 
 		// cloned so alterations don't affect the cached data
 		return (new ArrayList<CachedFacility>(results));
 	}
 
-	public CachedFacility getRemoteFacility(int myFacilityId, int remoteFacilityId) throws MalformedURLException {
-		for (CachedFacility facility : getRemoteFacilities(myFacilityId)) {
+	public CachedFacility getRemoteFacility(int remoteFacilityId) throws MalformedURLException {
+		for (CachedFacility facility : getRemoteFacilities()) {
 			if (facility.getIntegratorFacilityId().equals(remoteFacilityId)) return (facility);
 		}
 

@@ -170,7 +170,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			MiscUtils.checkShutdownSignaled();
 
 			try {
-				if (facility.isDisabled() == false && facility.isIntegratorEnabled() == true) {
+				if (!facility.isDisabled() && facility.isIntegratorEnabled()) {
 					pushAllFacilityData(facility);
 				}
 			} catch (WebServiceException e) {

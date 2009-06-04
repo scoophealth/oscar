@@ -6,8 +6,7 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <%
-	int facilityId=Integer.parseInt(request.getParameter("facilityId"));
-	List<CachedFacility> facilities=IntegratorJspBean.getIntegratorFacilityCommunity(facilityId);
+	List<CachedFacility> facilities=IntegratorJspBean.getIntegratorFacilityCommunity();
 %>
 
 

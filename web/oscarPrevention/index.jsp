@@ -47,9 +47,8 @@
   PreventionData pd = new PreventionData();    
   Prevention p = pd.getPrevention(demographic_no);
   
-  Integer facilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
   Integer demographicId=Integer.parseInt(demographic_no);
-  pd.addRemotePreventions(p, facilityId, demographicId);
+  pd.addRemotePreventions(p, demographicId);
   Date demographicDateOfBirth=pd.getDemographicDateOfBirth(demographic_no);
   
   PreventionDS pf = PreventionDS.getInstance();
@@ -446,7 +445,7 @@ div.recommendations li {
                         Hashtable h = (Hashtable) prevList.get(i);
                         String prevName = (String) h.get("name");
                         ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-                        pd.addRemotePreventions(alist, facilityId, demographicId,prevName,demographicDateOfBirth);
+                        pd.addRemotePreventions(alist, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(h, demographic_no,alist.size());                        
                         if(!show){  
                             Hashtable h2 = new Hashtable();
@@ -560,7 +559,7 @@ div.recommendations li {
 		<%
                                 String prevType=(String)h.get("name");
                                 ArrayList alist = pd.getPreventionData(prevType, demographic_no);
-                                pd.addRemotePreventions(alist, facilityId, demographicId, prevType,demographicDateOfBirth);
+                                pd.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
                                 for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
                                 
@@ -597,7 +596,7 @@ div.recommendations li {
         Hashtable h = (Hashtable) prevList.get(i);
         String prevName = (String) h.get("name");
         ArrayList alist = pd.getPreventionData(prevName, demographic_no); 
-        pd.addRemotePreventions(alist, facilityId, demographicId, prevName,demographicDateOfBirth);
+        pd.addRemotePreventions(alist, demographicId, prevName,demographicDateOfBirth);
         if( alist.size() > 0 ) { %>
 <input type="hidden" id="preventionHeader<%=i%>"
 	name="preventionHeader<%=i%>" value="<%=h.get("name")%>">

@@ -18,6 +18,7 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -71,7 +72,7 @@ public class StaticScriptBean {
 		}
 		
 		// add remote drugs
-		if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			try {
 				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
 				List<CachedDemographicDrug> remoteDrugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
@@ -99,7 +100,7 @@ public class StaticScriptBean {
 		remoteProviderPk.setIntegratorFacilityId(remoteFacilityId);
 		remoteProviderPk.setCaisiItemId(remoteDrug.getCaisiProviderId());
 		CachedProvider cachedProvider=caisiIntegratorManager.getProvider(currentFacilityId, remoteProviderPk);
-		CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(currentFacilityId, remoteFacilityId);
+		CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName()+" @ "+cachedFacility.getName();
 
 		drugDisplayData.startDate = RxUtil.DateToString(remoteDrug.getRxDate());

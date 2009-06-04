@@ -48,7 +48,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
-import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -63,12 +62,10 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
 import org.oscarehr.casemgmt.service.CommunityNoteManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
-import org.oscarehr.common.dao.FacilityDao;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -79,8 +76,6 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
-	private static CaisiIntegratorManager caisiIntegratorManager= (CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-	private static FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
@@ -341,8 +336,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 			else // get community issues for old CME UI
 			{
-				Facility currentFacility = facilityDao.find(currentFacilityId);
-				communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, currentFacilityId, currentFacility.isIntegratorEnabled(), Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+				communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
 				//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
 				request.setAttribute("Issues", communityIssues);
 			}
@@ -546,11 +540,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<PrescriptDrug> prescriptions = null;
 			boolean viewAll=caseForm.getPrescipt_view().equals("all");
 			String demographicId=getDemographicNo(request);
-			if (caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)){
-				request.setAttribute("isIntegratorEnabled", true);
-			}
-			
-			prescriptions = this.caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll, currentFacilityId);
+			request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());			
+			prescriptions = this.caseManagementMgr.getPrescriptions(Integer.parseInt(demographicId), viewAll);
 			
 			request.setAttribute("Prescriptions", prescriptions);
 

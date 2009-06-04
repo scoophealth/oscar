@@ -137,7 +137,7 @@ public class ProgramManagerViewAction extends BaseAction {
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
 
-		if (caisiIntegratorManager.isEnableIntegratedReferrals(loggedInFacility.getId())) {
+		if (caisiIntegratorManager.isEnableIntegratedReferrals()) {
 			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(loggedInFacility.getId(), Integer.parseInt(programId)));
 		}
 

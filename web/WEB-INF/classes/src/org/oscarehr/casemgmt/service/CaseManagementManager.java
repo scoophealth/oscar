@@ -92,6 +92,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -452,19 +453,19 @@ public class CaseManagementManager {
 	 * This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs.
 	 * If it's not enabled it will return only local drugs.
 	 */
-	public List<PrescriptDrug> getPrescriptions(int demographicId, boolean all, Integer currentFacilityId) {
+	public List<PrescriptDrug> getPrescriptions(int demographicId, boolean all) {
 		List<PrescriptDrug> results = null;
 
 		results = getPrescriptions(String.valueOf(demographicId), all);
 
-		if (currentFacilityId != null && caisiIntegratorManager.isIntegratorEnabled(currentFacilityId)) {
-			addIntegratorDrugs(results, all, currentFacilityId, demographicId);
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
+			addIntegratorDrugs(results, all, demographicId);
 		}
 
 		return (results);
 	}
 
-	private void addIntegratorDrugs(List<PrescriptDrug> prescriptions, boolean viewAll, int currentFacilityId, int demographicId) {
+	private void addIntegratorDrugs(List<PrescriptDrug> prescriptions, boolean viewAll, int demographicId) {
 
 		if (prescriptions == null) {
 			logger.warn("prescriptions passed in is null, it should never be null, empty list should be used if no entries for drugs.");
@@ -472,21 +473,21 @@ public class CaseManagementManager {
 		}
 
 		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
 			List<CachedDemographicDrug> drugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 
 			for (CachedDemographicDrug cachedDrug : drugs) {
 				if (viewAll) {
-					prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
+					prescriptions.add(getPrescriptDrug(cachedDrug));
 				} else {
 					// if it's not view all, we need to only add the drug if it's not already there, or if it's a newer prescription
 					PrescriptDrug pd = containsPrescriptDrug(prescriptions, cachedDrug.getRegionalIdentifier());
 					if (pd == null) {
-						prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
+						prescriptions.add(getPrescriptDrug(cachedDrug));
 					} else {
 						if (pd.getDate_prescribed().before(cachedDrug.getRxDate())) {
 							prescriptions.remove(pd);
-							prescriptions.add(getPrescriptDrug(currentFacilityId, cachedDrug));
+							prescriptions.add(getPrescriptDrug(cachedDrug));
 						}
 					}
 				}
@@ -496,7 +497,7 @@ public class CaseManagementManager {
 		}
 	}
 
-	private PrescriptDrug getPrescriptDrug(int currentFacilityId, CachedDemographicDrug cachedDrug) throws MalformedURLException {
+	private PrescriptDrug getPrescriptDrug(CachedDemographicDrug cachedDrug) throws MalformedURLException {
 		PrescriptDrug pd = new PrescriptDrug();
 
 		pd.setBN(cachedDrug.getBrandName());
@@ -508,7 +509,7 @@ public class CaseManagementManager {
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
 
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
-		CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(currentFacilityId, remoteFacilityId);
+		CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
 		return (pd);

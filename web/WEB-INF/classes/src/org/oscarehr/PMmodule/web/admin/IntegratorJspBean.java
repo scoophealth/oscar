@@ -10,9 +10,9 @@ import org.oscarehr.util.SpringUtils;
 public class IntegratorJspBean {
     private static CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
     
-    public static List<CachedFacility> getIntegratorFacilityCommunity(int facilityId) throws IOException
+    public static List<CachedFacility> getIntegratorFacilityCommunity() throws IOException
     {
-    	caisiIntegratorManager.flushCachedFacilityInfo(facilityId);
-        return(caisiIntegratorManager.getRemoteFacilities(facilityId));
+    	caisiIntegratorManager.flushCachedFacilityInfo();
+        return(caisiIntegratorManager.getRemoteFacilities());
     }
 }

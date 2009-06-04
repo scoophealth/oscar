@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -66,10 +65,8 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
-import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
-import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import oscar.OscarProperties;
@@ -86,7 +83,6 @@ import oscar.util.UtilDateUtilities;
 public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     private static Log log = LogFactory.getLog(CaseManagementEntryAction.class);
-    private FacilityDao facilityDao = (FacilityDao)SpringUtils.getBean("facilityDao");
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return edit(mapping, form, request, response);
@@ -114,7 +110,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("Get demo and provider no " + String.valueOf(current-start));
         start = current;
         
-        Boolean restore = (Boolean) request.getAttribute("restore");
         String programId = (String) request.getSession().getAttribute("case_program_id");
 
         request.setAttribute("demoName", getDemoName(demono));
@@ -331,7 +326,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         else // retrieve community issues for old CME UI
         {
-        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(providerNo, demono, programId, currentFacilityId, facilityDao.find(currentFacilityId).isIntegratorEnabled(), true);
+        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(providerNo, demono, programId, true);
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));

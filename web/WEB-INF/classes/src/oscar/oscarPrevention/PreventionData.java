@@ -43,10 +43,10 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.caisi_integrator.CxfClientUtils;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarDB.DBHandler;
@@ -393,10 +393,10 @@ public class PreventionData {
 
 	private List<CachedDemographicPrevention> remotePreventions = null;
 
-	private List<CachedDemographicPrevention> populateRemotePreventions(Integer facilityId, Integer demographicId) {
-		if (remotePreventions == null && caisiIntegratorManager.isIntegratorEnabled(facilityId)) {
+	private List<CachedDemographicPrevention> populateRemotePreventions(Integer demographicId) {
+		if (remotePreventions == null && LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			try {
-				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
+				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
 				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
 			}
 			catch (Exception e) {
@@ -407,8 +407,8 @@ public class PreventionData {
 		return (remotePreventions);
 	}
 
-	public Prevention addRemotePreventions(Prevention prevention, Integer facilityId, Integer demographicId) {
-		populateRemotePreventions(facilityId, demographicId);
+	public Prevention addRemotePreventions(Prevention prevention, Integer demographicId) {
+		populateRemotePreventions(demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
@@ -423,8 +423,8 @@ public class PreventionData {
 		return (prevention);
 	}
 
-	public ArrayList addRemotePreventions(ArrayList preventions, Integer facilityId, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
-		populateRemotePreventions(facilityId, demographicId);
+	public ArrayList addRemotePreventions(ArrayList preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
+		populateRemotePreventions(demographicId);
 
 		if (remotePreventions != null) {
 			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
@@ -437,7 +437,7 @@ public class PreventionData {
 					String remoteFacilityName="N/A";
 					CachedFacility remoteFacility=null;
 					try {
-						remoteFacility = caisiIntegratorManager.getRemoteFacility(facilityId, cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+						remoteFacility = caisiIntegratorManager.getRemoteFacility(cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					}
 					catch (Exception e) {
 						log.error(e);

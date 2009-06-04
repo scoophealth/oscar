@@ -227,7 +227,7 @@ public class ManageLinkedClients {
 		integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(demographicTransfer.getHin());
 		integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(demographicTransfer.getLastName());
 
-		CachedFacility tempFacility = caisiIntegratorManager.getRemoteFacility(currentFacility.getId(), demographicTransfer.getIntegratorFacilityId());
+		CachedFacility tempFacility = caisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId());
 		integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.OSCAR_CAISI.name() + '.' + tempFacility.getIntegratorFacilityId();
 		integratorLinkedDemographicHolder.remoteLinkId = demographicTransfer.getCaisiDemographicId();
 		

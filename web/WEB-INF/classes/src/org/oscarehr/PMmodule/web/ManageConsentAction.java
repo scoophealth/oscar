@@ -33,7 +33,7 @@ public class ManageConsentAction {
 		consent.setFacilityId(loggedInInfo.currentFacility.getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities(loggedInInfo.currentFacility.getId())) {
+		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities()) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);
 		}
 	}

@@ -44,7 +44,7 @@
 			pk.setCaisiItemId(remotePreventionId);
 			CachedDemographicPrevention remotePrevention = demographicWs.getCachedDemographicPreventionsByPreventionId(pk);
 			
-			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(loggedInFacilityId, remoteFacilityId);
+			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 			providerPk.setCaisiItemId(remotePrevention.getCaisiProviderId());

@@ -29,7 +29,8 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 <%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%><input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -158,7 +159,7 @@ function openSurvey() {
 			<td>
 				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
 				<%
-					if (caisiIntegratorManager.isEnableHealthNumberRegistry(loggedInFacilityId))
+					if (caisiIntegratorManager.isEnableHealthNumberRegistry())
 					{
 						%>
 							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
@@ -231,7 +232,7 @@ function openSurvey() {
 		</td>
 	</tr>
 	<%
-		if (caisiIntegratorManager.isIntegratorEnabled(loggedInFacilityId))
+		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled())
 		{
 			%>
 				<tr>

@@ -100,6 +100,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -1049,7 +1050,7 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("programs", programManager.search(criteria));
 
 		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-		if (caisiIntegratorManager.isEnableIntegratedReferrals(facility.getId())) {
+		if (caisiIntegratorManager.isEnableIntegratedReferrals()) {
 			try {
 				List<CachedProgram> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
 				filterResultsByCriteria(results, criteria);
@@ -1293,7 +1294,7 @@ public class ClientManagerAction extends BaseAction {
 
 	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;
-
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
 		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
@@ -1513,7 +1514,7 @@ public class ClientManagerAction extends BaseAction {
 		if (tabBean.getTab().equals("Refer")) {
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo, String.valueOf(facilityId)));
 
-			if (caisiIntegratorManager.isIntegratorEnabled(facilityId)) {
+			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {
 					ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
 
@@ -1525,7 +1526,7 @@ public class ClientManagerAction extends BaseAction {
 							ClientReferral clientReferral = new ClientReferral();
 
 							StringBuilder programName = new StringBuilder();
-							CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(facilityId, remoteReferral.getDestinationIntegratorFacilityId());
+							CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteReferral.getDestinationIntegratorFacilityId());
 							programName.append(cachedFacility.getName());
 							programName.append(" / ");
 
