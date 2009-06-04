@@ -176,7 +176,7 @@ public class ManageHnrClientAction {
 					IntegratorConsent integratorConsent=consents.get(0);
 					// was asked to remove hnr consent and just apply the general consent setting to the hnr
 //					hnrClient.setHidden(!integratorConsent.isConsentToShareData());
-					hnrClient.setHiddenConsentDate(integratorConsent.getCreatedDate());
+					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
 				}
 				
 				// save the client
