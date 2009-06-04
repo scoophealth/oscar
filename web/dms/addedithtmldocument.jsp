@@ -287,7 +287,7 @@ String annotation_attrib = "anno"+now;
 		<tr>
 			<td colspan="2">
 			    <input type="button" value="Annotation"
-			    onclick="window.open('/oscar/annotation/annotation.jsp?atbname=<%=annotation_attrib%>&display=<%=annotation_display%>&table_id=<%=annotation_tableid%>&demo=<%=moduleid%>','anwin','width=400,height=250');" />
+			    onclick="window.open('../annotation/annotation.jsp?atbname=<%=annotation_attrib%>&display=<%=annotation_display%>&table_id=<%=annotation_tableid%>&demo=<%=moduleid%>','anwin','width=400,height=250');" />
 			</td>
 		</tr>
 		<tr>
