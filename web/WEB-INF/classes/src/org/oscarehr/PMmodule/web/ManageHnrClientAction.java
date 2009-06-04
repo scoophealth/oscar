@@ -19,6 +19,7 @@ import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -175,7 +176,7 @@ public class ManageHnrClientAction {
 					// only 1 hnr setting so using the latest is fine.
 					IntegratorConsent integratorConsent=consents.get(0);
 					// was asked to remove hnr consent and just apply the general consent setting to the hnr
-//					hnrClient.setHidden(!integratorConsent.isConsentToShareData());
+					hnrClient.setHidden(integratorConsent.getClientConsentStatus()!=ConsentStatus.GIVEN);
 					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
 				}
 				
