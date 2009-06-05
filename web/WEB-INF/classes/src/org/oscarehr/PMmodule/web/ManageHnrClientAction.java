@@ -7,7 +7,9 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.ConsentState;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
+import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
@@ -18,8 +20,6 @@ import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
-import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -171,14 +171,26 @@ public class ManageHnrClientAction {
 
 				// set the consent
 				hnrClient.setHidden(true);
-				List<IntegratorConsent> consents=integratorConsentDao.findByFacilityAndDemographic(loggedInInfo.currentFacility.getId(), clientId);
-				if (consents.size()>0) {
-					// only 1 hnr setting so using the latest is fine.
-					IntegratorConsent integratorConsent=consents.get(0);
-					// was asked to remove hnr consent and just apply the general consent setting to the hnr
-					hnrClient.setHidden(integratorConsent.getClientConsentStatus()!=ConsentStatus.GIVEN);
-					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
+// this section will produce correct results based on the model but unexpected from the user, so we're hacking it
+//				List<IntegratorConsent> consents=integratorConsentDao.findByFacilityAndDemographic(loggedInInfo.currentFacility.getId(), clientId);
+//				if (consents.size()>0) {
+//					// only 1 hnr setting so using the latest is fine.
+//					IntegratorConsent integratorConsent=consents.get(0);
+//					// was asked to remove hnr consent and just apply the general consent setting to the hnr
+//					hnrClient.setHidden(integratorConsent.getClientConsentStatus()!=ConsentStatus.GIVEN);
+//					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
+//				}
+				// new hacked consent which is actually wrong but may produced "expected" results
+				GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(clientId);
+				if (remoteConsent!=null)
+				{
+					if (remoteConsent.getConsentState()==ConsentState.ALL)
+					{
+						hnrClient.setHidden(false);
+						hnrClient.setHiddenChangeDate(remoteConsent.getConsentDate());
+					}
 				}
+				
 				
 				// save the client
 				hnrClient.setUpdatedBy("faciliy: " + loggedInInfo.currentFacility.getName() + ", provider:" + loggedInInfo.loggedInProvider.getFormattedName());
