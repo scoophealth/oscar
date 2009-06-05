@@ -65,7 +65,7 @@
 	</tr>
 	<tr>
 		<td class="genericTableHeader">Birth Date</td>
-		<td><%=demographic.getFormattedDob()%><%=(StringUtils.trimToNull(demographic.getFormattedDob())==null?"<span style=\"color:red\">*</span>":"")%></td>
+		<td><%=demographic.getFormattedDob()%><%=(demographic.getBirthDay()==null||StringUtils.trimToNull(demographic.getFormattedDob())==null?"<span style=\"color:red\">*</span>":"")%></td>
 		<td><%=manageHnrClient.getRemoteFormatedBirthDate()%></td>
 	</tr>
 	<tr>
