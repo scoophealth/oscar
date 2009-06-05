@@ -186,7 +186,7 @@ public class CommunityIssueManager {
 	 * Used when a remote COmmunity Issue is checked while adding a new note in the CaseManagementEntry(.jsp) screen
 	 * @param issue a remote CaseManagementCommunityIssue copied into a CaseManagementIssue
 	 */
-	public void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue)
+	public void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo)
 	{
 		// look up issue code/description/type
 		Issue iss = issueDao.findIssueByCode(issue.getIssue().getCode());
@@ -206,6 +206,7 @@ public class CommunityIssueManager {
 				
 		// save to casemgmt_issue table so we have an ID to attach to a note
 		issue.setIssue_id(iss.getId());
+		issue.setDemographic_no(String.valueOf(demographicNo));
 		cmiDao.saveIssue(issue);
 		log.debug("CaseManagementIssue created with ID "+issue.getIssue_id());
 	}

@@ -927,7 +927,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     if(iss.isRemote())
                     {
                     	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
-                    	new CommunityIssueManager().copyRemoteCommunityIssueToLocal(cmi);
+                    	new CommunityIssueManager().copyRemoteCommunityIssueToLocal(cmi,Integer.valueOf(demo));
                     	BeanUtils.copyProperties(iss, cmi);
                     }
                     
