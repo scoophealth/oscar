@@ -79,7 +79,7 @@ public class AlertTimer {
             	logger.debug("AlertTimer noticed shutdown signaled.");
             }
             catch (Exception e) {
-                logger.error(e);
+                logger.error("unexpected error", e);
             }
             finally {
         		LoggedInInfo.loggedInInfo.remove();

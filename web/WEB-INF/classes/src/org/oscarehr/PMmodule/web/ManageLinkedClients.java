@@ -72,7 +72,7 @@ public class ManageLinkedClients {
 
 			return (sortedResult);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 			return (null);
 		}
 	}

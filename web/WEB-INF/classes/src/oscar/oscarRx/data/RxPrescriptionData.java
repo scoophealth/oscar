@@ -736,7 +736,7 @@ public class RxPrescriptionData {
 			arr = (Prescription[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -769,7 +769,7 @@ public class RxPrescriptionData {
 			arr = (Favorite[]) lst.toArray(arr);
 
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -796,7 +796,7 @@ public class RxPrescriptionData {
 			rs.close();
 
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -815,7 +815,7 @@ public class RxPrescriptionData {
 			db.getConnection().close();
 			ret = true;
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		}
 
 		return ret;
@@ -846,7 +846,7 @@ public class RxPrescriptionData {
 			patient = new oscar.oscarRx.data.RxPatientData().getPatient(demographic_no);
 			provider = new oscar.oscarRx.data.RxProviderData().getProvider(provider_no);
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		}
 		ProSignatureData sig = new ProSignatureData();
 		boolean hasSig = sig.hasSignature(bean.getProviderNo());
@@ -899,7 +899,7 @@ public class RxPrescriptionData {
 			}
 			db.getConnection().close();
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		}
 
 		logger.debug("INSERT INTO PRESCRIPTION " + retval);
@@ -912,7 +912,7 @@ public class RxPrescriptionData {
 			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 			db.RunSQL(sql);
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -929,7 +929,7 @@ public class RxPrescriptionData {
 				ret = rs.getString("rx_comments");
 			}
 		} catch (SQLException e) {
-			logger.error(e);
+			logger.error("unexpected error", e);
 		} finally {
 			DbConnectionFilter.releaseThreadLocalDbConnection();
 		}
@@ -1506,7 +1506,7 @@ public class RxPrescriptionData {
 
 				return ret;
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 				return null;
 			}
 		}
@@ -1567,7 +1567,7 @@ public class RxPrescriptionData {
 
 				db.getConnection().close();
 			} catch (Exception e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			}
 		}
 
@@ -1618,7 +1618,7 @@ public class RxPrescriptionData {
 				}
 
 			} catch (SQLException e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			}
 			return ret;
 		}
@@ -1767,7 +1767,7 @@ public class RxPrescriptionData {
 				db.getConnection().close();
 
 			} catch (SQLException e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			}
 
 			return b;
@@ -2294,7 +2294,7 @@ public class RxPrescriptionData {
 				}
 
 			} catch (SQLException e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			} finally {
 				DbConnectionFilter.releaseThreadLocalDbConnection();
 			}

@@ -7,12 +7,15 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.IntegratorConsent;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -22,6 +25,7 @@ public class ManageConsent {
 	private static Logger logger=MiscUtils.getLogger();
 	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
+	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
 	private LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 	private int clientId = -1;
@@ -51,7 +55,7 @@ public class ManageConsent {
 			else return (getPreviousConsentFacilities());
 		} catch (Exception e) {
 			integratorServerError=true;
-			logger.error(e);
+			logger.error("unexpected error", e);
 			return (null);
 		}
 	}
@@ -132,5 +136,16 @@ public class ManageConsent {
 		if (previousConsentToView!=null) return(true);
 		
 		return(integratorServerError);
+	}
+	
+	public String getPreviousConsentProvider()
+	{
+		Provider provider=providerDao.getProvider(previousConsentToView.getProviderNo());
+		return(provider.getFormattedName()+", "+provider.getProviderType());
+	}
+	
+	public String getPreviousConsentDate()
+	{
+		return(DateFormatUtils.ISO_DATETIME_FORMAT.format(previousConsentToView.getCreatedDate()).replace('T', ' '));
 	}
 }

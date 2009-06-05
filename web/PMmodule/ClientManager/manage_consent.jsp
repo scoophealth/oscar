@@ -133,7 +133,15 @@
 		}
 	%>
 	<br />
-	<input type="submit" value="save" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
+	<%
+		if (viewConsentId!=null)
+		{
+			%>
+				Consent obtained by <%=manageConsent.getPreviousConsentProvider()%> on <%=manageConsent.getPreviousConsentDate()%> <br/>
+			<%
+		}
+	%>
+	<input type="submit" value="sign save and exit" <%=manageConsent.disableEdit()?"disabled=\"disabled\" style=\"display:none\"":""%> /> &nbsp; <input type="button" value="Cancel" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ClientManager.do?id=<%=currentDemographicId%>'"/>
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>

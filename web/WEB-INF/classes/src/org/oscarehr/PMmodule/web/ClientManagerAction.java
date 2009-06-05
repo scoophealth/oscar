@@ -1056,9 +1056,9 @@ public class ClientManagerAction extends BaseAction {
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			} catch (WebServiceException e) {
-				logger.error(e);
+				logger.error("unexpected error", e);
 			}
 		}
 
