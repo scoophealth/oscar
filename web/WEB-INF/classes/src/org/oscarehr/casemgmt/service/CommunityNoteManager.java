@@ -49,6 +49,7 @@ public class CommunityNoteManager {
 				trans.setFacilityId(facilityId);
 				trans.setIssueCode(issue);
 				transfers.add(trans);
+				log.debug("IssueTransfer created for " + issue);
 			}
 			log.debug("looking for remoteNotes");
 			List<NoteTransfer> remoteNotes = ciMan.getRemoteNotes(facilityId, demographicId, transfers);

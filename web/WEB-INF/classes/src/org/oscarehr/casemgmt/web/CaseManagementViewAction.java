@@ -391,7 +391,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 							if(issue.getCheckboxID().equals(checked_issues[i]))
 							{
 								checked_issueIDs[i] = Long.toString(issue.getIssue_id());
-								if(issue.isRemote()) checked_remoteIssueCodes.add(issue.getIssue().getCode());
+								if(issue.isRemote()) {
+									checked_remoteIssueCodes.add(issue.getIssue().getCode());
+									log.debug("check_remoteIssueCodes - added " + issue.getIssue().getCode());
+								}
 								continue;
 							}
 						}
