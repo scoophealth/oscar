@@ -398,7 +398,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					}
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+					log.debug("getting remote notes");
 					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
+					log.debug("found " + remoteNotes.size() + " remote notes");
 					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
 					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
