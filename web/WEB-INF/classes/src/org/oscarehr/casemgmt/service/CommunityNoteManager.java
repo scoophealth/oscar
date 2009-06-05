@@ -38,6 +38,7 @@ public class CommunityNoteManager {
 			Role role = cMan.getProviderRole(providerNo, programId, facilityId);
 			if(role == null || (!role.getName().equals("doctor") && !role.getName().equals("nurse"))) // not a doctor or nurse 
 			{
+				log.debug("returning no notes because of role not being a doctor/nurse (" + role.getName() + ")");
 				return notes;
 			}
 			
@@ -49,7 +50,10 @@ public class CommunityNoteManager {
 				trans.setIssueCode(issue);
 				transfers.add(trans);
 			}
+			log.debug("looking for remoteNotes");
 			List<NoteTransfer> remoteNotes = ciMan.getRemoteNotes(facilityId, demographicId, transfers);
+			log.debug("found " + remoteNotes.size() + " note transfers");
+			
 			for(NoteTransfer rNote: remoteNotes)
 			{
 				CaseManagementNote note = new CaseManagementNote();
@@ -76,7 +80,7 @@ public class CommunityNoteManager {
 				}
 				note.setProvider(provider);
 				note.setSigned(rNote.getSigningCaisiProviderName() != null);
-				
+				log.debug("adding note to list");
 				notes.add(note);
 			}
 		}

@@ -228,7 +228,7 @@ public class CaisiIntegratorManager {
 		try {
 			DemographicWs demographicWs = getDemographicWs(facilityId);
 			List<NoteTransfer> notes = (List<NoteTransfer>) demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
-
+			log.debug("retrieved " + notes.size() + " notes from the integrator" );
 			return notes;
 		} catch (Exception e) {
 			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
