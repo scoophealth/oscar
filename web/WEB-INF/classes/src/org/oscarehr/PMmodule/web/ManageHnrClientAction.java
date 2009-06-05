@@ -16,7 +16,6 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.HnrDataValidationDao;
-import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
@@ -30,7 +29,6 @@ public class ManageHnrClientAction {
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static HnrDataValidationDao hnrDataValidationDao = (HnrDataValidationDao) SpringUtils.getBean("hnrDataValidationDao");
-	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 	
 	public static void copyHnrToLocal(Integer clientId) {
 		try {
