@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.ConsentState;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
 import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
@@ -30,7 +31,7 @@ public class ManageHnrClientAction {
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private static HnrDataValidationDao hnrDataValidationDao = (HnrDataValidationDao) SpringUtils.getBean("hnrDataValidationDao");
 	
-	public static void copyHnrToLocal(Integer clientId) {
+	public static void copyHnrToLocal(Integer clientId) throws ConnectException_Exception {
 		try {
 			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			
@@ -83,12 +84,14 @@ public class ManageHnrClientAction {
 
 				demographicDao.getHibernateTemplate().saveOrUpdate(demographic);
 			}
+		} catch (ConnectException_Exception e) {
+			throw(e);
 		} catch (Exception e) {
 			logger.error("Unexpected Error.", e);
 		}
 	}
 
-	public static void copyLocalValidatedToHnr(Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException {
+	public static void copyLocalValidatedToHnr(Integer clientId) throws DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
 		try {
 			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
@@ -209,6 +212,8 @@ public class ManageHnrClientAction {
 					clientLinkDao.persist(clientLink);
 				}
 			}
+		} catch (ConnectException_Exception e) {
+			throw(e);
 		} catch (InvalidHinExceptionException e) {
 			throw(e);
 		} catch (DuplicateHinExceptionException e) {

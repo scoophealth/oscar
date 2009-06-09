@@ -1,4 +1,5 @@
 
+<%@page import="org.oscarehr.caisi_integrator.ws.ConnectException_Exception"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException"%>
@@ -21,6 +22,10 @@
 		{
 			ManageHnrClientAction.copyLocalValidatedToHnr(currentDemographicId);
 		}
+		catch (ConnectException_Exception e)
+		{
+			WebUtils.addErrorMessage(session, "The HNR server is currently unavailable.");
+		}
 		catch (DuplicateHinExceptionException e)
 		{
 			WebUtils.addErrorMessage(session, "This HIN is already in use in the HNR, please link to that individual.");
@@ -34,7 +39,14 @@
 	}
 	else if ("copyHnrToLocal".equals(request.getParameter("action")))
 	{
-		ManageHnrClientAction.copyHnrToLocal(currentDemographicId);
+		try
+		{
+			ManageHnrClientAction.copyHnrToLocal(currentDemographicId);
+		}
+		catch (ConnectException_Exception e)
+		{
+			WebUtils.addErrorMessage(session, "The HNR server is currently unavailable.");
+		}
 	}
 	else if ("validatePicture".equals(request.getParameter("action")))
 	{

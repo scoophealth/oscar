@@ -15,6 +15,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
@@ -77,7 +78,7 @@ public class ManageLinkedClients {
 		}
 	}
 
-	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException {
+	private static void addHnrLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException, ConnectException_Exception {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
 		List<ClientLink> currentLinks = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographic.getDemographicNo(), true, ClientLink.Type.HNR);
@@ -105,25 +106,29 @@ public class ManageLinkedClients {
 	}
 
 	private static void addHnrMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException, DatatypeConfigurationException {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		try {
+	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
-		MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
-		List<MatchingClientScore> potentialMatches = caisiIntegratorManager.searchHnrForMatchingClients(loggedInInfo.currentFacility, loggedInInfo.loggedInProvider, matchingClientParameters);
-		
-		for (MatchingClientScore matchingClientScore : potentialMatches) {
-			String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();
-			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
+	        MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
+	        List<MatchingClientScore> potentialMatches = caisiIntegratorManager.searchHnrForMatchingClients(loggedInInfo.currentFacility, loggedInInfo.loggedInProvider, matchingClientParameters);
+	        
+	        for (MatchingClientScore matchingClientScore : potentialMatches) {
+	        	String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();
+	        	LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
 
-			if (integratorLinkedDemographicHolder == null) {
-				integratorLinkedDemographicHolder = new LinkedDemographicHolder();
-				results.put(tempKey, integratorLinkedDemographicHolder);
-			}
+	        	if (integratorLinkedDemographicHolder == null) {
+	        		integratorLinkedDemographicHolder = new LinkedDemographicHolder();
+	        		results.put(tempKey, integratorLinkedDemographicHolder);
+	        	}
 
-			integratorLinkedDemographicHolder.linked = false;
-			integratorLinkedDemographicHolder.matchingScore = matchingClientScore.getScore();
-			org.oscarehr.hnr.ws.Client hnrClient = matchingClientScore.getClient();
-			copyHnrClientDataToMatchingScorePlaceholder(integratorLinkedDemographicHolder, hnrClient);
-		}
+	        	integratorLinkedDemographicHolder.linked = false;
+	        	integratorLinkedDemographicHolder.matchingScore = matchingClientScore.getScore();
+	        	org.oscarehr.hnr.ws.Client hnrClient = matchingClientScore.getClient();
+	        	copyHnrClientDataToMatchingScorePlaceholder(integratorLinkedDemographicHolder, hnrClient);
+	        }
+        } catch (ConnectException_Exception e) {
+	        logger.error("Connection exception to HNR", e);
+        }
 	}
 
 	private static void copyHnrClientDataToMatchingScorePlaceholder(LinkedDemographicHolder integratorLinkedDemographicHolder, org.oscarehr.hnr.ws.Client hnrClient) {

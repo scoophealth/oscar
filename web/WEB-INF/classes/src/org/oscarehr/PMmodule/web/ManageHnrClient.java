@@ -6,6 +6,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -45,9 +46,11 @@ public class ManageHnrClient {
 		List<ClientLink> temp = clientLinkDao.findByFacilityIdClientIdType(loggedInInfo.currentFacility.getId(), demographicId, true, ClientLink.Type.HNR);
 		if (temp.size() > 0) clientLink = temp.get(0);
 
-		if (caisiIntegratorManager.isEnableHealthNumberRegistry() && clientLink != null) {
+		if (CaisiIntegratorManager.isEnableHealthNumberRegistry() && clientLink != null) {
 			try {
 				hnrClient = caisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
+			} catch (ConnectException_Exception e) {
+				logger.error("Error Connecting to HNR server", e);
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);
 			}

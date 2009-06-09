@@ -35,6 +35,7 @@ import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWs;
 import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
+import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
@@ -388,7 +389,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws DatatypeConfigurationException, MalformedURLException {
+	public List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws DatatypeConfigurationException, MalformedURLException, ConnectException_Exception {
 		HnrWs hnrWs = getHnrWs(facility.getId());
 		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(matchingClientParameters);
 
@@ -398,7 +399,7 @@ public class CaisiIntegratorManager {
 		return (potentialMatches);
 	}
 
-	public org.oscarehr.hnr.ws.Client getHnrClient(Integer linkingId) throws MalformedURLException {
+	public org.oscarehr.hnr.ws.Client getHnrClient(Integer linkingId) throws MalformedURLException, ConnectException_Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		
 		org.oscarehr.hnr.ws.Client client = hnrClientCache.get(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), linkingId);
@@ -412,7 +413,7 @@ public class CaisiIntegratorManager {
 		return (client);
 	}
 
-	public Integer setHnrClient(org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException {
+	public Integer setHnrClient(org.oscarehr.hnr.ws.Client hnrClient) throws MalformedURLException, DuplicateHinExceptionException, InvalidHinExceptionException, ConnectException_Exception {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		
 		if (hnrClient.getLinkingId() != null) hnrClientCache.remove(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), hnrClient.getLinkingId());
