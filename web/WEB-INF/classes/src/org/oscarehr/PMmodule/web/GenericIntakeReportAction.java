@@ -36,7 +36,10 @@ public class GenericIntakeReportAction extends BaseGenericIntakeAction {
 		Date endDate = getEndDate(request);
 		boolean includePast = new Boolean(getIncludePast(request));
 
-		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(intakeType, programId, startDate, endDate, includePast);
+		String nodeId = getParameter(request,"nodeId");
+		
+		
+		Map<String, SortedSet<ReportStatistic>> questionStatistics = genericIntakeManager.getQuestionStatistics(nodeId,intakeType, programId, startDate, endDate, includePast);
 		
 		request.setAttribute("intakeType", StringUtils.capitalize(intakeType));
 		request.setAttribute("startDate", DateTimeFormatUtils.getStringFromDate(startDate, DATE_FORMAT));

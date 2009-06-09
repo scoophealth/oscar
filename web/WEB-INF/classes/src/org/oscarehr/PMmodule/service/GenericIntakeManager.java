@@ -33,7 +33,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
-import org.jfree.util.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
@@ -61,6 +62,8 @@ public class GenericIntakeManager {
 	private AdmissionDao admissionDao;
 	private OcanXmlAdapterFactory adapterFactory = new OcanXmlAdapterFactory();
 
+	Log logger = LogFactory.getLog(GenericIntakeManager.class);
+	
 	public void setGenericIntakeNodeDAO(
 			GenericIntakeNodeDAO genericIntakeNodeDAO) {
 		this.genericIntakeNodeDAO = genericIntakeNodeDAO;
@@ -190,7 +193,7 @@ public class GenericIntakeManager {
 					.getPublishedIntakeNodesByName(regIntakeNode.getLabel()
 							.getLabel());
 			for (IntakeNode in : previousIntakeNodes) {
-				Log.info("searching for intakes for node version: "
+				logger.info("searching for intakes for node version: "
 						+ in.getForm_version());
 				intake = genericIntakeDAO.getLatestIntakeByFacility(in,
 						clientId, null, facilityId);
@@ -350,7 +353,7 @@ public class GenericIntakeManager {
 	}
 
 	public Map<String, SortedSet<ReportStatistic>> getQuestionStatistics(
-			String intakeType, Integer programId, Date startDate, Date endDate,
+			String nodeId, String intakeType, Integer programId, Date startDate, Date endDate,
 			boolean includePast) throws SQLException {
 		Map<String, SortedSet<ReportStatistic>> questionStatistics = new LinkedHashMap<String, SortedSet<ReportStatistic>>();
 
@@ -363,8 +366,14 @@ public class GenericIntakeManager {
 			node = getIndepthIntakeNode();
 		} else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
 			node = getProgramIntakeNode(programId);
+		} else {
+			node = getIntakeNode(Integer.valueOf(nodeId));
 		}
 
+		if(node==null) {
+			logger.info("No node found with given parameters");
+			return questionStatistics;
+		}
 		// get report statistics
 		List<IntakeNode> nodeList = getEqIntakeNodes(node, includePast);
 		Hashtable<Integer, Integer> choiceAnswerIds = new Hashtable<Integer, Integer>();
@@ -586,7 +595,7 @@ public class GenericIntakeManager {
 							// System.out.println("value=" + value);
 							ia.setValue(value);
 						} catch (IllegalStateException e) {
-							Log.warn(e);
+							logger.warn(e);
 						}
 					}
 				}

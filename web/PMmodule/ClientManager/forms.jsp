@@ -70,6 +70,37 @@ function createIntake(clientId,nodeId) {
 	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=none&nodeId="+nodeId+"&clientId=" + clientId;
 
 }
+
+function getIntakeReportByNodeId(nodeId) {
+    var oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    var startDate = prompt("Please enter a start date in this format (e.g. 2000-01-01)", dojo.date.format(oneWeekAgo, {selector:'dateOnly', datePattern:'yyyy-MM-dd'}));
+    if (startDate == null) {
+        return;
+    }
+    if (!dojo.validate.isValidDate(startDate, 'YYYY-MM-DD')) {
+        alert("'" + startDate + "' is not a valid start date");
+        return;
+    }
+
+    var endDate = prompt("Please enter the end date in this format (e.g. 2000-12-01)", dojo.date.format(new Date(), {selector:'dateOnly', datePattern:'yyyy-MM-dd'}));
+    if (endDate == null) {
+        return;
+    }
+    if (!dojo.validate.isValidDate(endDate, 'YYYY-MM-DD')) {
+        alert("'" + endDate + "' is not a valid end date");
+        return;
+    }
+
+    var includePast = confirm("Do you want to include past intake forms in your report? ([OK] for yes / [Cancel] for no)");
+
+    alert("Generating report from " + startDate + " to " + endDate + ". Please note: it is normal for the generation process to take up to a few minutes to complete, be patient.");
+
+    var url = '<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'nodeId=' + nodeId + '&method=report' + '&type=&startDate=' + startDate + '&endDate=' + endDate + '&includePast=' + includePast;
+    
+    popupPage2(url, "IntakeReport" + nodeId);
+}
 </script>
 
 <div class="tabs">
@@ -161,13 +192,23 @@ New Follow-up Intake:&nbsp;
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.node.label.label}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)" /> <input type="button" value="Print Preview"
-				onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" /></td>
+			<td>
+				<input type="button" value="Update" onclick="createIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.node.id}"/>)" /> 
+				<input type="button" value="Print Preview" onclick="printIntake('<c:out value="${client.demographicNo}" />',<c:out value="${intake.id}" />)" />				
+			</td>
 		</tr>
 	</c:forEach>
 </table>
 New General Form:&nbsp;
 <select onchange="createIntake('<c:out value="${client.demographicNo}" />',this.options[this.selectedIndex].value);">
+	<option value="" selected></option>
+	<c:forEach var="node" items="${generalIntakeNodes}">
+		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}" /></option>
+	</c:forEach>
+</select>
+<br />
+Report:&nbsp;
+<select onchange="getIntakeReportByNodeId(this.options[this.selectedIndex].value);">
 	<option value="" selected></option>
 	<c:forEach var="node" items="${generalIntakeNodes}">
 		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}" /></option>
