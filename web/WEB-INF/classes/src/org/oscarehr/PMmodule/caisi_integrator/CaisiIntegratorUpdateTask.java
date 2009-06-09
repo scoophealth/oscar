@@ -189,6 +189,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		logger.debug("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
+		// set working facility
+		LoggedInInfo.loggedInInfo.get().currentFacility=facility;
+		
 		// check all parameters are present
 		String integratorBaseUrl = facility.getIntegratorUrl();
 		String user = facility.getIntegratorUser();
@@ -208,7 +211,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// in theory sync should only send changed data, but currently due to
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
 		// data model.
-		pushFacility(facility);
+		pushFacility();
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics(facility);
@@ -221,14 +224,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityDao.merge(facility);
 	}
 
-	private void pushFacility(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+	private void pushFacility() throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
+		
 		if (facility.getIntegratorLastPushTime() == null || facility.getLastUpdated().after(facility.getIntegratorLastPushTime())) {
 			logger.debug("pushing facility record");
 
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(cachedFacility, facility);
 
-			FacilityWs service = caisiIntegratorManager.getFacilityWs(facility.getId());
+			FacilityWs service = caisiIntegratorManager.getFacilityWs();
 			service.setMyFacility(cachedFacility);
 		}
 		else

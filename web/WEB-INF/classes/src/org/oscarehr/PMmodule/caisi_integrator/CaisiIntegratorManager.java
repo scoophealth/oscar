@@ -108,12 +108,12 @@ public class CaisiIntegratorManager {
 	private static FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer> integratorConsentState = new FacilityProviderSegmentedTimeClearedHashMap<org.oscarehr.caisi_integrator.ws.GetConsentTransfer>(
 	        DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
-	public boolean isEnableIntegratedReferrals() {
+	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
 	}
 
-	public boolean isEnableHealthNumberRegistry() {
+	public static boolean isEnableHealthNumberRegistry() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 		return(facility.isIntegratorEnabled() && facility.isEnableHealthNumberRegistry());
 	}
@@ -122,16 +122,16 @@ public class CaisiIntegratorManager {
 		return (facilityDao.find(facilityId));
 	}
 
-	private void addAuthenticationInterceptor(Facility facility, Object wsPort) {
+	private static void addAuthenticationInterceptor(Facility facility, Object wsPort) {
 		CxfClientUtils.addWSS4JAuthentication(facility.getIntegratorUser(), facility.getIntegratorPassword(), wsPort);
 	}
 
-	private URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {
+	private static URL buildURL(Facility facility, String servicePoint) throws MalformedURLException {
 		return (new URL(facility.getIntegratorUrl() + '/' + servicePoint + "?wsdl"));
 	}
 
-	public FacilityWs getFacilityWs(int facilityId) throws MalformedURLException {
-		Facility facility = getLocalFacility(facilityId);
+	public FacilityWs getFacilityWs() throws MalformedURLException {
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
 		FacilityWsService service = new FacilityWsService(buildURL(facility, "FacilityService"));
 		FacilityWs port = service.getFacilityWsPort();
@@ -153,7 +153,7 @@ public class CaisiIntegratorManager {
 		List<CachedFacility> results = (List<CachedFacility>) facilitySegmentedSimpleTimeCache.get(loggedInInfo.currentFacility.getId(), "ALL_REMOTE_FACILITIES");
 
 		if (results == null) {
-			FacilityWs facilityWs = getFacilityWs(loggedInInfo.currentFacility.getId());
+			FacilityWs facilityWs = getFacilityWs();
 			results = facilityWs.getAllFacility();
 			facilitySegmentedSimpleTimeCache.put(loggedInInfo.currentFacility.getId(), "ALL_REMOTE_FACILITIES", results);
 		}
@@ -427,7 +427,7 @@ public class CaisiIntegratorManager {
 		CachedFacility cachedFacility = (CachedFacility) facilitySegmentedSimpleTimeCache.get(loggedInInfo.currentFacility.getId(), "MY_REMOTE_FACILITY");
 
 		if (cachedFacility == null) {
-			FacilityWs facilityWs = getFacilityWs(loggedInInfo.currentFacility.getId());
+			FacilityWs facilityWs = getFacilityWs();
 			cachedFacility = facilityWs.getMyFacility();
 			if (cachedFacility != null) facilitySegmentedSimpleTimeCache.put(loggedInInfo.currentFacility.getId(), "MY_REMOTE_FACILITY", cachedFacility);
 		}
