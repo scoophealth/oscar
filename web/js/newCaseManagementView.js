@@ -224,7 +224,7 @@ var minMain;
 var minWin;
 function monitorNavBars(e) {            
     var win = pageWidth();
-    var main = Element.getWidth("main");    
+    var main = Element.getWidth("body");
     
     if( e == null ) {
         minMain = Math.round(main * minDelta);
@@ -232,10 +232,10 @@ function monitorNavBars(e) {
     }
 
     if( main < minMain ) {        
-        $("main").style.width = minMain + "px";                
+        $("body").style.width = minMain + "px";
     }
     else if( win >= minWin &&  main == minMain ) {
-        $("main").style.width = "100%";       
+        $("body").style.width = "100%";
     }
         
 }
@@ -304,14 +304,15 @@ function navBarLoader() {
               
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=FF9933",
-                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",                  
+                  ctx + "/oscarEncounter/displayRx.do?hC=C3C3C3",
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
                   ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
                   ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
                   ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
               ];
               
-          var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues" ];
+         
 
           var navbar = "leftNavBar";    
           for( var idx = 0; idx < leftNavBar.length; ++idx ) {
@@ -389,19 +390,23 @@ function navBarLoader() {
                                                 $(div).update("<p>Loading ...<\/p>");
                                             }, */                            
                                 onSuccess: function(request) {                            
-                                                while( $(div).firstChild )
-                                                    $(div).removeChild($(div).firstChild);
-                                                
+                                                //while( $(div).firstChild )
+                                                //    $(div).removeChild($(div).firstChild);
+                                                //alert("success " + div);
                                                 $(div).update(request.responseText);
                                                     
                                                 if( $("leftColLoader") != null )
-                                                    Element.remove("leftColLoader");                                                      
+                                                    Element.remove("leftColLoader");
+
+                                                if( $("rightColLoader") != null )
+                                                    Element.remove("rightColLoader");
+
 
                                                 //track ajax completions and display divs when last ajax call completes                                                
                                                 //navBarObj.display(navBar,div);
                                            }, 
                                 onFailure: function(request) {
-                                                $(div).innerHTML = "<h3>" + div + "<\/h3>Error: " + request.status;
+                                                $(div).innerHTML = "<h3>" + div + "</h3>Error: " + request.status;
                                             }
                             }
 
@@ -659,7 +664,7 @@ exKeys[7] = "Relationship";
 function prepareExtraFields(cpp,exts) {
     var rowIDs = new Array(8);
     for (var i=2; i<exFields.length; i++) {
-	rowIDs[i] = "_"+exFields[i];
+	rowIDs[i] = "Item"+exFields[i];
 	$(rowIDs[i]).hide();
     }
     if (cpp==cppNames[1]) $(rowIDs[2],rowIDs[4]).invoke("show");
@@ -1424,14 +1429,17 @@ function fetchNote(nId) {
 function fullView(e) {
     var url = ctx + "/CaseManagementView.do";
     var id = Event.element(e).id;
+    
     var regEx = /\d+/;    
     var nId = regEx.exec(id);
+    
     var txt = "n" + nId;
     var img = "quitImg" + nId;     
     var fullId = "full" + nId;
     var params = "method=viewNote&raw=false&noteId=" + nId;    
     var noteTxtId = "txt" + nId;
-    var btnHtml = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";
+    var btnHtml = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='" + ctx + "/oscarEncounter/graphics/triangle_up.gif'>";    
+    Element.stopObserving(txt, 'click', fullView);
     
     var ajax = new Ajax.Request (                    
                     url,
@@ -1457,7 +1465,7 @@ function fullView(e) {
     
     $(txt).style.height = 'auto';    
     new Insertion.Top(txt, imgTag);    
-    Element.stopObserving(txt, 'click', fullView);
+    //Element.stopObserving(txt, 'click', fullView);
     Event.stop(e);
 
 }
@@ -1569,7 +1577,7 @@ function editNote(e) {
     var nId = regEx.exec(el.id);
     var txt = "n" + nId;    
     var xpandId = "xpImg" + nId;
-
+    
     if( $(xpandId) != null ) {
         xpandView(e);
     }
@@ -1636,8 +1644,10 @@ function editNote(e) {
         $(caseNote).focus();
         origCaseNote = $F(caseNote); 
     }
-    else
+    else {
         fetchNote(nId);
+        Element.stopObserving(txt, 'click', fullView);
+    }
 
     Element.observe(caseNote, 'keyup', monitorCaseNote);
     Element.observe(caseNote, 'click', getActiveText);
@@ -1670,9 +1680,7 @@ function editNote(e) {
     Element.observe('asgnIssues', 'click', addIssueFunc);
     
     $(txt).style.height = "auto";          
-    
-    //we don't want to capture clicks as user inputs text
-    Element.stopObserving(txt, 'click', editNote);
+            
     
     //AutoCompleter for Issues
     var issueURL = ctx + "/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=" + providerNo;
@@ -1834,6 +1842,7 @@ var assignObservationDateError;
 var assignIssueError;
 var savingNoteError;
 function ajaxSaveNote(div,noteId,noteTxt) {
+
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
         alert(pastObservationDateError);
         return false;
@@ -1890,16 +1899,18 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 }
 
 function savePage(method, chain) {
+
+    var noteStr;
+    noteStr = $F(caseNote);
+    if( noteStr.replace(/^\s+|\s+$/g,"").length == 0 ) {
+        alert("Please enter a note before saving");
+        return false;
+    }
     
     if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
         alert(pastObservationDateError);
         return false;
-    }
-    
-    /*if( $F(caseNote).replace(/^\s+|\s+$/g,"").length == 0 ) {
-        alert("Please enter a note before saving");
-        return false;
-    }*/
+    }        
     
     if( caisiEnabled ) {
         if( !issueIsAssigned() ) {
