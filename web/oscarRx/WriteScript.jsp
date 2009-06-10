@@ -72,7 +72,8 @@ String atcCode = null;
 String regionalIdentifier="";
 String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;
 Long now = new Date().getTime();
-String annotation_attrib = "anno"+now;
+String annotation_attrib = "";// = "anno"+now;
+
 %>
 
 <script language=javascript>
@@ -790,10 +791,8 @@ String annotation_attrib = "anno"+now;
 <html:form action="/oscarRx/writeScript">
 
 	<html:hidden property="action" />
-	<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
-	<%
-
-
+	
+	<%        
 
 
 // define current form
@@ -802,6 +801,7 @@ RxWriteScriptForm thisForm = (RxWriteScriptForm)request.getAttribute("RxWriteScr
 
 if(bean.getStashIndex() > -1){ //new way
     RxPrescriptionData.Prescription rx = bean.getStashItem(bean.getStashIndex());
+    annotation_attrib = rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex());
     RxDrugData drugData = new RxDrugData();
     thisForm.setDemographicNo(bean.getDemographicNo());
     thisForm.setRxDate(RxUtil.DateToString(rx.getRxDate(),"yyyy-MM-dd"));
@@ -863,6 +863,7 @@ if(bean.getStashIndex() > -1){ //new way
 isCustom = thisForm.getGCN_SEQNO() == 0;
 int drugId = thisForm.getGCN_SEQNO();
 %>
+<input type="hidden" name="annotation_attrib" value="<%=annotation_attrib%>" />
 <!--
 DemographicNo:   <%= thisForm.getDemographicNo() %><br>
 RxDate:          <%= thisForm.getRxDate() %><br>
@@ -1464,7 +1465,7 @@ int i;
 		</tr>
 
 		<tr>
-			<td width="100%" height="0%" style="padding: 5" bgcolor="#DCDCDC"
+			<td width="100%" height="0%" style="padding: 5px;" bgcolor="#DCDCDC"
 				colspan="2"><script language=javascript>
         <%if ( specialStringLen == 0 ){
                 out.write("first=false;"); 
