@@ -33,6 +33,7 @@
 	cursor: default;
 	background: #c8d0d4;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
+    z-index: 150;
 }
 
 .calendar table {
