@@ -119,7 +119,7 @@ public final class RxRePrescribeAction extends DispatchAction {
             
             int drugId;
             int i;
-            
+            int stashIdx;
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
@@ -127,17 +127,19 @@ public final class RxRePrescribeAction extends DispatchAction {
                 	logger.error("Unexpected error.", e);
                     break; 
                 }
-                
+
                 // get original drug
                 RxPrescriptionData.Prescription oldRx =
                 rxData.getPrescription(drugId);
                 
                 // create copy of Prescription                
                     RxPrescriptionData.Prescription rx =
-                        rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);                
-                    beanRX.setStashIndex(beanRX.addStashItem(rx));
-                auditStr.append(rx.getAuditString() + "\n");
-                                
+                        rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
+                beanRX.setStashIndex(beanRX.addStashItem(rx));
+                auditStr.append(rx.getAuditString() + "\n");                
+                //allocate space for annotation
+                beanRX.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(beanRX.getStashIndex()));
+
                 request.setAttribute("BoxNoFillFirstLoad", "true");
                 
             }
