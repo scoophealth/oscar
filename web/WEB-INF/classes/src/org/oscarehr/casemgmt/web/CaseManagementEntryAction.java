@@ -435,6 +435,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String strNote = request.getParameter("value");
             //strNote = strNote.trim();
             log.debug("Saving: " + strNote);
+            strNote = org.apache.commons.lang.StringUtils.trimToNull(strNote);
             if( strNote == null || strNote.equals("") )
                 return null;                        
             
@@ -800,7 +801,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         // we don't want to save empty notes!        
         
         String noteTxt = cform.getCaseNote_note();        
-        
+        noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
         if (noteTxt == null || noteTxt.equals("")) return -1;
 
         String demo = getDemographicNo(request);
@@ -1149,6 +1150,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (request.getSession().getAttribute("userrole") == null) return mapping.findForward("expired");
         
         String noteTxt = request.getParameter("noteTxt");
+        noteTxt = org.apache.commons.lang.StringUtils.trimToNull(noteTxt);
         if( noteTxt == null || noteTxt.equals("") )
             return null;
         
@@ -1196,8 +1198,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         history = noteTxt + "[[" + now + "]]" + history;
         note.setNote(noteTxt);                
         note.setHistory(history);
-        note.setSigning_provider_no("");
-        note.setSigned(false);       
+
+        if( note.isSigned() ) {
+            note.setSigning_provider_no(providerNo);
+            note.setSigned(true);
+        }
+        else {
+            note.setSigning_provider_no("");
+            note.setSigned(false);
+        }
         
         note.setProviderNo(providerNo);
         if (provider != null) note.setProvider(provider);                
@@ -1275,6 +1284,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         if (note.getCreate_date() == null) note.setCreate_date(now);
        
         note.setEncounter_type(request.getParameter("encType"));
+        
         this.caseManagementMgr.saveNoteSimple(note);
         this.caseManagementMgr.getEditors(note);
         
@@ -1338,7 +1348,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("note.saved"));
         saveMessages(request, messages);
 
-        noteSave(cform, request);
+        long noteId = noteSave(cform, request);
+        if( noteId == -1 ) {
+            return mapping.findForward("windowClose");
+        }
+
         cform.setMethod("view");
         String error = (String)request.getAttribute("DateError");
         if (error != null) {
