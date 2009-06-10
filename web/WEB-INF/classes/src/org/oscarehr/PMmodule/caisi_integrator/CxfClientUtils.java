@@ -37,9 +37,9 @@ public class CxfClientUtils {
 	private static void configureTimeout(HTTPConduit httpConduit) {
 		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
 
-		httpClientPolicy.setConnectionTimeout(10000);
+		httpClientPolicy.setConnectionTimeout(4000);
 		httpClientPolicy.setAllowChunking(false);
-		httpClientPolicy.setReceiveTimeout(15000);
+		httpClientPolicy.setReceiveTimeout(10000);
 		
 		httpConduit.setClient(httpClientPolicy);
 	}
