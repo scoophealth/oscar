@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- 
 /*
 * 
@@ -228,19 +229,6 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
  
 <jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 --%>
-
-<html:form action="/CaseManagementView" method="post">
-	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
-	<html:hidden property="providerNo" value="<%=provNo%>" />
-	<html:hidden property="tab" value="Current Issues" />
-	<html:hidden property="hideActiveIssue" />
-	<html:hidden property="ectWin.rowOneSize" styleId="rowOneSize" />
-	<html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize" />
-	<input type="hidden" name="chain" value="list" />
-	<input type="hidden" name="method" value="view" />
-	<input type="hidden" id="check_issue" name="check_issue">
-	<input type="hidden" id="serverDate" value="<%=strToday%>">
-	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
 	<!--Row One Headers -->
 
 	<%-- <div style="float:left; width:34%; border-width:0px; background-color:#CCCCFF;" class="RowTop" >&nbsp;<bean:message key="oscarEncounter.Index.socialFamHist"/>:</div><input type="hidden" name="shInput"/>
@@ -334,6 +322,18 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 
 	<div id="notCPP"
 		style="height: 70%; margin-left: 2px; background-color: #FFFFFF;">
+  <html:form action="/CaseManagementView" method="post">
+	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
+	<html:hidden property="providerNo" value="<%=provNo%>" />
+	<html:hidden property="tab" value="Current Issues" />
+	<html:hidden property="hideActiveIssue" />
+	<html:hidden property="ectWin.rowOneSize" styleId="rowOneSize" />
+	<html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize" />
+	<input type="hidden" name="chain" value="list" >
+	<input type="hidden" name="method" value="view" >
+	<input type="hidden" id="check_issue" name="check_issue">
+	<input type="hidden" id="serverDate" value="<%=strToday%>">
+	<input type="hidden" id="resetFilter" name="resetFilter" value="false">
 	<%--<div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white;"><jsp:include page="rightColumn.jsp" /></div>--%>
 	<div id="topContent"
 		style="float: left; width: 100%; margin-right: -2px; padding-bottom: 10px; background-color: #CCCCFF; font-size: 10px;">
@@ -447,10 +447,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	</div>
 	<div
 		style="float: left; clear: both; margin-top: 5px; margin-bottom: 5px; width: 100%; text-align: center;">
-	<img
-		src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">
+            <img alt="<bean:message key="oscarEncounter.msgFind"/>"src="<c:out value="${ctx}/oscarEncounter/graphics/edit-find.png"/>">
 	<input id="enTemplate" tabindex="6" size="16" type="text" value=""
-		onkeypress="return grabEnterGetTemplate(event)" />
+		onkeypress="return grabEnterGetTemplate(event)" >
 	<div class="enTemplate_name_auto_complete" id="enTemplate_list"
 		style="z-index: 1; display: none">&nbsp</div>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select id="channel">
@@ -469,7 +468,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message
 			key="global.BNF" /></option>
 	</select> <input type="text" id="keyword" name="keyword" value=""
-		onkeypress="return grabEnter('searchButton',event)" /> <input
+		onkeypress="return grabEnter('searchButton',event)"> <input
 		type="button" id="searchButton" name="button" value="<bean:message key="oscarEncounter.Index.btnSearch"/>"
 		onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">
 
@@ -481,11 +480,11 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	&nbsp;&nbsp; <img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>"
 		id='imgPrintCPP' alt="<bean:message key="oscarEncounter.togglePrintCPP.title"/>"
 		onclick="return printInfo(this,'printCPP');"
-		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;<bean:message key="oscarEncounter.cpp.title"/>
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' >&nbsp;<bean:message key="oscarEncounter.cpp.title"/>
 	&nbsp;&nbsp; <img style="cursor: pointer;" title="<bean:message key="oscarEncounter.print.title"/>"
 		id='imgPrintRx' alt="<bean:message key="oscarEncounter.togglePrintRx.title"/>"
 		onclick="return printInfo(this, 'printRx');"
-		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />&nbsp;<bean:message key="oscarEncounter.Rx.title"/>
+		src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' >&nbsp;<bean:message key="oscarEncounter.Rx.title"/>
 	&nbsp;&nbsp;</div>
 	</div>
 </html:form>
@@ -510,9 +509,9 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<input type="hidden" name="from" value="casemgmt">
 	<input type="hidden" name="method" value="save">
 	<input type="hidden" name="change_diagnosis"
-		value="<c:out value="${change_diagnosis}"/>" />
+		value="<c:out value="${change_diagnosis}"/>" >
 	<input type="hidden" name="change_diagnosis_id"
-		value="<c:out value="${change_diagnosis_id}"/>" />
+		value="<c:out value="${change_diagnosis_id}"/>" >
 	<input type="hidden" name="newIssueId" id="newIssueId">
 	<input type="hidden" name="newIssueName" id="newIssueName">
 	<input type="hidden" name="ajax" value="false">
@@ -531,19 +530,18 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
         
 	<div id="mainContent"
 		style="background-color: #FFFFFF; width: 100%; margin-right: -2px; display: inline; float: left;">
-	<span id="issueList"
+	<div id="issueList"
 		style="background-color: #FFFFFF; height: 440px; width: 350px; position: absolute; z-index: 1; display: none; overflow: auto;">
 	<table id="issueTable" class="enTemplate_name_auto_complete"
 		style="position: relative; left: 0px; display: none;">
 		<tr>
 			<td style="height: 430px; vertical-align: bottom;">
 			<div class="enTemplate_name_auto_complete" id="issueAutocompleteList"
-				name="issueAutocompleteList"
 				style="position: relative; left: 0px; display: none;"></div>
 			</td>
 		</tr>
 	</table>
-	</span>
+	</div>
 	<div id="encMainDiv"
 		style="width: 99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; background-color: #FFFFFF; height: 410px; overflow: auto; margin-left: 2px;">
 
@@ -592,7 +590,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                     long time1,time2;
 		    String noteStr;
 		    int length;
-                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders"};                    
+                    String cppCodes[] = {"OMeds", "SocHistory", "MedHistory", "Concerns", "FamHistory", "Reminders", "RiskFactors"};
                     
                     /*
                      *  Cycle through notes starting from the most recent and marking them for full inclusion or one line display
@@ -701,8 +699,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			id='print<%=note.getId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
-		<textarea tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea"
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' >
+		<textarea tabindex="7" cols="84" rows="10" class="txtArea"
 			style="line-height: 1.1em;" name="caseNote_note"
 			id="caseNote_note<%=savedId%>"><nested:write
 			property="caseNote.note" /></textarea>
@@ -732,20 +730,20 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			id='quitImg<%=note.getId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>"
 			onclick="minView(event)"
 			style='float: right; margin-right: 5px; margin-bottom: 3px; margin-top: 2px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' >
 		<% }else {
                             %> <img title="<bean:message key="oscarEncounter.MaxDisplay.title"/>"
 			id='quitImg<%=note.getId()%>' alt="Maximize Display"
 			onclick="fullView(event)" style='float: right; margin-right: 5px; margin-top: 2px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' />
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif' >
 		<% }
                     
                             %> <img title="<bean:message key="oscarEncounter.print.title"/>"
 			id='print<%=note.getId()%>' alt="<bean:message key="oscarEncounter.togglePrintNote.title"/>"
 			onclick="togglePrint(<%=note.getId()%>, event)"
 			style='float: right; margin-right: 5px; margin-top: 2px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' />
-                        <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event);":"editNote(event);"%> return false;" style='float:right; margin-right:5px; font-size:8px;'><bean:message key="oscarEncounter.edit.msgEdit"/></a>
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/printer.png' >
+                        <a title="<bean:message key="oscarEncounter.edit.msgEdit"/>" id="edit<%=note.getId()%>" href="#" onclick="<%=editWarn?"noPrivs(event)":"editNote(event)"%> ;return false;" style="float:right; margin-right:5px; font-size:8px;"><bean:message key="oscarEncounter.edit.msgEdit"/></a>
 
 		<span id="txt<%=note.getId()%>"><%=noteStr%></span> <%--
 			    time2 = System.currentTimeMillis();
@@ -756,7 +754,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 			id='bottomQuitImg<%=note.getId()%>' alt="<bean:message key="oscarEncounter.MinDisplay.title"/>"
 			onclick="minView(event)"
 			style='float: right; margin-right: 5px; margin-bottom: 3px;'
-			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' />
+			src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif' >
 		<%
                             }
 
@@ -787,7 +785,8 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
                                             else {
                                             out.print(p.getFormattedName() + "</li>");
                                             }
-                                            ++count;
+                                            if( it.hasNext() )
+                                                ++count;
                                             }
                                             if( count % MAXLINE == 0 )
                                             out.print("</li>");
@@ -876,7 +875,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 		value="color:#000000;background-color:#CCCCFF;">
                 <input type="hidden" id="editWarn<%=savedId%>" value="false">
 	<div id="n<%=savedId%>" style="line-height: 1.1em;"><textarea
-		tabindex="7" cols="84" rows="10" wrap='soft' class="txtArea"
+		tabindex="7" cols="84" rows="10" class="txtArea"
 		style="line-height: 1.1em;" name="caseNote_note"
 		id="caseNote_note<%=savedId%>"><nested:write
 		property="caseNote_note" /></textarea>
@@ -942,7 +941,7 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	<span id="busy" style="display: none"><img
 		style="position: absolute;"
 		src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>"
-		alt="<bean:message key="oscarEncounter.Index.btnWorking" />"</span></div>
+		alt="<bean:message key="oscarEncounter.Index.btnWorking" />"></span></div>
 	</div>
 </nested:form>
 </div>

@@ -74,11 +74,11 @@
     %>
     
     <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-<div style="padding-left:2px; text-align:left; font-size: 12px; color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
+<div style="padding-left:2px; text-align:left; font-size: 12px; color:<%=inverseUserColour%>; background-color:<%=userColour%>">
     <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
     <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;</span>
     
-    <span class="Header" style="color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
+    <span class="Header" style="color:<%=inverseUserColour%>; background-color:<%=userColour%>">
         <%
             String winName = "Master" + bean.demographicNo;
             String url;
@@ -87,16 +87,16 @@
             else
                 url = "/demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail";
         %>
-        <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%> </a>
+        <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<c:out value="${ctx}"/><%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
 
-<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
+<a href="javascript:popupPage(400,850,'ApptHist','<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&amp;last_name=<%=bean.patientLastName%>&amp;first_name=<%=bean.patientFirstName%>&amp;orderby=appointment_date&amp;displaymode=appt_history&amp;dboperation=appt_history&amp;limit1=0&amp;limit2=25')" style="font-size: 11px;text-decoration:none;" title="<bean:message key="oscarEncounter.Header.nextApptMsg"/>"><span style="margin-left:20px;"><bean:message key="oscarEncounter.Header.nextAppt"/>: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
 
 
-        &nbsp;&nbsp;<a href="#" onClick="popupPage(150,200,'Calculators','<c:out value="${ctx}"/>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" title="<bean:message key="oscarEncounter.Header.Calculators"/>"/><bean:message key="oscarEncounter.Header.Calculators"/></a>
+        &nbsp;&nbsp;<a href="#" onClick="popupPage(150,200,'Calculators','<c:out value="${ctx}"/>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&amp;age=<%=pAge%>'); return false;" title="<bean:message key="oscarEncounter.Header.Calculators"/>"><bean:message key="oscarEncounter.Header.Calculators"/></a>
                  <% if(oscar.OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")){%>    
                     <a href="javascript:void(0)" onClick="popupPage(600,175,'Calculators','<c:out value="${ctx}"/>/common/omdDiseaseList.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Header.OntMD"/></a>
                  <%}%>
-               
+   </span>
 </div>
 
 
