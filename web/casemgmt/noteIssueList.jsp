@@ -97,6 +97,7 @@
 	<ul style="list-style: none inside none; margin: 0px;">
 		<nested:iterate indexId="eIdx" id="editor" property="caseNote.editors"
 			name="caseManagementEntryForm">
+                
 			<c:if test="${eIdx % 2 == 0}">
 				<li><nested:write property="formattedName" />;
 			</c:if>
@@ -157,7 +158,7 @@
 	<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 		<%
                                 String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
-                                winame = winame.replaceAll("\\s|\\/", "_");
+                                winame = winame.replaceAll("\\s|\\/|\\*", "_");
                                 winame = winame.replaceAll("'","");
                                 winame = StringEscapeUtils.escapeJavaScript(winame);
                                 if( ind % 2 == 0 ) {%>
