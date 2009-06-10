@@ -22,14 +22,16 @@
 %>
 
 <h3><%=viewConsentId!=null?"View Consent":"Manage Consent"%></h3>
-<br />
-<h2>PLACE HOLDER FOR CONSENT TEXT</h2>
-<br />
+<hr />
+<div style="border:solid black 1px">
+	<%@include file="manage_consent_text.jspf" %>
+</div>
+<hr />
 <form action="manage_consent_action.jsp">
 	<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
 
 	<div style="font-weight:bold">Client consent</div>
-	<table>
+	<table style="background-color:#ccccff">
 		<tr>
 			<td><input type="radio" name="consentStatus" <%=manageConsent.disableEdit()?"disabled=\"disabled\"":""%> value="<%=ConsentStatus.GIVEN%>" <%=manageConsent.displayAsSelectedConsentStatus(ConsentStatus.GIVEN)?"checked=\"on\"":""%> /></td>
 			<td>
