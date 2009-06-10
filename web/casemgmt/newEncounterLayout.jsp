@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html;charset=UTF-8"%>
 <!-- 
 /*
 * 
@@ -46,7 +46,7 @@
 --%>
 <html:html locale="true">
   <head>      
-        
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
   	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
 	<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/casemgmt.css" type="text/css">
         <link rel="stylesheet" href="<c:out value="${ctx}"/>/oscarEncounter/encounterStyles.css" type="text/css">         
@@ -147,7 +147,7 @@
         }
       
         p.passwd {
-            margin:0px 3px; 0px 3px;        
+            margin: 0px 3px 0px 3px;
         }
         
         /* span formatting for measurements div found in ajax call */
@@ -440,7 +440,7 @@ function init() {
   </head> 
   <body id="body" style="margin:0px;" onload="init()" onunload="onClosing()">
     
-      <div id="main">          
+              
           <div id="header">
               <tiles:insert attribute="header" />
           </div>
@@ -467,23 +467,23 @@ function init() {
                   <input type="hidden" id="archived" name="archived" value="false">
 		  <input type="hidden" id="annotation_attrib" name="annotation_attrib">
                   <div id="winTitle"></div>
-                  <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" wrap="soft"></textarea><br>
+                  <textarea style="margin:10px;" cols="50" rows="15" id="noteEditTxt" name="value" ></textarea><br>
 		  <table>
-		      <tr id="_startdate"><td><bean:message key="oscarEncounter.startdate.title"/>: </td>
+		      <tr id="Itemstartdate"><td><bean:message key="oscarEncounter.startdate.title"/>: </td>
 			<td><input type="text" id="startdate" name="startdate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_resolutiondate"><td><bean:message key="oscarEncounter.resolutionDate.title"/>: </td>
+		      <tr id="Itemresolutiondate"><td><bean:message key="oscarEncounter.resolutionDate.title"/>: </td>
 			<td><input type="text" id="resolutiondate" name="resolutiondate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_ageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
+		      <tr id="Itemageatonset"><td><bean:message key="oscarEncounter.ageAtOnset.title"/>: </td>
 			<td><input type="text" id="ageatonset" name="ageatonset" value="" size="2"></td></tr>
-		      <tr id="_treatment"><td><bean:message key="oscarEncounter.treatment.title"/>: </td>
+		      <tr id="Itemtreatment"><td><bean:message key="oscarEncounter.treatment.title"/>: </td>
 			<td><input type="text" id="treatment" name="treatment" value=""></td></tr>
-		      <tr id="_proceduredate"><td><bean:message key="oscarEncounter.procedureDate.title"/>: </td>
+		      <tr id="Itemproceduredate"><td><bean:message key="oscarEncounter.procedureDate.title"/>: </td>
 			<td><input type="text" id="proceduredate" name="proceduredate" value="" size="12"> (YYYY-MM-DD)</td></tr>
-		      <tr id="_problemstatus"><td><bean:message key="oscarEncounter.problemStatus.title"/>: </td>
+		      <tr id="Itemproblemstatus"><td><bean:message key="oscarEncounter.problemStatus.title"/>: </td>
 			<td><input type="text" id="problemstatus" name="problemstatus" value="" size="8"> <bean:message key="oscarEncounter.problemStatusExample.msg"/></td></tr>
-		      <tr id="_exposuredetail"><td><bean:message key="oscarEncounter.exposureDetail.title"/>: </td>
+		      <tr id="Itemexposuredetail"><td><bean:message key="oscarEncounter.exposureDetail.title"/>: </td>
 			<td><input type="text" id="exposuredetail" name="exposuredetail" value=""></td></tr>
-		      <tr id="_relationship"><td><bean:message key="oscarEncounter.relationship.title"/>: </td>
+		      <tr id="Itemrelationship"><td><bean:message key="oscarEncounter.relationship.title"/>: </td>
 			<td><input type="text" id="relationship" name="relationship" value=""></td></tr>
 		  </table><br>
                   <span style="float:right; margin-right:10px;">      
@@ -492,15 +492,15 @@ function init() {
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
                   </span>
-                  <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position">                        
+                  <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position"><option id="popt0">1</option>
                   </select> 
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
-                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" name="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
+                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteListCPP" style="position:relative; left:0px; display:none;"></div>
                   </div>
                   <bean:message key="oscarEncounter.Index.assnIssue"/>&nbsp;<input  tabindex="100" type="text" id="issueAutocompleteCPP" name="issueSearch" style="z-index: 2;" size="25">&nbsp;
                  
-                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking"/>" /></span>
+                  <span id="busy2" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="<bean:message key="oscarEncounter.Index.btnWorking"/>" ></span>
                   
               </form>
           </div>
@@ -520,6 +520,5 @@ function init() {
               </form>              
           </div>
           
-      </div>
   </body>
 </html:html>
