@@ -72,6 +72,10 @@ public class RxSessionBean {
     public void addAttributeName(String RHS) {
 	this.attributeNames.add(RHS);
     }
+
+    public void addAttributeName(String RHS, int index) {
+        this.attributeNames.set(index, RHS);
+    }
     
     //--------------------------------------------------------------------------
     
