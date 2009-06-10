@@ -122,16 +122,12 @@ private static final Logger logger=MiscUtils.getLogger();
 			if (rx.getSpecial()==null) logger.error("Drug.special is null : "+rx.getSpecial()+" : "+frm.getSpecial());
 			else if (rx.getSpecial().length()<6) logger.warn("Drug.special appears to be empty : "+rx.getSpecial()+" : "+frm.getSpecial());
 
-			bean.setStashItem(bean.getStashIndex(), rx);
-			rx = null;
-
-			if (bean.getStashSize() > bean.getAttributeNames().size()) {
-				String annotation_attrib = request.getParameter("annotation_attrib");
-				if (annotation_attrib == null) annotation_attrib = "";
-                                for( int idx = bean.getAttributeNames().size(); idx <= bean.getStashSize(); ++idx ) {
-                                    bean.addAttributeName(annotation_attrib);
-                                }
-			}
+            String annotation_attrib = request.getParameter("annotation_attrib");
+            if (annotation_attrib == null) annotation_attrib = "";
+            //System.out.println("SETTING ANNOTATE NAME '" + annotation_attrib + "'");
+            bean.addAttributeName(annotation_attrib,bean.getStashIndex());
+			bean.setStashItem(bean.getStashIndex(), rx);            
+			rx = null;			
 
 			if (frm.getAction().equals("update")) {
 				fwd = "refresh";
@@ -145,12 +141,12 @@ private static final Logger logger=MiscUtils.getLogger();
 
 				@SuppressWarnings("unchecked")
 				ArrayList<String> attrib_names = bean.getAttributeNames();
-                                StringBuffer auditStr = new StringBuffer();
+                StringBuffer auditStr = new StringBuffer();
 				for (i = 0; i < bean.getStashSize(); i++) {
 					rx = bean.getStashItem(i);
 					rx.Save(scriptId);
-                                        auditStr.append(rx.getAuditString());
-                                        auditStr.append("\n");
+                    auditStr.append(rx.getAuditString());
+                    auditStr.append("\n");
 					/* Save annotation */
 					HttpSession se = request.getSession();
 					WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
@@ -167,7 +163,7 @@ private static final Logger logger=MiscUtils.getLogger();
 							cmm.saveNoteLink(cml);
 
 							se.removeAttribute(attrib_name);
-                                                        LogAction.addLog(cmn.getProviderNo(),LogConst.ANNOTATE, CaseManagementNoteLink.DISP_PRESCRIP, scriptId, request.getRemoteAddr(), cmn.getDemographic_no(), cmn.getNote());
+                            LogAction.addLog(cmn.getProviderNo(),LogConst.ANNOTATE, CaseManagementNoteLink.DISP_PRESCRIP, scriptId, request.getRemoteAddr(), cmn.getDemographic_no(), cmn.getNote());
 						}
 					}
 					rx = null;
