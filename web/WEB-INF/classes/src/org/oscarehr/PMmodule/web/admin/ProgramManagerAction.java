@@ -84,11 +84,6 @@ public class ProgramManagerAction extends BaseAction {
 	private ProviderManager providerManager;
 	private ProgramQueueManager programQueueManager;
 	private RoleManager roleManager;
-	private CaisiIntegratorManager caisiIntegratorManager;
-
-	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
-		this.caisiIntegratorManager = caisiIntegratorManager;
-	}
 
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -528,7 +523,7 @@ public class ProgramManagerAction extends BaseAction {
 		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
 
 		try {
-			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 			referralWs.removeReferral(remoteReferralId);
 		} catch (MalformedURLException e) {
 			logger.error("Unexpected error", e);
@@ -927,7 +922,7 @@ public class ProgramManagerAction extends BaseAction {
 			request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 			request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
 
-			if (caisiIntegratorManager.isEnableIntegratedReferrals()) {
+			if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 				request.setAttribute("remoteQueue", getRemoteQueue(facility.getId(), Integer.parseInt(programId)));
 			}
 
@@ -976,8 +971,8 @@ public class ProgramManagerAction extends BaseAction {
 
 	protected List<RemoteQueueEntry> getRemoteQueue(int facilityId, int programId) {
 		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
-			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 			List<Referral> remoteReferrals = referralWs.getReferralsToProgram(programId);
 
 			ArrayList<RemoteQueueEntry> results = new ArrayList<RemoteQueueEntry>();
@@ -995,7 +990,7 @@ public class ProgramManagerAction extends BaseAction {
 				FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
 				pk.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
 				pk.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
-				CachedProvider cachedProvider = caisiIntegratorManager.getProvider(facilityId, pk);
+				CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityId, pk);
 				if (cachedProvider != null) {
 					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " + cachedProvider.getFirstName());
 				} else {

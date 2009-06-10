@@ -218,7 +218,6 @@
 		<property name="clientRestrictionManager" ref="clientRestrictionManager" />
 		<property name="outsideOfDomainEnabled" value="${pmm.client.search.outside.of.domain.enabled}" />
 	</bean>
-	<bean id="caisiIntegratorManager" class="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager" autowire="byName" />
 	<bean id="infirmBedProgramManager" class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
 		<property name="programProviderDAOT" ref="programProviderDAO" />
 		<property name="demographicDao" ref="demographicDaoT" />

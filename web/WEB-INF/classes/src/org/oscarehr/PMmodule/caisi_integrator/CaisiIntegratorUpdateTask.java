@@ -98,7 +98,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 	private static TimerTask timerTask = null;
 
-	private CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueDAO caseManagementIssueDAO = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
@@ -214,7 +213,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		pushFacility();
 		pushPrograms(facility);
 		pushProviders(facility);
-		pushAllDemographics(facility);
+		pushAllDemographics();
 
 		// update late push time only if an exception didn't occur
 		// re-get the facility as the sync time could be very long and changes
@@ -233,7 +232,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(cachedFacility, facility);
 
-			FacilityWs service = caisiIntegratorManager.getFacilityWs();
+			FacilityWs service = CaisiIntegratorManager.getFacilityWs();
 			service.setMyFacility(cachedFacility);
 		}
 		else
@@ -270,7 +269,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedPrograms.add(cachedProgram);
 		}
 
-		ProgramWs service = caisiIntegratorManager.getProgramWs(facility.getId());
+		ProgramWs service = CaisiIntegratorManager.getProgramWs(facility.getId());
 		service.setCachedPrograms(cachedPrograms);
 	}
 
@@ -295,14 +294,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedProviders.add(cachedProvider);
 		}
 
-		ProviderWs service = caisiIntegratorManager.getProviderWs(facility.getId());
+		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility.getId());
 		service.setCachedProviders(cachedProviders);
 	}
 
-	private void pushAllDemographics(Facility facility) throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushAllDemographics() throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
+		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
+		
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-		DemographicWs demogrpahicService = caisiIntegratorManager.getDemographicWs(facility.getId());
-		HnrWs hnrService = caisiIntegratorManager.getHnrWs(facility.getId());
+		DemographicWs demogrpahicService = CaisiIntegratorManager.getDemographicWs();
+		HnrWs hnrService = CaisiIntegratorManager.getHnrWs(facility.getId());
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
 

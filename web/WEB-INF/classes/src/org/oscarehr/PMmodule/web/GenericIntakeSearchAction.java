@@ -85,14 +85,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 
 	private SurveyManager surveyManager;
-	private CaisiIntegratorManager caisiIntegratorManager;
 
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
-	}
-
-	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
-		this.caisiIntegratorManager = caisiIntegratorManager;
 	}
 
 	@Override
@@ -107,10 +102,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		try {
 			Integer remoteReferralId = Integer.parseInt(request.getParameter("remoteReferralId"));
 
-			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(currentFacilityId);
 			Referral remoteReferral = referralWs.getReferral(remoteReferralId);
 
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteReferral.getSourceIntegratorFacilityId(), remoteReferral.getSourceCaisiDemographicId());
 
 			GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
@@ -151,7 +146,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		request.setAttribute("genders", getGenders());
 
 		if (LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
-			createRemoteList(request, intakeSearchBean, currentFacilityId);
+			createRemoteList(request, intakeSearchBean);
 		}
 
 		// if matches found display results, otherwise create local intake
@@ -164,9 +159,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		}
 	}
 
-	private void createRemoteList(HttpServletRequest request, GenericIntakeSearchFormBean intakeSearchBean, int currentFacilityId) {
+	private void createRemoteList(HttpServletRequest request, GenericIntakeSearchFormBean intakeSearchBean) {
 		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 
 			MatchingDemographicParameters parameters = new MatchingDemographicParameters();
 			parameters.setMaxEntriesToReturn(10);
@@ -200,7 +195,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			List<MatchingDemographicTransferScore> integratedMatches = demographicWs.getMatchingDemographics(parameters);
 			request.setAttribute("remoteMatches", integratedMatches);
 
-			List<CachedFacility> allFacilities = caisiIntegratorManager.getRemoteFacilities();
+			List<CachedFacility> allFacilities = CaisiIntegratorManager.getRemoteFacilities();
 			HashMap<Integer, String> facilitiesNameMap = new HashMap<Integer, String>();
 			for (CachedFacility cachedFacility : allFacilities)
 				facilitiesNameMap.put(cachedFacility.getIntegratorFacilityId(), cachedFacility.getName());
@@ -234,8 +229,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			int remoteFacilityId = Integer.parseInt(request.getParameter("remoteFacilityId"));
 			int remoteDemographicId = Integer.parseInt(request.getParameter("remoteDemographicId"));
 
-			int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(currentFacilityId);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
 
 			Demographic demographic = Demographic.create(demographicTransfer.getFirstName(), demographicTransfer.getLastName(), null, null, null, null, demographicTransfer.getHin(), null, true);
@@ -293,7 +287,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			try {
 				int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
-				ReferralWs referralWs = caisiIntegratorManager.getReferralWs(currentFacilityId);
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(currentFacilityId);
 				Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
 				parameters.append(remoteReferral.getDestinationCaisiProgramId());

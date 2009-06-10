@@ -19,7 +19,6 @@ import org.oscarehr.util.SpringUtils;
 public class ManageConsentAction {
 	private static Logger logger = LogManager.getLogger(ManageConsentAction.class);
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 
 	private IntegratorConsent consent = new IntegratorConsent();
 	private String signatureRequestId = null;
@@ -33,7 +32,7 @@ public class ManageConsentAction {
 		consent.setFacilityId(loggedInInfo.currentFacility.getId());
 		consent.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-		for (CachedFacility cachedFacility : caisiIntegratorManager.getRemoteFacilities()) {
+		for (CachedFacility cachedFacility : CaisiIntegratorManager.getRemoteFacilities()) {
 			consent.getConsentToShareData().put(cachedFacility.getIntegratorFacilityId(), true);
 		}
 	}
@@ -66,7 +65,7 @@ public class ManageConsentAction {
 
 		integratorConsentDao.persist(consent);
 		
-		caisiIntegratorManager.pushConsent(consent);
+		CaisiIntegratorManager.pushConsent(consent);
 	}
 
 	public void setExcludeMentalHealthData(Boolean b) {

@@ -24,7 +24,6 @@ public class CommunityIssueManager {
 
 	private static Logger log = Logger.getLogger(CommunityIssueManager.class);
 	private CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-	private CaisiIntegratorManager ciMan = (CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	
@@ -59,8 +58,7 @@ public class CommunityIssueManager {
     	if(loggedInInfo.currentFacility.isIntegratorEnabled())
 		{
 			// get remote issues
-			CaisiIntegratorManager ciMan = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-			remoteIssues = ciMan.getRemoteIssues(loggedInInfo.currentFacility.getId(), Integer.valueOf(demographicNo));
+			remoteIssues = CaisiIntegratorManager.getRemoteIssues(Integer.valueOf(demographicNo));
 		}
 		
 		// combine local and remote
@@ -160,7 +158,7 @@ public class CommunityIssueManager {
 			List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
 			if(communityCodes == null || communityCodes.isEmpty())
 			{
-				communityCodes = ciMan.getCommunityIssueCodeList(facilityId, type);
+				communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
 			}
 			return communityCodes;
 		}

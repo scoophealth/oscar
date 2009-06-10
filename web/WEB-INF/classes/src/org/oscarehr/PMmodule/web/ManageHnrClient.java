@@ -21,7 +21,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClient {
 	private static Logger logger = LogManager.getLogger(ManageHnrClient.class);
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
@@ -48,7 +47,7 @@ public class ManageHnrClient {
 
 		if (CaisiIntegratorManager.isEnableHealthNumberRegistry() && clientLink != null) {
 			try {
-				hnrClient = caisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
+				hnrClient = CaisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
 			} catch (ConnectException_Exception e) {
 				logger.error("Error Connecting to HNR server", e);
 			} catch (Exception e) {

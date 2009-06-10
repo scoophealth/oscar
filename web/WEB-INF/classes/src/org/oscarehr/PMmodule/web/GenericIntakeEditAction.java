@@ -88,12 +88,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		this.clientImageDAO = clientImageDAO;
 	}
 
-	private CaisiIntegratorManager caisiIntegratorManager = null;
-
-	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
-		this.caisiIntegratorManager = caisiIntegratorManager;
-	}
-
 	public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
@@ -307,7 +301,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				// doing this after the admit is about as transactional as this is going to get for now.
 				ReferralWs referralWs;
 				try {
-					referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+					referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 					referralWs.removeReferral(Integer.parseInt(remoteReferralId));
 				}
 				catch (Exception e) {
@@ -377,7 +371,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			try {
 				int remoteFacilityId = Integer.parseInt(remoteFacilityIdStr);
 				int remoteDemographicId = Integer.parseInt(remoteDemographicIdStr);
-				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facilityId);
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 
 				// link the clients
 				demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
@@ -419,18 +413,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	private String getAdmissionText(Integer facilityId, String admissionText, String remoteReferralId) {
 		try {
-			ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 			Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 
-			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteReferral.getSourceIntegratorFacilityId());
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteReferral.getSourceIntegratorFacilityId());
 			sb.append("Referred from : ");
 			sb.append(cachedFacility.getName());
 
 			FacilityIdStringCompositePk facilityProviderPrimaryKey = new FacilityIdStringCompositePk();
 			facilityProviderPrimaryKey.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
 			facilityProviderPrimaryKey.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
-			CachedProvider cachedProvider = caisiIntegratorManager.getProvider(facilityId, facilityProviderPrimaryKey);
+			CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityId, facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProvider.getLastName());
 			sb.append(", ");

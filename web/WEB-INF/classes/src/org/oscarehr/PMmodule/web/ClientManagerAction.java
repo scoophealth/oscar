@@ -112,7 +112,6 @@ public class ClientManagerAction extends BaseAction {
 
 	private static final Logger logger = org.apache.log4j.LogManager.getLogger(ClientManagerAction.class);
 
-	private CaisiIntegratorManager caisiIntegratorManager;
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
 	private ProviderDao providerDao;
@@ -131,10 +130,6 @@ public class ClientManagerAction extends BaseAction {
 	private ProgramQueueManager programQueueManager;
 	private RoomManager roomManager;
 	private IntegratorConsentDao integratorConsentDao;
-
-	public void setCaisiIntegratorManager(CaisiIntegratorManager mgr) {
-		this.caisiIntegratorManager = mgr;
-	}
 
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
@@ -404,7 +399,7 @@ public class ClientManagerAction extends BaseAction {
 				remoteReferral.setSourceCaisiDemographicId(clientId);
 				remoteReferral.setSourceCaisiProviderId(providerId);
 
-				ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 				referralWs.makeReferral(remoteReferral);
 			} catch (Exception e) {
 				logger.error("Unexpected Error.", e);
@@ -484,7 +479,7 @@ public class ClientManagerAction extends BaseAction {
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
 				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
-				CachedProgram cachedProgram = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(facilityId, pk);
 
 				p.setName(cachedProgram.getName());
 
@@ -1050,9 +1045,9 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("programs", programManager.search(criteria));
 
 		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
-		if (caisiIntegratorManager.isEnableIntegratedReferrals()) {
+		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 			try {
-				List<CachedProgram> results = caisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
+				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
@@ -1516,7 +1511,7 @@ public class ClientManagerAction extends BaseAction {
 
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {
-					ReferralWs referralWs = caisiIntegratorManager.getReferralWs(facilityId);
+					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
 
 					List<Referral> referrals = referralWs.getReferralsFor(Integer.parseInt(demographicNo));
 					if (referrals != null) {
@@ -1526,14 +1521,14 @@ public class ClientManagerAction extends BaseAction {
 							ClientReferral clientReferral = new ClientReferral();
 
 							StringBuilder programName = new StringBuilder();
-							CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteReferral.getDestinationIntegratorFacilityId());
+							CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteReferral.getDestinationIntegratorFacilityId());
 							programName.append(cachedFacility.getName());
 							programName.append(" / ");
 
 							FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 							pk.setIntegratorFacilityId(remoteReferral.getDestinationIntegratorFacilityId());
 							pk.setCaisiItemId(remoteReferral.getDestinationCaisiProgramId());
-							CachedProgram cachedProgram = caisiIntegratorManager.getRemoteProgram(facilityId, pk);
+							CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(facilityId, pk);
 							programName.append(cachedProgram.getName());
 
 							clientReferral.setProgramName(programName.toString());

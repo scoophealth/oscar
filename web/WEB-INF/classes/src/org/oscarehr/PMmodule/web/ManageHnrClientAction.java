@@ -25,7 +25,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageHnrClientAction {
 	private static Logger logger = LogManager.getLogger(ManageHnrClientAction.class);
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
@@ -42,7 +41,7 @@ public class ManageHnrClientAction {
 			// it might be 0 if some one unlinked the client at the same time you are looking at this screen.
 			if (clientLinks.size() > 0) {
 				ClientLink clientLink = clientLinks.get(0);
-				org.oscarehr.hnr.ws.Client hnrClient = caisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
+				org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
 
 				Demographic demographic = demographicDao.getDemographicById(clientId);
 
@@ -110,7 +109,7 @@ public class ManageHnrClientAction {
 			// try to retrieve existing linked client to update
 			if (clientLinks.size() >= 1) {
 				clientLink = clientLinks.get(0);
-				hnrClient = caisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
+				hnrClient = CaisiIntegratorManager.getHnrClient(clientLink.getRemoteLinkId());
 			}
 
 			// can be null if there's no existing link or if the data on the hnr has been revoked of consent
@@ -182,7 +181,7 @@ public class ManageHnrClientAction {
 //					hnrClient.setHiddenChangeDate(integratorConsent.getCreatedDate());
 //				}
 				// new hacked consent which is actually wrong but may produced "expected" results
-				GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(clientId);
+				GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(clientId);
 				if (remoteConsent!=null)
 				{
 					if (remoteConsent.getConsentState()==ConsentState.ALL)
@@ -195,7 +194,7 @@ public class ManageHnrClientAction {
 				
 				// save the client
 				hnrClient.setUpdatedBy("faciliy: " + loggedInInfo.currentFacility.getName() + ", provider:" + loggedInInfo.loggedInProvider.getFormattedName());
-				Integer linkingId = caisiIntegratorManager.setHnrClient(hnrClient);
+				Integer linkingId = CaisiIntegratorManager.setHnrClient(hnrClient);
 
 				// if the hnr client is new / not previously linked, save the new link
 				// in theory this can lead to multiple links if 2 people run this method

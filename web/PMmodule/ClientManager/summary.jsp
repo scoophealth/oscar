@@ -18,7 +18,6 @@
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%
-	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 	IntegratorConsentDao integratorConsentDao=(IntegratorConsentDao)SpringUtils.getBean("integratorConsentDao");
 	Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Demographic currentDemographic=(Demographic)request.getAttribute("client");
@@ -159,7 +158,7 @@ function openSurvey() {
 			<td>
 				<c:out value="${client.hin}" />&nbsp;<c:out value="${client.ver}" />
 				<%
-					if (caisiIntegratorManager.isEnableHealthNumberRegistry())
+					if (CaisiIntegratorManager.isEnableHealthNumberRegistry())
 					{
 						%>
 							<input type="button" value="Manage Health Number Registry" onclick="document.location='ClientManager/manage_hnr_client.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" />
@@ -244,7 +243,7 @@ function openSurvey() {
 						
 							try
 							{
-								GetConsentTransfer remoteConsent=caisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
+								GetConsentTransfer remoteConsent=CaisiIntegratorManager.getConsentState(currentDemographic.getDemographicNo());
 								
 								if (remoteConsent!=null)
 								{
@@ -254,7 +253,7 @@ function openSurvey() {
 									if (remoteConsent.getConsentState()==ConsentState.SOME) sb.append("Limited consent, ");
 									if (remoteConsent.getConsentState()==ConsentState.NONE) sb.append("No consent, ");
 									
-									CachedFacility myFacility=caisiIntegratorManager.getCurrentRemoteFacility();
+									CachedFacility myFacility=CaisiIntegratorManager.getCurrentRemoteFacility();
 									if (myFacility.getIntegratorFacilityId().equals(remoteConsent.getIntegratorFacilityId()))
 									{
 										sb.append("set locally on ");

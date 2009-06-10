@@ -61,8 +61,6 @@ import oscar.util.UtilDateUtilities;
 public class PreventionData {
 	private static Log log = LogFactory.getLog(PreventionData.class);
 
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-
 	/*
 	 * create table preventions( id int(10) NOT NULL auto_increment primary key, demographic_no int(10) NOT NULL default '0', creation_date datetime, prevention_date date,
 	 * provider_no varchar(6) NOT NULL default '', provider_name varchar(255), prevention_type varchar(20), next_date date, never char(1) default '0', deleted char(1) default '0',
@@ -396,7 +394,7 @@ public class PreventionData {
 	private List<CachedDemographicPrevention> populateRemotePreventions(Integer demographicId) {
 		if (remotePreventions == null && LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled()) {
 			try {
-				DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
+				DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 				remotePreventions = demographicWs.getLinkedCachedDemographicPreventionsByDemographicId(demographicId);
 			}
 			catch (Exception e) {
@@ -437,7 +435,7 @@ public class PreventionData {
 					String remoteFacilityName="N/A";
 					CachedFacility remoteFacility=null;
 					try {
-						remoteFacility = caisiIntegratorManager.getRemoteFacility(cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+						remoteFacility = CaisiIntegratorManager.getRemoteFacility(cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 					}
 					catch (Exception e) {
 						log.error(e);

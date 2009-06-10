@@ -20,7 +20,6 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.common.dao.DigitalSignatureDao;
 import org.oscarehr.common.model.DigitalSignature;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DigitalSignatureUtils;
 import org.oscarehr.util.SessionConstants;
@@ -38,7 +37,6 @@ import org.oscarehr.util.SpringUtils;
 public class ImageRenderingServlet extends HttpServlet {
 	private static Logger logger = LogManager.getLogger(ImageRenderingServlet.class);
 	private static ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static DigitalSignatureDao digitalSignatureDao = (DigitalSignatureDao) SpringUtils.getBean("digitalSignatureDao");
 
 	public static enum Source {
@@ -105,10 +103,9 @@ public class ImageRenderingServlet extends HttpServlet {
 
 		try {
 			// get image
-			Facility loggedInFacility = (Facility) session.getAttribute(SessionConstants.CURRENT_FACILITY);
 			Integer integratorFacilityId = Integer.parseInt(request.getParameter("integratorFacilityId"));
 			Integer caisiClientId = Integer.parseInt(request.getParameter("caisiDemographicId"));
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInFacility.getId());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(integratorFacilityId, caisiClientId);
 
 			if (demographicTransfer != null && demographicTransfer.getPhoto() != null) {
@@ -136,7 +133,7 @@ public class ImageRenderingServlet extends HttpServlet {
 		try {
 			// get image
 			Integer linkingId = Integer.parseInt(request.getParameter("linkingId"));
-			org.oscarehr.hnr.ws.Client hnrClient = caisiIntegratorManager.getHnrClient(linkingId);
+			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(linkingId);
 
 			if (hnrClient != null && hnrClient.getImage() != null) {
 				renderImage(response, hnrClient.getImage(), "jpeg");

@@ -29,26 +29,23 @@
 		</style>
 	</head>
 	<body>
-		<%!
-			private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
-		%>
 		<%
 			Integer remoteFacilityId=Integer.valueOf(request.getParameter("remoteFacilityId"));
 			Integer remotePreventionId=Integer.valueOf(request.getParameter("remotePreventionId"));
 			Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 			
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInFacilityId);
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 
 			FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
 			pk.setIntegratorFacilityId(remoteFacilityId);
 			pk.setCaisiItemId(remotePreventionId);
 			CachedDemographicPrevention remotePrevention = demographicWs.getCachedDemographicPreventionsByPreventionId(pk);
 			
-			CachedFacility cachedFacility=caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 			providerPk.setCaisiItemId(remotePrevention.getCaisiProviderId());
-			CachedProvider cachedProvider=caisiIntegratorManager.getProvider(loggedInFacilityId, providerPk);
+			CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInFacilityId, providerPk);
 		%>
 		<table style="border-collapse:collapse">
 			<tr>

@@ -35,7 +35,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageLinkedClients {
 	public static Logger logger = LogManager.getLogger(ManageLinkedClients.class);
-	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 	public static ClientImageDAO clientImageDAO=(ClientImageDAO)SpringUtils.getBean("clientImageDAO");
@@ -87,7 +86,7 @@ public class ManageLinkedClients {
 		// only be 1, a minor issue about some of this code not being atomic makes multiple
 		// entries theoretically possible though in reality it should never happen.
 		if (currentLinks.size() >0 ) {
-			org.oscarehr.hnr.ws.Client hnrClient = caisiIntegratorManager.getHnrClient(currentLinks.get(0).getRemoteLinkId());
+			org.oscarehr.hnr.ws.Client hnrClient = CaisiIntegratorManager.getHnrClient(currentLinks.get(0).getRemoteLinkId());
 
 			// can be null if client revoked consent or locked data, link still exists but no records are returned.
 			if (hnrClient != null) {
@@ -110,7 +109,7 @@ public class ManageLinkedClients {
 	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 	        MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
-	        List<MatchingClientScore> potentialMatches = caisiIntegratorManager.searchHnrForMatchingClients(loggedInInfo.currentFacility, loggedInInfo.loggedInProvider, matchingClientParameters);
+	        List<MatchingClientScore> potentialMatches = CaisiIntegratorManager.searchHnrForMatchingClients(loggedInInfo.currentFacility, loggedInInfo.loggedInProvider, matchingClientParameters);
 	        
 	        for (MatchingClientScore matchingClientScore : potentialMatches) {
 	        	String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();
@@ -181,7 +180,7 @@ public class ManageLinkedClients {
 	private static void addCurrentLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
-		DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility.getId());
+		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 		List<DemographicTransfer> directLinksTemp = demographicWs.getDirectlyLinkedDemographicsByDemographicId(demographic.getDemographicNo());
 
 		for (DemographicTransfer cachedDemographic : directLinksTemp) {
@@ -203,7 +202,7 @@ public class ManageLinkedClients {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		MatchingDemographicParameters parameters = getMatchingDemographicParameters(demographic);
-		DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(loggedInInfo.currentFacility.getId());
+		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 		List<MatchingDemographicTransferScore> potentialMatches = demographicWs.getMatchingDemographics(parameters);
 		
 		if (potentialMatches == null) return;
@@ -232,7 +231,7 @@ public class ManageLinkedClients {
 		integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(demographicTransfer.getHin());
 		integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(demographicTransfer.getLastName());
 
-		CachedFacility tempFacility = caisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId());
+		CachedFacility tempFacility = CaisiIntegratorManager.getRemoteFacility(demographicTransfer.getIntegratorFacilityId());
 		integratorLinkedDemographicHolder.linkDestination = ClientLink.Type.OSCAR_CAISI.name() + '.' + tempFacility.getIntegratorFacilityId();
 		integratorLinkedDemographicHolder.remoteLinkId = demographicTransfer.getCaisiDemographicId();
 		

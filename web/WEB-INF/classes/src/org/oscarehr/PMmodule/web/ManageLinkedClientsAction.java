@@ -19,7 +19,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageLinkedClientsAction {
 	public static Logger logger = LogManager.getLogger(ManageLinkedClientsAction.class);
-	public static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	public static ClientLinkDao clientLinkDao = (ClientLinkDao) SpringUtils.getBean("clientLinkDao");
 
 	private Integer newHnrLinkedId = null;
@@ -44,12 +43,12 @@ public class ManageLinkedClientsAction {
 
 	public void saveLinkedIds(Facility facility, Provider provider, Integer demographicId) {
 		saveHnrLinkedIds(facility, provider, demographicId);
-		saveCaisiLinkedIds(facility, provider, demographicId);
+		saveCaisiLinkedIds(provider, demographicId);
 	}
 
-	private void saveCaisiLinkedIds(Facility facility, Provider provider, Integer demographicId) {
+	private void saveCaisiLinkedIds(Provider provider, Integer demographicId) {
 		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(facility.getId());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			List<DemographicTransfer> tempLinks = demographicWs.getDirectlyLinkedDemographicsByDemographicId(demographicId);
 			HashSet<FacilityDemographicPrimaryKey> currentLinks = new HashSet<FacilityDemographicPrimaryKey>();
 

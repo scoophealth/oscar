@@ -8,14 +8,12 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
 <%
 	DemographicDao demographicDao=(DemographicDao)SpringUtils.getBean("demographicDao");
-	CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
 
 	int currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
 	

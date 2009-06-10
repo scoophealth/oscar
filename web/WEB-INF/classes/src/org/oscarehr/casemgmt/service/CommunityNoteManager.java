@@ -8,12 +8,8 @@ import java.util.StringTokenizer;
 import org.caisi.model.Role;
 import org.jboss.logging.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.IssueTransfer;
 import org.oscarehr.caisi_integrator.ws.NoteTransfer;
-import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
-import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
-import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SpringUtils;
@@ -22,11 +18,7 @@ public class CommunityNoteManager {
 
 	private static Logger log = Logger.getLogger(CommunityNoteManager.class);
 	private CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-	private CaisiIntegratorManager ciMan = (CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-	private CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
-	private CaseManagementNoteDAO cmnDao = (CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
-	
+
 	public List<CaseManagementNote> getRemoteNotes(int facilityId, int demographicId, String providerNo, String programId, List<String> issues)
 	{
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
@@ -52,7 +44,7 @@ public class CommunityNoteManager {
 				log.debug("IssueTransfer created for " + issue);
 			}
 			log.debug("looking for remoteNotes");
-			List<NoteTransfer> remoteNotes = ciMan.getRemoteNotes(facilityId, demographicId, transfers);
+			List<NoteTransfer> remoteNotes = CaisiIntegratorManager.getRemoteNotes(facilityId, demographicId, transfers);
 			log.debug("found " + remoteNotes.size() + " note transfers");
 			
 			for(NoteTransfer rNote: remoteNotes)

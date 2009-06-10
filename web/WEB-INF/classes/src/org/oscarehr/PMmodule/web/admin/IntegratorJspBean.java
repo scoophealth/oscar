@@ -5,14 +5,11 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.util.SpringUtils;
 
-public class IntegratorJspBean {
-    private static CaisiIntegratorManager caisiIntegratorManager=(CaisiIntegratorManager)SpringUtils.getBean("caisiIntegratorManager");
-    
+public class IntegratorJspBean {    
     public static List<CachedFacility> getIntegratorFacilityCommunity() throws IOException
     {
-    	caisiIntegratorManager.flushCachedFacilityInfo();
-        return(caisiIntegratorManager.getRemoteFacilities());
+    	CaisiIntegratorManager.flushCachedFacilityInfo();
+        return(CaisiIntegratorManager.getRemoteFacilities());
     }
 }

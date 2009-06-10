@@ -23,7 +23,6 @@ import org.oscarehr.util.SpringUtils;
 
 public class ManageConsent {
 	private static Logger logger=MiscUtils.getLogger();
-	private static CaisiIntegratorManager caisiIntegratorManager = (CaisiIntegratorManager) SpringUtils.getBean("caisiIntegratorManager");
 	private static IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
@@ -64,7 +63,7 @@ public class ManageConsent {
 		ArrayList<CachedFacility> results = new ArrayList<CachedFacility>();
 
 		for (Integer remoteFacilityId : previousConsentToView.getConsentToShareData().keySet()) {
-			CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+			CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 			results.add(cachedFacility);
 		}
 
@@ -72,7 +71,7 @@ public class ManageConsent {
 	}
 
 	private Collection<CachedFacility> getAllRemoteFacilities() throws MalformedURLException {
-		List<CachedFacility> results = caisiIntegratorManager.getRemoteFacilities();
+		List<CachedFacility> results = CaisiIntegratorManager.getRemoteFacilities();
 		return (results);
 	}
 

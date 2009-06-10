@@ -86,11 +86,6 @@ public class ProgramManagerViewAction extends BaseAction {
 	private ProgramManager programManager;
 	private ProgramManagerAction programManagerAction;
 	private ProgramQueueManager programQueueManager;
-	private CaisiIntegratorManager caisiIntegratorManager;
-
-	public void setCaisiIntegratorManager(CaisiIntegratorManager caisiIntegratorManager) {
-		this.caisiIntegratorManager = caisiIntegratorManager;
-	}
 
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -137,7 +132,7 @@ public class ProgramManagerViewAction extends BaseAction {
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
 
-		if (caisiIntegratorManager.isEnableIntegratedReferrals()) {
+		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(loggedInFacility.getId(), Integer.parseInt(programId)));
 		}
 

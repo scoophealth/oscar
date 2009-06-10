@@ -29,13 +29,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Locale;
-    
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.util.LabelValueBean;
@@ -93,7 +93,6 @@ import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
@@ -134,9 +133,6 @@ public class CaseManagementManager {
 	protected UserPropertyDAO userPropertyDAO;
 	protected DxResearchDAO dxResearchDAO;
 	
-	@Autowired
-	private CaisiIntegratorManager caisiIntegratorManager;
-
 	private boolean enabled;
 
 	private static final Log logger = LogFactory.getLog(CaseManagementManager.class);
@@ -473,7 +469,7 @@ public class CaseManagementManager {
 		}
 
 		try {
-			DemographicWs demographicWs = caisiIntegratorManager.getDemographicWs(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 			List<CachedDemographicDrug> drugs = demographicWs.getLinkedCachedDemographicDrugsByDemographicId(demographicId);
 
 			for (CachedDemographicDrug cachedDrug : drugs) {
@@ -509,7 +505,7 @@ public class CaseManagementManager {
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
 
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
-		CachedFacility cachedFacility = caisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		pd.setRemoteFacilityName(cachedFacility.getName());
 
 		return (pd);
