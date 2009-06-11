@@ -121,6 +121,7 @@ public final class RxChooseDrugAction extends Action {
                 rx.setDuration("30");
                 rx.setDurationUnit("D");
 
+                bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
                 bean.setStashIndex(bean.addStashItem(rx));
             }
             catch (Exception e){
