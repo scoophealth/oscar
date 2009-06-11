@@ -402,7 +402,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 					log.debug("getting remote notes");
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
+					//Commenting out until we can properly test
+					//remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
 					log.debug("found " + remoteNotes.size() + " remote notes");
 					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
@@ -423,7 +424,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 						}
 					}
 					// get community notes for all remote issues
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
+					//Commenting out until we can properly test
+					//remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
 					current = System.currentTimeMillis();
 					log.debug("Get Notes " + String.valueOf(current - start));
 					start = current;
