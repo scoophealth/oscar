@@ -45,7 +45,6 @@ if (window.XMLHttpRequest) {
 window.onload = new Function("summary_load();");
 
 function summary_load() {
-	showEMPILinks();
 }
 
 function openRelations(){
@@ -69,22 +68,6 @@ function openHealthSafety(){
 	window.open(url,'consent');
 }	
 
-function showEMPILinks() {
-	if (XMLHttpRequestObject) {
-		var obj = document.getElementById('empi_links');
-		if (obj == null) return;
-		XMLHttpRequestObject.open("GET",'<html:rewrite action="/PMmodule/ClientManager"/>?method=getLinks&id=<c:out value="${client.demographicNo}"/>');
-		
-		XMLHttpRequestObject.onreadystatechange = function()
-		{
-			if (XMLHttpRequestObject.readyState == 4 && XMLHttpRequestObject.status == 200) {
-				obj.innerHTML = XMLHttpRequestObject.responseText;
-			}
-		}
-		
-		XMLHttpRequestObject.send(null);
-	}
-}
 
 function saveJointAdmission(clientId,headClientId,jType){
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=save_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&headClientId="+headClientId+"&dependentClientId="+clientId+"&type="+jType;
@@ -186,10 +169,12 @@ function openSurvey() {
  				%>
 			</td>
 		</tr>
+<!-- 
 		<tr>
 			<th width="20%">EMPI</th>
 			<td><span id='empi_links'>Loading...</span></td>
 		</tr>
+-->
 	</caisi:isModuleLoad>
 	<tr>
 		<th width="20%">Active?</th>
