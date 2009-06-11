@@ -433,15 +433,25 @@ public class CaisiIntegratorManager {
 		return (cachedFacility);
 	}
 
-	public static GetConsentTransfer getConsentState(Integer demographicId) throws MalformedURLException {
+	public static GetConsentTransfer getConsentState(Integer localDemographicId) throws MalformedURLException {
+		CachedFacility localIntegratorFacility=getCurrentRemoteFacility();
+		
+		return (getConsentState(localIntegratorFacility.getIntegratorFacilityId(), localDemographicId));
+	}
+
+	public static GetConsentTransfer getConsentState(Integer integratorFacilityId, Integer caisiDemographicId) throws MalformedURLException {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		
-		GetConsentTransfer getConsentTransfer = integratorConsentState.get(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), demographicId);
+		FacilityIdIntegerCompositePk pk=new FacilityIdIntegerCompositePk();
+		pk.setIntegratorFacilityId(integratorFacilityId);
+		pk.setCaisiItemId(caisiDemographicId);
+		
+		GetConsentTransfer getConsentTransfer = integratorConsentState.get(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), pk);
 
 		if (getConsentTransfer == null) {
 			DemographicWs demographicWs = getDemographicWs();
-			getConsentTransfer = demographicWs.getConsentState(demographicId);
-			if (getConsentTransfer != null) integratorConsentState.put(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), demographicId, getConsentTransfer);
+			getConsentTransfer = demographicWs.getConsentState(pk);
+			if (getConsentTransfer != null) integratorConsentState.put(loggedInInfo.currentFacility.getId(), loggedInInfo.loggedInProvider.getProviderNo(), pk, getConsentTransfer);
 		}
 
 		return (getConsentTransfer);
