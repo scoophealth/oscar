@@ -19,4 +19,5 @@ public interface RxPrescriptionMgr {
     public List<String[]> getFavoritesName(List<Favorites> list);
     public void setFavoritesPrivilege(String providerNo, boolean openpublic, boolean writeable);
     public boolean[] getFavoritesPrivilege(String providerNo);
+    public String getProviderName(String providerNo);
 }

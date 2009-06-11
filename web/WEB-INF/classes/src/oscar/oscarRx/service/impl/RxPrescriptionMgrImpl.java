@@ -15,6 +15,7 @@ import oscar.oscarRx.model.Favorites;
 import oscar.oscarRx.model.Favoritesprivilege;
 import oscar.oscarRx.service.RxPrescriptionMgr;
 
+
 /**
  *
  * @author toby
@@ -155,6 +156,12 @@ public class RxPrescriptionMgrImpl implements RxPrescriptionMgr{
             ret[1]=exist.isWriteable();
             return ret;
         }
+    }
+
+    public String getProviderName(String providerNo) {
+        String name = null;
+        name = rxCloneDao.getProviderName(providerNo);
+        return name;
     }
     
 

@@ -16,6 +16,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import oscar.oscarRx.model.Favorites;
 import oscar.oscarRx.dao.RxCloneFavoritesDAO;
 import oscar.oscarRx.model.Favoritesprivilege;
+import org.oscarehr.common.model.Provider;
 
 /**
  *
@@ -115,6 +116,10 @@ public class RxCloneFavoritesDAOHibernate extends HibernateDaoSupport
         if (list.size()==0)
             return null;
         return (Favoritesprivilege)list.get(0);
+    }
+
+    public String getProviderName(String providerNo) {
+        return ((Provider) getHibernateTemplate().get(Provider.class, providerNo)).getFormattedName();
     }
 
 }

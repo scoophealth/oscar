@@ -145,14 +145,14 @@
                                         %>
 
                                         <option
-                                            value=<%=((String) allProviders.get(p))%>  <%=((String) allProviders.get(p)).equalsIgnoreCase(copyProviderNo) ? "SELECTED" : ""%> > <%=((String) allProviders.get(p))%>
+                                            value=<%=((String) allProviders.get(p))%>  <%=((String) allProviders.get(p)).equalsIgnoreCase(copyProviderNo) ? "SELECTED" : ""%> > <%=( rxMgr.getProviderName((String)allProviders.get(p)))%>
                                         </option>
                                         <% }%>
 
                                     </select>
 
 
-                                    <input type="button" onclick="copy();form.submit();" value="Copy" name="b_copy" />
+                                    <input type="button" onclick="copy();form.submit();" value="Copy to my Favorites" name="b_copy" />
 
                                 </td>
                             </tr>

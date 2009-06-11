@@ -20,4 +20,5 @@ public interface RxCloneFavoritesDAO {
     public List<String> getProviders(); 
     public void setFavoritesPrivilege(String providerNo,boolean openpublic, boolean writeable);
     public Favoritesprivilege getFavoritesPrivilege(String providerNo);
+    public String getProviderName(String providerNo);
 }
