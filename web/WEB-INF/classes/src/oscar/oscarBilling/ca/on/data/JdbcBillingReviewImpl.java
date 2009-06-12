@@ -18,6 +18,10 @@ package oscar.oscarBilling.ca.on.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -32,19 +36,33 @@ public class JdbcBillingReviewImpl {
 
 	public String getCodeFee(String val, String billReferalDate) {
 		String retval = null;
-		String sql = "select value from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
+		String sql = "select value, termination_date from billingservice where service_code='" + val + "' and billingservice_date = (select max(billingservice_date) from billingservice where billingservice_date <= '" + billReferalDate + "' and service_code = '" + val + "')";
 
 		// _logger.info("getCodeFee(sql = " + sql + ")");
 		ResultSet rs = dbObj.searchDBRecord(sql);
 
 		try {
-			while (rs.next()) {
+			 if(rs.next()) {
 				retval = rs.getString("value");
-			}
+			
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date serviceDate = df.parse(billReferalDate);
+                String tDate = rs.getString("termination_date");
+                Date termDate = df.parse(tDate);
+                if( termDate.before(serviceDate) ) {
+                    retval = "defunct";
+                }
+             }
 			rs.close();
 		} catch (SQLException e) {
 			_logger.error("getCodeFee(sql = " + sql + ")");
-		}
+            e.printStackTrace();
+		} catch(ParseException e ) {
+            _logger.error("Parse service date error");
+            e.printStackTrace();
+        }
+
 
 		return retval;
 	}
