@@ -57,13 +57,26 @@ public class BillingReviewPrep {
 				codeItem.setCodeUnit((String) vecUnit.get(i));
 				codeItem.setCodeFee("0");
 				codeItem.setCodeTotal("0");
-				codeItem.setMsg("<b>No this code in the database!!!</b>");
+				codeItem.setMsg("<b>This code is NOT in the database!!!</b>");
 				ret.add(codeItem);
 				_logger
-						.error("getServiceCodeReviewVec: No this code in the database! "
+						.error("getServiceCodeReviewVec: This code is NOT in the database! "
 								+ vecCode.get(i));
 				continue;
 			}
+            if( fee.equals("defunct") ) {
+                codeItem = new BillingReviewCodeItem();
+				codeItem.setCodeName((String) vecCode.get(i));
+				codeItem.setCodeUnit((String) vecUnit.get(i));
+				codeItem.setCodeFee("0");
+				codeItem.setCodeTotal("0");
+				codeItem.setMsg("<b>This code has expired!!!</b>");
+				ret.add(codeItem);
+				_logger
+						.error("getServiceCodeReviewVec: This code has expired! "
+								+ vecCode.get(i));
+				continue;
+            }
 			// if perc. code ( This code is not added to the vector of billing codes)
 			if (fee.equals(".00") || fee.equals(""))
 				continue;
