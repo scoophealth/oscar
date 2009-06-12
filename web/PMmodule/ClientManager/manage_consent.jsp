@@ -104,13 +104,13 @@
 			String imageUrl=null;
 			if (viewConsentId==null)
 			{
-				imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&amp;"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
+				imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_preview.name()+"&"+DigitalSignatureUtils.SIGNATURE_REQUEST_ID_KEY+"="+signatureRequestId;
 			}
 			else
 			{
 				Integer previousDigitalSignatureId=manageConsent.getPreviousConsentDigitalSignatureId();
 				if (previousDigitalSignatureId==null) imageUrl=request.getContextPath()+"/images/1x1.gif";
-				else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&amp;digitalSignatureId="+previousDigitalSignatureId;
+				else imageUrl=request.getContextPath()+"/imageRenderingServlet?source="+ImageRenderingServlet.Source.signature_stored.name()+"&digitalSignatureId="+previousDigitalSignatureId;
 			}
 
 			%>
@@ -125,7 +125,7 @@
 					{
 						counter=counter+1;
 						var img=document.getElementById("signature");
-						img.src='<%=imageUrl%>&amp;rand='+counter;
+						img.src='<%=imageUrl%>&rand='+counter;
 					}
 				</script>
 				<br />
