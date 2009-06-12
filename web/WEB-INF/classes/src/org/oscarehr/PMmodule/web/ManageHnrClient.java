@@ -1,5 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -7,6 +8,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
+import org.oscarehr.caisi_integrator.ws.ConsentState;
+import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.dao.ClientLinkDao;
@@ -183,5 +186,10 @@ public class ManageHnrClient {
 	public String getOtherInfoValidationActionString() {
 		if (otherValidated) return("invalidate");
 		else return("validate");
+	}
+	
+	public boolean hasConsented() throws MalformedURLException {
+		GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(demographic.getDemographicNo());
+		return(consent!=null && consent.getConsentState()==ConsentState.ALL);
 	}
 }
