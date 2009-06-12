@@ -227,7 +227,8 @@ public class ManageLinkedClients {
 		// copy the data to holder entry
 		if (demographicTransfer.getBirthDate() != null) integratorLinkedDemographicHolder.birthDate = DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate());
 		integratorLinkedDemographicHolder.firstName = StringUtils.trimToEmpty(demographicTransfer.getFirstName());
-		integratorLinkedDemographicHolder.gender = StringUtils.trimToEmpty(demographicTransfer.getGender());
+		integratorLinkedDemographicHolder.gender = "";
+		if (demographicTransfer.getGender()!=null) integratorLinkedDemographicHolder.gender=demographicTransfer.getGender().name();
 		integratorLinkedDemographicHolder.hin = StringUtils.trimToEmpty(demographicTransfer.getHin());
 		integratorLinkedDemographicHolder.lastName = StringUtils.trimToEmpty(demographicTransfer.getLastName());
 

@@ -20,6 +20,7 @@ import org.oscarehr.common.dao.HnrDataValidationDao;
 import org.oscarehr.common.model.ClientLink;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.HnrDataValidation;
+import org.oscarehr.hnr.ws.Gender;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -53,13 +54,9 @@ public class ManageHnrClientAction {
 					}
 				if (hnrClient.getCity() != null) demographic.setCity(hnrClient.getCity());
 				if (hnrClient.getFirstName() != null) demographic.setFirstName(hnrClient.getFirstName());
-
-				// genders can't be synced until gender constants are resolved
-				// if (hnrClient.getGender()!=null) demographic.setSex(hnrClient.getGender().name());
-
+				if (hnrClient.getGender()!=null) demographic.setSex(hnrClient.getGender().name());
 				if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
-
 				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart());
 				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd());
 
@@ -130,10 +127,16 @@ public class ManageHnrClientAction {
 
 				if (demographic.getFirstName() != null) hnrClient.setFirstName(demographic.getFirstName());
 				if (demographic.getLastName() != null) hnrClient.setLastName(demographic.getLastName());
-
-				// genders can't be synced until gender constants are resolved
-				// if (demographic.getSex()!=null) hnrClient.setGender(demographic.getSex());
-
+				
+				try
+				{
+					if (demographic.getSex()!=null) hnrClient.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
+				}
+				catch (Exception e)
+				{
+					// do nothing, this is on a best attempt basis. until genders are defined constants.
+				}
+				
 				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType().toLowerCase());
@@ -155,8 +158,6 @@ public class ManageHnrClientAction {
 			if (otherValidated) {
 				isAtLeastOneThingValidated=true;
 				
-				// genders can't be synced until gender constants are resolved
-				// if (demographic.getSex()!=null) hnrClient.setGender(demographic.getSex());
 				if (demographic.getAddress() != null) hnrClient.setStreetAddress(demographic.getAddress());
 				if (demographic.getCity() != null) hnrClient.setCity(demographic.getCity());
 				if (demographic.getProvince() != null) hnrClient.setProvince(demographic.getProvince());

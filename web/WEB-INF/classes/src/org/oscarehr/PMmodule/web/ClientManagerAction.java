@@ -91,6 +91,7 @@ import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -1085,13 +1086,13 @@ public class ClientManagerAction extends BaseAction {
 
 			temp = StringUtils.trimToNull(criteria.getManOrWoman());
 			if (temp != null) {
-				if (cachedProgram.getGender() != null && !cachedProgram.getGender().equals(temp)) {
+				if (cachedProgram.getGender() != null && !cachedProgram.getGender().name().equals(temp.toUpperCase())) {
 					it.remove();
 					continue;
 				}
 			}
 
-			if (criteria.isTransgender() && cachedProgram.getGender() != null != cachedProgram.getGender().equals("T")) {
+			if (criteria.isTransgender() && cachedProgram.getGender()!=Gender.T) {
 				it.remove();
 				continue;
 			}

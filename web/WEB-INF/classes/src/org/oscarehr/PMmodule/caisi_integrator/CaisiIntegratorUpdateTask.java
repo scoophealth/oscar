@@ -56,6 +56,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
+import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
@@ -259,8 +260,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pk.setCaisiItemId(program.getId());
 			cachedProgram.setFacilityIdIntegerCompositePk(pk);
 
-			cachedProgram.setGender(program.getManOrWoman());
-			if (program.isTransgender()) cachedProgram.setGender("T");
+			try
+			{
+				cachedProgram.setGender(Gender.valueOf(program.getManOrWoman().toUpperCase()));
+			}
+			catch (Exception e)
+			{
+				// do nothing, we can't assume anything is right or wrong with genders 
+				// until the whole mess is sorted out, for now it's a what you get is 
+				// what you get
+			}
+
+			if (program.isTransgender()) cachedProgram.setGender(Gender.T);
 
 			cachedProgram.setMaxAge(program.getAgeMax());
 			cachedProgram.setMinAge(program.getAgeMin());
@@ -344,8 +355,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		demographicTransfer.setBirthDate(demographic.getBirthDay().getTime());
 
 		demographicTransfer.setHinVersion(demographic.getVer());
-		demographicTransfer.setGender(demographic.getSex());
-
+		
+		try
+		{
+			demographicTransfer.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
+		}
+		catch (Exception e)
+		{
+			// do nothing, for now gender is on a "good luck" what ever you
+			// get is what you get basis until the whole gender mess is sorted.
+		}
+		
 		// set image
 		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
 		if (clientImage != null) {

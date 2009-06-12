@@ -112,7 +112,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
 			GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 			intakeSearchBean.setFirstName(demographicTransfer.getFirstName());
-			intakeSearchBean.setGender(demographicTransfer.getGender());
+			intakeSearchBean.setGender(demographicTransfer.getGender().name());
 			intakeSearchBean.setHealthCardNumber(demographicTransfer.getHin());
 			intakeSearchBean.setHealthCardVersion(demographicTransfer.getHinVersion());
 			intakeSearchBean.setLastName(demographicTransfer.getLastName());
