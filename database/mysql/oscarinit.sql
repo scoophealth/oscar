@@ -209,6 +209,7 @@ CREATE TABLE billingservice (
   specialty varchar(15) default NULL,
   region varchar(5) default NULL,
   anaesthesia char(2) default NULL,
+  termination_date date default '9999-12-31',
   PRIMARY KEY  (billingservice_no),
   KEY billingservice_service_code_index (service_code)
 ) ;
