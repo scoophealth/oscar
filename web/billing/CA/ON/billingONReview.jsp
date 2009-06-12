@@ -75,7 +75,7 @@ boolean dupServiceCode = false;
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
 
         //Check whether there are duplicated service code existing
-        //User double click a service code, and then check off that 
+        //User double click a service code, and then check off that g
         //service code in billingON page will cause duplicated service
         //code in billing review page.
         TreeMap mapServiceParam = new TreeMap();
@@ -471,8 +471,9 @@ window.onload=function(){
     String serviceCodeValue = null;
     for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 	serviceCodeValue = request.getParameter("serviceCode" + i);
+    
 	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "'";
+	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "' and termination_date > '" + billReferalDate + "'";
 	   System.out.println(sql);
             rs = dbObj.searchDBRecord(sql);
 	    if (!rs.next()) {
@@ -538,6 +539,7 @@ window.onload=function(){
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
 						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
+                        String strWarning = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getMsg();
                                                 gstFlag = gstRep.getGstFlag(codeName,billReferalDate);  // Retrieve whether the code has gst involved
                                                 if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
                                                     BigDecimal cTotal = new BigDecimal(codeTotal);
@@ -557,10 +559,15 @@ window.onload=function(){
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
 				<td align='right' width='12%'><%=codeName %> (<%=codeUnit %>)</td>
-				<td align='right'><%=codeFee %> x <%=codeUnit %><% if (gstFlag.equals("1")){%> + <%=percent%>% GST<%}%> = 
+				<td>
+                    <% if( strWarning.length() > 0 ) { %>
+                    <span style="color:red; float:left;"><%=strWarning%></span>
+                    <%}%>
+                    <span style="float:right;"> <%=codeFee %> x <%=codeUnit %><% if (gstFlag.equals("1")){%> + <%=percent%>% GST<%}%> =
 				<input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="<%=codeTotal %>" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
+                    </span>
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
 			</tr>
