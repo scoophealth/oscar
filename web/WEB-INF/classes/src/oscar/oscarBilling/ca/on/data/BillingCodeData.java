@@ -200,12 +200,12 @@ public class BillingCodeData {
       return retval;
    }
    
-   public boolean insertBillingCode(String value, String code, String date, String description) {
+   public boolean insertBillingCode(String value, String code, String date, String description, String termDate) {
       boolean retval = true;
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-         String str = "insert into billingservice (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia) Values("+
+         String str = "insert into billingservice (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia,termination_date) Values("+
                       "''," +                      
                       "'"+StringEscapeUtils.escapeSql(code)+"'," +
                       "'"+StringEscapeUtils.escapeSql(description) + "'," + 
@@ -214,7 +214,8 @@ public class BillingCodeData {
                       "'"+StringEscapeUtils.escapeSql(date) + "'," + 
                       "''," +
                       "'ON'," +
-                      "'00')";
+                      "'00'," + 
+                      "'" + StringEscapeUtils.escapeSql(termDate) + "')";
          System.out.println(str);
          db.RunSQL(str);
          System.out.println("NOW updated");
