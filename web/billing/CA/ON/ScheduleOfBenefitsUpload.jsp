@@ -139,6 +139,8 @@ function checkAll(formId){
 					<th>New Price</th>
 					<th>Diff</th>
 					<th>Description</th>
+                    <th>Effective Date</th>
+                    <th>Termination Date</th>
 				</tr>
 				<% for (int i = 0; i < warnings.size(); i++){ 
                       Hashtable h = (Hashtable) warnings.get(i);
@@ -153,6 +155,8 @@ function checkAll(formId){
 					<td><%=h.get("newprice")%></td>
 					<td><%=h.get("diff")%></td>
 					<td title="<%=h.get("prices")%>"><%=h.get("description")%></td>
+                    <td><%=h.get("effectiveDate")%></td>
+                    <td><%=h.get("terminactionDate")%></td>
 				</tr>
 				<%}%>
 			</table>
