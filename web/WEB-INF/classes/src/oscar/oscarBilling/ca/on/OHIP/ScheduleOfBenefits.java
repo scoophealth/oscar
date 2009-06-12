@@ -104,6 +104,8 @@ public class ScheduleOfBenefits {
                   change.put("diff","");
                   change.put("prices",moreprices);
                   change.put("description","----");
+                  change.put("effectiveDate",    newPricingInfo.get("effectiveDate"));
+                  change.put("terminactionDate", newPricingInfo.get("terminactionDate"));
                   changes.add(change);
                }
             }else{
