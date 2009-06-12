@@ -79,8 +79,22 @@ public class ScheduleOfBenefitsUpdateAction extends Action {
                 else {
                     effDate = change[2].substring(0,4) + "-" + change[2].substring(4,6) + "-" + change[2].substring(6,8);
                 }
+
+                String termDate;
+                if( change[3].equals("99999999") ) {
+                    termDate = "9999-12-31";
+                }
+                else {
+                    termDate = change[3].substring(0, 4) + "-" + change[3].substring(4,6) + "-";
+                    if( change[3].substring(6,8).equals("00") ) {
+                        termDate += "01";
+                    }
+                    else {
+                        termDate += change[3].substring(6,8);
+                    }
+                }
                 
-               bc.insertBillingCode(change[1], change[0], effDate, change[4]);
+               bc.insertBillingCode(change[1], change[0], effDate, change[4], termDate);
                Hashtable h = new Hashtable();
                h.put("code",change[0]);
                h.put("value",change[1]);
