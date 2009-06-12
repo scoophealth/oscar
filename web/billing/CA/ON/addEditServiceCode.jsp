@@ -61,7 +61,8 @@
 			String	sql   = "update billingservice set description='" + StringEscapeUtils.escapeSql(request.getParameter("description")) + "', ";
 			sql += " value='" + valuePara + "', ";
 			sql += " percentage='" + request.getParameter("percentage") + "', ";
-			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "' ";
+			sql += " billingservice_date='" + request.getParameter("billingservice_date") + "', ";
+            sql += " termination_date='" + request.getParameter("termination_date") + "' ";
 			sql += "where service_code='" + serviceCode + "'";
 			System.out.println(sql);
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
@@ -107,13 +108,13 @@
       	// insert into the service code
 		String serviceCode = request.getParameter("service_code");
 		if(serviceCode.equals(request.getParameter("action").substring("add".length()))) {
-			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia) values ('', '";
+			String	sql   = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date,specialty,region,anaesthesia, termination_date) values ('', '";
 			sql += serviceCode + "', '";
 			sql += request.getParameter("description") + "', '";
 			sql += valuePara + "', '";
 			sql += request.getParameter("percentage") + "', '";
 			sql += request.getParameter("billingservice_date") + "',";
-                        sql += "'','ON','00')";
+                        sql += "'','ON','00', '" + request.getParameter("termination_date") + "')";
 			if(request.getParameter("percentage").length()>1 && request.getParameter("min").length()>1 && request.getParameter("max").length()>1) {
 				String sqlMinMax = "insert into billingperclimit values('";
 				sqlMinMax += serviceCode + "', '";
@@ -170,6 +171,8 @@ System.out.println(sql);
                         prop.setProperty("percentage", tmp);                    
                         tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
                         prop.setProperty("billingservice_date", tmp);
+                        tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
+                        prop.setProperty("termination_date", tmp);
                         msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
                         action = "edit" + serviceCode;
                         action2 = "add" + serviceCode;
@@ -215,6 +218,8 @@ System.out.println(sql);
             prop.setProperty("percentage", tmp);                    
             tmp = rs.getString("billingservice_date") == null ? "" : rs.getString("billingservice_date");
             prop.setProperty("billingservice_date", tmp);
+            tmp = rs.getString("termination_date") == null ? "" : rs.getString("termination_date");
+            prop.setProperty("termination_date", tmp);
             msg = "You can edit the service code by clicking 'Save' or add a new entry for this code by clicking 'Add Service Code'";
             action = "edit" + serviceCode;
             action2 = "add" + serviceCode;
@@ -438,6 +443,14 @@ System.out.println(sqlMinMax);
 			maxlength='10' readonly> (effective date) <img
 			src="../../../images/cal.gif" id="billingservice_date_cal"></td>
 	</tr>
+    <tr bgcolor="#EEEEFF">
+		<td align="right"><b>Termination Date</b></td>
+		<td><input type="text" name="termination_date"
+			id="termination_date"
+			value="<%=prop.getProperty("termination_date", "")%>" size='10'
+			maxlength='10' readonly> (stale date) <img
+			src="../../../images/cal.gif" id="termination_date_cal"></td>
+	</tr>
 	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -464,5 +477,6 @@ System.out.println(sqlMinMax);
 </body>
 <script type="text/javascript">
 Calendar.setup( { inputField : "billingservice_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "billingservice_date_cal", singleClick : true, step : 1 } );
+Calendar.setup( { inputField : "termination_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "termination_date_cal", singleClick : true, step : 1 } );
 </script>
 </html:html>
