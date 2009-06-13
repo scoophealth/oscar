@@ -1314,10 +1314,17 @@ insert into `secObjectName` (`objectName`) values ('_rx');
 insert into `secObjectName` (`objectName`) values ('_merge');
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_flowsheet','Flow Sheet',0);
 
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Casemgmt - Issues',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Casemgmt - Notes',0);
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist','_masterLink','x',0,999998);
+insert into `secObjPrivilege` values('receptionist', '_casemgmt.issues', 'x', 0, '999998');
+insert into `secObjPrivilege` values('receptionist', '_casemgmt.notes', 'x', 0, '999998');
+
+
 insert into `secObjPrivilege` values('doctor', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor', '_eChart', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor', '_appointment.doctorLink', 'x', 0, '999998');
@@ -1329,10 +1336,14 @@ insert into `secObjPrivilege` values('doctor','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_rx','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_admin.reporting','x',0,999998);
 insert into `secObjPrivilege` values('doctor','_flowsheet','x',0,999998);
+insert into `secObjPrivilege` values('doctor', '_casemgmt.issues', 'x', 0, '999998');
+insert into `secObjPrivilege` values('doctor', '_casemgmt.notes', 'x', 0, '999998');
 
 
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
+insert into `secObjPrivilege` values('admin', '_casemgmt.issues', 'x', 0, '999998');
+insert into `secObjPrivilege` values('admin', '_casemgmt.notes', 'x', 0, '999998');
 
 
 -- for role locum
@@ -1345,6 +1356,8 @@ insert into `secObjPrivilege` values('locum', '_billing', 'x', 0, '999998');
 insert into `secObjPrivilege` values('locum', '_tasks', 'x', 0, '999998');
 insert into `secObjPrivilege` values('locum','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('locum','_rx','x',0,999998);
+insert into `secObjPrivilege` values('locum', '_casemgmt.issues', 'x', 0, '999998');
+insert into `secObjPrivilege` values('locum', '_casemgmt.notes', 'x', 0, '999998');
 
 -- for role nurse
 insert into `secObjPrivilege` values('nurse', '_appointment', 'x', 0, '999998');
@@ -1355,6 +1368,8 @@ insert into `secObjPrivilege` values('nurse', '_billing', 'x', 0, '999998');
 insert into `secObjPrivilege` values('nurse', '_tasks', 'x', 0, '999998');
 insert into `secObjPrivilege` values('nurse','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('nurse','_rx','x',0,999998);
+insert into `secObjPrivilege` values('nurse', '_casemgmt.issues', 'x', 0, '999998');
+insert into `secObjPrivilege` values('nurse', '_casemgmt.notes', 'x', 0, '999998');
 
 insert into lst_orgcd (code, description, activeyn, orderbyindex,codetree) values('R0000001','Shelter Management Information System',1,10,'R000001');
 
