@@ -8,13 +8,13 @@
   <property name="webapp.name" value="oscar"/>
   
   <path id="classpath.path">
+   <fileset dir="../web/WEB-INF/lib">
+    <include name="*.jar"/>
+   </fileset>
    <fileset dir="${catalina}/common/lib">
     <include name="*.jar"/>
    </fileset>
    <pathelement location="${classes}"/>
-   <fileset dir="../web/WEB-INF/lib">
-    <include name="*.jar"/>
-   </fileset>
   </path>
 
  <target name="init" 
