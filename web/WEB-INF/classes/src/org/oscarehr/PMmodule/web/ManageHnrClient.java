@@ -1,6 +1,5 @@
 package org.oscarehr.PMmodule.web;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -188,8 +187,13 @@ public class ManageHnrClient {
 		else return("validate");
 	}
 	
-	public boolean hasConsented() throws MalformedURLException {
-		GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(demographic.getDemographicNo());
-		return(consent!=null && consent.getConsentState()==ConsentState.ALL);
+	public boolean hasConsented() {
+		try {
+	        GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(demographic.getDemographicNo());
+	        return(consent!=null && consent.getConsentState()==ConsentState.ALL);
+        } catch (Exception e) {
+        	logger.debug("Exception getting consent state.", e);
+        	return(false);
+        }
 	}
 }
