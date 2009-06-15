@@ -448,6 +448,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String noteId = request.getParameter("noteId");                                 
             log.debug("SAVING NOTE " + noteId + " STRING: " + strNote);
             String issueChange = request.getParameter("issueChange");
+            String archived = request.getParameter("archived");
             
             CaseManagementNote note;
             boolean newNote = false;
@@ -461,7 +462,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             else {
                 note = this.caseManagementMgr.getNote(noteId);                
                 //if note has not changed don't save                
-                if( strNote.equals(note.getNote()) && !issueChange.equals("true") )
+                if( strNote.equals(note.getNote()) && !issueChange.equals("true") && (archived == null || archived.equalsIgnoreCase("false")))
                     return null;
             }
             
@@ -473,8 +474,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             if( provider != null )
                 note.setProvider(provider);                        
 
-            String logAction = "";
-            String archived = request.getParameter("archived");
+            String logAction = "";            
             if( archived == null || archived.equalsIgnoreCase("false") ) {
                 note.setArchived(false);
             }
