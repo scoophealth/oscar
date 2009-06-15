@@ -77,7 +77,7 @@
             if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) ) {
                 tmpSaveNeeded = false;
                 //autoSave(false);
-                document.forms['caseManagementEntryForm'].sign.value='off'                                
+                document.forms['caseManagementEntryForm'].sign.value='on'
                 document.forms["caseManagementEntryForm"].method.value = "saveAndExit";
                 document.forms["caseManagementEntryForm"].ajax.value = false;
                 document.forms["caseManagementEntryForm"].chain.value = "";
