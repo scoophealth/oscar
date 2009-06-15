@@ -492,7 +492,7 @@ function init() {
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>' onclick="$('archived').value='false';" style="padding-right:10px;">
                       <input type="image" src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" title='<bean:message key="global.btnExit"/>' onclick="this.focus();$('channel').style.visibility ='visible';$('showEditNote').style.display='none';return false;">
                   </span>
-                  <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position"><option id="popt0">1</option>
+                  <bean:message key="oscarEncounter.Index.btnPosition"/><select id="position" name="position"><option id="popt0" value="0">1</option>
                   </select> 
                   <div id="issueNoteInfo" style="clear:both; text-align:left;"></div>
                   <div id="issueListCPP" style="background-color:#FFFFFF; height:200px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
