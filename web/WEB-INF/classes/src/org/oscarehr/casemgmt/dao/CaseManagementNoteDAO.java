@@ -189,12 +189,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 					list += issues[x];
 				}
 				hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list
-						+ ") and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.position, cmn.observation_date asc";
+						+ ") and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.position, cmn.observation_date desc";
 				return this.getHibernateTemplate().find(hql, new Object[] { demographic_no, demographic_no });
 
 			}
 			else if (issues.length == 1) {
-				hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.position, cmn.observation_date asc";
+				hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id = ? and cmn.demographic_no = ? and cmn.archived = 0 and cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) ORDER BY cmn.position, cmn.observation_date desc";
 				long id = Long.parseLong(issues[0]);
 				return this.getHibernateTemplate().find(hql, new Object[] { id, demographic_no, demographic_no });
 			}
