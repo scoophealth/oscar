@@ -53,12 +53,18 @@ public class ThirdApptTimeReporter implements Reporter{
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
         String date_from = request.getParameter("date_from");
         String provider_no = request.getParameter("provider_no");
+        String tmp = request.getParameter("scheduleSymbols:list");
+        String[] schedSymbols = null;
+        if( tmp != null ) {
+            schedSymbols = tmp.split(",");
+        }
+        
         int apptLength = Integer.parseInt(request.getParameter("apptLength"));
         int numDays = -1;
         String rsHtml = "";
         String csv = "";
-        if( date_from == null ||  provider_no == null ) {
-            rsHtml = "date_from and provider_no must be set";
+        if( date_from == null ||  provider_no == null || schedSymbols == null ) {
+            rsHtml = "date_from and provider_no must be set and at least one schedule symbol must be set";
             request.setAttribute("errormsg", rsHtml);
             request.setAttribute("templateid", templateId);
             return false;
@@ -83,7 +89,8 @@ public class ThirdApptTimeReporter implements Reporter{
             int codePos;            
             int latestApptHour, latestApptMin;            
             int third = 3;
-            int numAppts = 0;            
+            int numAppts = 0;
+            boolean codeMatch;
             while(rs.next() && numAppts < third) {
                 timecodes = rs.getString("timecode"); 
                 //System.out.println("TIME CODES " + timecodes);
@@ -122,22 +129,33 @@ public class ThirdApptTimeReporter implements Reporter{
                         }
                         
                     }
-                    
-                    if( code.equalsIgnoreCase("1") || code.equalsIgnoreCase("2") || code.equalsIgnoreCase("3") || code.equalsIgnoreCase("4") || code.equalsIgnoreCase("6") ) {
-                        if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
-                            unbooked += duration;
+
+                    codeMatch = false;
+                    for( int schedIdx = 0; schedIdx < schedSymbols.length; ++schedIdx ) {
                         
-                            if( unbooked >= apptLength ) {                                
-                                unbooked = 0;
-                                ++numAppts;
-                                if( numAppts == third ) {
-                                    break;
+                        if( code.equals(schedSymbols[schedIdx]) ) {                        
+                            codeMatch = true;
+                            System.out.println("codeMatched " + codeMatch);
+                            if( iHours > latestApptHour || (iHours == latestApptHour && iMins > latestApptMin)) {
+                                unbooked += duration;
+
+                                if( unbooked >= apptLength ) {
+                                    unbooked = 0;
+                                    ++numAppts;
+                                    if( numAppts == third ) {
+                                        break;
+                                    }
                                 }
                             }
+                            
                         }
-                        
+                    } //end for schedule symbols
+
+                    if( numAppts == third ) {
+                        break;
                     }
-                    else {
+
+                    if( !codeMatch ) {
                         unbooked = 0;
                     }
                     
