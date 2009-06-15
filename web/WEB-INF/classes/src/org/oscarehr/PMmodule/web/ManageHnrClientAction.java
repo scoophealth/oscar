@@ -56,6 +56,7 @@ public class ManageHnrClientAction {
 				if (hnrClient.getFirstName() != null) demographic.setFirstName(hnrClient.getFirstName());
 				if (hnrClient.getGender()!=null) demographic.setSex(hnrClient.getGender().name());
 				if (hnrClient.getHin() != null) demographic.setHin(hnrClient.getHin());
+				if (hnrClient.getHinVersion() != null) demographic.setVer(hnrClient.getHinVersion());
 				if (hnrClient.getHinType() != null) demographic.setHcType(hnrClient.getHinType());
 				if (hnrClient.getHinValidStart() != null) demographic.setEffDate(hnrClient.getHinValidStart());
 				if (hnrClient.getHinValidEnd() != null) demographic.setHcRenewDate(hnrClient.getHinValidEnd());
@@ -139,6 +140,7 @@ public class ManageHnrClientAction {
 				
 				if (demographic.getBirthDay() != null) hnrClient.setBirthDate(demographic.getBirthDay().getTime());
 				if (demographic.getHin() != null) hnrClient.setHin(demographic.getHin());
+				if (demographic.getVer() != null) hnrClient.setHinVersion(demographic.getVer());
 				if (demographic.getHcType() != null) hnrClient.setHinType(demographic.getHcType().toLowerCase());
 				if (demographic.getEffDate() != null) hnrClient.setHinValidStart(demographic.getEffDate());
 				if (demographic.getHcRenewDate() != null) hnrClient.setHinValidEnd(demographic.getHcRenewDate());

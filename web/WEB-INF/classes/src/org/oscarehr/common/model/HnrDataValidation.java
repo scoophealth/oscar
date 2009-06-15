@@ -186,6 +186,7 @@ public class HnrDataValidation {
 		else if (demographic.getSex()==null) return(false);
 		else if (demographic.getBirthDay()==null) return(false);
 		else if (demographic.getHin()==null) return(false);
+		// HIN type is not here because only ontario has it
 		else if (demographic.getHcType()==null) return(false);
 		else if (!HinValidator.isValid(demographic.getHin(), demographic.getHcType().toLowerCase())) return(false);
 		else if (demographic.getEffDate()==null) return(false);
@@ -203,6 +204,7 @@ public class HnrDataValidation {
 		sb.append(demographic.getSex()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getFormattedDob()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHin()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
+		if (demographic.getVer()!=null) sb.append(demographic.getVer()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHcType()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getEffDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
 		sb.append(demographic.getHcRenewDate()).append(RANDOM_NON_PRINTABLE_CRC_SEPARATOR_CHAR);
