@@ -22,6 +22,7 @@ package org.oscarehr.PMmodule.web;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -250,6 +251,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Integer nodeId = formBean.getNodeId();
 		Integer oldId = null;
 		try {
+			try {
+				GregorianCalendar cal = new GregorianCalendar(Integer.parseInt(request.getParameter("eff_year")), Integer.parseInt(request.getParameter("eff_month")), Integer.parseInt(request.getParameter("eff_day")));
+				client.setEffDate(cal.getTime());
+			} catch (Exception e) {
+				LOG.debug("date parse exception on eff date", e);
+				// that's fine ignore it, probably an invalid date or no date set.
+			}
+			
 			// save client information.
 			saveClient(client, providerNo);
 
