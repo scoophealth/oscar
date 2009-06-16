@@ -253,7 +253,7 @@ function openSurvey() {
 								}
 								else
 								{
-									consentString="Not yet asked";								
+									consentString="Not yet obtained";								
 								}
 								
 								isIntegratorContactable=true;
