@@ -41,7 +41,10 @@
     intakeFrmName += intakeFrmVer==null ? " (1)" : " ("+intakeFrmVer+")";
 %>
 
-<%@page import="org.apache.commons.lang.StringUtils"%><html:html xhtml="true" locale="true">
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.text.DateFormatSymbols"%><html:html xhtml="true" locale="true">
 <head>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
@@ -270,6 +273,70 @@
             <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver"
                    value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
         </label></td>    
+        <td>
+        	<label>
+        		EFF Date
+           	</label>
+        		
+       		<br>
+			<%
+	   			int selectedYear=-1;
+	   			int selectedMonth=-1;
+	   			int selectedDay=-1;
+	   	 		if (intakeEditForm.getClient()!=null && intakeEditForm.getClient().getEffDate()!=null)
+	   	 		{
+	   	 			GregorianCalendar selectedCal=new GregorianCalendar();
+	   	 			selectedCal.setTime(intakeEditForm.getClient().getEffDate());
+	   	 			// force recomputing of time
+	   	 			selectedCal.getTimeInMillis();
+	   	 			selectedYear=selectedCal.get(Calendar.YEAR);
+	   	 			selectedMonth=selectedCal.get(Calendar.MONTH);
+	   	 			selectedDay=selectedCal.get(Calendar.DAY_OF_MONTH);
+	   	 		}	   		
+			%>
+           	<select name="eff_year">
+           		<option></option>
+           		<%
+           			GregorianCalendar cal=new GregorianCalendar();
+           			int year=cal.get(Calendar.YEAR);
+           			
+           			for (int i=0; i<100; i++)
+           			{
+           				int displayYear=year-i;
+           				%>
+           					<option value="<%=displayYear%>" <%=displayYear==selectedYear?"selected=\"selected\"":""%>><%=displayYear%></option>
+           				<%
+           			}
+           		%>
+           	</select>
+           	-
+           	<select name="eff_month">
+           		<option></option>
+           		<%
+           			DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
+           			String[] months=dateFormatSymbols.getShortMonths();
+           			
+           			for (int i=0; i<12; i++)
+           			{
+           				%>
+           					<option value="<%=i%>" title="<%=months[i]%>" <%=i==selectedMonth?"selected=\"selected\"":""%>><%=i+1%></option>
+           				<%
+           			}
+           		%>
+           	</select>
+           	-
+           	<select name="eff_day">
+           		<option></option>
+           		<%
+           			for (int i=1; i<=31; i++)
+           			{
+           				%>
+           					<option value="<%=i%>" <%=i==selectedDay?"selected=\"selected\"":""%>><%=i%></option>
+           				<%
+           			}
+           		%>
+           	</select>
+        </td>    
 	</caisi:isModuleLoad>
 </tr>
 
