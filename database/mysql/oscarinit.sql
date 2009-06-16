@@ -6942,6 +6942,7 @@ CREATE TABLE `log` (
   `contentId` varchar(80) default NULL,
   `ip` varchar(30) default NULL,
   `demographic_no` int(10),
+  `data` text,
   index datetime (`dateTime`, `provider_no`),
   INDEX `action` (`action`),
   INDEX `content` (`content`),
