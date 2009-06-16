@@ -29,7 +29,8 @@
 <%@page import="org.apache.commons.lang.time.DateUtils"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.ConsentState"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%><input type="hidden" name="clientId" value="" />
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.MiscUtils"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -260,7 +261,7 @@ function openSurvey() {
 							}
 							catch (Exception e)
 							{
-								e.printStackTrace();
+								MiscUtils.getLogger().error("Unexpected error on summary page.", e);
 							}
 						%>
 						<input type="button" <%=isIntegratorContactable?"":"disabled=\"disabled\""%> value="Change Consent" onclick="document.location='ClientManager/manage_consent.jsp?demographicId=<%=currentDemographic.getDemographicNo()%>'" /> <%=consentString%>
