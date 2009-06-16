@@ -739,7 +739,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		boolean latePass1 = false;
 		Date reservationEnd1 = null;
 		Date assignEnd1 = null;
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		// List<Integer> familyList = new ArrayList<Integer>();
 
 		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");

@@ -61,10 +61,6 @@ public final class DateTimeFormatUtils {
 		return getDateFromDate(future);
 	}
 
-	public static final Date getToday() {
-		return getDateFromDate(Calendar.getInstance().getTime());
-	}
-
 	public static final String getStringFromDate(Date date) {
 		return getStringFromDate(date, DATE_FORMAT);
 	}

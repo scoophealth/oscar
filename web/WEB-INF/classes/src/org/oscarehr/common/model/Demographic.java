@@ -111,8 +111,8 @@ public class Demographic implements Serializable {
 		demographic.setRosterStatus(StringUtils.EMPTY);
 		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
 
-		demographic.setDateJoined(DateTimeFormatUtils.getToday());
-		demographic.setEffDate(DateTimeFormatUtils.getToday());
+		demographic.setDateJoined(new Date());
+		demographic.setEffDate(new Date());
 		demographic.setEndDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 		demographic.setHcRenewDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 

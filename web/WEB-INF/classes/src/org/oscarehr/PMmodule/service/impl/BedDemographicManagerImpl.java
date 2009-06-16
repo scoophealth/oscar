@@ -22,6 +22,8 @@
 
 package org.oscarehr.PMmodule.service.impl;
 
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
@@ -35,11 +37,10 @@ import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedDemographicHistorical;
 import org.oscarehr.PMmodule.model.BedDemographicHistoricalPK;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.common.model.Demographic;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -173,7 +174,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getExpiredReservations()
 	 */
 	public BedDemographicHistorical[] getExpiredReservations() {
-		BedDemographicHistorical[] bedDemographicHistoricals = bedDemographicDao.getBedDemographicHistoricals(DateTimeFormatUtils.getToday());
+		BedDemographicHistorical[] bedDemographicHistoricals = bedDemographicDao.getBedDemographicHistoricals(new Date());
 		
 		for (BedDemographicHistorical historical : bedDemographicHistoricals) {
 			BedDemographicHistoricalPK id = historical.getId();

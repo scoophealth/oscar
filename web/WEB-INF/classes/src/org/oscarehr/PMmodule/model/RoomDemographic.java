@@ -59,7 +59,7 @@ public class RoomDemographic implements Auditable, Serializable {
 		roomDemographic.setProviderNo(providerNo);
 
 		// set assign start to today and assign end to today + duration
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		roomDemographic.setAssignStart(today);
 //		roomDemographic.setAssignEnd(today);
@@ -129,7 +129,7 @@ public class RoomDemographic implements Auditable, Serializable {
 	
 	public boolean isExpired() {
 		Date end = DateTimeFormatUtils.getDateFromDate(getAssignEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		return end.before(today);
 	}
@@ -137,7 +137,7 @@ public class RoomDemographic implements Auditable, Serializable {
 	public boolean isValidAssign() {
 		Date start = DateTimeFormatUtils.getDateFromDate(getAssignStart());
 		Date end = DateTimeFormatUtils.getDateFromDate(getAssignEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 
 		return start.before(end) && today.before(end);
 	}

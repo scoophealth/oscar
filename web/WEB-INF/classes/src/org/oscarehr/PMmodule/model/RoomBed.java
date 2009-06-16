@@ -53,7 +53,7 @@ public class RoomBed implements Auditable, Serializable {
 		roomBed.setId(id);
 
 		// set assign start to today and assign end to today + duration
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		roomBed.setAssignStart(today);
 		roomBed.setAssignEnd(today);
@@ -101,7 +101,7 @@ public class RoomBed implements Auditable, Serializable {
 	
 	public boolean isExpired() {
 		Date end = DateTimeFormatUtils.getDateFromDate(getAssignEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		return end.before(today);
 	}
@@ -109,7 +109,7 @@ public class RoomBed implements Auditable, Serializable {
 	public boolean isValidAssign() {
 		Date start = DateTimeFormatUtils.getDateFromDate(getAssignStart());
 		Date end = DateTimeFormatUtils.getDateFromDate(getAssignEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 
 		return start.before(end) && today.before(end);
 	}

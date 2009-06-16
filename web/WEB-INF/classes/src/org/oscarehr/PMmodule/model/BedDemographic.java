@@ -64,7 +64,7 @@ public class BedDemographic implements Auditable, Serializable {
 		bedDemographic.setProviderNo(providerNo);
 
 		// set reservation start to today and reservation end to today + duration
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		bedDemographic.setReservationStart(today);
 		//bedDemographic.setReservationEnd(DateTimeFormatUtils.getFuture(today, bedDemographicStatus.getDuration()));
@@ -125,7 +125,7 @@ public class BedDemographic implements Auditable, Serializable {
 	
 	public boolean isExpired() {
 		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		
 		return end.before(today);
 	}
@@ -133,7 +133,7 @@ public class BedDemographic implements Auditable, Serializable {
 	public boolean isValidReservation() {
 		Date start = DateTimeFormatUtils.getDateFromDate(getReservationStart());
 		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd());
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 
 		return start.before(end) && today.before(end);
 	}

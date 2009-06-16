@@ -655,7 +655,7 @@ public class ClientManagerAction extends BaseAction {
 		ActionMessages messages = new ActionMessages();
 		DynaActionForm clientForm = (DynaActionForm) form;
 		BedDemographic bedDemographic = (BedDemographic) clientForm.get("bedDemographic");
-		Date today = DateTimeFormatUtils.getToday();
+		Date today = new Date();
 		String roomId = request.getParameter("roomId");
 		bedDemographic.setReservationStart(today);
 		bedDemographic.setRoomId(Integer.valueOf(roomId));

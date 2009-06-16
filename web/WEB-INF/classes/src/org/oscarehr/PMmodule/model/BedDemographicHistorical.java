@@ -23,9 +23,9 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.Demographic;
 
 public class BedDemographicHistorical implements Serializable {
@@ -41,7 +41,7 @@ public class BedDemographicHistorical implements Serializable {
 		BedDemographicHistorical historical = new BedDemographicHistorical();
 
 		historical.setId(BedDemographicHistoricalPK.create(bedDemographic.getId(), bedDemographic.getReservationStart()));
-		historical.setUsageEnd(DateTimeFormatUtils.getToday());
+		historical.setUsageEnd(new Date());
 
 		return historical;
 	}
