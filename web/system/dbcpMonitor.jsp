@@ -60,8 +60,6 @@ detect those and search the source.
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
         DBHandler dbHandler = new DBHandler(DBHandler.OSCAR_DATA);
         
-        
-        
         int numActive = basicDataSource.getNumActive();
         int numIdle = basicDataSource.getNumIdle();
         
@@ -126,6 +124,55 @@ detect those and search the source.
         Free Memory: <%=String.valueOf(Runtime.getRuntime().freeMemory()/1000000)%> MB<br/>
         Total Memory: <%=String.valueOf(Runtime.getRuntime().totalMemory()/1000000)%> MB<br/>
         Max Memory: <%=String.valueOf(Runtime.getRuntime().maxMemory()/1000000)%> MB  (Maximum memory JVM will attempt to use.)
+        <br />
+        <br />
+        
+        <table style="border-collapse:collapse;border:solid black 1px; text-align:right">
+        	<tr style="background-color:#ccccff">
+        		<td style="border:solid black 1px">Pool</td>
+        		<td style="border:solid black 1px">Used</td>
+        		<td style="border:solid black 1px">Max</td>
+        	</tr>
+	        <%
+		        List<MemoryPoolMXBean> memoryPools=ManagementFactory.getMemoryPoolMXBeans();
+				
+				for (MemoryPoolMXBean memoryPool : memoryPools)
+				{
+					%>
+						<tr>
+							<td style="border:solid black 1px"><%=memoryPool.getName()%></td>
+							<td style="border:solid black 1px"><%=memoryPool.getUsage().getUsed()%></td>
+							<td style="border:solid black 1px"><%=memoryPool.getUsage().getMax()%></td>
+						</tr>
+					<%
+				}
+	        %>
+        </table>
+        
+    <h3>----- GC Monitor -----</h3>        
+
+        <table style="border-collapse:collapse;border:solid black 1px; text-align:right">
+        	<tr style="background-color:#ccccff">
+        		<td style="border:solid black 1px">Pool</td>
+        		<td style="border:solid black 1px">count</td>
+        		<td style="border:solid black 1px">total time (ms)</td>
+        	</tr>
+	        <%
+				List<GarbageCollectorMXBean> garbageCollectorMXBeans=ManagementFactory.getGarbageCollectorMXBeans();
+				
+				for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
+				{
+					%>
+						<tr>
+							<td style="border:solid black 1px"><%=garbageCollectorMXBean.getName()%></td>
+							<td style="border:solid black 1px"><%=garbageCollectorMXBean.getCollectionCount()%></td>
+							<td style="border:solid black 1px"><%=garbageCollectorMXBean.getCollectionTime()%></td>
+						</tr>
+					<%
+				}
+	        %>
+        </table>
+
     <h3>----- Thread Monitor -----</h3>        
     
 	Thread Format: <%=VmStat.getThreadFormat() %><br />
