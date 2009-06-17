@@ -33,7 +33,9 @@ public class GenericIntakeConstants {
     	new LabelValueBean("British Columbia", "BC"), new LabelValueBean("Manitoba", "MB"),
     	new LabelValueBean("Newfoundland", "NL"), new LabelValueBean("New Brunswick", "NB"),
     	new LabelValueBean("Yukon", "YT"), new LabelValueBean("Nova Scotia", "NS"),
-    	new LabelValueBean("Prince Edward Island", "PE"), new LabelValueBean("Saskatchewan", "SK")
+    	new LabelValueBean("Prince Edward Island", "PE"), new LabelValueBean("Saskatchewan", "SK"),
+    	new LabelValueBean("Quebec", "QC"), new LabelValueBean("Nunavut", "NU"),
+    	new LabelValueBean("Northwest Territory", "NT")
     };
 	
 }
