@@ -27,6 +27,7 @@ package org.oscarehr.document.dao;
 
 import java.util.List;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.oscarehr.document.model.CtlDocument;
 import org.oscarehr.document.model.Document;
@@ -49,17 +50,27 @@ public class DocumentDAO extends HibernateDaoSupport {
     
     
     public CtlDocument getCtrlDocument(Integer docId) {
-        System.out.println("in ctrldocument");
-		Criteria c = getSession().createCriteria(CtlDocument.class);
-                System.out.println("in ctrldocument after c");
-		c=c.add(Expression.eq("id.documentNo", docId));
-                System.out.println("in ctrldocument afert add expression");
-		List cList=c.list();
-                System.out.println("in ctrldocument got list");
-		if (cList.size()>0)
-			return (CtlDocument)cList.get(0);
-		else return null;
-	}
+        List cList = null;
+        Session session = null;
+        try{
+            session = getSession();
+	    Criteria c = session.createCriteria(CtlDocument.class);
+	    c=c.add(Expression.eq("id.documentNo", docId));
+	    cList=c.list();
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            if (session != null){
+               releaseSession(session);
+            }
+        }
+                
+        if (cList != null && cList.size()>0){
+            return (CtlDocument)cList.get(0);
+        }else{
+            return null;
+        }
+    }
     
     
     public void saveCtlDocument(CtlDocument ctlDocument){
