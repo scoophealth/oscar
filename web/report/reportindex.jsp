@@ -304,6 +304,69 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<td></td>
 		<td></td>
 	</tr>
+        
+    <!-- add lab day sheet -->
+        <script type="text/javascript">
+        function labgo(s) {
+                var t = document.report.apptDate.value ;
+                var u = 'printLabDaySheetAction.do?xmlStyle=labDaySheet.xml&input_date=' + t;
+                popupPage(600,1000,u);
+        }
+        function labgo1(s) {
+                var t = document.report.apptDate1.value ;
+                var u = 'printLabDaySheetAction.do?xmlStyle=billDaySheet.xml&input_date=' + t;
+                popupPage(600,1000,u);
+        }
+        </script>
+    <tr>
+        <td width="2"></td>
+        <td width="1">*</td>
+        <td width="300"><a HREF="#" ONCLICK ="labgo('labDaySheet')" title="lab day sheet"/>Lab Day Sheet</a></td>
+        <td>
+            <select name="apptDate" >
+            <%
+                          cal.add(cal.DATE, -31) ;
+              cal.add(cal.DATE, -1) ;
+              for(int i=0; i<31; i++) {
+                String dateString = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE) ;
+            %>
+              <option value="<%=dateString%>" <%=dateString.equals(today)?"selected":""%> ><%=dateString%></option>
+            <%
+                cal.add(cal.DATE, 1) ;
+                    }
+            %>
+            </select>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td width="2"></td>
+        <td width="1">*</td>
+        <td width="300"><a HREF="#" ONCLICK ="labgo1('billingDaySheet')" title="billing day sheet"/>Billing Day Sheet</a></td>
+        <td>
+            <select name="apptDate1" >
+            <%
+              cal.add(cal.DATE, -31) ;
+              cal.add(cal.DATE, -1) ;
+              for(int i=0; i<31; i++) {
+                String dateString = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE) ;
+            %>
+              <option value="<%=dateString%>" <%=dateString.equals(today)?"selected":""%> ><%=dateString%></option>
+            <%
+                cal.add(cal.DATE, 1) ;
+                    }
+            %>
+            </select>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <!-- add lab day sheet -->
+
 	<tr>
 		<td width="2"><%=j%>
 		<%j++;%>

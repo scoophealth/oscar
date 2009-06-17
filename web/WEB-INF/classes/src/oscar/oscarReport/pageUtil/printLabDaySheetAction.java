@@ -1,0 +1,109 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package oscar.oscarReport.pageUtil;
+
+import oscar.OscarAction;
+import oscar.OscarDocumentCreator;
+
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.util.HashMap;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+
+
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.DbConnectionFilter;
+
+/**
+ *
+ * @author Toby
+ */
+public class printLabDaySheetAction extends OscarAction{
+
+    private static Log logger = LogFactory.getLog(printLabDaySheetAction.class);
+
+    public printLabDaySheetAction() {
+    }
+
+    @Override
+    public ActionForward execute(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+
+        String classpath = (String)request.getSession().getServletContext().getAttribute("org.apache.catalina.jsp_classpath");
+        if (classpath==null) classpath = (String)request.getSession().getServletContext().getAttribute("com.ibm.websphere.servlet.application.classpath");
+        System.setProperty("jasper.reports.compile.class.path", classpath);
+
+        HashMap parameters = new HashMap();
+        parameters.put("input_date", request.getParameter("input_date"));
+        String xmlStyleFile=request.getParameter("xmlStyle");
+        ServletOutputStream sos = null;
+        InputStream ins = null;
+
+                try {
+                ins = new FileInputStream(System.getProperty("user.home") + "Addresslabel.xml");
+        }
+
+        catch (FileNotFoundException ex1) {
+                logger.debug("Addresslabel.xml not found in user's home directory. Using default instead");
+        }
+
+        if (ins == null) {
+                try {
+                        ServletContext context = getServlet().getServletContext();
+                        ins = getClass().getResourceAsStream("/oscar/oscarReport/pageUtil/"+xmlStyleFile);
+                        logger.debug("loading from : /oscar/oscarReport/pageUtil/labDaySheet.xml " + ins);
+                }
+                catch (Exception ex1) {
+                        ex1.printStackTrace();
+                }
+        }
+
+        try {
+            sos = response.getOutputStream();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        response.setHeader("Content-disposition", getHeader(response).toString());
+        OscarDocumentCreator osc = new OscarDocumentCreator();
+        try {
+            osc.fillDocumentStream(parameters, sos, "pdf", ins, DbConnectionFilter.getThreadLocalDbConnection());
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return actionMapping.findForward(this.target);
+
+    }
+
+    private StringBuffer getHeader(HttpServletResponse response) {
+        StringBuffer strHeader = new StringBuffer();
+        strHeader.append("label_");
+        strHeader.append(".pdf");
+        response.setHeader("Cache-Control", "max-age=0");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("application/pdf");
+        StringBuffer sbContentDispValue = new StringBuffer();
+        sbContentDispValue.append("inline; filename="); //inline - display
+        sbContentDispValue.append(strHeader);
+        return sbContentDispValue;
+    }
+
+}
