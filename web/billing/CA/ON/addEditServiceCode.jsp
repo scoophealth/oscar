@@ -447,7 +447,7 @@ System.out.println(sqlMinMax);
 		<td align="right"><b>Termination Date</b></td>
 		<td><input type="text" name="termination_date"
 			id="termination_date"
-			value="<%=prop.getProperty("termination_date", "")%>" size='10'
+			value="<%=prop.getProperty("termination_date", "9999-12-31")%>" size='10'
 			maxlength='10' readonly> (stale date) <img
 			src="../../../images/cal.gif" id="termination_date_cal"></td>
 	</tr>
