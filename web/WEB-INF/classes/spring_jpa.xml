@@ -15,7 +15,7 @@
 		<property name="username" value="${db_username}" />
 		<property name="password" value="${db_password}" />
 
-		<property name="maxActive" value="100" />
+		<property name="maxActive" value="30" />
 		<property name="maxIdle" value="2" />
 		<property name="maxWait" value="10000" />
 
@@ -25,6 +25,9 @@
 		<property name="maxOpenPreparedStatements" value="320" />
 		<!-- bug in the connector 3.11 driver which prevents this from being used, we need to upgrade drivers before re-enabling -->
 		<property name="poolPreparedStatements" value="false" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="150" />
+		<property name="logAbandoned" value="true" />
 	</bean>
 
 	<!-- JPA -->
