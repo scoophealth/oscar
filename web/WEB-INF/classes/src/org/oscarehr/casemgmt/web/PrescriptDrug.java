@@ -35,6 +35,7 @@ public class PrescriptDrug {
 	private String customName;
 	private String regionalIdentifier = null;
 	private String remoteFacilityName = null;
+	private Date createDate=null;
 	
 	public Integer getLocalDrugId() {
     	return localDrugId;
@@ -121,5 +122,13 @@ public class PrescriptDrug {
 	public void setGCN_SEQNO(Integer gcn_seqno) {
 		GCN_SEQNO = gcn_seqno;
 	}
+
+	public Date getCreateDate() {
+    	return createDate;
+    }
+
+	public void setCreateDate(Date createDate) {
+    	this.createDate = createDate;
+    }
 
 }

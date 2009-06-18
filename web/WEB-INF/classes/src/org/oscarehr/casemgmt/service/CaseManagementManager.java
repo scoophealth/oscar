@@ -481,7 +481,9 @@ public class CaseManagementManager {
 					if (pd == null) {
 						prescriptions.add(getPrescriptDrug(cachedDrug));
 					} else {
-						if (pd.getDate_prescribed().before(cachedDrug.getRxDate())) {
+						if (pd.getDate_prescribed().before(cachedDrug.getRxDate()) ||
+							(pd.getDate_prescribed().equals(cachedDrug.getRxDate()) && pd.getCreateDate().before(cachedDrug.getCreateDate()))
+							) {
 							prescriptions.remove(pd);
 							prescriptions.add(getPrescriptDrug(cachedDrug));
 						}
@@ -503,6 +505,7 @@ public class CaseManagementManager {
 		pd.setDrug_special(cachedDrug.getSpecial());
 		pd.setEnd_date(cachedDrug.getEndDate());
 		pd.setRegionalIdentifier(cachedDrug.getRegionalIdentifier());
+		pd.setCreateDate(cachedDrug.getCreateDate());
 
 		int remoteFacilityId = cachedDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		CachedFacility cachedFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);

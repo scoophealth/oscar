@@ -60,6 +60,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 
             prescriptDrug.setEnd_date(drug.getEndDate());
             prescriptDrug.setDrug_achived(false);
+            prescriptDrug.setCreateDate(drug.getCreateDate());
 
             boolean b = true;
             for (int i = 0; i < rt.size(); i++) {
@@ -102,6 +103,7 @@ public class PrescriptionDAO extends HibernateDaoSupport {
 			prescriptDrug.setGCN_SEQNO(drug.getGcnSeqNo());
 			prescriptDrug.setCustomName(drug.getCustomName());
             prescriptDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
+            prescriptDrug.setCreateDate(drug.getCreateDate());
 			rt.add(prescriptDrug);
 		}
 		return rt;
