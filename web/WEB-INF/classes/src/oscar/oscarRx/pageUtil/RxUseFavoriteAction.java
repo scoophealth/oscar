@@ -72,7 +72,8 @@ public final class RxUseFavoriteAction extends Action {
             // create Prescription
             RxPrescriptionData.Prescription rx =
             rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), fav);
-            
+
+            bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getStashIndex()));
             bean.setStashIndex(bean.addStashItem(rx));
             request.setAttribute("BoxNoFillFirstLoad", "true");
         }
