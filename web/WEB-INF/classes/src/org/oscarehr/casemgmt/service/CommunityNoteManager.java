@@ -79,7 +79,7 @@ public class CommunityNoteManager {
 		}
 		catch(MalformedURLException mue)
 		{
-			
+			log.error("error", mue);
 		}
 		return notes;
 	}
