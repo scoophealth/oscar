@@ -1,7 +1,7 @@
 
-alter table app_lookuptable add `readonly` integer default 0;
+#alter table app_lookuptable add `readonly` integer default 0;
 
-alter table app_lookuptable_fields add fieldLength int(10);
+#alter table app_lookuptable_fields add fieldLength int(10);
 
 delete from lst_field_category;
 alter table lst_field_category

@@ -1,8 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU General Public License
+ * which accompanies this distribution, and is available at
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ * Contributors:
+ *     <Quatro Group Software Systems inc.>  <OSCAR Team>
+ *******************************************************************************/
 package com.quatro.model.security;
 import java.io.Serializable;
 import java.util.Date;
 
 public class SecSiteValue implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String siteId;
 	int siteKey;
 	String userName;
