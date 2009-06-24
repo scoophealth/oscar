@@ -314,11 +314,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));
+            List allNotes = this.caseManagementMgr.getNotes(demono);
             for (int i = 0; i < issues.size(); i++) {
                 checkedList[i] = new CheckBoxBean();
                 CaseManagementIssue iss = (CaseManagementIssue) issues.get(i);
                 checkedList[i].setIssue(iss);
-                checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
+                checkedList[i].setUsed(haveIssue(iss.getId(), allNotes));
                 current = System.currentTimeMillis();
                 log.debug("Set Checked Issues " + String.valueOf(current-start));
                 start = current;
@@ -2343,4 +2344,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     boolean filled(String s) {
 	return (s!=null && s.length()>0);
     }
+
+    public boolean haveIssue(Long issid, List allNotes) {
+
+		Iterator itr = allNotes.iterator();
+		while (itr.hasNext()) {
+			CaseManagementNote note = (CaseManagementNote) itr.next();
+			Set issues = note.getIssues();
+			Iterator its = issues.iterator();
+			while (its.hasNext()) {
+				CaseManagementIssue iss = (CaseManagementIssue) its.next();
+				if (iss.getId().intValue() == issid.intValue()) return true;
+			}
+		}
+		return false;
+	}
 }
