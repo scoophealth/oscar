@@ -251,7 +251,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("teamName", teamName);
 
-		if (OscarProperties.getInstance().isCaisiLoaded()) {
+		if (OscarProperties.getInstance().isCaisiLoaded() && (useNewCaseMgmt == null || !useNewCaseMgmt.equals("true"))) {
 
 			log.debug("Get program providers");
 			List teamMembers = new ArrayList();
