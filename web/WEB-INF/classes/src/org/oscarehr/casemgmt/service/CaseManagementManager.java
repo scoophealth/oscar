@@ -1135,14 +1135,10 @@ public class CaseManagementManager {
 
 	/**
 	 * Filters a list of CaseManagementIssue objects based on role.
-	 * 
-	 * @param issues
-	 * @param providerNo
-	 * @param programId
-	 * @param currentFacilityId
-	 * @return
 	 */
-	public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String providerNo, String programId, Integer currentFacilityId) {
+	public List<CaseManagementIssue> filterIssues(List<CaseManagementIssue> issues, String programId) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
 		List<CaseManagementIssue> filteredIssues = new ArrayList<CaseManagementIssue>();
 
 		if (issues.isEmpty()) {
@@ -1150,7 +1146,7 @@ public class CaseManagementManager {
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList();
 		}
@@ -1214,7 +1210,7 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = issuesFacilityFiltering(currentFacilityId, filteredIssues);
+			filteredIssues = issuesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredIssues);
 		}
 
 		return filteredIssues;

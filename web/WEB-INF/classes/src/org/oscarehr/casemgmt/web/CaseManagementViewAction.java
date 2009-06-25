@@ -328,7 +328,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					start = current;
 				}
 				log.debug("Filter Issues");
-				issues = caseManagementMgr.filterIssues(issues, providerNo, programId, currentFacilityId);
+				issues = caseManagementMgr.filterIssues(issues, programId);
 				current = System.currentTimeMillis();
 				log.debug("FILTER ISSUES " + String.valueOf(current - start));
 				start = current;

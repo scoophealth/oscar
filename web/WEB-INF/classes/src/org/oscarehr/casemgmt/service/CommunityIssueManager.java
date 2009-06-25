@@ -52,7 +52,7 @@ public class CommunityIssueManager {
 			localIssues = cMan.getActiveIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
 		}
     	//filter out issues from other facilities in this CAISI instance
-    	localIssues = cMan.filterIssues(localIssues, loggedInInfo.loggedInProvider.getProviderNo(), programId, loggedInInfo.currentFacility.getId());
+    	localIssues = cMan.filterIssues(localIssues, programId);
     	List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
 		// check facility integrator status
     	if(loggedInInfo.currentFacility.isIntegratorEnabled())
