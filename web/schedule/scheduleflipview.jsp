@@ -258,14 +258,16 @@ function t(s1,s2,s3,s4,s5,s6) {
 	  int ratio = (hour*60+min)/nLen;
 	  //System.out.println((hour*60+min)+"  "+nLen +"  "+ratio);
 	  temp = new StringBuffer( ((String) DateTimeCodeBean.get(MyDateFormat.getMysqlStandardDate(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DATE) ))).substring(ratio,ratio+1) ); //(nStartTime*60*ratio/nStep+j*ratio),(nStartTime*60*ratio/nStep+j*ratio)+1)
-          scheduleCode = temp.toString();          
-	} else temp = new StringBuffer("&nbsp;");
-        
-        
+          scheduleCode = temp.toString();  
         bookinglimit = (String)DateTimeCodeBean.get("bookinglimit"+scheduleCode);
         if( bookinglimit == null ) {
             bookinglimit = "";
         }
+	} else {
+        temp = new StringBuffer("&nbsp;");
+        bookinglimit = "";
+    }
+                        
         String strNumOfAppts = "";
         int limitDelta = 0;
         int limit = bookinglimit.length() > 0 ? Integer.parseInt(bookinglimit) : 1;
