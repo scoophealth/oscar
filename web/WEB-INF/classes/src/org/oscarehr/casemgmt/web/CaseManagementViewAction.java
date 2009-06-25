@@ -60,7 +60,6 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
-import org.oscarehr.casemgmt.service.CommunityNoteManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
@@ -336,7 +335,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 			else // get community issues for old CME UI
 			{
-				communityIssues = new CommunityIssueManager().getCommunityIssues(providerNo, this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+				communityIssues = new CommunityIssueManager().getCommunityIssues(this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
 				//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
 				request.setAttribute("Issues", communityIssues);
 			}

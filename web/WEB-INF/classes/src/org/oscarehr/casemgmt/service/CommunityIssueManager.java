@@ -40,19 +40,19 @@ public class CommunityIssueManager {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public List<CaseManagementCommunityIssue> getCommunityIssues(String providerNo, String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
+	public List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
     {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
     	List<CaseManagementIssue> localIssues = null;
     	if (!active) {
-			localIssues = cMan.getIssues(providerNo, demographicNo);
+			localIssues = cMan.getIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
 		}
 		else {
-			localIssues = cMan.getActiveIssues(providerNo, demographicNo);
+			localIssues = cMan.getActiveIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
 		}
     	//filter out issues from other facilities in this CAISI instance
-    	localIssues = cMan.filterIssues(localIssues, providerNo, programId, loggedInInfo.currentFacility.getId());
+    	localIssues = cMan.filterIssues(localIssues, loggedInInfo.loggedInProvider.getProviderNo(), programId, loggedInInfo.currentFacility.getId());
     	List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
 		// check facility integrator status
     	if(loggedInInfo.currentFacility.isIntegratorEnabled())
@@ -66,7 +66,7 @@ public class CommunityIssueManager {
 		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
 		
 		//logger.debug("Filter Issues");
-		communityIssues = cMan.filterCommunityIssues(communityIssues, providerNo, programId, loggedInInfo.currentFacility.getId());
+		communityIssues = cMan.filterCommunityIssues(communityIssues, loggedInInfo.loggedInProvider.getProviderNo(), programId, loggedInInfo.currentFacility.getId());
 		this.assignCheckboxID(communityIssues);
     	return communityIssues;
     }

@@ -327,7 +327,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         else // retrieve community issues for old CME UI
         {
-        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(providerNo, demono, programId, true);
+        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(demono, programId, true);
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));
