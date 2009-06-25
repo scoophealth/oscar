@@ -47,6 +47,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.EncounterUtil;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -58,18 +59,21 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 
 	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);
 
-	public List getEditors(CaseManagementNote note) {
+	@SuppressWarnings("unchecked")
+    public List<Provider> getEditors(CaseManagementNote note) {
 		String uuid = note.getUuid();
 		String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.providerNo and cmn.uuid = ?";
 		return this.getHibernateTemplate().find(hql, uuid);
 	}
 
-	public List getHistory(CaseManagementNote note) {
+	@SuppressWarnings("unchecked")
+	public List<Provider> getHistory(CaseManagementNote note) {
 		String uuid = note.getUuid();
 		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.uuid = ? order by cmn.update_date asc", uuid);
 	}
 
-	public List getIssueHistory(String issueIds, String demoNo) {
+	@SuppressWarnings("unchecked")
+	public List<Provider> getIssueHistory(String issueIds, String demoNo) {
 		String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + issueIds
 				+ ") and cmn.demographic_no = ? and cmn.id in (select max(cn.id) from CaseManagementNote cn join cn.issues i where i.issue_id in (" + issueIds
 				+ ") and cn.demographic_no = ? GROUP BY cn.uuid) ORDER BY cmn.observation_date asc";

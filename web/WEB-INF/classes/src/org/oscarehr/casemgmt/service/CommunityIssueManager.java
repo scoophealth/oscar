@@ -66,7 +66,7 @@ public class CommunityIssueManager {
 		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
 		
 		//logger.debug("Filter Issues");
-		communityIssues = cMan.filterCommunityIssues(communityIssues, loggedInInfo.loggedInProvider.getProviderNo(), programId, loggedInInfo.currentFacility.getId());
+		communityIssues = cMan.filterCommunityIssues(communityIssues, programId);
 		this.assignCheckboxID(communityIssues);
     	return communityIssues;
     }

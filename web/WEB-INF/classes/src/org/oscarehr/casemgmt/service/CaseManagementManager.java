@@ -633,7 +633,6 @@ public class CaseManagementManager {
 		String ongoing = cpp.getOngoingConcerns();
 		String newOngoing;
 		String description;
-		int idx;
 
 		description = issue.getIssue().getDescription();
 		Pattern pattern = Pattern.compile("^" + description + "$", Pattern.MULTILINE);
@@ -660,7 +659,6 @@ public class CaseManagementManager {
 		String ongoing = cpp.getOngoingConcerns();
 		String newOngoing;
 		String description;
-		int idx;
 
 		description = origIssue.getIssue().getDescription();
 
@@ -1225,7 +1223,8 @@ public class CaseManagementManager {
 	 * @param currentFacilityId
 	 * @return
 	 */
-	public List<CaseManagementCommunityIssue> filterCommunityIssues(List<CaseManagementCommunityIssue> issues, String providerNo, String programId, Integer currentFacilityId) {
+	public List<CaseManagementCommunityIssue> filterCommunityIssues(List<CaseManagementCommunityIssue> issues, String programId) {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<CaseManagementCommunityIssue> filteredIssues = new ArrayList<CaseManagementCommunityIssue>();
 
 		if (issues.isEmpty()) {
@@ -1233,7 +1232,7 @@ public class CaseManagementManager {
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList();
 		}
@@ -1297,7 +1296,7 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = communityIssuesFacilityFiltering(currentFacilityId, filteredIssues);
+			filteredIssues = communityIssuesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredIssues);
 		}
 
 		return filteredIssues;
