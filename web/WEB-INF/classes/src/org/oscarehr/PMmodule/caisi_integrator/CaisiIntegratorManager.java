@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
@@ -207,7 +205,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) throws MalformedURLException {
+	public static ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) {
 		Facility facility = facilityDao.find(facilityId);
 		if (facility.isIntegratorEnabled()) {
 			try {
@@ -222,10 +220,10 @@ public class CaisiIntegratorManager {
 		}
 	}
 
-	public static List<NoteTransfer> getRemoteNotes(int facilityId, int demographicId, List<IssueTransfer> remoteIssues) throws MalformedURLException {
+	public static List<NoteTransfer> getRemoteNotes(int demographicId, List<IssueTransfer> remoteIssues) {
 		try {
 			DemographicWs demographicWs = getDemographicWs();
-			List<NoteTransfer> notes = (List<NoteTransfer>) demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
+			List<NoteTransfer> notes = demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
 			log.debug("retrieved " + notes.size() + " notes from the integrator" );
 			return notes;
 		} catch (Exception e) {
@@ -386,7 +384,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws DatatypeConfigurationException, MalformedURLException, ConnectException_Exception {
+	public static List<MatchingClientScore> searchHnrForMatchingClients(Facility facility, Provider provider, MatchingClientParameters matchingClientParameters) throws MalformedURLException, ConnectException_Exception {
 		HnrWs hnrWs = getHnrWs(facility.getId());
 		List<MatchingClientScore> potentialMatches = hnrWs.getMatchingHnrClients(matchingClientParameters);
 

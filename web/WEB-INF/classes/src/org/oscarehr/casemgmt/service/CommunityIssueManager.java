@@ -82,7 +82,6 @@ public class CommunityIssueManager {
 	public List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException
     {
     	List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
-    	String communityType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
     	for(CaseManagementIssue localIssue: local)
     	{
     		CaseManagementCommunityIssue newLocalIssue = new CaseManagementCommunityIssue();
@@ -145,29 +144,16 @@ public class CommunityIssueManager {
     	return communityIssues;
     }
 	
-	/**
-	 * 
-	 * @param facilityId
-	 * @param type
-	 * @return
-	 */
 	public List<String> getCommunityIssueCodes(int facilityId, String type) 
 	{
-		try
+		List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
+		if(communityCodes == null || communityCodes.isEmpty())
 		{
-			List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
-			if(communityCodes == null || communityCodes.isEmpty())
-			{
-				communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
-			}
-			return communityCodes;
+			communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
 		}
-		catch(MalformedURLException e)
-		{
-			log.error("Error connecting to Integrator for Issue Code List", e);
-			return new ArrayList<String>();
-		}
+		return communityCodes;
 	}
+
 	public boolean isIdentical(CaseManagementIssue local, IssueTransfer remote)
 	{
 		if (!remote.getIssueCode().equals(local.getIssue().getCode())) return false;

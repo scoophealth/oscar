@@ -60,6 +60,7 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
+import org.oscarehr.casemgmt.service.CommunityNoteManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
@@ -397,8 +398,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 					log.debug("getting remote notes");
-					//Commenting out until we can properly test
-					//remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
 					log.debug("found " + remoteNotes.size() + " remote notes");
 					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
@@ -417,8 +417,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 						}
 					}
 					// get community notes for all remote issues
-					//Commenting out until we can properly test
-					//remoteNotes = new CommunityNoteManager().getRemoteNotes(currentFacilityId, Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
+					remoteNotes = new CommunityNoteManager().getRemoteNotes(Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
 					current = System.currentTimeMillis();
 					log.debug("Get Notes " + String.valueOf(current - start));
 					start = current;
