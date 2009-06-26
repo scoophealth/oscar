@@ -69,9 +69,6 @@
 			<%
 				String checked="";
 				CaseManagementCommunityIssue issue = (CaseManagementCommunityIssue)pageContext.getAttribute("issue");
-				if(issue == null) {
-					System.out.println("issue=null");	
-				}
 				String checkboxID = String.valueOf(issue.getCheckboxID());
 				// remote issues have no ID
 				String set_issues[] = (String[])request.getAttribute("checked_issues");
