@@ -154,7 +154,7 @@ public class CommunityIssueManager {
 		return communityCodes;
 	}
 
-	public boolean isIdentical(CaseManagementIssue local, IssueTransfer remote)
+	private static boolean isIdentical(CaseManagementIssue local, IssueTransfer remote)
 	{
 		if (!remote.getIssueCode().equals(local.getIssue().getCode())) return false;
 		if (!remote.getIssueDescription().equals(local.getIssue().getDescription())) return false;
@@ -170,7 +170,7 @@ public class CommunityIssueManager {
 	 * Used when a remote COmmunity Issue is checked while adding a new note in the CaseManagementEntry(.jsp) screen
 	 * @param issue a remote CaseManagementCommunityIssue copied into a CaseManagementIssue
 	 */
-	public void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo)
+	public static void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo)
 	{
 		// look up issue code/description/type
 		Issue iss = issueDao.findIssueByCode(issue.getIssue().getCode());
@@ -195,7 +195,7 @@ public class CommunityIssueManager {
 		log.debug("CaseManagementIssue created with ID "+issue.getIssue_id());
 	}
 	
-	private void assignCheckboxID(List<CaseManagementCommunityIssue> issues)
+	private static void assignCheckboxID(List<CaseManagementCommunityIssue> issues)
 	{
 		for(CaseManagementCommunityIssue issue: issues)
 		{
@@ -229,7 +229,7 @@ public class CommunityIssueManager {
 		
 	}
 	
-	private int intMe(boolean boo)
+	private static int intMe(boolean boo)
 	{
 		if (boo) return 1;
 		else return 0;
