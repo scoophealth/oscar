@@ -26,68 +26,42 @@ public class CommunityIssueManager {
 	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private static CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	
-	/**
-	 * 
-	 * @param providerNo
-	 * @param demographicNo
-	 * @param programId
-	 * @param facilityId
-	 * @param getRemote
-	 * @param active
-	 * @return
-	 * @throws MalformedURLException
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
-	 */
-	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
-    {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		
-    	List<CaseManagementIssue> localIssues = null;
-    	if (!active) {
+	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		List<CaseManagementIssue> localIssues = null;
+		if (!active) {
 			localIssues = cMan.getIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
-		}
-		else {
+		} else {
 			localIssues = cMan.getActiveIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
 		}
-    	//filter out issues from other facilities in this CAISI instance
-    	localIssues = cMan.filterIssues(localIssues, programId);
-    	List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
+		// filter out issues from other facilities in this CAISI instance
+		localIssues = cMan.filterIssues(localIssues, programId);
+		List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
 		// check facility integrator status
-    	if(loggedInInfo.currentFacility.isIntegratorEnabled())
-		{
+		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 			// get remote issues
 			remoteIssues = CaisiIntegratorManager.getRemoteIssues(Integer.valueOf(demographicNo));
 		}
-		
+
 		// combine local and remote
-		//logger.debug("Combine local and remote");
+		// logger.debug("Combine local and remote");
 		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
-		
-		//logger.debug("Filter Issues");
+
+		// logger.debug("Filter Issues");
 		communityIssues = cMan.filterCommunityIssues(communityIssues, programId);
 		assignCheckboxID(communityIssues);
-    	return communityIssues;
-    }
+		return communityIssues;
+	}
 	
-	/**
-	 * 
-	 * @param local
-	 * @param remote
-	 * @return
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
-	 */
-	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException
-    {
-    	List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
-    	for(CaseManagementIssue localIssue: local)
-    	{
-    		CaseManagementCommunityIssue newLocalIssue = new CaseManagementCommunityIssue();
-    		BeanUtils.copyProperties(newLocalIssue, localIssue);
-    		communityIssues.add(newLocalIssue);
-    		log.debug("Found local issue "+localIssue.getIssue().getCode()+"/"+localIssue.getIssue().getDescription()+" in program "+localIssue.getProgram_id());
-    	}
+	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException {
+		List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
+		for (CaseManagementIssue localIssue : local) {
+			CaseManagementCommunityIssue newLocalIssue = new CaseManagementCommunityIssue();
+			BeanUtils.copyProperties(newLocalIssue, localIssue);
+			communityIssues.add(newLocalIssue);
+			log.debug("Found local issue " + localIssue.getIssue().getCode() + "/" + localIssue.getIssue().getDescription() + " in program " + localIssue.getProgram_id());
+		}
     	
     	String type = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
 		// add roles to remote issues, drop all remote issues with codes not found in the local issues table
@@ -138,25 +112,22 @@ public class CommunityIssueManager {
 	    return(false);
     }
 	
-	public static List<String> getCommunityIssueCodes(int facilityId, String type) 
-	{
+	public static List<String> getCommunityIssueCodes(int facilityId, String type) {
 		List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
-		if(communityCodes == null || communityCodes.isEmpty())
-		{
+		if (communityCodes == null || communityCodes.isEmpty()) {
 			communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
 		}
 		return communityCodes;
 	}
 
-	private static boolean isIdentical(CaseManagementIssue local, IssueTransfer remote)
-	{
+	private static boolean isIdentical(CaseManagementIssue local, IssueTransfer remote) {
 		if (!remote.getIssueCode().equals(local.getIssue().getCode())) return false;
 		if (!remote.getIssueDescription().equals(local.getIssue().getDescription())) return false;
 		if (remote.isAcute() != local.isAcute()) return false;
 		if (remote.isCertain() != local.isCertain()) return false;
 		if (remote.isMajor() != local.isMajor()) return false;
 		if (remote.isResolved() != local.isResolved()) return false;
-		
+
 		return true;
 	}
 	
@@ -164,46 +135,37 @@ public class CommunityIssueManager {
 	 * Used when a remote COmmunity Issue is checked while adding a new note in the CaseManagementEntry(.jsp) screen
 	 * @param issue a remote CaseManagementCommunityIssue copied into a CaseManagementIssue
 	 */
-	public static void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo)
-	{
+	public static void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo) {
 		// look up issue code/description/type
 		Issue iss = issueDao.findIssueByCode(issue.getIssue().getCode());
-		if(iss == null || iss.getType() == null || !iss.getType().equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE")))
-		{
-			// if not found, or not a community type, or no type make issue in issue table			
+		if (iss == null || iss.getType() == null || !iss.getType().equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"))) {
+			// if not found, or not a community type, or no type make issue in issue table
 			iss = issue.getIssue();
 			issueDao.saveIssue(issue.getIssue());
-			log.debug("Issue "+iss.getCode()+"/"+iss.getDescription()+" saved as Issue "+iss.getId());
-		}
-		else
-		{
+			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " saved as Issue " + iss.getId());
+		} else {
 			// otherwise copy the ID over.
 			issue.setIssue(iss);
-			log.debug("Issue "+iss.getCode()+"/"+iss.getDescription()+" exists as Issue "+iss.getId());
+			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " exists as Issue " + iss.getId());
 		}
-				
+
 		// save to casemgmt_issue table so we have an ID to attach to a note
 		issue.setIssue_id(iss.getId());
 		issue.setDemographic_no(String.valueOf(demographicNo));
 		cmiDao.saveIssue(issue);
-		log.debug("CaseManagementIssue created with ID "+issue.getIssue_id());
+		log.debug("CaseManagementIssue created with ID " + issue.getIssue_id());
 	}
-	
-	private static void assignCheckboxID(List<CaseManagementCommunityIssue> issues)
-	{
-		for(CaseManagementCommunityIssue issue: issues)
-		{
-			// something needs to go here... but what?  it needs to be consistent for each pull, and unique to the issue itself.
+
+	private static void assignCheckboxID(List<CaseManagementCommunityIssue> issues) {
+		for (CaseManagementCommunityIssue issue : issues) {
+			// something needs to go here... but what? it needs to be consistent for each pull, and unique to the issue itself.
 			StringBuffer buff = new StringBuffer();
 			// facilityID, or 0 for local + issue code type
-			if(issue.isRemote()) 
-			{ 
+			if (issue.isRemote()) {
 				buff.append(issue.getFacilityId());
 				buff.append("-");
 				buff.append(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
-			}
-			else 
-			{
+			} else {
 				buff.append(0);
 				buff.append("-");
 				buff.append(issue.getIssue().getType());
@@ -220,11 +182,10 @@ public class CommunityIssueManager {
 			issue.setCheckboxID(buff.toString());
 			log.debug(issue.getCheckboxID());
 		}
-		
+
 	}
-	
-	private static int intMe(boolean boo)
-	{
+
+	private static int intMe(boolean boo) {
 		if (boo) return 1;
 		else return 0;
 	}
