@@ -183,9 +183,7 @@ public class CaisiIntegratorManager {
 			DemographicWs demographicWs = getDemographicWs();
 			List<IssueTransfer> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
 
-			// this is done for cached lists
-			// cloned so alterations don't affect the cached data
-			return (new ArrayList<IssueTransfer>(results));
+			return (results);
 		} catch (Exception e) // remote issues unavailable for some reason
 		{
 			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
