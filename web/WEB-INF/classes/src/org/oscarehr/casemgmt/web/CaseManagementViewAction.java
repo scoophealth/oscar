@@ -154,7 +154,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		long beginning = start;
 		long current = 0;
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
-		String useNewCaseMgmt = (String) request.getSession().getAttribute("newCaseManagement");
+		boolean useNewCaseMgmt=false;
+		String useNewCaseMgmtString = (String) request.getSession().getAttribute("newCaseManagement");		
+		if (useNewCaseMgmtString!=null) useNewCaseMgmt=Boolean.parseBoolean(useNewCaseMgmtString);
 		
 		log.debug("Starting VIEW");
 		String tab = request.getParameter("tab");
@@ -250,7 +252,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("teamName", teamName);
 
-		if (OscarProperties.getInstance().isCaisiLoaded() && (useNewCaseMgmt == null || !useNewCaseMgmt.equals("true"))) {
+		if (OscarProperties.getInstance().isCaisiLoaded() && !useNewCaseMgmt) {
 
 			log.debug("Get program providers");
 			List teamMembers = new ArrayList();
@@ -307,12 +309,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		current = System.currentTimeMillis();
 		log.debug("Prep work " + String.valueOf(current - start));
 		start = current;
-		if (tab.equals("Current Issues")) 
-		{
+		if (tab.equals("Current Issues")) {
 			List<CaseManagementIssue> issues = new ArrayList<CaseManagementIssue>();
 			List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
-			if(useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
-			{
+			if (useNewCaseMgmt) {
 				if (!caseForm.getHideActiveIssue().equals("true")) {
 					log.debug("Get Issues");
 					issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
@@ -353,8 +353,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<CaseManagementNote> remoteNotes = new ArrayList<CaseManagementNote>();
 			// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
 			String[] checked_issues = request.getParameterValues("check_issue");
-			if(useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
-			{
+			if (useNewCaseMgmt) {
 				if (checked_issues != null && checked_issues[0].trim().length() > 0) {
 					// need to apply a filter
 					log.debug("Get Notes with checked issues");
@@ -383,14 +382,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					// construct an array of checked issues by ID
 					String[] checked_issueIDs = new String[checked_issues.length];
 					List<String> checked_remoteIssueCodes = new ArrayList<String>();
-					for(int i=0;i<checked_issues.length;i++)
-					{
-						for(CaseManagementCommunityIssue issue: communityIssues)
-						{
-							if(issue.getCheckboxID().equals(checked_issues[i]))
-							{
+					for (int i = 0; i < checked_issues.length; i++) {
+						for (CaseManagementCommunityIssue issue : communityIssues) {
+							if (issue.getCheckboxID().equals(checked_issues[i])) {
 								checked_issueIDs[i] = Long.toString(issue.getIssue_id());
-								if(issue.isRemote()) {
+								if (issue.isRemote()) {
 									checked_remoteIssueCodes.add(issue.getIssue().getCode());
 									log.debug("check_remoteIssueCodes - added " + issue.getIssue().getCode());
 								}
@@ -415,10 +411,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 					// get all remote issue codes
 					ArrayList<String> remote_issueCodes = new ArrayList<String>();
-					for(CaseManagementCommunityIssue issue: communityIssues)
-					{
-						if(issue.isRemote())
-						{
+					for (CaseManagementCommunityIssue issue : communityIssues) {
+						if (issue.isRemote()) {
 							remote_issueCodes.add(issue.getIssue().getCode());
 						}
 					}
@@ -492,8 +486,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// this is the wrong place for this, but we aren't actively filtering on role, provider or 
 			// program.  see CommunityNoteManager.getRemoteNotes() for detail on current role filtering.
 			// da 2009.04.06
-			if(useNewCaseMgmt == null || !useNewCaseMgmt.equals("true"))
-			{
+			if (!useNewCaseMgmt) {
 				notes.addAll(remoteNotes);
 			}
 			
@@ -600,7 +593,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		else {
 
-			if (useNewCaseMgmt != null && useNewCaseMgmt.equals("true"))
+			if (useNewCaseMgmt)
 				return mapping.findForward("page.newcasemgmt.view");
 			else
 				return mapping.findForward("page.casemgmt.view");
