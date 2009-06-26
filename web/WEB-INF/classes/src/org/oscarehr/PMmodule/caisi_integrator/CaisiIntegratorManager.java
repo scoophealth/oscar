@@ -180,7 +180,7 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<IssueTransfer> getRemoteIssues(int demographicId) throws MalformedURLException {
+	public static List<IssueTransfer> getRemoteIssues(int demographicId) {
 		try {
 			DemographicWs demographicWs = getDemographicWs();
 			List<IssueTransfer> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
