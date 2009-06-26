@@ -23,9 +23,9 @@ import oscar.OscarProperties;
 public class CommunityIssueManager {
 
 	private static Logger log = Logger.getLogger(CommunityIssueManager.class);
-	private CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
-	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-	private CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
+	private static CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+	private static CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	
 	/**
 	 * 
@@ -144,7 +144,7 @@ public class CommunityIssueManager {
     	return communityIssues;
     }
 	
-	public List<String> getCommunityIssueCodes(int facilityId, String type) 
+	public static List<String> getCommunityIssueCodes(int facilityId, String type) 
 	{
 		List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
 		if(communityCodes == null || communityCodes.isEmpty())

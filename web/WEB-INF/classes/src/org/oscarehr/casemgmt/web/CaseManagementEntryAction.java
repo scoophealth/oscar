@@ -1576,7 +1576,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         // tag issues with matching codes from Integrator as community
         String communityIssueType = oscar.OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
-        List<String> communityIssueCodes = new CommunityIssueManager().getCommunityIssueCodes(currentFacilityId, communityIssueType);
+        List<String> communityIssueCodes = CommunityIssueManager.getCommunityIssueCodes(currentFacilityId, communityIssueType);
         
         CheckIssueBoxBean[] issueList = new CheckIssueBoxBean[filteredSearchResults.size()];
         for (int i = 0; i < filteredSearchResults.size(); i++) {
