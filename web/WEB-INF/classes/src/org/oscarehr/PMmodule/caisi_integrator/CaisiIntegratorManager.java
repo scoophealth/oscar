@@ -183,7 +183,7 @@ public class CaisiIntegratorManager {
 	public static List<IssueTransfer> getRemoteIssues(int demographicId) throws MalformedURLException {
 		try {
 			DemographicWs demographicWs = getDemographicWs();
-			List<IssueTransfer> results = (List<IssueTransfer>) demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
+			List<IssueTransfer> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
 
 			// this is done for cached lists
 			// cloned so alterations don't affect the cached data
