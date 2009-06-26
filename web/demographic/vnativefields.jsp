@@ -56,6 +56,7 @@ Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
 		Vancouver</option>
 		<option value="9" <%=getSel(area,"9")%>>Surrey</option>
 		<option value="10" <%=getSel(area,"10")%>>On-Reserve</option>
+		<option value="14" <%=getSel(area,"14")%>>Off-Reserve</option>
 		<option value="11" <%=getSel(area,"11")%>>Homeless</option>
 		<option value="12" <%=getSel(area,"12")%>>Out of Country
 		Residents</option>

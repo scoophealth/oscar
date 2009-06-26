@@ -35,7 +35,7 @@ Hashtable h2 = new Hashtable();
     h2.put("11", "Homeless");
     h2.put("12", "Out of Country Residents");
     h2.put("13","Other");
-
+    h2.put("14","Off-Reserve");
 %>
 <li>Area: <b><%=getArea(h2,apptMainBean.getString(demoExt.get("area")))%></b>
 Status #: <b><%=apptMainBean.getString(demoExt.get("statusNum"))%></b>
