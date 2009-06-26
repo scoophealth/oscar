@@ -327,7 +327,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
         else // retrieve community issues for old CME UI
         {
-        	List<CaseManagementCommunityIssue> issues = new CommunityIssueManager().getCommunityIssues(demono, programId, true);
+        	List<CaseManagementCommunityIssue> issues = CommunityIssueManager.getCommunityIssues(demono, programId, true);
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));
@@ -342,20 +342,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 }
             }
         }
-        /*CheckBoxBean[] checkedList = new CheckBoxBean[issues.size()];
-        log.debug("Set Checked Issues");
-        for (int i = 0; i < issues.size(); i++) {
-            checkedList[i] = new CheckBoxBean();
-            CaseManagementIssue iss = (CaseManagementIssue) issues.get(i);
-            checkedList[i].setIssue(iss);
-            checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
-            current = System.currentTimeMillis();
-            log.debug("Set Checked Issues " + String.valueOf(current-start));
-            start = current;
-        }*/
-        current = System.currentTimeMillis();
         
-
+        current = System.currentTimeMillis();
         
         start = current;
         

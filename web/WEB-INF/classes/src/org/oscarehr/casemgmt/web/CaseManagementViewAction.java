@@ -336,7 +336,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 			else // get community issues for old CME UI
 			{
-				communityIssues = new CommunityIssueManager().getCommunityIssues(this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+				communityIssues = CommunityIssueManager.getCommunityIssues(this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
 				//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
 				request.setAttribute("Issues", communityIssues);
 			}

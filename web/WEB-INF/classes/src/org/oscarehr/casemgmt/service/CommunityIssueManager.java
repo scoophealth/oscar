@@ -3,7 +3,6 @@ package org.oscarehr.casemgmt.service;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -40,7 +39,7 @@ public class CommunityIssueManager {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
+	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException
     {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		
@@ -67,7 +66,7 @@ public class CommunityIssueManager {
 		
 		//logger.debug("Filter Issues");
 		communityIssues = cMan.filterCommunityIssues(communityIssues, programId);
-		this.assignCheckboxID(communityIssues);
+		assignCheckboxID(communityIssues);
     	return communityIssues;
     }
 	
@@ -79,7 +78,7 @@ public class CommunityIssueManager {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	public List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException
+	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException
     {
     	List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
     	for(CaseManagementIssue localIssue: local)
@@ -92,25 +91,16 @@ public class CommunityIssueManager {
     	
     	String type = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
 		// add roles to remote issues, drop all remote issues with codes not found in the local issues table
-    	for(IssueTransfer remoteIssue: remote)
-    	{
+		for (IssueTransfer remoteIssue : remote) {
     		log.debug("Found remote issue "+remoteIssue.getIssueCode()+"/"+remoteIssue.getIssueDescription());
     		Issue matchingLocalIssue = issueDao.findIssueByCode(remoteIssue.getIssueCode());
-    		if(matchingLocalIssue != null)
-    		{
-    			//filter out remote issues that have identical parameters to used local issue (req 6.2)
-    			boolean found = false;
-    			Iterator<CaseManagementIssue> it = local.iterator();
-	    		while (!found && it.hasNext())
-	    		{
-	    			if(isIdentical(it.next(), remoteIssue))
-	    			{
-	    				found = true;
-	    			}
-	    		}
-	    		if (!found) // no duplicates found 
-	    		{ 
-	    			CaseManagementCommunityIssue newRemoteIssue = new CaseManagementCommunityIssue();
+    		
+			if (matchingLocalIssue != null) {
+			
+				// filter out remote issues that have identical parameters to used local issue (req 6.2)
+				if (!existsIssue(local, remoteIssue)) // no duplicates found
+				{
+					CaseManagementCommunityIssue newRemoteIssue = new CaseManagementCommunityIssue();
 		    		newRemoteIssue.setRemote(true);
 		
 		    		newRemoteIssue.setFacilityId(remoteIssue.getFacilityId());
@@ -130,18 +120,22 @@ public class CommunityIssueManager {
 		    		newRemoteIssue.setIssue(issue);
 		    		
 		    		communityIssues.add(newRemoteIssue);
-	    		}
-	    		else
-	    		{
-	    			log.debug("Remote issue "+remoteIssue.getIssueCode()+" is identical to a local issue, dropping");
-	    		}
-    		}
-    		else
-    		{
-    			log.debug("Dropping remote issue with code "+remoteIssue.getIssueCode()+" - no matching local issue code found (it mustn't be a community issue");
-    		}
+	    		} else {
+					log.debug("Remote issue " + remoteIssue.getIssueCode() + " is identical to a local issue, dropping");
+				}
+			} else {
+				log.debug("Dropping remote issue with code " + remoteIssue.getIssueCode() + " - no matching local issue code found (it mustn't be a community issue");
+			}
     	}
     	return communityIssues;
+    }
+
+	private static boolean existsIssue(List<CaseManagementIssue> local, IssueTransfer remoteIssue) {
+	    for (CaseManagementIssue caseManagementIssue : local) {
+			if (isIdentical(caseManagementIssue, remoteIssue)) return (true);
+		}
+	    
+	    return(false);
     }
 	
 	public static List<String> getCommunityIssueCodes(int facilityId, String type) 
