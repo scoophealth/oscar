@@ -1,7 +1,6 @@
 package org.oscarehr.casemgmt.service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class CommunityIssueManager {
 	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private static CaseManagementIssueDAO cmiDao = (CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
 	
-	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws MalformedURLException, InvocationTargetException, IllegalAccessException {
+	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws InvocationTargetException, IllegalAccessException {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		List<CaseManagementIssue> localIssues = null;
