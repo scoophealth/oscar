@@ -38,7 +38,10 @@ if (props == null || props.getProperty("c_lastVisited", "").equals("")){
             tempName = medications[i].getCustomName();
             
         props.setProperty("pg1_medName"+(i+1), tempName);
-        props.setProperty("pg1_date"+(i+1), medications[i].getRxDate().toString().replaceAll("-", "/"));
+        
+        props.setProperty("pg1_date"+(i+1),UtilDateUtilities.DateToString( medications[i].getRxDate(), "dd/MM/yyyy"));
+        
+        //props.setProperty("pg1_date"+(i+1), medications[i].getRxDate().toString().replaceAll("-", "/"));
         props.setProperty("pg1_dose"+(i+1), medications[i].getDosageDisplay());
         props.setProperty("pg1_howOften"+(i+1), medications[i].getFullFrequency());
     }
