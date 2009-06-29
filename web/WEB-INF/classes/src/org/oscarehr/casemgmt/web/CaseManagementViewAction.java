@@ -353,13 +353,13 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			List<CaseManagementNote> notes = null;
 			List<CaseManagementNote> remoteNotes = new ArrayList<CaseManagementNote>();
 			// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
-			String[] checked_issues = request.getParameterValues("check_issue");
+			String[] checkedIssues = request.getParameterValues("check_issue");
 			if (useNewCaseMgmt) {
-				if (checked_issues != null && checked_issues[0].trim().length() > 0) {
+				if (checkedIssues != null && checkedIssues[0].trim().length() > 0) {
 					// need to apply a filter
 					log.debug("Get Notes with checked issues");
-					request.setAttribute("checked_issues", checked_issues);
-					notes = caseManagementMgr.getNotes(demoNo, checked_issues);
+					request.setAttribute("checked_issues", checkedIssues);
+					notes = caseManagementMgr.getNotes(demoNo, checkedIssues);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 					current = System.currentTimeMillis();
 					log.debug("Get Notes with checked issues " + String.valueOf(current - start));
@@ -376,29 +376,28 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 			else // get checked community issues for old CME UI
 			{
-				if (checked_issues != null && checked_issues[0].trim().length() > 0) { // something is checked
+				if (checkedIssues != null && checkedIssues[0].trim().length() > 0) { // something is checked
 					// need to apply a filter
 					log.debug("Get Notes with checked issues");
-					request.setAttribute("checked_issues", checked_issues);
+					request.setAttribute("checked_issues", checkedIssues);
 					// construct an array of checked issues by ID
-					String[] checked_issueIDs = new String[checked_issues.length];
+					String[] checked_issueIDs = new String[checkedIssues.length];
 					List<String> checked_remoteIssueCodes = new ArrayList<String>();
-					for (int i = 0; i < checked_issues.length; i++) {
+					for (int i = 0; i < checkedIssues.length; i++) {
 						for (CaseManagementCommunityIssue issue : communityIssues) {
-							if (issue.getCheckboxID().equals(checked_issues[i])) {
+							if (issue.getCheckboxID().equals(checkedIssues[i])) {
 								checked_issueIDs[i] = Long.toString(issue.getIssue_id());
-								if (issue.isRemote()) {
-									checked_remoteIssueCodes.add(issue.getIssue().getCode());
-									log.debug("check_remoteIssueCodes - added " + issue.getIssue().getCode());
-								}
+								checked_remoteIssueCodes.add(issue.getIssue().getCode());
+								log.debug("check_remoteIssueCodes - added " + issue.getIssue().getCode());
 								continue;
 							}
 						}
 					}
+					
 					notes = caseManagementMgr.getNotes(demoNo, checked_issueIDs);
 					notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
 					log.debug("getting remote notes");
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, checked_remoteIssueCodes);
+					remoteNotes = CommunityNoteManager.getRemoteNotes(Integer.parseInt(demoNo), programId, checked_remoteIssueCodes);
 					log.debug("found " + remoteNotes.size() + " remote notes");
 					// get community notes for checked remote issues
 					current = System.currentTimeMillis();
@@ -412,12 +411,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					// get all remote issue codes
 					ArrayList<String> remote_issueCodes = new ArrayList<String>();
 					for (CaseManagementCommunityIssue issue : communityIssues) {
-						if (issue.isRemote()) {
-							remote_issueCodes.add(issue.getIssue().getCode());
-						}
+						remote_issueCodes.add(issue.getIssue().getCode());
 					}
 					// get community notes for all remote issues
-					remoteNotes = new CommunityNoteManager().getRemoteNotes(Integer.parseInt(this.getDemographicNo(request)), providerNo, programId, remote_issueCodes);
+					remoteNotes = CommunityNoteManager.getRemoteNotes(Integer.parseInt(demoNo), programId, remote_issueCodes);
 					current = System.currentTimeMillis();
 					log.debug("Get Notes " + String.valueOf(current - start));
 					start = current;
@@ -438,9 +435,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			// if(request.getSession().getAttribute("archiveView")!="true")
 			
 			String resetFilter = request.getParameter("resetFilter");
-			System.out.println("RESET FILTER " + resetFilter);
+			log.debug("RESET FILTER " + resetFilter);
 			if (resetFilter != null && resetFilter.equals("true")) {
-				System.out.println("CASEMGMTVIEW RESET FILTER");
+				log.debug("CASEMGMTVIEW RESET FILTER");
 				caseForm.setFilter_providers(null);
 				// caseForm.setFilter_provider("");
 				caseForm.setFilter_roles(null);
@@ -840,10 +837,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return filteredNotes;
 	}
 
-	protected List manageLockedNotes(List notes, boolean removeLockedNotes, Map unlockedNotesMap) {
-		List notesNoLocked = new ArrayList();
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
+	private List<CaseManagementNote> manageLockedNotes(List<CaseManagementNote> notes, boolean removeLockedNotes, Map unlockedNotesMap) {
+		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
+		for (CaseManagementNote note : notes) {
 			if (note.isLocked()) {
 				if (unlockedNotesMap.get(note.getId()) != null) {
 					note.setLocked(false);

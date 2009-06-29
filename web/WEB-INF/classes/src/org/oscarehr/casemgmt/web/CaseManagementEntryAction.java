@@ -2162,7 +2162,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         return map;
     }
 
-    protected List manageLockedNotes(List notes, boolean removeLockedNotes, Map unlockedNotesMap) {
+    private List manageLockedNotes(List notes, boolean removeLockedNotes, Map unlockedNotesMap) {
         List notesNoLocked = new ArrayList();
         for (Iterator iter = notes.iterator(); iter.hasNext();) {
             CaseManagementNote note = (CaseManagementNote) iter.next();

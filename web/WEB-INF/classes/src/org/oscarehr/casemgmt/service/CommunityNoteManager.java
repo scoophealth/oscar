@@ -17,16 +17,16 @@ import org.oscarehr.util.SpringUtils;
 public class CommunityNoteManager {
 
 	private static Logger log = Logger.getLogger(CommunityNoteManager.class);
-	private CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+	private static CaseManagementManager cMan = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 
-	public List<CaseManagementNote> getRemoteNotes(int demographicId, String providerNo, String programId, List<String> issues) {
+	public static List<CaseManagementNote> getRemoteNotes(int demographicId, String programId, List<String> issues) {
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		List<CaseManagementNote> notes = new ArrayList<CaseManagementNote>();
 
 		List<IssueTransfer> transfers = new ArrayList<IssueTransfer>();
 
 		// get demographic role
-		Role role = cMan.getProviderRole(providerNo, programId, loggedInInfo.currentFacility.getId());
+		Role role = cMan.getProviderRole(loggedInInfo.loggedInProvider.getProviderNo(), programId, loggedInInfo.currentFacility.getId());
 		if (role == null || (!role.getName().equals("doctor") && !role.getName().equals("nurse"))) // not a doctor or nurse
 		{
 			log.debug("returning no notes because of role not being a doctor/nurse (" + role.getName() + ")");

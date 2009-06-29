@@ -285,22 +285,21 @@ public class CaseManagementManager {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
 	}
 
-	public List<CaseManagementNote> getNotes(String demographic_no) {
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotes(String demographic_no) {
 		return caseManagementNoteDAO.getNotesByDemographic(demographic_no);
 	}
 
-	public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
-		// List notesNoLocked = new ArrayList();
-		List notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
-		/*
-		 * for(Iterator iter=notes.iterator();iter.hasNext();) { CaseManagementNote note = (CaseManagementNote)iter.next(); if(!note.isLocked()) { notesNoLocked.add(note); } } return notesNoLocked;
-		 */
+    public List<CaseManagementNote> getNotes(String demographic_no, String[] issues) {
+    	@SuppressWarnings("unchecked")
+		List<CaseManagementNote> notes = caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues);
 		return notes;
 	}
 
 	/* Return only those notes with archived set to zero */
 	public List<CaseManagementNote> getActiveNotes(String demographic_no, String[] issues) {
-		List notes = caseManagementNoteDAO.getActiveNotesByDemographic(demographic_no, issues);
+		@SuppressWarnings("unchecked")
+		List<CaseManagementNote> notes = caseManagementNoteDAO.getActiveNotesByDemographic(demographic_no, issues);
 		return notes;
 	}
 
