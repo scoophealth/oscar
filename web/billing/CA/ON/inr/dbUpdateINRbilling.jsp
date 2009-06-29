@@ -24,7 +24,7 @@
  */
 -->
 
-
+ 
 <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../../logout.htm");
 
@@ -32,17 +32,14 @@ String curUser_no,userfirstname,userlastname;
 curUser_no = (String) session.getAttribute("user");
 userfirstname = (String) session.getAttribute("userfirstname");
 userlastname = (String) session.getAttribute("userlastname");
-%>
+%>   
 
-<%@ page import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"
-	errorPage="../../errorpage.jsp"%>
-<%@ include file="../../../../admin/dbconnection.jsp"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
-	scope="session" />
-<%@ include file="dbINR.jsp"%>
+<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="../../errorpage.jsp"%>
+<%@ include file="../../../../admin/dbconnection.jsp" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
+<%@ include file="dbINR.jsp" %>
 <html>
 <head>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script LANGUAGE="JavaScript">
     <!--
     function start(){
@@ -55,26 +52,31 @@ userlastname = (String) session.getAttribute("userlastname");
     //-->
 </script>
 </head>
-<body onload="start()">
+<body  onload="start()">
 <center>
-<table border="0" cellspacing="0" cellpadding="0" width="90%">
-	<tr bgcolor="#486ebd">
-		<th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-		UPDATE A BILLING RECORD</font></th>
-	</tr>
-</table>
-<% 
+    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
+      <tr bgcolor="#486ebd"> 
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+            UPDATE A BILLING RECORD</font></th>
+      </tr>
+    </table>
+<%
 String demo_hin="", demo_dob="", demo_name="", billinginr_no="", errorCode="",service_code="", service_desc="", service_amount="",diag_code="";
 billinginr_no = request.getParameter("billinginr_no");
 service_code = request.getParameter("service_code").trim();
 diag_code = request.getParameter("diag_code").trim();
-
 if (service_code.trim().compareTo("") == 0){
 	errorCode = errorCode + "Please input a service code.<br>"; 
 }else{
-	service_code = service_code.substring(0,5);
-
-	ResultSet rsother = apptMainBean.queryResults(service_code, "search_servicecode_detail");
+	service_code = service_code.substring(0,5);    
+    Calendar cal = GregorianCalendar.getInstance();
+    String yyyy = String.valueOf(cal.get(Calendar.YEAR));
+    String mm = String.valueOf(cal.get(Calendar.MONTH)+1);
+    String dd = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+    String[] params1 = new String[2];
+    params1[0] = service_code;
+    params1[1] = yyyy + "-" + mm + "-" + dd;
+	ResultSet rsother = apptMainBean.queryResults(params1, "search_servicecode_detail");  
 	while(rsother.next()){
 		service_desc = rsother.getString("description");
 		service_code = rsother.getString("service_code");
@@ -82,7 +84,6 @@ if (service_code.trim().compareTo("") == 0){
 		// otherperc1 = rsother.getString("percentage");
 	}
 }
-
 
 if (diag_code.trim().compareTo("") == 0){
 	errorCode = errorCode + "Please input a diagnostic code.<br>";
@@ -117,10 +118,12 @@ if (errorCode.compareTo("") ==0){
 		param[6] = billinginr_no; 
 
 		int rowAffect = apptMainBean.queryExecuteUpdate(param,"update_inrbilling_dt_item");
-%> <script LANGUAGE="JavaScript">
+%>
+<script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
-</script> <%
+</script>
+<%
 	}else{
 		if (request.getParameter("inraction").compareTo("delete")==0) {
 			GregorianCalendar now=new GregorianCalendar();
@@ -135,22 +138,28 @@ if (errorCode.compareTo("") ==0){
 			param1[2] = billinginr_no;
 
 			int rowAffect = apptMainBean.queryExecuteUpdate(param1,"update_inrbilling_dt_billno");
-%> <script LANGUAGE="JavaScript">
+%>
+<script LANGUAGE="JavaScript">
       self.close();
       self.opener.refresh();
-</script> <%
+</script>
+<%
 		}
 	}
 }else{
-%> <%=errorCode%> <input type="button" value="Change"
-	onClick="history.go(-1);return false;"> <%
+%>
+
+<%=errorCode%>
+<input type="button" value="Change" onClick="history.go(-1);return false;">
+<%
 }
 apptMainBean.closePstmtConn();
 %>
-<p><%=request.getParameter("inraction")%> Bill number <%=billinginr_no%></p>
-<hr width="90%"></hr>
-<form><input type="button" value="Close this window"
-	onClick="window.close()"></form>
+  <p><%=request.getParameter("inraction")%> Bill number <%=billinginr_no%></p>
+  <hr width="90%"></hr>
+<form>
+<input type="button" value="Close this window" onClick="window.close()">
+</form>
 </center>
 </body>
 </html>
