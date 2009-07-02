@@ -59,5 +59,7 @@
 			not-null="true" type="string" />
 		<property column="rma_no" length="20" name="RmaNo" not-null="false"
 			type="string" />
+        <property column="signed_confidentiality" name="SignedConfidentiality" not-null="true"
+            type="date" />
 	</class>
 </hibernate-mapping>
