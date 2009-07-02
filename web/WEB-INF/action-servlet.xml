@@ -7,6 +7,10 @@
 	</bean>
 	<bean name="/shelterSelection" class="oscar.login.ShelterSelectionAction" singleton="false" autowire="byName" />
 
+    <bean name="/login/recordLogin" class="oscar.login.LoginAgreementAction" singleton="false">
+        <property name="providerDao" ref="providerDao" />
+    </bean>
+
 	<bean name="/Home" class="org.oscarehr.PMmodule.web.HomeAction" singleton="false" autowire="byName" />
 
 	<!--
