@@ -126,6 +126,8 @@ public final class LoginAction extends DispatchAction {
             Properties pvar = cl.getOscarVariable();
             session.setAttribute("oscarVariables", pvar);
 
+
+
             // get View Type
             String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
             String providerNo = strAuth[0];
@@ -219,6 +221,12 @@ public final class LoginAction extends DispatchAction {
         			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
         			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);
             	}
+            }
+
+            if( pvar.getProperty("LOGINTEST","").equalsIgnoreCase("yes")) {
+                String proceedURL = mapping.findForward(where).getPath();
+                request.getSession().setAttribute("proceedURL", proceedURL);               
+                return mapping.findForward("LoginTest");
             }
         }
         // expired password
