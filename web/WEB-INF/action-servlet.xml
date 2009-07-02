@@ -18,7 +18,7 @@
 	<bean name="/dms/ManageDocument" class="org.oscarehr.document.web.ManageDocumentAction">
 		<property name="documentDAO" ref="documentDAO" />
 	</bean>
-        
+
         <bean name="/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowSheetCustomAction" class="org.oscarehr.common.web.FlowSheetCustomAction">
 		<property name="flowSheetCustomizerDAO" ref="flowSheetCustomizerDAO" />
 	</bean>
@@ -27,7 +27,8 @@
 		<property name="flowSheetDrugDAO" ref="flowSheetDrugDAO" />
 	</bean>
 
-
+ 	<bean name="/MeasurementHL7Uploader" class="oscar.oscarEncounter.oscarMeasurements.hl7.MeasurementHL7UploaderAction" autowire="byName">
+ 	</bean>
 
 	<bean name="/Admin" class="com.quatro.web.admin.AdminAction" singleton="true" />
 	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
@@ -66,10 +67,10 @@
 	</bean>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
-    <bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction" 
+    <bean name="/PMmodule/MergeClient" class="org.oscarehr.PMmodule.web.admin.MergeClientAction"
     	singleton="false"  autowire="byName"/>
-    <bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction" 
-    	singleton="false"  autowire="byName" />		
+    <bean name="/PMmodule/UnmergeClient" class="org.oscarehr.PMmodule.web.admin.UnMergeClientAction"
+    	singleton="false"  autowire="byName" />
 	<bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false" autowire="byName" />
@@ -167,12 +168,12 @@
 	<bean name="/Lookup/LookupTree" class="com.quatro.web.lookup.LookupTreeAction" singleton="false">
         	<property name="lookupManager" ref="lookupManager"/>
  	</bean>
-	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">    
+	<bean name="/Lookup/LookupTableList" class="com.quatro.web.lookup.LookupTableListAction" singleton="false">
         	<property name="lookupManager" ref="lookupManager"/>
  	</bean>
 	<bean name="/Lookup/LookupCodeList" class="com.quatro.web.lookup.LookupCodeListAction" singleton="false">
         	<property name="lookupManager" ref="lookupManager"/>
-	</bean> 	 	
+	</bean>
 	<bean name="/Lookup/LookupCodeEdit" class="com.quatro.web.lookup.LookupCodeEditAction" singleton="false">
 		<property name="lookupManager" ref="lookupManager" />
 	</bean>
@@ -209,11 +210,11 @@
 	<bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
 		<property name="userPropertyDAO" ref="UserPropertyDAO" />
 	</bean>
-        
+
         <bean name="/saveWorkView" class="org.oscarehr.provider.web.ProviderViewAction" singleton="false">
                 <property name="userViewDAO" ref="UserViewDAO" />
         </bean>
-        
+
     <bean name="/oscarBilling/batchBillingbyCode" class="oscar.oscarBilling.ca.on.pageUtil.BatchBillingbyCodeAction" singleton="false">
         <property name="providerMgr" ref="providerManager"/>
     </bean>
@@ -230,7 +231,7 @@
 		<property name="phrService" ref="phrService" />
 		<property name="phrConstants" ref="phrConstants" />
 	</bean>
-        <bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
+    <bean name="/oscarEncounter/oscarMeasurements/SendToPhr" class="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSendMeasurementToPhr" singleton="false">
 		<property name="phrService" ref="phrService" />
 		<property name="phrConstants" ref="phrConstants" />
 	</bean>

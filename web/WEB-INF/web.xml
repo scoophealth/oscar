@@ -13,9 +13,9 @@
     GNU General Public License for more details. You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-    
+
     <OSCAR TEAM>
-    
+
     This software was written for the
     Department of Family Medicine
     McMaster University
@@ -35,9 +35,15 @@
 
    <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext*.xml</param-value>           
+        <param-value>/WEB-INF/applicationContext*.xml</param-value>
     </context-param>
-    
+    <filter>
+	<filter-name>ComponentFilter</filter-name>
+	<filter-class>
+		org.caisi.comp.web.WebComponentFilter
+	</filter-class>
+  	</filter>
+
 	<filter>
 		<filter-name>DbConnectionFilter</filter-name>
 		<filter-class>org.oscarehr.util.DbConnectionFilter</filter-class>
@@ -95,7 +101,11 @@
 		<filter-name>PMMFilter</filter-name>
 		<filter-class>org.oscarehr.PMmodule.web.PMMFilter</filter-class>
 	</filter>
-    
+
+    <filter-mapping>
+		<filter-name>ComponentFilter</filter-name>
+		<url-pattern>/mod/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>DbConnectionFilter</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -124,7 +134,7 @@
 		<filter-name>LoginFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-    
+
 	<listener>
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
@@ -134,7 +144,7 @@
     <listener>
         <listener-class>org.oscarehr.util.ContextStartupListener</listener-class>
     </listener>
-    
+
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -204,7 +214,7 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-    
+
     <servlet>
         <servlet-name>FileUpload</servlet-name>
         <servlet-class>FileUpload</servlet-class>
@@ -229,20 +239,20 @@
 		<servlet-name>HsfoQuartzSchedulerServlet</servlet-name>
 		<servlet-class>oscar.form.study.HSFO.pageUtil.HsfoQuartzServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
-	</servlet>    
+	</servlet>
     <servlet>
         <servlet-name>PatientListByAppointment</servlet-name>
         <servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
     </servlet>
-    <servlet> 
-	 	<servlet-name>RxCloneService</servlet-name> 
-	 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class> 
-    </servlet> 
-    <servlet> 
-	 	<servlet-name>ImageRenderingServlet</servlet-name> 
-	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class> 
-    </servlet> 
-    
+    <servlet>
+	 	<servlet-name>RxCloneService</servlet-name>
+	 	<servlet-class>oscar.oscarRx.server.service.RxCloneServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+	 	<servlet-name>ImageRenderingServlet</servlet-name>
+	 	<servlet-class>org.oscarehr.ui.servlet.ImageRenderingServlet</servlet-class>
+    </servlet>
+
     <servlet>
 		<servlet-name>DATISExportTest</servlet-name>
 		<servlet-class>org.oscarehr.PMmodule.exporter.TestServlet</servlet-class>
@@ -252,7 +262,7 @@
 		<servlet-name>DATISExportTest</servlet-name>
 		<url-pattern>/PMmodule/export</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>DATISExport</servlet-name>
 		<servlet-class>org.oscarehr.PMmodule.exporter.DATISExporterServlet</servlet-class>
@@ -262,7 +272,7 @@
 		<servlet-name>DATISExport</servlet-name>
 		<url-pattern>/PMmodule/exportfiles</url-pattern>
 	</servlet-mapping>
-    
+
     <servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
@@ -303,10 +313,10 @@
 		<servlet-name>DocumentUploadServlet</servlet-name>
 		<url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
 	</servlet-mapping>
-        <servlet-mapping> 
-                <servlet-name>PatientListByAppointment</servlet-name> 
-                <url-pattern>/patientlistbyappt</url-pattern> 
-        </servlet-mapping> 
+        <servlet-mapping>
+                <servlet-name>PatientListByAppointment</servlet-name>
+                <url-pattern>/patientlistbyappt</url-pattern>
+        </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FileUpload</servlet-name>
         <url-pattern>/FileUpload</url-pattern>
@@ -327,35 +337,35 @@
         <servlet-name>redirectLinkTracking</servlet-name>
         <url-pattern>/redirectLinkTracking</url-pattern>
     </servlet-mapping>
-    <servlet-mapping> 
-	 	<servlet-name>RxCloneService</servlet-name> 
-	 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern> 
-    </servlet-mapping>  
-    <servlet-mapping> 
-	 	<servlet-name>ImageRenderingServlet</servlet-name> 
-	 	<url-pattern>/imageRenderingServlet</url-pattern> 
-    </servlet-mapping>  
-    
+    <servlet-mapping>
+	 	<servlet-name>RxCloneService</servlet-name>
+	 	<url-pattern>/oscar.oscarRx.CloneRx/service/rxcloneservice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+	 	<servlet-name>ImageRenderingServlet</servlet-name>
+	 	<url-pattern>/imageRenderingServlet</url-pattern>
+    </servlet-mapping>
+
     <session-config>
     	<session-timeout>120</session-timeout> <!-- 120minutes -->
     </session-config>
-    
+
     <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 	</welcome-file-list>
-    
+
     <error-page>
 	   <error-code>404</error-code>
 	   <location>/404.jsp</location>
 	</error-page>
-    
+
     <error-page>
 	   <error-code>500</error-code>
 	   <location>/500.jsp</location>
-	</error-page>    
-    
+	</error-page>
+
 	<taglib>
 		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
 		<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
@@ -370,12 +380,12 @@
 	</taglib>
 
 	<taglib>
-       <taglib-uri>/WEB-INF/struts-menu.tld</taglib-uri>  
+       <taglib-uri>/WEB-INF/struts-menu.tld</taglib-uri>
        <taglib-location>/WEB-INF/struts-menu.tld</taglib-location>
      </taglib>
-     <taglib>    
-       <taglib-uri>/WEB-INF/struts-menu-el.tld</taglib-uri>    
-       <taglib-location>/WEB-INF/struts-menu-el.tld</taglib-location> 
-     </taglib> 
-	
+     <taglib>
+       <taglib-uri>/WEB-INF/struts-menu-el.tld</taglib-uri>
+       <taglib-location>/WEB-INF/struts-menu-el.tld</taglib-location>
+     </taglib>
+
 </web-app>

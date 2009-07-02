@@ -24,6 +24,7 @@
  * Ontario, Canada
  */
 --%>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -62,6 +63,7 @@ You have no rights to access the data!
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
 
 <%@page
 	import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
@@ -88,6 +90,22 @@ You have no rights to access the data!
     return;
   }
 %>
+<!--add for special encounter-->
+<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+<special:SpecialEncounterTag moduleName="eyeform">
+<%
+session.setAttribute("encounter_oscar_bean", bean);
+session.setAttribute("encounter_bean_flag", "true");
+String encounterurl=request.getContextPath()+"/mod/specialencounterComp/forward.jsp?method=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+session.setAttribute("encounter_oscar_baseurl",request.getContextPath());
+if (request.getParameter("specalEncounter")==null)
+{
+	response.sendRedirect(encounterurl);
+    return;
+}
+%>
+</special:SpecialEncounterTag>
+</plugin:hideWhenCompExists>
 <!-- add by caisi  -->
 <caisi:isModuleLoad moduleName="caisi">
 	<%
@@ -108,7 +126,7 @@ if (request.getParameter("casetoEncounter")==null)
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
   String provNo = bean.providerNo;
-  EctFormData.Form[] forms = new EctFormData().getForms();  
+  EctFormData.Form[] forms = new EctFormData().getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   EctProviderData.Provider prov = new EctProviderData().getProvider(provNo);
   String patientName = pd.getFirstName()+" "+pd.getSurname();
@@ -269,7 +287,7 @@ if (request.getParameter("casetoEncounter")==null)
           + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
         window.open(page, "<bean:message key="oscarEncounter.Index.popupPage2Window"/>", windowprops);
     }
-    
+
     function urlencode(str) {
         var ns = (navigator.appName=="Netscape") ? 1 : 0;
         if (ns) { return escape(str); }
@@ -569,7 +587,7 @@ function popupOscarComm(vheight,vwidth,varpage) {
 
 function popUpMsg(vheight,vwidth,msgPosition) {
 
-  
+
   var page = "<rewrite:reWrite jspPage="../oscarMessenger/ViewMessageByPosition.do"/>?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
@@ -617,7 +635,7 @@ function loader(){
 
 function notifyChildren() {
     if( !measurementWindows.closed )
-        measurementWindows.parentChanged = true;   
+        measurementWindows.parentChanged = true;
 }
 </script>
 <script language="javascript">
@@ -723,11 +741,11 @@ function AutoSaveEncounter() {
     form.submitMethod.value='ajax';
     var pars = Form.serialize(form);
     //send off the request
-    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post',
                                                   postBody: pars,
                                                   asynchronous:  true,
                                                   onSuccess: AutoSaveSuccess,
-                                                  onFailure: AjaxSubmitFailure});              
+                                                  onFailure: AjaxSubmitFailure});
 }
 
 function AutoSaveSuccess(request)  {
@@ -746,7 +764,7 @@ function AjaxSubmit(formToSubmit)  {
     formToSubmit.submitMethod.value='ajax';
     var pars = Form.serialize(formToSubmit);
      //send off the request
-    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post',
                                                   postBody: pars,
                                                   asynchronous:  true,
                                                   onSuccess: AjaxSubmitSuccess,
@@ -930,18 +948,18 @@ function removeSaveFeedback()  {
                             for(int j=0; j<forms.length; j++) {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
-                                if(!table.equalsIgnoreCase("")){                                    
+                                if(!table.equalsIgnoreCase("")){
                                     EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
                                     if(pforms.length>0) {
                                         EctFormData.PatientForm pfrm = pforms[0];
                                 %>
-					
+
 					<option
 						value="<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>"><%=frm.getFormName()%>&nbsp;Cr:<%=pfrm.getCreated()%>&nbsp;Ed:<%=pfrm.getEdited()%>
 					<%}}}
 
                             %>
-					
+
 				</select></td>
 			</tr>
 			<tr>
@@ -955,7 +973,7 @@ function removeSaveFeedback()  {
                             EctFormData.Form frm = forms[j];
                             if (!frm.isHidden()) {
                         %>
-					
+
 					<option
 						value="<%=frm.getFormPage()+demoNo+"&formId=0&provNo="+provNo%>"><%=frm.getFormName()%>
 					<%
@@ -964,7 +982,7 @@ function removeSaveFeedback()  {
                         }
 
                         %>
-					
+
 				</select></td>
 			</tr>
 			<tr>
@@ -999,7 +1017,7 @@ function removeSaveFeedback()  {
                                 msgSubject = msgData.getSubject();
                                 msgDate = msgData.getDate();
                          %>
-					
+
 					<option value="<%=j%>"><%=msgSubject + " - " + msgDate %></option>
 					<% }%>
 				</select></td>
@@ -1032,7 +1050,7 @@ function removeSaveFeedback()  {
                             for(int j=0; j<bean.templateNames.size(); j++) {
                                 encounterTmp = (String)bean.templateNames.get(j);
                          %>
-					
+
 					<option value="<%=encounterTmp%>"><%=encounterTmp %></option>
 					<% }%>
 				</select></td>
@@ -1068,9 +1086,9 @@ function removeSaveFeedback()  {
                             for(int j=0; j<bean.measurementGroupNames.size(); j++) {
                             String tmp = (String)bean.measurementGroupNames.get(j);
                          %>
-					
+
 					<option value="<%=tmp%>"><%=tmp %> <%}%>
-					
+
 				</select>
 				</td>
 			</tr>
@@ -1507,7 +1525,7 @@ function removeSaveFeedback()  {
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);                              
+                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                   //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";

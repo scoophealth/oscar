@@ -29,6 +29,11 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<!-- add for special encounter -->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
+<!-- end -->
 <%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
 <html:html locale="true">
@@ -73,7 +78,7 @@
     while (st.hasMoreTokens()) {
          vecFaxes.add(st.nextToken());
     }
-    
+
     // for satellite clinics
     Vector vecAddressName = null;
     Vector vecAddress = null;
@@ -226,7 +231,7 @@
         	document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
         	document.getElementById("clinicPhone").innerHTML="Tel: "+"<%=vecAddressPhone.get(i)%>";
         	document.getElementById("clinicFax").innerHTML="Fax: "+"<%=vecAddressFax.get(i)%>";
-        } 
+        }
 		<% } }%>
     }
 
@@ -244,20 +249,20 @@
             <tr>
             <td align="center">
                 <oscarProp:oscarPropertiesCheck property="EMAIL_REFERRAL" value="yes">
-                <a href="mailto:<%=reqFrm.getSpecailistsEmail(reqFrm.specialist)%>?subject=Consultation%20Request&body=<%=formatEmail(reqFrm)%>">mail</a>                
+                <a href="mailto:<%=reqFrm.getSpecailistsEmail(reqFrm.specialist)%>?subject=Consultation%20Request&body=<%=formatEmail(reqFrm)%>">mail</a>
                 </oscarProp:oscarPropertiesCheck>
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFaxFooter"/>" onclick="javascript :flipFaxFooter();"/>
             </td>
             <td align="center">
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
-            </td>            
-            <td align="center">               
+            </td>
+            <td align="center">
                 <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
-            </td>            
-            <td align="center">                
+            </td>
+            <td align="center">
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
             </td>
-		<% if(vecPhones.size() > 0) { %>            
+		<% if(vecPhones.size() > 0) { %>
             <td align="center">
                 P
                 <select name="sendersPhone" id="sendersPhone" onChange="phoneNumSelect()">
@@ -269,7 +274,7 @@
                 </select>
             </td>
 		<% } %>
-		<% if(vecFaxes.size() > 0) { %>            
+		<% if(vecFaxes.size() > 0) { %>
             <td align="center">
                 F
                 <select name="sendersFax" id="sendersFax" onChange="faxNumSelect()">
@@ -281,7 +286,7 @@
                 </select>
             </td>
 		<% } %>
-		<% if(vecAddress != null) { %>            
+		<% if(vecAddress != null) { %>
             <td align="center">
                 Address
                 <select name="addressSel" id="addressSel" onChange="addressSelect()">
@@ -349,7 +354,7 @@
                         <c:otherwise>
                         <tr>
                             <td colspan="2" class="address" id="clinicAddress">
-               					<c:out value="${infirmaryView_programAddress}" escapeXml="false"/>        			
+               					<c:out value="${infirmaryView_programAddress}" escapeXml="false"/>
                             </td>
                         </tr>
                         <tr>
@@ -453,6 +458,17 @@
                                 <%=reqFrm.specAddr%>
                                         </td>
                                     </tr>
+<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+<special:SpecialEncounterTag moduleName="eyeform">
+<script type="text/javascript" src="js/prototype.js">
+</script>
+<%
+String requestId=(String)request.getAttribute("reqId");
+String aburl="/EyeForm.do?method=showCC";
+if (requestId!=null) aburl+="&requestId="+requestId; %>
+<plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl %>"></plugin:include>
+</special:SpecialEncounterTag>
+</plugin:hideWhenCompExists>
                                 </table>
                             </td>
                             <td valign="top">
@@ -494,7 +510,7 @@
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
                                         </td>
                                         <td class="fillLine">
-                                <%=reqFrm.patientDOB %>  (y/m/d)  
+                                <%=reqFrm.patientDOB %>  (y/m/d)
                                         </td>
                                     </tr>
                                     <tr>
@@ -525,7 +541,7 @@
                             <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
                                 <%=reqFrm.appointmentHour %>:<%=reqFrm.appointmentMinute %> <%=reqFrm.appointmentPm %>
                             <%}else{%>
-                                &nbsp; 
+                                &nbsp;
 		                      <%}%>
                                         </td>
                                     </tr>
@@ -554,7 +570,7 @@
                     &nbsp;<br>
                 </td>
             </tr>
-            <% if(getlen(reqFrm.clinicalInformation) > 1) {%>	
+            <% if(getlen(reqFrm.clinicalInformation) > 1) {%>
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgClinicalInfom"/>:
@@ -567,10 +583,10 @@
                 </td>
             </tr>
             <%}%>
-            <% if(getlen(reqFrm.concurrentProblems) > 1) {%>	
+            <% if(getlen(reqFrm.concurrentProblems) > 1) {%>
             <tr>
                 <td class="subTitles">
-	            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+	            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) {
 	                out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
 	             } else { %>
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgSigProb"/>:
@@ -584,10 +600,21 @@
                 </td>
             </tr>
             <%}%>
-            <% if(getlen(reqFrm.currentMedications) > 1) {%>	
+            <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+<special:SpecialEncounterTag moduleName="eyeform">
+<script type="text/javascript" src="js/prototype.js">
+</script>
+<%
+String requestId=(String)request.getAttribute("reqId");
+String aburl="/EyeForm.do?method=showSpecial";
+if (requestId!=null) aburl+="&requestId="+requestId; %>
+<plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl %>"></plugin:include>
+</special:SpecialEncounterTag>
+</plugin:hideWhenCompExists>
+            <% if(getlen(reqFrm.currentMedications) > 1) {%>
             <tr>
                 <td class="subTitles">
-		            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+		            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) {
 		                out.print(props.getProperty("currentMedicationsTitle", ""));
 		             } else { %>
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCurrMed"/>
@@ -601,7 +628,7 @@
                 </td>
             </tr>
             <%}%>
-            <% if(getlen(reqFrm.allergies) > 1) {%>	
+            <% if(getlen(reqFrm.allergies) > 1) {%>
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAllergies"/>
@@ -637,15 +664,15 @@
                 </tr>
                 <tr>
                     <td id="faxFooter">
-                        
+
                     </td>
                 </tr>
                 <tr>
                 <td align="center">
-                    <% if (props.getProperty("FORMS_PROMOTEXT") != null){                    
-                        %></br><%= props.getProperty("FORMS_PROMOTEXT") %>                
+                    <% if (props.getProperty("FORMS_PROMOTEXT") != null){
+                        %></br><%= props.getProperty("FORMS_PROMOTEXT") %>
                     <%}%>
-                </td>    
+                </td>
             </tr>
         </table>
     </body>
@@ -675,23 +702,23 @@ public int getlen (String str){
 }
 
 public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm){
-   String Urgency = ""; 
+   String Urgency = "";
    if (reqFrm.urgency.equals("1")) {
       Urgency = "Urgent";
    }else if(reqFrm.urgency.equals("2")){
       Urgency = "Non-Urgent";
-   }else if (reqFrm.urgency.equals("3")){ 
+   }else if (reqFrm.urgency.equals("3")){
       Urgency = "Return";
    }
-    
+
    String s = "";
    s +="<b>Date:</b>"+reqFrm.referalDate+"<br/>";
    s +="<b>Status:</b>"+Urgency+"<br/>";
    s +="<b>Service:</b>"+reqFrm.getServiceName(reqFrm.service)+"<br/>";
-   
+
    s +="<b>Specailist:</b>"+reqFrm.getSpecailistsName(reqFrm.specialist) +" <b>Phone:</b>"+reqFrm.specPhone+" <b>Fax:</b> "+reqFrm.specFax+"<br/>";
    s +="<b>Address:</b> "+reqFrm.specAddr+"<br/><br/><br/>";
-   
+
    s +="<b>Patient Info</b><br/>";
    s +="<b>Name:</b>"+reqFrm.patientName+"<br/>";
    s +="<b>DOB:</b>"+reqFrm.patientDOB+"<br/>";
@@ -699,8 +726,8 @@ public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil
    s +="<b>Phone:</b>"+reqFrm.patientPhone+"<br/>";
    s +="<b>Phone:</b>"+reqFrm.patientWPhone+"<br/>";
    s +="<b>Address:</b>"+reqFrm.patientAddress+"<br/><br/><br/>";
-   
-   
+
+
    s += "<b>Reason For Consultation</b> <br/> ";
    s += divy(reqFrm.reasonForConsultation);
    s += "<br/><br/>";
@@ -712,12 +739,12 @@ public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil
    s += "<br/><br/>";
    s += "<b>Current Medications</b><br/> ";
    s += divy(reqFrm.currentMedications);
-   s += "<br/><br/>";   
+   s += "<br/><br/>";
    s += "<b>Allergies</b><br/> ";
    s += divy(reqFrm.allergies);
-   s += "<br/><br/>";   
+   s += "<br/><br/>";
    s += "<b>Associated with:</b> "+reqFrm.getProviderName(reqFrm.providerNo)+"<br/> ";
-   s += "<b>Family Doctor:</b> "+reqFrm.getFamilyDoctor() ;   
+   s += "<b>Family Doctor:</b> "+reqFrm.getFamilyDoctor() ;
    s = s.replaceAll("\"","&quot;");
    return s;
 }

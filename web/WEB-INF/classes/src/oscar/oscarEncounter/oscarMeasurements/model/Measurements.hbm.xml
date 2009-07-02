@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="oscar.oscarEncounter.oscarMeasurements.model">
+	<class
+		name="Measurements"
+		table="measurements"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="id"
+		>
+			<generator class="native"/>
+		</id>
+
+		<property
+			name="type"
+			column="type"
+			type="string"
+			not-null="true"
+			length="4"
+		/>
+		<property
+			name="demographicNo"
+			column="demographicNo"
+			type="integer"
+			not-null="true"
+			length="10"
+		/>
+		<property
+			name="providerNo"
+			column="providerNo"
+			type="string"
+			not-null="true"
+			length="6"
+		/>
+		<property
+			name="dataField"
+			column="dataField"
+			type="string"
+			not-null="true"
+			length="10"
+		/>
+		<property
+			name="measuringInstruction"
+			column="measuringInstruction"
+			type="string"
+			not-null="true"
+			length="255"
+		/>
+		<property
+			name="comments"
+			column="comments"
+			type="string"
+			not-null="true"
+			length="255"
+		/>
+		<property
+			name="dateObserved"
+			column="dateObserved"
+			type="timestamp"
+			not-null="true"
+			length="19"
+		/>
+		<property
+			name="dateEntered"
+			column="dateEntered"
+			type="timestamp"
+			not-null="true"
+			length="19"
+		/>
+
+
+	</class>	
+</hibernate-mapping>

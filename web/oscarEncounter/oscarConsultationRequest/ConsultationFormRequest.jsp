@@ -30,6 +30,11 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
+<!-- add for special encounter -->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
+<!-- end -->
+
 <%@page
 	import="java.util.ArrayList, java.util.Collections, java.util.List, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
 <%@page
@@ -59,13 +64,13 @@ if( requestId != null ) consultUtil.estRequestFromId(requestId);
 if( demo == null ) demo = consultUtil.demoNo;
 
 ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
-boolean useNewCmgmt = false;    
+boolean useNewCmgmt = false;
 WebApplicationContext  ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 CaseManagementManager cmgmtMgr = null;
 if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, providerNo)>=0)) {
         useNewCmgmt = true;
         cmgmtMgr = (CaseManagementManager)ctx.getBean("caseManagementManager");
-}   
+}
 
 UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
 UserProperty fmtProperty = userPropertyDAO.getProp(providerNo,UserProperty.CONSULTATION_REQ_PASTE_FMT);
@@ -73,7 +78,7 @@ String pasteFmt = fmtProperty != null ? fmtProperty.getValue() : null;
 
 if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
-    demographic = demoData.getDemographic(demo);    
+    demographic = demoData.getDemographic(demo);
 }
 else if(requestId==null){
     response.sendRedirect("../error.jsp");
@@ -105,7 +110,7 @@ OscarProperties props = OscarProperties.getInstance();
 </title>
 <html:base />
 <style type="text/css">
- 
+
 /* Used for "import from enctounter" button */
 input.btn{
    color:black;
@@ -119,7 +124,7 @@ input.btn{
    border-right-color:#363;
    border-bottom-color:#363;
 }
-    
+
 .doc {
     color:blue;
 }
@@ -203,7 +208,7 @@ function initMaster() {
 // create car make objects and fill arrays
 //==========
 function K( serviceNumber, service ){
-        
+
 	servicesName[service] = new ServicesName(serviceNumber);
 	services[serviceNumber] = new Service( );
 }
@@ -232,9 +237,9 @@ function disableDateFields(){
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
 //=======
-function D( servNumber, specNum, phoneNum ,SpecName,SpecFax,SpecAddress){    
-    var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);    
-    services[servNumber].specialists.push(specialistObj);           
+function D( servNumber, specNum, phoneNum ,SpecName,SpecFax,SpecAddress){
+    var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);
+    services[servNumber].specialists.push(specialistObj);
 }
 //-------------------------------------------------------------------
 
@@ -280,16 +285,16 @@ function fillSpecialistSelect( aSelectedService ){
 	document.EctConsultationFormRequestForm.phone.value = ("");
 	document.EctConsultationFormRequestForm.fax.value = ("");
 	document.EctConsultationFormRequestForm.address.value = ("");
-        
+
 	if ( selectedIdx == 0){ return; }
-        
+
         var i = 1;
-	var specs = (services[makeNbr].specialists);	
+	var specs = (services[makeNbr].specialists);
 	for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
-	   aPit = specs[ specIndex ];                      
-           document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );	           
+	   aPit = specs[ specIndex ];
+           document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );
 	}
- 
+
 }
 //-------------------------------------------------------------------
 
@@ -316,7 +321,7 @@ function fillSpecialistSelect1( makeNbr )
 		aPit = specs[specIndex];
 		document.EctConsultationFormRequestForm.specialist.options[i] = new Option(aPit.specName, aPit.specNbr );
        // window.alert("in da loop");
-                
+
 		/*if (aPit.specName.toUpperCase() == x[j]) {
 			document.EctConsultationFormRequestForm.specialist.options[i].selected = true;
 			j++;
@@ -325,14 +330,14 @@ function fillSpecialistSelect1( makeNbr )
 		i++;
 	}
     //window.alert("im out");
-        if( notSet ) {            
+        if( notSet ) {
             document.EctConsultationFormRequestForm.specialist.options[0].selected = true;
         }
 }
 //-------------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
-function setSpec(servNbr,specialNbr){    
+function setSpec(servNbr,specialNbr){
 //    //window.alert("get Called");
     specs = (services[servNbr].specialists);
 //    //window.alert("got specs");
@@ -340,7 +345,7 @@ function setSpec(servNbr,specialNbr){
     var NotSelected = true;
     for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
 //      //  window.alert("loop");
-        aPit = specs[specIndex];        
+        aPit = specs[specIndex];
         if (aPit.specNbr == specialNbr){
 //        //    window.alert("if");
             document.EctConsultationFormRequestForm.specialist.options[i].selected = true;
@@ -349,7 +354,7 @@ function setSpec(servNbr,specialNbr){
 
         i++;
     }
-    
+
     if( NotSelected )
         document.EctConsultationFormRequestForm.specialist.options[0].selected = true;
 //    window.alert("exiting");
@@ -377,7 +382,7 @@ function initService(ser){
 	      document.EctConsultationFormRequestForm.service.options[ i ].selected = true;
 	      isSel = 1;
           //window.alert("get here"+serNBR);
-	      fillSpecialistSelect1( serNBR );              
+	      fillSpecialistSelect1( serNBR );
           //window.alert("and here");
 	   }
 	   if (isSel != 1){
@@ -402,7 +407,7 @@ function GetExtensionOn(SelectedSpec)	{
 	var specs = (services[selectedService].specialists);					// get all the specs the offer this service
         for( var idx = 0; idx < specs.length; ++idx ) {
             aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
-            if( aSpeci.specNbr == SelectedSpec.value ) {	
+            if( aSpeci.specNbr == SelectedSpec.value ) {
                 document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
                 document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
                 document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
@@ -417,7 +422,7 @@ function FillThreeBoxes(serNbr)	{
 
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
 	var specs = (services[selectedService].specialists);					// get all the specs the offer this service
-        
+
         for( var idx = 0; idx < specs.length; ++idx ) {
             aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
             if( aSpeci.specNbr == serNbr ) {
@@ -435,8 +440,8 @@ function FillThreeBoxes(serNbr)	{
 </SCRIPT>
 
 <script type="text/javascript" language="javascript">
-    
-    
+
+
 function BackToOscar() {
        window.close();
 }
@@ -453,7 +458,7 @@ function rs(n,u,w,h,x){
 var DocPopup = null;
 function popup(location) {
     DocPopup = window.open(location,"_blank","height=380,width=580");
-    
+
     if (DocPopup != null) {
         if (DocPopup.opener == null) {
             DocPopup.opener = self;
@@ -475,11 +480,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 
 function checkForm(submissionVal,formName){
     //if document attach to consultation is still active user needs to close before submitting
-    if( DocPopup != null && !DocPopup.closed ) {        
-        alert("Please close Consultation Documents window before proceeding");        
+    if( DocPopup != null && !DocPopup.closed ) {
+        alert("Please close Consultation Documents window before proceeding");
         return false;
-    }    
-   
+    }
+
    var msg = "<bean:message key="Errors.service.noServiceSelected"/>";
    msg  = msg.replace('<li>','');
    msg  = msg.replace('</li>','');
@@ -494,17 +499,17 @@ function checkForm(submissionVal,formName){
 }
 
 //enable import from encounter
-function importFromEnct(reqInfo,txtArea) 
-{    
-    var info = "";    
+function importFromEnct(reqInfo,txtArea)
+{
+    var info = "";
     switch( reqInfo )
     {
         case "MedicalHistory":
             <%
-                
-                String value = "";                                
+
+                String value = "";
                 if( demo != null )
-                {                 
+                {
                      if( useNewCmgmt ) {
                         value = listNotes(cmgmtMgr, "MedHistory", providerNo, demo);
                     }
@@ -517,9 +522,9 @@ function importFromEnct(reqInfo,txtArea)
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                 }
-             %>  
+             %>
              break;
-          case "ongoingConcerns":                
+          case "ongoingConcerns":
              <%
                  if( demo != null )
                  {
@@ -550,16 +555,16 @@ function importFromEnct(reqInfo,txtArea)
                     else {
                         value = demographic.EctInfo.getSocialHistory();
                     }
-				  }	
+				  }
                     if( pasteFmt == null || pasteFmt.equalsIgnoreCase("single") ) {
                         value = StringUtils.lineBreaks(value);
                     }
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
                  }
-              %>  
-              break;            
-            case "OtherMeds":                
+              %>
+              break;
+            case "OtherMeds":
               <%
                  if( demo != null )
                  {
@@ -579,11 +584,11 @@ function importFromEnct(reqInfo,txtArea)
                     }
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("info = '" + value + "'");
-                    
+
                 }
-              %>                
+              %>
                 break;
-            case "Reminders":                
+            case "Reminders":
               <%
                  if( demo != null )
                  {
@@ -602,19 +607,19 @@ function importFromEnct(reqInfo,txtArea)
                         out.println("info = '" + value + "'");
                     //}
                  }
-              %>                
+              %>
     } //end switch
-    
+
     if( txtArea.value.length > 0 && info.length > 0 )
         txtArea.value += '\n';
-        
+
     txtArea.value += info;
     txtArea.scrollTop = txtArea.scrollHeight;
     txtArea.focus();
-                
+
 }
 
-function updateAttached() {             
+function updateAttached() {
     var t = setTimeout('fetchAttached()', 2000);
 }
 
@@ -623,11 +628,11 @@ function fetchAttached() {
     var params = "demo=<%=demo%>&requestId=<%=requestId%>";
     var url = "<rewrite:reWrite jspPage="displayAttachedFiles.jsp" />";
 
-    var objAjax = new Ajax.Request (                
+    var objAjax = new Ajax.Request (
                 url,
                 {
                     method: 'get',
-                    parameters: params,                     
+                    parameters: params,
                     onSuccess: function(request) {
                                     $(updateElem).innerHTML = request.responseText;
                                 },
@@ -638,8 +643,8 @@ function fetchAttached() {
 
             );
 
-}        
-          
+}
+
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF"
@@ -653,7 +658,7 @@ function fetchAttached() {
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
         //System.out.println("Requested ID :"+requestId);
         if (requestId !=null ){
-                
+
                 thisForm.setAllergies(consultUtil.allergies);
                 thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
                 thisForm.setClinicalInformation(consultUtil.clinicalInformation);
@@ -673,30 +678,30 @@ function fetchAttached() {
                 thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
                 thisForm.setUrgency(consultUtil.urgency);
                 thisForm.setPatientWillBook(consultUtil.pwb);
-                
+
 
                 // System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
 
         }else if(request.getAttribute("validateError") == null){
-            //  new request      
+            //  new request
             if( demo != null ) {
                         thisForm.setAllergies(demographic.RxInfo.getAllergies());
-                
+
 			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
                             thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
 			} else {
                             thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
 			}
             }
-                
+
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 //thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
         	thisForm.setAppointmentYear(year);
 
 	}
-        
+
         %>
 
 	<input type="hidden" name="providerNo" value="<%=providerNo%>">
@@ -1074,6 +1079,18 @@ function fetchAttached() {
 							</html:select></td>
 						</tr>
 
+<!--add for special encounter-->
+<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+<special:SpecialEncounterTag moduleName="eyeform">
+
+<%
+String aburl1="/EyeForm.do?method=addCC&demographicNo="+demo;
+if (requestId!=null) aburl1+="&requestId="+requestId; %>
+<plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl1 %>"></plugin:include>
+</special:SpecialEncounterTag>
+</plugin:hideWhenCompExists>
+<!-- end -->
+
 						<tr>
 							<td colspan=2 class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes" />:
@@ -1137,7 +1154,7 @@ function fetchAttached() {
 					<table width="100%">
 						<tr>
 							<td width="30%" class="tite4">
-							<% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+							<% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) {
                                     out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
                                 } else { %> <bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems" />:
@@ -1170,12 +1187,23 @@ function fetchAttached() {
 
 					</html:textarea></td>
 				</tr>
+ <!--add for special encounter-->
+<plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+<special:SpecialEncounterTag moduleName="eyeform">
+<%String aburl2="/EyeForm.do?method=specialConRequest&demographicNo="+demo+"&appNo="+request.getParameter("appNo");
+if (requestId!=null) aburl2+="&requestId="+requestId;
+System.out.println("requestId:"+requestId);
+%>
+<html:hidden property="specialencounterFlag" value="true"/>
+<plugin:include componentName="specialencounterComp" absoluteUrl="<%=aburl2 %>"></plugin:include>
+</special:SpecialEncounterTag>
+</plugin:hideWhenCompExists>
 				<tr>
 					<td colspan="2" class="tite4">
 					<table width="100%">
 						<tr>
 							<td width="30%" class="tite4">
-							<% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+							<% if(props.getProperty("currentMedicationsTitle", "").length() > 1) {
                                     out.print(props.getProperty("currentMedicationsTitle", ""));
                                } else { %> <bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications" />:
@@ -1230,7 +1258,7 @@ function fetchAttached() {
 				</tr>
 
 				<script type="text/javascript">
-        
+
 	        initMaster();
         	initService('<%=consultUtil.service%>');
                 initSpec();
@@ -1265,33 +1293,33 @@ function fetchAttached() {
 	</table>
 </html:form>
 </body>
-<script type="text/javascript" src="../../share/javascript/prototype.js" /> 
+<script type="text/javascript" src="../../share/javascript/prototype.js" />
 
 <script type="text/javascript" language="javascript">
-    
+
 
 </script>
 </html:html>
 
 <%!
     protected String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo) {
-         // filter the notes by the checked issues       
+         // filter the notes by the checked issues
         List<Issue> issues = cmgmtMgr.getIssueInfoByCode(providerNo, code);
-                
+
         String[] issueIds = new String[issues.size()];
         int idx = 0;
         for(Issue issue: issues) {
             issueIds[idx] = String.valueOf(issue.getId());
-        }    
-        
-        // need to apply issue filter        
+        }
+
+        // need to apply issue filter
         List<CaseManagementNote>notes = cmgmtMgr.getNotes(demoNo, issueIds);
         StringBuffer noteStr = new StringBuffer();
         for(CaseManagementNote n: notes) {
             if( !n.isLocked() )
                 noteStr.append(n.getNote() + "\n");
         }
-        
+
         return noteStr.toString();
     }
 %>

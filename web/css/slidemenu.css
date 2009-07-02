@@ -1,0 +1,147 @@
+#dhtmlgoodies_slidedown_menu li {
+	list-style-type: none;
+	position: relative;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size: 10pt;
+	width: 190px;
+	overflow: hidden;
+}
+
+#dhtmlgoodies_slidedown_menu ul {
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+}
+
+#dhtmlgoodies_slidedown_menu div {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* 	Layout CSS */
+#dhtmlgoodies_slidedown_menu {
+	width: 190px;
+	visibility: hidden;
+	overflow: hidden;
+}
+
+/* All A tags - i.e menu items. */
+#dhtmlgoodies_slidedown_menu a {
+	color: #000;
+	text-decoration: none;
+	display: block;
+	clear: both;
+	white-space: nowrap;	
+}
+
+/*
+	A tags 
+	*/
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth1 { /* Main menu items */
+	margin-top: 1px;
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	background-color: #def;
+}
+
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth2 { /* Sub menu items */
+	height:16px;
+	background-color: #FFFFDD;
+	padding: 2px;
+	color: blue;
+	font-size: 1em;
+	border-bottom: 2px solid #FFF;	
+}
+
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth3 { /* Sub menu items */
+	margin-top: 1px;
+	background-color: #FFFFDD;
+	font-size: 0.9em;
+	color: blue;
+}
+
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth4 { /* Sub menu items */
+	margin-top: 1px;
+	color: red;
+}
+
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth5 { /* Sub menu items */
+	margin-top: 1px;
+}
+
+/* UL tags, i.e group of menu utems. 
+	It's important to add style to the UL if you're specifying margins. If not, assign the style directly
+	to the parent DIV, i.e. 
+	
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv1
+	
+	instead of 
+	
+	#dhtmlgoodies_slidedown_menu .slideMenuDiv1 ul
+	*/
+#dhtmlgoodies_slidedown_menu .slideMenuDiv1 ul {
+	padding: 1px;
+}
+
+#dhtmlgoodies_slidedown_menu .slideMenuDiv2 ul {
+	margin-left: 5px;
+	margin-right: 5px;
+	padding: 1px;
+
+}
+
+#dhtmlgoodies_slidedown_menu .slideMenuDiv3 ul {
+	margin-left: 10px;
+	padding: 1px;
+}
+
+#dhtmlgoodies_slidedown_menu .slMenuItem_depth4 ul {
+	margin-left: 15px;
+	padding: 1px;
+}
+
+
+/********************************************/
+#menu li {
+	list-style-type: none;
+	position: relative;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size: 11pt;
+	width: 190px;
+	overflow: hidden;
+}
+
+#menu ul {
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+}
+
+#menu div {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* 	Layout CSS */
+#menu {
+	margin-top: 1px;
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	list-style-type: none;
+	position: relative;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size: 10pt;
+	width: 190px;
+	overflow: hidden;
+	background-color: #def;
+}
+
+/* All A tags - i.e menu items. */
+#menu a {
+	color: #000;
+	text-decoration: none;
+	display: block;
+	clear: both;
+	white-space: nowrap;	
+}
+

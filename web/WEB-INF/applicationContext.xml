@@ -22,6 +22,8 @@
 	<import resource="classpath:spring_hibernate.xml" />
 
 	<!-- hibernated DAO -->
+    <bean id="demoDao" class="oscar.oscarEncounter.oscarMeasurements.dao.DemographicHibernateDao" autowire="byName"/>
+    <bean id="measurementsDao" class="oscar.oscarEncounter.oscarMeasurements.dao.MeasurementsHibernateDao" autowire="byName"/>
 	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
 	<bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName" />
 	<bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName" />
@@ -37,7 +39,7 @@
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-	<!-- 
+	<!--
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
@@ -91,7 +93,7 @@
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
 	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
 	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
-        
+
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
@@ -108,11 +110,11 @@
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
 
 	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
-	<bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
+    <bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
 		<property name="serviceOrganizationNumber" value="1001" />
 		<property name="submissionFileLocation" value="C:/TEMP/ocan_test" />
 	</bean>
-
+    
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
 
@@ -135,8 +137,8 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
                                 <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
-                                 
-                                 
+
+
                     <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>

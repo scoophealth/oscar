@@ -1,0 +1,69 @@
+.treeview ul { /*CSS for Simple Tree Menu*/
+	padding: 0px;
+	margin: 0px;
+}
+
+.treeview a {
+	padding-left: 4px;
+	text-decoration: none;
+	display: block;
+	clear: both;
+	white-space: nowrap;
+}
+
+.menu1 {
+	margin-top: 1px;
+	border-bottom: 1px solid #000;
+	font-weight: bold;
+	list-style-type: none;
+	font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+	font-size: 10pt;
+	overflow: hidden;
+	background-color: #def;
+	padding: 0px;
+	color: black;
+}
+
+.menu2 {
+	margin-top: 1px;
+	height: 16px;
+	background-color: #FFFFDD;
+	padding: 2px;
+	color: blue;
+	font-size: 10pt;
+}
+
+.menu3 {
+	margin-top: 1px;
+	background-color: #FFFFDD;
+	font-size: 9pt;
+	color: blue;
+}
+
+.treeview li {
+	/*Style for LI elements in general (excludes an LI that contains sub lists)
+	background: white url('img/list.gif') no-repeat left center;*/
+	list-style-type: none;
+	padding-left: 0px;
+	marging-left: 0px;
+	margin-bottom: 1px;
+}
+
+.submenu { /* Style for LI that contains sub lists (other ULs). */
+	background: white url('../img/list.gif') no-repeat left 1px;
+	cursor: hand !important;
+	cursor: pointer !important;
+	marging-left: 0px;
+}
+
+.treeview li.submenu ul {
+	/*Style for ULs that are children of LIs (submenu) */
+	display: none; /*Hide them by default. Don't delete. */
+	marging-left: 0px;
+}
+
+.treeview .submenu ul li {
+	/*Style for LIs of ULs that are children of LIs (submenu) */
+	cursor: default;
+	marging-left: 0px;
+}

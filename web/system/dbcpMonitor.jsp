@@ -24,20 +24,20 @@
  */
 -->
 
-<%-- 
+<%--
     Document   : dbcpMonitor
     Created on : 29-May-2008, 9:05:02 AM
     Author     : apavel
-    
-This script can be used to trace improper connection use and db connection pool 
+
+This script can be used to trace improper connection use and db connection pool
 leaks.
 Used to monitor:
 1. Status of the DBCP (apache.commons connection pool)
 2. Status of mysql db connections
-3. Current db connections in the thread (with stack traces back to the relevant 
+3. Current db connections in the thread (with stack traces back to the relevant
 classes)
-Note: If a connection is openened independently of the spring dataSource, 
-then it will not show up in section #3. Will have to use sections #1 and #2 to 
+Note: If a connection is openened independently of the spring dataSource,
+then it will not show up in section #3. Will have to use sections #1 and #2 to
 detect those and search the source.
 
 --%>
@@ -59,12 +59,14 @@ detect those and search the source.
 <%
         BasicDataSource basicDataSource = (BasicDataSource) SpringUtils.getBean("dataSource");
         DBHandler dbHandler = new DBHandler(DBHandler.OSCAR_DATA);
-        
+
+
+
         int numActive = basicDataSource.getNumActive();
         int numIdle = basicDataSource.getNumIdle();
-        
+
         ResultSet rsProcessList = dbHandler.GetSQL("show processlist");
-        
+
 %>
 
 <html>
@@ -91,7 +93,7 @@ detect those and search the source.
         <h3>----- DB Connection Pool Monitor -----</h2>
         <font color="red">Active Connections (borrowed from pool): <%=numActive%></font><br/>
         <font color="green">Idle Connections (currently in the pool):  <%=numIdle%></font><br/><br/>
-        
+
         <hr>
         <h3>----- Mysql Monitor -----</h3>
         <table border="1" style="border-collapse: collapse; border: 1px solid grey; font-size: 12px;">
@@ -119,14 +121,15 @@ detect those and search the source.
         <font color="blue">Total Mysql Connections: <%=count%></font><br/>
         <br/>
         <hr>
-            
+
     <h3>----- JVM Memory Monitor -----</h3>
         Free Memory: <%=String.valueOf(Runtime.getRuntime().freeMemory()/1000000)%> MB<br/>
         Total Memory: <%=String.valueOf(Runtime.getRuntime().totalMemory()/1000000)%> MB<br/>
         Max Memory: <%=String.valueOf(Runtime.getRuntime().maxMemory()/1000000)%> MB  (Maximum memory JVM will attempt to use.)
+
+                <br />
         <br />
-        <br />
-        
+
         <table style="border-collapse:collapse;border:solid black 1px; text-align:right">
         	<tr style="background-color:#ccccff">
         		<td style="border:solid black 1px">Pool</td>
@@ -135,7 +138,7 @@ detect those and search the source.
         	</tr>
 	        <%
 		        List<MemoryPoolMXBean> memoryPools=ManagementFactory.getMemoryPoolMXBeans();
-				
+
 				for (MemoryPoolMXBean memoryPool : memoryPools)
 				{
 					%>
@@ -148,8 +151,8 @@ detect those and search the source.
 				}
 	        %>
         </table>
-        
-    <h3>----- GC Monitor -----</h3>        
+
+    <h3>----- GC Monitor -----</h3>
 
         <table style="border-collapse:collapse;border:solid black 1px; text-align:right">
         	<tr style="background-color:#ccccff">
@@ -159,7 +162,7 @@ detect those and search the source.
         	</tr>
 	        <%
 				List<GarbageCollectorMXBean> garbageCollectorMXBeans=ManagementFactory.getGarbageCollectorMXBeans();
-				
+
 				for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
 				{
 					%>
@@ -173,11 +176,11 @@ detect those and search the source.
 	        %>
         </table>
 
-    <h3>----- Thread Monitor -----</h3>        
-    
-	Thread Format: <%=VmStat.getThreadFormat() %><br />
-	Thread Info: <%=VmStat.getThreadInfo()%>
-        
+    <h3>----- Thread Monitor -----</h3>
+
+	Thread Format: <%=VMStat.getThreadFormat() %><br />
+	Thread Info: <%=VMStat.getThreadInfo()%>
+
 	<br /><br />
         <font color="blue">DbConnections in the Thread: <%=DbConnectionFilter.debugMap.size()%></font>
 	<br /><br />
@@ -190,7 +193,7 @@ detect those and search the source.
 		{
                     threadCount++;
 			%>
-		<a href="javascript: hideDiv('stacktrace<%=threadCount%>');">Hide Stacktrace</a> | 
+		<a href="javascript: hideDiv('stacktrace<%=threadCount%>');">Hide Stacktrace</a> |
                 <a href="javascript: showDiv('stacktrace<%=threadCount%>');">Show FULL Stacktrace</a><br/>
                 <div id="stacktrace<%=threadCount%>" style="border: 1px solid grey; height: 70px; overflow: hidden;">
                     <%=threadList.get(i).getKey().getName()%> : <%=Arrays.toString(threadList.get(i).getValue()).replace(",", "<br/>") %>

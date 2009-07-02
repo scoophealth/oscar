@@ -30,8 +30,8 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographic_no") ;
-    
-    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());  
+
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     CountryCodeDAO ccDAO =  (CountryCodeDAO) ctx.getBean("countryCodeDAO");
     List<CountryCode> countryList = ccDAO.getAllCountryCodes();
     %>
@@ -67,12 +67,13 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic"
 	prefix="logic"%>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
-        
 	String curProvider_no = (String) session.getAttribute("user");
 	String demographic_no = request.getParameter("demographic_no") ;
 	String userfirstname = (String) session.getAttribute("userfirstname");
@@ -84,18 +85,18 @@
 
         LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DEMOGRAPHIC,  demographic_no , request.getRemoteAddr(),demographic_no);
 
-        
+
         OscarProperties oscarProps = OscarProperties.getInstance();
 
         ProvinceNames pNames = ProvinceNames.getInstance();
    oscar.oscarDemographic.data.DemographicExt ext = new oscar.oscarDemographic.data.DemographicExt();
    ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
    Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
-   
+
     GregorianCalendar now=new GregorianCalendar();
     int curYear = now.get(Calendar.YEAR);
     int curMonth = (now.get(Calendar.MONTH)+1);
-    int curDay = now.get(Calendar.DAY_OF_MONTH);        
+    int curDay = now.get(Calendar.DAY_OF_MONTH);
 %>
 
 
@@ -185,7 +186,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
-    }    
+    }
     popup.focus();
   }
 }
@@ -394,7 +395,7 @@ function hideItem(id){
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=false%>" >
 var numMenus = 1;
 var encURL = "<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&encType=<%=URLEncoder.encode("telephone encounter with client")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=";
-function showMenu(menuNumber, eventObj) {        
+function showMenu(menuNumber, eventObj) {
     var menuId = 'menu' + menuNumber;
     return showPopup(menuId, eventObj);
 }
@@ -413,7 +414,7 @@ function add2url(txt) {
     end = encURL.indexOf("&", beg);
     part1 = encURL.substring(0,beg);
     part2 = encURL.substr(end);
-    encURL = part1 + encodeURI(txt) + part2;    
+    encURL = part1 + encodeURI(txt) + part2;
     popupEChart(710, 1024,encURL);
     return false;
 }
@@ -421,26 +422,26 @@ function add2url(txt) {
 function customReason() {
     var txtInput;
     var list = document.getElementById("listCustom");
-    if( list.style.display == "block" )        
+    if( list.style.display == "block" )
         list.style.display = "none";
     else {
         list.style.display = "block";
         txtInput = document.getElementById("txtCustom");
         txtInput.focus();
     }
-        
+
     return false;
 }
 
 function grabEnterCustomReason(event){
 
   var txtInput = document.getElementById("txtCustom");
-  if(window.event && window.event.keyCode == 13){          
+  if(window.event && window.event.keyCode == 13){
       add2url(txtInput.value);
-  }else if (event && event.which == 13){     
+  }else if (event && event.which == 13){
       add2url(txtInput.value);
   }
-  
+
   return true;
 }
 
@@ -503,21 +504,21 @@ div.demographicWrapper {
 }
 
 /* popup menu style for encounter reason */
-.menu { 
-    position: absolute; 
-    visibility: hidden; 
-    background-color: #6699cc; 
-    layer-background-color: #6699cc; 
-    color: white; 
-    border-left: 1px solid black; 
-    border-top: 1px solid black; 
-    border-bottom: 3px solid black; 
-    border-right: 3px solid black; 
-    padding: 3px; 
-    z-index: 10;    
+.menu {
+    position: absolute;
+    visibility: hidden;
+    background-color: #6699cc;
+    layer-background-color: #6699cc;
+    color: white;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+    border-bottom: 3px solid black;
+    border-right: 3px solid black;
+    padding: 3px;
+    z-index: 10;
     font-size: 9px;
     width: 25em;
-}   
+}
 
 .menu a {
     text-decoration: none;
@@ -544,7 +545,7 @@ div.demographicWrapper {
                                 String resident="", nurse="", alert="", notes="", midwife="";
                                 ResultSet rs = null;
                                 rs = apptMainBean.queryResults(demographic_no, "search_demographiccust");
-                                while (rs.next()) { 
+                                while (rs.next()) {
                                         resident = (apptMainBean.getString(rs,"cust1"));
                                         nurse = (apptMainBean.getString(rs,"cust2"));
                                         alert = (apptMainBean.getString(rs,"cust3"));
@@ -553,7 +554,7 @@ div.demographicWrapper {
                                         notes = notes==null?"":notes;
                                 }
                                 rs.close();
-                                
+
                                 String dateString = curYear+"-"+curMonth+"-"+curDay;
                                 int age=0, dob_year=0, dob_month=0, dob_date=0;
 
@@ -606,12 +607,12 @@ div.demographicWrapper {
 					key="demographic.demographiceditdemographic.btnApptHist" /></a></td>
 			</tr>
 			<%
-                    String wLReadonly = ""; 
+                    String wLReadonly = "";
                     WaitingList wL = WaitingList.getInstance();
-                   if(!wL.getFound()){ 
-                        wLReadonly = "readonly"; 
+                   if(!wL.getFound()){
+                        wLReadonly = "readonly";
                         }
-                   if(wLReadonly.equals("")){ 
+                   if(wLReadonly.equals("")){
                 %>
 			<tr>
 				<td><a
@@ -706,44 +707,37 @@ div.demographicWrapper {
 			<% } %>
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart"
 				rights="r" reverse="<%=false%>">
-				<tr>
-					<td><!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
-					<a href="javascript: function myFunction() {return false; }"
-						onClick="popupEChart(710, 1024,encURL);return false;"
-						title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
-					<bean:message
-						key="demographic.demographiceditdemographic.btnEChart" /></a>&nbsp;<a
-						style="text-decoration: none;" href="#"
-						onmouseover="return !showMenu('1', event);">+</a>
+                    <special:SpecialEncounterTag moduleName="eyeform" reverse="true">
+                    <tr><td>
+					<!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
+					<a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
+					<bean:message key="demographic.demographiceditdemographic.btnEChart" /></a>&nbsp;<a style="text-decoration: none;" href="#" onmouseover="return !showMenu('1', event);">+</a>
 					<div id='menu1' class='menu' onclick='event.cancelBubble = true;'>
 					<h3 style='text-align: center'><bean:message key="demographic.demographiceditdemographic.msgEncType"/></h3>
 					<br>
 					<ul>
-						<li><a href="#" onmouseover='this.style.color="black"'
-							onmouseout='this.style.color="white"'
-							onclick="return add2url('<bean:message key="oscarEncounter.faceToFaceEnc.title"/>');"><bean:message key="oscarEncounter.faceToFaceEnc.title"/>
+						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.faceToFaceEnc.title"/>');"><bean:message key="oscarEncounter.faceToFaceEnc.title"/>
 						</a><br>
 						</li>
-						<li><a href="#" onmouseover='this.style.color="black"'
-							onmouseout='this.style.color="white"'
-							onclick="return add2url('<bean:message key="oscarEncounter.telephoneEnc.title"/>');"><bean:message key="oscarEncounter.telephoneEnc.title"/>
+						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.telephoneEnc.title"/>');"><bean:message key="oscarEncounter.telephoneEnc.title"/>
 						</a><br>
 						</li>
-						<li><a href="#" onmouseover='this.style.color="black"'
-							onmouseout='this.style.color="white"'
-							onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');">oscarEncounter.noClientEnc.title
+						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return add2url('<bean:message key="oscarEncounter.noClientEnc.title"/>');">oscarEncounter.noClientEnc.title
 						</a><br>
 						</li>
-						<li><a href="#" onmouseover='this.style.color="black"'
-							onmouseout='this.style.color="white"'
-							onclick="return customReason();"><bean:message key="demographic.demographiceditdemographic.msgCustom"/></a></li>
-						<li id="listCustom" style="display: none;"><input
-							id="txtCustom" type="text" size="16" maxlength="32"
-							onkeypress="return grabEnterCustomReason(event);"></li>
+						<li><a href="#" onmouseover='this.style.color="black"' onmouseout='this.style.color="white"' onclick="return customReason();"><bean:message key="demographic.demographiceditdemographic.msgCustom"/></a></li>
+						<li id="listCustom" style="display: none;"><input id="txtCustom" type="text" size="16" maxlength="32" onkeypress="return grabEnterCustomReason(event);"></li>
 					</ul>
 					</div>
-					</td>
-				</tr>
+                    </td></tr>
+                    </special:SpecialEncounterTag>
+                    <special:SpecialEncounterTag moduleName="eyeform">
+                    <tr><td>
+                            <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("telephone encounter with client")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
+                            <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(710, 1024,encURL);return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
+                            <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
+                    </td></tr>
+                    </special:SpecialEncounterTag>
 				<tr>
 					<td><a
 						href="javascript: function myFunction() {return false; }"
@@ -751,6 +745,33 @@ div.demographicWrapper {
 					<bean:message key="oscarEncounter.LeftNavBar.Prevent" /></a></td>
 				</tr>
 			</security:oscarSec>
+                <plugin:hideWhenCompExists componentName="specialencounterComp" reverse="true">
+      			<%session.setAttribute("encounter_oscar_baseurl",request.getContextPath());
+				 %>
+      			<special:SpecialEncounterTag moduleName="eyeform" exactEqual="true">
+
+				<tr><td>
+      			<a href="#" style="color: brown;" onclick="popupPage(600,800,'<%=request.getContextPath()%>/mod/specialencounterComp/PatientLog.do?method=editPatientLog&demographicNo=<%=demographic_no%>&providerNo=<%=curProvider_no%>&providerName=<%=URLEncoder.encode( userfirstname+" "+userlastname)%>');return false;">patient log</a>
+      			</td>
+      			</tr>
+      			</special:SpecialEncounterTag>
+      			<special:SpecialEncounterTag moduleName="eyeform">
+      			<tr><td>
+      			<a href="#" style="color: brown;" onclick="popupPage(600,600,'<%=request.getContextPath()%>/mod/specialencounterComp/EyeForm.do?method=eyeFormHistory&demographicNo=<%=demographic_no%>&providerNo=<%=curProvider_no%>&providerName=<%=URLEncoder.encode( userfirstname+" "+userlastname)%>');return false;">eyeForm Hx</a>
+      			</td>
+      			</tr>
+      			<tr>
+      			<td>
+				<a href="#" style="color: brown;" onclick="popupPage(600,600,'<%=request.getContextPath()%>/mod/specialencounterComp/EyeForm.do?method=chooseField&&demographicNo=<%=demographic_no%>&providerNo=<%=curProvider_no%>&providerName=<%=URLEncoder.encode( userfirstname+" "+userlastname)%>');return false;">Exam Hx</a>
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<a href="#" style="color: brown;" onclick="popupPage(600,1000,'<%=request.getContextPath()%>/mod/specialencounterComp/ConReportList.do?method=list&&dno=<%=demographic_no%>');return false;">ConReport Hx</a>
+
+      			</td></tr>
+      			</special:SpecialEncounterTag>
+      		</plugin:hideWhenCompExists>
 			<tr>
 				<td><a
 					href="javascript: function myFunction() {return false; }"
@@ -796,6 +817,15 @@ div.demographicWrapper {
 				<td style="font-weight: bold"><bean:message
 					key="oscarEncounter.Index.clinicalResources" /></td>
 			</tr>
+                <special:SpecialPlugin moduleName="inboxmnger">
+                <tr>
+                <td>
+
+                        <a href="#" onClick="window.open('../mod/docmgmtComp/DocList.do?method=list&&demographic_no=<%=demographic_no %>','_blank','resizable=yes,status=yes,scrollbars=yes');return false;">Inbox Manager</a><br>
+              	</td>
+              	</tr>
+                 </special:SpecialPlugin>
+                 <special:SpecialPlugin moduleName="inboxmnger" reverse="true">
 			<tr>
 				<td><!--th><a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'demographicsummary.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>')">Patient Summary</a> </th-->
 				<a href="javascript: function myFunction() {return false; }"
@@ -808,6 +838,18 @@ div.demographicWrapper {
 					onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=apptMainBean.getString(rs,"demographic_no")%>&curUser=<%=curProvider_no%>&mode=add')"><bean:message
 					key="demographic.demographiceditdemographic.btnAddDocument" /></a></td>
 			</tr>
+                </special:SpecialPlugin>
+                <special:SpecialEncounterTag moduleName="eyeform">
+                <% String iviewTag=oscarProps.getProperty("iviewTag");
+
+                   if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
+                %>
+	    		<tr><td>
+				<a href='<%=request.getContextPath()%>/mod/specialencounterComp/iviewServlet?method=iview&demoNo=<%=apptMainBean.getString(rs,"demographic_no")%>&<%=System.currentTimeMillis() %>'>
+				<%=iviewTag %></a>
+				</td></tr>
+		<%} %>
+		</special:SpecialEncounterTag>
 			<tr>
 				<td><a
 					href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message
@@ -842,13 +884,13 @@ div.demographicWrapper {
 					<tr>
 						<td class="RowTop">
 						<%
-                            DemographicMerged dmDAO = new DemographicMerged();                            
+                            DemographicMerged dmDAO = new DemographicMerged();
                             String dboperation = "search_detail";
                             String head = dmDAO.getHead(demographic_no);
                             ArrayList records = dmDAO.getTail(head);
                             if (vLocale.getCountry().equals("BR"))
                                 dboperation = "search_detail_ptbr";
-                                
+
                             %><b><bean:message key="demographic.demographiceditdemographic.msgRecord"/></b> ( <%if (head.equals(demographic_no)){
                                     %><%=demographic_no%>
 						<%
@@ -856,7 +898,7 @@ div.demographicWrapper {
                                     %><a
 							href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=<%= dboperation %>"><%=head%></a>
 						<%}
-                            
+
                                 for (int i=0; i < records.size(); i++){
                                     if (((String) records.get(i)).equals(demographic_no)){
                                         %><%=", "+demographic_no %>
@@ -867,9 +909,9 @@ div.demographicWrapper {
 						<%
                                     }
                                 }
-                            %> ) 
+                            %> )
                             <%
-                                                    if( head.equals(demographic_no)) { 
+                                                    if( head.equals(demographic_no)) {
                                                     %>
                                                         <a href="javascript: showHideDetail();"><bean:message key="demographic.demographiceditdemographic.msgEdit"/></a>
                                                    <% } %>
@@ -896,7 +938,7 @@ div.demographicWrapper {
 								key="demographic.demographiceditdemographic.formDOB" />:<b>(<%=apptMainBean.getString(rs,"year_of_birth")%>-<%=apptMainBean.getString(rs,"month_of_birth")%>-<%=apptMainBean.getString(rs,"date_of_birth")%>)</b>
 							</li>
 							<li><bean:message key="demographic.demographiceditdemographic.msgDemoLanguage"/>: <b><%= apptMainBean.getString(rs,"official_lang")%></b>
-						<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){ 
+						<% if (apptMainBean.getString(rs,"country_of_origin") != null &&  !apptMainBean.getString(rs,"country_of_origin").equals("") && !apptMainBean.getString(rs,"country_of_origin").equals("-1")){
                                                         CountryCode countryCode = ccDAO.getCountryCode(apptMainBean.getString(rs,"country_of_origin"));
                                                         if  (countryCode != null){
                                                     %>
@@ -910,8 +952,8 @@ div.demographicWrapper {
 							</li>
 						<% }
 						  if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
-                                              String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS"); 
-                                              fieldJSP+= "View.jsp";  
+                                              String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
+                                              fieldJSP+= "View.jsp";
                                             %>
 							<jsp:include page="<%=fieldJSP%>">
 								<jsp:param name="demo" value="<%=demographic_no%>" />
@@ -970,7 +1012,7 @@ if ( PatStat.equals(Dead) ) {%>
 							<%} else {%> <bean:message
 								key="demographic.demographiceditdemographic.formPatientStatus" />:<b><%=rs.getString("patient_status")%></b>
 							<%}%>
-							
+
 							</li>
 							<li><bean:message
 								key="demographic.demographiceditdemographic.formChartNo" />:<b><%=apptMainBean.getString(rs,"chart_no")%></b>
@@ -1624,7 +1666,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									style="width: 200px">
 									<option value=""></option>
 									<%
-                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc");
+                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc_with_ohip");
                           while (rsdemo.next()) {
                         %>
 									<option value="<%=rsdemo.getString("provider_no")%>"
@@ -1842,7 +1884,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							<!-- start -->
 							<%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
                                  String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
-                                 fieldJSP+= ".jsp";                                    
+                                 fieldJSP+= ".jsp";
                             %>
 							<jsp:include page="<%=fieldJSP%>">
 								<jsp:param name="demo" value="<%=demographic_no%>" />
@@ -1873,14 +1915,14 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 										<td align="left" width="31%">
 										<%
                                 ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
- 	                        String wlId="", listID="", wlnote=""; 
- 	                        String wlReferralDate=""; 
+ 	                        String wlId="", listID="", wlnote="";
+ 	                        String wlReferralDate="";
                                 if (rsWLStatus.next()){
-                                    wlId = rsWLStatus.getString("id"); 
+                                    wlId = rsWLStatus.getString("id");
                                     listID = rsWLStatus.getString("listID");
                                     wlnote = rsWLStatus.getString("note");
-                                    wlReferralDate = rsWLStatus.getString("onListSince"); 
-                                    if(wlReferralDate != null  &&  wlReferralDate.length()>10){ 
+                                    wlReferralDate = rsWLStatus.getString("onListSince");
+                                    if(wlReferralDate != null  &&  wlReferralDate.length()>10){
                                         wlReferralDate = wlReferralDate.substring(0, 11);
                                     }
                                 }
@@ -2047,9 +2089,9 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									name="dboperation" value="update_record"> <%
                                   if (vLocale.getCountry().equals("BR")) { %>
 								<input type="hidden" name="dboperation2"
-									value="update_record_ptbr"> 
-                                                                        <%}%> 
-                                                                                                                                                
+									value="update_record_ptbr">
+                                                                        <%}%>
+
                                                                         <input type="button"
 									name="Button" value="<bean:message key="global.btnBack" />"
 									onclick="history.go(-1);return false;"> <input
@@ -2057,7 +2099,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 									value="<bean:message key="global.btnCancel" />"
 									onclick=self.close();>
 								<br><input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
-									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">																	
+									onclick="window.open('demographicExport.jsp?demographic_no=<%=apptMainBean.getString(rs,"demographic_no")%>');">
 								</td>
 								<td width="30%" align='center' valign="top"><input
 									type="hidden" name="displaymode" value="Update Record">
@@ -2099,7 +2141,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                   }
                   apptMainBean.closePstmtConn();
                 %>
-				
+
 		</table>
 		</td>
 	</tr>
@@ -2110,8 +2152,8 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 </table>
 
 
-<script type="text/javascript"> 
-Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 }); 
+<script type="text/javascript">
+Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
 </script>
 </body>
 </html:html>
