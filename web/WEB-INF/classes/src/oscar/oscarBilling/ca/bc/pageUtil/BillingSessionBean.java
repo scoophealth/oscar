@@ -88,6 +88,7 @@ public class BillingSessionBean {
   private String endTimeMin = "";
   private String startTimeHr = "";
   private String startTimeMin = "";
+  private String wcbId="";
 
   public String getIcbc_claim_no() {
     this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
@@ -675,6 +676,14 @@ public class BillingSessionBean {
   public void setStartTimeMin(String startTimeMin) {
     this.startTimeMin = startTimeMin;
   }
+
+    public String getWcbId() {
+        return wcbId;
+    }
+
+    public void setWcbId(String wcbId) {
+        this.wcbId = wcbId;
+    }
 
   // public void estUserName(){
   //     try{
