@@ -23,6 +23,7 @@ public class LogConst {
     public static final String REPRESCRIBE = "represcribe";
     public static final String ANNOTATE = "annotate";
 
+    public static final String CON_LOGIN_AGREEMENT = "login agreement";
     public static final String CON_LOGIN = "login";
     public static final String CON_APPT = "appointment";
     public static final String CON_ECHART = "eChart";
