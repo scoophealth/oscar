@@ -50,6 +50,7 @@ public class Provider implements Serializable {
 	private String providerActivity;
 	private String firstName;
 	private String rmaNo;
+    private Date SignedConfidentiality;
 	
 	// constructors
 	public Provider() {
@@ -226,6 +227,14 @@ public class Provider implements Serializable {
 	public void setRmaNo(String rmaNo) {
 		this.rmaNo = rmaNo;
 	}
+
+    public Date getSignedConfidentiality() {
+        return this.SignedConfidentiality;
+    }
+
+    public void setSignedConfidentiality( Date SignedConfidentiality ) {
+        this.SignedConfidentiality = SignedConfidentiality;
+    }
 
 	public ComparatorName ComparatorName() {
 		return new ComparatorName();
