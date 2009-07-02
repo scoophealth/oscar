@@ -310,6 +310,12 @@ public class ClientManagerAction extends BaseAction {
 		return mapping.findForward("edit");
 	}
 
+	public ActionForward getGeneralFormsReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
+	
+		return mapping.findForward("generalFormsReport");
+}
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
