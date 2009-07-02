@@ -487,7 +487,10 @@
             <forward name="error" path="/loginfailed.jsp" />
             <forward name="caisiPMM" path="/PMmodule/ProviderInfo.do" />
             <forward name="shelterSelection" path="/shelterSelection.do" redirect="true"/>
+            <forward name="LoginTest" path="/login/LoginTest.jsp" redirect="true"/>
         </action>
+        <action input="/login/loginTest.jsp" path="/login/recordLogin" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
+
         <action path="/shelterSelection" scope="request" type="org.springframework.web.struts.DelegatingActionProxy" validate="true" parameter="method">
                         <forward name="shelterSelection" path="page.pmm.shelterSelection"/>
                         <forward name="home" path="/Home.do" redirect="true" />
@@ -1374,6 +1377,9 @@
         </action>
         <action input="/demographic/demographicImport.jsp" name="LabUploadForm" path="/billing/CA/ON/benefitScheduleUpload" scope="request" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction">
             <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp" />
+        </action>
+        <action input="/admin/uploadEntryText.jsp" name="LabUploadForm" path="/admin/uploadEntryText" scope="request" type="oscar.login.UploadLoginTextAction">
+            <forward name="success" path="/admin/uploadEntryText.jsp" />
         </action>
         <action input="/demographic/demographicImport.jsp" name="FrmForm" path="/billing/CA/ON/benefitScheduleChange" scope="request" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUpdateAction">
             <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp" />
