@@ -48,6 +48,13 @@ label {
 	font-weight: bold;
 }
 </style>
+<script type="text/javascript">
+    function callToggleWCB(){
+        if (toggleWCB){
+            toggleWCB();
+        }
+    }
+</script>
 <table>
 	<tr>
 		<td nowrap="nowrap"><label for="billtype">Billing Type: </label>
@@ -59,7 +66,7 @@ label {
 	<tr>
 		<td><label for="status">Change Type:</label></td>
 		<td><html:select styleId="status" property="status"
-			onchange="javascript:document.forms[0].xml_status.value = this.value;">
+			onchange="javascript:document.forms[0].xml_status.value = this.value;callToggleWCB();">
 			<html:options collection="statusTypes" property="billingstatus"
 				labelProperty="displayNameExt" />
 		</html:select></td>
