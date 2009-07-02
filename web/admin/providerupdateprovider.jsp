@@ -340,6 +340,13 @@ function setfocus() {
 			value="<%= SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")==null?"": SxmlMisc.getXmlContent(apptMainBean.getString(rs,"comments"),"xml_p_slppassword")%>"
 			datafld='xml_p_slppassword'></td>
 	</tr>
+    <tr>
+		<td align="right"><bean:message
+			key="provider.login.title.confidentiality" />:</td>
+		<td><input type="text" readonly name="signed_confidentiality"
+			value="<%=apptMainBean.getString(rs,"signed_confidentiality")%>">
+        </td>
+	</tr>
 	<tr>
 		<td colspan="2">
 		<div align="center"><input type="hidden" name="displaymode"
@@ -349,6 +356,7 @@ function setfocus() {
 		</div>
 		</td>
 	</tr>
+
 </table>
 <%
   }}
