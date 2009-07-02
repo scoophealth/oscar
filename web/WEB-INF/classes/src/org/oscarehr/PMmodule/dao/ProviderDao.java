@@ -279,4 +279,8 @@ public class ProviderDao extends HibernateDaoSupport {
 				.selectStringList("select provider_no from provider_facility where facility_id="
 						+ facilityId));
 	}
+
+    public void updateProvider( Provider provider) {        
+        this.getHibernateTemplate().update(provider);
+    }
 }
