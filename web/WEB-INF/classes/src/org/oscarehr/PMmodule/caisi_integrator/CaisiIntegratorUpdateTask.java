@@ -28,10 +28,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,10 +45,13 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
+import org.oscarehr.caisi_integrator.ws.CodeType;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
@@ -57,8 +59,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.Gender;
-import org.oscarehr.caisi_integrator.ws.HnrWs;
-import org.oscarehr.caisi_integrator.ws.NoteTransfer;
+import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
@@ -66,10 +67,12 @@ import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.common.dao.CaseManagementIssueNotesDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.FacilityDao;
@@ -102,7 +105,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private FacilityDao facilityDao = (FacilityDao) SpringUtils.getBean("facilityDao");
 	private DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
 	private CaseManagementIssueDAO caseManagementIssueDAO = (CaseManagementIssueDAO) SpringUtils.getBean("caseManagementIssueDAO");
+	private IssueDAO issueDao = (IssueDAO) SpringUtils.getBean("IssueDAO");
 	private CaseManagementNoteDAO caseManagementNoteDAO = (CaseManagementNoteDAO) SpringUtils.getBean("CaseManagementNoteDAO");
+	private CaseManagementIssueNotesDao caseManagementIssueNotesDao = (CaseManagementIssueNotesDao) SpringUtils.getBean("caseManagementIssueNotesDao");
 	private ClientImageDAO clientImageDAO = (ClientImageDAO) SpringUtils.getBean("clientImageDAO");
 	private IntegratorConsentDao integratorConsentDao = (IntegratorConsentDao) SpringUtils.getBean("integratorConsentDao");
 	private ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
@@ -163,7 +168,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	public void pushAllFacilities() throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	public void pushAllFacilities() throws ShutdownException {
 		List<Facility> facilities = facilityDao.findAll(null);
 
 		for (Facility facility : facilities) {
@@ -186,7 +191,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushAllFacilityData(Facility facility) throws IOException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushAllFacilityData(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		logger.debug("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// set working facility
@@ -309,12 +314,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setCachedProviders(cachedProviders);
 	}
 
-	private void pushAllDemographics() throws MalformedURLException, DatatypeConfigurationException, IllegalAccessException, InvocationTargetException, ShutdownException {
+	private void pushAllDemographics() throws MalformedURLException, ShutdownException {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 		
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		DemographicWs demogrpahicService = CaisiIntegratorManager.getDemographicWs();
-		HnrWs hnrService = CaisiIntegratorManager.getHnrWs(facility.getId());
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
 
@@ -324,9 +328,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			MiscUtils.checkShutdownSignaled();
 
 			try {
-				pushDemographic(facility, demogrpahicService, demographicId);
+				pushDemographic(demogrpahicService, demographicId);
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
-				pushDemographicConsent(facility, demogrpahicService, hnrService, demographicId);
+				pushDemographicConsent(facility, demogrpahicService, demographicId);
 				pushDemographicIssues(facility, programsInFacility, demogrpahicService, demographicId);
 				pushDemographicPreventions(facility, providerIdsInFacility, demogrpahicService, demographicId);
 				pushDemographicNotes(facility, demogrpahicService, demographicId);
@@ -343,7 +347,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private void pushDemographic(Facility facility, DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
+	private void pushDemographic(DemographicWs service, Integer demographicId) throws IllegalAccessException, InvocationTargetException {
 		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		// set demographic info
@@ -377,7 +381,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.setDemographic(demographicTransfer);
 	}
 
-	private void pushDemographicConsent(Facility facility, DemographicWs demographicService, HnrWs hnrService, Integer demographicId) throws MalformedURLException, IllegalAccessException, InvocationTargetException, DatatypeConfigurationException {
+	private void pushDemographicConsent(Facility facility, DemographicWs demographicService, Integer demographicId)  {
 
 		// find the latest relvent consent that needs to be pushed.
 		List<IntegratorConsent> tempConsents=integratorConsentDao.findByFacilityAndDemographic(facility.getId(), demographicId);
@@ -410,7 +414,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.debug("Facility:" + facility.getName() + " - caseManagementIssue = " + caseManagementIssue.toString());
 			if (caseManagementIssue.getProgram_id() == null || !isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
 
-			Issue issue = caseManagementIssue.getIssue();
+			long issueId=caseManagementIssue.getIssue_id();
+			Issue issue = issueDao.getIssue(issueId);
 			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
 
 			FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
@@ -435,7 +440,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (false);
 	}
 
-	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws DatatypeConfigurationException, ShutdownException {
+	private void pushDemographicPreventions(Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
@@ -483,76 +488,72 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		if (preventionsToSend.size() > 0) service.setCachedDemographicPreventions(preventionsToSend, preventionExtsToSend);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void pushDemographicNotes(Facility facility, DemographicWs service, Integer demographicId) {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-		// Only notes from the COMMUNITY_ISSUE_CODETYPE group will be sent
-		String issueType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
-		if (issueType == null || issueType.equalsIgnoreCase("")) {
-			logger.info("No Community Issue Code Type specified, community notes will not be shared.");
-			return;
-		}
-		// need to get all issue IDs for notes on COMMUNITY ISSUES
-		List<CaseManagementNote> localNotes = (List<CaseManagementNote>) caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
-		ArrayList<NoteTransfer> notes = new ArrayList<NoteTransfer>();
-		for (CaseManagementNote localNote : localNotes) {
-			// don't upload locked notes
-			logger.debug("Checking note " + localNote.getId());
-			if (localNote.isLocked()) {
-				logger.debug("Note " + localNote.getId() + " is locked, skipping");
-				continue;
-			}
-			// filter out notes from a programs attached to different facilities
-			try {
-				Integer.parseInt(localNote.getProgram_no());
-			} catch(NumberFormatException e) {
-				logger.debug("Note " + localNote.getId() + " has no programNo, skipping");
-				continue;
-			}
-			Program noteProgram = programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
-			if (noteProgram.getFacilityId() != facility.getId()) {
-				logger.debug("Note " + localNote.getId() + " is attached to Program " + localNote.getProgram_no() + " from " + noteProgram.getFacilityId() + ", NOT " + facility.getId() + ", skipping");
-				continue;
-			}
-			Set issues = localNote.getIssues();
-			List<String> communityIssueCodes = new ArrayList<String>();
-			Iterator<CaseManagementIssue> iter = issues.iterator();
-			while (iter.hasNext()) {
-				Issue issue = (iter.next()).getIssue();
-				if (issue.getType().equalsIgnoreCase(issueType))
-				;
-				{
-					communityIssueCodes.add(issue.getCode());
-				}
-			}
 
-			// if there are community issue codes attached to this note, add it to the transfer list
-			if (!communityIssueCodes.isEmpty()) {
-				NoteTransfer transfer = new NoteTransfer();
-				transfer.setFacilityId(facility.getId());
-				transfer.setNoteId(localNote.getId().intValue());
-				transfer.setProgramId(Integer.parseInt(localNote.getProgram_no()));
-				transfer.setDemographicId(Integer.parseInt(localNote.getDemographic_no()));
-				transfer.setObservationCaisiProviderId(localNote.getProviderNo());
-				transfer.setSigningCaisiProviderId(localNote.getSigning_provider_no());
-				transfer.setEncounterType(localNote.getEncounter_type());
-				transfer.setNote(localNote.getNote());
-				transfer.setUpdateDate(localNote.getUpdate_date());
-				transfer.setObservationDate(localNote.getObservation_date());
-				// transfer.setIssueCodes(communityIssueCodes.toArray(new String[communityIssueCodes.size()]));
-				transfer.setRole(localNote.getRoleName());
-				StringBuffer buff = new StringBuffer();
-				for (String code : communityIssueCodes) {
-					buff.append(code);
-					buff.append("||");
-				}
-				transfer.setIssueCodes(buff.substring(0, buff.length() - 2));
-				notes.add(transfer);
-			}
+		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
+		HashSet<Integer> programIds=new HashSet<Integer>();
+		for (Program program : programs) programIds.add(program.getId());
+		
+		List<CaseManagementNote> localNotes = caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
+		
+		String issueType = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
+		if (issueType!=null) issueType=issueType.toUpperCase();
+
+		ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
+		
+		for (CaseManagementNote localNote : localNotes)
+		{
+			try {
+				// if it's locked or if it's not in this facility ignore it.
+				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
+
+				// if it's a note we've already sent ignore it
+				if (facility.getIntegratorLastPushTime()!=null && facility.getIntegratorLastPushTime().after(localNote.getUpdate_date())) continue;
+				
+				CachedDemographicNote noteToSend=makeRemoteNote(localNote, issueType);
+				notesToSend.add(noteToSend);
+			} catch (NumberFormatException e) {
+	            logger.error("Unexpected error. ProgramNo="+localNote.getProgram_no(), e);
+            }
 		}
-		// NoteTransfer[] notesToSend = (NoteTransfer[])notes.toArray();
-		service.setCachedDemographicNotes(notes);
+		
+		if (notesToSend.size()>0) service.setCachedDemographicNotes(notesToSend);
 	}
+
+	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote, String issueType) {
+		
+		CachedDemographicNote note=new CachedDemographicNote();
+		
+		CachedDemographicNoteCompositePk pk=new CachedDemographicNoteCompositePk();
+		pk.setUuid(localNote.getUuid());
+		note.setCachedDemographicNoteCompositePk(pk);
+		
+		note.setCaisiDemographicId(Integer.parseInt(localNote.getDemographic_no()));
+		note.setCaisiProgramId(Integer.parseInt(localNote.getProgram_no()));
+		note.setEncounterType(localNote.getEncounter_type());
+		note.setNote(localNote.getNote());
+		note.setObservationCaisiProviderId(localNote.getProviderNo());
+		note.setObservationDate(localNote.getObservation_date());
+		note.setRole(localNote.getRoleName());
+		note.setSigningCaisiProviderId(localNote.getSigning_provider_no());
+		note.setUpdateDate(localNote.getUpdate_date());
+
+		List<NoteIssue> issues=note.getIssues();
+		List<CaseManagementIssue> localIssues=caseManagementIssueNotesDao.getNoteIssues(localNote.getId().intValue());
+		for (CaseManagementIssue caseManagementIssue : localIssues)
+		{
+			long issueId=caseManagementIssue.getIssue_id();
+			Issue localIssue = issueDao.getIssue(issueId);
+
+			NoteIssue noteIssue=new NoteIssue();
+			noteIssue.setCodeType(CodeType.valueOf(issueType));
+			noteIssue.setIssueCode(localIssue.getCode());
+			issues.add(noteIssue);
+		}
+		
+	    return(note);
+    }
 
 	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException,
 	        ShutdownException {

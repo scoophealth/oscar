@@ -155,22 +155,24 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return result;
 	}
 
-	public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String staleDate) {
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotesByDemographic(String demographic_no, String staleDate) {
 		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
-			return this.getHibernateTemplate().findByNamedQuery("mostRecentTimeOra", new Object[] { demographic_no, staleDate });
+			return getHibernateTemplate().findByNamedQuery("mostRecentTimeOra", new Object[] { demographic_no, staleDate });
 		}
 		else {
-			return this.getHibernateTemplate().findByNamedQuery("mostRecentTime", new Object[] { demographic_no, staleDate });
+			return getHibernateTemplate().findByNamedQuery("mostRecentTime", new Object[] { demographic_no, staleDate });
 		}
 	}
 
 	// This was created by OSCAR. if all notes' UUID are same like null, it will only get one note.
-	public List getNotesByDemographic(String demographic_no) {
+	@SuppressWarnings("unchecked")
+    public List<CaseManagementNote> getNotesByDemographic(String demographic_no) {
 		if (OscarProperties.getInstance().getDbType().equals("oracle")) {
-			return this.getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
+			return getHibernateTemplate().findByNamedQuery("mostRecentOra", new Object[] { demographic_no });
 		}
 		else {
-			return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
+			return getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] { demographic_no });
 		}
 	}
 

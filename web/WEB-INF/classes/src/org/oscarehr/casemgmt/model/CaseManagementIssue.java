@@ -128,10 +128,16 @@ public class CaseManagementIssue extends BaseObject {
 		this.id = id;
 	}
 
+	/**
+	 * deprecated too inefficient and too many dependencies use IssueDao
+	 */
 	public Issue getIssue() {
 		return issue;
 	}
 
+	/**
+	 * deprecated too inefficient and too many dependencies use IssueDao 
+	 */
 	public void setIssue(Issue issue) {
 		this.issue = issue;
 	}

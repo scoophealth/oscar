@@ -6,13 +6,11 @@ import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.logging.Logger;
-import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.caisi_integrator.ws.IssueTransfer;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
-import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -34,14 +32,15 @@ public class CommunityIssueManager {
 		} else {
 			localIssues = cMan.getActiveIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
 		}
-		// filter out issues from other facilities in this CAISI instance
-		localIssues = cMan.filterIssues(localIssues, programId);
-		List<IssueTransfer> remoteIssues = new ArrayList<IssueTransfer>();
-		// check facility integrator status
-		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
-			// get remote issues
-			remoteIssues = CaisiIntegratorManager.getRemoteIssues(Integer.valueOf(demographicNo));
-		}
+
+//		// filter out issues from other facilities in this CAISI instance
+//		localIssues = cMan.filterIssues(localIssues, programId);
+		List<CachedDemographicIssue> remoteIssues = new ArrayList<CachedDemographicIssue>();
+//		// check facility integrator status
+//		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
+//			// get remote issues
+//			remoteIssues = CaisiIntegratorManager.getRemoteIssues(Integer.valueOf(demographicNo));
+//		}
 
 		// combine local and remote
 		// logger.debug("Combine local and remote");
@@ -53,7 +52,7 @@ public class CommunityIssueManager {
 		return communityIssues;
 	}
 	
-	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<IssueTransfer> remote) throws InvocationTargetException, IllegalAccessException {
+	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<CachedDemographicIssue> remote) throws InvocationTargetException, IllegalAccessException {
 		List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
 		for (CaseManagementIssue localIssue : local) {
 			CaseManagementCommunityIssue newLocalIssue = new CaseManagementCommunityIssue();
@@ -64,69 +63,70 @@ public class CommunityIssueManager {
     	
     	String type = OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
 		// add roles to remote issues, drop all remote issues with codes not found in the local issues table
-		for (IssueTransfer remoteIssue : remote) {
-    		log.debug("Found remote issue "+remoteIssue.getIssueCode()+"/"+remoteIssue.getIssueDescription());
-    		Issue matchingLocalIssue = issueDao.findIssueByCode(remoteIssue.getIssueCode());
-    		
-			if (matchingLocalIssue != null) {
-			
-				// filter out remote issues that have identical parameters to used local issue (req 6.2)
-				if (!existsIssue(local, remoteIssue)) // no duplicates found
-				{
-					CaseManagementCommunityIssue newRemoteIssue = new CaseManagementCommunityIssue();
-		    		newRemoteIssue.setRemote(true);
-		
-		    		newRemoteIssue.setFacilityId(remoteIssue.getFacilityId());
-		    		newRemoteIssue.setFacilityName(remoteIssue.getFacilityName());
-		    		newRemoteIssue.setDemographic_no(remoteIssue.getDemographicId().toString());
-		    		newRemoteIssue.setAcute(remoteIssue.isAcute());
-		    		newRemoteIssue.setCertain(remoteIssue.isCertain());
-		    		newRemoteIssue.setMajor(remoteIssue.isMajor());
-		    		newRemoteIssue.setResolved(remoteIssue.isResolved());
-		    		newRemoteIssue.setType(matchingLocalIssue.getRole());
-		    		
-		    		Issue issue = new Issue();
-		    		issue.setCode(remoteIssue.getIssueCode());
-		    		issue.setDescription(remoteIssue.getIssueDescription());
-		    		issue.setRole(matchingLocalIssue.getRole());
-		    		issue.setType(type);
-		    		newRemoteIssue.setIssue(issue);
-		    		
-		    		communityIssues.add(newRemoteIssue);
-	    		} else {
-					log.debug("Remote issue " + remoteIssue.getIssueCode() + " is identical to a local issue, dropping");
-				}
-			} else {
-				log.debug("Dropping remote issue with code " + remoteIssue.getIssueCode() + " - no matching local issue code found (it mustn't be a community issue");
-			}
-    	}
+//		for (IssueTransfer remoteIssue : remote) {
+//    		log.debug("Found remote issue "+remoteIssue.getIssueCode()+"/"+remoteIssue.getIssueDescription());
+//    		Issue matchingLocalIssue = issueDao.findIssueByCode(remoteIssue.getIssueCode());
+//    		
+//			if (matchingLocalIssue != null) {
+//			
+//				// filter out remote issues that have identical parameters to used local issue (req 6.2)
+//				if (!existsIssue(local, remoteIssue)) // no duplicates found
+//				{
+//					CaseManagementCommunityIssue newRemoteIssue = new CaseManagementCommunityIssue();
+//		    		newRemoteIssue.setRemote(true);
+//		
+//		    		newRemoteIssue.setFacilityId(remoteIssue.getFacilityId());
+//		    		newRemoteIssue.setFacilityName(remoteIssue.getFacilityName());
+//		    		newRemoteIssue.setDemographic_no(remoteIssue.getDemographicId().toString());
+//		    		newRemoteIssue.setAcute(remoteIssue.isAcute());
+//		    		newRemoteIssue.setCertain(remoteIssue.isCertain());
+//		    		newRemoteIssue.setMajor(remoteIssue.isMajor());
+//		    		newRemoteIssue.setResolved(remoteIssue.isResolved());
+//		    		newRemoteIssue.setType(matchingLocalIssue.getRole());
+//		    		
+//		    		Issue issue = new Issue();
+//		    		issue.setCode(remoteIssue.getIssueCode());
+//		    		issue.setDescription(remoteIssue.getIssueDescription());
+//		    		issue.setRole(matchingLocalIssue.getRole());
+//		    		issue.setType(type);
+//		    		newRemoteIssue.setIssue(issue);
+//		    		
+//		    		communityIssues.add(newRemoteIssue);
+//	    		} else {
+//					log.debug("Remote issue " + remoteIssue.getIssueCode() + " is identical to a local issue, dropping");
+//				}
+//			} else {
+//				log.debug("Dropping remote issue with code " + remoteIssue.getIssueCode() + " - no matching local issue code found (it mustn't be a community issue");
+//			}
+//    	}
     	return communityIssues;
     }
 
-	private static boolean existsIssue(List<CaseManagementIssue> local, IssueTransfer remoteIssue) {
-	    for (CaseManagementIssue caseManagementIssue : local) {
-			if (isIdentical(caseManagementIssue, remoteIssue)) return (true);
-		}
-	    
+	private static boolean existsIssue(List<CaseManagementIssue> local, CachedDemographicIssue remoteIssue) {
+//	    for (CaseManagementIssue caseManagementIssue : local) {
+//			if (isIdentical(caseManagementIssue, remoteIssue)) return (true);
+//		}
+//	    
 	    return(false);
     }
 	
 	public static List<String> getCommunityIssueCodes(int facilityId, String type) {
-		List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
-		if (communityCodes == null || communityCodes.isEmpty()) {
-			communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
-		}
-		return communityCodes;
+//		List<String> communityCodes = issueDao.getLocalCodesByCommunityType(type);
+//		if (communityCodes == null || communityCodes.isEmpty()) {
+//			communityCodes = CaisiIntegratorManager.getCommunityIssueCodeList(facilityId, type);
+//		}
+//		return communityCodes;
+		return(null);
 	}
 
-	private static boolean isIdentical(CaseManagementIssue local, IssueTransfer remote) {
-		if (!remote.getIssueCode().equals(local.getIssue().getCode())) return false;
-		if (!remote.getIssueDescription().equals(local.getIssue().getDescription())) return false;
-		if (remote.isAcute() != local.isAcute()) return false;
-		if (remote.isCertain() != local.isCertain()) return false;
-		if (remote.isMajor() != local.isMajor()) return false;
-		if (remote.isResolved() != local.isResolved()) return false;
-
+	private static boolean isIdentical(CaseManagementIssue local, CachedDemographicIssue remote) {
+//		if (!remote.getIssueCode().equals(local.getIssue().getCode())) return false;
+//		if (!remote.getIssueDescription().equals(local.getIssue().getDescription())) return false;
+//		if (remote.isAcute() != local.isAcute()) return false;
+//		if (remote.isCertain() != local.isCertain()) return false;
+//		if (remote.isMajor() != local.isMajor()) return false;
+//		if (remote.isResolved() != local.isResolved()) return false;
+//
 		return true;
 	}
 	
@@ -135,57 +135,57 @@ public class CommunityIssueManager {
 	 * @param issue a remote CaseManagementCommunityIssue copied into a CaseManagementIssue
 	 */
 	public static void copyRemoteCommunityIssueToLocal(CaseManagementIssue issue, Integer demographicNo) {
-		// look up issue code/description/type
-		Issue iss = issueDao.findIssueByCode(issue.getIssue().getCode());
-		if (iss == null || iss.getType() == null || !iss.getType().equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"))) {
-			// if not found, or not a community type, or no type make issue in issue table
-			iss = issue.getIssue();
-			issueDao.saveIssue(issue.getIssue());
-			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " saved as Issue " + iss.getId());
-		} else {
-			// otherwise copy the ID over.
-			issue.setIssue(iss);
-			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " exists as Issue " + iss.getId());
-		}
-
-		// save to casemgmt_issue table so we have an ID to attach to a note
-		issue.setIssue_id(iss.getId());
-		issue.setDemographic_no(String.valueOf(demographicNo));
-		cmiDao.saveIssue(issue);
-		log.debug("CaseManagementIssue created with ID " + issue.getIssue_id());
+//		// look up issue code/description/type
+//		Issue iss = issueDao.findIssueByCode(issue.getIssue().getCode());
+//		if (iss == null || iss.getType() == null || !iss.getType().equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"))) {
+//			// if not found, or not a community type, or no type make issue in issue table
+//			iss = issue.getIssue();
+//			issueDao.saveIssue(issue.getIssue());
+//			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " saved as Issue " + iss.getId());
+//		} else {
+//			// otherwise copy the ID over.
+//			issue.setIssue(iss);
+//			log.debug("Issue " + iss.getCode() + "/" + iss.getDescription() + " exists as Issue " + iss.getId());
+//		}
+//
+//		// save to casemgmt_issue table so we have an ID to attach to a note
+//		issue.setIssue_id(iss.getId());
+//		issue.setDemographic_no(String.valueOf(demographicNo));
+//		cmiDao.saveIssue(issue);
+//		log.debug("CaseManagementIssue created with ID " + issue.getIssue_id());
 	}
 
 	private static void assignCheckboxID(List<CaseManagementCommunityIssue> issues) {
-		for (CaseManagementCommunityIssue issue : issues) {
-			// something needs to go here... but what? it needs to be consistent for each pull, and unique to the issue itself.
-			StringBuffer buff = new StringBuffer();
-			// facilityID, or 0 for local + issue code type
-			if (issue.isRemote()) {
-				buff.append(issue.getFacilityId());
-				buff.append("-");
-				buff.append(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
-			} else {
-				buff.append(0);
-				buff.append("-");
-				buff.append(issue.getIssue().getType());
-			}
-			// +issue code
-			buff.append("-");
-			buff.append(issue.getIssue().getCode());
-			// + boolean values
-			buff.append("-");
-			buff.append(intMe(issue.isAcute()));
-			buff.append(intMe(issue.isCertain()));
-			buff.append(intMe(issue.isMajor()));
-			buff.append(intMe(issue.isResolved()));
-			issue.setCheckboxID(buff.toString());
-			log.debug(issue.getCheckboxID());
-		}
-
+//		for (CaseManagementCommunityIssue issue : issues) {
+//			// something needs to go here... but what? it needs to be consistent for each pull, and unique to the issue itself.
+//			StringBuffer buff = new StringBuffer();
+//			// facilityID, or 0 for local + issue code type
+//			if (issue.isRemote()) {
+//				buff.append(issue.getFacilityId());
+//				buff.append("-");
+//				buff.append(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
+//			} else {
+//				buff.append(0);
+//				buff.append("-");
+//				buff.append(issue.getIssue().getType());
+//			}
+//			// +issue code
+//			buff.append("-");
+//			buff.append(issue.getIssue().getCode());
+//			// + boolean values
+//			buff.append("-");
+//			buff.append(intMe(issue.isAcute()));
+//			buff.append(intMe(issue.isCertain()));
+//			buff.append(intMe(issue.isMajor()));
+//			buff.append(intMe(issue.isResolved()));
+//			issue.setCheckboxID(buff.toString());
+//			log.debug(issue.getCheckboxID());
+//		}
+//
 	}
 
 	private static int intMe(boolean boo) {
-		if (boo) return 1;
-		else return 0;
+//		if (boo) return 1;
+		return 0;
 	}
 }

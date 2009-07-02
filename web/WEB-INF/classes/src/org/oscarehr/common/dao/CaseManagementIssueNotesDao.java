@@ -27,9 +27,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 
-@Transactional
+@Repository
 public class CaseManagementIssueNotesDao {
     
     @PersistenceContext

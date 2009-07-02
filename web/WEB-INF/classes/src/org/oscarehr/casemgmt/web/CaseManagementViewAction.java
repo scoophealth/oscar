@@ -410,9 +410,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
 					// get all remote issue codes
 					ArrayList<String> remote_issueCodes = new ArrayList<String>();
-					for (CaseManagementCommunityIssue issue : communityIssues) {
-						remote_issueCodes.add(issue.getIssue().getCode());
-					}
+//					for (CaseManagementCommunityIssue issue : communityIssues) {
+//						remote_issueCodes.add(issue.getIssue().getCode());
+//					}
 					// get community notes for all remote issues
 					remoteNotes = CommunityNoteManager.getRemoteNotes(Integer.parseInt(demoNo), programId, remote_issueCodes);
 					current = System.currentTimeMillis();

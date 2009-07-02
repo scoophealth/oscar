@@ -28,11 +28,10 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
 import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.CommunityIssueWs;
-import org.oscarehr.caisi_integrator.ws.CommunityIssueWsService;
 import org.oscarehr.caisi_integrator.ws.ConnectException_Exception;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
@@ -46,8 +45,6 @@ import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.HnrWs;
 import org.oscarehr.caisi_integrator.ws.HnrWsService;
 import org.oscarehr.caisi_integrator.ws.InvalidHinExceptionException;
-import org.oscarehr.caisi_integrator.ws.IssueTransfer;
-import org.oscarehr.caisi_integrator.ws.NoteTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProgramWsService;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
@@ -178,57 +175,17 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<IssueTransfer> getRemoteIssues(int demographicId) {
+	public static List<CachedDemographicIssue> getRemoteIssues(int demographicId) {
 		try {
 			DemographicWs demographicWs = getDemographicWs();
-			List<IssueTransfer> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
+			List<CachedDemographicIssue> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
 
 			return (results);
 		} catch (Exception e) // remote issues unavailable for some reason
 		{
 			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
-			return new ArrayList<IssueTransfer>();
+			return new ArrayList<CachedDemographicIssue>();
 		}
-	}
-
-	public static CommunityIssueWs getCommunityIssueWs(int facilityId) throws MalformedURLException {
-		Facility facility = getLocalFacility(facilityId);
-
-		CommunityIssueWsService service = new CommunityIssueWsService(buildURL(facility, "CommunityIssueService"));
-		CommunityIssueWs port = service.getCommunityIssueWsPort();
-
-		CxfClientUtils.configureClientConnection(port);
-		addAuthenticationInterceptor(facility, port);
-
-		return (port);
-	}
-
-	public static ArrayList<String> getCommunityIssueCodeList(int facilityId, String type) {
-		Facility facility = facilityDao.find(facilityId);
-		if (facility.isIntegratorEnabled()) {
-			try {
-				CommunityIssueWs communityIssueWs = getCommunityIssueWs(facilityId);
-				return (ArrayList<String>) communityIssueWs.getCommunityIssueCodeList(type);
-			} catch (Exception e) {
-				log.error("Unable to retrieve community issue code list", e);
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
-
-	public static List<NoteTransfer> getRemoteNotes(int demographicId, List<IssueTransfer> remoteIssues) {
-		try {
-			DemographicWs demographicWs = getDemographicWs();
-			List<NoteTransfer> notes = demographicWs.getCommunityNotes(Integer.valueOf(demographicId), OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"), remoteIssues);
-			log.debug("retrieved " + notes.size() + " notes from the integrator" );
-			return notes;
-		} catch (Exception e) {
-			log.error("Unable to retrieve remote issues, defaulting to empty list", e);
-			return new ArrayList<NoteTransfer>();
-		}
-
 	}
 
 	public static ProgramWs getProgramWs(int facilityId) throws MalformedURLException {
