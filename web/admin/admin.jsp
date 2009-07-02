@@ -570,6 +570,7 @@ div.logoutBox {
 				<li><a href="#"
 					onclick="popupPage(600,900, &quot;<html:rewrite page="/admin/oscarLogging.jsp"/>&quot;)"><bean:message key="admin.admin.serverLog"/></a></li>
 			</oscar:oscarPropertiesCheck>
+            
 		</ul>
 		</div>
 	</security:oscarSec>
@@ -691,8 +692,12 @@ div.logoutBox {
 		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
 			<li><a href="#"
 				onclick='popupPage(400,600,&quot;<html:rewrite page="/admin/RecommitHSFO.do"/>?method=showSchedule&quot;);return false;'><bean:message key="admin.admin.hsfoSubmit"/></a></li>
-			<%} %>
-
+			<%}%>
+            <oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
+            <li><a href="#"
+            onclick='popupPage(800,1000,&quot;<html:rewrite page="/admin/uploadEntryText.jsp"/>&quot;);return false;'><bean:message key="admin.admin.uploadEntryTxt"/></a>
+            </li>
+            </oscar:oscarPropertiesCheck>
 		</ul>
 		</div>
 	</security:oscarSec>
