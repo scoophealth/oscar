@@ -151,3 +151,11 @@ function checkAll(master, parentEle, className){
       chkList[i].checked = val;
    }
 }
+
+
+function oscarLog(str){
+    if(window.console){
+       console.log(str);
+    }
+    
+}
