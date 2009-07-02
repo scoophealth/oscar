@@ -6446,6 +6446,7 @@ CREATE TABLE provider (
   `title` varchar(20) default NULL,
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` date default NULL,
+  `signed_confidentiality` date default '0001-01-01',
   PRIMARY KEY  (provider_no)
 );
 
