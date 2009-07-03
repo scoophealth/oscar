@@ -187,7 +187,7 @@ public class ManageHnrClient {
 		else return("validate");
 	}
 	
-	public boolean hasConsented() {
+	private boolean hasConsented() {
 		try {
 	        GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(demographic.getDemographicNo());
 	        return(consent!=null && consent.getConsentState()==ConsentState.ALL);
@@ -195,5 +195,9 @@ public class ManageHnrClient {
         	logger.debug("Exception getting consent state.", e);
         	return(false);
         }
+	}
+	
+	public boolean canSendToHnr() {
+		return(pictureValidated && hasConsented());
 	}
 }
