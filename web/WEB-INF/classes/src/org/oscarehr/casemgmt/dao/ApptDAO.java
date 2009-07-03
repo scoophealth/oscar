@@ -19,7 +19,7 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
+//:TODO move to appt package
 package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
@@ -42,5 +42,10 @@ public class ApptDAO extends HibernateDaoSupport {
 
             getHibernateTemplate().update(appt);
         }
+    }
+    
+    public Appointment getAppt(String apptId) {
+       Appointment appt = (Appointment) getHibernateTemplate().get(Appointment.class,new Long(apptId));
+       return appt;
     }
 }
