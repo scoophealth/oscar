@@ -235,9 +235,15 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			Demographic demographic = new Demographic();
 			demographic.setFirstName(demographicTransfer.getFirstName());
 			demographic.setLastName(demographicTransfer.getLastName());
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.setTime(demographicTransfer.getBirthDate());
-			demographic.setBirthDay(cal);
+			
+			if (demographicTransfer.getBirthDate()!=null)
+			{
+				GregorianCalendar cal = new GregorianCalendar();
+				cal.setTime(demographicTransfer.getBirthDate());
+				demographic.setBirthDay(cal);
+			}
+			
+			if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
 						
 			return forwardIntakeEditCreate(mapping, request, demographic);
 		} catch (Exception e) {
