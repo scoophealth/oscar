@@ -41,10 +41,8 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.ConsentState;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
-import org.oscarehr.caisi_integrator.ws.GetConsentTransfer;
 import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore;
 import org.oscarehr.caisi_integrator.ws.Referral;
@@ -240,16 +238,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(demographicTransfer.getBirthDate());
 			demographic.setBirthDay(cal);
-			
-			GetConsentTransfer consent=CaisiIntegratorManager.getConsentState(demographicTransfer.getIntegratorFacilityId(), demographicTransfer.getCaisiDemographicId());
-			if (consent!=null && consent.getConsentState()==ConsentState.ALL)
-			{
-				demographic.setHin(demographicTransfer.getHin());
-				demographic.setCity(demographicTransfer.getCity());
-				demographic.setProvince(demographicTransfer.getProvince());
-				demographic.setSin(demographicTransfer.getSin());
-			}
-			
+						
 			return forwardIntakeEditCreate(mapping, request, demographic);
 		} catch (Exception e) {
 			log.error("Unexpected error.", e);
