@@ -139,9 +139,9 @@ function disablenupload() {
 				id="uploadMarker" value="false"> <input type="button"
 				name="uploadbtn" id="uploadbtn"
 				value="<bean:message key="eform.edithtml.frmUpload"/>"
-				onclick="disablenupload()"> <% if (errors.containsKey("uploadError")) { %><font
-				class="warning"><bean:message
-				key="<%= (String) errors.get("uploadError") %>" /></font>
+				onclick="disablenupload()"> <% if (errors.containsKey("uploadError")) { 
+                                    String uploadError = (String) errors.get("uploadError"); %>
+                                <font class="warning"><bean:message key="<%=uploadError%>" /></font>
 			<% } %>
 			</td>
 		</tr>
