@@ -207,13 +207,7 @@ New General Form:&nbsp;
 	</c:forEach>
 </select>
 <br />
-Report:&nbsp;
-<select onchange="getIntakeReportByNodeId(this.options[this.selectedIndex].value);">
-	<option value="" selected></option>
-	<c:forEach var="node" items="${generalIntakeNodes}">
-		<option value="<c:out value="${node.id}"/>"><c:out value="${node.label.label}" /></option>
-	</c:forEach>
-</select>
+
 <br />
 <br />
 <!-- 

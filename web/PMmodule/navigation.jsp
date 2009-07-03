@@ -106,6 +106,13 @@
         popupPage2('<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate, "IntakeCReport");
     }
 
+	function getGeneralFormsReport()
+	{
+		
+		popupPage2('<html:rewrite action="/PMmodule/ClientManager.do"/>?method=getGeneralFormsReport',"generalFormsReport");
+	}
+	
+	
     function createStreetHealthReport()
     {
         var startDate = "";
@@ -195,7 +202,10 @@
 <c:if
 	test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
 	<div><span>Reporting Tools</span> <caisi:isModuleLoad
-		moduleName="TORONTO_RFQ" reverse="true">
+		moduleName="TORONTO_RFQ" reverse="true">		
+		<div><a HREF="javascript:void(0);" 
+		ONCLICK="javascript:getGeneralFormsReport();return false;">General Forms Reports 
+		</a></div>
 		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('quick');return false;">Registration
 		Intake Report</a></div>
 		<div><a href="javascript:void(0);" onclick="javascript:getIntakeReport('indepth');return false;">Follow-up
