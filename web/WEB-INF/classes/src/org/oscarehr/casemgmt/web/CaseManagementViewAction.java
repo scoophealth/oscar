@@ -309,7 +309,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		/* ISSUES */
 		if (tab.equals("Current Issues")) {
-			currentIssuesTab(request, caseForm, useNewCaseMgmt, providerNo, demoNo, programId, currentFacilityId);
+			viewCurrentIssuesTab(request, caseForm, useNewCaseMgmt, demoNo, programId);
 		} // end Current Issues Tab
 
 		log.debug("Get CPP");
@@ -399,35 +399,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 	}
 
-	private void currentIssuesTab(HttpServletRequest request, CaseManagementViewFormBean caseForm, boolean useNewCaseMgmt, String providerNo, String demoNo, String programId, Integer currentFacilityId) throws InvocationTargetException,
+	private void viewCurrentIssuesTab(HttpServletRequest request, CaseManagementViewFormBean caseForm, boolean useNewCaseMgmt, String demoNo, String programId) throws InvocationTargetException,
             IllegalAccessException, Exception {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
+		
+		
 	    long startTime;
-	    List<CaseManagementIssue> issues = new ArrayList<CaseManagementIssue>();
 	    List<CaseManagementCommunityIssue> communityIssues = new ArrayList<CaseManagementCommunityIssue>();
-	    if (useNewCaseMgmt) {
-	    	if (!caseForm.getHideActiveIssue().equals("true")) {
-	    		log.debug("Get Issues");
-	    		startTime = System.currentTimeMillis();
-	    		issues = caseManagementMgr.getIssues(providerNo, this.getDemographicNo(request));
-	    		log.debug("Get Issues " + (System.currentTimeMillis()-startTime));
-	    	}
-	    	else {
-	    		log.debug("Get Active Issues");
-	    		startTime = System.currentTimeMillis();
-	    		issues = caseManagementMgr.getActiveIssues(providerNo, this.getDemographicNo(request));
-	    		log.debug("Get Active Issues " + (System.currentTimeMillis()-startTime));
-	    	}
-	    	log.debug("Filter Issues");
-    		startTime = System.currentTimeMillis();
-	    	issues = caseManagementMgr.filterIssues(issues, programId);
-	    	log.debug("FILTER ISSUES " + (System.currentTimeMillis()-startTime));
-	    }
-	    else // get community issues for old CME UI
-	    {
-	    	communityIssues = CommunityIssueManager.getCommunityIssues(this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
-	    	//List<CaseManagementIssue> communityIssues = new ArrayList<CaseManagementIssue>();
-	    	request.setAttribute("Issues", communityIssues);
-	    }
+	    // get community issues for old CME UI
+    	communityIssues = CommunityIssueManager.getCommunityIssues(this.getDemographicNo(request), programId, Boolean.parseBoolean(caseForm.getHideActiveIssue()));
+    	request.setAttribute("Issues", communityIssues);
 	    
 	    log.debug("Get stale note date");
 	    // filter the notes by the checked issues and date if set
@@ -532,7 +514,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    log.debug("Filter Notes");
 	    
 	    // filter notes based on role and program/provider mappings
-	    notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);                        
+	    notes = caseManagementMgr.filterNotes(notes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
 	    log.debug("FILTER NOTES " + (System.currentTimeMillis()-startTime));
 	    
 
