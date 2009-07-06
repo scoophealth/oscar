@@ -1666,7 +1666,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 									style="width: 200px">
 									<option value=""></option>
 									<%
-                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc_with_ohip");
+                          ResultSet rsdemo = apptMainBean.queryResults("search_provider_doc");
                           while (rsdemo.next()) {
                         %>
 									<option value="<%=rsdemo.getString("provider_no")%>"
