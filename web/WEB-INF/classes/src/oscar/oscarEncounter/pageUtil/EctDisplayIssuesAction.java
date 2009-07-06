@@ -25,7 +25,6 @@
 
 package oscar.oscarEncounter.pageUtil;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,11 +63,8 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
         
         //grab all of the diseases associated with patient and add a list item for each
-        String dbFormat = "yyyy-MM-dd";
-        String serviceDateStr;
-        Date date; 
         List issues = null;        
-        issues = caseManagementMgr.getIssues(bean.providerNo,bean.getDemographicNo());             
+        issues = caseManagementMgr.getIssues(Integer.parseInt(bean.getDemographicNo()));             
         String programId = (String)request.getSession().getAttribute("case_program_id");
         issues = caseManagementMgr.filterIssues(issues,programId);
 

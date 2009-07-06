@@ -135,8 +135,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		//String programId = String.valueOf(((ProgramProvider)programDomain.get(0)).getProgramId());
 		
 		//List accessRights = this.caseManagementManager.getAccessRight(getProviderNo(request),clientId,programId);
-		//List issues = this.caseManagementManager.getActiveIssues(getProviderNo(request),clientId,accessRights);
-		List issues = this.caseManagementManager.getActiveIssues(getProviderNo(request),clientId);
+		List issues = this.caseManagementManager.getIssues(Integer.parseInt(clientId),false);
 		request.setAttribute("issues",issues);
 		
 		List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);

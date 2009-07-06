@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.service;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -160,12 +161,10 @@ public class CaseManagementManager {
 
 	// retrieves a list of providers that have been associated with each note
 	// and stores this list in the coresponding note.
-	public void getEditors(List<CaseManagementNote> notes) {
-		Iterator<CaseManagementNote> iterator = notes.listIterator();
+	public void getEditors(Collection<CaseManagementNote> notes) {
 		List<Provider> providers;
-		while (iterator.hasNext()) {
-			CaseManagementNote note = iterator.next();
-			providers = this.caseManagementNoteDAO.getEditors(note);
+		for (CaseManagementNote note : notes) {
+			providers = caseManagementNoteDAO.getEditors(note);
 			if (providers == null) providers = new ArrayList<Provider>();
 			note.setEditors(providers);
 		}
@@ -303,21 +302,16 @@ public class CaseManagementManager {
 		return notes;
 	}
 
-	public List<CaseManagementIssue> getIssues(String providerNo, String demographic_no) {
-		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no);
-
+	public List<CaseManagementIssue> getIssues(int demographic_no) {
+		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, null);
 	}
 
-	public List<CaseManagementIssue> getActiveIssues(String providerNo, String demographic_no) {
-		return caseManagementIssueDAO.getActiveIssuesByDemographic(demographic_no);
+	public List<CaseManagementIssue> getIssues(int demographic_no, Boolean resolved) {
+		return caseManagementIssueDAO.getIssuesByDemographicOrderActive(demographic_no, resolved);
 	}
 
-	public List<CaseManagementIssue> getIssues(String providerNo, String demographic_no, List accessRight) {
-		return filterIssueList(getIssues(providerNo, demographic_no), providerNo, accessRight);
-	}
-
-	public List<CaseManagementIssue> getActiveIssues(String providerNo, String demographic_no, List accessRight) {
-		return filterIssueList(getActiveIssues(providerNo, demographic_no), providerNo, accessRight);
+	public List<CaseManagementIssue> getIssues(String demographic_no, List accessRight) {
+		return filterIssueList(getIssues(Integer.parseInt(demographic_no)), accessRight);
 	}
 
 	/* return true if have the right to access issues */
@@ -333,20 +327,20 @@ public class CaseManagementManager {
 	}
 
 	/* filter the issues by caisi role */
-	public List filterIssueList(List allIssue, String providerNo, List accessRight) {
-		List role = roleProgramAccessDAO.getAllRoleName();
-		List filteredIssue = new ArrayList();
+	private List<CaseManagementIssue> filterIssueList(List<CaseManagementIssue> allIssue, List accessRight) {
+		List<String> role = roleProgramAccessDAO.getAllRoleName();
+		List<CaseManagementIssue> filteredIssue = new ArrayList<CaseManagementIssue>();
 
 		for (int i = 0; i < role.size(); i++) {
-			Iterator itr = allIssue.iterator();
-			String rl = (String) role.get(i);
+			Iterator<CaseManagementIssue> itr = allIssue.iterator();
+			String rl = role.get(i);
 			String right = rl.trim() + "issues";
 			boolean inaccessRight = inAccessRight(right, issueAccessType, accessRight);
 			if (inaccessRight) {
 
 				String iRole = rl;
 				while (itr.hasNext()) {
-					CaseManagementIssue iss = (CaseManagementIssue) itr.next();
+					CaseManagementIssue iss = itr.next();
 
 					if (iss.getIssue().getRole().trim().equalsIgnoreCase(iRole.trim())) {
 						filteredIssue.add(iss);
@@ -976,29 +970,31 @@ public class CaseManagementManager {
 	 * @param providerNo provider reading issues
 	 * @param programId program provider is logged into
 	 */
-	public List filterNotes(List notes, String providerNo, String programId, Integer currentFacilityId) {
-		List filteredNotes = new ArrayList();
+    public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String providerNo, String programId, Integer currentFacilityId) {
+		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
 		if (notes.isEmpty()) {
-			return notes;
+			return filteredNotes;
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
+		@SuppressWarnings("unchecked")
 		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
-			return new ArrayList();
+			return new ArrayList<CaseManagementNote>();
 		}
 
 		ProgramProvider pp = (ProgramProvider) ppList.get(0);
 		Role role = pp.getRole();
 
 		// Load up access list from program
+		@SuppressWarnings("unchecked")
 		List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+		@SuppressWarnings("unchecked")
 		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
 
 		// iterate through the issue list
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote cmNote = (CaseManagementNote) iter.next();
+		for (CaseManagementNote cmNote : notes) {
 			String noteRole = cmNote.getReporter_caisi_role();
 			String noteRoleName = roleManager.getRole(noteRole).getName().toLowerCase();
 			ProgramAccess pa = null;

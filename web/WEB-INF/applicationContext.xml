@@ -39,13 +39,14 @@
 	<bean id="countryCodeDAO" class="org.oscarehr.common.dao.CountryCodeDAO" autowire="byName" />
 	<bean id="consultationRequestDAO" class="org.oscarehr.consultationRequest.dao.ConsultationRequestDAO" autowire="byName" />
 	<bean id="dxResearchDao" class="org.oscarehr.dx.dao.DxResearchDAO" autowire="byName" />
-	<!--
+	<!-- 
     <bean id="topazDao" class="com.quatro.dao.TopazDao" autowire="byName" />
  -->
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName" />
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="caseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName" />
 	<bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName" />
+	<bean id="caseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName" />
 	<bean id="CaseManagementNoteExtDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteExtDAO" autowire="byName" />
 	<bean id="CaseManagementNoteLinkDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteLinkDAO" autowire="byName" />
 	<bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName" />
@@ -93,7 +94,7 @@
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
 	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
 	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
-
+        
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
 	<bean id="lookupDao" class="com.quatro.dao.LookupDao" autowire="byName" />
@@ -108,7 +109,7 @@
 	<bean id="receptionistSuperDao" class="oscar.dao.ReceptionistDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
-        
+
         <!-- OSCAR Desicion Support -->
     <bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
         <property name="dsGuidelineDAO">
@@ -125,11 +126,11 @@
 	</bean>
 
 	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
-    <bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
+	<bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
 		<property name="serviceOrganizationNumber" value="1001" />
 		<property name="submissionFileLocation" value="C:/TEMP/ocan_test" />
 	</bean>
-    
+
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
 

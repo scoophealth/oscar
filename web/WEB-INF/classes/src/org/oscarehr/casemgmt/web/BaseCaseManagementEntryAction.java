@@ -335,8 +335,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 				mHis = mHis.replaceAll("\r\n", "\n");
 				mHis = mHis.replaceAll("\r", "\n");
 			}
-			//List allIssues = caseManagementMgr.getIssues(providerNo, cpp.getDemographic_no(),accessRight);
-			List allIssues = caseManagementMgr.getIssues(providerNo, cpp.getDemographic_no());
+			List allIssues = caseManagementMgr.getIssues(Integer.parseInt(cpp.getDemographic_no()));
 			
 			Iterator itr = allIssues.iterator();
 			while (itr.hasNext()) {

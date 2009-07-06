@@ -36,17 +36,12 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CaseManagementIssue> getIssuesByDemographicOrderActive(String demographic_no) {
-        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? order by cmi.resolved", new Object[] {demographic_no});
-
+    public List<CaseManagementIssue> getIssuesByDemographicOrderActive(Integer demographic_no, Boolean resolved) {
+        return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? "+(resolved!=null?" and cmi.resolved="+resolved:"")+" order by cmi.resolved", new Object[] {demographic_no.toString()});
     }
 
-    @SuppressWarnings("unchecked")
-    public List<CaseManagementIssue> getActiveIssuesByDemographic(String demographic_no) {
-        return this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.demographic_no = ? and cmi.resolved=false", new Object[] {demographic_no});
-    }
-    
     public CaseManagementIssue getIssuebyId(String demo, String id) {
+        @SuppressWarnings("unchecked")
         List<CaseManagementIssue> list = this.getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.issue_id = ? and demographic_no = ?",new Object[]{Long.parseLong(id),demo});
         if( list != null && list.size() == 1 )
             return list.get(0);
@@ -60,7 +55,6 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
 
     }
 
-    @SuppressWarnings("unchecked")
     public void saveAndUpdateCaseIssues(List<CaseManagementIssue> issuelist) {
         Iterator<CaseManagementIssue> itr = issuelist.iterator();
         while (itr.hasNext()) {

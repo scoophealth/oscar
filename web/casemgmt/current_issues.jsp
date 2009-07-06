@@ -26,6 +26,7 @@
 
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*"%>
+<%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="java.util.Map"%>
 
@@ -33,6 +34,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="r">
 
 <%
@@ -68,51 +70,40 @@
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<%
 				String checked="";
-				CaseManagementCommunityIssue issue = (CaseManagementCommunityIssue)pageContext.getAttribute("issue");
-				String checkboxID = String.valueOf(issue.getCheckboxID());
-				// remote issues have no ID
-				String set_issues[] = (String[])request.getAttribute("checked_issues");
-				if(set_issues != null) {
-					for(int x=0;x<set_issues.length;x++) {
-						if(set_issues[x].equals(checkboxID)) {
+				CaseManagementViewAction.IssueDisplay issue = (CaseManagementViewAction.IssueDisplay)pageContext.getAttribute("issue");
+				String issueCompositeId=issue.codeType+"."+issue.code;
+				String[] checkedIssues=request.getParameterValues("check_issue");
+				if(checkedIssues != null) {
+					for(int x=0;x<checkedIssues.length;x++) {
+						if(checkedIssues[x].equals(issueCompositeId)) {
 							checked="CHECKED";
 						}
 					}
 				}
 				String priority = "";				
-				if("allergy".equals(issue.getIssue().getPriority()))
+				if("allergy".equals(issue.priority))
 					priority="yellow";
 			%>
 			<td>
-				<input type="checkbox" name="check_issue" value="<c:out value="${issue.checkboxID}"/>" <%=checked %> onclick="document.caseManagementViewForm.submit();" />
+				<input type="checkbox" name="check_issue" value="<%=issueCompositeId%>" <%=checked%> onclick="document.caseManagementViewForm.submit();" />
 			</td>
-			<td><c:out value="${issue.issue.code}" /></td>
-			<td bgcolor=<%=priority%>><c:out
-				value="${issue.issue.description }" /></td>
-			<td>
-				<c:if test="${issue.remote=='true'}"><c:out value="${issue.facilityName }" /></c:if>
-				<c:if test="${issue.remote=='false'}">local</c:if>
-			</td>
-			<td><c:if test="${issue.acute=='true'}">acute</c:if> <c:if
-				test="${issue.acute=='false'}">chronic</c:if></td>
-			<td><c:if test="${issue.certain=='true'}">certain</c:if> <c:if
-				test="${issue.certain=='false'}">uncertain</c:if></td>
-			<td><c:if test="${issue.major=='true'}">major</c:if> <c:if
-				test="${issue.major=='false'}">not major</c:if></td>
-			<td><c:if test="${issue.resolved=='true'}">resolved</c:if> <c:if
-				test="${issue.resolved=='false'}">unresolved</c:if></td>
-			<td><c:out value="${issue.type }" /></td>
+			<td><c:out value="${issue.code}" /></td>
+			<td bgcolor="<%=priority%>"><c:out value="${issue.description }" /></td>
+			<td><c:out value="${issue.location}" /></td>
+			<td><c:out value="${issue.acute}" /></td>
+			<td><c:out value="${issue.certain}" /></td>
+			<td><c:out value="${issue.major}" /></td>
+			<td><c:out value="${issue.resolved}" /></td>
+			<td><c:out value="${issue.role}" /></td>
 			<td>
 			<%
-					CaseManagementIssue i = (CaseManagementIssue) pageContext.getAttribute("issue");
-					if(i.isMajor()) {
-						String code = i.getIssue().getCode();
-						if(dxMap.get(code) != null) {
+					if("major".equals(issue.major)) {
+						if(dxMap.get(issue.code) != null) {
 							%>Dx<%
 						} else {
 							%><span
 				style="text-decoration: underline; cursor: pointer; color: blue"
-				onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.issue.code}"/>';document.caseManagementViewForm.submit(); return false;">+Dx</span>
+				onclick="document.caseManagementViewForm.hideActiveIssue.value='false';document.caseManagementViewForm.method.value='addToDx';document.caseManagementViewForm.issue_code.value='<c:out value="${issue.code}"/>';document.caseManagementViewForm.submit(); return false;">+Dx</span>
 			<%
 						}
 					}

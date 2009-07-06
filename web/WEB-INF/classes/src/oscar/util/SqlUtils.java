@@ -505,6 +505,14 @@ public class SqlUtils {
 	 * statements. This only works for primitives unless you pre-quote strings.
 	 */
 	public static String constructInClauseForStatements(Object[] items) {
+		return(constructInClauseForStatements(items, false));
+	}
+
+	/**
+	 * This method will return a string similar to "(1,3,5,7)". The intent is that this method will be used to build "in clauses" like select * from foo where x in (1,3,5,7) for
+	 * statements. This only works for primitives unless you pre-quote strings.
+	 */
+	public static String constructInClauseForStatements(Object[] items, boolean quoteItems) {
 		if (items.length <= 0) throw (new IllegalArgumentException("Don't call this method if the items for the in clause is <1 it doesn't make sense."));
 
 		StringBuilder sb = new StringBuilder();
@@ -512,7 +520,9 @@ public class SqlUtils {
 
 		for (Object item : items) {
 			if (sb.length() > 1) sb.append(',');
+			if (quoteItems) sb.append('\'');
 			sb.append(item);
+			if (quoteItems) sb.append('\'');
 		}
 
 		sb.append(')');

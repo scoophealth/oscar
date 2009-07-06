@@ -100,7 +100,7 @@ public class CaseManagementNote extends BaseObject {
 
 	public String getAuditString() {
 		StringBuffer auditStr = new StringBuffer(getNote());
-		Iterator<CaseManagementIssue> iter = this.issues.iterator();
+		Iterator<CaseManagementIssue> iter = issues.iterator();
 		auditStr.append("\nIssues\n");
 		int idx = 0;
 		while (iter.hasNext()) {
@@ -319,12 +319,9 @@ public class CaseManagementNote extends BaseObject {
 		return getProvider().getFormattedName();
 	}
 
-	public static Comparator getProviderComparator() {
-		return new Comparator() {
-			public int compare(Object o1, Object o2) {
-				CaseManagementNote note1 = (CaseManagementNote) o1;
-				CaseManagementNote note2 = (CaseManagementNote) o2;
-
+	public static Comparator<CaseManagementNote> getProviderComparator() {
+		return new Comparator<CaseManagementNote>() {
+			public int compare(CaseManagementNote note1, CaseManagementNote note2) {
 				if (note1 == null || note2 == null) {
 					return 0;
 				}
@@ -335,11 +332,9 @@ public class CaseManagementNote extends BaseObject {
 
 	}
 
-	public static Comparator getProgramComparator() {
-		return new Comparator() {
-			public int compare(Object o1, Object o2) {
-				CaseManagementNote note1 = (CaseManagementNote) o1;
-				CaseManagementNote note2 = (CaseManagementNote) o2;
+	public static Comparator<CaseManagementNote> getProgramComparator() {
+		return new Comparator<CaseManagementNote>() {
+			public int compare(CaseManagementNote note1, CaseManagementNote note2) {
 				if (note1 == null || note1.getProgramName() == null || note2 == null || note2.getProgramName() == null) {
 					return 0;
 				}
@@ -349,16 +344,12 @@ public class CaseManagementNote extends BaseObject {
 
 	}
 
-	public static Comparator getRoleComparator() {
-		return new Comparator() {
-			public int compare(Object o1, Object o2) {
-				CaseManagementNote note1 = (CaseManagementNote) o1;
-				CaseManagementNote note2 = (CaseManagementNote) o2;
-
+	public static Comparator<CaseManagementNote> getRoleComparator() {
+		return new Comparator<CaseManagementNote>() {
+			public int compare(CaseManagementNote note1, CaseManagementNote note2) {
 				if (note1 == null || note2 == null) {
 					return 0;
 				}
-
 				return note1.getRoleName().compareTo(note2.getRoleName());
 			}
 		};

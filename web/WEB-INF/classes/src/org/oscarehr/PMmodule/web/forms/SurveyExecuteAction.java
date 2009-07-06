@@ -335,8 +335,8 @@ public class SurveyExecuteAction extends DispatchAction {
                         questionNum2++;
                         if (question.getCaisiObject() != null && question.getCaisiObject().length() > 0) {
                             String caisiObject = question.getCaisiObject();
-                            System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum2 + " " + caisiObject);
-                            populateWithCaisiObject(request, data, pageNum + "_" + sectionNum + "_" + questionNum2, caisiObject, clientId, getProviderNo(request));
+                            log.debug("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum2 + " " + caisiObject);
+                            populateWithCaisiObject(request, data, pageNum + "_" + sectionNum + "_" + questionNum2, caisiObject, clientId);
                         }
 
                         if (question.getDataLink() != null && question.getDataLink().length() > 0) {
@@ -353,8 +353,8 @@ public class SurveyExecuteAction extends DispatchAction {
                     questionNum++;
                     if (question.getCaisiObject() != null && question.getCaisiObject().length() > 0) {
                         String caisiObject = question.getCaisiObject();
-                        System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + 0 + "_" + questionNum + " " + caisiObject);
-                        populateWithCaisiObject(request, data, pageNum + "_" + 0 + "_" + questionNum, caisiObject, clientId, getProviderNo(request));
+                        log.debug("FOUND CAISI-OBJECT: " + pageNum + "_" + 0 + "_" + questionNum + " " + caisiObject);
+                        populateWithCaisiObject(request, data, pageNum + "_" + 0 + "_" + questionNum, caisiObject, clientId);
                     }
 
                     if (question.getDataLink() != null && question.getDataLink().length() > 0) {
@@ -393,7 +393,7 @@ public class SurveyExecuteAction extends DispatchAction {
         List pageNames = new ArrayList();
 
         if (formBean.getAdmissionId() > 0) {
-            System.out.println("ADMISSION ID=" + formBean.getAdmissionId());
+            log.debug("ADMISSION ID=" + formBean.getAdmissionId());
         }
 
         for (int x = 0; x < model.getSurvey().getBody().getPageArray().length; x++) {
@@ -638,8 +638,8 @@ public class SurveyExecuteAction extends DispatchAction {
         return "%Y-%m-%d";
     }
 
-    public void populateWithCaisiObject(HttpServletRequest request, SurveyExecuteDataBean data, String key, String caisiObject, String demographic_no, String providerNo) {
-        System.out.println("CaisObject=" + caisiObject);
+    private void populateWithCaisiObject(HttpServletRequest request, SurveyExecuteDataBean data, String key, String caisiObject, String demographic_no) {
+        log.debug("CaisObject=" + caisiObject);
 
         if (caisiObject.equals("Current Medications")) {
             List<PrescriptDrug> meds = cmeManager.getPrescriptions(demographic_no, true);
@@ -649,7 +649,7 @@ public class SurveyExecuteAction extends DispatchAction {
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Current Issues")) {
-            List issues = cmeManager.getActiveIssues(providerNo, demographic_no);
+            List issues = cmeManager.getIssues(Integer.parseInt(demographic_no), false);
             StringBuffer str = new StringBuffer();
             for (Iterator iter = issues.iterator(); iter.hasNext();) {
                 CaseManagementIssue issue = (CaseManagementIssue) iter.next();
@@ -665,7 +665,7 @@ public class SurveyExecuteAction extends DispatchAction {
             }
             data.getValues().put(key, str.toString());
         } else if (caisiObject.equals("Program Selector")) {
-            System.out.println("SETTING CURRENT ADMISSIONS");
+            log.debug("SETTING CURRENT ADMISSIONS");
             List admissions = admissionManager.getCurrentAdmissions(new Integer(demographic_no));
             request.setAttribute("admissions", admissions);
         }

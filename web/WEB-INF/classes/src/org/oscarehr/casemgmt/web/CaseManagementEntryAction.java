@@ -310,7 +310,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         CheckBoxBean[] checkedList = null;
         if(useNewCaseMgmt)
         {
-        	List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), programId);
+        	List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));
@@ -1493,7 +1493,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);        
 
         // remove issues which we already have - we don't want duplicates unless asked for
-        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), programId);
+        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
         List filteredSearchResults;
         
         if( request.getParameter("amp;all") != null ) {            
@@ -1553,7 +1553,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         // remove issues which we already have - we don't want duplicates
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono), programId);
+        List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
         Map existingIssuesMap = convertIssueListToMap(existingIssues);
         for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
             Issue issue = (Issue) iter.next();

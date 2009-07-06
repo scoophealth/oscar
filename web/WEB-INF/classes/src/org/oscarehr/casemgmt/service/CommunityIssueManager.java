@@ -26,13 +26,6 @@ public class CommunityIssueManager {
 	public static List<CaseManagementCommunityIssue> getCommunityIssues(String demographicNo, String programId, boolean active) throws InvocationTargetException, IllegalAccessException {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
-		List<CaseManagementIssue> localIssues = null;
-		if (!active) {
-			localIssues = cMan.getIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
-		} else {
-			localIssues = cMan.getActiveIssues(loggedInInfo.loggedInProvider.getProviderNo(), demographicNo);
-		}
-
 //		// filter out issues from other facilities in this CAISI instance
 //		localIssues = cMan.filterIssues(localIssues, programId);
 		List<CachedDemographicIssue> remoteIssues = new ArrayList<CachedDemographicIssue>();
@@ -44,12 +37,13 @@ public class CommunityIssueManager {
 
 		// combine local and remote
 		// logger.debug("Combine local and remote");
-		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
+//		List<CaseManagementCommunityIssue> communityIssues = combineLocalAndRemoteIssues(localIssues, remoteIssues);
 
 		// logger.debug("Filter Issues");
-		communityIssues = cMan.filterCommunityIssues(communityIssues, programId);
-		assignCheckboxID(communityIssues);
-		return communityIssues;
+//		communityIssues = cMan.filterCommunityIssues(communityIssues, programId);
+//		assignCheckboxID(communityIssues);
+//		return communityIssues;
+return new ArrayList<CaseManagementCommunityIssue>();
 	}
 	
 	private static List<CaseManagementCommunityIssue> combineLocalAndRemoteIssues(List<CaseManagementIssue> local, List<CachedDemographicIssue> remote) throws InvocationTargetException, IllegalAccessException {
