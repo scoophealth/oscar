@@ -594,7 +594,10 @@ public class DemographicData {
            return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
         }
         
-        
+        public long getAgeInDays(){            
+           return UtilDateUtilities.getNumDays(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
+        }
+
         public Date getDOBObj(){
             Date date = null;
             try{

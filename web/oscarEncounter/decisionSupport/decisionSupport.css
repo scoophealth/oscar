@@ -1,0 +1,49 @@
+/* 
+    Document   : decisionSupport
+    Created on : 29-Jun-2009, 2:50:33 AM
+    Author     : apavel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+    font-size: 10px;
+    font-family: Arial;
+}
+
+body {
+    font-size: 10px;
+}
+
+table.dsTable {
+    font-size: 12px;
+    font-family: Arial;
+}
+
+table.dsTable th {
+    border-bottom: 1px solid black;
+    background-color: #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+}
+
+table.dsTable td {
+    padding-left: 5px;
+}
+
+table.dsTable tr.odd {
+    background-color: #ececec;
+}
+
+.good {
+    color: green;
+}
+
+.bad {
+    color: red;
+}

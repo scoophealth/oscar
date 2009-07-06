@@ -143,7 +143,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     }
     
     
-    public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId)throws Exception{
+    public Vector getMyDrugrefInfo(String command, Vector drugs,String myDrugrefId) throws Exception {
         removeNullFromVector(drugs);
         Vector params = new Vector();
         params.addElement(command);
@@ -170,7 +170,6 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
                 System.out.println(s+" "+((Hashtable) obj).get(s)+" "+((Hashtable) obj).get(s).getClass().getName());
             }
         }
-        
         return vec;
     }
     
@@ -260,10 +259,12 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 //
     
     
-    private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
+    public Object callWebserviceLite(String procedureName, Vector params) throws Exception{
         System.out.println("#CALLDRUGREF-"+procedureName);
         Object object = null;
-        String server_url = "http://dev2.mydrugref.org/backend/api";
+        //String server_url = "http://dev2.mydrugref.org/backend/api";
+
+        String server_url = "http://mydrugref.org/backend/api";
         //String server_url = "http://localhost:8080/oscar_mcmaster/noreturn.jsp";
         TimingOutCallback callback = new TimingOutCallback(10 * 1000);
         try{
@@ -286,7 +287,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
         } catch (TimeoutException e) {
             System.out.println("No response from server."+server_url);
         }catch(Throwable ethrow){
-                System.out.println("Throwing error."+ethrow.getMessage());
+            System.out.println("Throwing error."+ethrow.getMessage());
         } 
         /*catch (Exception exception) {
             System.err.println("JavaClient: " + exception.toString());

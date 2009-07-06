@@ -30,11 +30,15 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.decisionSupport.service.DSService;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
@@ -143,7 +147,6 @@ public final class LoginAction extends DispatchAction {
             //com.quatro.service.security.UserAccessManager userAccessManager = (com.quatro.service.security.UserAccessManager) getAppContext().getBean("userAccessManager");
             //com.quatro.service.security.SecurityManager secManager = userAccessManager.getUserUserSecurityManager(providerNo);
             //session.setAttribute("securitymanager", secManager);
-            
             String default_pmm = null;
             if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
                 // get preferences from preference table
@@ -174,6 +177,18 @@ public final class LoginAction extends DispatchAction {
             if (where.equals("provider") && default_pmm != null && "enabled".equals(default_pmm)) {
                 where = "caisiPMM";
             }
+            
+            if (where.equals("provider")) {
+                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServlet().getServletContext());
+                UserPropertyDAO  propDAO =  (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+                UserProperty drugrefProperty = propDAO.getProp(UserProperty.MYDRUGREF_ID);
+                if (drugrefProperty != null) {
+                    String drugrefId = drugrefProperty.getValue();
+                    DSService service =  (DSService) ctx.getBean("dsService");
+                    service.fetchGuidelinesFromServiceInBackground(providerNo);
+                }
+            }
+
 
             String quatroShelter = OscarProperties.getInstance().getProperty("QUATRO_SHELTER");
             if(quatroShelter!= null && quatroShelter.equals("on")) {

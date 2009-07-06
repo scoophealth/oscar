@@ -308,10 +308,11 @@ function navBarLoader() {
                   ctx + "/CaseManagementView.do?hc=CCDDAA&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=OMeds&title=" + oMedsLabel + "&cmd=OMeds",
                   ctx + "/CaseManagementView.do?hc=993333&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=RiskFactors&title=" + riskFactorsLabel + "&cmd=RiskFactors",
                   ctx + "/CaseManagementView.do?hc=006600&method=listNotes&providerNo=" + providerNo + "&demographicNo=" + demographicNo + "&issue_code=FamHistory&title=" + famHistoryLabel + "&cmd=FamHistory",
-                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900"                  
+                  ctx + "/oscarEncounter/displayIssues.do?hC=CC9900",
+                  ctx + "/oscarEncounter/displayDecisionSupportAlerts.do?providerNo=" + providerNo + "&demographicNo=" + demographicNo
               ];
               
-            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues" ];
+            var rightNavBarTitles = [ "allergies", "Rx", "OMeds", "RiskFactors", "FamHistory", "issues", "Guidelines" ];
          
 
           var navbar = "leftNavBar";    
