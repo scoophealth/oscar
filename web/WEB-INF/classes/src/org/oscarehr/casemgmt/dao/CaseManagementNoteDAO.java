@@ -373,6 +373,15 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		}
 	}
 
+    //used by decision support to search through the notes for a string
+	public List<CaseManagementNote> searchDemographicNotes(String demographic_no, String searchString) {
+		String list = null;
+		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.id in (select max(cmn.id) from cmn where cmn.demographic_no = ? GROUP BY uuid) and cmn.demographic_no = ? and cmn.note like ? and cmn.archived = 0";
+
+		List<CaseManagementNote> result = getHibernateTemplate().find(hql, new Object[] {demographic_no, demographic_no, searchString });
+		return result;
+	}
+
 	public List<CaseManagementNote> findLatestUnlockedByDemographicIdProgramId(Integer demographicId, Integer programId) {
 		// yes I know this algorithm is inefficient, the data model for notes is pretty poor and should be fixed, I can't be bothered to "optimise" this for a bad data model right
 		// now as it'll create complex buggy code so I'll stick with simple slow code until the data model is fixed.

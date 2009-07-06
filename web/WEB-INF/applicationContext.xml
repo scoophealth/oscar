@@ -108,6 +108,21 @@
 	<bean id="receptionistSuperDao" class="oscar.dao.ReceptionistDao" autowire="byName" />
 	<bean id="providerSuperDao" class="oscar.dao.ProviderDao" autowire="byName" />
 	<bean id="adminSuperDao" class="oscar.dao.AdminDao" autowire="byName" />
+        
+        <!-- OSCAR Desicion Support -->
+    <bean id="dsService" class="org.oscarehr.decisionSupport.service.DSServiceMyDrugref">
+        <property name="dsGuidelineDAO">
+            <ref bean="dsGuidelineDAO"/>
+        </property>
+        <property name="userPropertyDAO">
+            <ref bean="UserPropertyDAO"/>
+        </property>
+    </bean>
+    <bean id="dsGuidelineDAO" class="org.oscarehr.decisionSupport.dao.DSGuidelineDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
 
 	<!-- OcanDataProcessor is used to create the OCAN xml submission file based on intake data -->
     <bean id="ocanDataProcessor" class="oscar.ocan.service.OcanDataProcessor">
@@ -137,8 +152,8 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
                                 <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
-
-
+                                 
+                                 
                     <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>

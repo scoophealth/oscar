@@ -256,7 +256,13 @@
 		<property name="phrActionDAO" ref="phrActionDAO" />
 		<property name="phrConstants" ref="phrConstants" />
 	</bean>
-	<bean name="/appointment/apptStatusSetting" class="oscar.appt.status.web.AppointmentStatusAction" singleton="false">
+    <bean name="/testAction" class="org.oscarehr.decisionSupport.web.TestActionW" singleton="false">
+            <property name="dsService" ref="dsService"/>
+    </bean>
+    <bean name="/oscarEncounter/decisionSupport/guidelineAction" class="org.oscarehr.decisionSupport.web.DSGuidelineAction" singleton="false">
+            <property name="dsService" ref="dsService"/>
+    </bean>
+    <bean name="/appointment/apptStatusSetting" class="oscar.appt.status.web.AppointmentStatusAction" singleton="false">
 	</bean>
     <bean name="/oscarRx/copyFavorite" class="oscar.oscarRx.web.CopyFavoritesAction" singleton="false">
 	</bean>

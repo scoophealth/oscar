@@ -754,6 +754,12 @@
         <action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
         <action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
         <action path="/oscarEncounter/displayIssues" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
+        <action path="/oscarEncounter/displayDecisionSupportAlerts" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDecisionSupportAlertsAction"></action>
+
+        <action path="/oscarEncounter/decisionSupport/guidelineAction" scope="request" parameter="method" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="guidelineList" path="/oscarEncounter/decisionSupport/guidelineList.jsp"/>
+            <forward name="guidelineDetail" path="/oscarEncounter/decisionSupport/guidelineDetail.jsp"/>
+        </action>
 
         <action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
             <forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
@@ -1789,8 +1795,6 @@
         <action path="/VaccineProviderReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
         </action>
-
-
 
         <!--
                 <action input="/indivoMessenger/DisplayIndivoMessages.jsp" name="DisplayIndivoMsgsActionForm"
