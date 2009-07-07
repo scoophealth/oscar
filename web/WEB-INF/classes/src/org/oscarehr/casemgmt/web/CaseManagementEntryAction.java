@@ -174,7 +174,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         log.debug("Get Issues and filter them");
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        System.out.println("EDIT " + providerNo + " " + demono + " " + programId + " " + currentFacilityId);
+        log.debug("EDIT " + providerNo + " " + demono + " " + programId + " " + currentFacilityId);
         
         current = System.currentTimeMillis();
         log.debug("Get Issues and filter them " + String.valueOf(current-start));
@@ -190,7 +190,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("NoteId " + nId);
 
         String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave","");
-        System.out.println("maxTmpSave " + maxTmpSave);
+        log.debug("maxTmpSave " + maxTmpSave);
         // set date 2 weeks in past so we retrieve more recent saved notes
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, -14);
@@ -372,7 +372,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.EDIT, LogConst.CON_CME_NOTE, String.valueOf(note.getId()), request.getRemoteAddr(),demono, note.getAuditString());
         
         String frmName = "caseManagementEntryForm" + demono;        
-        System.out.println("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
+        log.debug("Setting session form - " + frmName + " - " + String.valueOf(cform != null));
         request.getSession().setAttribute(frmName, cform);        
         
         ActionForward fwd, finalFwd = null;
@@ -469,11 +469,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             else {
                 note.setArchived(true);
-                System.out.println("Setting archived to true");
+                log.debug("Setting archived to true");
                 logAction = LogConst.ARCHIVE;                
             }
             
-            System.out.println("Note archived " + note.isArchived());
+            log.debug("Note archived " + note.isArchived());
             String programId = (String)request.getSession().getAttribute("case_program_id");			
             note.setProgram_no(programId);
                         
@@ -1398,7 +1398,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
             
             String url = "/billing.do?billRegion=" + region + "&billForm=" + defaultView + "&hotclick=&appointment_no=" + appointmentNo + "&demographic_name=" + java.net.URLEncoder.encode(name, "utf-8")  + "&amp;status=t&demographic_no=" + demoNo + "&providerview=" + providerview + "&user_no=" + providerNo + "&apptProvider_no=" + apptProvider + "&appointment_date=" + date + "&start_time=" + start_time + "&bNewForm=1" + dxCodes.toString();
-            System.out.println("BILLING URL " + url);
+            log.debug("BILLING URL " + url);
             ActionForward forward = new ActionForward();
             forward.setPath(url);
             return forward;
@@ -1437,7 +1437,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String demo = cform.getDemographicNo();
         
         try {            
-            System.out.println("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
+            log.debug("CANCEL P:" + providerNo + " D:" + demo + " PROG:" + programNo);
             this.caseManagementMgr.deleteTmpSave(providerNo, demo, programNo);
         }
         catch (Throwable e) {
@@ -2211,14 +2211,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 // encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
             }
             else { // if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-                // System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
+                // log.debug("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
                 // encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                 encounterText = "\n[" + ("".equals(bean.appointmentDate) ? UtilDateUtilities.getToday("dd-MMM-yyyy") : apptDate) + " .: " + bean.reason + "]\n";
             } /*
                  * else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){ //encounterText
                  * +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n"; encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n"; }
                  */
-            // System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+" bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
+            // log.debug("eChartTimeStamp" + bean.eChartTimeStamp+" bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
             //if (!bean.oscarMsg.equals("")) {
             //    encounterText += "\n\n" + bean.oscarMsg;
             //}
