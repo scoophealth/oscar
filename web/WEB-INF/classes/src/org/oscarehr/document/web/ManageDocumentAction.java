@@ -378,19 +378,22 @@ public class ManageDocumentAction extends DispatchAction {
         log.debug("about to Print to stream");
         ServletOutputStream outs = response.getOutputStream();
  
-        
+      
         response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
         BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(file));
-        int data;
-        while ((data = bfis.read()) != -1) {
-            outs.write(data);
-            outs.flush();
+
+        byte[] buffer = new byte[1024];
+        int bytesRead = 0;
+
+        while ((bytesRead = bfis.read(buffer)) != -1) {
+            outs.write(buffer, 0, bytesRead);
+            //outs.flush();
         }
-		
+	
         bfis.close();
         
         outs.flush();
-        outs.close();     
+        outs.close();
         return null;
     }
 
