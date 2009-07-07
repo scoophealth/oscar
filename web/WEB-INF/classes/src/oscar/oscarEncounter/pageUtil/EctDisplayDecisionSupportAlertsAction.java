@@ -73,6 +73,7 @@ public class EctDisplayDecisionSupportAlertsAction extends EctDisplayAction {
         for(DSGuideline dsGuideline: dsGuidelines) {
             try {
                 List<DSConsequence> dsConsequences = dsGuideline.evaluate(bean.demographicNo);
+                if (dsConsequences == null) continue;
                 for (DSConsequence dsConsequence: dsConsequences) {
                     if (dsConsequence.getConsequenceType() != DSConsequence.ConsequenceType.warning)
                         continue;
