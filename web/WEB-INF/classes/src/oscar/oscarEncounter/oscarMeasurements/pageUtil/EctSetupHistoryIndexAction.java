@@ -66,6 +66,26 @@ public final class EctSetupHistoryIndexAction extends Action {
 			String beforeDate = request.getParameter("beforeDate");
 			String afterDate = request.getParameter("afterDate");
 			String flag = request.getParameter("processFlag");
+            //Calendar beginningOfTime = Calendar.getInstance();
+            //beginningOfTime.add(Calendar.YEAR, -1000);
+            //if (beforeDate == null) beforeDate = dateF.format(Calendar.getInstance().getTime());
+            //if (afterDate == null) afterDate = dateF.format(beginningOfTime.getTime());
+            //if (flag == null) flag = "next";
+            if (beforeDate == null && afterDate == null && flag == null) {
+                request.getSession().setAttribute("EctSessionBean", bean);
+
+                if (bean!=null){
+                    oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
+
+                    HttpSession session = request.getSession();
+                    session.setAttribute( "measurementsData", hd );
+                }
+                else{
+                    System.out.println("cannot get the EctSessionBean");
+                }
+                return (mapping.findForward("continue"));
+            }
+
 			List<Date> dates = getDatesInRange(beforeDate, afterDate, flag,
 					demo);
 			HashMap<Date, HashMap> hd = getMeasurementDate(dates, demo);
