@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,9 +51,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -459,6 +464,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, !activeIssues);
 		addLocalIssues(issuesToDisplay, localIssues);
 		
+		addRemoteIssues(issuesToDisplay, demographicNo, !activeIssues);
+		
     	request.setAttribute("Issues", issuesToDisplay);
     	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
     	
@@ -550,6 +557,64 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     }
 
 	
+	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+
+		try {
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			List<CachedDemographicIssue> remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+
+			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
+				try {
+					if (resolved == cachedDemographicIssue.isResolved()) {
+						issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
+					}
+				} catch (Exception e) {
+					log.error("Unexpected error.", e);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Unexpected error.", e);
+		}
+	}
+
+	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
+		IssueDisplay issueDisplay = new IssueDisplay();
+
+		issueDisplay.acute = cachedDemographicIssue.isAcute() ? "acute" : "chronic";
+		issueDisplay.certain = cachedDemographicIssue.isCertain() ? "certain" : "uncertain";
+		issueDisplay.code = cachedDemographicIssue.getFacilityDemographicIssuePk().getIssueCode();
+		issueDisplay.codeType = "ICD10"; // temp hard coded hack till issue is resolved
+
+		Issue issue = null;
+		// temp hard coded icd hack till issue is resolved
+		if ("ICD10".equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE").toUpperCase())) {
+			issue = issueDao.findIssueByCode(cachedDemographicIssue.getFacilityDemographicIssuePk().getIssueCode());
+		}
+
+		if (issue != null) {
+			issueDisplay.description = issue.getDescription();
+			issueDisplay.priority = issue.getPriority();
+			issueDisplay.role = issue.getRole();
+		} else {
+			issueDisplay.description = "Not Available";
+			issueDisplay.priority = "Not Available";
+			issueDisplay.role = "Not Available";
+		}
+
+		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
+		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		if (remoteFacility != null) issueDisplay.location = "remote<br/>" + remoteFacility.getName();
+		else issueDisplay.location = "remote, name unavailable";
+
+		issueDisplay.major = cachedDemographicIssue.isMajor() ? "major" : "not major";
+		issueDisplay.resolved = cachedDemographicIssue.isResolved() ? "resolved" : "unresolved";
+
+		return (issueDisplay);
+	}
+
 	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, List<CaseManagementIssue> localIssues) {
 		for (CaseManagementIssue cmi : localIssues)
 		{

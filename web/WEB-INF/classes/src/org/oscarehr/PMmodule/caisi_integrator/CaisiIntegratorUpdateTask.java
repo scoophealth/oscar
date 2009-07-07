@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -318,23 +317,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 		
 		List<Integer> demographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
-		DemographicWs demogrpahicService = CaisiIntegratorManager.getDemographicWs();
+		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs();
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = ProviderDao.getProviderIds(facility.getId());
 
 		for (Integer demographicId : demographicIds) {
 			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId);
-
 			MiscUtils.checkShutdownSignaled();
 
 			try {
-				pushDemographic(demogrpahicService, demographicId);
+				pushDemographic(demographicService, demographicId);
 				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
-				pushDemographicConsent(facility, demogrpahicService, demographicId);
-				pushDemographicIssues(facility, programsInFacility, demogrpahicService, demographicId);
-				pushDemographicPreventions(facility, providerIdsInFacility, demogrpahicService, demographicId);
-				pushDemographicNotes(facility, demogrpahicService, demographicId);
-				pushDemographicDrugs(facility, providerIdsInFacility, demogrpahicService, demographicId);
+				pushDemographicConsent(facility, demographicService, demographicId);
+				pushDemographicIssues(facility, programsInFacility, demographicService, demographicId);
+				pushDemographicPreventions(facility, providerIdsInFacility, demographicService, demographicId);
+				pushDemographicNotes(facility, demographicService, demographicId);
+				pushDemographicDrugs(facility, providerIdsInFacility, demographicService, demographicId);
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
@@ -416,17 +414,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			long issueId=caseManagementIssue.getIssue_id();
 			Issue issue = issueDao.getIssue(issueId);
-			CachedDemographicIssue issueTransfer = new CachedDemographicIssue();
+			CachedDemographicIssue cachedDemographicIssue = new CachedDemographicIssue();
 
 			FacilityIdDemographicIssueCompositePk facilityDemographicIssuePrimaryKey = new FacilityIdDemographicIssueCompositePk();
 			facilityDemographicIssuePrimaryKey.setCaisiDemographicId(Integer.parseInt(caseManagementIssue.getDemographic_no()));
+			facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_10); // temporary hard code hack till we sort this out
 			facilityDemographicIssuePrimaryKey.setIssueCode(issue.getCode());
-			issueTransfer.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
+			cachedDemographicIssue.setFacilityDemographicIssuePk(facilityDemographicIssuePrimaryKey);
 
-			BeanUtils.copyProperties(issueTransfer, caseManagementIssue);
-			issueTransfer.setIssueDescription(issue.getDescription());
+			BeanUtils.copyProperties(cachedDemographicIssue, caseManagementIssue);
+			cachedDemographicIssue.setIssueDescription(issue.getDescription());
 
-			issues.add(issueTransfer);
+			issues.add(cachedDemographicIssue);
 		}
 
 		if (issues.size() > 0) service.setCachedDemographicIssues(issues);
@@ -547,7 +546,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			Issue localIssue = issueDao.getIssue(issueId);
 
 			NoteIssue noteIssue=new NoteIssue();
-			noteIssue.setCodeType(CodeType.valueOf(issueType));
+			if ("ICD10".equalsIgnoreCase(issueType)) noteIssue.setCodeType(CodeType.ICD_10); // temporary hard code hack till we sort this out
 			noteIssue.setIssueCode(localIssue.getCode());
 			issues.add(noteIssue);
 		}
@@ -555,8 +554,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	    return(note);
     }
 
-	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws IllegalAccessException, InvocationTargetException, DatatypeConfigurationException,
-	        ShutdownException {
+	private void pushDemographicDrugs(Facility facility, List<String> providerIdsInFacility, DemographicWs demogrpahicService, Integer demographicId) throws ShutdownException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		List<Drug> drugs = drugDao.findByDemographicIdOrderByDate(demographicId, null);

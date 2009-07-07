@@ -64,8 +64,6 @@ import org.oscarehr.util.FacilitySegmentedTimeClearedHashMap;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
-
 /**
  * This class is a manager for integration related functionality. <br />
  * <br />
@@ -178,7 +176,7 @@ public class CaisiIntegratorManager {
 	public static List<CachedDemographicIssue> getRemoteIssues(int demographicId) {
 		try {
 			DemographicWs demographicWs = getDemographicWs();
-			List<CachedDemographicIssue> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId, OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE"));
+			List<CachedDemographicIssue> results = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicId);
 
 			return (results);
 		} catch (Exception e) // remote issues unavailable for some reason
