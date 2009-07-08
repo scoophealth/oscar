@@ -696,7 +696,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- plugins menu extension point add -->
 <%int pluginMenuTagNumber=0; %>
 <plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
-<%System.out.println("enter plugin---"); %>
+<%MiscUtils.getLogger().debug("enter plugin---"); %>
 <logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
 <%if (oscar.util.plugin.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
 	pluginMenuTagNumber++;
