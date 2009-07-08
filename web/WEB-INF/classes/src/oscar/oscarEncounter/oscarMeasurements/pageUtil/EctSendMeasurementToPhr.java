@@ -35,7 +35,7 @@ public class EctSendMeasurementToPhr extends Action {
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, 
             HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, JAXBException, IndivoException {
-        System.out.println("CALLED................." + request.getParameterValues("measurementTypeList"));
+        //System.out.println("CALLED................." + request.getParameterValues("measurementTypeList"));
         String errorMsg = null;
         String demographicNo = request.getParameter("demographicNo");
         String providerNo = (String) request.getSession().getAttribute("user");
@@ -56,7 +56,7 @@ public class EctSendMeasurementToPhr extends Action {
                 
             }
         }
-        request.setAttribute("error_msg", errorMsg);  //it's always null, I can't see where something can go wrong at this point
+        request.setAttribute("error_msg", errorMsg);
         return mapping.findForward("finished");
     }
     
