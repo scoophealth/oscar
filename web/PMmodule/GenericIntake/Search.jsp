@@ -7,6 +7,16 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
+
+<%
+String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+boolean isErClerk = false;
+if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
+    isErClerk=true;
+}
+%>
+
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
@@ -132,7 +142,13 @@
 
 <c:if test="${requestScope.genericIntakeSearchForm.searchPerformed}">
     <br />
+    <%if(isErClerk) { %>
+		<c:if test="${empty requestScope.remoteMatches}">
+    		<p style="color:red">No Clients found.</p>
+    	</c:if>
+    <% } else { %>
     <p><html:submit onclick="createLocal()">New Client</html:submit></p>
+    <% } %>
     <br />
 </c:if>
 </html:form>

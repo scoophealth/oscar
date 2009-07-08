@@ -1627,6 +1627,7 @@
             scope="request">
             <forward name="searchForm" path="page.genericIntake.search" />
             <forward name="intakeEdit" path="/PMmodule/GenericIntake/Edit.do" redirect="true" />
+            <forward name="clientEdit" path="/PMmodule/ClientManager.do?method=edit" redirect="false"/>
         </action>
         <action
             path="/PMmodule/GenericIntake/Edit"

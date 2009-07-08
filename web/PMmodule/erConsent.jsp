@@ -50,7 +50,7 @@
 
 <script>
 			function cancel() {
-				location.href='<html:rewrite action="/PMmodule/ClientSearch2"/>';
+				location.href='<html:rewrite action="/PMmodule/GenericIntake/Search.do"/>';
 			}
 			
 			function submit() {

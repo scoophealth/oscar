@@ -40,6 +40,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
@@ -152,6 +153,12 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		// if matches found display results, otherwise create local intake
 		@SuppressWarnings("unchecked")
 		List<MatchingDemographicTransferScore> remoteMatches = (List<MatchingDemographicTransferScore>) request.getAttribute("remoteMatches");
+		
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+	    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
+	    	return mapping.findForward(FORWARD_SEARCH_FORM);
+	    }
+	    
 		if (!localMatches.isEmpty() || (remoteMatches != null && remoteMatches.size() > 0)) {
 			return mapping.findForward(FORWARD_SEARCH_FORM);
 		} else {
@@ -218,6 +225,14 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
+		//TODO: Erclerk - go to their consent.
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+	    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
+	    	request.setAttribute("demographicNo", new Long(intakeSearchBean.getDemographicId()));
+	    	return mapping.findForward("clientEdit");
+	    }
+	    
+		
 		return forwardIntakeEditUpdate(mapping, intakeSearchBean.getDemographicId(), request);
 	}
 
@@ -244,7 +259,17 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			}
 			
 			if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
-						
+	
+			//TODO: if this is ER clerk, go to their consent form.
+			//client.setProviderNo(providerNo);
+			//clientManager.saveClient(client);
+			String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+		    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
+		    	clientManager.saveClient(demographic);
+		    	request.setAttribute("demographicNo", new Long(demographic.getDemographicNo()));
+		    	return mapping.findForward("clientEdit");
+		    }
+		    
 			return forwardIntakeEditCreate(mapping, request, demographic);
 		} catch (Exception e) {
 			log.error("Unexpected error.", e);
