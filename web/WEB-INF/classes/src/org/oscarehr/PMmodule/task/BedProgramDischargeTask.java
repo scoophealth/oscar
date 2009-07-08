@@ -71,7 +71,7 @@ public class BedProgramDischargeTask extends TimerTask {
 	public void run() {
 		LoggedInInfo.setLoggedInInfoToCurrentClassAndMethod();
 		try {
-            log.info("start bed program discharge task");
+            log.debug("start bed program discharge task");
 
             Program[] bedPrograms = programManager.getBedPrograms();
 
@@ -113,7 +113,7 @@ public class BedProgramDischargeTask extends TimerTask {
                 }
             }
 
-            log.info("finish bed program discharge task");
+            log.debug("finish bed program discharge task");
         } catch (ShutdownException e) {
         	log.debug("BedProgramDischargeTask noticed shutdown signaled.");
         }
