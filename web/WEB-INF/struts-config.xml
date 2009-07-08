@@ -1825,6 +1825,10 @@
         </action>
         <!-- Population Report -->
         <!-- PHR -->
+        <action path="/SendToPhr" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+            <forward name="preview" path="/phr/SendToPhrPreview.jsp"/>
+        </action>
+
 
         <action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="success" path="/admin/clinicAdmin.jsp" />
@@ -1869,6 +1873,9 @@
         <action path="/phr/UserManagement" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="registrationResult" path="/phr/indivo/RegisterIndivoResult.jsp"/>
             <forward name="msgIndex" path="/phr/PhrMessage.do?method=viewMessages"/>
+        </action>
+        <action input="/oscarEncounter/oscarMeasurements/HistoryIndex.jsp" name="FrmForm" path="/oscarEncounter/oscarMeasurements/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"></forward>
         </action>
         <action
             path="/appointment/apptStatusSetting"
