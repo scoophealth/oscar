@@ -451,6 +451,18 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 	}
 	
+	public static class NoteDisplay
+	{
+		public Integer noteId=null;
+		public boolean editable=false;
+		public String lastUpdated=null;
+		public String provider=null;
+		public String status=null;
+		public String program=null;
+		public String location=null;
+		public String role=null;
+	}
+	
     private void viewCurrentIssuesTab(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
             IllegalAccessException, Exception {
 	    long startTime = System.currentTimeMillis();
@@ -606,7 +618,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
 		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
-		if (remoteFacility != null) issueDisplay.location = "remote<br/>" + remoteFacility.getName();
+		if (remoteFacility != null) issueDisplay.location = "remote: " + remoteFacility.getName();
 		else issueDisplay.location = "remote, name unavailable";
 
 		issueDisplay.major = cachedDemographicIssue.isMajor() ? "major" : "not major";
