@@ -1324,5 +1324,5 @@ document.onkeydown=function(e){
 </html:html>
 <%
 long finLoad = System.currentTimeMillis();
-System.out.println("TOTAL LOAD TIME FOR DAY SHEET:" + (finLoad-loadPage)*.001);
+MiscUtils.getLogger().debug("TOTAL LOAD TIME FOR DAY SHEET:" + (finLoad-loadPage)*.001);
 %>
