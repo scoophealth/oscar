@@ -22,8 +22,11 @@ package org.oscarehr.common.dao;
 import org.oscarehr.common.model.FacilityDemographicPrimaryKey;
 import org.oscarehr.common.model.IntegratorConsentComplexExitInterview;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class IntegratorConsentComplexExitInterviewDao extends AbstractDao {
 
     public IntegratorConsentComplexExitInterview find(FacilityDemographicPrimaryKey id) {

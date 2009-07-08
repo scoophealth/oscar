@@ -25,8 +25,11 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.IssueGroup;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class IssueGroupDao extends AbstractDao {
 
     public IssueGroup find(int id) {

@@ -21,8 +21,11 @@ package org.oscarehr.common.dao;
 
 import org.oscarehr.common.model.DigitalSignature;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class DigitalSignatureDao extends AbstractDao {
 	
     public DigitalSignature find(Integer id) {

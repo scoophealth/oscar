@@ -25,8 +25,11 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.IntegratorConsent;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class IntegratorConsentDao extends AbstractDao {
 
     public IntegratorConsent find(Integer id) {

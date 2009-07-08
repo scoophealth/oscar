@@ -26,8 +26,11 @@ import javax.persistence.Query;
 
 import org.oscarehr.common.model.HnrDataValidation;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
 public class HnrDataValidationDao extends AbstractDao {
 
 	public HnrDataValidation find(Integer id) {
