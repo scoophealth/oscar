@@ -48,6 +48,8 @@ import org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters;
 import org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
+import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
@@ -85,6 +87,12 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	private static final String FORWARD_SEARCH_FORM = "searchForm";
 	private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 
+	private ClientImageDAO clientImageDAO = null;
+	
+	public void setClientImageDAO(ClientImageDAO clientImageDAO) {
+		this.clientImageDAO = clientImageDAO;
+	}
+	
 	private SurveyManager surveyManager;
 
 	public void setSurveyManager(SurveyManager mgr) {
@@ -267,6 +275,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		    if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
 		    	clientManager.saveClient(demographic);
 		    	request.setAttribute("demographicNo", new Long(demographic.getDemographicNo()));
+		    	String providerNo = ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();		    	
+		    	this.erClerklinkRemoteDemographic(remoteFacilityId, remoteDemographicId, providerNo, demographic);
 		    	return mapping.findForward("clientEdit");
 		    }
 		    
@@ -355,4 +365,34 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	public static List<LookupCodeValue> getGenders() {
 		return genders;
 	}
+	
+	private void erClerklinkRemoteDemographic(int remoteFacilityId, int remoteDemographicId, String providerNo, Demographic client) {
+		
+		try {			
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+
+			// link the clients
+			demographicWs.linkDemographics(providerNo, client.getDemographicNo(), remoteFacilityId, remoteDemographicId);
+
+			// copy image if exists
+			{
+				DemographicTransfer demographicTransfer = demographicWs.getDemographicByFacilityIdAndDemographicId(remoteFacilityId, remoteDemographicId);
+
+				if (demographicTransfer.getPhoto() != null) {
+					ClientImage clientImage = new ClientImage();
+					clientImage.setDemographic_no(client.getDemographicNo());
+					clientImage.setImage_data(demographicTransfer.getPhoto());
+					clientImage.setImage_type("jpg");
+					clientImageDAO.saveClientImage(clientImage);
+				}
+			}
+		}
+		catch (MalformedURLException e) {
+			LOG.error(e);
+		}
+		catch (WebServiceException e) {
+			LOG.error(e);
+		}
+	}
+
 }

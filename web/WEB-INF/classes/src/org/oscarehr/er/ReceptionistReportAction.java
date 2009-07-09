@@ -22,6 +22,8 @@
 
 package org.oscarehr.er;
 
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,18 +38,34 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.PrescriptDrug;
+import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
+
+import oscar.OscarProperties;
+import oscar.oscarRx.pageUtil.RxSessionBean;
 
 public class ReceptionistReportAction extends DispatchAction {
 	private static Log log = LogFactory.getLog(ReceptionistReportAction.class);
 
+	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+	
 	private ProgramManager programManager;
 	private ClientManager clientManager;
 	private AdmissionManager admissionManager;
@@ -138,13 +156,97 @@ public class ReceptionistReportAction extends DispatchAction {
 		List issues = this.caseManagementManager.getIssues(Integer.parseInt(clientId),false);
 		request.setAttribute("issues",issues);
 		
-		List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
-		request.setAttribute("prescriptions",prescriptions);
+		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
+		this.addRemoteIssues(issuesToDisplay, Integer.parseInt(clientId), false);
+		request.setAttribute("remote_issues",issuesToDisplay);
+		
+		
+		//List<PrescriptDrug> prescriptions = this.caseManagementManager.getPrescriptions(clientId,false);
+		//request.setAttribute("prescriptions",prescriptions);
+		
+		List<PrescriptDrug> prescriptions = null;
+		boolean viewAll=true;
+
+		request.setAttribute("isIntegratorEnabled", LoggedInInfo.loggedInInfo.get().currentFacility.isIntegratorEnabled());			
+		prescriptions = caseManagementManager.getPrescriptions(Integer.valueOf(clientId), viewAll);
+		
+		request.setAttribute("Prescriptions", prescriptions);
+
+		String providerNo = ((Provider) request.getSession().getAttribute(SessionConstants.LOGGED_IN_PROVIDER)).getProviderNo();		    	
+    	
+		// Setup RX bean start
+		RxSessionBean bean = new RxSessionBean();
+		bean.setProviderNo(providerNo);
+		bean.setDemographicNo(Integer.valueOf(clientId));
+		request.getSession().setAttribute("RxSessionBean", bean);
+		// set up RX end
+
+		
+		
+		
 		
 		List allergies = this.caseManagementManager.getAllergies(clientId);
 		request.setAttribute("allergies",allergies);
 		
 		
 		return mapping.findForward("report");
+	}
+
+	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+
+		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+
+		try {
+			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
+			List<CachedDemographicIssue> remoteIssues = demographicWs.getLinkedCachedDemographicIssuesByDemographicId(demographicNo);
+
+			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
+				try {
+					if (resolved == cachedDemographicIssue.isResolved()) {
+						issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
+					}
+				} catch (Exception e) {
+					log.error("Unexpected error.", e);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Unexpected error.", e);
+		}
+	}
+
+	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
+		IssueDisplay issueDisplay = new IssueDisplay();
+
+		issueDisplay.acute = cachedDemographicIssue.isAcute() ? "acute" : "chronic";
+		issueDisplay.certain = cachedDemographicIssue.isCertain() ? "certain" : "uncertain";
+		issueDisplay.code = cachedDemographicIssue.getFacilityDemographicIssuePk().getIssueCode();
+		issueDisplay.codeType = "ICD10"; // temp hard coded hack till issue is resolved
+
+		Issue issue = null;
+		// temp hard coded icd hack till issue is resolved
+		if ("ICD10".equalsIgnoreCase(OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE").toUpperCase())) {
+			issue = issueDao.findIssueByCode(cachedDemographicIssue.getFacilityDemographicIssuePk().getIssueCode());
+		}
+
+		if (issue != null) {
+			issueDisplay.description = issue.getDescription();
+			issueDisplay.priority = issue.getPriority();
+			issueDisplay.role = issue.getRole();
+		} else {
+			issueDisplay.description = "Not Available";
+			issueDisplay.priority = "Not Available";
+			issueDisplay.role = "Not Available";
+		}
+
+		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
+		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
+		if (remoteFacility != null) issueDisplay.location = "remote: " + remoteFacility.getName();
+		else issueDisplay.location = "remote, name unavailable";
+
+		issueDisplay.major = cachedDemographicIssue.isMajor() ? "major" : "not major";
+		issueDisplay.resolved = cachedDemographicIssue.isResolved() ? "resolved" : "unresolved";
+
+		return (issueDisplay);
 	}
 }

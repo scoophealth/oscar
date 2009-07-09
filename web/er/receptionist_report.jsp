@@ -23,6 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
+<%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 
 <table width="100%" cellspacing="3" cellpadding="3">
 	<tr>
@@ -76,20 +77,35 @@
 		<td valign="top">Current Issues:</td>
 		<td valign="top">
 		<table width="100%">
-			<tr>
-				<td><b>Description</b></td>
-				<td><b>Acute</b></td>
-				<td><b>Certain</b></td>
-				<td><b>Major</b></td>
-				<td><b>Type</b></td>
-			</tr>
-			<c:forEach var="issue" items="${issues}">
+			<c:if test="${not empty Prescriptions}">
 				<tr>
-					<td><c:out value="${issue.issue.description}" /></td>
+				
+					<td><b>Code</b></td>
+					<td><b>Issue</b></td>
+					<td><b>Location</b></td>
+					<td><b>Acute</b></td>
+					<td><b>Certain</b></td>
+					<td><b>Major</b></td>
+					<td><b>Resolved</b></td>
+					<td><b>type</b></td>
+				</tr>
+			</c:if>
+			<c:forEach var="issue" items="${remote_issues}">
+			<%
+				CaseManagementViewAction.IssueDisplay issue = (CaseManagementViewAction.IssueDisplay)pageContext.getAttribute("issue");
+				String priority = "";				
+				if("allergy".equals(issue.priority))
+					priority="yellow";
+			%>
+				<tr>
+					<td><c:out value="${issue.code}" /></td>
+					<td bgcolor="<%=priority%>"><c:out value="${issue.description }" /></td>
+					<td><c:out value="${issue.location}" /></td>
 					<td><c:out value="${issue.acute}" /></td>
 					<td><c:out value="${issue.certain}" /></td>
 					<td><c:out value="${issue.major}" /></td>
-					<td><c:out value="${issue.type}" /></td>
+					<td><c:out value="${issue.resolved}" /></td>
+					<td><c:out value="${issue.role}" /></td>
 				</tr>
 			</c:forEach>
 		</table>
@@ -99,25 +115,47 @@
 		<td>Prescriptions:</td>
 		<td>
 		<table>
-			<c:forEach var="prescription" items="${prescriptions}">
-				<tr>
-					<td bgcolor="white"><fmt:formatDate pattern="MM/dd/yy"
-						value="${prescription.date_prescribed}" /></td>
-
-					<%String styleColor=""; %>
-					<c:if test="${!prescription.expired && prescription.drug_achived}">
-						<%styleColor="style=\"color:red;text-decoration: line-through;\"";%>
-					</c:if>
-					<c:if test="${prescription.expired && prescription.drug_achived}">
-						<%styleColor="style=\"text-decoration: line-through;\"";%>
-					</c:if>
-					<c:if test="${!prescription.expired && !prescription.drug_achived}">
-						<%styleColor="style=\"color:red;\"";%>
-					</c:if>
-					<td bgcolor="white"><span style="<%=styleColor%>"><c:out
-						value="${prescription.drug_special}" /></span></td>
-				</tr>
-			</c:forEach>
+		<c:if test="${not empty Prescriptions}">
+			<tr class="title">
+				<td><b>Start Date</b></td>
+				<td><b>Prescription Details</b></td>
+				<td><b>Location Prescribed</b></td>
+			</tr>
+		</c:if>
+<c:forEach var="prescription" items="${Prescriptions}">
+	<tr>
+		<td>
+			<c:if test="${prescription.expired}">
+			*
+			</c:if>
+			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.date_prescribed}"/>
+		</td>
+		
+		<%String styleColor=""; %>
+		<c:if test="${!prescription.expired && prescription.drug_achived}">
+		<%styleColor="style=\"color:red;text-decoration: line-through;\"";%>
+		</c:if>
+		<c:if test="${prescription.expired && prescription.drug_achived}">
+		<%styleColor="style=\"text-decoration: line-through;\"";%>
+		</c:if>
+		<c:if test="${!prescription.expired && !prescription.drug_achived}">
+		<%styleColor="style=\"color:red;\"";%>
+		</c:if>
+		<td bgcolor="white">
+			<span <%= styleColor%> ><c:out value="${prescription.drug_special}"/></span>			
+		</td>
+		
+		<td bgcolor="white">
+			<c:if test="${empty prescription.remoteFacilityName}">
+				local
+			</c:if>
+			<c:if test="${not empty prescription.remoteFacilityName}">
+				<c:out value="${prescription.remoteFacilityName}"/>
+			</c:if>
+		</td>
+		
+	</tr>
+</c:forEach>
 		</table>
 		</td>
 	</tr>
