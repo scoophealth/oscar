@@ -21,6 +21,7 @@ package org.oscarehr.PMmodule.web;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -268,6 +269,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 			
 			if (demographicTransfer.getGender()!=null) demographic.setSex(demographicTransfer.getGender().name());
 	
+			demographic.setPatientStatus("AC");
+			demographic.setDateJoined(new Date());
+			
 			//TODO: if this is ER clerk, go to their consent form.
 			//client.setProviderNo(providerNo);
 			//clientManager.saveClient(client);
