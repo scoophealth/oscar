@@ -32,7 +32,6 @@ public class CommunityIssueManager {
 //		// check facility integrator status
 //		if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 //			// get remote issues
-//			remoteIssues = CaisiIntegratorManager.getRemoteIssues(Integer.valueOf(demographicNo));
 //		}
 
 		// combine local and remote
