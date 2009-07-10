@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,13 +52,26 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
+import org.caisi.model.Role;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.caisi_integrator.ws.CachedProgram;
+import org.oscarehr.caisi_integrator.ws.CachedProvider;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
+import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
@@ -68,11 +82,13 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -83,8 +99,11 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
-	private static IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
-	private static CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
+	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
+	private OscarSecurityDAO oscarSecurityDao=(OscarSecurityDAO)SpringUtils.getBean("oscarSecurityDAO");
+	private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
+	private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean) form;
@@ -453,14 +472,60 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	
 	public static class NoteDisplay
 	{
+		public Integer remoteFacilityId=null;
+		public String uuid=null;
 		public Integer noteId=null;
 		public boolean editable=false;
-		public String lastUpdated=null;
+		public boolean hasHistory=false;
+		public boolean locked=false;
+		public Date observationDate=null;
 		public String provider=null;
 		public String status=null;
 		public String program=null;
 		public String location=null;
 		public String role=null;
+		public String note=null;
+		public Integer getNoteId() {
+        	return noteId;
+        }
+		public boolean isEditable() {
+        	return editable;
+        }
+		public Date getObservationDate() {
+        	return observationDate;
+        }
+		public String getProvider() {
+        	return provider;
+        }
+		public String getStatus() {
+        	return status;
+        }
+		public String getProgram() {
+        	return program;
+        }
+		public String getLocation() {
+        	return location;
+        }
+		public String getRole() {
+        	return role;
+        }
+		public Integer getRemoteFacilityId() {
+        	return remoteFacilityId;
+        }
+		public String getUuid() {
+        	return uuid;
+        }
+		public boolean getHasHistory()
+		{
+			return(hasHistory);
+		}
+		public boolean isLocked() {
+        	return locked;
+        }
+		public String getNote() {
+        	return note;
+        }
+		
 	}
 	
     private void viewCurrentIssuesTab(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
@@ -473,9 +538,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		boolean activeIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
 		
 		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, !activeIssues);
-		addLocalIssues(issuesToDisplay, localIssues);
-		
+		addLocalIssues(issuesToDisplay, demographicNo, !activeIssues);
 		addRemoteIssues(issuesToDisplay, demographicNo, !activeIssues);
 		
     	request.setAttribute("Issues", issuesToDisplay);
@@ -502,11 +565,29 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 		}	
 	    
-	    Collection<CaseManagementNote> notes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
-		notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
-	    log.debug("FETCHED " + notes.size() + " NOTES in time : "+(System.currentTimeMillis()-startTime));
-	    
+	    ArrayList<NoteDisplay> notesToDisplay=new ArrayList<NoteDisplay>();
+
+	    // deal with local notes
 	    startTime = System.currentTimeMillis();
+	    Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
+	    localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
+	    localNotes = caseManagementMgr.filterNotes(localNotes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
+
+	    HashSet providers=new HashSet();
+	    localNotes = applyProviderFilters(localNotes, providers, caseForm.getFilter_providers());
+	    request.setAttribute("providers", providers);
+
+	    caseManagementMgr.getEditors(localNotes);
+
+	    addLocalNotes(notesToDisplay, localNotes);
+	    log.debug("FETCHED " + localNotes.size() + " NOTES in time : "+(System.currentTimeMillis()-startTime));
+	    
+	    // deal with remote notes
+		startTime = System.currentTimeMillis();
+	    addRemoteNotes(notesToDisplay, demographicNo, checkedCodeList);
+	    log.debug("Get remote notes. time="+(System.currentTimeMillis()-startTime));
+
+	    // not sure what everything else is after this
 	    String resetFilter = request.getParameter("resetFilter");
 	    log.debug("RESET FILTER " + resetFilter);
 	    if (resetFilter != null && resetFilter.equals("true")) {
@@ -517,37 +598,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    	caseForm.setNote_sort(null);
 	    }
 
-	    log.debug("Filter Notes");
-	    
-	    // filter notes based on role and program/provider mappings
-	    notes = caseManagementMgr.filterNotes(notes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
-	    log.debug("FILTER NOTES " + (System.currentTimeMillis()-startTime));
-	    
-
-	    // apply provider filter
-	    log.debug("Filter Notes Provider");
-	    startTime = System.currentTimeMillis();
-	    HashSet providers=new HashSet();
-	    notes = applyProviderFilters(notes, providers, caseForm.getFilter_providers());
-	    log.debug("FILTER NOTES PROVIDER " + (System.currentTimeMillis()-startTime));
-	                
-	    request.setAttribute("providers", providers);
-
 	    // apply if we are filtering on role
 	    log.debug("Filter on Role");
 	    startTime = System.currentTimeMillis();
 	    List roles = roleMgr.getRoles();
 	    request.setAttribute("roles", roles);
 	    String[] roleId = caseForm.getFilter_roles();
-	    if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
+	    notesToDisplay = applyRoleFilter(notesToDisplay, roleId);
 	    log.debug("Filter on Role " + (System.currentTimeMillis()-startTime));
 	                
-	    // this is a local filter and does not apply to remote notes
-	    log.debug("Pop notes with editors");
-	    startTime = System.currentTimeMillis();
-	    caseManagementMgr.getEditors(notes);
-	    log.debug("Pop notes with editors " + (System.currentTimeMillis()-startTime));
-	    	    
 	    /*
 	     * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 	     */
@@ -555,20 +614,135 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    startTime = System.currentTimeMillis();
 	    String noteSort = caseForm.getNote_sort();
 	    if (noteSort != null && noteSort.length() > 0) {
-	    	request.setAttribute("Notes", sortNotes(notes, noteSort));
+	    	notesToDisplay=sortNotes(notesToDisplay, noteSort);
 	    }
 	    else {
 	    	oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 	    	noteSort = p.getProperty("CMESort", "");
 	    	if (noteSort.trim().equalsIgnoreCase("UP"))
-	    		request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
+	    		notesToDisplay=sortNotes(notesToDisplay, "observation_date_asc");
 	    	else
-	    		request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
+	    		notesToDisplay=sortNotes(notesToDisplay, "observation_date_desc");
 	    }
+
+	    request.setAttribute("Notes", notesToDisplay);
 	    log.debug("Apply sorting to notes " + (System.currentTimeMillis()-startTime));
     }
 
-	
+    private static boolean hasRole(List<SecUserRole> roles, String role)
+    {
+    	if (roles==null) return(false);
+    	
+    	for (SecUserRole roleTmp : roles)
+    	{
+    		if (roleTmp.getRoleName().equals(role)) return(true);
+    	}
+    	
+    	return(false);
+    }
+    
+	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		List<SecUserRole> roles=oscarSecurityDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
+
+		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
+
+		try {
+			List<CachedDemographicNote> linkedNotes = CaisiIntegratorManager.getLinkedNotes(demographicNo);
+
+			for (CachedDemographicNote cachedDemographicNote : linkedNotes) {
+				try {
+					
+					// filter on issues to display
+					if (hasIssueToBeDisplayed(cachedDemographicNote, issueCodesToDisplay)) {
+						
+						// filter on role based access
+						if (hasRole(roles, cachedDemographicNote.getRole())) {
+							notesToDisplay.add(getNoteToDisplay(cachedDemographicNote));
+						}
+					}
+				} catch (Exception e) {
+					log.error("Unexpected error.", e);
+				}
+			}
+		} catch (Exception e) {
+			log.error("Unexpected error.", e);
+		}
+    }
+
+	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, ArrayList<String> issueCodesToDisplay) {
+		for (NoteIssue noteIssue : cachedDemographicNote.getIssues())
+		{
+			// yes I know this is flawed in that it's ignoreing the code type.
+			// right now we don't support code type properly on the caisi side.
+			if (issueCodesToDisplay.contains(noteIssue.getIssueCode())) return(true);
+		}
+		
+		return(false);
+	}
+
+	private NoteDisplay getNoteToDisplay(CachedDemographicNote cachedDemographicNote) throws MalformedURLException {
+    	NoteDisplay noteDisplay=new NoteDisplay();
+    	
+    	noteDisplay.editable=false;
+    	noteDisplay.observationDate=cachedDemographicNote.getObservationDate();
+    	
+    	CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
+    	if (cachedFacility!=null) noteDisplay.location="remote: "+cachedFacility.getName();
+    	else noteDisplay.location="remote: name unavailable";
+    	
+    	noteDisplay.remoteFacilityId=cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId();
+    	noteDisplay.uuid=cachedDemographicNote.getCachedDemographicNoteCompositePk().getUuid();
+    	
+    	FacilityIdIntegerCompositePk programPk=new FacilityIdIntegerCompositePk();
+    	programPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
+    	programPk.setCaisiItemId(cachedDemographicNote.getCaisiProgramId());
+    	CachedProgram remoteProgram=CaisiIntegratorManager.getRemoteProgram(programPk);
+    	if (remoteProgram!=null) noteDisplay.program=remoteProgram.getName();
+    	else noteDisplay.program="Not unavailable";
+    	
+    	FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
+    	providerPk.setIntegratorFacilityId(cachedDemographicNote.getCachedDemographicNoteCompositePk().getIntegratorFacilityId());
+    	providerPk.setCaisiItemId(cachedDemographicNote.getObservationCaisiProviderId());
+    	CachedProvider remoteProvider=CaisiIntegratorManager.getProvider(providerPk);
+    	if (remoteProvider!=null) noteDisplay.provider=remoteProvider.getLastName()+", "+remoteProvider.getFirstName();
+    	else noteDisplay.provider="Not unavailable";
+    	
+    	noteDisplay.role=cachedDemographicNote.getRole();
+    	noteDisplay.status=cachedDemographicNote.getSigningCaisiProviderId()!=null?"Signed":"Unsigned";
+    	noteDisplay.note=cachedDemographicNote.getNote();
+    	
+    	return(noteDisplay);
+	}
+
+	private void addLocalNotes(ArrayList<NoteDisplay> notesToDisplay, Collection<CaseManagementNote> localNotes) {	    
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		for (CaseManagementNote localNote : localNotes)
+	    {
+	    	NoteDisplay noteDisplay=new NoteDisplay();
+	    	
+	    	noteDisplay.editable=!localNote.isSigned() || (loggedInInfo.loggedInProvider.getProviderNo().equals(localNote.getProviderNo()) && !localNote.isLocked());
+	    	noteDisplay.observationDate=localNote.getObservation_date();
+	    	noteDisplay.location="local";
+	    	noteDisplay.noteId=localNote.getId().intValue();
+	    	noteDisplay.hasHistory=localNote.getHasHistory();
+	    	noteDisplay.locked=localNote.isLocked();
+	    	
+	    	Program program=programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
+	    	noteDisplay.program=program.getName();
+	    	
+	    	Provider provider=providerDao.getProvider(localNote.getProviderNo());
+	    	noteDisplay.provider=provider.getFormattedName();
+	    	
+	    	noteDisplay.role=localNote.getRoleName();
+	    	noteDisplay.status=localNote.isSigned()?"Signed":"Unsigned";
+	    	noteDisplay.note=localNote.getNote();
+	    	
+	    	notesToDisplay.add(noteDisplay);
+	    }
+    }
+
 	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
@@ -619,7 +793,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Integer remoteFacilityId = cachedDemographicIssue.getFacilityDemographicIssuePk().getIntegratorFacilityId();
 		CachedFacility remoteFacility = CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		if (remoteFacility != null) issueDisplay.location = "remote: " + remoteFacility.getName();
-		else issueDisplay.location = "remote, name unavailable";
+		else issueDisplay.location = "remote: name unavailable";
 
 		issueDisplay.major = cachedDemographicIssue.isMajor() ? "major" : "not major";
 		issueDisplay.resolved = cachedDemographicIssue.isResolved() ? "resolved" : "unresolved";
@@ -627,7 +801,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, List<CaseManagementIssue> localIssues) {
+	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean resolved) {
+		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, resolved);
+
 		for (CaseManagementIssue cmi : localIssues)
 		{
 			IssueDisplay issueDisplay=new IssueDisplay();
@@ -751,17 +927,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		searchBean.setSearchRoleId(caseForm.getSearchRoleId());
 		searchBean.setSearchStartDate(caseForm.getSearchStartDate());
 		searchBean.setSearchText(caseForm.getSearchText());
-		List results = this.caseManagementMgr.search(searchBean);
+		List results = caseManagementMgr.search(searchBean);
 		Collection filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
 		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 		List filteredResults = caseManagementMgr.filterNotes(filtered1, getProviderNo(request), programId, currentFacilityId);
 
-		List sortedResults = this.sortNotes(filteredResults, caseForm.getNote_sort());
+		List sortedResults = sortNotes_old(filteredResults, caseForm.getNote_sort());
 		request.setAttribute("search_results", sortedResults);
 		return view(mapping, form, request, response);
 	}
-
-	private List sortNotes(Collection<CaseManagementNote> notes, String field) throws Exception {
+	
+	private List sortNotes_old(Collection<CaseManagementNote> notes, String field) throws Exception {
 		log.debug("Sorting notes by field: " + field);
 		
 		ArrayList<CaseManagementNote> resultsSorted=new ArrayList<CaseManagementNote>(notes);
@@ -789,7 +965,69 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		return resultsSorted;
 	}
+	
+	private ArrayList sortNotes(ArrayList<NoteDisplay> notes, String field) throws Exception {
+		log.debug("Sorting notes by field: " + field);
+		
+		if (field == null || field.equals("") || field.equals("update_date")) {
+			return notes;
+		}
 
+		if (field.equals("providerName")) {
+			Collections.sort(notes, noteProviderComparator);
+		}
+		if (field.equals("programName")) {
+			Collections.sort(notes, noteRoleComparator);
+		}
+		if (field.equals("observation_date_asc")) {
+			Collections.sort(notes, noteObservationDateComparator);
+			Collections.reverse(notes);
+		}
+		if (field.equals("observation_date_desc")) {
+			Collections.sort(notes, noteObservationDateComparator);
+		}
+
+		return notes;
+	}
+
+	public static Comparator<NoteDisplay> noteProviderComparator = new Comparator<NoteDisplay>() {
+		public int compare(NoteDisplay note1, NoteDisplay note2) {
+			if (note1 == null || note2 == null) {
+				return 0;
+			}
+
+			return note1.provider.compareTo(note2.provider);
+		}
+	};
+
+	public static Comparator<NoteDisplay> noteProgramComparator = new Comparator<NoteDisplay>() {
+		public int compare(NoteDisplay note1, NoteDisplay note2) {
+			if (note1 == null || note1.program == null || note2 == null || note2.program == null) {
+				return 0;
+			}
+			return note1.program.compareTo(note2.program);
+		}
+	};
+
+	public static Comparator<NoteDisplay> noteRoleComparator = new Comparator<NoteDisplay>() {
+		public int compare(NoteDisplay note1, NoteDisplay note2) {
+			if (note1 == null || note2 == null) {
+				return 0;
+			}
+			return note1.role.compareTo(note2.role);
+		}
+	};
+
+	public static Comparator<NoteDisplay> noteObservationDateComparator = new Comparator<NoteDisplay>() {
+		public int compare(NoteDisplay note1, NoteDisplay note2) {
+			if (note1 == null || note2 == null) {
+				return 0;
+			}
+
+			return note2.observationDate.compareTo(note1.observationDate);
+		}
+	};
+	
 	// unlock a note temporarily - session
 	/*
 	 * show password
@@ -851,20 +1089,30 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return map;
 	}
 
-	protected List<CaseManagementNote> applyRoleFilter(Collection<CaseManagementNote> notes, String[] roleId) {
+	private ArrayList<NoteDisplay> applyRoleFilter(ArrayList<NoteDisplay> notes, String[] roleId) {
 
-		// if no filter return everything
-		if (Arrays.binarySearch(roleId, "a") >= 0) return new ArrayList<CaseManagementNote>(notes);
+		if (roleId==null || hasRole(roleId, "a")) return(notes);
 
-		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
+		ArrayList<NoteDisplay> filteredNotes = new ArrayList<NoteDisplay>();
 
-		for (CaseManagementNote note : notes) {
-			if (Arrays.binarySearch(roleId, note.getReporter_caisi_role()) >= 0) filteredNotes.add(note);
+		for (NoteDisplay note : notes) {
+			if (hasRole(roleId, note.getRole())) filteredNotes.add(note);
 		}
 
 		return filteredNotes;
 	}
 
+	private static boolean hasRole(String[] roleId, String role)
+	{
+		for (String s : roleId)
+		{
+			if (s.equals(role)) return(true);
+		}
+		
+		return(false);
+	}
+	
+	
 	/*
 	 * This method extracts a unique list of providers, and optionally filters out all notes belonging to providerNo (arg2).
 	 */
