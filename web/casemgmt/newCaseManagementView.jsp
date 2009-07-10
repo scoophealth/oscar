@@ -497,12 +497,39 @@ WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplication
 	style="display:inline; margin-top:0; margin-bottom:0;">
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<html:hidden property="includeIssue" value="off" />
-        <html:hidden property="appointmentNo"  value="<%=request.getParameter(\"appointmentNo\")%>" />
-        <html:hidden property="appointmentDate"  value="<%=request.getParameter(\"appointmentDate\")%>" />
-        <html:hidden property="start_time"  value="<%=request.getParameter(\"start_time\")%>" />
+    <%
+       String apptNo = request.getParameter("appointmentNo");
+       if( apptNo == null || apptNo.equals("") ) {
+           apptNo = "0";
+        }
+
+       String apptDate = request.getParameter("appointmentDate");
+       if( apptDate == null || apptDate.equals("") ) {
+           apptDate = oscar.util.UtilDateUtilities.getToday("yyyy-MM-dd");
+       }
+
+       String startTime = request.getParameter("start_time");
+       if( startTime == null || startTime.equals("") ) {
+            startTime = "0:00";
+       }
+
+       String apptProv = request.getParameter("apptProvider");
+       if( apptProv == null || apptProv.equals("") || apptProv.equals("null") ) {
+           apptProv = "none";
+       }
+
+       String provView = request.getParameter("providerview");
+       if( provView == null || provView.equals("") || provView.equals("null") ) {
+           provView = "1";
+       }
+
+    %>
+        <html:hidden property="appointmentNo"  value="<%=apptNo%>" />
+        <html:hidden property="appointmentDate"  value="<%=apptDate%>" />
+        <html:hidden property="start_time"  value="<%=startTime%>" />
         <html:hidden property="billRegion" value="<%=((String )oscarVariables.getProperty(\"billregion\",\"\")).trim().toUpperCase()%>"/>
-        <html:hidden property="apptProvider" value="<%=request.getParameter(\"apptProvider\")%>"/>
-        <html:hidden property="providerview" value="<%=request.getParameter(\"providerview\")%>"/>
+        <html:hidden property="apptProvider" value="<%=apptProv%>"/>
+        <html:hidden property="providerview" value="<%=provView%>"/>
         <input type="hidden" name="toBill" id="toBill" value="false">
 	<input type="hidden" name="deleteId" value="0">
 	<input type="hidden" name="lineId" value="0">
