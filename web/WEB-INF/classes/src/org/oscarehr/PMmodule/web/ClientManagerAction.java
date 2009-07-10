@@ -471,7 +471,6 @@ public class ClientManagerAction extends BaseAction {
 		ClientReferral r = (ClientReferral) clientForm.get("referral");
 		String id = request.getParameter("id");
 		setEditAttributes(form, request, id);
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
 		// if it's a local referral
 		long programId = p.getId();
@@ -486,7 +485,7 @@ public class ClientManagerAction extends BaseAction {
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setIntegratorFacilityId(Integer.parseInt(r.getRemoteFacilityId()));
 				pk.setCaisiItemId(Integer.parseInt(r.getRemoteProgramId()));
-				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(facilityId, pk);
+				CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(pk);
 
 				p.setName(cachedProgram.getName());
 
@@ -1535,7 +1534,7 @@ public class ClientManagerAction extends BaseAction {
 							FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 							pk.setIntegratorFacilityId(remoteReferral.getDestinationIntegratorFacilityId());
 							pk.setCaisiItemId(remoteReferral.getDestinationCaisiProgramId());
-							CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(facilityId, pk);
+							CachedProgram cachedProgram = CaisiIntegratorManager.getRemoteProgram(pk);
 							programName.append(cachedProgram.getName());
 
 							clientReferral.setProgramName(programName.toString());

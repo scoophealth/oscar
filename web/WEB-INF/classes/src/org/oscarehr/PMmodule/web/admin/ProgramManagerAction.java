@@ -990,7 +990,7 @@ public class ProgramManagerAction extends BaseAction {
 				FacilityIdStringCompositePk pk = new FacilityIdStringCompositePk();
 				pk.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
 				pk.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
-				CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityId, pk);
+				CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(pk);
 				if (cachedProvider != null) {
 					remoteQueueEntry.setProviderName(cachedProvider.getLastName() + ", " + cachedProvider.getFirstName());
 				} else {

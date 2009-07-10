@@ -77,10 +77,9 @@
 <%
 	String regionalIdentifier=request.getParameter("regionalIdentifier");
 	String cn=request.getParameter("cn");
-	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Integer currentDemographicNo=bean.getDemographicNo();
 	
-	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentFacilityId, currentDemographicNo, regionalIdentifier, cn);
+	ArrayList<StaticScriptBean.DrugDisplayData> drugs=StaticScriptBean.getDrugList(currentDemographicNo, regionalIdentifier, cn);
 	
 	oscar.oscarRx.data.RxPatientData.Patient patient=new oscar.oscarRx.data.RxPatientData().getPatient(currentDemographicNo);
 	String annotation_display=org.oscarehr.casemgmt.model.CaseManagementNoteLink.DISP_PRESCRIP;

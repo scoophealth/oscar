@@ -433,7 +433,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			FacilityIdStringCompositePk facilityProviderPrimaryKey = new FacilityIdStringCompositePk();
 			facilityProviderPrimaryKey.setIntegratorFacilityId(remoteReferral.getSourceIntegratorFacilityId());
 			facilityProviderPrimaryKey.setCaisiItemId(remoteReferral.getSourceCaisiProviderId());
-			CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityId, facilityProviderPrimaryKey);
+			CachedProvider cachedProvider = CaisiIntegratorManager.getProvider(facilityProviderPrimaryKey);
 			sb.append(" by ");
 			sb.append(cachedProvider.getLastName());
 			sb.append(", ");

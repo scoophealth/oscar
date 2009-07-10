@@ -109,7 +109,7 @@ public class ManageLinkedClients {
 	        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 	        MatchingClientParameters matchingClientParameters = getMatchingHnrClientParameters(demographic);
-	        List<MatchingClientScore> potentialMatches = CaisiIntegratorManager.searchHnrForMatchingClients(loggedInInfo.currentFacility, loggedInInfo.loggedInProvider, matchingClientParameters);
+	        List<MatchingClientScore> potentialMatches = CaisiIntegratorManager.searchHnrForMatchingClients(matchingClientParameters);
 	        
 	        for (MatchingClientScore matchingClientScore : potentialMatches) {
 	        	String tempKey = ClientLink.Type.HNR.name() + '.' + matchingClientScore.getClient().getLinkingId();

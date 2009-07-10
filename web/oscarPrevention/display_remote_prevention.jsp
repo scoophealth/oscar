@@ -32,7 +32,6 @@
 		<%
 			Integer remoteFacilityId=Integer.valueOf(request.getParameter("remoteFacilityId"));
 			Integer remotePreventionId=Integer.valueOf(request.getParameter("remotePreventionId"));
-			Integer loggedInFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 			
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 
@@ -45,7 +44,7 @@
 			FacilityIdStringCompositePk providerPk=new FacilityIdStringCompositePk();
 			providerPk.setIntegratorFacilityId(remotePrevention.getFacilityPreventionPk().getIntegratorFacilityId());
 			providerPk.setCaisiItemId(remotePrevention.getCaisiProviderId());
-			CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(loggedInFacilityId, providerPk);
+			CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(providerPk);
 		%>
 		<table style="border-collapse:collapse">
 			<tr>
