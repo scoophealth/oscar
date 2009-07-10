@@ -1314,8 +1314,8 @@ insert into `secObjectName` (`objectName`) values ('_rx');
 insert into `secObjectName` (`objectName`) values ('_merge');
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_flowsheet','Flow Sheet',0);
 
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Casemgmt - Issues',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Casemgmt - Notes',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Access to Case Management Issues',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Permissions for Case Management Notes',0);
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');

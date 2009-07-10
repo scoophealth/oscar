@@ -3,8 +3,8 @@
 --  ('_casemgmt.notes','Permissions for Case Management Notes',0,NULL);
 -- COMMIT;
 
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Casemgmt - Issues',0);
-insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Casemgmt - Notes',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Access to Case Management Issues',0);
+insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Permissions for Case Management Notes',0);
 
 insert into `secObjPrivilege` values('doctor', '_casemgmt.issues', 'x', 0, '999998');
 insert into `secObjPrivilege` values('doctor', '_casemgmt.notes', 'x', 0, '999998');
