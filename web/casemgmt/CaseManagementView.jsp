@@ -100,26 +100,8 @@
 		
 		var suche = trimAll(term.toLowerCase());
 		var noteCount = <%=noteList.size()%>;
-		//alert(suche.length + suche  + _id);
-
-		if ("all" == suche) {
-			for (var r = 1; r <= noteCount; r++) {
-				var table = document.getElementById(_id + r);
-				table.style.display = '';
-			}
-			return;
-		}
-
-		for (var r = 1; r <= noteCount; r++) {
-			var table = document.getElementById(_id + r);
-			var ele = table.rows[0].cells[cellNr-1].innerHTML.replace(/<[^>]+>/g,"");
-			
-			if (ele.toLowerCase().indexOf(suche) >= 0) {
-				table.style.display = '';
-			} else {
-				table.style.display = 'none';
-			}
-		}
+		table.style.display = '';
+		
 	}
 <%}%>
 
