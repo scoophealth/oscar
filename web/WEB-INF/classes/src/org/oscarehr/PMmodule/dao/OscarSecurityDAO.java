@@ -26,18 +26,20 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class OscarSecurityDAO extends HibernateDaoSupport {
 
     private static Log log = LogFactory.getLog(OscarSecurityDAO.class);
 
-    public List getUserRoles(String providerNo) {
+    public List<SecUserRole> getUserRoles(String providerNo) {
         if (providerNo == null) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from SecUserRole s where s.ProviderNo = ?", providerNo);
+        @SuppressWarnings("unchecked")
+        List<SecUserRole> results = getHibernateTemplate().find("from SecUserRole s where s.ProviderNo = ?", providerNo);
 
         if (log.isDebugEnabled()) {
             log.debug("getUserRoles: providerNo=" + providerNo + ",# of results=" + results.size());
