@@ -57,7 +57,7 @@ public class StaticScriptBean {
 		public boolean isLocal = true;
 	}
 
-	public static ArrayList<DrugDisplayData> getDrugList(int currentFacilityId, int demographicId, String regionalIdentifier, String customName) {
+	public static ArrayList<DrugDisplayData> getDrugList(int demographicId, String regionalIdentifier, String customName) {
 		regionalIdentifier=StringUtils.trimToNull(regionalIdentifier);
 		customName=StringUtils.trimToNull(customName);
 		
@@ -78,9 +78,9 @@ public class StaticScriptBean {
 				for (CachedDemographicDrug remoteDrug : remoteDrugs) {
 					if (regionalIdentifier != null)
 					{
-						if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.add(getDrugDisplayData(currentFacilityId, remoteDrug));
+						if (regionalIdentifier.equals(remoteDrug.getRegionalIdentifier())) results.add(getDrugDisplayData(remoteDrug));
 					}
-					else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.add(getDrugDisplayData(currentFacilityId, remoteDrug));
+					else if (customName != null && !"null".equals(customName) && customName.equals(remoteDrug.getCustomName())) results.add(getDrugDisplayData(remoteDrug));
 				}
 			} catch (Exception e) {
 				logger.error("Unexpected error", e);
@@ -91,14 +91,14 @@ public class StaticScriptBean {
 		return (results);
 	}
 
-	private static DrugDisplayData getDrugDisplayData(int currentFacilityId, CachedDemographicDrug remoteDrug) throws MalformedURLException {
+	private static DrugDisplayData getDrugDisplayData(CachedDemographicDrug remoteDrug) throws MalformedURLException {
 		DrugDisplayData drugDisplayData = new DrugDisplayData();
 
 		FacilityIdStringCompositePk remoteProviderPk=new FacilityIdStringCompositePk();
 		int remoteFacilityId=remoteDrug.getFacilityIdIntegerCompositePk().getIntegratorFacilityId();
 		remoteProviderPk.setIntegratorFacilityId(remoteFacilityId);
 		remoteProviderPk.setCaisiItemId(remoteDrug.getCaisiProviderId());
-		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(currentFacilityId, remoteProviderPk);
+		CachedProvider cachedProvider=CaisiIntegratorManager.getProvider(remoteProviderPk);
 		CachedFacility cachedFacility=CaisiIntegratorManager.getRemoteFacility(remoteFacilityId);
 		drugDisplayData.providerName = cachedProvider.getFirstName() + ' ' + cachedProvider.getLastName()+" @ "+cachedFacility.getName();
 
