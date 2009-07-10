@@ -1,4 +1,4 @@
-<!-- 
+<%-- 
 /*
 * 
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
@@ -20,7 +20,7 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
- -->
+--%>
 
 <%-- Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061 --%>
 <%-- Updated by Eugene Petruhin on 15 jan 2009 while fixing #2510692 --%>
@@ -31,20 +31,19 @@
 <%@ page import="org.oscarehr.casemgmt.model.*"%>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page
-	import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="oscar.OscarProperties"%>
 <%@ page import="org.apache.log4j.Logger"%>
+<%@page import="org.oscarehr.casemgmt.web.CaseManagementViewAction"%>
 <%
 	response.setHeader("Cache-Control", "no-cache");
 	Logger logger=Logger.getLogger("CaseManagementView.jsp");
-	java.util.List noteList=(java.util.List)request.getAttribute("Notes");
-%>
+	java.util.List<CaseManagementViewAction.NoteDisplay> noteList=(java.util.List<CaseManagementViewAction.NoteDisplay>)request.getAttribute("Notes");
 
-<%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
+
 <html:form action="/CaseManagementView" method="get">
 	<html:hidden property="demographicNo" />
 	<html:hidden property="providerNo" />
@@ -458,42 +457,22 @@
 						<td>
 						<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
 						<c:choose>
-							<c:when
-								test="${(!note.signed) and (sessionScope.readonly=='false')}">
-								<c:url
-									value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true"
-									var="notesURL" />
-								<img src="<c:out value="${ctx}"/>/images/edit_white.png"
-									title="Edit/Sign Note" style="cursor: pointer"
-									onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
-							</c:when>
-							<c:when
-								test="${note.signed and note.providerNo eq param.providerNo and (note.locked !=true)}">
-								<c:url
-									value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true"
-									var="notesURL" />
-								<img src="<c:out value="${ctx}"/>/images/edit_white.png"
-									title="Edit Note" style="cursor: pointer"
-									onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
+							<c:when test="${(note.editable) and (sessionScope.readonly=='false')}">
+								<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true" var="notesURL" />
+								<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor: pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 							</c:when>
 							<c:otherwise>
-								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif"
-									title="" />
+								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif" title="" />
 							</c:otherwise>
 						</c:choose> 
 						</security:oscarSec>
 						<c:choose>
 							<c:when test="${note.hasHistory == true and note.locked != true}">
-								<c:url
-									value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-									var="historyURL" />
-								<img src="<c:out value="${ctx}"/>/images/history.gif"
-									title="Note History" style="cursor: pointer"
-									onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
+								<c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
+								<img src="<c:out value="${ctx}"/>/images/history.gif" title="Note History" style="cursor: pointer" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
 							</c:when>
 							<c:otherwise>
-								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif"
-									title="" />
+								<img src="<c:out value="${ctx}"/>/images/transparent_icon.gif" title="" />
 							</c:otherwise>
 						</c:choose> 
 						<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
@@ -513,16 +492,12 @@
 						</c:choose>
 						</security:oscarSec>
 						</td>
-						<td><fmt:formatDate pattern="yyyy-MM-dd hh:mm a"
-							value="${note.observation_date}" /></td>
-						<td><c:out value="${note.providerName}" /></td>
+						<td><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.observationDate}" /></td>
+						<td><c:out value="${note.provider}" /></td>
 						<td><c:out value="${note.status}" /></td>
-						<td><c:out value="${note.programName}" /></td>
-						<td>
-							<c:if test="${note.remote=='true'}"><c:out value="${note.facilityName }" /></c:if>
-							<c:if test="${note.remote=='false'}">local</c:if>
-						</td>
-						<td><c:out value="${note.roleName}" /></td>
+						<td><c:out value="${note.program}" /></td>
+						<td><c:out value="${note.location}" /></td>
+						<td><c:out value="${note.role}" /></td>
 					</tr>
 				</c:forEach>
 			</table>
@@ -546,47 +521,31 @@
 							bgcolor1="#EEEEFF";
 						}
 						String noteId;
-						if(((CaseManagementNote)noteList.get(index1 - 1)).isRemote())
-						{
-							noteId = "remoteNote"+index1;
-						}
-						else
-						{
-							noteId=((CaseManagementNote)noteList.get(index1 - 1)).getId().toString();
-							request.setAttribute("noteId", noteId);
-						}
-						
+						noteId=noteList.get(index1 - 1).getNoteId().toString();
+						request.setAttribute("noteId", noteId);
 					%>
 					<tr>
 						<td>
 						<table id="test<%=index1%>" width="100%" border="0" style="margin-bottom: 5px">
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Facility</td>
-								<td width="93%">
-									<c:if test="${note.remote}">
-										<c:out value="${note.facilityName } (Remote Facility)" />
-									</c:if>
-									<c:if test="${note.remote=='false'}">
-										<c:out value="Local Facility" />
-									</c:if>
-								</td>
+								<td width="93%"><c:out value="${note.location}" /></td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Program</td>
 								<td width="93%">
-									<c:out value="${note.programName }" />
+									<c:out value="${note.program}" />
 								</td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Provider</td>
 								<td width="93%">
-									<c:out value="${note.provider.formattedName }" />
+									<c:out value="${note.provider}" />
 								</td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Date</td>
-								<td width="93%"><fmt:formatDate
-									pattern="yyyy-MM-dd hh:mm a" value="${note.observation_date}" /></td>
+								<td width="93%"><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.observationDate}" /></td>
 							</tr>
 							<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Status</td>
@@ -595,55 +554,36 @@
 						<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Action</td>
 								<td width="93%">
-									<c:if test="${note.remote}">
-										<c:out value="Remote notes are not editable" />
-									</c:if>
-									<c:if test="${note.remote=='false'}">
 									<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
-										<c:if test="${(!note.signed) and (sessionScope.readonly=='false')}">
-										<c:url
-											value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-											var="notesURL" />
-										<input type="button" value="Edit and Sign"
-											onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
-										</c:if> 
-										<c:if test="${note.signed and note.providerNo eq param.providerNo}">
-										<c:url
-											value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-											var="notesURL" />
-										<input type="button" value="Edit This Note"
-											onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
+										<c:if test="${(note.editable) and (sessionScope.readonly=='false')}">
+											<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
+											<input type="button" value="Edit and Sign" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')">
 										</c:if> 
 									</security:oscarSec>
-										<c:if test="${note.hasHistory == true}">
-										<c:url
-											value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}"
-											var="historyURL" />
-										<input type="button" value="Note History"
-											onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
-										</c:if> 
+									<c:if test="${note.hasHistory == true}">
+										<c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
+										<input type="button" value="Note History" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')">
+									</c:if> 
 									<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.notes" rights="u">
 										<c:if test="${note.locked}">
-										<c:url
-											value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}"
-											var="lockedURL" />
-										<input type="button" value="Unlock"
-											onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
+											<c:url value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}" var="lockedURL" />
+											<input type="button" value="Unlock" onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')">
 										</c:if>
 									</security:oscarSec>
-									</c:if>
 								</td>
 							</tr>
 						<tr bgcolor="<%=bgcolor1%>">
 								<td width="7%">Note</td>
-								<td width="93%"><c:choose>
-									<c:when test="${note.locked}">
-										<span style="color: red"><i>Contents Hidden</i></span>
-									</c:when>
-									<c:otherwise>
-										<pre><c:out value="${note.note }" /></pre>
-									</c:otherwise>
-								</c:choose></td>
+								<td width="93%">
+									<c:choose>
+										<c:when test="${note.locked}">
+											<span style="color: red"><i>Contents Hidden</i></span>
+										</c:when>
+										<c:otherwise>
+											<pre><c:out value="${note.note}" /></pre>
+										</c:otherwise>
+									</c:choose>
+								</td>
 							</tr>
 						</table>
 						
