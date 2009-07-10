@@ -122,7 +122,7 @@ You have no rights to access the data!
             String strBeanName = "casemgmt_oscar_bean" + bean.getDemographicNo();
             session.setAttribute(strBeanName, bean);
             session.setAttribute("casemgmt_bean_flag", "true");
-            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName+"&appointmentNo="+request.getParameter("appointmentNo")+"&appointmentDate="+request.getParameter("appointmentDate")+"&start_time="+request.getParameter("startTime")+ "&apptProvider=" + request.getParameter("apptProvider")+"&providerview="+ request.getParameter("providerview");
+            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName+"&appointmentNo="+request.getParameter("appointmentNo")+"&appointmentDate="+request.getParameter("appointmentDate")+"&start_time="+request.getParameter("startTime")+ "&apptProvider=" + request.getParameter("apptProvider_no")+"&providerview="+ request.getParameter("providerview");
             
             if( request.getParameter("noteBody") != null )
                 hrefurl += "&noteBody=" + request.getParameter("noteBody");
