@@ -541,6 +541,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		addLocalIssues(issuesToDisplay, demographicNo, !activeIssues);
 		addRemoteIssues(issuesToDisplay, demographicNo, !activeIssues);
 		
+		boolean useNewCaseMgmt=false;
+		String useNewCaseMgmtString = (String) request.getSession().getAttribute("newCaseManagement");		
+		if (useNewCaseMgmtString!=null) useNewCaseMgmt=Boolean.parseBoolean(useNewCaseMgmtString);
+		
     	request.setAttribute("Issues", issuesToDisplay);
     	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
     	
@@ -574,7 +578,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    localNotes = caseManagementMgr.filterNotes(localNotes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
 
 	    HashSet providers=new HashSet();
-	    localNotes = applyProviderFilters(localNotes, providers, caseForm.getFilter_providers());
+	    
+	    if(useNewCaseMgmt) {
+			localNotes = applyProviderFilters(localNotes, providers, caseForm.getFilter_providers());
+		}else{
+			String [] fp = new String[1];
+			fp[0]=caseForm.getFilter_provider();
+			if(fp[0]=="")	
+				fp = null;
+			localNotes = applyProviderFilters(localNotes, providers, fp);
+		}
+	    
 	    request.setAttribute("providers", providers);
 
 	    caseManagementMgr.getEditors(localNotes);
