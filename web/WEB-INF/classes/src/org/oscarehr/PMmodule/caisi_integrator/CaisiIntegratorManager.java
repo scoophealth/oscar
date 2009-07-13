@@ -307,8 +307,8 @@ public class CaisiIntegratorManager {
 		}
 	}
 
-	public static ReferralWs getReferralWs(int facilityId) throws MalformedURLException {
-		Facility facility = getLocalFacility(facilityId);
+	public static ReferralWs getReferralWs() throws MalformedURLException {
+		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 
 		ReferralWsService service = new ReferralWsService(buildURL(facility, "ReferralService"));
 		ReferralWs port = service.getReferralWsPort();

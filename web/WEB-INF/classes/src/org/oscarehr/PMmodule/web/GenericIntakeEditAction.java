@@ -301,7 +301,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			String admissionText = null;
 			String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 			if (remoteReferralId != null) {
-				admissionText = getAdmissionText(facilityId, admissionText, remoteReferralId);
+				admissionText = getAdmissionText(admissionText, remoteReferralId);
 			}
 
 			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId(), saveWhich, admissionText);
@@ -310,7 +310,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				// doing this after the admit is about as transactional as this is going to get for now.
 				ReferralWs referralWs;
 				try {
-					referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+					referralWs = CaisiIntegratorManager.getReferralWs();
 					referralWs.removeReferral(Integer.parseInt(remoteReferralId));
 				}
 				catch (Exception e) {
@@ -420,9 +420,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 	}
 
-	private String getAdmissionText(Integer facilityId, String admissionText, String remoteReferralId) {
+	private String getAdmissionText(String admissionText, String remoteReferralId) {
 		try {
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 			Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 			StringBuilder sb = new StringBuilder();
 

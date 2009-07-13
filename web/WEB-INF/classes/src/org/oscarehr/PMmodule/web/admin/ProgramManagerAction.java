@@ -518,12 +518,10 @@ public class ProgramManagerAction extends BaseAction {
 		DynaActionForm programForm = (DynaActionForm) form;
 		Program program = (Program) programForm.get("program");
 
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
 		Integer remoteReferralId = Integer.valueOf(request.getParameter("remoteReferralId"));
 
 		try {
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 			referralWs.removeReferral(remoteReferralId);
 		} catch (MalformedURLException e) {
 			logger.error("Unexpected error", e);
@@ -898,7 +896,6 @@ public class ProgramManagerAction extends BaseAction {
 	}
 
 	private void setEditAttributes(HttpServletRequest request, String programId) {
-		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 
 		if (programId != null) {
 			request.setAttribute("id", programId);
@@ -923,7 +920,7 @@ public class ProgramManagerAction extends BaseAction {
 			request.setAttribute("queue", programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId)));
 
 			if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
-				request.setAttribute("remoteQueue", getRemoteQueue(facility.getId(), Integer.parseInt(programId)));
+				request.setAttribute("remoteQueue", getRemoteQueue(Integer.parseInt(programId)));
 			}
 
 			request.setAttribute("programFirstSignature", programManager.getProgramFirstSignature(Integer.valueOf(programId)));
@@ -969,10 +966,10 @@ public class ProgramManagerAction extends BaseAction {
 
 	}
 
-	protected List<RemoteQueueEntry> getRemoteQueue(int facilityId, int programId) {
+	protected List<RemoteQueueEntry> getRemoteQueue(int programId) {
 		try {
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 			List<Referral> remoteReferrals = referralWs.getReferralsToProgram(programId);
 
 			ArrayList<RemoteQueueEntry> results = new ArrayList<RemoteQueueEntry>();

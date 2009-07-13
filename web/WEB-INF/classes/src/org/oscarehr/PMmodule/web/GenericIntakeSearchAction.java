@@ -107,12 +107,10 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	}
 
 	public ActionForward searchFromRemoteAdmit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
 		try {
 			Integer remoteReferralId = Integer.parseInt(request.getParameter("remoteReferralId"));
 
-			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(currentFacilityId);
+			ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 			Referral remoteReferral = referralWs.getReferral(remoteReferralId);
 
 			DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
@@ -329,9 +327,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
 		if (remoteReferralId != null) {
 			try {
-				int currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(currentFacilityId);
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 				Referral remoteReferral = referralWs.getReferral(Integer.parseInt(remoteReferralId));
 				parameters.append("&destinationProgramId=");
 				parameters.append(remoteReferral.getDestinationCaisiProgramId());

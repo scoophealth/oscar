@@ -406,7 +406,7 @@ public class ClientManagerAction extends BaseAction {
 				remoteReferral.setSourceCaisiDemographicId(clientId);
 				remoteReferral.setSourceCaisiProviderId(providerId);
 
-				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 				referralWs.makeReferral(remoteReferral);
 			} catch (Exception e) {
 				logger.error("Unexpected Error.", e);
@@ -1517,7 +1517,7 @@ public class ClientManagerAction extends BaseAction {
 
 			if (loggedInInfo.currentFacility.isIntegratorEnabled()) {
 				try {
-					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs(facilityId);
+					ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 
 					List<Referral> referrals = referralWs.getReferralsFor(Integer.parseInt(demographicNo));
 					if (referrals != null) {

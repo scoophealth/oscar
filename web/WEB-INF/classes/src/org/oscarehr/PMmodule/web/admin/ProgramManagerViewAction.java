@@ -101,7 +101,6 @@ public class ProgramManagerViewAction extends BaseAction {
 
 	@SuppressWarnings("unchecked")
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		Facility loggedInFacility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 
 		ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
 
@@ -133,7 +132,7 @@ public class ProgramManagerViewAction extends BaseAction {
         request.setAttribute("queue", queue);
 
 		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
-			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(loggedInFacility.getId(), Integer.parseInt(programId)));
+			request.setAttribute("remoteQueue", programManagerAction.getRemoteQueue(Integer.parseInt(programId)));
 		}
 
         HashSet<Long> genderConflict = new HashSet<Long>();
