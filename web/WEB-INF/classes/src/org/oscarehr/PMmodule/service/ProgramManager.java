@@ -46,6 +46,7 @@ import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 import oscar.OscarProperties;
@@ -474,6 +475,7 @@ public class ProgramManager {
      * 
      * @param programId
      *            is allowed to be null.
+     *            @deprecated use the thread local variable version
      */
     public boolean hasAccessBasedOnFacility(Integer currentFacilityId, Integer programId) {
         // if no program restrictions are defined.
@@ -484,6 +486,21 @@ public class ProgramManager {
         Program program = getProgram(programId);
         if(program!=null) {
         	return(program.getFacilityId() == currentFacilityId.intValue());
+        } else {
+        	return false;
+        }
+    }
+
+    public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    	
+    	// if no program restrictions are defined.
+        if (programId == null) return(true);
+
+        // check the providers facilities against the programs facilities
+        Program program = getProgram(programId);
+        if(program!=null) {
+        	return(program.getFacilityId() == loggedInInfo.currentFacility.getId().intValue());
         } else {
         	return false;
         }

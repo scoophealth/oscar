@@ -289,7 +289,7 @@ public class EDocUtil extends SqlUtilBaseS {
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-            resultDocs = documentFacilityFiltering(currentFacilityId, resultDocs);
+            resultDocs = documentFacilityFiltering(resultDocs);
         }
 
         return resultDocs;
@@ -357,7 +357,7 @@ public class EDocUtil extends SqlUtilBaseS {
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-            resultDocs = documentFacilityFiltering(currentFacilityId, resultDocs);
+            resultDocs = documentFacilityFiltering(resultDocs);
         }
 
         return resultDocs;
@@ -414,12 +414,12 @@ public class EDocUtil extends SqlUtilBaseS {
        return list;
     }
 
-    private static ArrayList<EDoc> documentFacilityFiltering(Integer currentFacilityId, List<EDoc> eDocs) {
+    private static ArrayList<EDoc> documentFacilityFiltering(List<EDoc> eDocs) {
         ArrayList<EDoc> results = new ArrayList<EDoc>();
 
         for (EDoc eDoc : eDocs) {
             Integer programId = eDoc.getProgramId();
-            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) results.add(eDoc);
+            if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(eDoc);
         }
 
         return results;
@@ -455,7 +455,7 @@ public class EDocUtil extends SqlUtilBaseS {
         }
 
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-            resultDocs = documentFacilityFiltering(currentFacilityId, resultDocs);
+            resultDocs = documentFacilityFiltering(resultDocs);
         }
 
         return resultDocs;

@@ -970,7 +970,9 @@ public class CaseManagementManager {
 	 * @param providerNo provider reading issues
 	 * @param programId program provider is logged into
 	 */
-    public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String providerNo, String programId, Integer currentFacilityId) {
+    public List<CaseManagementNote> filterNotes(Collection<CaseManagementNote> notes, String programId) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    	
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
 		if (notes.isEmpty()) {
@@ -979,7 +981,7 @@ public class CaseManagementManager {
 
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList<CaseManagementNote>();
 		}
@@ -1036,7 +1038,7 @@ public class CaseManagementManager {
 
 		// filter notes based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredNotes = notesFacilityFiltering(currentFacilityId, filteredNotes);
+			filteredNotes = notesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredNotes);
 		}
 
 		return filteredNotes;
