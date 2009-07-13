@@ -116,7 +116,7 @@ public class ConsultationAttachDocs {
     public void attach() {
         
         //first we get a list of currently attached docs
-        ArrayList oldlist = EDocUtil.listDocs(demoNo,reqId,EDocUtil.ATTACHED, currentFacilityId);
+        ArrayList oldlist = EDocUtil.listDocs(demoNo,reqId,EDocUtil.ATTACHED);
         ArrayList newlist = new ArrayList();
         ArrayList keeplist = new ArrayList();
         boolean alreadyAttached;

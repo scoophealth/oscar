@@ -249,8 +249,7 @@ function save() {
 				style="width: 100%;" property="documents" multiple="1" size="10">
 				<%                
                 ArrayList privatedocs = new ArrayList();
-             	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED, currentFacilityId);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
@@ -293,8 +292,7 @@ function save() {
            <html:select style="width: 100%;" property="attachedDocs" multiple="1" size="10">
                <%                
                 ArrayList privatedocs = new ArrayList();
-            	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED,currentFacilityId);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {

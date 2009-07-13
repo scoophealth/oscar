@@ -226,7 +226,7 @@ public class EDocUtil extends SqlUtilBaseS {
     /**
      * Fetches all consult docs attached to specific consultation
      */
-    public static ArrayList listDocs(String demoNo, String consultationId, boolean attached, Integer currentFacilityId) {
+    public static ArrayList listDocs(String demoNo, String consultationId, boolean attached) {
         String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.source, d.responsible, d.program_id, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype, d.reviewer, d.reviewdatetime FROM document d, ctl_document c "
                 + "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + "c.module='demographic' AND c.module_id = " + demoNo;
 
@@ -295,12 +295,12 @@ public class EDocUtil extends SqlUtilBaseS {
         return resultDocs;
     }
 
-    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, Integer currentFacilityId) {
-        return  listDocs( module,  moduleid,  docType,  publicDoc,  sort, "active",  currentFacilityId) ;
+    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort) {
+        return  listDocs( module,  moduleid,  docType,  publicDoc,  sort, "active") ;
     }
 
 
-    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus, Integer currentFacilityId) {
+    public static ArrayList<EDoc> listDocs(String module, String moduleid, String docType, String publicDoc, String sort, String viewstatus) {
         // sort must be not null
         // docType = null or = "all" to show all doctypes
         // select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE

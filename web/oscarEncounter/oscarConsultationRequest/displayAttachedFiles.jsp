@@ -39,9 +39,8 @@
 <ul id="attachedList"
 	style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
 	<%
-      		Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             ArrayList privatedocs = new ArrayList();
-            privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED, currentFacilityId);
+            privatedocs = EDocUtil.listDocs(demo, requestId, EDocUtil.ATTACHED);
             EDoc curDoc;                                        
             for(int idx = 0; idx < privatedocs.size(); ++idx)
             {                    

@@ -81,8 +81,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 
     StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
     String js = "";
-    Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active", currentFacilityId);
+    ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE, "active");
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = "";
     String key;

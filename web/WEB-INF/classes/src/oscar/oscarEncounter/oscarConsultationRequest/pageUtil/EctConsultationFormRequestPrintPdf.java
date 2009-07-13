@@ -277,8 +277,7 @@ public class EctConsultationFormRequestPrintPdf {
         
         String demoNo = (String) request.getAttribute("demo");
         String reqId = (String) request.getAttribute("reqId");
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-        ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED, currentFacilityId);
+        ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);
         ArrayList pdfDocs = new ArrayList();
         
         // add recently created pdf to the list

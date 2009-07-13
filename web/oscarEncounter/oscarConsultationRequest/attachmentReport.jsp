@@ -152,8 +152,7 @@ function popup1(height, width, url, windowName){
 			onsubmit="return verifyChecks(this);">
 
 			<div class="documentLists"><%-- STUFF TO DISPLAY --%> <%                            
-	          	Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED, currentFacilityId);                                               
+                ArrayList consultdocs = EDocUtil.listDocs(demoNo, reqId, EDocUtil.ATTACHED);                                               
              %>
 			<div class="doclist">
 			<div class="headerline">
