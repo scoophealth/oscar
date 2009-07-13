@@ -470,27 +470,6 @@ public class ProgramManager {
         programSignatureDao.saveProgramSignature(programSignature);
     }
 
-    /**
-     * This method returns true if the provider is authorised to see items of this programId based on facility filtering.
-     * 
-     * @param programId
-     *            is allowed to be null.
-     *            @deprecated use the thread local variable version
-     */
-    public boolean hasAccessBasedOnFacility(Integer currentFacilityId, Integer programId) {
-        // if no program restrictions are defined.
-        if (programId == null) return(true);
-        if (currentFacilityId == null && programId == null) return(true);
-
-        // check the providers facilities against the programs facilities
-        Program program = getProgram(programId);
-        if(program!=null) {
-        	return(program.getFacilityId() == currentFacilityId.intValue());
-        } else {
-        	return false;
-        }
-    }
-
     public boolean hasAccessBasedOnCurrentFacility(Integer programId) {
     	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
     	

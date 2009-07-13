@@ -96,7 +96,7 @@ public class TicklerManager {
         
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {        	
         	//filter based on facility
-        	results = ticklerFacilityFiltering(currentFacilityId, results);
+        	results = ticklerFacilityFiltering(results);
         	
         	//filter based on caisi role access
             results = filterTicklersByAccess(results,providerNo,programId);
@@ -105,13 +105,13 @@ public class TicklerManager {
         return(results);
     }
     
-    private List<Tickler> ticklerFacilityFiltering(Integer currentFacilityId, List<Tickler> ticklers) {
+    private List<Tickler> ticklerFacilityFiltering(List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();
 
         for (Tickler tickler : ticklers) {
             Integer programId = tickler.getProgram_id();
             
-            if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) {            	
+            if (programManager.hasAccessBasedOnCurrentFacility(programId)) {            	
             	results.add(tickler);
             }        
         }

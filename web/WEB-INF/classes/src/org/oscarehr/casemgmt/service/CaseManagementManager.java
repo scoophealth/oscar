@@ -1038,7 +1038,7 @@ public class CaseManagementManager {
 
 		// filter notes based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredNotes = notesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredNotes);
+			filteredNotes = notesFacilityFiltering(filteredNotes);
 		}
 
 		return filteredNotes;
@@ -1205,7 +1205,7 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = issuesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredIssues);
+			filteredIssues = issuesFacilityFiltering(filteredIssues);
 		}
 
 		return filteredIssues;
@@ -1293,7 +1293,7 @@ public class CaseManagementManager {
 
 		// filter issues based on facility
 		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = communityIssuesFacilityFiltering(loggedInInfo.currentFacility.getId(), filteredIssues);
+			filteredIssues = communityIssuesFacilityFiltering(filteredIssues);
 		}
 
 		return filteredIssues;
@@ -1313,29 +1313,29 @@ public class CaseManagementManager {
 		return filtered;
 	}
 
-	private List<CaseManagementIssue> issuesFacilityFiltering(Integer currentFacilityId, List<CaseManagementIssue> issues) {
+	private List<CaseManagementIssue> issuesFacilityFiltering(List<CaseManagementIssue> issues) {
 		ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
 
 		for (CaseManagementIssue caseManagementIssue : issues) {
 			Integer programId = caseManagementIssue.getProgram_id();
-			if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) results.add(caseManagementIssue);
+			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
 		}
 
 		return results;
 	}
 
-	private List<CaseManagementCommunityIssue> communityIssuesFacilityFiltering(Integer currentFacilityId, List<CaseManagementCommunityIssue> issues) {
+	private List<CaseManagementCommunityIssue> communityIssuesFacilityFiltering(List<CaseManagementCommunityIssue> issues) {
 		ArrayList<CaseManagementCommunityIssue> results = new ArrayList<CaseManagementCommunityIssue>();
 
 		for (CaseManagementCommunityIssue caseManagementIssue : issues) {
 			Integer programId = caseManagementIssue.getProgram_id();
-			if (programManager.hasAccessBasedOnFacility(currentFacilityId, programId)) results.add(caseManagementIssue);
+			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
 		}
 
 		return results;
 	}
 
-	private List<CaseManagementNote> notesFacilityFiltering(Integer currentFacilityId, List<CaseManagementNote> notes) {
+	private List<CaseManagementNote> notesFacilityFiltering(List<CaseManagementNote> notes) {
 
 		ArrayList<CaseManagementNote> results = new ArrayList<CaseManagementNote>();
 
@@ -1345,7 +1345,7 @@ public class CaseManagementManager {
 			if (programId == null || "".equals(programId)) {
 				results.add(caseManagementNote);
 			} else {
-				if (programManager.hasAccessBasedOnFacility(currentFacilityId, Integer.parseInt(programId))) results.add(caseManagementNote);
+				if (programManager.hasAccessBasedOnCurrentFacility(Integer.parseInt(programId))) results.add(caseManagementNote);
 			}
 		}
 
