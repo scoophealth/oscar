@@ -51,15 +51,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.CustomFilter;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -88,7 +87,6 @@ import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
 import oscar.oscarRx.pageUtil.RxSessionBean;
@@ -541,10 +539,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		addLocalIssues(issuesToDisplay, demographicNo, !activeIssues);
 		addRemoteIssues(issuesToDisplay, demographicNo, !activeIssues);
 		
-		boolean useNewCaseMgmt=false;
-		String useNewCaseMgmtString = (String) request.getSession().getAttribute("newCaseManagement");		
-		if (useNewCaseMgmtString!=null) useNewCaseMgmt=Boolean.parseBoolean(useNewCaseMgmtString);
-		
     	request.setAttribute("Issues", issuesToDisplay);
     	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
     	
@@ -577,20 +571,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
 	    localNotes = caseManagementMgr.filterNotes(localNotes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
 
-	    HashSet providers=new HashSet();
-	    
-	    if(useNewCaseMgmt) {
-			localNotes = applyProviderFilters(localNotes, providers, caseForm.getFilter_providers());
-		}else{
-			String [] fp = new String[1];
-			fp[0]=caseForm.getFilter_provider();
-			if(fp[0]=="")	
-				fp = null;
-			localNotes = applyProviderFilters(localNotes, providers, fp);
-		}
-	    
-	    request.setAttribute("providers", providers);
-
 	    caseManagementMgr.getEditors(localNotes);
 
 	    addLocalNotes(notesToDisplay, localNotes);
@@ -621,6 +601,18 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    notesToDisplay = applyRoleFilter(notesToDisplay, roleId);
 	    log.debug("Filter on Role " + (System.currentTimeMillis()-startTime));
 	                
+	    // filter providers
+	    notesToDisplay = applyProviderFilter(notesToDisplay, caseForm.getFilter_providers());
+	    
+	    // set providers to display
+	    HashSet<LabelValueBean> providers=new HashSet<LabelValueBean>();
+	    for (NoteDisplay tempNote : notesToDisplay)
+	    {
+	    	String tempProvider=tempNote.getProvider();
+	    	providers.add(new LabelValueBean(tempProvider,tempProvider));
+	    }
+	    request.setAttribute("providers", providers);
+	    
 	    /*
 	     * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
 	     */
@@ -685,6 +677,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     }
 
 	private boolean hasIssueToBeDisplayed(CachedDemographicNote cachedDemographicNote, ArrayList<String> issueCodesToDisplay) {
+		// no issue selected means display all
+		if (issueCodesToDisplay==null || issueCodesToDisplay.size()==0) return(true);
+		
 		for (NoteIssue noteIssue : cachedDemographicNote.getIssues())
 		{
 			// yes I know this is flawed in that it's ignoreing the code type.
@@ -1127,33 +1122,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	}
 	
 	
-	/*
-	 * This method extracts a unique list of providers, and optionally filters out all notes belonging to providerNo (arg2).
-	 */
-	protected List applyProviderFilter(List notes, Set providers, String providerNo) {
-		boolean filter = false;
-		List filteredNotes = new ArrayList();
-
-		if (providerNo != null && providerNo.length() > 0) {
-			filter = true;
-		}
-
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
-			providers.add(note.getProvider());
-			if (!filter) {
-				// no filter, add all
-				filteredNotes.add(note);
-			}
-			else if (filter && note.getProviderNo().equals(providerNo)) {
-				// correct provider
-				filteredNotes.add(note);
-			}
-		}
-
-		return filteredNotes;
-	}
-
 	private Collection<CaseManagementNote> manageLockedNotes(Collection<CaseManagementNote> notes, boolean removeLockedNotes, Map unlockedNotesMap) {
 		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
 		for (CaseManagementNote note : notes) {
@@ -1172,33 +1140,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return notes;
 	}
 
-	/**
-	 * This method extracts a unique list of providers, and optionally filters out all notes belonging to providerNo (arg2).
-	 * @param notes
-	 * @param providers
-	 * @param providerNo
-	 * @return
-	 */
-	protected List applyProviderFilters(Collection<CaseManagementNote> notes, Set providers, String[] providerNo) {
-		boolean filter = false;
-		List filteredNotes = new ArrayList();
+	private ArrayList<NoteDisplay> applyProviderFilter(ArrayList<NoteDisplay> notes, String[] providerName) {
+		ArrayList<NoteDisplay> filteredNotes = new ArrayList<NoteDisplay>();
 
-		if (providerNo != null && Arrays.binarySearch(providerNo, "a") < 0) {
-			filter = true;
-		}
+		if (providerName == null || providerName.length==0) return(notes);
 
-		for (Iterator iter = notes.iterator(); iter.hasNext();) {
-			CaseManagementNote note = (CaseManagementNote) iter.next();
-			providers.add(note.getProvider());
-			if (!filter) {
-				// no filter, add all
-				filteredNotes.add(note);
-
-			}
-			else {
-				if (Arrays.binarySearch(providerNo, note.getProviderNo()) >= 0)
-				// correct provider
-					filteredNotes.add(note);
+		for (NoteDisplay note : notes) {
+			String tempName=note.getProvider();
+			
+			for (String temp : providerName)
+			{
+				if (tempName.equals(temp)) filteredNotes.add(note);
 			}
 		}
 

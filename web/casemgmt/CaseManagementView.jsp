@@ -100,8 +100,8 @@
 		
 		var suche = trimAll(term.toLowerCase());
 		var noteCount = <%=noteList.size()%>;
-		table.style.display = '';
-		
+				table.style.display = '';
+			
 	}
 <%}%>
 
@@ -395,8 +395,7 @@
 					property="filter_provider"
 					onchange="filter(this.options[this.selectedIndex].text, 'test', 2);">
 					<html:option value="">All</html:option>
-					<html:options collection="providers" property="providerNo"
-						labelProperty="formattedName" />
+					<html:options collection="providers" property="value" labelProperty="label" />
 				</html:select> &nbsp; &nbsp; &nbsp; Sort: <html-el:select property="note_sort"
 					onchange="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.note_view.value='${param.note_view}';document.caseManagementViewForm.submit()">
 					<html:option value="observation_date_desc">Observation Date - Desc</html:option>
@@ -502,8 +501,8 @@
 						{
 							bgcolor1="#EEEEFF";
 						}
-						String noteId;
-						noteId=noteList.get(index1 - 1).getNoteId().toString();
+						Integer noteId;
+						noteId=noteList.get(index1 - 1).getNoteId();
 						request.setAttribute("noteId", noteId);
 					%>
 					<tr>
