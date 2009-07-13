@@ -507,8 +507,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// if it's locked or if it's not in this facility ignore it.
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
 
-				// if it's a note we've already sent ignore it
-				if (facility.getIntegratorLastPushTime()!=null && facility.getIntegratorLastPushTime().after(localNote.getUpdate_date())) continue;
+				// if it's a note we've already sent ignore it (temporaryily disabled until more testing is done)
+				// if (facility.getIntegratorLastPushTime()!=null && facility.getIntegratorLastPushTime().after(localNote.getUpdate_date())) continue;
 				
 				CachedDemographicNote noteToSend=makeRemoteNote(localNote, issueType);
 				notesToSend.add(noteToSend);
