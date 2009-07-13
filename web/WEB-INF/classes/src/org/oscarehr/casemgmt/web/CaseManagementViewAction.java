@@ -334,7 +334,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		/* ISSUES */
 		if (tab.equals("Current Issues")) {
-			viewCurrentIssuesTab(request, caseForm, demoNo, programId);
+			if (useNewCaseMgmt) viewCurrentIssuesTab_newCme(request, caseForm, demoNo, programId);
+			else viewCurrentIssuesTab_oldCme(request, caseForm, demoNo, programId);
 		} // end Current Issues Tab
 
 		log.debug("Get CPP");
@@ -526,7 +527,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 	}
 	
-    private void viewCurrentIssuesTab(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
+    private void viewCurrentIssuesTab_oldCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
             IllegalAccessException, Exception {
 	    long startTime = System.currentTimeMillis();
 
@@ -569,7 +570,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    startTime = System.currentTimeMillis();
 	    Collection<CaseManagementNote> localNotes = caseManagementNoteDao.findNotesByDemographicAndIssueCode(demographicNo, checkedCodeList.toArray(new String[0]));
 	    localNotes = manageLockedNotes(localNotes, true, this.getUnlockedNotesMap(request));
-	    localNotes = caseManagementMgr.filterNotes(localNotes, providerNo, programId, loggedInInfo.currentFacility.getId());                        
+	    localNotes = caseManagementMgr.filterNotes(localNotes, programId);                        
 
 	    caseManagementMgr.getEditors(localNotes);
 
@@ -635,6 +636,196 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    log.debug("Apply sorting to notes " + (System.currentTimeMillis()-startTime));
     }
 
+	private void viewCurrentIssuesTab_newCme(HttpServletRequest request, CaseManagementViewFormBean caseForm, String demoNo, String programId) throws InvocationTargetException,
+	        IllegalAccessException, Exception {
+	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
+
+		long startTime;
+		
+		log.debug("Get stale note date");
+		// filter the notes by the checked issues and date if set
+		startTime = System.currentTimeMillis();
+		UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+		request.setAttribute(UserProperty.STALE_NOTEDATE, userProp);
+		log.debug("Get stale note date " + (System.currentTimeMillis() - startTime));
+
+		/* PROGRESS NOTES */
+		List<CaseManagementNote> notes = null;
+		// here we might have a checked/unchecked issue that is remote and has no issue_id (they're all zero).
+		String[] checkedIssues = request.getParameterValues("check_issue");
+		if (checkedIssues != null && checkedIssues[0].trim().length() > 0) {
+			// need to apply a filter
+			log.debug("Get Notes with checked issues");
+			startTime = System.currentTimeMillis();
+			request.setAttribute("checked_issues", checkedIssues);
+			notes = caseManagementMgr.getNotes(demoNo, checkedIssues);
+			notes = manageLockedNotes(notes, true, this.getUnlockedNotesMap(request));
+			log.debug("Get Notes with checked issues " + (System.currentTimeMillis() - startTime));
+		} else { // get all notes
+			log.debug("Get Notes");
+			startTime = System.currentTimeMillis();
+			notes = caseManagementMgr.getNotes(demoNo);
+			notes = manageLockedNotes(notes, false, this.getUnlockedNotesMap(request));
+			log.debug("Get Notes " + (System.currentTimeMillis() - startTime));
+		}
+
+		log.debug("FETCHED " + notes.size() + " NOTES");
+
+		// copy cpp notes
+		/*
+		 * HashMap issueMap = getCPPIssues(request, providerNo); Iterator<Map.Entry> iterator = issueMap.entrySet().iterator(); while( iterator.hasNext() ) { Map.Entry mapEntry = iterator.next(); String key = (String)mapEntry.getKey(); Issue value =
+		 * (Issue)mapEntry.getValue(); List<CaseManagementNote>cppNotes = caseManagementMgr.getCPP(demoNo,value.getId(),userProp); String cppAdd = request.getContextPath() + "/CaseManagementEntry.do?hc=996633&method=issueNoteSave&providerNo=" + providerNo
+		 * + "&demographicNo=" + demoNo + "&issue_id=" + value.getId() + "&noteId="; request.setAttribute(key,cppNotes); request.setAttribute(key+"add",cppAdd); }
+		 */
+		// apply role based access
+		// if(request.getSession().getAttribute("archiveView")!="true")
+		startTime = System.currentTimeMillis();
+		String resetFilter = request.getParameter("resetFilter");
+		log.debug("RESET FILTER " + resetFilter);
+		if (resetFilter != null && resetFilter.equals("true")) {
+			log.debug("CASEMGMTVIEW RESET FILTER");
+			caseForm.setFilter_providers(null);
+			// caseForm.setFilter_provider("");
+			caseForm.setFilter_roles(null);
+			caseForm.setNote_sort(null);
+		}
+
+		log.debug("Filter Notes");
+
+		// filter notes based on role and program/provider mappings
+		notes = caseManagementMgr.filterNotes(notes, programId);
+		log.debug("FILTER NOTES " + (System.currentTimeMillis() - startTime));
+
+		// apply provider filter
+		log.debug("Filter Notes Provider");
+		startTime = System.currentTimeMillis();
+		Set providers = new HashSet();
+		notes = applyProviderFilters(notes, providers, caseForm.getFilter_providers());
+		log.debug("FILTER NOTES PROVIDER " + (System.currentTimeMillis() - startTime));
+
+		request.setAttribute("providers", providers);
+
+		// apply if we are filtering on role
+		log.debug("Filter on Role");
+		startTime = System.currentTimeMillis();
+		List roles = roleMgr.getRoles();
+		request.setAttribute("roles", roles);
+		String[] roleId = caseForm.getFilter_roles();
+		if (roleId != null && roleId.length > 0) notes = applyRoleFilter(notes, roleId);
+		log.debug("Filter on Role " + (System.currentTimeMillis() - startTime));
+
+		// this is a local filter and does not apply to remote notes
+		log.debug("Pop notes with editors");
+		startTime = System.currentTimeMillis();
+		this.caseManagementMgr.getEditors(notes);
+		log.debug("Pop notes with editors " + (System.currentTimeMillis() - startTime));
+
+		/*
+		 * people are changing the default sorting of notes so it's safer to explicity set it here, some one already changed it once and it reversed our sorting.
+		 */
+		log.debug("Apply sorting to notes");
+		startTime = System.currentTimeMillis();
+		String noteSort = caseForm.getNote_sort();
+		if (noteSort != null && noteSort.length() > 0) {
+			request.setAttribute("Notes", sortNotes(notes, noteSort));
+		} else {
+			oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+			noteSort = p.getProperty("CMESort", "");
+			if (noteSort.trim().equalsIgnoreCase("UP")) request.setAttribute("Notes", sortNotes(notes, "observation_date_asc"));
+			else request.setAttribute("Notes", sortNotes(notes, "observation_date_desc"));
+		}
+		log.debug("Apply sorting to notes " + (System.currentTimeMillis() - startTime));
+
+		// request.setAttribute("surveys", surveyManager.getForms(demographicNo));
+	}
+	
+	private List sortNotes(List notes, String field) throws Exception {
+		log.debug("Sorting notes by field: " + field);
+		if (field == null || field.equals("") || field.equals("update_date")) {
+			return notes;
+		}
+
+		if (field.equals("providerName")) {
+			Collections.sort(notes, CaseManagementNote.getProviderComparator());
+		}
+		if (field.equals("programName")) {
+			Collections.sort(notes, CaseManagementNote.getProgramComparator());
+		}
+		if (field.equals("roleName")) {
+			Collections.sort(notes, CaseManagementNote.getRoleComparator());
+		}
+		if (field.equals("observation_date_asc")) {
+			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+			Collections.reverse(notes);
+		}
+		if (field.equals("observation_date_desc")) {
+			Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
+		}
+
+		return notes;
+	}
+
+	private List applyRoleFilter(List notes, String[] roleId) {
+
+		// if no filter return everything
+		if (Arrays.binarySearch(roleId, "a") >= 0) return notes;
+
+		List filteredNotes = new ArrayList();
+
+		for (Iterator iter = notes.listIterator(); iter.hasNext();) {
+			CaseManagementNote note = (CaseManagementNote) iter.next();
+
+			if (Arrays.binarySearch(roleId, note.getReporter_caisi_role()) >= 0) filteredNotes.add(note);
+		}
+
+		return filteredNotes;
+	}
+
+	private List<CaseManagementNote> manageLockedNotes(List<CaseManagementNote> notes, boolean removeLockedNotes, Map unlockedNotesMap) {
+		List<CaseManagementNote> notesNoLocked = new ArrayList<CaseManagementNote>();
+		for (CaseManagementNote note : notes) {
+			if (note.isLocked()) {
+				if (unlockedNotesMap.get(note.getId()) != null) {
+					note.setLocked(false);
+				}
+			}
+			if (removeLockedNotes && !note.isLocked()) {
+				notesNoLocked.add(note);
+			}
+		}
+		if (removeLockedNotes) {
+			return notesNoLocked;
+		}
+		return notes;
+	}
+
+	private List applyProviderFilters(List notes, Set providers, String[] providerNo) {
+		boolean filter = false;
+		List filteredNotes = new ArrayList();
+
+		if (providerNo != null && Arrays.binarySearch(providerNo, "a") < 0) {
+			filter = true;
+		}
+
+		for (Iterator iter = notes.iterator(); iter.hasNext();) {
+			CaseManagementNote note = (CaseManagementNote) iter.next();
+			providers.add(note.getProvider());
+			if (!filter) {
+				// no filter, add all
+				filteredNotes.add(note);
+
+			}
+			else {
+				if (Arrays.binarySearch(providerNo, note.getProviderNo()) >= 0)
+				// correct provider
+					filteredNotes.add(note);
+			}
+		}
+
+		return filteredNotes;
+	}
+	
     private static boolean hasRole(List<SecUserRole> roles, String role)
     {
     	if (roles==null) return(false);
@@ -902,7 +1093,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		Integer currentFacilityId = request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID) != null ? (Integer) request.getSession().getAttribute(
 				SessionConstants.CURRENT_FACILITY_ID) : 0;
 
-		notes = caseManagementMgr.filterNotes(notes, providerNo, programId, currentFacilityId);
+		notes = caseManagementMgr.filterNotes(notes, programId);
 		this.caseManagementMgr.getEditors(notes);
 		
 		List lcme = new ArrayList();
@@ -939,7 +1130,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		List results = caseManagementMgr.search(searchBean);
 		Collection filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
 		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		List filteredResults = caseManagementMgr.filterNotes(filtered1, getProviderNo(request), programId, currentFacilityId);
+		List filteredResults = caseManagementMgr.filterNotes(filtered1, programId);
 
 		List sortedResults = sortNotes_old(filteredResults, caseForm.getNote_sort());
 		request.setAttribute("search_results", sortedResults);
@@ -1143,7 +1334,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private ArrayList<NoteDisplay> applyProviderFilter(ArrayList<NoteDisplay> notes, String[] providerName) {
 		ArrayList<NoteDisplay> filteredNotes = new ArrayList<NoteDisplay>();
 
-		if (providerName == null || providerName.length==0) return(notes);
+		// no list, or empty list, or list of no providers
+		if (providerName == null || providerName.length==0 || providerName[0].length()==0) return(notes);
 
 		for (NoteDisplay note : notes) {
 			String tempName=note.getProvider();

@@ -2140,7 +2140,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }
 
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        notes = caseManagementMgr.filterNotes(notes, providerNo, programId,currentFacilityId);
+        notes = caseManagementMgr.filterNotes(notes, programId);
 
         for (int idx = notes.size() - 1; idx >= 0; --idx) {
             CaseManagementNote n = (CaseManagementNote) notes.get(idx);
