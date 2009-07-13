@@ -56,7 +56,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.util.SessionConstants;
 
 public class ConsultationAttachDocsAction
     extends Action {
@@ -74,8 +73,7 @@ public class ConsultationAttachDocsAction
         String provNo = frm.getString("providerNo");
         String[] arrDocs = frm.getStrings("attachedDocs");
                 
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs,currentFacilityId);
+        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
         Doc.attach();
         
         ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
