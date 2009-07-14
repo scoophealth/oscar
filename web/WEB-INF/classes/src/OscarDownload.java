@@ -25,17 +25,15 @@
 // * Ontario, Canada
 // *
 // -----------------------------------------------------------------------------------------------------------------------
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-public class OscarDownload extends HttpServlet {
+import oscar.util.GenericDownload;
+public class OscarDownload extends GenericDownload  {
 	public void doGet(HttpServletRequest req, HttpServletResponse res)
 			throws IOException {
 		HttpSession session = req.getSession(true);
@@ -50,8 +48,6 @@ public class OscarDownload extends HttpServlet {
 				&& ((String) session.getAttribute("userprofession")) != null) {
 			ServletOutputStream stream = res.getOutputStream();
 			transferFile(res, stream, backupfilepath, filename);
-			//      transferFile(res, stream, "oscar_mfp.properties" );
-			// System.out.println("str");
 			stream.close();
 		} else {
 			res.setContentType("text/html");
@@ -61,20 +57,5 @@ public class OscarDownload extends HttpServlet {
 			out.println("</body>");
 			out.println("</html>");
 		}
-	}
-	private void transferFile(HttpServletResponse res,
-			ServletOutputStream stream, String backupfilepath, String filename)
-			throws IOException {
-		//      System.out.println(filename);
-		res.setContentType("application/octet-stream");
-		res.setHeader("Content-Disposition", "attachment;filename=" + filename);
-		BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(
-				backupfilepath + filename));
-		int data;
-		while ((data = bfis.read()) != -1) {
-			stream.write(data);
-			stream.flush();
-		}
-		bfis.close();
 	}
 }
