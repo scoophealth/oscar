@@ -1,5 +1,4 @@
-<%@page contentType="text/html"%>
-<%-- <%@page pageEncoding="UTF-8"%> --%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page
 	import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*, java.util.ArrayList, java.util.Date, java.util.Calendar, java.io.IOException"%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c"%>
