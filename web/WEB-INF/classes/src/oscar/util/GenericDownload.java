@@ -28,7 +28,6 @@
 
 package oscar.util;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import javax.servlet.http.HttpSession;
 import oscar.OscarProperties;
 
 /**
- * 
+ *
  * @author Jay Gallagher
  */
 public class GenericDownload extends HttpServlet {
@@ -73,8 +72,7 @@ public class GenericDownload extends HttpServlet {
             throws IOException {
         if (bDownload) {
             ServletOutputStream stream = res.getOutputStream();
-            //if problem with the "transferFile2" streaming method, use "transferFile" method
-            transferFile2(res, stream, dir, filename, contentType);
+            transferFile(res, stream, dir, filename, contentType);
             stream.close();
         } else {
             res.setContentType("text/html");
@@ -86,28 +84,11 @@ public class GenericDownload extends HttpServlet {
         }
     }
 
-    public void transferFile(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
-            String contentType) throws IOException {
-        //too slow (16-20kB/s on the network transfer over SSL and 170kB/s over a non-SSL layer)
-        String setContentType = "application/octet-stream";
-        if (contentType != null) {
-            setContentType = contentType;
-        }
-        res.setContentType(setContentType);
-        res.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
-        BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(dir + filename));
-        int data;
-        //int incrementor = 0;
-        while ((data = bfis.read()) != -1) {
-            stream.write(data);
-            stream.flush();
-            //incrementor++;
-            //System.out.println("buffer cycle--------" + incrementor);
-        }
-        bfis.close();
+    protected void transferFile(HttpServletResponse res, ServletOutputStream stream, String dir, String filename) throws IOException {
+            transferFile(res,stream,dir,filename,null);
     }
-    
-        public void transferFile2(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
+
+    protected void transferFile(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
             String contentType) throws IOException {
             //faster than "transferFile" method - clocked at 1.1MB/s on a 10Mbps switch
         int BUFFER_SIZE = 2048;
@@ -117,26 +98,20 @@ public class GenericDownload extends HttpServlet {
         }
         res.setContentType(setContentType);
         res.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
-         File curfile = new File(dir + filename);
-         FileInputStream fis = new FileInputStream(curfile);                  
-         int bufferSize;
-         byte[] buffer = new byte[BUFFER_SIZE];
-         long incrementor = 0;
-         while(( bufferSize = fis.read(buffer)) != -1) {
+        File directory = new File(dir);
+        File curfile = new File(directory, filename);
+        FileInputStream fis = new FileInputStream(curfile);
+        int bufferSize;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        long incrementor = 0;
+        while(( bufferSize = fis.read(buffer)) != -1) {
              stream.write(buffer, 0, bufferSize);
              //System.out.println("Prebuffer size: " + bufferSize);
              //incrementor++;
              //System.out.println("Buffer Cycle -----------" + incrementor + "bytes loaded");
-         }
-         fis.close();
-         stream.flush();
-         stream.close();
+        }
+        fis.close();
+        stream.flush();
+        stream.close();
     }
- 
-        
-        
 }
-
-// /
-
-// /
