@@ -534,11 +534,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 		String providerNo=loggedInInfo.loggedInProvider.getProviderNo();
 		int demographicNo=Integer.parseInt(demoNo);
-		boolean activeIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
+		boolean hideInactiveIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
 		
 		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-		addLocalIssues(issuesToDisplay, demographicNo, !activeIssues);
-		addRemoteIssues(issuesToDisplay, demographicNo, !activeIssues);
+		addLocalIssues(issuesToDisplay, demographicNo, hideInactiveIssues);
+		addRemoteIssues(issuesToDisplay, demographicNo, hideInactiveIssues);
 		
     	request.setAttribute("Issues", issuesToDisplay);
     	log.debug("Get issues time : " + (System.currentTimeMillis()-startTime));
@@ -943,7 +943,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    }
     }
 
-	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean resolved) {
+	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
@@ -954,9 +954,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			for (CachedDemographicIssue cachedDemographicIssue : remoteIssues) {
 				try {
-					if (resolved == cachedDemographicIssue.isResolved()) {
-						issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
-					}
+					if (!hideInactiveIssues) issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue)); 
+					else if (!cachedDemographicIssue.isResolved()) issuesToDisplay.add(getIssueToDisplay(cachedDemographicIssue));
 				} catch (Exception e) {
 					log.error("Unexpected error.", e);
 				}
@@ -1001,8 +1000,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean resolved) {
-		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, resolved);
+	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues) {
+		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, hideInactiveIssues?false:null);
 
 		for (CaseManagementIssue cmi : localIssues)
 		{
