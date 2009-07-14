@@ -80,6 +80,7 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.model.Issue;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
@@ -97,6 +98,7 @@ import oscar.oscarRx.pageUtil.RxSessionBean;
 public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	private static Log log = LogFactory.getLog(CaseManagementViewAction.class);
+	private CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
 	private OscarSecurityDAO oscarSecurityDao=(OscarSecurityDAO)SpringUtils.getBean("oscarSecurityDAO");
@@ -427,6 +429,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	public static class IssueDisplay
 	{
+		public boolean writeAccess=true;
 		public String codeType=null;
 		public String code=null;
 		public String description=null;
@@ -466,6 +469,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 		public String getPriority() {
         	return priority;
+        }
+		public boolean isWriteAccess() {
+        	return writeAccess;
         }
 	}
 	
@@ -943,7 +949,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    }
     }
 
-	private void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean hideInactiveIssues) {
+	protected void addRemoteIssues(ArrayList<IssueDisplay> issuesToDisplay, int demographicNo, boolean hideInactiveIssues) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
@@ -968,6 +974,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private IssueDisplay getIssueToDisplay(CachedDemographicIssue cachedDemographicIssue) throws MalformedURLException {
 		IssueDisplay issueDisplay = new IssueDisplay();
 
+		issueDisplay.writeAccess=true;
 		issueDisplay.acute = cachedDemographicIssue.isAcute() ? "acute" : "chronic";
 		issueDisplay.certain = cachedDemographicIssue.isCertain() ? "certain" : "uncertain";
 		issueDisplay.code = cachedDemographicIssue.getFacilityDemographicIssuePk().getIssueCode();
@@ -1000,13 +1007,14 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	private void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues) {
-		List<CaseManagementIssue> localIssues = caseManagementMgr.getIssues(demographicNo, hideInactiveIssues?false:null);
+	protected void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues) {
+		List<CaseManagementIssue> localIssues = caseManagementManager.getIssues(demographicNo, hideInactiveIssues?false:null);
 
 		for (CaseManagementIssue cmi : localIssues)
 		{
 			IssueDisplay issueDisplay=new IssueDisplay();
 			
+			issueDisplay.writeAccess=cmi.isWriteAccess();
 			issueDisplay.acute=cmi.isAcute()?"acute":"chronic";
 			issueDisplay.certain=cmi.isCertain()?"certain":"uncertain";
 			

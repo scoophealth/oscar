@@ -44,7 +44,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -54,8 +53,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
-import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -64,9 +63,11 @@ import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.service.CommunityIssueManager;
+import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import oscar.OscarProperties;
@@ -84,6 +85,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     private static Log log = LogFactory.getLog(CaseManagementEntryAction.class);
 
+    private CaseManagementNoteDAO caseManagementNoteDao=(CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
+    
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return edit(mapping, form, request, response);
     }
@@ -105,6 +108,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         log.debug("Get demo and provider no");
         String demono = getDemographicNo(request);
+        Integer demographicNo=Integer.parseInt(demono);
         String providerNo = getProviderNo(request);
         current = System.currentTimeMillis();
         log.debug("Get demo and provider no " + String.valueOf(current-start));
@@ -325,22 +329,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 start = current;
             }	
         }
-        else // retrieve community issues for old CME UI
+        else // old CME
         {
-        	List<CaseManagementCommunityIssue> issues = CommunityIssueManager.getCommunityIssues(demono, programId, true);
-        	checkedList = new CheckBoxBean[issues.size()];
-        	// set issue checked list 
-            log.debug("Set Checked Issues " + String.valueOf(current-start));
-            for (int i = 0; i < issues.size(); i++) {
-                checkedList[i] = new CheckBoxBean();
-                CaseManagementCommunityIssue iss = issues.get(i);
-                checkedList[i].setCommunityIssue(iss);
-                // this might be a problem
-                if(!iss.isRemote())
-                {
-                	checkedList[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), demono));
-                }
+        	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
+    		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
+    		caseManagementViewAction.addLocalIssues(issuesToDisplay, demographicNo, true);
+    		caseManagementViewAction.addRemoteIssues(issuesToDisplay, demographicNo, true);
+    		
+    		ArrayList<CheckBoxBean> checkBoxBeanList=new ArrayList<CheckBoxBean>();
+    		
+            for (IssueDisplay issueToDisplay : issuesToDisplay) {
+            	CheckBoxBean checkBoxBean = new CheckBoxBean();
+            	checkBoxBean.setIssueDisplay(issueToDisplay);
+
+            	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueToDisplay.code, demographicNo));
+
+            	checkBoxBeanList.add(checkBoxBean);
             }
+        	checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
         }
         
         current = System.currentTimeMillis();
@@ -899,42 +905,43 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         else
         {
         	for (int i = 0; i < checkedlist.length; i++) {
-            	if (!checkedlist[i].getCommunityIssue().isResolved()) 
+            	if (checkedlist[i].getIssueDisplay().resolved.equals("unresolved")) 
         		{
-            		ongoing = ongoing + checkedlist[i].getCommunityIssue().getIssue().getDescription() + "\n";
+            		ongoing = ongoing + checkedlist[i].getIssueDisplay().getDescription() + "\n";
         		}
                 String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
-                CaseManagementCommunityIssue iss = checkedlist[i].getCommunityIssue();
-                CaseManagementIssue cmi = new CaseManagementIssue();
-                BeanUtils.copyProperties(cmi,iss);
-                
-                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
-                    checkedlist[i].setChecked("on");                                
-                    checkedlist[i].setUsed(true);
-                    iss.setNotes(noteSet);                 
-                    
-                    // if we've checked a remote issue, save it locally first.
-                    if(iss.isRemote())
-                    {
-                    	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
-                    	CommunityIssueManager.copyRemoteCommunityIssueToLocal(cmi,Integer.valueOf(demo));
-                    	BeanUtils.copyProperties(iss, cmi);
-                    }
-                    
-                    issueset.add(cmi);
-                }
-                else {
-                    checkedlist[i].setChecked("off");
-                    if(iss.isRemote()) { checkedlist[i].setUsed(false); }
-                    else{ checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); }
-                    // why is this here?
-                    // checkedlist[i].setUsed(false);
-                }
-                // don't try to save a remote issue -- no id.  this should create a copy instead.
-                if(!iss.isRemote())
-                {
-                	issuelist.add(cmi);
-                }
+// SPOT
+//                CaseManagementCommunityIssue iss = checkedlist[i].getCommunityIssue();
+//                CaseManagementIssue cmi = new CaseManagementIssue();
+//                BeanUtils.copyProperties(cmi,iss);
+//                
+//                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
+//                    checkedlist[i].setChecked("on");                                
+//                    checkedlist[i].setUsed(true);
+//                    iss.setNotes(noteSet);                 
+//                    
+//                    // if we've checked a remote issue, save it locally first.
+//                    if(iss.isRemote())
+//                    {
+//                    	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
+//                    	CommunityIssueManager.copyRemoteCommunityIssueToLocal(cmi,Integer.valueOf(demo));
+//                    	BeanUtils.copyProperties(iss, cmi);
+//                    }
+//                    
+//                    issueset.add(cmi);
+//                }
+//                else {
+//                    checkedlist[i].setChecked("off");
+//                    if(iss.isRemote()) { checkedlist[i].setUsed(false); }
+//                    else{ checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); }
+//                    // why is this here?
+//                    // checkedlist[i].setUsed(false);
+//                }
+//                // don't try to save a remote issue -- no id.  this should create a copy instead.
+//                if(!iss.isRemote())
+//                {
+//                	issuelist.add(cmi);
+//                }
             }
         }
 
@@ -1664,7 +1671,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             caseIssueList[i].setChecked(oldList[i].getChecked());
             caseIssueList[i].setUsed(oldList[i].isUsed());
             caseIssueList[i].setIssue(oldList[i].getIssue());
-            caseIssueList[i].setCommunityIssue(oldList[i].getCommunityIssue());
+// SPOT            
+//            caseIssueList[i].setCommunityIssue(oldList[i].getCommunityIssue());
         }
         k = 0;
 

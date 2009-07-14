@@ -341,6 +341,14 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return false;
 	}
 
+	public boolean haveIssue(String issueCode, Integer demographicId) {
+		SQLQuery query = this.getSession().createSQLQuery("select * from casemgmt_issue_notes,casemgmt_issue,issue   where issue.issue_id=casemgmt_issue.issue_id and casemgmt_issue.id=casemgmt_issue_notes.id and demographic_no="+demographicId+" and issue.code='"+issueCode+"'");
+		List results = query.list();
+		// log.info("haveIssue - DAO - # of results = " + results.size());
+		if (results.size() > 0) return true;
+		return false;
+	}
+
 	public static class EncounterCounts {
 		public HashMap<EncounterUtil.EncounterType, Integer> uniqueCounts = new HashMap<EncounterUtil.EncounterType, Integer>();
 		public HashMap<EncounterUtil.EncounterType, Integer> nonUniqueCounts = new HashMap<EncounterUtil.EncounterType, Integer>();

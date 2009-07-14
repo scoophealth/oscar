@@ -1,4 +1,4 @@
-<!-- 
+<%-- 
 /*
 * 
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
@@ -20,7 +20,7 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
- -->
+--%>
 
 <%-- Updated by Eugene Petruhin on 24 dec 2008 while fixing #2459538 --%>
 <%-- Updated by Eugene Petruhin on 09 jan 2009 while fixing #2482832 & #2494061 --%>
@@ -297,9 +297,6 @@ if (pId==null) pId="";
 </I></b>
 <br><br>
 
-
-
-
 	<b>Issue Association View:</b>
 
 	<table width="90%" border="0" cellpadding="0" cellspacing="1"
@@ -315,62 +312,54 @@ if (pId==null) pId="";
 			<td></td>
 		</tr>
 
-		<nested:iterate indexId="ind" id="issueCheckList"
-			property="issueCheckList" type="org.oscarehr.casemgmt.web.CheckBoxBean">
+		<nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" type="org.oscarehr.casemgmt.web.CheckBoxBean">
 			<tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>"
 				align="center">
 				<%String submitString = "this.form.method.value='issueChange';";
 						submitString = submitString + "this.form.lineId.value=" + "'"
 					+ ind.intValue() + "';" + "this.form.submit();";
-				%>
-				<%
+
 				org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
-				boolean writeAccess = cbb.getCommunityIssue().isWriteAccess();
-				boolean disabled = cbb.getCommunityIssue().isRemote() ? true : !writeAccess;
+				boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
+				boolean disabled = !cbb.getIssueDisplay().location.equals("local") ? true : !writeAccess;
+				boolean checkBoxDisabled=!cbb.getIssueDisplay().location.equals("local") ? false : disabled;
 				%>
 				<td>
-					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%= cbb.getCommunityIssue().isRemote() ? false : disabled %>"></nested:checkbox>
+					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=checkBoxDisabled%>"></nested:checkbox>
 				</td>
-					<logic:equal name="issueCheckList" property="communityIssue.issue.priority" value="allergy">
-						<td bgcolor="yellow">
-							<nested:write name="issueCheckList"	property="communityIssue.issue.description" />
-						</td>
-					</logic:equal>
-					<logic:notEqual name="issueCheckList" property="communityIssue.issue.priority" value="allergy">
-						<td>
-							<nested:write name="issueCheckList"	property="communityIssue.issue.description" /> 
-						</td>
-					</logic:notEqual>
+					<td <%="allergy".equals(cbb.getIssueDisplay().priority)?"bgcolor=\"yellow\"":""%>>
+						<nested:write name="issueCheckList"	property="issueDisplay.description" />
+					</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="communityIssue.acute" disabled="<%=disabled%>">
-						<html:option value="true">acute</html:option>
-						<html:option value="false">chronic</html:option>
+					<nested:select indexed="acute" name="issueCheckList"	property="issueDisplay.acute" disabled="<%=disabled%>">
+						<html:option value="acute">acute</html:option>
+						<html:option value="chronic">chronic</html:option>
 					</nested:select>	
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList" property="communityIssue.certain"  disabled="<%=disabled%>">
-						<html:option value="true">certain</html:option>
-						<html:option value="false">uncertain</html:option>
+					<nested:select indexed="certain" name="issueCheckList" property="issueDisplay.certain"  disabled="<%=disabled%>">
+						<html:option value="certain">certain</html:option>
+						<html:option value="uncertain">uncertain</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="communityIssue.major" disabled="<%=disabled%>">
-						<html:option value="true">major</html:option>
-						<html:option value="false">not major</html:option>
+					<nested:select indexed="major" name="issueCheckList"	property="issueDisplay.major" disabled="<%=disabled%>">
+						<html:option value="major">major</html:option>
+						<html:option value="not major">not major</html:option>
 					</nested:select>
 				</td>				
 				<td>
 					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
-					 <nested:select indexed="true" name="issueCheckList" property="communityIssue.resolved"  disabled="<%=disabled%>">										 	
-						<html:option value="true">resolved</html:option>
-						<html:option value="false">unresolved</html:option>
+					 <nested:select indexed="resolved" name="issueCheckList" property="issueDisplay.resolved"  disabled="<%=disabled%>">										 	
+						<html:option value="resolved">resolved</html:option>
+						<html:option value="unresolved">unresolved</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:text indexed="true" name="issueCheckList" property="communityIssue.type" disabled="<%=disabled%>"/>
+					<nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" disabled="<%=disabled%>"/>
 				</td>
 				<td>
-<% if (!cbb.getCommunityIssue().isRemote()){ %>
+<% if (cbb.getIssueDisplay().location.equals("local")){ %>
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="u">
 				<nested:equal name="issueCheckList" property="used"
 					value="false">
