@@ -114,8 +114,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("Get demo and provider no " + String.valueOf(current-start));
         start = current;
         
-        String programId = (String) request.getSession().getAttribute("case_program_id");
-
+        String programIdString = (String) request.getSession().getAttribute("case_program_id");
+        Integer programId=null;
+        try
+        {
+        	programId=Integer.parseInt(programIdString);
+        }
+        catch (Exception e)
+        {
+        	log.warn("Error parsing programId:"+programIdString, e);
+        }
+        
         request.setAttribute("demoName", getDemoName(demono));
         request.setAttribute("demoAge", getDemoAge(demono));
         request.setAttribute("demoDOB", getDemoDOB(demono));
@@ -178,7 +187,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         log.debug("Get Issues and filter them");
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        log.debug("EDIT " + providerNo + " " + demono + " " + programId + " " + currentFacilityId);
+        log.debug("EDIT " + providerNo + " " + demono + " " + programIdString + " " + currentFacilityId);
         
         current = System.currentTimeMillis();
         log.debug("Get Issues and filter them " + String.valueOf(current-start));
@@ -202,10 +211,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         log.debug("Get tmp note");
         CaseManagementTmpSave tmpsavenote;
         if( maxTmpSave.equalsIgnoreCase("off") ) {
-            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programId);
+            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programIdString);
         }
         else {
-            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programId, twoWeeksAgo);
+            tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo, demono, programIdString, twoWeeksAgo);
         }
         current = System.currentTimeMillis();
         log.debug("Get tmp note " + String.valueOf(current-start));
@@ -229,7 +238,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
             this.insertReason(request, note);
 
-            resetTemp(providerNo, demono, programId);
+            resetTemp(providerNo, demono, programIdString);
 
         }
         // get the last temp note?
@@ -314,7 +323,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         CheckBoxBean[] checkedList = null;
         if(useNewCaseMgmt)
         {
-        	List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
+        	List<CaseManagementIssue> issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programIdString);
         	checkedList = new CheckBoxBean[issues.size()];
         	// set issue checked list 
             log.debug("Set Checked Issues " + String.valueOf(current-start));
@@ -333,7 +342,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         {
         	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
     		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-    		caseManagementViewAction.addLocalIssues(issuesToDisplay, demographicNo, true);
+    		caseManagementViewAction.addLocalIssues(issuesToDisplay, demographicNo, true, programId);
     		caseManagementViewAction.addRemoteIssues(issuesToDisplay, demographicNo, true);
     		
     		ArrayList<CheckBoxBean> checkBoxBeanList=new ArrayList<CheckBoxBean>();

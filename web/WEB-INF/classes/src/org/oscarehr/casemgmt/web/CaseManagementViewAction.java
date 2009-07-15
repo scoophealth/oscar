@@ -543,7 +543,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		boolean hideInactiveIssues=Boolean.parseBoolean(caseForm.getHideActiveIssue());
 		
 		ArrayList<IssueDisplay> issuesToDisplay = new ArrayList<IssueDisplay>();
-		addLocalIssues(issuesToDisplay, demographicNo, hideInactiveIssues);
+		addLocalIssues(issuesToDisplay, demographicNo, hideInactiveIssues, null);
 		addRemoteIssues(issuesToDisplay, demographicNo, hideInactiveIssues);
 		
     	request.setAttribute("Issues", issuesToDisplay);
@@ -1007,14 +1007,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return (issueDisplay);
 	}
 
-	protected void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues) {
+	protected void addLocalIssues(ArrayList<IssueDisplay> issuesToDisplay, Integer demographicNo, boolean hideInactiveIssues, Integer programId) {
 		List<CaseManagementIssue> localIssues = caseManagementManager.getIssues(demographicNo, hideInactiveIssues?false:null);
 
 		for (CaseManagementIssue cmi : localIssues)
 		{
 			IssueDisplay issueDisplay=new IssueDisplay();
 			
-			issueDisplay.writeAccess=cmi.isWriteAccess();
+			if (programId!=null) issueDisplay.writeAccess=cmi.isWriteAccess(programId);
+			
 			issueDisplay.acute=cmi.isAcute()?"acute":"chronic";
 			issueDisplay.certain=cmi.isCertain()?"certain":"uncertain";
 			

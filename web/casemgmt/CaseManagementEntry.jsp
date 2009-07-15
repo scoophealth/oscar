@@ -321,8 +321,8 @@ if (pId==null) pId="";
 
 				org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
 				boolean writeAccess = cbb.getIssueDisplay().isWriteAccess();
-				boolean disabled = !cbb.getIssueDisplay().location.equals("local") ? true : !writeAccess;
-				boolean checkBoxDisabled=!cbb.getIssueDisplay().location.equals("local") ? false : disabled;
+				boolean disabled = !"local".equals(cbb.getIssueDisplay().location) ? true : !writeAccess;
+				boolean checkBoxDisabled=!"local".equals(cbb.getIssueDisplay().location)? false : disabled;
 				%>
 				<td>
 					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=checkBoxDisabled%>"></nested:checkbox>

@@ -23,12 +23,25 @@
 package org.oscarehr.casemgmt.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.caisi.model.BaseObject;
+import org.caisi.model.Role;
+import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 public class CaseManagementIssue extends BaseObject {
+
+	private RoleProgramAccessDAO roleProgramAccessDao=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
+
 	protected Long id;
 	protected String demographic_no;
 	protected long issue_id;
@@ -44,6 +57,7 @@ public class CaseManagementIssue extends BaseObject {
 	protected Issue issue;
 	protected Integer program_id = null;
 
+	/** @deprecated not a data field */
 	protected boolean writeAccess;
 
 	protected int hashCode = Integer.MIN_VALUE;
@@ -199,10 +213,12 @@ public class CaseManagementIssue extends BaseObject {
 		this.update_date = update_date;
 	}
 
+	/** @deprecated not a data field */
 	public boolean isWriteAccess() {
 		return writeAccess;
 	}
 
+	/** @deprecated not a data field */
 	public void setWriteAccess(boolean writeAccess) {
 		this.writeAccess = writeAccess;
 	}
@@ -214,5 +230,60 @@ public class CaseManagementIssue extends BaseObject {
 	public void setProgram_id(Integer program_id) {
 		this.program_id = program_id;
 	}
+
+	public boolean isWriteAccess(int programId)
+	{
+		List<ProgramProvider> ppList = roleProgramAccessDao.getProgramProviderByProviderProgramID(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
+		if (ppList == null || ppList.isEmpty()) {
+			return(false);
+		}
+
+		ProgramProvider pp = ppList.get(0);
+		Role role = pp.getRole();
+
+		List<ProgramAccess> programAccessList = roleProgramAccessDao.getAccessListByProgramID(new Long(programId));
+		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+		
+		String issueRole = getIssue().getRole().toLowerCase();
+		ProgramAccess pa = null;
+		boolean add = false;
+
+		// write
+		pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
+		if (pa != null) {
+			if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+				return(true);
+			}
+		} else {
+			if (issueRole.equalsIgnoreCase(role.getName())) {
+				return(true);
+			}
+		}
+		
+		return(false);
+	}
+	
+	private static boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
+		boolean result = false;
+
+		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
+			Role accessRole = (Role) iter.next();
+			if (role.getId() == accessRole.getId()) {
+				return true;
+			}
+		}
+		return result;
+	}
+
+	private static Map<String, ProgramAccess> convertProgramAccessListToMap(List<ProgramAccess> programAccessList) {
+		Map<String, ProgramAccess> map = new HashMap<String, ProgramAccess>();
+
+		for (Iterator<ProgramAccess> iter = programAccessList.iterator(); iter.hasNext();) {
+			ProgramAccess pa = iter.next();
+			map.put(pa.getAccessType().getName().toLowerCase(), pa);
+		}
+		return map;
+	}
+
 
 }
