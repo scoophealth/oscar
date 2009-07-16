@@ -25,6 +25,8 @@ package org.oscarehr.casemgmt.dao;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.NonUniqueResultException;
+
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -47,6 +49,17 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
             return list.get(0);
         
         return null;                    
+    }
+
+    public CaseManagementIssue getIssuebyIssueCode(String demo, String issueCode) {
+        @SuppressWarnings("unchecked")
+        List<CaseManagementIssue> list = this.getHibernateTemplate().find("select cmi from CaseManagementIssue cmi, Issue issue where cmi.issue_id=issue.id and issue.code = ? and cmi.demographic_no = ?",new Object[]{issueCode,demo});
+        
+        if(list == null || list.size()<1) return(null);
+        	
+        if (list.size() == 1 ) return list.get(0);
+        
+        throw(new NonUniqueResultException("Expected 1 result got more : "+list.size()));          
     }
 
     public void deleteIssueById(CaseManagementIssue issue) {

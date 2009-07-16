@@ -51,9 +51,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.ws.DemographicWs;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -66,8 +71,10 @@ import org.oscarehr.casemgmt.service.CommunityIssueManager;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import oscar.OscarProperties;
@@ -85,8 +92,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
     private static Log log = LogFactory.getLog(CaseManagementEntryAction.class);
 
-    private CaseManagementNoteDAO caseManagementNoteDao=(CaseManagementNoteDAO)SpringUtils.getBean("CaseManagementNoteDAO");
-    
+    private CaseManagementNoteDAO caseManagementNoteDao=(CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
+    private CaseManagementIssueDAO caseManagementIssueDao=(CaseManagementIssueDAO)SpringUtils.getBean("caseManagementIssueDAO");
+	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
+
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return edit(mapping, form, request, response);
     }
@@ -316,8 +325,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* set issue checked list */
         
         // get issues for current demographic, based on provider rights
-        
-        
+       
         Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
         
         CheckBoxBean[] checkedList = null;
@@ -350,9 +358,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             for (IssueDisplay issueToDisplay : issuesToDisplay) {
             	CheckBoxBean checkBoxBean = new CheckBoxBean();
             	checkBoxBean.setIssueDisplay(issueToDisplay);
-
             	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueToDisplay.code, demographicNo));
-
             	checkBoxBeanList.add(checkBoxBean);
             }
         	checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
@@ -796,9 +802,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             return new ActionForward(path.toString());
         }
 
-    public long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
+    private long noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
 
-    	WebApplicationContext ctx = this.getSpringContext();
+    	WebApplicationContext ctx = getSpringContext();
     	ProgramManager programManager = (ProgramManager) ctx.getBean("programManager");
         AdmissionManager admissionManager = (AdmissionManager) ctx.getBean("admissionManager");
     	
@@ -812,7 +818,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String sessionFrmName = "caseManagementEntryForm" + demo;
         CaseManagementEntryFormBean sessionFrm = (CaseManagementEntryFormBean)request.getSession().getAttribute(sessionFrmName);
 
-        CaseManagementNote note = (CaseManagementNote) sessionFrm.getCaseNote();                
+        CaseManagementNote note = sessionFrm.getCaseNote();                
         note.setNote(noteTxt);
         
         String providerNo = getProviderNo(request);
@@ -881,79 +887,25 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         /* get the checked issue save into note */
         // this goes into the database casemgmt_issue table
-        List issuelist = new ArrayList();
+        List<CaseManagementIssue> issuelist = new ArrayList<CaseManagementIssue>();
         
-        CheckBoxBean[] checkedlist = (CheckBoxBean[]) sessionFrm.getIssueCheckList();
+        CheckBoxBean[] checkedlist = sessionFrm.getIssueCheckList();
+
         // this gets attached to the CaseManagementNote object
-        Set issueset = new HashSet();
+        Set<CaseManagementIssue> issueset = new HashSet<CaseManagementIssue>();
         // wherever this is populated, it's not here...
-        Set noteSet = new HashSet();
+        Set<CaseManagementNote> noteSet = new HashSet<CaseManagementNote>();
         String ongoing = "";
         Boolean useNewCaseMgmt = new Boolean((String) request.getSession().getAttribute("newCaseManagement"));
         if(useNewCaseMgmt)
         {
-        	for (int i = 0; i < checkedlist.length; i++) {
-                if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
-                String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
-                CaseManagementIssue iss = checkedlist[i].getIssue();
-                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
-                    checkedlist[i].setChecked("on");                                
-                    checkedlist[i].setUsed(true);
-                    iss.setNotes(noteSet);                 
-                    issueset.add(checkedlist[i].getIssue());
-                }
-                else {
-                    checkedlist[i].setChecked("off");
-                    checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo));
-                    checkedlist[i].setUsed(false);
-                }
-                
-                issuelist.add(checkedlist[i].getIssue());
-            }
+        	ongoing = saveCheckedIssues_newCme(request, demo, note, issuelist, checkedlist, issueset, noteSet, ongoing);
         }
         else
         {
-        	for (int i = 0; i < checkedlist.length; i++) {
-            	if (checkedlist[i].getIssueDisplay().resolved.equals("unresolved")) 
-        		{
-            		ongoing = ongoing + checkedlist[i].getIssueDisplay().getDescription() + "\n";
-        		}
-                String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
-// SPOT
-//                CaseManagementCommunityIssue iss = checkedlist[i].getCommunityIssue();
-//                CaseManagementIssue cmi = new CaseManagementIssue();
-//                BeanUtils.copyProperties(cmi,iss);
-//                
-//                if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
-//                    checkedlist[i].setChecked("on");                                
-//                    checkedlist[i].setUsed(true);
-//                    iss.setNotes(noteSet);                 
-//                    
-//                    // if we've checked a remote issue, save it locally first.
-//                    if(iss.isRemote())
-//                    {
-//                    	cmi.setProgram_id(Integer.valueOf((String) request.getSession().getAttribute("case_program_id")));
-//                    	CommunityIssueManager.copyRemoteCommunityIssueToLocal(cmi,Integer.valueOf(demo));
-//                    	BeanUtils.copyProperties(iss, cmi);
-//                    }
-//                    
-//                    issueset.add(cmi);
-//                }
-//                else {
-//                    checkedlist[i].setChecked("off");
-//                    if(iss.isRemote()) { checkedlist[i].setUsed(false); }
-//                    else{ checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo)); }
-//                    // why is this here?
-//                    // checkedlist[i].setUsed(false);
-//                }
-//                // don't try to save a remote issue -- no id.  this should create a copy instead.
-//                if(!iss.isRemote())
-//                {
-//                	issuelist.add(cmi);
-//                }
-            }
+        	ongoing = saveCheckedIssues_oldCme(request, demo, issuelist, checkedlist, issueset, noteSet, ongoing);
         }
-
+        
         sessionFrm.setIssueCheckList(checkedlist);
         note.setIssues(issueset);
 
@@ -1099,6 +1051,93 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         LogAction.addLog((String) request.getSession().getAttribute("user"), logAction, LogConst.CON_CME_NOTE, ""+Long.valueOf(note.getId()).intValue(), request.getRemoteAddr(), demo, note.getAuditString());
         
         return note.getId();
+    }
+
+	private String saveCheckedIssues_oldCme(HttpServletRequest request, String demo, List<CaseManagementIssue> issuelist, CheckBoxBean[] checkedlist, Set<CaseManagementIssue> issueset, Set noteSet, String ongoing) {
+
+		int demographicNo=Integer.parseInt(demo);
+				
+		for (int i = 0; i < checkedlist.length; i++) {
+    		CheckBoxBean checkBoxBean = checkedlist[i];
+    		IssueDisplay issueDisplay=checkBoxBean.getIssueDisplay();
+    		
+        	if (issueDisplay.resolved.equals("unresolved")) 
+    		{
+        		ongoing = ongoing + issueDisplay.getDescription() + "\n";
+    		}
+        	
+			boolean isChecked = WebUtils.isChecked(request, "issueCheckList[" + i + "].checked");
+
+			CaseManagementIssue caseManagementIssue=null;
+            caseManagementIssue=caseManagementIssueDao.getIssuebyIssueCode(demo, issueDisplay.code);
+            if (caseManagementIssue==null && isChecked)
+            {
+                Issue issue=issueDao.findIssueByCode(issueDisplay.code);
+                if (issue!=null)
+                {
+                    caseManagementIssue=new CaseManagementIssue();
+                    caseManagementIssue.setDemographic_no(demo);
+                    caseManagementIssue.setIssue_id(issue.getId());
+                    caseManagementIssue.setType(issue.getRole());
+                    caseManagementIssue.setUpdate_date(new Date());
+                    
+                    caseManagementIssueDao.saveIssue(caseManagementIssue);
+                    // reload to materliase generated fields.
+                    caseManagementIssue=caseManagementIssueDao.getIssuebyId(demo, String.valueOf(issue.getId()));
+                }
+            }
+            
+            if (caseManagementIssue == null) continue;
+            else copyIssueDisplayToCaseManagementIssue(caseManagementIssue, issueDisplay);
+
+			if (isChecked) {
+	            checkBoxBean.setChecked("on");
+				checkBoxBean.setUsed(true);
+				caseManagementIssue.setNotes(noteSet);
+
+				issueset.add(caseManagementIssue);
+			} else {
+				checkBoxBean.setChecked("off");
+				boolean isLocal="local".equals(issueDisplay.location);
+				if (!isLocal) {
+					checkBoxBean.setUsed(false);
+				} else {
+	            	checkBoxBean.setUsed(caseManagementNoteDao.haveIssue(issueDisplay.code, demographicNo));
+				}
+			}
+                                
+           	issuelist.add(caseManagementIssue);
+        }
+	    return ongoing;
+    }
+
+	private void copyIssueDisplayToCaseManagementIssue(CaseManagementIssue caseManagementIssue, IssueDisplay issueDisplay) {
+		caseManagementIssue.setAcute("acute".equals(issueDisplay.acute));
+		caseManagementIssue.setCertain("certain".equals(issueDisplay.certain));
+		caseManagementIssue.setMajor("major".equals(issueDisplay.major));
+		caseManagementIssue.setResolved("resolved".equals(issueDisplay.resolved));
+    }
+
+	private String saveCheckedIssues_newCme(HttpServletRequest request, String demo, CaseManagementNote note, List issuelist, CheckBoxBean[] checkedlist, Set issueset, Set noteSet, String ongoing) {
+	    for (int i = 0; i < checkedlist.length; i++) {
+	        if (!checkedlist[i].getIssue().isResolved()) ongoing = ongoing + checkedlist[i].getIssue().getIssue().getDescription() + "\n";
+	        String ischecked = request.getParameter("issueCheckList[" + i + "].checked");
+	        CaseManagementIssue iss = checkedlist[i].getIssue();
+	        if (ischecked != null && ischecked.equalsIgnoreCase("on")) {
+	            checkedlist[i].setChecked("on");                                
+	            checkedlist[i].setUsed(true);
+	            iss.setNotes(noteSet);                 
+	            issueset.add(checkedlist[i].getIssue());
+	        }
+	        else {
+	            checkedlist[i].setChecked("off");
+	            checkedlist[i].setUsed(caseManagementMgr.haveIssue(iss.getId(), note.getId(), demo));
+	            checkedlist[i].setUsed(false);
+	        }
+	        
+	        issuelist.add(checkedlist[i].getIssue());
+	    }
+	    return ongoing;
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
