@@ -41,6 +41,9 @@
       String strView=(view==0)?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") );
       String strViewAll=request.getParameter("viewall")==null?"0":(request.getParameter("viewall")) ;
       String displaypage="providercontrol.jsp?year="+request.getParameter("year")+"&month="+request.getParameter("month")+"&day="+request.getParameter("day") +"&view="+  strView  +"&displaymode=day&dboperation=searchappointmentday" +"&viewall=" +strViewAll;
+    if (request.getParameter("viewWeek") != null) {
+       displaypage += "&provider_no=" + request.getParameter("provider_no");
+    }
     if(true) {
       out.clear();
     	response.sendRedirect(displaypage);
