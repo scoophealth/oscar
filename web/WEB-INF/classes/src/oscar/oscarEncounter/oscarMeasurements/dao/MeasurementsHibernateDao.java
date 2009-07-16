@@ -12,9 +12,12 @@ import java.util.TreeMap;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
@@ -56,48 +59,58 @@ public class MeasurementsHibernateDao extends HibernateDaoSupport implements
 	}
 
 	public SortedMap<String, String> getPatientMeasurementTypeDescriptions(String demo) {
-		Criteria c1 = getSession().createCriteria(Measurements.class);
-		Criteria c2 = getSession().createCriteria(Measurementtype.class);
-		List<String> types=(List<String>)c1.setProjection(Projections.projectionList().add(
-				Projections.groupProperty("type")))
-				.add(Expression.eq("demographicNo",new Integer(demo))).list();
-		
-		c2 = c2.setProjection(
-				Projections.projectionList().add(
-						Projections.groupProperty("type")).add(
-						Projections.property("typeDescription")))
-						.add(Expression.in("type", types));
-		List<Object[]> rs = new ArrayList();
-		if (types!=null && types.size()>0) rs=c2.list();
-		SortedMap<String, String> rm = new TreeMap(new Comparator<String>(){
-			public int compare(String o1, String o2) {
-				return o1.compareToIgnoreCase(o2);
-			}});
-		for (Object[] i : rs) {
-			rm.put((String) i[0], (String) i[1]);
+		Session s = getSession();
+		try {
+			Criteria c1 = s.createCriteria(Measurements.class);
+			Criteria c2 = s.createCriteria(Measurementtype.class);
+			List<String> types=(List<String>)c1.setProjection(Projections.projectionList().add(
+					Projections.groupProperty("type")))
+					.add(Expression.eq("demographicNo",new Integer(demo))).list();
+
+			c2 = c2.setProjection(
+					Projections.projectionList().add(
+							Projections.groupProperty("type")).add(
+							Projections.property("typeDescription")))
+							.add(Expression.in("type", types));
+			List<Object[]> rs = new ArrayList();
+			if (types!=null && types.size()>0) rs=c2.list();
+			SortedMap<String, String> rm = new TreeMap(new Comparator<String>(){
+				public int compare(String o1, String o2) {
+					return o1.compareToIgnoreCase(o2);
+				}});
+			for (Object[] i : rs) {
+				rm.put((String) i[0], (String) i[1]);
+			}
+
+			return rm;
+		} finally {
+			releaseSession(s);
 		}
-		
-		return rm;
 	}
 
 	public List<Date> getMeasurementsDatesByDateRange(Date date, int flag,
 			String demo) {
-		Criteria c = getSession().createCriteria(Measurements.class);
-		c = c.setProjection(
-				Projections.projectionList().add(
-						Projections.groupProperty("dateObserved"))).add(
-				Expression.eq("demographicNo", new Integer(demo)));
-		if (flag == 1)
-			c = c.add(Expression.gt("dateObserved", date));
-		if (flag == -1)
-			c = c.add(Expression.lt("dateObserved", date));
-		c = c.addOrder(Order.desc("dateObserved")).setMaxResults(displayCount);
-		
-		List<Date> dateList = new ArrayList();
+		Session s = getSession();
+		try {
+			Criteria c = s.createCriteria(Measurements.class);
+			c = c.setProjection(
+					Projections.projectionList().add(
+							Projections.groupProperty("dateObserved"))).add(
+					Expression.eq("demographicNo", new Integer(demo)));
+			if (flag == 1)
+				c = c.add(Expression.gt("dateObserved", date));
+			if (flag == -1)
+				c = c.add(Expression.lt("dateObserved", date));
+			c = c.addOrder(Order.desc("dateObserved")).setMaxResults(
+					displayCount);
+			List<Date> dateList = new ArrayList();
+			for (Object mm : (List<Object>) c.list()) {
+				dateList.add((Date) mm);
+			}
+			return dateList;
 
-		for (Object mm : (List<Object>)c.list()) {
-			dateList.add((Date)mm);
+		} finally {
+			releaseSession(s);
 		}
-		return dateList;
 	}
 }
