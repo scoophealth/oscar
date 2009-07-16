@@ -345,6 +345,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 log.debug("Set Checked Issues " + String.valueOf(current-start));
                 start = current;
             }	
+
+            Iterator itr = note.getIssues().iterator();
+            while (itr.hasNext()) {
+                int id = ((CaseManagementIssue) itr.next()).getId().intValue();
+                SetChecked(checkedList, id);
+            }
         }
         else // old CME
         {
@@ -362,21 +368,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             	checkBoxBeanList.add(checkBoxBean);
             }
         	checkedList = checkBoxBeanList.toArray(new CheckBoxBean[0]);
+
+        	
+            for (CaseManagementIssue cmi : note.getIssues()) {
+                setChecked_oldCme(checkedList, cmi);
+            }
         }
         
         current = System.currentTimeMillis();
         
-        start = current;
-        
-        Iterator itr = note.getIssues().iterator();
-        while (itr.hasNext()) {
-            int id = ((CaseManagementIssue) itr.next()).getId().intValue();
-            SetChecked(checkedList, id);
-        }
-
-        log.debug("Set Checked Issues " + String.valueOf(current-start));
-        start = current;                
-
         cform.setIssueCheckList(checkedList);
 
         cform.setSign("off");
@@ -432,7 +432,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         return finalFwd;
     }
 
-    public void resetTemp(String providerNo, String demoNo, String programId) {
+    private void setChecked_oldCme(CheckBoxBean[] checkedList, CaseManagementIssue cmi) {
+		for (CheckBoxBean cbb : checkedList)
+		{
+			if (cbb.getIssueDisplay().code.equals(cmi.getIssue().getCode()))
+			{
+				cbb.setChecked("on");
+				return;
+			}
+		}
+    }
+
+	public void resetTemp(String providerNo, String demoNo, String programId) {
         try {
             this.caseManagementMgr.deleteTmpSave(providerNo, demoNo, programId);
         }

@@ -221,7 +221,7 @@ public class CaseManagementNote extends BaseObject {
 	/**
 	 * deprecated too inefficient and too many dependencies use CaseManagementIssueNotesDao
 	 */
-	public Set getIssues() {
+	public Set<CaseManagementIssue> getIssues() {
 		return issues;
 	}
 
