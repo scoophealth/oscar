@@ -34,7 +34,7 @@
 <script LANGUAGE="JavaScript">
 <!--
 
-function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
+function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth, effdate, endyear, endmonth, enddate) {
         	 self.close();  
         	 self.opener.document.adddemographic.last_name.value = lname;
         	 self.opener.document.adddemographic.first_name.value = fname;
@@ -42,8 +42,14 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
         	 self.opener.document.adddemographic.year_of_birth.value = yob;
         	 self.opener.document.adddemographic.month_of_birth.value = mob;
         	 self.opener.document.adddemographic.date_of_birth.value = dob;
-        	   self.opener.document.adddemographic.ver.value = vercode;
+                 self.opener.document.adddemographic.ver.value = vercode;
         	 self.opener.document.adddemographic.sex.value = sex;
+                 self.opener.document.adddemographic.eff_date_year.value = effyear;
+                 self.opener.document.adddemographic.eff_date_month.value = effmonth;
+                 self.opener.document.adddemographic.eff_date_date.value = effdate;
+                 self.opener.document.adddemographic.end_date_year.value = endyear;
+                 self.opener.document.adddemographic.end_date_month.value = endmonth;
+                 self.opener.document.adddemographic.end_date_date.value = enddate;
 }
 -->
 </script>
@@ -67,7 +73,18 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
    String dobmonth = subcard.substring(subcard.indexOf("^")+13, subcard.indexOf("^")+15);
    String dobdate = subcard.substring(subcard.indexOf("^")+15, subcard.indexOf("^")+17);
    String vercode = subcard.substring(subcard.indexOf("^")+17, subcard.indexOf("^")+19);
-      vercode = vercode.toUpperCase();
+   vercode = vercode.toUpperCase();
+
+   int monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3));
+   String endyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3);
+   String endmonth = subcard.substring(subcard.indexOf("^")+3, subcard.indexOf("^")+5);
+   String enddate = dobdate;
+
+   monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26));
+   String effyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26);
+   String effmonth = subcard.substring(subcard.indexOf("^")+26, subcard.indexOf("^")+28);
+   String effdate = subcard.substring(subcard.indexOf("^")+28, subcard.indexOf("^")+30);
+
    String sex = subcard.substring(subcard.indexOf("^")+8,subcard.indexOf("^")+9);
      if (sex.compareTo("2") == 0) {
    sex="F";
@@ -77,10 +94,11 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
     
    %>
 	<td>HIN: <%=hin%> FName: <%=firstname%> LName: <%=lastname%>
-	DOBYEAR: <%=dobyear%>-<%=dobmonth%>-<%=dobdate%></td>
+	DOBYEAR: <%=dobyear%>-<%=dobmonth%>-<%=dobdate%> End Date: <%=endyear%>-<%=endmonth%>-<%=enddate%>
+	EFF Date: <%=effyear%>-<%=effmonth%>-<%=effdate%></td>
 	<script LANGUAGE="JavaScript">
 <!--
- 	Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>');
+ 	Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>', '<%=endyear%>', '<%=endmonth%>', '<%=enddate%>');
       
 -->
 

@@ -35,7 +35,7 @@
 <!--
 
 
-function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
+function Attach(lname, fname, hin, yob,mob,dob, vercode, sex, effyear, effmonth, effdate, endyear, endmonth, enddate) {
         	 if(confirm("You are about to replace the existing patient's information, are you sure?")) {
         	
         	self.close();  
@@ -45,8 +45,14 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
         	 self.opener.document.updatedelete.year_of_birth.value = yob;
         	 self.opener.document.updatedelete.month_of_birth.value = mob;
         	 self.opener.document.updatedelete.date_of_birth.value = dob;
-        	  self.opener.document.updatedelete.ver.value = vercode;
+        	 self.opener.document.updatedelete.ver.value = vercode;
         	 self.opener.document.updatedelete.sex.value = sex;
+		 self.opener.document.updatedelete.eff_date_year.value = effyear;
+		 self.opener.document.updatedelete.eff_date_month.value = effmonth;
+		 self.opener.document.updatedelete.eff_date_date.value = effdate;
+		 self.opener.document.updatedelete.end_date_year.value = endyear;
+		 self.opener.document.updatedelete.end_date_month.value = endmonth;
+		 self.opener.document.updatedelete.end_date_date.value = enddate;
         	 }
 }
 -->
@@ -70,10 +76,19 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
    String dobyear = subcard.substring(subcard.indexOf("^")+9,subcard.indexOf("^")+13);
    String dobmonth = subcard.substring(subcard.indexOf("^")+13, subcard.indexOf("^")+15);
    String dobdate = subcard.substring(subcard.indexOf("^")+15, subcard.indexOf("^")+17);
- String vercode = subcard.substring(subcard.indexOf("^")+17, subcard.indexOf("^")+19);
+   String vercode = subcard.substring(subcard.indexOf("^")+17, subcard.indexOf("^")+19);
    vercode = vercode.toUpperCase();
    
-   
+   int monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3));
+   String endyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+1, subcard.indexOf("^")+3); 
+   String endmonth = subcard.substring(subcard.indexOf("^")+3, subcard.indexOf("^")+5); 
+   String enddate = dobdate;
+ 
+   monthInt = Integer.parseInt(subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26));
+   String effyear = (monthInt > 30 ? "19" : "20") + subcard.substring(subcard.indexOf("^")+24, subcard.indexOf("^")+26); 
+   String effmonth = subcard.substring(subcard.indexOf("^")+26, subcard.indexOf("^")+28);
+   String effdate = subcard.substring(subcard.indexOf("^")+28, subcard.indexOf("^")+30); 
+
    String sex = subcard.substring(subcard.indexOf("^")+8,subcard.indexOf("^")+9);
     if (sex.compareTo("2") == 0) {
    sex="F";
@@ -113,18 +128,51 @@ function Attach(lname, fname, hin, yob,mob,dob, vercode, sex) {
 	</tr>
 	<tr valign="top">
 		<td align="right"><b>HIN: </b></td>
-		<td align="left"><input type="text" name="hin" value="<%=hin%>">
-		</td>
+		<td align="left"><input type="text" name="hin" value="<%=hin%>"></td>
 		<td align="right"><b>Ver.</b></td>
 		<td align="left"><input type="text" name="ver"
 			value="<%=vercode%>"></td>
 	</tr>
+        <tr valign="top">
+                <td align="right"><b>EFF Date:</b></td>
+                <td align="left">
+                <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                                <td><input type="text" name="eff_date_year"
+                                        value="<%=effyear%>" size="4" maxlength="4"></td>
+                                <td>-</td>
+                                <td><input type="text" name="eff_date_month"
+                                        value="<%=effmonth%>" size="2" maxlength="2"></td>
+                                <td>-</td>
+                                <td><input type="text" name="eff_date_date"
+                                        value="<%=effdate%>" size="2" maxlength="2"></td>
+                        </tr>
+                </table>
+                </td>
+                <td align="right"><b>End Date:</b></td>
+                <td align="left">
+                <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                                <td><input type="text" name="end_date_year"
+                                        value="<%=endyear%>" size="4" maxlength="4"></td>
+                                <td>-</td>
+                                <td><input type="text" name="end_date_month"
+                                        value="<%=endmonth%>" size="2" maxlength="2"></td>
+                                <td>-</td>
+                                <td><input type="text" name="end_date_date"
+                                        value="<%=enddate%>" size="2" maxlength="2"></td>
+                        </tr>
+                </table>
+                </td>
+
+        </tr>
+
 </table>
 
 <br>
 <br>
 <form><input type="button" name="Button1" value="Confirm"
-	onclick="javascript:Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>')"><input
+	onclick="javascript:Attach('<%=lastname%>','<%=firstname%>','<%=hin%>','<%=dobyear%>','<%=dobmonth%>','<%=dobdate%>', '<%=vercode%>','<%=sex%>', '<%=effyear%>', '<%=effmonth%>', '<%=effdate%>', '<%=endyear%>', '<%=endmonth%>', '<%=enddate%>')"><input
 	type="button" name="Button" value="Cancel" onclick=self.close();>
 </form>
 </body>
