@@ -1,0 +1,23 @@
+
+name left, 120, 135, 0, BaseFont.HELVETICA, 10,
+homeAddress left, 120, 165, 0, BaseFont.HELVETICA, 10,
+physician left, 220, 195, 0, BaseFont.HELVETICA, 10,
+dateOfExamination left, 200, 225, 0, BaseFont.HELVETICA, 10,
+chkThreatenedA left, 97, 347, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkBehavedA left, 97, 372, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkCompetenceA left, 97, 400, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmYourselfA left, 97, 455, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmAnotherA left, 97, 480, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkImpairmentA left, 97, 503, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmYourselfB left, 110, 600, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmAnotherB left, 110, 618, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkDeteriorationB left, 110, 636, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkImpairmentB left, 110, 654, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+
+
+
+
+
+
+

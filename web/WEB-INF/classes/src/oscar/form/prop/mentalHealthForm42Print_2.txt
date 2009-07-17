@@ -1,0 +1,14 @@
+chkHarmYourselfB2 left, 110, 95, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmAnotherB2 left, 110, 115, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkDeteriorationB2 left, 110, 132, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkImpairmentB2 left, 110, 150, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+dateOfSign left, 140, 315, 0, BaseFont.HELVETICA, 10,
+signPhysician left, 380, 315, 0, BaseFont.HELVETICA, 10,
+name2 left, 120, 388, 0, BaseFont.HELVETICA, 10,
+homeAddress2 left, 120, 418, 0, BaseFont.HELVETICA, 10,
+nameOfMinisterHealth left, 230, 448, 0, BaseFont.HELVETICA, 10,
+chkHarmYourself2 left, 98, 546, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+chkHarmAnother2 left, 98, 570, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+dateOfOrder left, 140, 620, 0, BaseFont.HELVETICA, 10,
+dateOfSign2 left, 140, 720, 0, BaseFont.HELVETICA, 10,
+signPhysician2 left, 370, 720, 0, BaseFont.HELVETICA, 10,
