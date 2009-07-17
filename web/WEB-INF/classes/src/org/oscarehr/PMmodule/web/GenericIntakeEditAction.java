@@ -65,7 +65,7 @@ import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
@@ -242,8 +242,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	public ActionForward save_all(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response, String saveWhich) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
 		Intake intake = formBean.getIntake();
 		String intakeType = intake.getType();
 		Demographic client = formBean.getClient();
@@ -294,9 +294,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				intake.setIntakeLocation(intakeLocationId);
 			}
 
-			Facility currentFacility = (Facility) request.getSession().getAttribute("currentFacility");
-			Integer currentFacilityId = currentFacility.getId();
-			intake.setFacilityId(currentFacilityId);
+			intake.setFacilityId(loggedInInfo.currentFacility.getId());
 
 			String admissionText = null;
 			String remoteReferralId = StringUtils.trimToNull(request.getParameter("remoteReferralId"));
@@ -369,7 +367,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
 				intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()),
-				getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), facilityId, nodeId);
+				getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()), loggedInInfo.currentFacility.getId(), nodeId);
 
 		String oldBedProgramId = String.valueOf(getCurrentBedCommunityProgramId(client.getDemographicNo()));
 		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
