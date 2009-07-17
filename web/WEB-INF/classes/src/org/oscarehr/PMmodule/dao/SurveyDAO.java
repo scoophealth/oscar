@@ -56,31 +56,35 @@ public class SurveyDAO extends HibernateDaoSupport {
         return null;
     }
 
-    public List getForms(Long clientId) {
-        List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.clientId = ? order by f.dateCreated DESC", clientId);
+    public List<OscarFormInstance> getForms(Long clientId) {
+        @SuppressWarnings("unchecked")
+        List<OscarFormInstance> result = this.getHibernateTemplate().find("from OscarFormInstance f where f.clientId = ? order by f.dateCreated DESC", clientId);
         return result;
     }
 
-    public List getForms(Long clientId, Integer facilityId) {
+    public List<OscarFormInstance> getForms(Long clientId, Integer facilityId) {
         ArrayList paramList = new ArrayList();
         String sSQL="from OscarFormInstance f where f.clientId = ? and f.formId in " +
         	"(select s.formId from OscarForm s where s.facilityId =?) order by f.dateCreated DESC";  
         paramList.add(clientId);
         paramList.add(facilityId);
         Object params[] = paramList.toArray(new Object[paramList.size()]);
-        List result = getHibernateTemplate().find(sSQL, params);
+        @SuppressWarnings("unchecked")
+        List<OscarFormInstance> result = getHibernateTemplate().find(sSQL, params);
         return result;
 //    	List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.clientId = ? order by f.dateCreated DESC", clientId);
     }
 
-    public List getForms(Long formId, Long clientId) {
-        List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.formId = ? and f.clientId = ? order by f.dateCreated DESC", new Object[] {formId, clientId});
+    public List<OscarFormInstance> getForms(Long formId, Long clientId) {
+        @SuppressWarnings("unchecked")
+        List<OscarFormInstance> result = this.getHibernateTemplate().find("from OscarFormInstance f where f.formId = ? and f.clientId = ? order by f.dateCreated DESC", new Object[] {formId, clientId});
         return result;
     }
     public OscarFormInstance getCurrentFormById(Long formInstanceId) {
-    	List result = this.getHibernateTemplate().find("from OscarFormInstance f where f.id = ?", new Object[] {formInstanceId});
+        @SuppressWarnings("unchecked")
+    	List<OscarFormInstance> result = this.getHibernateTemplate().find("from OscarFormInstance f where f.id = ?", new Object[] {formInstanceId});
     	if(result.size()>0) {
-    		return (OscarFormInstance)result.get(0);
+    		return result.get(0);
     	}    	
     	return null;
     }

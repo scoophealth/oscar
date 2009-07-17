@@ -1343,8 +1343,8 @@ public class ClientManagerAction extends BaseAction {
 
 		if (tabBean.getTab().equals("Summary")) {
 			/* survey module */
-			request.setAttribute("survey_list", surveyManager.getAllForms(facilityId,providerNo));
-			request.setAttribute("surveys", surveyManager.getForms(demographicNo, facilityId,providerNo));
+			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
+			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
 
 			// request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
 			// only allow bed/service programs show up.(not external program)
@@ -1492,8 +1492,8 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("generalIntakeNodes", genericIntakeManager.getIntakeNodesByType(3));
 			
 			/* survey module */
-			request.setAttribute("survey_list", surveyManager.getAllForms(facilityId,providerNo));
-			request.setAttribute("surveys", surveyManager.getForms(demographicNo, facilityId,providerNo));
+			request.setAttribute("survey_list", surveyManager.getAllFormsForCurrentProviderAndCurrentFacility());
+			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
 			
 			/* consent forms */
 			List<IntegratorConsent> consentTemp = integratorConsentDao.findByFacilityAndDemographic(facilityId, Integer.parseInt(demographicNo));

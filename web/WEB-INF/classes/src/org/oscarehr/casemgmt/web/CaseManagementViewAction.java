@@ -325,11 +325,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		}
 		request.setAttribute("dxMap",dxMap);
 
-		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-				
 		// UCF
 		log.debug("Fetch Survey List");
-		request.setAttribute("survey_list", surveyMgr.getAllForms(currentFacilityId,providerNo));
+		request.setAttribute("survey_list", surveyMgr.getAllFormsForCurrentProviderAndCurrentFacility());
 		current = System.currentTimeMillis();
 		log.debug("Fetch Survey List " + String.valueOf(current - start));
 		

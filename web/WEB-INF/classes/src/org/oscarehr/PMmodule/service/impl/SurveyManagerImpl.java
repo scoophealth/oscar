@@ -45,6 +45,7 @@ import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.Section;
 import org.oscarehr.surveymodel.SurveyDocument;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -58,8 +59,10 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		this.surveyDAO = dao;
 	}
 
-	public List getAllForms(Integer facilityId, String providerNo) {
-		List<OscarForm> allForms = getAllForms(facilityId);
+	public List getAllFormsForCurrentProviderAndCurrentFacility() {
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		List<OscarForm> allForms = surveyDAO.getAllForms(loggedInInfo.currentFacility.getId());
 		List<OscarForm> results = new ArrayList<OscarForm>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();
 		//filter out the ones due to security
@@ -67,7 +70,7 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 			//String name = form.getDescription().toLowerCase().replaceAll(" ","_");
 			String name = form.getDescription();
 			try {
-				if(securityDao.checkPrivilege(name,providerNo)) {
+				if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
 					results.add(form);
 				}
 			} catch(SQLException e) {
@@ -79,10 +82,6 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 	}
 	
 
-	
-    private List<OscarForm> getAllForms(Integer facilityId) {
-        return surveyDAO.getAllForms(facilityId);
-    }
 	
 	public OscarForm getForm(String formId) {
 		return surveyDAO.getForm(Long.valueOf(formId));
@@ -120,15 +119,17 @@ public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource 
 		return surveyDAO.getLatestForm(Long.valueOf(formId),Long.valueOf(clientId));
 	}
 
-	public List getForms(String clientId, Integer facilityId, String providerNo){
-		List<OscarFormInstance> forms = surveyDAO.getForms(Long.valueOf(clientId), facilityId);
+	public List getFormsForCurrentProviderAndCurrentFacility(String clientId){
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		
+		List<OscarFormInstance> forms = surveyDAO.getForms(Long.valueOf(clientId), loggedInInfo.currentFacility.getId());
 		List<OscarFormInstance> results = new ArrayList<OscarFormInstance>();
 		SurveySecurityDao securityDao = new SurveySecurityDao();
 		
 		for(OscarFormInstance form:forms) {
 			String name = form.getDescription();
 			try {
-				if(securityDao.checkPrivilege(name,providerNo)) {
+				if(securityDao.checkPrivilege(name,loggedInInfo.loggedInProvider.getProviderNo())) {
 					results.add(form);
 				}
 			} catch(SQLException e) {
