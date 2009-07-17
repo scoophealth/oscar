@@ -822,3 +822,7 @@ insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('Rem
 insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('FamHistory','Family History as part of cpp', 'nurse', now(), 'system');
 insert into issue (`code`,`description`,`role`,`update_date`,`type`) Values('RiskFactors','Risk Factors as part of cpp', 'nurse', now(), 'system');
 
+INSERT INTO encounterForm VALUES("Mental Health Form1","../form/formMentalHealthForm1.jsp?demographic_no=","formMentalHealthForm1",0);
+INSERT INTO encounterForm VALUES("Mental Health Form14","../form/formMentalHealthForm14.jsp?demographic_no=","formMentalHealthForm14",0);
+insert into encounterForm values("Mental Health Form42","../form/formMentalHealthForm42.jsp?demographic_no=","formMentalHealthForm42",0);
+
