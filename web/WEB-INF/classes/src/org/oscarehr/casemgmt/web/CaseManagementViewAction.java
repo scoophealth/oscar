@@ -1096,9 +1096,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			programId = "0";
 		}
 
-		Integer currentFacilityId = request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID) != null ? (Integer) request.getSession().getAttribute(
-				SessionConstants.CURRENT_FACILITY_ID) : 0;
-
 		notes = caseManagementMgr.filterNotes(notes, programId);
 		this.caseManagementMgr.getEditors(notes);
 		
@@ -1135,7 +1132,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		searchBean.setSearchText(caseForm.getSearchText());
 		List results = caseManagementMgr.search(searchBean);
 		Collection filtered1 = manageLockedNotes(results, false, this.getUnlockedNotesMap(request));
-		Integer currentFacilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 		List filteredResults = caseManagementMgr.filterNotes(filtered1, programId);
 
 		List sortedResults = sortNotes_old(filteredResults, caseForm.getNote_sort());
