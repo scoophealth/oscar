@@ -51,11 +51,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
-import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -67,11 +64,9 @@ import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
-import org.oscarehr.casemgmt.service.CommunityIssueManager;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
@@ -1627,20 +1622,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                 filteredSearchResults.add(issue);
             }
         }
-
-        // tag issues with matching codes from Integrator as community
-        String communityIssueType = oscar.OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE");
-        List<String> communityIssueCodes = CommunityIssueManager.getCommunityIssueCodes(currentFacilityId, communityIssueType);
         
         CheckIssueBoxBean[] issueList = new CheckIssueBoxBean[filteredSearchResults.size()];
         for (int i = 0; i < filteredSearchResults.size(); i++) {
             Issue issue = (Issue) filteredSearchResults.get(i);
         	issueList[i] = new CheckIssueBoxBean();
             issueList[i].setIssue(issue);
-            if(communityIssueCodes != null && communityIssueCodes.contains(issue.getCode()))
-            {
-            	issueList[i].setCommunity(true);
-            }
         }
         log.debug("Community issue reconciliation complete");
         String sessionFrmName = "caseManagementEntryForm" + demono;
