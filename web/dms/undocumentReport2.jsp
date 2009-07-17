@@ -87,7 +87,6 @@
 // "Module" and "function" is the same thing (old dms module)
             String module = "demographic";
             String moduleid = "-1";
-            Integer currentFacilityId = (Integer) session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
             String viewstatus = "active";
 
@@ -455,7 +454,7 @@
             <li>+ Need a way to show if the document is currently linked with a provider</li>
             
             <li>-Away to short the documents eg for provider , by provider, date range.  matched provider, matched demographic</li>
-            <li> Module  <%=module%>| module id<%=moduleid%>|  view <%=view%>| type? <%=EDocUtil.PRIVATE%>| sort <%=sort%>| viewstat <%=viewstatus%>| fac id <%=currentFacilityId%>  
+            <li> Module  <%=module%>| module id<%=moduleid%>|  view <%=view%>| type? <%=EDocUtil.PRIVATE%>| sort <%=sort%>| viewstat <%=viewstatus%>  
             </li>
             
         </ul>

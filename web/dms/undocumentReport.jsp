@@ -398,7 +398,6 @@
             ArrayList categories = new ArrayList();
             ArrayList categoryKeys = new ArrayList();
             ArrayList privatedocs = new ArrayList();
-            Integer currentFacilityId = (Integer) session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
             String viewstatus = "active";
             privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
 
