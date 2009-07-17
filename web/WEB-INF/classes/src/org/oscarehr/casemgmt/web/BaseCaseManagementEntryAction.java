@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
-import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -255,35 +254,6 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		return cIssue;
         }
         
-    protected CaseManagementCommunityIssue newIssueToCCIssue(String demoNo, Issue iss, Integer programId) 
-    {
-       	CaseManagementCommunityIssue cIssue = new CaseManagementCommunityIssue();
-		// cIssue.setActive(true);
-		cIssue.setAcute(false);
-		cIssue.setCertain(false);
-		cIssue.setDemographic_no(demoNo);
-	
-		cIssue.setIssue_id(iss.getId().longValue());
-	
-		cIssue.setIssue(iss);
-		cIssue.setMajor(false);
-		// cIssue.setMedical_diagnosis(true);
-		cIssue.setNotes(new HashSet());
-		cIssue.setResolved(false);
-		String issueType = iss.getRole();
-		cIssue.setType(issueType);
-		cIssue.setUpdate_date(new Date());
-		cIssue.setWriteAccess(true);
-		cIssue.setProgram_id(programId);
-		// add it to database
-		List uList = new ArrayList();
-		uList.add(cIssue);
-		caseManagementMgr.saveAndUpdateCaseIssues(uList);
-		// add new issues to ongoing concern
-		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
-		return cIssue;
-    }
-
 	/**
 	 * @param programId is optional, can be null for none.
 	 */
