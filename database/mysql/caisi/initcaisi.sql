@@ -13,7 +13,6 @@ create table Facility (
 	integratorUrl varchar(255),
 	integratorUser varchar(255),
 	integratorPassword varchar(255),
-	integratorLastPushTime datetime,
 	enableIntegratedReferrals tinyint(1) not null,
 	enableHealthNumberRegistry tinyint(1) not null,
 	allowSims tinyint(1) unsigned NOT NULL default 1,

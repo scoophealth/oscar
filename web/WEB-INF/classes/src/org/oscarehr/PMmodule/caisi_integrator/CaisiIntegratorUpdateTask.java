@@ -206,11 +206,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 
-		// get the time here so there's a slight over lap in actual runtime and
-		// activity time, other wise you'll have a gap, better to unnecessarily
-		// send a few more records than to miss some.
-		Date currentPushTime = new Date();
-
 		// do all the sync work
 		// in theory sync should only send changed data, but currently due to
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
@@ -219,31 +214,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics();
-
-		// update late push time only if an exception didn't occur
-		// re-get the facility as the sync time could be very long and changes
-		// may have been made to the facility.
-		facility = facilityDao.find(facility.getId());
-		facility.setIntegratorLastPushTime(currentPushTime);
-		facilityDao.merge(facility);
 	}
 
 	private void pushFacility() throws MalformedURLException, IllegalAccessException, InvocationTargetException {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 		
-		if (facility.getIntegratorLastPushTime() == null || facility.getLastUpdated().after(facility.getIntegratorLastPushTime())) {
-			logger.debug("pushing facility record");
+		logger.debug("pushing facility record");
 
-			CachedFacility cachedFacility = new CachedFacility();
-			BeanUtils.copyProperties(cachedFacility, facility);
+		CachedFacility cachedFacility = new CachedFacility();
+		BeanUtils.copyProperties(cachedFacility, facility);
 
-			FacilityWs service = CaisiIntegratorManager.getFacilityWs();
-			service.setMyFacility(cachedFacility);
-		}
-		else
-		{
-			logger.debug("skipping facility record (no changes)");
-		}			
+		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+		service.setMyFacility(cachedFacility);
 	}
 
 	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
@@ -386,8 +368,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		for (IntegratorConsent tempConsent : tempConsents)
 		{
-			if (tempConsent.getCreatedDate().before(facility.getIntegratorLastPushTime())) break;
-
 			if (tempConsent.getClientConsentStatus()==ConsentStatus.GIVEN || tempConsent.getClientConsentStatus()==ConsentStatus.REVOKED)
 			{
 				SetConsentTransfer consentTransfer=CaisiIntegratorManager.makeSetConsentTransfer(tempConsent);				
@@ -507,9 +487,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				// if it's locked or if it's not in this facility ignore it.
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
 
-				// if it's a note we've already sent ignore it (temporaryily disabled until more testing is done)
-				// if (facility.getIntegratorLastPushTime()!=null && facility.getIntegratorLastPushTime().after(localNote.getUpdate_date())) continue;
-				
 				CachedDemographicNote noteToSend=makeRemoteNote(localNote, issueType);
 				notesToSend.add(noteToSend);
 			} catch (NumberFormatException e) {

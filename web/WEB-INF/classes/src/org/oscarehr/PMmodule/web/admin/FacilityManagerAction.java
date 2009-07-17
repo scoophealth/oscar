@@ -203,8 +203,13 @@ public class FacilityManagerAction extends BaseAction {
 			else facilityDao.merge(facility);
 
 			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-			if (loggedInInfo.currentFacility.getIntegratorLastPushTime().equals(facility.getId())) request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
-
+			// if we just updated our current facility, refresh local cached data in the session / thread local variable
+			if (loggedInInfo.currentFacility.getId().intValue()==facility.getId().intValue())
+			{
+				request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
+				loggedInInfo.currentFacility=facility;
+			}
+			
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("facility.saved", facility.getName()));
 			saveMessages(request, messages);

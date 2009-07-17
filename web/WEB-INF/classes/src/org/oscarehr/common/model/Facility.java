@@ -30,8 +30,6 @@ public class Facility implements Serializable {
 	private String integratorUrl = null;
 	private String integratorUser = null;
 	private String integratorPassword = null;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date integratorLastPushTime = null;
 	private boolean enableIntegratedReferrals = true;
 	private boolean enableHealthNumberRegistry = true;
 	private boolean allowSims = true;
@@ -177,14 +175,6 @@ public class Facility implements Serializable {
 
 	public void setIntegratorPassword(String integratorPassword) {
 		this.integratorPassword = integratorPassword;
-	}
-
-	public Date getIntegratorLastPushTime() {
-		return integratorLastPushTime;
-	}
-
-	public void setIntegratorLastPushTime(Date integratorLastPushTime) {
-		this.integratorLastPushTime = integratorLastPushTime;
 	}
 
 	public boolean isAllowSims() {
