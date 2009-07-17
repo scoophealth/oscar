@@ -52,7 +52,6 @@
 	}
 	
 	Demographic currentDemographic=demographicDao.getDemographic(""+currentDemographicId);
-	int currentFacilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 	Facility currentFacility = (Facility)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);    
 %>
 
