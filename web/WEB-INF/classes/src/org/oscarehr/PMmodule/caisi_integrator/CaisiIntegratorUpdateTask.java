@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -205,18 +206,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 
+		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+		CachedFacility cachedFacility=service.getMyFacility();
+		// set to the beginning of time so by default everything is pushed
+		Date lastDataUpdated=new Date(0); 
+		if (cachedFacility!=null && cachedFacility.getLastDataUpdate()!=null) lastDataUpdated=cachedFacility.getLastDataUpdate();
+		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
+		Date currentUpdateDate=new Date();
+		
 		// do all the sync work
 		// in theory sync should only send changed data, but currently due to
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
-		// data model.
+		// data model. The last update date is available though as per above...
 		pushFacility();
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics();
 		
 		// all things updated successfully
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
-		service.updateMyFacilityLastUpdateDate();
+		service.updateMyFacilityLastUpdateDate(currentUpdateDate);
 	}
 
 	private void pushFacility() throws MalformedURLException, IllegalAccessException, InvocationTargetException {
