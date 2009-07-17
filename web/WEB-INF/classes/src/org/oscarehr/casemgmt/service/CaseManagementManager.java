@@ -74,7 +74,6 @@ import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
-import org.oscarehr.casemgmt.model.CaseManagementCommunityIssue;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -208,8 +207,6 @@ public class CaseManagementManager {
 	}
 
 	public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-		Date now = new Date();
 		String noteStr = note.getNote();
 		String noteHistory = note.getHistory();
 
@@ -1211,123 +1208,10 @@ public class CaseManagementManager {
 		return filteredIssues;
 	}
 
-	/**
-	 * Filters a list of CaseManagementIssue objects based on role.
-	 * 
-	 * @param issues
-	 * @param providerNo
-	 * @param programId
-	 * @param currentFacilityId
-	 * @return
-	 */
-	public List<CaseManagementCommunityIssue> filterCommunityIssues(List<CaseManagementCommunityIssue> issues, String programId) {
-		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
-		List<CaseManagementCommunityIssue> filteredIssues = new ArrayList<CaseManagementCommunityIssue>();
-
-		if (issues.isEmpty()) {
-			return issues;
-		}
-
-		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
-		if (ppList == null || ppList.isEmpty()) {
-			return new ArrayList();
-		}
-
-		ProgramProvider pp = (ProgramProvider) ppList.get(0);
-		Role role = pp.getRole();
-
-		// Load up access list from program
-		List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
-		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
-
-		// iterate through the issue list
-		for (Iterator iter = issues.iterator(); iter.hasNext();) {
-			CaseManagementCommunityIssue cmIssue = (CaseManagementCommunityIssue) iter.next();
-			String issueRole = cmIssue.getIssue().getRole().toLowerCase();
-			ProgramAccess pa = null;
-			boolean add = false;
-
-			// write
-			pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
-			if (pa != null) {
-				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
-					cmIssue.setWriteAccess(true);
-					add = true;
-				}
-			} else {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
-					// default
-					cmIssue.setWriteAccess(true);
-					add = true;
-				}
-			}
-			pa = null;
-			// read
-			pa = (ProgramAccess) programAccessMap.get("read " + issueRole + " issues");
-			if (pa != null) {
-				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
-					// filteredIssues.add(cmIssue);
-					add = true;
-				}
-			} else {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
-					// default
-					add = true;
-				}
-			}
-
-			// apply defaults
-			if (!add) {
-				if (issueRole.equalsIgnoreCase(role.getName())) {
-					cmIssue.setWriteAccess(true);
-					add = true;
-				}
-			}
-
-			// did it pass the test?
-			if (add) {
-				filteredIssues.add(cmIssue);
-			}
-		}
-
-		// filter issues based on facility
-		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
-			filteredIssues = communityIssuesFacilityFiltering(filteredIssues);
-		}
-
-		return filteredIssues;
-	}
-
-	public List<CaseManagementCommunityIssue> addRemoteIssueRoles(List<CaseManagementCommunityIssue> issues) {
-		ArrayList<CaseManagementCommunityIssue> filtered = new ArrayList<CaseManagementCommunityIssue>();
-
-		for (CaseManagementCommunityIssue issue : issues) {
-			Issue localIssue = issueDAO.findIssueByCode(issue.getIssue().getCode());
-			if (localIssue != null) {
-				issue.getIssue().setRole(localIssue.getRole());
-				filtered.add(issue);
-			}
-		}
-
-		return filtered;
-	}
-
 	private List<CaseManagementIssue> issuesFacilityFiltering(List<CaseManagementIssue> issues) {
 		ArrayList<CaseManagementIssue> results = new ArrayList<CaseManagementIssue>();
 
 		for (CaseManagementIssue caseManagementIssue : issues) {
-			Integer programId = caseManagementIssue.getProgram_id();
-			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
-		}
-
-		return results;
-	}
-
-	private List<CaseManagementCommunityIssue> communityIssuesFacilityFiltering(List<CaseManagementCommunityIssue> issues) {
-		ArrayList<CaseManagementCommunityIssue> results = new ArrayList<CaseManagementCommunityIssue>();
-
-		for (CaseManagementCommunityIssue caseManagementIssue : issues) {
 			Integer programId = caseManagementIssue.getProgram_id();
 			if (programManager.hasAccessBasedOnCurrentFacility(programId)) results.add(caseManagementIssue);
 		}

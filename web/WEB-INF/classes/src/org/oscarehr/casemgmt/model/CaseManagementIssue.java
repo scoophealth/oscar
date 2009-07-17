@@ -246,7 +246,6 @@ public class CaseManagementIssue extends BaseObject {
 		
 		String issueRole = getIssue().getRole().toLowerCase();
 		ProgramAccess pa = null;
-		boolean add = false;
 
 		// write
 		pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
