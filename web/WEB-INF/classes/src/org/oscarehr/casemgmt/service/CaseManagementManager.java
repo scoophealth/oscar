@@ -435,7 +435,7 @@ public class CaseManagementManager {
 	}
 
 	/**
-	 * This method gets all prescriptions including from integrated facilities. Pass in null for currentFacilityId to not include integrator drugs (or just use the method that doesn't include integrator drugs).
+	 * This method gets all prescriptions including from integrated facilities.
 	 * This method will also check to ensure the integrator is enabled for this facility before attemping to add remote drugs.
 	 * If it's not enabled it will return only local drugs.
 	 */
