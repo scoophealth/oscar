@@ -88,7 +88,7 @@ public class TicklerManager {
 
 */
    
-    public List<Tickler> getTicklers(CustomFilter filter, Integer currentFacilityId,String providerNo,String programId) {
+    public List<Tickler> getTicklers(CustomFilter filter,String providerNo,String programId) {
         List<Tickler> results = ticklerDAO.getTicklers(filter);     
            
         //String programNo = filter.getProgramId();

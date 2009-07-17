@@ -187,7 +187,7 @@ public class TicklerAction extends DispatchAction {
         //    if (programs.size()>0) filter.setProgramId(String.valueOf(programs.get(0).getId()));
         //}
         
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId, programId);
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId, programId);
 
         List cf = ticklerMgr.getCustomFilters(this.getProviderNo(request));
         // make my tickler filter
@@ -244,7 +244,7 @@ public class TicklerAction extends DispatchAction {
         Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
-        List<Tickler> ticklers = ticklerMgr.getTicklers(filter, currentFacilityId,providerId,programId);
+        List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId,programId);
         request.getSession().setAttribute("ticklers", ticklers);
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
