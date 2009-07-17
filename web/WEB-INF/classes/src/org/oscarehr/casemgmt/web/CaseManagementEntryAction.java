@@ -189,10 +189,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         /* remove the remembered echart string */
         request.getSession().setAttribute("lastSavedNoteString", null);
 
-        log.debug("Get Issues and filter them");
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
-        log.debug("EDIT " + providerNo + " " + demono + " " + programIdString + " " + currentFacilityId);
-        
+        log.debug("Get Issues and filter them");        
         current = System.currentTimeMillis();
         log.debug("Get Issues and filter them " + String.valueOf(current-start));
         start = current;
@@ -1605,7 +1602,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         String providerNo = getProviderNo(request);
 
         // get the issue list have search string
-        String search = (String) cform.getSearString();
+        String search = cform.getSearString();
 
         List searchResults;
         searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
@@ -1613,7 +1610,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         List filteredSearchResults = new ArrayList();
 
         // remove issues which we already have - we don't want duplicates
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         List existingIssues= caseManagementMgr.filterIssues(caseManagementMgr.getIssues(Integer.parseInt(demono)), programId);
         Map existingIssuesMap = convertIssueListToMap(existingIssues);
         for (Iterator iter = searchResults.iterator(); iter.hasNext();) {
@@ -2193,7 +2189,6 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             programId = "0";
         }
 
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         notes = caseManagementMgr.filterNotes(notes, programId);
 
         for (int idx = notes.size() - 1; idx >= 0; --idx) {
