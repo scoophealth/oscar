@@ -793,7 +793,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Set<Program> programsInDomain = getActiveProviderPrograms(providerNo);
 		if (facilityId == null) return programs;
 
-		for (Program p : programManager.getProgramDomainInFacility(providerNo, facilityId)) {
+		for (Program p : programManager.getProgramDomainInCurrentFacilityForCurrentProvider(false)) {
 			if (programsInDomain.contains(p)) {
 				programs.add(p);
 			}

@@ -152,7 +152,6 @@ public class CustomFilterAction extends DispatchAction {
 		log.debug("edit");
 		
 		String id = request.getParameter("id");
-		String providerId = (String)request.getSession().getAttribute("user");
 		if(id != null && !id.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
@@ -184,9 +183,7 @@ public class CustomFilterAction extends DispatchAction {
 		request.setAttribute("priorityList",CustomFilter.priorityList);
 		request.setAttribute("statusList",CustomFilter.statusList);
 		
-		//request.setAttribute("programs", programMgr.getProgramDomain(providerId));
-		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);  
-		request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,currentFacilityId));
+		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(false));
 		return mapping.findForward("customFilterForm");
 	}
 	

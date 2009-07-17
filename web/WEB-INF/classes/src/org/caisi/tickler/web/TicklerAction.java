@@ -116,31 +116,6 @@ public class TicklerAction extends DispatchAction {
         return from;
     }
 
-        
-    /* show all ticklers */
-    /*
-     * Eugene Petruhin, 12/16/2008: ticklerMgr.getTicklers() entry without any arguments is no longer available
-     * due to security and performance concerns. Following list() action is not being used so I comment it out. 
-
-    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.debug("list");
-        String providerId = (String)request.getSession().getAttribute("user");
-        request.setAttribute("providers", providerMgr.getProviders());
-        request.setAttribute("demographics", demographicMgr.getDemographics());
-        request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
-        
-        //request.setAttribute("programs",programMgr.getProgramDomain(providerId));
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);  
-        List<Program> programs=programMgr.getActiveProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId));
-        request.setAttribute("programs", programs);
-        
-        List ticklers = ticklerMgr.getTicklers();
-        request.getSession().setAttribute("ticklers", ticklers);
-        
-        request.setAttribute("from", getFrom(request));
-        return mapping.findForward("list");
-    }
-    */
 
     /* show a tickler */
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -174,11 +149,10 @@ public class TicklerAction extends DispatchAction {
         	filter.setDemographic_webName("");
         }
         
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
         
-        List<Program> programs=programMgr.getActiveProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId));
+        List<Program> programs=programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true);
         request.setAttribute("programs", programs);
         
         // if program selected default to first
@@ -241,7 +215,6 @@ public class TicklerAction extends DispatchAction {
         filter.setAssignee((String) request.getSession().getAttribute("user"));
         filter.setDemographic_webName(null);
         filter.setProgramId(null);
-        Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);        
         String providerId = (String)request.getSession().getAttribute("user");
         String programId = "";
         List<Tickler> ticklers = ticklerMgr.getTicklers(filter,providerId,programId);
@@ -249,9 +222,7 @@ public class TicklerAction extends DispatchAction {
         request.setAttribute("providers", providerMgr.getProviders());
         request.setAttribute("demographics", demographicMgr.getDemographics());
         
-        //request.setAttribute("programs",programMgr.getProgramDomain(providerId));
-		//request.setAttribute("programs", programMgr.getProgramDomainInFacility(providerId,currentFacilityId));
-		request.setAttribute("programs", programMgr.getActiveProgramDomainInFacility(providerId,Long.valueOf(currentFacilityId)));
+		request.setAttribute("programs", programMgr.getProgramDomainInCurrentFacilityForCurrentProvider(true));
         
 		request.setAttribute("customFilters", ticklerMgr.getCustomFilters(this.getProviderNo(request)));
         request.setAttribute("from", getFrom(request));

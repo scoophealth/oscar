@@ -370,31 +370,21 @@ public class ProgramManager {
         return programDomain;
     }
     
-    public List<Program> getActiveProgramDomainInFacility(String providerNo, Long facilityId) {
-    	List<Program> programs = getActiveProgramDomain(providerNo);
+    public List<Program> getProgramDomainInCurrentFacilityForCurrentProvider(boolean activeOnly) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+    	
+    	List<Program> programs = null;
+    	
+    	if (activeOnly) programs=getActiveProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
+    	else programs=getProgramDomain(loggedInInfo.loggedInProvider.getProviderNo());
+    	
     	List<Program> results = new ArrayList<Program>();
-    	if(facilityId==null) 
-    		return null;
-    	for(Iterator<Program> itr =programs.iterator(); itr.hasNext();) {
-    		Program p = itr.next();
-    		if(p.getFacilityId()==facilityId)
-    			results.add(p);
+    	for(Program program : programs) {
+    		if(program.getFacilityId()==loggedInInfo.currentFacility.getId().intValue()) results.add(program);
     	}
-    	return results;
+    	return results;    	
     }
     
-    public List<Program> getProgramDomainInFacility(String providerNo, Integer facilityId) {
-    	List<Program> programs = getProgramDomain(providerNo);
-    	List<Program> results = new ArrayList<Program>();
-    	if(facilityId==null) 
-    		return null;
-    	for(Iterator<Program> itr =programs.iterator(); itr.hasNext();) {
-    		Program p = itr.next();
-    		if(p.getFacilityId()==facilityId)
-    			results.add(p);
-    	}
-    	return results;
-    }
     public Program[] getCommunityPrograms() {
         return programDao.getCommunityPrograms();
     }
