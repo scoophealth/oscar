@@ -323,7 +323,6 @@ function popup1(height, width, url, windowName){
                 ArrayList categories = new ArrayList();
                 ArrayList categoryKeys = new ArrayList();
                 ArrayList privatedocs = new ArrayList();
-                Integer currentFacilityId=(Integer)session.getAttribute(SessionConstants.CURRENT_FACILITY_ID);
                 privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort, viewstatus);
 
                 categories.add(privatedocs);
