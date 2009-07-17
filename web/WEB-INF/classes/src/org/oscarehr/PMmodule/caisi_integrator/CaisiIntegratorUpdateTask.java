@@ -218,7 +218,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// in theory sync should only send changed data, but currently due to
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
 		// data model. The last update date is available though as per above...
-		pushFacility();
+		pushFacility(lastDataUpdated);
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics();
@@ -227,16 +227,23 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		service.updateMyFacilityLastUpdateDate(currentUpdateDate);
 	}
 
-	private void pushFacility() throws MalformedURLException, IllegalAccessException, InvocationTargetException {
+	private void pushFacility(Date lastDataUpdated) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
 		
-		logger.debug("pushing facility record");
-
-		CachedFacility cachedFacility = new CachedFacility();
-		BeanUtils.copyProperties(cachedFacility, facility);
-
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
-		service.setMyFacility(cachedFacility);
+		if (facility.getLastUpdated().after(lastDataUpdated))
+		{
+			logger.debug("pushing facility record");
+	
+			CachedFacility cachedFacility = new CachedFacility();
+			BeanUtils.copyProperties(cachedFacility, facility);
+	
+			FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+			service.setMyFacility(cachedFacility);
+		}
+		else
+		{
+			logger.debug("skipping facility record, not updated since last push");
+		}
 	}
 
 	private void pushPrograms(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
