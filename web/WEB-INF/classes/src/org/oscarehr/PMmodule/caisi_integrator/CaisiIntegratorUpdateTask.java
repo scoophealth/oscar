@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -214,6 +213,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		pushPrograms(facility);
 		pushProviders(facility);
 		pushAllDemographics();
+		
+		// all things updated successfully
+		FacilityWs service = CaisiIntegratorManager.getFacilityWs();
+		service.updateMyFacilityLastUpdateDate();
 	}
 
 	private void pushFacility() throws MalformedURLException, IllegalAccessException, InvocationTargetException {
