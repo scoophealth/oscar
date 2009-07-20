@@ -45,7 +45,7 @@
 
     System.out.println(number + "  " + name);
 
-    String sql = "update userRole set role_name='" + name + "' where provider_no='" + number + "'";
+    String sql = "update secUserRole set role_name='" + name + "' where provider_no='" + number + "'";
 
     dbObj.queryExecuteUpdate(sql);
   } 
@@ -53,7 +53,7 @@
   // save the role list
   if (request.getParameter("submit") != null && request.getParameter("submit").equals("Add Role(s)")) {
     Properties prop  = new Properties();
-    String     query = "select u.provider_no from userRole u ";
+    String     query = "select u.provider_no from secUserRole u ";
     ResultSet  rs    = dbObj.queryResults(query);
 
     while (rs.next()) {
@@ -68,7 +68,7 @@
       }
 
       String value = request.getParameter(temp);
-      String sql   = "insert into userRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" +
+      String sql   = "insert into secUserRole(provider_no, role_name) values('" + temp.substring(4, temp.length()) + "', '" +
               value + "')";
 
       dbObj.queryExecuteUpdate(sql);
@@ -112,7 +112,7 @@ function submit(form) {
       Properties oldRoleProp = new Properties();
       Vector     vec         = new Vector();
       Vector     oldRoleList = new Vector();
-      String     query       = "select u.*, p.first_name, p.last_name from userRole u, provider p ";
+      String     query       = "select u.*, p.first_name, p.last_name from secUserRole u, provider p ";
 
       query += "where u.provider_no=p.provider_no  order by p.first_name, p.last_name";
 
