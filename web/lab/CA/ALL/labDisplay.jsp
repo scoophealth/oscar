@@ -12,6 +12,8 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProperties"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo"%>
 <%
 
 String segmentID = request.getParameter("segmentID");
@@ -211,6 +213,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
+
+    function sendToPHR(labId, demographicNo) {
+        popup(300, 600, "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp?labId=" + labId + "&demographic_no=" + demographicNo, "sendtophr");
+    }
         </script>
         
     </head>    
@@ -702,8 +708,14 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
-                                    <% if ( searchProviderNo != null ) { // we were called from e-chart %>                            
+                                    <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                                        <indivo:indivoRegistered demographic="<%=demographicID%>" provider="<%=providerNo%>">
+                                        <input type="button" value="<bean:message key="global.btnSendToPHR"/>" onClick="sendToPHR('<%=segmentID%>', '<%=demographicID%>')">
+                                        </indivo:indivoRegistered>
+                                    </oscarProperties:oscarPropertiesCheck>
+                                    <% if ( searchProviderNo != null ) { // we were called from e-chart %>
                                     <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
+                                    
                                     <% } %>
                                 </td>
                                 <td width="50%" valign="center" align="left">
