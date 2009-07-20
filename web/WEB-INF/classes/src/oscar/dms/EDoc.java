@@ -22,13 +22,23 @@
  */
 package oscar.dms;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.upload.FormFile;
 import oscar.OscarProperties;
 import oscar.oscarTags.TagObject;
 import oscar.util.UtilDateUtilities;
 
 public class EDoc extends TagObject implements Comparable {
+    private static Log _log = LogFactory.getLog(EDoc.class);
+
     private String docId;
     private String description = "";
     private String dateTimeStamp = "";
@@ -36,6 +46,7 @@ public class EDoc extends TagObject implements Comparable {
     private String type = "";
     private String fileName = "";
     private String html = "";
+
     private String creatorId = "";
     private String responsibleId = "";
     private String source = "";
@@ -71,7 +82,7 @@ public class EDoc extends TagObject implements Comparable {
 	this.setReviewDateTime(reviewDateTime);
         preliminaryProcessing();
     }
-    
+
     /**
      *Comparable based on document id
      */
@@ -111,6 +122,40 @@ public class EDoc extends TagObject implements Comparable {
         String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
         return (path + "/" + this.getFileName());
         
+    }
+
+    public OutputStream getFileOutputStream() throws FileNotFoundException {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(this.getFilePath());
+        } catch (FileNotFoundException fnfe) {
+            _log.error("Could not write to the document container", fnfe);
+            throw fnfe;
+        }
+        return os;
+    }
+
+    public void writeLocalFile(FormFile docFile, String fileName) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = docFile.getInputStream();
+            os = this.getFileOutputStream();
+            byte[] buf = new byte[128*1024];
+            int i = 0;
+            while ((i = is.read(buf)) != -1) {
+                os.write(buf, 0, i);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            if (is != null) is.close();
+            if (os != null) os.close();
+            throw ioe;
+        }
+
+        if (is != null) is.close();
+        if (os != null) os.close();
+
     }
     
     //Getter/Setter methods...
