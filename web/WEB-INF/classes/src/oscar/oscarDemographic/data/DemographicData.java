@@ -33,10 +33,41 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
+
+
 public class DemographicData {     
-   
+    private static Log _log = LogFactory.getLog(DemographicData.class);
+
+    public DemographicData() {
+    }
+
+    public String getDemographicFirstLastName(String demographicNo) {
+       String fullName = "";
+       _log.debug("test");
+       System.out.println("test");
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT first_name, last_name FROM demographic WHERE demographic_no = '" + demographicNo +"'";
+            rs = db.GetSQL(sql);
+            System.out.println("sql: " + sql);
+            
+            if (rs.next()) {
+                System.out.println(db.getString(rs, "first_name"));
+               fullName = db.getString(rs,"first_name") + " " + db.getString(rs, "last_name");
+            }
+            rs.close();
+            db.CloseConn();
+
+        } catch (SQLException sqe) {
+            _log.error("Could not get demographic first/last name", sqe);
+        }
+        return fullName;
+    }
    
     public Date getDemographicDOB(String demographicNo){
        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
