@@ -41,5 +41,6 @@ public interface PHRConstants {
     public String DOCTYPE_BINARYDATA();
     public String DOCTYPE_ACCESSPOLICIES();
     public String DOCTYPE_MEASUREMENT();
-    
+    public String DOCTYPE_ANNOTATION();
 }
+

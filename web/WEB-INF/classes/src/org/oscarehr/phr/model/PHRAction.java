@@ -19,6 +19,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
+import org.indivo.IndivoException;
+import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.document.IndivoDocument;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 
 /**
@@ -55,6 +58,7 @@ public class PHRAction {
     public static final int ACTION_ADD = 1;
     public static final int ACTION_UPDATE = 2;
 
+    public static final int STATUS_OTHER_ERROR = 7; //i.e. the annotation failed to find the document it referenced when it was being sent
     public static final int STATUS_ON_HOLD = 6;  //usually means the provider approved an action, but something has to be done before it is sent off
     public static final int STATUS_APPROVAL_PENDING = 5;
     public static final int STATUS_NOT_SENT_DELETED = 4;
@@ -94,6 +98,13 @@ public class PHRAction {
         IndivoDocumentType doc = (IndivoDocumentType) docEle.getValue();
         return doc;
     }
+
+    public void setIndivoDocument(IndivoDocumentType document) throws JAXBException, IndivoException {
+        JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
+        byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
+        String docContentStr = new String(docContentBytes);
+        this.setDocContent(docContentStr);
+    }
     
     public PHRMessage getPhrMessage() throws Exception {
         //parses only once
@@ -113,7 +124,7 @@ public class PHRAction {
     
     public static List updateIndexes(String classification, String oscarId, String newPhrIndex, List<PHRAction> actions) {
         for (PHRAction action :actions) {
-            if (action.getPhrClassification().equals(classification) && (action.getOscarId().equals(oscarId))) {
+            if (action.getPhrClassification().equals(classification) && (action.getOscarId() != null) && (action.getOscarId().equals(oscarId))) {
                 action.setPhrIndex(newPhrIndex);
             }
         }

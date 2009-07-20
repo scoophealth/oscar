@@ -30,6 +30,8 @@
 package org.oscarehr.phr.indivo.service.impl;
 
 import java.io.StringReader;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -53,6 +55,7 @@ import org.indivo.xml.phr.DocumentGenerator;
 import org.indivo.xml.phr.DocumentUtils;
 import org.indivo.xml.phr.DocumentVersionGenerator;
 import org.indivo.xml.phr.RecordGenerator;
+import org.indivo.xml.phr.annotation.DocumentReferenceType;
 import org.indivo.xml.phr.document.DocumentClassificationType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
@@ -79,6 +82,8 @@ import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.IndivoAuthentication;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.indivo.IndivoUtil;
+import org.oscarehr.phr.indivo.model.PHRIndivoAnnotation;
+import org.oscarehr.phr.indivo.model.PHRIndivoDocument;
 import org.oscarehr.phr.indivo.service.accesspolicies.IndivoAPService;
 import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRBinaryData;
@@ -172,12 +177,22 @@ public class IndivoServiceImpl  implements PHRService{
         */
     }
     
-    public void sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
+    public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
         PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
         PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
         action.setOscarId(document.getDocId());
         //write action to phr_actions table
-        phrActionDAO.save(action);
+        return phrActionDAO.saveAndGetId(action);
+    }
+
+    public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception {
+        PHRIndivoAnnotation phrAnnotation = new PHRIndivoAnnotation(sender, recipientOscarId, recipientPhrId, documentReferenceOscarActionId, message);
+        PHRAction action = phrAnnotation.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
+        //write action to phr_actions table
+        
+        Integer oscarId = phrActionDAO.saveAndGetId(action);
+        action.setOscarId(oscarId + ""); //guaranteed unique, but there is no annotation object in oscar, so can't assign proper oscarId
+        phrActionDAO.update(action);
     }
     
     public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
@@ -225,9 +240,13 @@ public class IndivoServiceImpl  implements PHRService{
         //write action to phr_actions table
         phrActionDAO.save(action);
     }
-    
-     public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception{
-        PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId);
+
+    public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception {
+        sendAddMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, new ArrayList());
+    }
+
+     public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachmentActionIds) throws Exception{
+        PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, attachmentActionIds);
         PHRAction action = message.getAction(PHRAction.ACTION_ADD, PHRAction.STATUS_SEND_PENDING);
         phrActionDAO.save(action);
      }
@@ -358,6 +377,22 @@ public class IndivoServiceImpl  implements PHRService{
                     JAXBContext messageContext =JAXBContext.newInstance(MessageType.class.getPackage().getName());
                     MessageType msg = (MessageType) org.indivo.xml.phr.DocumentUtils.getDocumentAnyObject(doc, messageContext.createUnmarshaller());
                     log.debug("doc is msg?? "+msg);
+                    //need to set the document index on attachments (don't know phr index at time of attachment)
+                    for (DocumentReferenceType attachment: msg.getReferencedIndivoDocuments()) {
+                        log.debug("attaching document");
+                        String actionId = attachment.getDocumentIndex();
+                        PHRAction attachedDocumentAction = phrActionDAO.getActionById(actionId); //assuming aleady sent...
+                        if (attachedDocumentAction == null) continue;
+                        if (attachedDocumentAction.getPhrIndex() == null) continue; //attachment must be sent first
+                        attachment.setDocumentIndex(attachedDocumentAction.getPhrIndex());
+                        attachment.setClassification(attachedDocumentAction.getPhrClassification());
+                        attachment.setVersion(new BigInteger((attachedDocumentAction.getIndivoDocument().getDocumentVersion().size() -1) + "")); //latest
+                    }
+                    //update action if updated phr indexes in the attached document reference
+                    if (msg.getReferencedIndivoDocuments().size() > 0) {
+                        action.setIndivoDocument(PHRMessage.getPhrMessageDocument(auth.getUserId(), auth.getNamePHRFormat(), msg));
+                        phrActionDAO.update(action);
+                    }
                     client.sendMessage(auth.getToken(), msg);
                     log.debug("message is going to "+msg.getRecipient());
                     //client.sendMessage(auth.getToken(),msg.getRecipient(),msg.getPriorThreadMessageId(),msg.getSubject(),msg.getMessageContent().getAny().getTextContent() );  
@@ -367,6 +402,22 @@ public class IndivoServiceImpl  implements PHRService{
                     IndivoDocumentType doc = action.getIndivoDocument();
                     if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
                         doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
+                    if (action.getPhrClassification().equals(constants.DOCTYPE_ANNOTATION())) {
+                        try {
+                            String referenceIndex = PHRIndivoAnnotation.getAnnotationReferenceIndex(doc);//temporarily stored
+                            PHRAction referencedDocumentAction = phrActionDAO.getActionById(referenceIndex);
+                            if (referencedDocumentAction == null) throw new Exception ("Cannot find annotated document");
+                            if (referencedDocumentAction.getPhrIndex() == null) continue; //referenced document must be sent first
+                            doc = PHRIndivoAnnotation.mountReferenceDocument(referencedDocumentAction.getPhrClassification(), referencedDocumentAction.getPhrIndex(), referencedDocumentAction.getIndivoDocument().getDocumentVersion().size()-1, doc);
+                            action = PHRIndivoDocument.setDocContent(doc, action);
+                            phrActionDAO.save(action);
+                        } catch (Exception e) {
+                            log.error("Could not send the annotation with ID: '" + action.getId() + "' to PHR; skipping it...", e);
+                            action.setStatus(PHRAction.STATUS_OTHER_ERROR);
+                            phrActionDAO.update(action);
+                            continue;  //if there is an error sending annotation, screw it...move on
+                        }
+                    }
                     AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
                     String resultIndex = result.getDocumentIndex();
                     action.setPhrIndex(result.getDocumentIndex());

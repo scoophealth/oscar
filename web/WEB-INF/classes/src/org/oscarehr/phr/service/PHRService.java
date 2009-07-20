@@ -29,6 +29,7 @@
 package org.oscarehr.phr.service;
 
 import java.util.Hashtable;
+import java.util.List;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
@@ -60,11 +61,14 @@ public interface PHRService {
     public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String oldPhrDrugIndex) throws Exception;
     
     public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
-    public void sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
-    
+    public Integer sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
+
+    public void sendAddAnnotation(ProviderData sender, String recipientOscarId, String recipientPhrId, String documentReferenceOscarActionId, String message) throws Exception;
+
     void sendQueuedDocuments(PHRAuthentication auth, String providerNo) throws Exception;
     void setPhrActionDAO(PHRActionDAO phrActionDAO);
     public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception;
+    public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachmentActionIds) throws Exception;
     public void sendUpdateMessage(PHRMessage msg) throws Exception;
     public String getPhrIndex(String classification, String oscarId);
     public boolean isIndivoRegistered(String classification, String oscarId);

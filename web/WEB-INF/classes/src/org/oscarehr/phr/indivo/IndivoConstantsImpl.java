@@ -57,4 +57,7 @@ public class IndivoConstantsImpl implements PHRConstants {
     public String DOCTYPE_MEASUREMENT() {
         return DocumentClassificationUrns.VITAL;
     }
+    public String DOCTYPE_ANNOTATION() {
+        return DocumentClassificationUrns.ANNOTATION;
+    }
 }
