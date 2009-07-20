@@ -185,6 +185,12 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         public void save(PHRAction action) {
             this.getHibernateTemplate().save(action);
 	}
+
+        public Integer saveAndGetId(PHRAction action) {
+            this.save(action);
+            this.getHibernateTemplate().refresh(action);
+            return action.getId();
+        }
         
         public void update(PHRAction action) {
             this.getHibernateTemplate().update(action);

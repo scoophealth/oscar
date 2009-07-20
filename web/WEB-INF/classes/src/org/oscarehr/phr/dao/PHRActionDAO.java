@@ -38,6 +38,7 @@ import org.oscarehr.phr.model.PHRAction;
  */
 public interface PHRActionDAO {
     public void save(PHRAction action);
+    public Integer saveAndGetId(PHRAction action);
     public void update(PHRAction action);
     public List<PHRAction> getQueuedActions(String providerNo);
     public PHRAction getActionById(String id);
