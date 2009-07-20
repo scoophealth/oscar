@@ -1,8 +1,7 @@
-function phrActionPopup(url) {
-  phrActionPopup(url, Math.round(Math.random()*10000000));
-}
-
-function phrActionPopup(url, windowName){   
+function phrActionPopup(url, windowName){
+  if (windowName == null) {
+      windowName = "phr" + Math.round(Math.random()*10000000);
+  }
   var height = 200;
   var width = 350;
   var top = 300;
@@ -10,7 +9,7 @@ function phrActionPopup(url, windowName){
   var page = url;
   windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
   var popup=window.open(url, windowName, windowprops);  
-  if (popup != null){  
+  if (popup != null){  zz
     if (popup.opener == null){  
       popup.opener = self;  
     }  
