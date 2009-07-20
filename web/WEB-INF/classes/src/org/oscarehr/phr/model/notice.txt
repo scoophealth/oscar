@@ -1,0 +1,5 @@
+Do not put any more indivo-specific classes in here.  If you are trying to implement
+additional indivo documents, put them in the indivo package, which already has
+a PHRIndivoDocument base class with all the JAXB Indivo utilities.
+
+-Paul
