@@ -31,10 +31,12 @@ package org.oscarehr.phr.model;
 
 import java.io.Serializable;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -44,6 +46,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.indivo.IndivoException;
 import org.indivo.xml.JAXBUtils;
+import org.indivo.xml.phr.annotation.DocumentReferenceType;
 import org.indivo.xml.phr.document.DocumentClassificationType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.DocumentVersionType;
@@ -112,7 +115,8 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         msg.setReplied(true);
         addStatus(this.STATUS_REPLIED);
     }
-    
+
+
     public PHRMessage(String senderOscarId, int senderType, String senderPhrId, String recipientOscarId, int recipientType, String recipientPhrId, String docContentStr) throws JAXBException {
         this();
         this.setSenderOscar(senderOscarId);
@@ -160,11 +164,15 @@ public class PHRMessage  extends PHRDocument implements Serializable{
 //        String docContentStr = new String(docContentBytes);
 //        this.setDocContent(docContentStr);
     }
-    
+
     public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws JAXBException, IndivoException {
+        this(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId, new ArrayList());
+    }
+
+    public PHRMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, List<String> attachedDocumentActionIds) throws JAXBException, IndivoException {
         this();
         JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-        MessageType message = getPhrMessage(recipientPhrId, priorThreadMessage, subject, messageBody);
+        MessageType message = getPhrMessage(recipientPhrId, priorThreadMessage, subject, messageBody, attachedDocumentActionIds);
         IndivoDocumentType document = getPhrMessageDocument(sender, message);
         byte[] docContentBytes = JAXBUtils.marshalToByteArray((JAXBElement) new IndivoDocument(document), docContext);
         String docContentStr = new String(docContentBytes);
@@ -412,7 +420,7 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         return getPhrMessageDocument(sender.getMyOscarId(), providerFullName, message);
     }
     
-    private IndivoDocumentType getPhrMessageDocument(String phrId, String providerFullName,MessageType message) throws JAXBException, IndivoException {
+    public static IndivoDocumentType getPhrMessageDocument(String phrId, String providerFullName,MessageType message) throws JAXBException, IndivoException {
         JAXBContext messageContext = JAXBContext.newInstance(MessageType.class.getPackage().getName());
         JAXBContext documentContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
 
@@ -426,13 +434,18 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         return document;
     }
     
-    private MessageType getPhrMessage(String recipientPhrId, String priorThreadMessage, String subject, String messageBody) {
+    private MessageType getPhrMessage(String recipientPhrId, String priorThreadMessage, String subject, String messageBody, List<String> attachedDocumentIds) {
         MessageType message = new MessageType();
         message.setRecipient(recipientPhrId);
         message.setPriorThreadMessageId(priorThreadMessage);
         message.setSubject(subject);
         message.setMessageContent(toTextMessageContent(messageBody));
         message.setContentType(org.indivo.xml.phr.urns.ContentTypeQNames.TEXT);
+        for (String attachedDocumentId: attachedDocumentIds) {
+            DocumentReferenceType reference = new DocumentReferenceType();
+            reference.setDocumentIndex(attachedDocumentId);
+            message.getReferencedIndivoDocuments().add(reference);
+        }
         return message;
     }
    
