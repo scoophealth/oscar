@@ -1826,7 +1826,7 @@
         <!-- Population Report -->
         <!-- PHR -->
         <action path="/SendToPhr" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
-            <forward name="preview" path="/phr/SendToPhrPreview.jsp"/>
+            <forward name="loginPage" path="/phr/response.jsp"/>
         </action>
 
 

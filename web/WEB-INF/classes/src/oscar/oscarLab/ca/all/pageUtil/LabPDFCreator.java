@@ -88,14 +88,19 @@ public class LabPDFCreator extends PdfPageEventHelper{
         this.id = request.getParameter("segmentID");
         if (id == null)
             this.id = (String) request.getAttribute("segmentID");
-        
+        String providerNo = request.getParameter("providerNo");
+        if (providerNo == null) {
+            providerNo = (String) request.getAttribute("providerNo");
+        }
+        System.out.println("segmentID: " + this.id);
+        System.out.println("providerNo: " + request.getAttribute("providerNo"));
         // check for acknowledgements and set ackFlag
         AcknowledgementData ackData = new AcknowledgementData();
         ArrayList ackList = ackData.getAcknowledgements(id);
         if (ackList != null){
             for (int i=0; i < ackList.size(); i++){
                 ReportStatus reportStatus = (ReportStatus) ackList.get(i);
-                if ( reportStatus.getProviderNo().equals(request.getParameter("providerNo")) && reportStatus.getStatus().equals("A") ){
+                if ( reportStatus.getProviderNo().equals(providerNo) && reportStatus.getStatus().equals("A") ){
                     this.ackFlag = true;
                     break;
                 }

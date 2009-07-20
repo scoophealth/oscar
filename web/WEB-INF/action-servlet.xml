@@ -256,6 +256,9 @@
 		<property name="phrActionDAO" ref="phrActionDAO" />
 		<property name="phrConstants" ref="phrConstants" />
 	</bean>
+    <bean name="/SendToPhr" class="org.oscarehr.phr.web.PHRGenericSendToPhrAction" singleton="false">
+        <property name="phrService" ref="phrService" />
+    </bean>
     <bean name="/testAction" class="org.oscarehr.decisionSupport.web.TestActionW" singleton="false">
             <property name="dsService" ref="dsService"/>
     </bean>
