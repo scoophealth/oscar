@@ -35,6 +35,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.indivo.xml.attributes.RoleType;
+import org.indivo.xml.phr.types.AuthorType;
 import org.indivo.xml.talk.AuthenticateResultType;
 import org.oscarehr.phr.PHRAuthentication;
 
@@ -98,6 +100,18 @@ public class IndivoAuthentication implements PHRAuthentication {
     
     public String getProviderNo(){
         return providerNo;
+    }
+
+    public AuthorType getAuthorType() {
+        org.indivo.xml.phr.types.ObjectFactory objectFactory = new org.indivo.xml.phr.types.ObjectFactory();
+        AuthorType authorType = objectFactory.createAuthorType();
+        authorType.setIndivoId(this.getUserId());
+        authorType.setName(this.getNamePHRFormat());
+        org.indivo.xml.attributes.ObjectFactory attributeObjectFactory = new org.indivo.xml.attributes.ObjectFactory();
+        RoleType roleType = attributeObjectFactory.createRoleType();
+        roleType.setValue(this.getRole());
+        authorType.setRole(roleType);
+        return authorType;
     }
     
 }
