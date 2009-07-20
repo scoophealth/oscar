@@ -72,7 +72,7 @@ request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginE
    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
        <div class="myoscarLoginElementAuth">
            Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
-           <form action="../phr/Logout.do" name="phrLogout" method="POST">
+           <form action="<%=request.getContextPath()%>/phr/Logout.do" name="phrLogout" method="POST">
                <input type="hidden" name="forwardto" value="<%=(String) request.getAttribute("forwardto")%>">
                <center><a href="javascript:;" onclick="document.forms['phrLogout'].submit();">Logout</a></center>
            </form>
@@ -81,7 +81,7 @@ request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginE
    </logic:present>
    <logic:notPresent name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
         <div class="myoscarLoginElementNoAuth">
-            <form action="<%=(String) request.getParameter("pathtophr")%>Login.do" name="phrLogin" method="POST">
+            <form action="<%=request.getContextPath()%>/phr/Login.do" name="phrLogin" method="POST">
                 <%request.setAttribute("phrUserLoginErrorMsg", request.getParameter("phrUserLoginErrorMsg"));
                 request.setAttribute("phrTeAttributechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg"));%>
                 <logic:present name="phrUserLoginErrorMsg">
@@ -99,5 +99,5 @@ request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginE
                 <input type="hidden" name="forwardto" value="<%=(String) request.getParameter("forwardto")%>">
             </form>
         </div>
-        <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+        <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
    </logic:notPresent>
