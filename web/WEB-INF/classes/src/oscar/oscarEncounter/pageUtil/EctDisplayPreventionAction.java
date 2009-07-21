@@ -82,11 +82,13 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         String serviceDateStr;
         String highliteColour = "FF0000";
         String inelligibleColour = "FF6600";
+        String pendingColour = "FF00FF";
         Date date = null;
         Date defaultDate = new Date(System.currentTimeMillis());
         url += "; return false;";
         ArrayList warnings = new ArrayList();
         ArrayList items = new ArrayList();
+        String result;
         for (int i = 0 ; i < prevList.size(); i++){ 
             NavBarDisplayDAO.Item item = Dao.Item();
             Hashtable h = (Hashtable) prevList.get(i);
@@ -96,6 +98,9 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
             if( show ) {                                    
                 if( alist.size() > 0 ) {
                     Hashtable hdata = (Hashtable) alist.get(alist.size()-1);
+                    Hashtable hExt = (Hashtable)pd.getPreventionKeyValues((String)hdata.get("id"));
+                    result = (String)hExt.get("result");
+
                     date = (Date)hdata.get("prevention_date_asDate");
                     System.out.println("Prevention Date " +  date);
                     item.setDate(date);
@@ -107,9 +112,13 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                         serviceDateStr = DateUtils.getDate(date, dateFormat, request.getLocale());
                         //item.setDate(date);
                     }
-                    
-                    if( hdata.get("refused").equals("2") )
+
+                    if( hdata.get("refused").equals("2") ) {
                         item.setColour(inelligibleColour);
+                    }
+                    else if( result != null && result.equalsIgnoreCase("pending") ) {
+                        item.setColour(pendingColour);
+                    }
                 }
                 else {
                     serviceDateStr = "";

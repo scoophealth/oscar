@@ -473,15 +473,17 @@ div.recommendations li {
 		<br />
 		</p>
 		</div>
-		<%     
+		<%              String result;
                         for (int k = 0; k < alist.size(); k++){
                         Hashtable hdata = (Hashtable) alist.get(k);
-                        
+                        Hashtable hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
+                        result = (String)hExt.get("result");
+
                         String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
                         if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
                         %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
-		<p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br />
+		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
@@ -517,13 +519,16 @@ div.recommendations li {
 		<br />
 		</p>
 		</div>
-		<%     
+		<%
+                            String result;
                             for (int k = 0; k < alist.size(); k++){
                             Hashtable hdata = (Hashtable) alist.get(k);
+                            Hashtable hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
+                            result = (String)hExt.get("result");
                             %>
 		<div class="preventionProcedure"
 			onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')">
-		<p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br />
+		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 		</p>
 		</div>
@@ -560,14 +565,17 @@ div.recommendations li {
                                 String prevType=(String)h.get("name");
                                 ArrayList alist = pd.getPreventionData(prevType, demographic_no);
                                 pd.addRemotePreventions(alist, demographicId, prevType,demographicDateOfBirth);
+                                String result;
                                 for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
+                                Hashtable hExt = pd.getPreventionKeyValues((String)hdata.get("id"));
+                                result = (String)hExt.get("result");
                                 
                                 String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
                                 if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"')";
                                 %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">
-		<p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br />
+		<p <%=r(hdata.get("refused"),result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
@@ -630,13 +638,17 @@ String refused(Object re){
         }
         return ret;
     }
-String r(Object re){ 
+
+String r(Object re, String result){
         String ret = "";
         if (re instanceof java.lang.String){                
            if (re != null && re.equals("1")){
               ret = "style=\"background: #FFDDDD;\"";
            }else if(re !=null && re.equals("2")){
               ret = "style=\"background: #FFCC24;\""; 
+           }
+           else if( result != null && result.equalsIgnoreCase("pending")) {
+               ret = "style=\"background: #FF00FF;\"";
            }
         }
         return ret;
