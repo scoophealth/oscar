@@ -275,23 +275,55 @@ function checkAll(formId){
                                     </td>
                                 </tr>
                             </table>
+
                         </td>
                     </tr>
-
-
-
-                    <tr>
-                        <td>
-
-                                <%String strutsAction = "/oscarMessenger/DisplayMessages";
-                                    if (pageType == 2){
-                                        strutsAction = "/oscarMessenger/ReDisplayMessages";
-                                    }
-                                %>
+                    <%String strutsAction = "/oscarMessenger/DisplayMessages";
+                        if (pageType == 2){
+                            strutsAction = "/oscarMessenger/ReDisplayMessages";
+                        }
+                    %>
 
                          <html:form action="<%=strutsAction%>" styleId="msgList" >
+                    <% //java.util.Vector theMessages = new java.util.Vector() ;
+                           java.util.Vector theMessages2 = new java.util.Vector() ;
+                        switch(pageType){
+                            case 0:
+//                                        theMessages =  DisplayMessagesBeanId.getMessageid();
+                                theMessages2 = DisplayMessagesBeanId.estInbox(orderby,moreMessages,INITIAL_DISPLAY);
+                                // System.out.println("normal messages");
+                            break;
+                            case 1:
+//                                      theMessages  = DisplayMessagesBeanId.getSentMessageid();
+                                theMessages2 = DisplayMessagesBeanId.estSentItemsInbox(orderby);
+                                // System.out.println("Sent messages");
+                            break;
+                            case 2:
+///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
+                                theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
+                                // System.out.println("deleted messages");
+                            break;
+                            case 3:
+                                theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
+                                // System.out.println("demographic messages");
+                            break;
+                        }   //messageid
 
-
+                        if( theMessages2.size() >= INITIAL_DISPLAY ) {
+                    %>
+                    <tr>
+                        <td>
+                            <%if (pageType == 0){%>
+                                    <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
+                            <%}else if (pageType == 2){%>
+                                    <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
+                            <%}%>
+                            &nbsp;
+                        </td>
+                   </tr>
+                   <%}%>
+                    <tr>
+                        <td>
                             <table border="0" width="80%" cellspacing="1">
                                 <tr>
                                     <th align="left" bgcolor="#DDDDFF" width="75">
@@ -361,33 +393,11 @@ function checkAll(formId){
                                         <%}%>
                                     </th>                                    
                                 </tr>
-                                <% //java.util.Vector theMessages = new java.util.Vector() ;
-                                   java.util.Vector theMessages2 = new java.util.Vector() ;
-                                switch(pageType){
-                                    case 0:
-//                                        theMessages =  DisplayMessagesBeanId.getMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estInbox(orderby,moreMessages,INITIAL_DISPLAY);
-                                        // System.out.println("normal messages");
-                                    break;
-                                    case 1:
-  //                                      theMessages  = DisplayMessagesBeanId.getSentMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estSentItemsInbox(orderby);
-                                        // System.out.println("Sent messages");
-                                    break;
-                                    case 2:
-    ///                                    theMessages  = DisplayMessagesBeanId.getDelMessageid();
-                                        theMessages2 = DisplayMessagesBeanId.estDeletedInbox(orderby);
-                                        // System.out.println("deleted messages");
-                                    break;
-                                    case 3:
-                                        theMessages2 = DisplayMessagesBeanId.estDemographicInbox(orderby,demographic_no);
-                                        // System.out.println("demographic messages");
-                                    break;
-                                }   //messageid
-                                %>
                                 
+                               
                                 <!--   for loop Control Initiliation variabe changed to nextMessage   -->
-                            <%for (int i = 0; i < theMessages2.size() ; i++) {  
+                            <% 
+                                    for (int i = 0; i < theMessages2.size() ; i++) {
                                         oscar.oscarMessenger.data.MsgDisplayMessage dm;
                                         dm = (oscar.oscarMessenger.data.MsgDisplayMessage) theMessages2.get(i);
                                         String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); 
