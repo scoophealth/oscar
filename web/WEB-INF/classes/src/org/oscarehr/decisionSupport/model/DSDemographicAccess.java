@@ -5,8 +5,8 @@
 
 package org.oscarehr.decisionSupport.model;
 
+import java.util.ArrayList;
 import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -18,7 +18,7 @@ import org.oscarehr.util.SpringUtils;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
-import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 
 /**
@@ -111,18 +111,14 @@ public class DSDemographicAccess {
 
     public List<Prescription> getRxCodes() throws DecisionSupportException {
         _log.debug("GET RX CODES CALLED");
-        RxPatientData rxPatientData = new RxPatientData();
-        RxPatientData.Patient patient = null;
         try {
-            patient = rxPatientData.getPatient(Integer.parseInt(demographicNo));
-        } catch (SQLException e) {
-            throw new DecisionSupportException("Cannot get drugs for patient.", e);
+            Prescription[] prescriptions = new RxPrescriptionData().getPrescriptionsByPatientHideDeleted(Integer.parseInt(this.demographicNo));
+            List<Prescription> prescribedDrugs = Arrays.asList(prescriptions);
+            return prescribedDrugs;
+        } catch (NumberFormatException nfe) {
+            _log.error("Decision Support Exception, could not format demographicNo: " + demographicNo);
         }
-        Prescription[] prescriptions = patient.getPrescribedDrugs();
-
-
-        List<Prescription> prescribedDrugs = Arrays.asList(patient.getPrescribedDrugs());
-        return prescribedDrugs;
+        return new ArrayList();
     }
 
     //generally for testing
