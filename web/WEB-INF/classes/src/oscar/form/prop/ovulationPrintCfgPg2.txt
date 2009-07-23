@@ -1,0 +1,33 @@
+collectionDate          : left, 70, 57, 0, BaseFont.HELVETICA, 7
+abstinenceDays          : left, 70, 71, 0, BaseFont.HELVETICA, 7
+collectionTime          : left, 70, 85, 0, BaseFont.HELVETICA, 7
+collectionAmPm          : left, 95, 85, 0, BaseFont.HELVETICA, 7
+collectionMethod        : left, 70, 104, 0, BaseFont.HELVETICA, 7
+
+bmiAge                  : left, 309, 62, 0, BaseFont.HELVETICA, 7
+bmiPpWt                 : left, 385, 62, 0, BaseFont.HELVETICA, 7
+bmiPpHt                 : left, 460, 62, 0, BaseFont.HELVETICA, 7
+bmi                     : left, 524, 62, 0, BaseFont.HELVETICA, 7
+
+preColor                : left, 94, 157, 0, BaseFont.HELVETICA, 7
+preViscosity            : left, 94, 168, 0, BaseFont.HELVETICA, 7
+preLiquefaction         : left, 94, 177, 0, BaseFont.HELVETICA, 7
+prePh                   : left, 94, 187, 0, BaseFont.HELVETICA, 7
+preRoundCells           : left, 94, 197, 0, BaseFont.HELVETICA, 7
+preProgression          : left, 94, 207, 0, BaseFont.HELVETICA, 7
+preVolume               : left, 20, 230, 0, BaseFont.HELVETICA, 7
+preDensity              : left, 92, 230, 0, BaseFont.HELVETICA, 7
+preMotility             : left, 172, 230, 0, BaseFont.HELVETICA, 7
+preTmc                  : left, 253, 230, 0, BaseFont.HELVETICA, 7
+preMorphology           : left, 94, 242, 0, BaseFont.HELVETICA, 7
+preAgglutination        : left, 94, 252, 0, BaseFont.HELVETICA, 7
+preDebris               : left, 94, 262, 0, BaseFont.HELVETICA, 7
+
+postProgression         : left, 388, 158, 0, BaseFont.HELVETICA, 7
+postVolume              : left, 310, 187, 0, BaseFont.HELVETICA, 7
+postDensity             : left, 388, 187, 0, BaseFont.HELVETICA, 7
+postMotility            : left, 465, 187, 0, BaseFont.HELVETICA, 7
+postTmc                 : left, 540, 187, 0, BaseFont.HELVETICA, 7
+
+postComment             : left, 310, 208, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+

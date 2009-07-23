@@ -1,0 +1,365 @@
+clientFirstName	    : left, 72, 70, 0, BaseFont.HELVETICA, 7
+clientLastName	    : left, 156, 70, 0, BaseFont.HELVETICA, 7
+dob	                : left, 252, 70, 0, BaseFont.HELVETICA, 7
+
+
+healthNum	        : left, 168, 46, 0, BaseFont.HELVETICA, 7
+workPhone	        : left, 52, 93, 0, BaseFont.HELVETICA, 7
+homePhone	        : left, 137, 93, 0, BaseFont.HELVETICA, 7
+otherPhone	        : left, 223, 93, 0, BaseFont.HELVETICA, 7
+
+lmp                 : left, 79, 117, 0, BaseFont.HELVETICA, 7
+diag	            : left, 52, 130, 0, BaseFont.HELVETICA, 7
+femara	            : left, 52, 148, 0, BaseFont.HELVETICA, 7
+tamoxi	            : left, 52, 164, 0, BaseFont.HELVETICA, 7
+ccNol	            : left, 52, 182, 0, BaseFont.HELVETICA, 7
+gonad	            : left, 52, 198, 0, BaseFont.HELVETICA, 7
+
+metForMin	        : left, 146, 135, 0, BaseFont.HELVETICA, 7
+parlodEl	        : left, 146, 159, 0, BaseFont.HELVETICA, 7
+folicAcid	        : left, 146, 186, 0, BaseFont.HELVETICA, 7
+
+ovul	            : left, 202, 130, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+postOv	            : left, 202, 165, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+iui	                : left, 340, 138, 0, BaseFont.HELVETICA, 7
+tdi	                : left, 340, 171, 0, BaseFont.HELVETICA, 7
+
+semenVolume	        : left, 497, 70, 0, BaseFont.HELVETICA, 7
+semenPMotility	    : left, 505, 92, 0, BaseFont.HELVETICA, 7
+semenTMotility	    : left, 505, 114, 0, BaseFont.HELVETICA, 7
+semenMorphology	    : left, 512, 135, 0, BaseFont.HELVETICA, 7
+semenConcentration	: left, 520, 158, 0, BaseFont.HELVETICA, 7
+semenSperm	        : left, 517, 179, 0, BaseFont.HELVETICA, 7
+semenSpermPh	    : left, 508, 200, 0, BaseFont.HELVETICA, 7
+
+diagnosis           : left, 307, 50, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+sideEffects         : left, 276, 140, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+abnormalResult      : left, 395, 50, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+previousCycles      : left, 395, 123, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+fsh                 : left, 77, 231, 0, BaseFont.HELVETICA, 7
+
+date1           : left, 27, 278, 0, BaseFont.HELVETICA, 7
+date2           : left, 27, 315, 0, BaseFont.HELVETICA, 7
+date3           : left, 27, 355, 0, BaseFont.HELVETICA, 7
+date4           : left, 27, 392, 0, BaseFont.HELVETICA, 7
+date5           : left, 27, 431, 0, BaseFont.HELVETICA, 7
+date6           : left, 27, 468, 0, BaseFont.HELVETICA, 7
+date7           : left, 27, 510, 0, BaseFont.HELVETICA, 7
+date8           : left, 27, 545, 0, BaseFont.HELVETICA, 7
+date9           : left, 27, 584, 0, BaseFont.HELVETICA, 7
+date10          : left, 27, 621, 0, BaseFont.HELVETICA, 7
+date11          : left, 27, 657, 0, BaseFont.HELVETICA, 7
+date12          : left, 27, 699, 0, BaseFont.HELVETICA, 7
+
+day1           : left, 75, 278, 0, BaseFont.HELVETICA, 7
+day2           : left, 75, 315, 0, BaseFont.HELVETICA, 7
+day3           : left, 75, 355, 0, BaseFont.HELVETICA, 7
+day4           : left, 75, 392, 0, BaseFont.HELVETICA, 7
+day5           : left, 75, 431, 0, BaseFont.HELVETICA, 7
+day6           : left, 75, 468, 0, BaseFont.HELVETICA, 7
+day7           : left, 75, 510, 0, BaseFont.HELVETICA, 7
+day8           : left, 75, 545, 0, BaseFont.HELVETICA, 7
+day9           : left, 75, 584, 0, BaseFont.HELVETICA, 7
+day10           : left, 75, 621, 0, BaseFont.HELVETICA, 7
+day11           : left, 75, 657, 0, BaseFont.HELVETICA, 7
+day12           : left, 75, 699, 0, BaseFont.HELVETICA, 7
+
+e2Lh1a           : left, 90, 270, 0, BaseFont.HELVETICA, 7
+e2Lh1b           : left, 90, 287, 0, BaseFont.HELVETICA, 7
+e2Lh2a           : left, 90, 306, 0, BaseFont.HELVETICA, 7
+e2Lh2b           : left, 90, 325, 0, BaseFont.HELVETICA, 7
+e2Lh3a           : left, 90, 344, 0, BaseFont.HELVETICA, 7
+e2Lh3b           : left, 90, 363, 0, BaseFont.HELVETICA, 7
+e2Lh4a           : left, 90, 384, 0, BaseFont.HELVETICA, 7
+e2Lh4b           : left, 90, 402, 0, BaseFont.HELVETICA, 7
+e2Lh5a           : left, 90, 420, 0, BaseFont.HELVETICA, 7
+e2Lh5b           : left, 90, 440, 0, BaseFont.HELVETICA, 7
+e2Lh6a           : left, 90, 459, 0, BaseFont.HELVETICA, 7
+e2Lh6b           : left, 90, 479, 0, BaseFont.HELVETICA, 7
+e2Lh7a           : left, 90, 497, 0, BaseFont.HELVETICA, 7
+e2Lh7b           : left, 90, 515, 0, BaseFont.HELVETICA, 7
+e2Lh8a           : left, 90, 535, 0, BaseFont.HELVETICA, 7
+e2Lh8b           : left, 90, 554, 0, BaseFont.HELVETICA, 7
+e2Lh9a           : left, 90, 573, 0, BaseFont.HELVETICA, 7
+e2Lh9b           : left, 90, 593, 0, BaseFont.HELVETICA, 7
+e2Lh10a           : left, 90, 615, 0, BaseFont.HELVETICA, 7
+e2Lh10b           : left, 90, 634, 0, BaseFont.HELVETICA, 7
+e2Lh11a           : left, 90, 652, 0, BaseFont.HELVETICA, 7
+e2Lh11b           : left, 90, 672, 0, BaseFont.HELVETICA, 7
+e2Lh12a           : left, 90, 690, 0, BaseFont.HELVETICA, 7
+e2Lh12b           : left, 90, 707, 0, BaseFont.HELVETICA, 7
+
+tshPrl1a           : left, 118, 270, 0, BaseFont.HELVETICA, 7
+tshPrl1b           : left, 118, 287, 0, BaseFont.HELVETICA, 7
+tshPrl2a           : left, 118, 306, 0, BaseFont.HELVETICA, 7
+tshPrl2b           : left, 118, 325, 0, BaseFont.HELVETICA, 7
+tshPrl3a           : left, 118, 344, 0, BaseFont.HELVETICA, 7
+tshPrl3b           : left, 118, 363, 0, BaseFont.HELVETICA, 7
+tshPrl4a           : left, 118, 384, 0, BaseFont.HELVETICA, 7
+tshPrl4b           : left, 118, 402, 0, BaseFont.HELVETICA, 7
+tshPrl5a           : left, 118, 420, 0, BaseFont.HELVETICA, 7
+tshPrl5b           : left, 118, 440, 0, BaseFont.HELVETICA, 7
+tshPrl6a           : left, 118, 459, 0, BaseFont.HELVETICA, 7
+tshPrl6b           : left, 118, 479, 0, BaseFont.HELVETICA, 7
+tshPrl7a           : left, 118, 497, 0, BaseFont.HELVETICA, 7
+tshPrl7b           : left, 118, 515, 0, BaseFont.HELVETICA, 7
+tshPrl8a           : left, 118, 535, 0, BaseFont.HELVETICA, 7
+tshPrl8b           : left, 118, 554, 0, BaseFont.HELVETICA, 7
+tshPrl9a           : left, 118, 573, 0, BaseFont.HELVETICA, 7
+tshPrl9b           : left, 118, 593, 0, BaseFont.HELVETICA, 7
+tshPrl10a           : left, 118, 615, 0, BaseFont.HELVETICA, 7
+tshPrl10b           : left, 118, 634, 0, BaseFont.HELVETICA, 7
+tshPrl11a           : left, 118, 652, 0, BaseFont.HELVETICA, 7
+tshPrl11b           : left, 118, 672, 0, BaseFont.HELVETICA, 7
+tshPrl12a           : left, 118, 690, 0, BaseFont.HELVETICA, 7
+tshPrl12b           : left, 118, 707, 0, BaseFont.HELVETICA, 7
+
+progBhog1a           : left, 147, 270, 0, BaseFont.HELVETICA, 7
+progBhog1b           : left, 147, 287, 0, BaseFont.HELVETICA, 7
+progBhog2a           : left, 147, 306, 0, BaseFont.HELVETICA, 7
+progBhog2b           : left, 147, 325, 0, BaseFont.HELVETICA, 7
+progBhog3a           : left, 147, 344, 0, BaseFont.HELVETICA, 7
+progBhog3b           : left, 147, 363, 0, BaseFont.HELVETICA, 7
+progBhog4a           : left, 147, 384, 0, BaseFont.HELVETICA, 7
+progBhog4b           : left, 147, 402, 0, BaseFont.HELVETICA, 7
+progBhog5a           : left, 147, 420, 0, BaseFont.HELVETICA, 7
+progBhog5b           : left, 147, 440, 0, BaseFont.HELVETICA, 7
+progBhog6a           : left, 147, 459, 0, BaseFont.HELVETICA, 7
+progBhog6b           : left, 147, 479, 0, BaseFont.HELVETICA, 7
+progBhog7a           : left, 147, 497, 0, BaseFont.HELVETICA, 7
+progBhog7b           : left, 147, 515, 0, BaseFont.HELVETICA, 7
+progBhog8a           : left, 147, 535, 0, BaseFont.HELVETICA, 7
+progBhog8b           : left, 147, 554, 0, BaseFont.HELVETICA, 7
+progBhog9a           : left, 147, 573, 0, BaseFont.HELVETICA, 7
+progBhog9b           : left, 147, 593, 0, BaseFont.HELVETICA, 7
+progBhog10a           : left, 147, 615, 0, BaseFont.HELVETICA, 7
+progBhog10b           : left, 147, 634, 0, BaseFont.HELVETICA, 7
+progBhog11a           : left, 147, 652, 0, BaseFont.HELVETICA, 7
+progBhog11b           : left, 147, 672, 0, BaseFont.HELVETICA, 7
+progBhog12a           : left, 147, 690, 0, BaseFont.HELVETICA, 7
+progBhog12b           : left, 147, 707, 0, BaseFont.HELVETICA, 7
+
+flag_fsh              : left, 108, 225, 0, BaseFont.HELVETICA, 4
+
+flag_e2Lh1a           : left, 108, 261, 0, BaseFont.HELVETICA, 4
+flag_e2Lh1b           : left, 108, 281, 0, BaseFont.HELVETICA, 4
+flag_e2Lh2a           : left, 108, 300, 0, BaseFont.HELVETICA, 4
+flag_e2Lh2b           : left, 108, 320, 0, BaseFont.HELVETICA, 4
+flag_e2Lh3a           : left, 108, 338, 0, BaseFont.HELVETICA, 4
+flag_e2Lh3b           : left, 108, 357, 0, BaseFont.HELVETICA, 4
+flag_e2Lh4a           : left, 108, 376, 0, BaseFont.HELVETICA, 4
+flag_e2Lh4b           : left, 108, 396, 0, BaseFont.HELVETICA, 4
+flag_e2Lh5a           : left, 108, 414, 0, BaseFont.HELVETICA, 4
+flag_e2Lh5b           : left, 108, 434, 0, BaseFont.HELVETICA, 4
+flag_e2Lh6a           : left, 108, 453, 0, BaseFont.HELVETICA, 4
+flag_e2Lh6b           : left, 108, 473, 0, BaseFont.HELVETICA, 4
+flag_e2Lh7a           : left, 108, 491, 0, BaseFont.HELVETICA, 4
+flag_e2Lh7b           : left, 108, 509, 0, BaseFont.HELVETICA, 4
+flag_e2Lh8a           : left, 108, 529, 0, BaseFont.HELVETICA, 4
+flag_e2Lh8b           : left, 108, 548, 0, BaseFont.HELVETICA, 4
+flag_e2Lh9a           : left, 108, 567, 0, BaseFont.HELVETICA, 4
+flag_e2Lh9b           : left, 108, 587, 0, BaseFont.HELVETICA, 4
+flag_e2Lh10a           : left, 108, 606, 0, BaseFont.HELVETICA, 4
+flag_e2Lh10b           : left, 108, 625, 0, BaseFont.HELVETICA, 4
+flag_e2Lh11a           : left, 108, 645, 0, BaseFont.HELVETICA, 4
+flag_e2Lh11b           : left, 108, 665, 0, BaseFont.HELVETICA, 4
+flag_e2Lh12a           : left, 108, 683, 0, BaseFont.HELVETICA, 4
+flag_e2Lh12b           : left, 108, 701, 0, BaseFont.HELVETICA, 4
+
+flag_tshPrl1a           : left, 136, 262, 0, BaseFont.HELVETICA, 4
+flag_tshPrl1b           : left, 136, 281, 0, BaseFont.HELVETICA, 4
+flag_tshPrl2a           : left, 136, 300, 0, BaseFont.HELVETICA, 4
+flag_tshPrl2b           : left, 136, 319, 0, BaseFont.HELVETICA, 4
+flag_tshPrl3a           : left, 136, 338, 0, BaseFont.HELVETICA, 4
+flag_tshPrl3b           : left, 136, 357, 0, BaseFont.HELVETICA, 4
+flag_tshPrl4a           : left, 136, 376, 0, BaseFont.HELVETICA, 4
+flag_tshPrl4b           : left, 136, 396, 0, BaseFont.HELVETICA, 4
+flag_tshPrl5a           : left, 136, 414, 0, BaseFont.HELVETICA, 4
+flag_tshPrl5b           : left, 136, 434, 0, BaseFont.HELVETICA, 4
+flag_tshPrl6a           : left, 136, 453, 0, BaseFont.HELVETICA, 4
+flag_tshPrl6b           : left, 136, 473, 0, BaseFont.HELVETICA, 4
+flag_tshPrl7a           : left, 136, 491, 0, BaseFont.HELVETICA, 4
+flag_tshPrl7b           : left, 136, 509, 0, BaseFont.HELVETICA, 4
+flag_tshPrl8a           : left, 136, 529, 0, BaseFont.HELVETICA, 4
+flag_tshPrl8b           : left, 136, 548, 0, BaseFont.HELVETICA, 4
+flag_tshPrl9a           : left, 136, 567, 0, BaseFont.HELVETICA, 4
+flag_tshPrl9b           : left, 136, 587, 0, BaseFont.HELVETICA, 4
+flag_tshPrl10a           : left, 136, 606, 0, BaseFont.HELVETICA, 4
+flag_tshPrl10b           : left, 136, 625, 0, BaseFont.HELVETICA, 4
+flag_tshPrl11a           : left, 136, 644, 0, BaseFont.HELVETICA, 4
+flag_tshPrl11b           : left, 136, 664, 0, BaseFont.HELVETICA, 4
+flag_tshPrl12a           : left, 136, 682, 0, BaseFont.HELVETICA, 4
+flag_tshPrl12b           : left, 136, 701, 0, BaseFont.HELVETICA, 4
+
+flag_progBhog1a           : left, 164, 262, 0, BaseFont.HELVETICA, 4
+flag_progBhog1b           : left, 164, 281, 0, BaseFont.HELVETICA, 4
+flag_progBhog2a           : left, 164, 300, 0, BaseFont.HELVETICA, 4
+flag_progBhog2b           : left, 164, 319, 0, BaseFont.HELVETICA, 4
+flag_progBhog3a           : left, 164, 338, 0, BaseFont.HELVETICA, 4
+flag_progBhog3b           : left, 164, 357, 0, BaseFont.HELVETICA, 4
+flag_progBhog4a           : left, 164, 376, 0, BaseFont.HELVETICA, 4
+flag_progBhog4b           : left, 164, 396, 0, BaseFont.HELVETICA, 4
+flag_progBhog5a           : left, 164, 414, 0, BaseFont.HELVETICA, 4
+flag_progBhog5b           : left, 164, 434, 0, BaseFont.HELVETICA, 4
+flag_progBhog6a           : left, 164, 453, 0, BaseFont.HELVETICA, 4
+flag_progBhog6b           : left, 164, 473, 0, BaseFont.HELVETICA, 4
+flag_progBhog7a           : left, 164, 491, 0, BaseFont.HELVETICA, 4
+flag_progBhog7b           : left, 164, 509, 0, BaseFont.HELVETICA, 4
+flag_progBhog8a           : left, 164, 529, 0, BaseFont.HELVETICA, 4
+flag_progBhog8b           : left, 164, 548, 0, BaseFont.HELVETICA, 4
+flag_progBhog9a           : left, 164, 567, 0, BaseFont.HELVETICA, 4
+flag_progBhog9b           : left, 164, 587, 0, BaseFont.HELVETICA, 4
+flag_progBhog10a           : left, 164, 606, 0, BaseFont.HELVETICA, 4
+flag_progBhog10b           : left, 164, 625, 0, BaseFont.HELVETICA, 4
+flag_progBhog11a           : left, 164, 644, 0, BaseFont.HELVETICA, 4
+flag_progBhog11b           : left, 164, 664, 0, BaseFont.HELVETICA, 4
+flag_progBhog12a           : left, 164, 682, 0, BaseFont.HELVETICA, 4
+flag_progBhog12b           : left, 164, 701, 0, BaseFont.HELVETICA, 4
+
+rightCyst1a           : left, 255, 268, 0, BaseFont.HELVETICA, 7
+rightCyst1b           : left, 255, 286, 0, BaseFont.HELVETICA, 7
+rightCyst2a           : left, 255, 307, 0, BaseFont.HELVETICA, 7
+rightCyst2b           : left, 255, 326, 0, BaseFont.HELVETICA, 7
+rightCyst3a           : left, 255, 344, 0, BaseFont.HELVETICA, 7
+rightCyst3b           : left, 255, 363, 0, BaseFont.HELVETICA, 7
+rightCyst4a           : left, 255, 384, 0, BaseFont.HELVETICA, 7
+rightCyst4b           : left, 255, 402, 0, BaseFont.HELVETICA, 7
+rightCyst5a           : left, 255, 420, 0, BaseFont.HELVETICA, 7
+rightCyst5b           : left, 255, 440, 0, BaseFont.HELVETICA, 7
+rightCyst6a           : left, 255, 459, 0, BaseFont.HELVETICA, 7
+rightCyst6b           : left, 255, 477, 0, BaseFont.HELVETICA, 7
+rightCyst7a           : left, 255, 497, 0, BaseFont.HELVETICA, 7
+rightCyst7b           : left, 255, 515, 0, BaseFont.HELVETICA, 7
+rightCyst8a           : left, 255, 535, 0, BaseFont.HELVETICA, 7
+rightCyst8b           : left, 255, 554, 0, BaseFont.HELVETICA, 7
+rightCyst9a           : left, 255, 573, 0, BaseFont.HELVETICA, 7
+rightCyst9b           : left, 255, 593, 0, BaseFont.HELVETICA, 7
+rightCyst10a           : left, 255, 615, 0, BaseFont.HELVETICA, 7
+rightCyst10b           : left, 255, 634, 0, BaseFont.HELVETICA, 7
+rightCyst11a           : left, 255, 652, 0, BaseFont.HELVETICA, 7
+rightCyst11b           : left, 255, 672, 0, BaseFont.HELVETICA, 7
+rightCyst12a           : left, 255, 690, 0, BaseFont.HELVETICA, 7
+rightCyst12b           : left, 255, 707, 0, BaseFont.HELVETICA, 7
+
+leftCyst1a           : left, 357, 270, 0, BaseFont.HELVETICA, 7
+leftCyst1b           : left, 357, 287, 0, BaseFont.HELVETICA, 7
+leftCyst2a           : left, 357, 306, 0, BaseFont.HELVETICA, 7
+leftCyst2b           : left, 357, 325, 0, BaseFont.HELVETICA, 7
+leftCyst3a           : left, 357, 344, 0, BaseFont.HELVETICA, 7
+leftCyst3b           : left, 357, 363, 0, BaseFont.HELVETICA, 7
+leftCyst4a           : left, 357, 384, 0, BaseFont.HELVETICA, 7
+leftCyst4b           : left, 357, 402, 0, BaseFont.HELVETICA, 7
+leftCyst5a           : left, 357, 420, 0, BaseFont.HELVETICA, 7
+leftCyst5b           : left, 357, 440, 0, BaseFont.HELVETICA, 7
+leftCyst6a           : left, 357, 459, 0, BaseFont.HELVETICA, 7
+leftCyst6b           : left, 357, 477, 0, BaseFont.HELVETICA, 7
+leftCyst7a           : left, 357, 497, 0, BaseFont.HELVETICA, 7
+leftCyst7b           : left, 357, 515, 0, BaseFont.HELVETICA, 7
+leftCyst8a           : left, 357, 535, 0, BaseFont.HELVETICA, 7
+leftCyst8b           : left, 357, 554, 0, BaseFont.HELVETICA, 7
+leftCyst9a           : left, 357, 573, 0, BaseFont.HELVETICA, 7
+leftCyst9b           : left, 357, 593, 0, BaseFont.HELVETICA, 7
+leftCyst10a           : left, 357, 615, 0, BaseFont.HELVETICA, 7
+leftCyst10b           : left, 357, 634, 0, BaseFont.HELVETICA, 7
+leftCyst11a           : left, 357, 652, 0, BaseFont.HELVETICA, 7
+leftCyst11b           : left, 357, 672, 0, BaseFont.HELVETICA, 7
+leftCyst12a           : left, 357, 690, 0, BaseFont.HELVETICA, 7
+leftCyst12b           : left, 357, 707, 0, BaseFont.HELVETICA, 7
+
+
+etTEX1a           : left, 435, 270, 0, BaseFont.HELVETICA, 7
+etTEX1b           : left, 435, 287, 0, BaseFont.HELVETICA, 7
+etTEX2a           : left, 435, 306, 0, BaseFont.HELVETICA, 7
+etTEX2b           : left, 435, 325, 0, BaseFont.HELVETICA, 7
+etTEX3a           : left, 435, 344, 0, BaseFont.HELVETICA, 7
+etTEX3b           : left, 435, 363, 0, BaseFont.HELVETICA, 7
+etTEX4a           : left, 435, 384, 0, BaseFont.HELVETICA, 7
+etTEX4b           : left, 435, 402, 0, BaseFont.HELVETICA, 7
+etTEX5a           : left, 435, 420, 0, BaseFont.HELVETICA, 7
+etTEX5b           : left, 435, 440, 0, BaseFont.HELVETICA, 7
+etTEX6a           : left, 435, 459, 0, BaseFont.HELVETICA, 7
+etTEX6b           : left, 435, 477, 0, BaseFont.HELVETICA, 7
+etTEX7a           : left, 435, 497, 0, BaseFont.HELVETICA, 7
+etTEX7b           : left, 435, 515, 0, BaseFont.HELVETICA, 7
+etTEX8a           : left, 435, 535, 0, BaseFont.HELVETICA, 7
+etTEX8b           : left, 435, 554, 0, BaseFont.HELVETICA, 7
+etTEX9a           : left, 435, 573, 0, BaseFont.HELVETICA, 7
+etTEX9b           : left, 435, 593, 0, BaseFont.HELVETICA, 7
+etTEX10a           : left, 435, 615, 0, BaseFont.HELVETICA, 7
+etTEX10b           : left, 435, 634, 0, BaseFont.HELVETICA, 7
+etTEX11a           : left, 435, 652, 0, BaseFont.HELVETICA, 7
+etTEX11b           : left, 435, 672, 0, BaseFont.HELVETICA, 7
+etTEX12a           : left, 435, 690, 0, BaseFont.HELVETICA, 7
+etTEX12b           : left, 435, 707, 0, BaseFont.HELVETICA, 7
+
+ff1           : left, 402, 277, 0, BaseFont.HELVETICA, 7
+ff2           : left, 402, 314, 0, BaseFont.HELVETICA, 7
+ff3           : left, 402, 353, 0, BaseFont.HELVETICA, 7
+ff4           : left, 402, 393, 0, BaseFont.HELVETICA, 7
+ff5           : left, 402, 431, 0, BaseFont.HELVETICA, 7
+ff6           : left, 402, 468, 0, BaseFont.HELVETICA, 7
+ff7           : left, 402, 507, 0, BaseFont.HELVETICA, 7
+ff8           : left, 402, 541, 0, BaseFont.HELVETICA, 7
+ff9           : left, 402, 581, 0, BaseFont.HELVETICA, 7
+ff10           : left, 402, 622, 0, BaseFont.HELVETICA, 7
+ff11           : left, 402, 657, 0, BaseFont.HELVETICA, 7
+ff12           : left, 402, 696, 0, BaseFont.HELVETICA, 7
+
+rightLo1           : left, 175, 258, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo2           : left, 175, 297, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo3           : left, 175, 335, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo4           : left, 175, 370, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo5           : left, 175, 412, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo6           : left, 175, 451, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo7           : left, 175, 488, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo8           : left, 175, 527, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo9           : left, 175, 564, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo10           : left, 175, 602, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo11           : left, 175, 640, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+rightLo12           : left, 175, 679, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+leftLo1           : left, 289, 258, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo2           : left, 289, 297, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo3           : left, 289, 335, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo4           : left, 289, 370, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo5           : left, 289, 412, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo6           : left, 289, 451, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo7           : left, 289, 488, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo8           : left, 289, 527, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo9           : left, 289, 564, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo10           : left, 289, 602, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo11           : left, 289, 640, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+leftLo12           : left, 289, 679, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+meds1           : left, 464, 258, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds2           : left, 464, 297, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds3           : left, 464, 335, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds4           : left, 464, 370, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds5           : left, 464, 412, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds6           : left, 464, 451, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds7           : left, 464, 488, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds8           : left, 464, 527, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds9           : left, 464, 564, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds10           : left, 464, 602, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds11           : left, 464, 640, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+meds12           : left, 464, 679, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+comment1           : left, 490, 258, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment2           : left, 490, 297, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment3           : left, 490, 335, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment4           : left, 490, 370, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment5           : left, 490, 412, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment6           : left, 490, 451, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment7           : left, 490, 488, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment8           : left, 490, 527, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment9           : left, 490, 564, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment10           : left, 490, 602, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment11           : left, 490, 640, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+comment12           : left, 490, 679, 0, BaseFont.HELVETICA, 7  , _, 578, 765, 8
+
+
+
+
+
