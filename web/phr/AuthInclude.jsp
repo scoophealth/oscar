@@ -1,6 +1,6 @@
 <%-- Used in registering users
 REQUREMENTS: (2 PARAMS)
-1.  pathtophr - example: ../../phr/ (tail slash requrement)
+1.  pathtophr - example: ../../phr/ (tail slash requrement) (as of July 22, 2009 - not needed)
 2.  forwardto - where to go after user is authenticated
 --%>
 

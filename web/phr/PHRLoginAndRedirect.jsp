@@ -6,7 +6,7 @@ you must also add the JSTL library to the project. The Add Library... action
 on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 --%>
 <%--
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 --%>
 
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
@@ -28,12 +28,14 @@ if (errors) {
 %>
 
 <%
-String providerName = request.getSession().getAttribute("userfirstname") + " " + 
+String providerName = request.getSession().getAttribute("userfirstname") + " " +
         request.getSession().getAttribute("userlastname");
 String providerNo = (String) request.getSession().getAttribute("user");
 ProviderData providerData = new ProviderData();
 providerData.setProviderNo(providerNo);
+String providerPhrId = providerData.getMyOscarId();
 PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+pageContext.setAttribute("forwardToOnSuccess",request.getAttribute("forwardToOnSuccess"));
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -55,6 +57,13 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                 window.opener=self;
                 window.close();
             }
+            function startRedirectTimeout(url) {
+                var sec=800;
+                setTimeout("redirect('" + url + "')",sec);
+            }
+            function redirect(url) {
+                window.location.href = url;
+            }
             function onloadd() {
                 document.getElementById("phrPassword").focus();
             }
@@ -69,7 +78,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
             text-align: left;
             font-weight: normal;
         }
-        
+
         .myoscarLoginElementAuth {
             border: 0;
             color: black;
@@ -100,23 +109,33 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
         }
     </style>
     </head>
-    <body onload="onloadd();">
+    <body onload="onloadd()">
         <div class="<%=cssPrefix%>">
             <div class="<%=cssPrefix%>Header">Personal Health Record Action</div>
             <%if (errors) {%>
                 <font class="announcementRed"><%=errorMsg%></font>
             <%} else {%>
-                <center><font class="announcementGreen">SUCCESS, added to send queue.</font></center>
-                <center><font style="font-size: 10px;"><sup>(It will be sent next time you log in)</sup></font></center>
+                <center><font class="announcementGreen">You must log into the personal health record to continue.</font></center>
+                <center><font style="font-size: 10px;"><sup>(Use your personal health record provider password)</sup></font></center>
                <br/>
                    <logic:present name="<%=PHRAuthentication.SESSION_PHR_AUTH%>">
                        <div class="myoscarLoginElementAuth">
                            Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)<br/>
-                           <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
-                           <%-- if no errors and logged in, close window--%>
-                           <%if (!errors) {%>
-                                <script type="text/javascript" language="JavaScript">startCloseWindowTimeout()</script>
-                           <%}%>
+                           <logic:notPresent name="forwardToOnSuccess">
+                               <center>Closing Window... <a href="javascript:;" onclick="closeWindow()">close</a></center>
+                               <%-- if no errors and logged in, close window--%>
+                               <%if (!errors) {%>
+                                    <script type="text/javascript" language="JavaScript">startCloseWindowTimeout()</script>
+                               <%}%>
+                           </logic:notPresent>
+                           <logic:present name="forwardToOnSuccess">
+                               <center>Redirecting ... <a href="javascript:;" onclick="redirect('<bean:write name="forwardToOnSuccess"/>');">redirect now</a></center>
+                               <%-- if no errors and logged in, close window--%>
+                               <%if (!errors) {%>
+                                    <script type="text/javascript" language="JavaScript">startRedirectTimeout('<bean:write name="forwardToOnSuccess"/>')</script>
+                               <%}%>
+                           </logic:present>
+
                        </div>
                        <!--<p style="background-color: #E00000"  title="fade=[on] requireclick=[on] header=[Diabetes Med Changes] body=[<span style='color:red'>no DM Med changes have been recorded</span> </br>]">dsfsdfsdfsdfgsdgsdg</p>-->
                    </logic:present>
@@ -124,7 +143,7 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                         <div class="myoscarLoginElementNoAuth">
                             <form action="<%=request.getContextPath()%>/phr/Login.do" name="phrLogin" method="POST" style="margin-bottom: 0px;">
                                 <logic:present name="phrUserLoginErrorMsg">
-                                    <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/></font>  
+                                    <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/></font>
                                     <logic:present name="phrTechLoginErrorMsg">
                                         <a href="javascript:;" title="fade=[on] requireclick=[off] cssheader=[moreInfoBoxoverHeader] cssbody=[moreInfoBoxoverBody] singleclickstop=[on] header=[MyOSCAR Server Response:] body=[<bean:write name="phrTechLoginErrorMsg"/> </br>]">More Info</a></div>
                                     </logic:present>
@@ -136,17 +155,19 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
                                     <a href="javascript:;" onclick="closeWindow()">Send Later</a>
                                 </center>
                                 <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>">
+                                <input type="hidden" name="forwardToOnSuccess" value="<bean:write name="forwardToOnSuccess"/>">
                             </form>
                         </div>
                    </logic:notPresent>
-               
+
             <%}%>
         </div>
         <script type="text/javascript" src="<%=request.getContextPath()%>/share/javascript/boxover.js"></script>
+        <%-- Kill this to speed it up
         <phr:IfTimeToExchange>
             <script type="text/javascript">
             phrExchangeGo('<%=request.getContextPath()%>/phrExchange.do');
             </script>
-        </phr:IfTimeToExchange>
+        </phr:IfTimeToExchange>--%>
     </body>
 </html>
