@@ -71,13 +71,21 @@ public final class BillingAction
         //If newWCBClaim == 1, this action was invoked from the WCB form
         //Therefore, we need to set the appropriate parameters to set up the subsequent bill
         if ("1".equals(newWCBClaim)) {
-          WCBForm wcbForm = (WCBForm) request.getSession().getAttribute(
-              "WCBForm");
+          WCBForm wcbForm = (WCBForm) request.getSession().getAttribute("WCBForm");
           frm.setXml_billtype("WCB");
-          frm.setXml_other1(wcbForm.getW_extrafeeitem());
-          frm.setXml_diagnostic_detail1(wcbForm.getW_icd9());
-          request.setAttribute("newWCBClaim",
-                               request.getParameter("newWCBClaim"));
+          
+          List l = (List) request.getAttribute("billingcodes");
+          if (l != null && l.size() > 0 ){
+              frm.setXml_other1(""+l.get(0));
+              if (l.size() > 1){
+                frm.setXml_other2(""+l.get(1));
+              }
+            
+          }
+          
+          frm.setXml_diagnostic_detail1(""+request.getAttribute("icd9"));
+          request.setAttribute("WCBFormId",request.getAttribute("WCBFormId"));
+          request.setAttribute("newWCBClaim",request.getParameter("newWCBClaim"));
           request.setAttribute("loadFromSession", "y");
         }
         bean = new oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean();
