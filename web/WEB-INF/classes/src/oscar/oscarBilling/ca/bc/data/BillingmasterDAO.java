@@ -32,7 +32,11 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
+import oscar.entities.WCB;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 import oscar.util.StringUtils;
@@ -41,7 +45,7 @@ import oscar.util.StringUtils;
  *
  * @author jay
  */
-public class BillingmasterDAO {
+public class BillingmasterDAO extends HibernateDaoSupport {
     
     /** Creates a new instance of BillingmasterDAO */
     public BillingmasterDAO() {
@@ -57,7 +61,55 @@ public class BillingmasterDAO {
         return getBillingMaster(query);
     }
     
+    public void save(Billingmaster bm){
+        getHibernateTemplate().save((bm));
+    }
     
+    public void save(WCB wcb){
+        getHibernateTemplate().save(wcb);
+    }
+    
+    public void save(Billing billing){
+        getHibernateTemplate().save(billing);
+    }
+    
+
+    
+    public void update(Billingmaster bm){
+        getHibernateTemplate().update(bm);
+    }
+    
+    public void update(Billing billing){
+        getHibernateTemplate().update(billing);
+    }
+    
+    
+ 
+    public Billing getBilling(int billingNo){
+        return (Billing) getHibernateTemplate().get(Billing.class, billingNo);
+    }
+    
+    
+    public List<WCB> getWCBForms(int demographic){
+        return getHibernateTemplate().find("from WCB where demographic_no = ? order by id desc",demographic);
+    }
+    
+    public List<WCB> getWCBForms(String demographic){
+        return getHibernateTemplate().find("from WCB where demographic_no = ? order by id desc",Integer.parseInt(demographic));
+    }
+    
+    public WCB getWCBForm(String formID){
+        if (formID == null){
+            return null;
+        }
+        System.out.println("\nFORM ID "+formID);
+        HibernateTemplate hb = getHibernateTemplate();
+        
+        //return (WCB) getHibernateTemplate().get(WCB.class,Integer.parseInt(formID));
+        System.out.println(hb);
+        return (WCB) hb.get(WCB.class,Integer.parseInt(formID));
+        
+    }
     
     
     public Billingmaster getBillingMasterByBillingMasterNo(String billingNo){
