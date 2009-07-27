@@ -31,6 +31,7 @@ package org.oscarehr.phr.web;
 
 import java.util.Calendar;
 
+import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -72,7 +73,8 @@ public class PHRLoginAction extends DispatchAction {
        //ActionForward af = new ActionForward();
        //af.setPath(forwardTo);
        //af.setRedirect(true);
-       ActionRedirect ar = new ActionRedirect(forwardTo);
+       ActionForward ar = new ActionForward(forwardTo);
+       request.setAttribute("forwardToOnSuccess", request.getParameter("forwardToOnSuccess"));
        //log.debug("Request URI: " + forwardTo);
        //log.debug("from request uri: " + (String) request.getParameter("forwardto"));
        //log.debug("referrer header: " + request.getHeader("referer"));
@@ -93,8 +95,8 @@ public class PHRLoginAction extends DispatchAction {
            if (e.getCause() != null && e.getCause().getClass().getName().indexOf("java.") != -1) {
                 //server probably offline
                 log.warn("Connection to MyOSCAR server refused");
-                ar.addParameter("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
-                ar.addParameter("phrTechLoginErrorMsg", e.getMessage());
+                request.setAttribute("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
+                request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
                 return ar;
             }
             //assume wrong password at this point, but could be due to problems on the server
@@ -106,8 +108,8 @@ public class PHRLoginAction extends DispatchAction {
            
            //server probably offline
            log.debug("exception");
-           ar.addParameter("phrUserLoginErrorMsg", "Incorrect password");
-           ar.addParameter("phrTechLoginErrorMsg", e.getMessage());
+           request.setAttribute("phrUserLoginErrorMsg", "Incorrect password");
+           request.setAttribute("phrTechLoginErrorMsg", e.getMessage());
            return ar;
        }
        session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
@@ -117,52 +119,5 @@ public class PHRLoginAction extends DispatchAction {
        session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
        log.debug("Correct user/pass, auth success");
        return ar;
-    }
-       //String intendedAction = request.getRequestURL().toString()+"?"+request.getQueryString();
-       //String nextAction = request.getParameter("nextAction");
-       
-       //log.debug("intendedAction "+intendedAction+" nextAction "+nextAction);
-       //if (nextAction != null && !nextAction.equals(null)){
-       //    intendedAction = nextAction;
-       //}
-       
-//       PHRAuthentication  auth = (PHRAuthentication) session.getAttribute("INDIVO_AUTH");
-//       log.debug("AUTH CHECK "+auth);
-//       if (!phrService.validAuthentication(auth)){
-//           log.debug("not valid authentication");
-//           String indivoPass = (String) request.getParameter("indivoPW");
-//           if (indivoPass == null){
-//               log.debug("returning to login");
-//               request.setAttribute("nextAction",intendedAction);
-//               return (mapping.findForward("login"));
-//           }else{
-//               //Should catch the exception so that error can be displayed to user
-//               log.debug("Trying to authenticate");
-//               auth = phrService.authenticate( curUserNo, indivoPass);
-//               if ( auth == null){
-//                   log.debug("not valid authentication  2 sending to login");
-//                   request.setAttribute("nextAction",intendedAction);
-//                   return (mapping.findForward("login"));
-//               } 
-//               log.debug("Set sessino var");
-//               session.setAttribute("INDIVO_AUTH",auth);
-//               
-//               
-//           }
-//       }
-//       
-//       String method = (String) request.getAttribute("method");
-//       request.setAttribute("INDIVO_AUTH",auth);
-//       
-//       if (nextAction != null && !nextAction.equals(null)){
-//           ActionForward af = new ActionForward();
-//           af.setPath(nextAction);
-//           af.setRedirect(true);
-//           return af;
-//       }
-//
-//       return super.execute(mapping, form, request, response);
-//    }
-    
-        
+    } 
 }

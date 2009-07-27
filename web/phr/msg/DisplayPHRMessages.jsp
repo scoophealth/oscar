@@ -315,10 +315,6 @@ request.setAttribute("pageMethod",pageMethod);
                                         <td class="myoscarLoginElementNoAuth">
                                             <div>
                                                 <form action="../../phr/Login.do" name="phrLogin" method="POST"  style="margin-bottom: 0px;">
-                                                    <%--=request.getParameter("phrUserLoginErrorMsg")%>
-                                                    <%=request.getAttribute("phrUserLoginErrorMsg")--%>
-                                                  <%request.setAttribute("phrUserLoginErrorMsg", request.getParameter("phrUserLoginErrorMsg"));
-                                                    request.setAttribute("phrTechLoginErrorMsg", request.getParameter("phrTechLoginErrorMsg"));%>
                                                     <logic:present name="phrUserLoginErrorMsg">
                                                         <div class="phrLoginErrorMsg"><font color="red"><bean:write name="phrUserLoginErrorMsg"/>.</font>  
                                                         <logic:present name="phrTechLoginErrorMsg">
