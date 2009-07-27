@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		Copyright (c) 2001-2002. Centre for Research on Inner City Health, St.
+		Michael's Hospital, Toronto. All Rights Reserved. This software is
+		published under the GPL GNU General Public License. This program is
+		free software; you can redistribute it and/or modify it under the
+		terms of the GNU General Public License as published by the Free
+		Software Foundation; either version 2 of the License, or (at your
+		option) any later version. This program is distributed in the hope
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+		PURPOSE. See the GNU General Public License for more details. You
+		should have received a copy of the GNU General Public License along
+		with this program; if not, write to the Free Software Foundation,
+		Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. OSCAR
+		TEAM This software was written for Centre for Research on Inner City
+		Health, St. Michael's Hospital, Toronto, Ontario, Canada
+	-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="oscar.entities">
+	<class name="Billingmaster" table="billingmaster">
+		<id column="billingmaster_no" name="billingmasterNo" type="integer">
+			<generator class="native" />
+		</id>
+                
+               
+<property column="billing_no"  length="10" name="billingNo" not-null="true" type="integer" />  
+<property column="createdate" name="createdate" not-null="false" type="date" />
+<property column="billingstatus"                 length="1" name="billingstatus" not-null="false" type="string" />
+<property column="demographic_no"           length="10" name="demographicNo" not-null="true" type="integer" />  
+<property column="appointment_no"           length="10" name="appointmentNo" not-null="true" type="integer" />  
+<property column="claimcode"                length="3" name="claimcode" not-null="false" type="string" />
+<property column="datacenter"               length="5" name="datacenter" not-null="false" type="string" />
+<property column="payee_no"                 length="5" name="payeeNo" not-null="false" type="string" />
+<property column="practitioner_no"          length="5" name="practitionerNo" not-null="false" type="string" />
+<property column="phn"                      length="10" name="phn" not-null="false" type="string" />
+<property column="name_verify"              length="4" name="nameVerify" not-null="false" type="string" />
+<property column="dependent_num"            length="2" name="dependentNum" not-null="false" type="string" />
+<property column="billing_unit"             length="3" name="billingUnit" not-null="false" type="string" />
+<property column="clarification_code"       length="2" name="clarificationCode" not-null="false" type="string" />
+<property column="anatomical_area"          length="2" name="anatomicalArea" not-null="false" type="string" />
+<property column="after_hour"               length="1" name="afterHour" not-null="false" type="string" />
+<property column="new_program"              length="2" name="newProgram" not-null="false" type="string" />
+<property column="billing_code"             length="10" name="billingCode" not-null="false" type="string" />
+<property column="bill_amount"              length="9" name="billAmount" not-null="false" type="string" />
+<property column="payment_mode"             length="1" name="paymentMode" not-null="false" type="string" />
+<property column="service_date"             length="8" name="serviceDate" not-null="false" type="string" />
+<property column="service_to_day"           length="2" name="serviceToDay" not-null="false" type="string" />
+<property column="submission_code"          length="1" name="submissionCode" not-null="false" type="string" />
+<property column="extended_submission_code" length="1" name="extendedSubmissionCode" not-null="false" type="string" />
+<property column="dx_code1"                 length="5" name="dxCode1" not-null="false" type="string" />
+<property column="dx_code2"                 length="5" name="dxCode2" not-null="false" type="string" />
+<property column="dx_code3"                 length="5" name="dxCode3" not-null="false" type="string" />
+<property column="dx_expansion"             length="15" name="dxExpansion" not-null="false" type="string" />
+<property column="service_location"         length="1" name="serviceLocation" not-null="false" type="string" />
+<property column="referral_flag1"           length="1" name="referralFlag1" not-null="false" type="string" />
+<property column="referral_no1"             length="5" name="referralNo1" not-null="false" type="string" />
+<property column="referral_flag2"           length="1" name="referralFlag2" not-null="false" type="string" />
+<property column="referral_no2"             length="5" name="referralNo2" not-null="false" type="string" />
+<property column="time_call"                length="4" name="timeCall" not-null="false" type="string" />
+<property column="service_start_time"       length="4" name="serviceStartTime" not-null="false" type="string" />
+<property column="service_end_time"         length="4" name="serviceEndTime" not-null="false" type="string" />
+<property column="birth_date"               length="8" name="birthDate" not-null="false" type="string" />
+<property column="office_number"            length="7" name="officeNumber" not-null="false" type="string" />
+<property column="correspondence_code"      length="1" name="correspondenceCode" not-null="false" type="string" />
+<property column="claim_comment"            length="20" name="claimComment" not-null="false" type="string" />
+<property column="mva_claim_code"           length="1" name="mvaClaimCode" not-null="false" type="string" />
+<property column="icbc_claim_no"            length="8" name="icbcClaimNo" not-null="false" type="string" />
+<property column="original_claim"           length="20" name="originalClaim" not-null="false" type="string" />
+<property column="facility_no"              length="5" name="facilityNo" not-null="false" type="string" />
+<property column="facility_sub_no"          length="1" name="facilitySubNo" not-null="false" type="string" />
+<property column="filler_claim"             length="58" name="fillerClaim" not-null="false" type="string" />
+<property column="oin_insurer_code"         length="2" name="oinInsurerCode" not-null="false" type="string" />
+<property column="oin_registration_no"      length="12" name="oinRegistrationNo" not-null="false" type="string" />
+<property column="oin_birthdate"            length="8" name="oinBirthdate" not-null="false" type="string" />
+<property column="oin_first_name"           length="12" name="oinFirstName" not-null="false" type="string" />
+<property column="oin_second_name"          length="1" name="oinSecondName" not-null="false" type="string" />
+<property column="oin_surname"              length="18" name="oinSurname" not-null="false" type="string" />
+<property column="oin_sex_code"             length="1" name="oinSexCode" not-null="false" type="string" />
+<property column="oin_address"              length="25" name="oinAddress" not-null="false" type="string" />
+<property column="oin_address2"             length="25" name="oinAddress2" not-null="false" type="string" />
+<property column="oin_address3"             length="25" name="oinAddress3" not-null="false" type="string" />
+<property column="oin_address4"             length="25" name="oinAddress4" not-null="false" type="string" />
+<property column="oin_postalcode"           length="6" name="oinPostalcode" not-null="false" type="string" />
+<property column="paymentMethod"            length="1" name="paymentMethod" not-null="false" type="integer" />
+<property column="wcb_id"            name="wcbId" not-null="false" type="integer" />
+
+<!--
+                private int billingNo;
+  private Date createdate;
+  private String billingstatus;
+  private int demographicNo;
+  private int appointmentNo;
+  private String claimcode;
+  private String datacenter;
+  private String payeeNo;
+  private String practitionerNo;
+  private String phn;
+  private String nameVerify;
+  private String dependentNum;
+  private String billingUnit;
+  private String clarificationCode;
+  private String anatomicalArea;
+  private String afterHour;
+  private String newProgram;
+  private String billingCode;
+  private String billAmount;
+  private String paymentMode;
+  private String serviceDate;
+  private String serviceToDay;
+  private String submissionCode;
+  private String extendedSubmissionCode;
+  private String dxCode1;
+  private String dxCode2;
+  private String dxCode3;
+  private String dxExpansion;
+  private String serviceLocation;
+  private String referralFlag1;
+  private String referralNo1;
+  private String referralFlag2;
+  private String referralNo2;
+  private String timeCall;
+  private String serviceStartTime;
+  private String serviceEndTime;
+  private String birthDate;
+  private String officeNumber;
+  private String correspondenceCode;
+  private String claimComment;
+  private String mvaClaimCode;
+  private String icbcClaimNo;
+  private String originalClaim;
+  private String facilityNo;
+  private String facilitySubNo;
+  private String fillerClaim;
+  private String oinInsurerCode;
+  private String oinRegistrationNo;
+  private String oinBirthdate;
+  private String oinFirstName;
+  private String oinSecondName;
+  private String oinSurname;
+  private String oinSexCode;
+  private String oinAddress;
+  private String oinAddress2;
+  private String oinAddress3;
+  private String oinAddress4;
+  private String oinPostalcode;
+  
+  private int paymentMethod;
+  -->
+	</class>
+</hibernate-mapping>
