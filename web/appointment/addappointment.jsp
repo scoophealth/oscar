@@ -1,5 +1,4 @@
-
-<%
+<%@page contentType="text/html" pageEncoding="UTF-8"%><%
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 
   String DONOTBOOK = "Do_Not_Book";
@@ -366,6 +365,7 @@ function pasteAppt() {
   String email  = "";
   String hin = "";
   String dob = "";
+  String sex = "";
 
   //to show Alert msg
 
@@ -386,6 +386,7 @@ function pasteAppt() {
         String month_of_birth  = (String) status.get("month_of_birth"); 
         String date_of_birth   = (String) status.get("date_of_birth");
         dob = "("+year_of_birth+"-"+month_of_birth+"-"+date_of_birth+")";
+        sex = (String) status.get("sex");
         hin                    = (String) status.get("hin");
         String ver             = (String) status.get("ver");
         hin = hin +" "+ ver;
@@ -679,20 +680,14 @@ function pasteAppt() {
 %> <INPUT TYPE="submit"
 			onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'"
 			tabindex="6"
-			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/> 
-"
-			<%=disabled%>></TD>
+			VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/>" <%=disabled%>></TD>
 		<TD></TD>
 		<% } %>
 		<TD align="right">
 		<% if(apptObj!=null) { %> <input type="button" value="Paste"
 			onclick="pasteAppt();"> <% } %> <INPUT TYPE="RESET"
-			VALUE="<bean:message key="appointment.addappointment.btnCancel"/> 
-"
-			onClick="window.close();"> <input type="button"
-			value="<bean:message key="appointment.addappointment.btnRepeat"/> 
-"
-			onclick="onButRepeat()" <%=disabled%>></TD>
+			VALUE="<bean:message key="appointment.addappointment.btnCancel"/>" onClick="window.close();"> <input type="button"
+			value="<bean:message key="appointment.addappointment.btnRepeat"/>" onclick="onButRepeat()" <%=disabled%>></TD>
 	</tr>
 </TABLE>
 </FORM>
@@ -705,24 +700,26 @@ function pasteAppt() {
         <table style="font-size: 9pt;" bgcolor="#c0c0c0" align="center" valign="top" cellpadding="3px">
             <tr bgcolor="#ccccff">
                 <th style="font-family: arial, sans-serif" colspan="2">
-                    Demographics
-                    <a title="Master File" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoNo%>&amp;displaymode=edit&amp;dboperation=search_detail','master')" href="javascript: function myFunction() {return false; }">edit</a>
+                    <bean:message key="appointment.addappointment.msgDemgraphics"/>
+                    <a title="Master File" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoNo%>&amp;displaymode=edit&amp;dboperation=search_detail','master')" href="javascript: function myFunction() {return false; }"><bean:message key="appointment.addappointment.btnEdit"/></a>
+
+                    <bean:message key="appointment.addappointment.msgSex"/>: <%=sex%> &nbsp; <bean:message key="appointment.addappointment.msgDOB"/>: <%=dob%>
                 </th>
             </tr>
              <tr bgcolor="#ccccff">
-                <th style="padding-right: 20px" align="left">Hin:</th>
+                <th style="padding-right: 20px" align="left"><bean:message key="appointment.addappointment.msgHin"/>:</th>
                 <td><%=hin%> </td>
             </tr>
             <tr bgcolor="#ccccff">
-                <th style="padding-right: 20px"align="left">Address:</th>
+                <th style="padding-right: 20px"align="left"><bean:message key="appointment.addappointment.msgAddress"/>:</th>
                 <td><%=address%>, <%=city%>, <%=province%>, <%=postal%></td>
             </tr>
             <tr bgcolor="#ccccff">
-                <th style="padding-right: 20px" align="left">Phone:</th>
-                <td><b>H</b>:<%=phone%> <b>W</b>:<%=phone2%> </td>
+                <th style="padding-right: 20px" align="left"><bean:message key="appointment.addappointment.msgPhone"/>:</th>
+                <td><b><bean:message key="appointment.addappointment.msgH"/></b>:<%=phone%> <b><bean:message key="appointment.addappointment.msgW"/></b>:<%=phone2%> </td>
             </tr>
             <tr bgcolor="#ccccff" align="left">
-                <th style="padding-right: 20px">Email:</th>
+                <th style="padding-right: 20px"><bean:message key="appointment.addappointment.msgEmail"/>:</th>
                 <td><%=email%></td>
             </tr>
 
