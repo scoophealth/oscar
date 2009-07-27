@@ -28,7 +28,9 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<% TeleplanUserPassDAO dao = new TeleplanUserPassDAO(); %>
+<% TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+   String superUser = (String) session.getAttribute("user");
+%>
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -302,7 +304,7 @@ div.recommendations li{
                 <%if (request.getAttribute("error") != null) { %>
                 <div> <%=request.getAttribute("error")%></div>
                 <%}%>
-                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=superUser%>" >
                     <div class="leftBox">
                         <h3>&nbsp;Manually Set Sequence #</h3>
                         <div style="background-color: #EEEEFF;" >
@@ -315,7 +317,7 @@ div.recommendations li{
                     </div>
                 </oscar:oscarPropertiesCheck>
                
-                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=superUser%>" >
                 
                <div class="leftBox">
                   <h3>&nbsp;Set Teleplan UserName Password</h3>
@@ -332,7 +334,7 @@ div.recommendations li{
                </oscar:oscarPropertiesCheck>
                
                <% if ( dao.hasUsernamePassword()){ %> 
-               <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+               <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=superUser%>" >
                 
                <div class="leftBox">
                   <h3>&nbsp;Get Teleplan Sequence #</h3>
@@ -403,7 +405,7 @@ div.recommendations li{
         </tr>
         <tr>
             <td class="MainTableBottomRowLeftColumn">
-                <input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print">
+                
                 &nbsp;
             </td>
             <td class="MainTableBottomRowRightColumn" valign="top">
