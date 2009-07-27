@@ -933,8 +933,16 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	    	noteDisplay.hasHistory=localNote.getHasHistory();
 	    	noteDisplay.locked=localNote.isLocked();
 	    	
-	    	Program program=programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
-	    	noteDisplay.program=program.getName();
+	    	try
+	    	{
+		    	Program program=programDao.getProgram(Integer.parseInt(localNote.getProgram_no()));
+		    	noteDisplay.program=program.getName();
+	    	}
+	    	catch (Exception e)
+	    	{
+	    		log.error("Error, note is missing program_no, or program_no is invalid. ProgramNo="+localNote.getProgram_no());
+	    		noteDisplay.program="Error, not available.";
+	    	}
 	    	
 	    	Provider provider=providerDao.getProvider(localNote.getProviderNo());
 	    	noteDisplay.provider=provider.getFormattedName();
