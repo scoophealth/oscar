@@ -97,6 +97,7 @@ public class Billingmaster {
   private String oinAddress3;
   private String oinAddress4;
   private String oinPostalcode;
+  private int wcbId;
   
   private int paymentMethod;
 
@@ -1250,6 +1251,14 @@ public class Billingmaster {
           e.printStackTrace();
        }
        return retval;
+    }
+
+    public int getWcbId() {
+        return wcbId;
+    }
+
+    public void setWcbId(int wcbId) {
+        this.wcbId = wcbId;
     }
 
 }
