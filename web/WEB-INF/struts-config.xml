@@ -1828,6 +1828,10 @@
         <action path="/SendToPhr" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
             <forward name="loginPage" path="/phr/response.jsp"/>
         </action>
+        <action path="/demographic/viewPhrRecord" name="FrmForm" type="org.oscarehr.phr.web.PHRViewPatientRecord" parameter="method" scope="request">
+            <forward name="login" path="/phr/PHRLoginAndRedirect.jsp"/>
+            <forward name="phr" path="/phr/PHRRedirectToPhrForm.jsp"/>
+        </action>
 
 
         <action path="/admin/ManageClinic" name="clinicForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">

@@ -47,13 +47,12 @@
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<%@ page
-	import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"
-	errorPage="../appointment/errorpage.jsp"%>
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList, oscar.oscarReport.data.DemographicSets,oscar.log.*"%>
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
-<%@ page
-	import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+<%@ page import="org.springframework.web.context.*,org.springframework.web.context.support.*,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%>
+<%@ page import="oscar.OscarProperties"%>
+<%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -791,12 +790,19 @@ div.demographicWrapper {
 			<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
 				<phr:indivoRegistered provider="<%=curProvider_no%>"
 					demographic="<%=demographic_no%>">
+                                <tr class="Header">
+				     <td style="font-weight: bold">f<bean:message key="global.personalHealthRecord"/></td>
+                                </tr>
 					<tr>
 						<td><a
 							href="javascript: function myFunction() {return false; }"
-							ONCLICK="popupOscarRx(600,900,'../phr//PhrMessage.do?method=createMessage&providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"
+							ONCLICK="popupOscarRx(600,900,'../phr/PhrMessage.do?method=createMessage&providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"
 							title="myOscar"><bean:message key="demographic.demographiceditdemographic.msgSendMsgPHR"/></a></td>
 					</tr>
+                                        <tr>
+
+                                            <td><a href="" onclick="popup(600, 1000, '<%=request.getContextPath()%>/demographic/viewPhrRecord.do?demographic_no=<%=demographic_no%>', 'viewPatientPHR'); return false;">View PHR Record</a></td></tr>
+
 				</phr:indivoRegistered>
 			</oscar:oscarPropertiesCheck>
 			<% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>
