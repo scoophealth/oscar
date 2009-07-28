@@ -61,14 +61,13 @@ import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.util.SessionConstants;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ProgramManagerViewAction extends BaseAction {
@@ -615,7 +614,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		boolean isClientDependent = false;
 		boolean isClientFamilyHead = false;
 
-		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		for (int i = 0; reservedBeds != null && i < reservedBeds.length; i++) {
 			Bed reservedBed = reservedBeds[i];
@@ -653,7 +652,7 @@ public class ProgramManagerViewAction extends BaseAction {
 							for (int k = 0; familyList != null && k < familyList.size(); k++) {
 								bedDemographic.getId().setDemographicNo(familyList.get(k));
 
-								BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k), facilityId);
+								BedDemographic dependentBD = bedDemographicManager.getBedDemographicByDemographic(familyList.get(k), loggedInInfo.currentFacility.getId());
 
 								if (dependentBD != null) {
 									bedDemographic.getId().setBedId(dependentBD.getId().getBedId());
