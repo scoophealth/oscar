@@ -28,7 +28,7 @@
  */
 -->
 <%@ page
-	import="oscar.form.*, java.util.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.oscarDB.*,oscar.oscarBilling.ca.bc.MSP.*"%>
+	import="oscar.form.*, java.util.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.oscarDB.*,oscar.oscarBilling.ca.bc.MSP.*, oscar.oscarBilling.ca.bc.Teleplan.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -39,6 +39,11 @@
    String readOnlyParam = request.getAttribute("readonly")!=null?(String)request.getAttribute("readonly"):"";
    if(readOnlyParam != null && readOnlyParam.equals("true")){
       readonly = true;
+   }
+
+   boolean hideToBill = false;
+   if (request.getParameter("hideToBill") != null){
+      hideToBill = true;
    }
 
    oscar.oscarBilling.ca.bc.pageUtil.WCBForm form = (oscar.oscarBilling.ca.bc.pageUtil.WCBForm) request.getAttribute("WCBForm");
@@ -279,6 +284,16 @@ function isformNeeded(){
     document.WCBForm.w_emparea.value = w_emparea;
     document.WCBForm.w_empphone.value = w_empphone;
   }
+  
+  function billingFormActive(){
+     oscarLog("billingFormActive")
+      if(window.opener && window.opener.replaceWCB){
+          oscarLog("Calling on replaceWCB");
+        window.opener.replaceWCB('1');  
+      }
+      oscarLog("billingFormActiveEnd");
+  }
+  
 </script>
 </head>
 <body onLoad="isformNeeded()" bgproperties="fixed" topmargin="0"
@@ -287,8 +302,8 @@ function isformNeeded(){
 <html:form action="/billing/CA/BC/formwcb">
 	<html:hidden property="w_servicelocation" />
 
-	<!-- Params for billingBC.jsp -->
-
+	<!-- Params for billingBC.jsp `-->
+        <input type="hidden" name="method" value="save" />
 	<input type="hidden" name="billRegion" value="BC" />
 	<input type="hidden" name="billForm" value="GP" />
 	<input type="hidden" name="appointment_no" value="0" />
@@ -330,6 +345,15 @@ String fmtApptDate = fmt.format(new Date());
 	<table border="0" cellspacing="0" cellpadding="0" width="100%"
 		class="SmallerText">
 		<tr>
+                <%
+                if(request.getParameter("billingcode") != null){
+                    String billingcode = request.getParameter("billingcode");
+                    if (WCBCodes.getInstance().isFormNeeded(billingcode)){
+                        form.setFormNeeded("1");
+                    }
+                }              
+                %>
+                    
 			<td>Form Needed <html:checkbox value="1" property="formNeeded"
 				onclick="isformNeeded();" /></td>
 			<td colspan="1" valign="top" height="25" class="SmallerText"
@@ -619,12 +643,18 @@ String fmtApptDate = fmt.format(new Date());
 		</tr>
 		<tr>
 			<td colspan="2" align="center" valign="top" class="SectionHead">
-			<html:hidden property="doValidate" /> <input type="submit"
-				name="save" value="Save" />| <%if(readonly){%><input type="submit"
-				name="bill" value="Bill" />|<%}%> <%if(!readonly&&!"true".equals(fromBilling)){%><input
-				type="submit" name="saveandbill" value="Save and Bill" />|<%}%> <input
-				type="button" value="Cancel" onClick="window.close();" /> | <input
-				type="button" value="Print" onClick="window.print()" /></td>
+			    <html:hidden property="doValidate" />
+                            <%if(hideToBill){ %>
+                            <hidden name="hideToBill" value="true"/>
+                            <%}%>
+                            <input type="submit" name="save" value="Save" />| 
+                            <input type="submit" name="saveAndClose" value="Save and Close" />|  
+                            <%if( !hideToBill){%>
+                            <input type="submit" name="saveandbill" value="Save and Bill" />|
+                            <%}%> 
+                            <input type="button" value="Cancel" onClick="window.close();" /> | 
+                            <input type="button" value="Print" onClick="window.print()" />
+                        </td>
 		</tr>
 	</table>
 	<script language='javascript'>
