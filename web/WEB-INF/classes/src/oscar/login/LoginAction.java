@@ -50,7 +50,7 @@ import oscar.util.AlertTimer;
 public final class LoginAction extends DispatchAction {
 	
 	/**
-	 * This variable is only inteneded to be used by this class and the jsp which sets the selected facility.
+	 * This variable is only intended to be used by this class and the jsp which sets the selected facility.
 	 * This variable represents the queryString key used to pass the facility ID to this class.
 	 */
     public static final String SELECTED_FACILITY_ID="selectedFacilityId";
