@@ -112,10 +112,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
 		}
 
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
-				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null, facilityId,null);
+				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null, loggedInInfo.currentFacility.getId(), null);
 
 		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
 
@@ -129,7 +129,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
 		List genders = GenericIntakeSearchAction.getGenders();
@@ -211,7 +212,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Integer facilityId = loggedInInfo.currentFacility.getId();
 
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
