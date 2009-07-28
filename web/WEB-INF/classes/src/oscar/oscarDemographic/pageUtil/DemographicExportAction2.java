@@ -58,7 +58,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.xmlbeans.GDateBuilder;
 import org.apache.xmlbeans.XmlCalendar;
-import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -811,8 +810,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		// REPORTS RECEIVED
-		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo,currentFacilityId);
+		ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
 
 		if (!edoc_list.isEmpty()) {
 		    for (int j=0; j<edoc_list.size(); j++) {

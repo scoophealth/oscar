@@ -62,7 +62,6 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
-import org.oscarehr.util.SessionConstants;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -1311,8 +1310,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 	    if (exReportsReceived) {
 		// REPORTS RECEIVED
-		Integer currentFacilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		ArrayList edoc_list = new EDocUtil().listDemoDocs(this.demographicNo,currentFacilityId);
+		ArrayList edoc_list = new EDocUtil().listDemoDocs(this.demographicNo);
 		
 		if (!edoc_list.isEmpty()) {
 		    for (int j=0; j<edoc_list.size(); j++) {

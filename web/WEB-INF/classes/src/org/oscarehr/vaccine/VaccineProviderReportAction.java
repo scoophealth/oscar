@@ -13,12 +13,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.er.ReceptionistReportAction;
+import org.oscarehr.util.LoggedInInfo;
 
 public class VaccineProviderReportAction extends BaseAction {
 	private static Log log = LogFactory.getLog(ReceptionistReportAction.class);
@@ -62,7 +63,7 @@ public class VaccineProviderReportAction extends BaseAction {
 	public ActionForward show_report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String clientId = request.getParameter("id");
 			
-        Integer facilityId=(Integer)request.getSession().getAttribute("currentFacilityId");
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
         
 		Demographic client = clientManager.getClientByDemographicNo(clientId);
 		
@@ -85,7 +86,7 @@ public class VaccineProviderReportAction extends BaseAction {
 		//List allergies = this.caseManagementManager.getAllergies(clientId);
 		//request.setAttribute("allergies",allergies);
 		
-		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId), facilityId);
+		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId), loggedInInfo.currentFacility.getId());
 		Map<String,String> answerMap = quickIntake.getAnswerKeyValues();
 		String allergies = answerMap.get("Allergies");
 		request.setAttribute("allergies", allergies);

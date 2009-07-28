@@ -38,6 +38,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.MyDateFormat;
@@ -425,7 +426,7 @@ public class EDocUtil extends SqlUtilBaseS {
         return results;
     }
 
-    public static ArrayList<EDoc> listDemoDocs(String moduleid, Integer currentFacilityId) {
+    public static ArrayList<EDoc> listDemoDocs(String moduleid) {
         String sql = "SELECT d.*, p.first_name, p.last_name FROM document d, provider p, ctl_document c " + "WHERE d.doccreator=p.provider_no AND d.document_no = c.document_no " + "AND c.module='demographic' AND c.module_id=" + moduleid;
 
         log.debug("sql list: " + sql);
