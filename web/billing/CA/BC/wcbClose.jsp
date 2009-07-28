@@ -1,4 +1,4 @@
-<%
+v<%
   	if (session.getAttribute("user") == null){
 		response.sendRedirect("../logout.jsp");
 	}
@@ -15,16 +15,17 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 <html:base />
 <title>OSCAR BC Billing - WCB</title>
 <script language="JavaScript">
   function billingFormActive(){
-     console.log("billingFormActive")
+     oscarLog("billingFormActive")
       if(window.opener && window.opener.replaceWCB){
-          console.log("Calling on replaceWCB");
+          oscarLog("Calling on replaceWCB");
         window.opener.replaceWCB('<%=request.getAttribute("WCBFormId")%>');  
       }
-      console.log("billingFormActiveEnd");
+      oscarLog("billingFormActiveEnd");
       window.close();
   }  
 </script>
