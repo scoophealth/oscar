@@ -374,8 +374,7 @@ public class ClientManagerAction extends BaseAction {
 		ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
 		int clientId = Integer.parseInt(request.getParameter("id"));
-		String providerId = getProviderNo(request);
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		Program p = (Program) clientForm.get("program");
 		int programId = p.getId();
@@ -383,9 +382,9 @@ public class ClientManagerAction extends BaseAction {
 		if (programId != 0) {
 			referral.setClientId((long) clientId);
 			referral.setProgramId((long) programId);
-			referral.setProviderNo(providerId);
+			referral.setProviderNo(loggedInInfo.loggedInProvider.getProviderNo());
 
-			referral.setFacilityId(facilityId);
+			referral.setFacilityId(loggedInInfo.currentFacility.getId());
 
 			referral.setReferralDate(new Date());
 			referral.setProgramType(p.getType());
@@ -401,7 +400,7 @@ public class ClientManagerAction extends BaseAction {
 				remoteReferral.setPresentingProblem(referral.getPresentProblems());
 				remoteReferral.setReasonForReferral(referral.getNotes());
 				remoteReferral.setSourceCaisiDemographicId(clientId);
-				remoteReferral.setSourceCaisiProviderId(providerId);
+				remoteReferral.setSourceCaisiProviderId(loggedInInfo.loggedInProvider.getProviderNo());
 
 				ReferralWs referralWs = CaisiIntegratorManager.getReferralWs();
 				referralWs.makeReferral(remoteReferral);
@@ -1162,10 +1161,10 @@ public class ClientManagerAction extends BaseAction {
 			boolean doRefer = true;
 			ProgramProvider program = (ProgramProvider) programDomain.get(0);
 			// refer/admin client to service program associated with this user
-			Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+			LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 			
 			ClientReferral referral = new ClientReferral();
-			referral.setFacilityId(facilityId);
+			referral.setFacilityId(loggedInInfo.currentFacility.getId());
 			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(program.getProgramId().longValue());
@@ -1194,11 +1193,8 @@ public class ClientManagerAction extends BaseAction {
 				doRefer = false;
 			}
 			if (doRefer) {
-				/*
-				 * Fix for 2390337 to populate FacilityId with current facility from user's session for receptionists
-				 */
 				if (referral.getFacilityId() == null) {
-					referral.setFacilityId((Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID));
+					referral.setFacilityId(loggedInInfo.currentFacility.getId());
 				}
 				clientManager.saveClientReferral(referral);
 			}
@@ -1293,9 +1289,8 @@ public class ClientManagerAction extends BaseAction {
 	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Integer facilityId = loggedInInfo.currentFacility.getId();
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
-
-		Integer facilityId = (Integer) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
 
 		request.setAttribute("id", demographicNo);
 		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
