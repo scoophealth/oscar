@@ -84,7 +84,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
-import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -665,7 +664,7 @@ public class ClientManagerAction extends BaseAction {
 		bedDemographic.setReservationStart(today);
 		bedDemographic.setRoomId(Integer.valueOf(roomId));
 
-		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		Integer bedId = bedDemographic.getBedId();
 		Integer demographicNo = bedDemographic.getId().getDemographicNo();
@@ -710,7 +709,7 @@ public class ClientManagerAction extends BaseAction {
 
 		} else {// check whether client is familyHead or independent client
 			// create roomDemographic from bedDemographic
-			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo, facilityId);
+			roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(demographicNo, loggedInInfo.currentFacility.getId());
 			if (roomDemographic == null) {// demographicNo (familyHead or independent) has no record in 'room_demographic'
 				roomDemographic = RoomDemographic.create(demographicNo, bedDemographic.getProviderNo());
 			}
@@ -874,7 +873,7 @@ public class ClientManagerAction extends BaseAction {
 						getRoomDemographicManager().saveRoomDemographic(roomDemographic);
 
 						if (isBedSelected) {
-							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), facilityId);
+							BedDemographic bdHeadDelete = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.currentFacility.getId());
 							if (bdHeadDelete != null) {
 								bedDemographicManager.deleteBedDemographic(bdHeadDelete);
 							}
@@ -894,13 +893,13 @@ public class ClientManagerAction extends BaseAction {
 							clientId = new Integer(((JointAdmission) dependentList.get(i)).getClientId().intValue());
 
 							if (clientId != null) {
-								roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(clientId, facilityId);
+								roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(clientId, loggedInInfo.currentFacility.getId());
 								bedDemographic.getId().setDemographicNo(clientId); // change to dependent member
 
 								// assigning both room & bed (different ones) for all dependents
 								if (isBedSelected && correctedAvailableBedIdList.size() >= dependentList.size()) {
 
-									BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), facilityId);
+									BedDemographic bdDependent = bedDemographicManager.getBedDemographicByDemographic(bedDemographic.getId().getDemographicNo(), loggedInInfo.currentFacility.getId());
 									bedDemographic.getId().setBedId(correctedAvailableBedIdList.get(i));
 
 									if (roomDemographic == null) {

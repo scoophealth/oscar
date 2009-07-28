@@ -740,7 +740,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		Date today = new Date();
 		// List<Integer> familyList = new ArrayList<Integer>();
 
-		Integer facilityId = (Integer) request.getSession().getAttribute("currentFacilityId");
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 		String switchBed1 = formBean.getSwitchBed1();
 		String switchBed2 = formBean.getSwitchBed2();
@@ -816,8 +816,8 @@ public class ProgramManagerViewAction extends BaseAction {
 			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent1 = " + isFamilyDependent1);
 			// System.out.println("ProgramManagerViewAction.switch_beds(): isFamilyDependent2 = " + isFamilyDependent2);
 
-			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, facilityId);
-			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, facilityId);
+			RoomDemographic roomDemographic1 = roomDemographicManager.getRoomDemographicByDemographic(client1, loggedInInfo.currentFacility.getId());
+			RoomDemographic roomDemographic2 = roomDemographicManager.getRoomDemographicByDemographic(client2, loggedInInfo.currentFacility.getId());
 
 			if (roomDemographic1 == null || roomDemographic2 == null) {
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.check.error"));
