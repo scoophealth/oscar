@@ -476,58 +476,65 @@ function popFeeItemList(form,field){
 				</tr>
 				<tr>
 
-					<td>
-					<%String status = form.getStatus()!=null?form.getStatus():"";
+
+              <td colspan="2">
+              <%String status = form.getStatus()!=null?form.getStatus():"";
               String statusCodes[] = {"O","P","N","B","X","T","C","D"};
               request.setAttribute("codes",statusCodes);
-              %> <!-- includes the Billing Type Drop Down List --> <jsp:include
-						flush="false" page="billType_frag.jsp">
-						<jsp:param name="BillType" value="<%=status%>" />
-					</jsp:include></td>
-					<td></td>
-				</tr>
-			</table>
-			</td>
-			<td width="50%" align="left" valign="top">
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td>
-					<table width="100%">
-						<tr>
-							<td class="FormLabel">Disabled from Work:</td>
-							<td><html:select name="w_work" value="<%=form.getW_work()%>"
-								property="w_work">
-								<html:option value="Y">Yes</html:option>
-								<html:option value="N">No</html:option>
-							</html:select></td>
-						</tr>
-						<tr>
-							<td class="FormLabel">Date Of Injury:</td>
-							<td><html:text readonly="true" property="w_doi"
-								value="<%=form.getW_doi()%>" styleId="w_doi" /> <a id="hlIDate">Date</a>
-							</td>
-						</tr>
-						<tr>
-							<td class="FormLabel">Service Date:</td>
-							<td><html:text readonly="true" property="w_servicedate"
-								value="<%=form.getW_servicedate()%>" styleId="w_servicedate" />
-							<a id="hlSDate">Date</a></td>
-						</tr>
-						<tr>
-							<td class="FormLabel">Work Date:</td>
-							<td><html:text readonly="true" property="w_workdate"
-								value="<%=form.getW_workdate()%>" styleId="w_workdate" /> <a
-								id="hlWDate">Date</a></td>
-						</tr>
-						<tr>
-							<td class="FormLabel">Estimate:</td>
-							<td><html:select name="w_estimate"
-								value="<%=form.getW_estimate()%>" property="w_estimate">
-								<html:option value="0">At Work</html:option>
-								<html:option value="1">1-6 days</html:option>
-								<html:option value="2">7-13 days</html:option>
-								<html:option value="3">14-20 days</html:option>
-								<html:option value="9">                          &gt;
+
+              %>
+                 <!-- includes the Billing Type Drop Down List -->
+                 <jsp:include flush="false" page="billType_frag.jsp">
+                    <jsp:param name="BillType" value="<%=status%>"/>                 
+                 </jsp:include>              
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td width="50%" align="left" valign="top">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <table width="100%">
+                  <tr>
+                    <td class="FormLabel">Disabled from Work:</td>
+                    <td>
+                      <html:select name="w_work" value="<%=form.getW_work()%>" property="w_work">
+                        <html:option value="Y">Yes</html:option>
+                        <html:option value="N">No</html:option>
+                      </html:select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="FormLabel">Date Of Injury:</td>
+                    <td>
+                      <html:text readonly="true" property="w_doi" value="<%=form.getW_doi()%>" styleId="w_doi"/>
+                      <a id="hlIDate">Date</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="FormLabel">Service Date:</td>
+                    <td>
+                      <html:text readonly="true" property="w_servicedate" value="<%=form.getW_servicedate()%>" styleId="w_servicedate"/>
+                      <a id="hlSDate">Date</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="FormLabel">Work Date:</td>
+                    <td>
+                      <html:text readonly="true" property="w_workdate" value="<%=form.getW_workdate()%>" styleId="w_workdate"/>
+                      <a id="hlWDate">Date</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="FormLabel">Estimate:</td>
+                    <td>
+                      <html:select name="w_estimate" value="<%=form.getW_estimate()%>" property="w_estimate">
+                        <html:option value="0">At Work</html:option>
+                        <html:option value="1">1-6 days</html:option>
+                        <html:option value="2">7-13 days</html:option>
+                        <html:option value="3">14-20 days</html:option>
+                        <html:option value="9">                          &gt;
                           20 days
 </html:option>
 							</html:select></td>
