@@ -35,6 +35,7 @@ public class ReportFactory {
     public static final String UnusedMinutes = "unusedminutes";
     public static final String ThirdAppt = "thirdAppt";
     public static final String INR = "inr";
+    public static final String CONTINUITY = "continuity";
     
     /** Creates a new instance of ReportFactory */
     public ReportFactory() {
@@ -53,6 +54,9 @@ public class ReportFactory {
         }
         else if( type.equalsIgnoreCase(INR) ) {
             return new INRReporter();
+        }
+        else if( type.equalsIgnoreCase(CONTINUITY)) {
+            return new DepressionContinuityReporter();
         }
         else
             return null;
