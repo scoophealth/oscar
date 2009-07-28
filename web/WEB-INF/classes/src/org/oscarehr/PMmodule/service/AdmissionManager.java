@@ -44,6 +44,7 @@ import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -494,11 +495,11 @@ public class AdmissionManager {
         this.roomDemographicManager = roomDemographicManager;
     }
 
-    public boolean isActiveInFacility(Integer facilityId, int demographicId)
+    public boolean isActiveInCurrentFacility(int demographicId)
     {
-        if (facilityId==null) return(true);
+        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
         
-        List<Admission> results=getCurrentAdmissionsByFacility(demographicId, facilityId);
+        List<Admission> results=getCurrentAdmissionsByFacility(demographicId, loggedInInfo.currentFacility.getId());
         if (results!=null && results.size()>0) return(true);
         
         return(false);

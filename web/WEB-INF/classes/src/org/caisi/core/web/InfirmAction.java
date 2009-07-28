@@ -38,6 +38,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 
 import oscar.OscarProperties;
@@ -82,8 +83,9 @@ public class InfirmAction extends BaseAction
 		Integer facilityId=null;
 		
 		// facility filtering
-        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {         
-            facilityId = (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+        if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {   
+        	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+            facilityId = loggedInInfo.currentFacility.getId();
         }        
 
 		programBean=manager.getProgramBeans(providerNo, facilityId);		

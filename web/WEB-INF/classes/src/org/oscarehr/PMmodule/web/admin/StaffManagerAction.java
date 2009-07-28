@@ -43,7 +43,6 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.PMmodule.service.LogManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
@@ -53,7 +52,8 @@ import org.oscarehr.PMmodule.web.formbean.StaffEditProgramContainer;
 import org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.util.SessionConstants;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 
 public class StaffManagerAction extends BaseAction {
 	private static Log log = LogFactory.getLog(StaffManagerAction.class);
@@ -109,8 +109,8 @@ public class StaffManagerAction extends BaseAction {
 		}
 		request.setAttribute("programs",sortProgramProviders(pp));
 		
-		Integer facilityId=(Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
-		List<Program> allPrograms = programManager.getCommunityPrograms(facilityId);
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		List<Program> allPrograms = programManager.getCommunityPrograms(loggedInInfo.currentFacility.getId());
 		List<StaffEditProgramContainer> allProgramsInContainer = new ArrayList<StaffEditProgramContainer>();
 		for(Program p : allPrograms) {
 			StaffEditProgramContainer container = new StaffEditProgramContainer(p,programManager.getProgramTeams(String.valueOf(p.getId())));

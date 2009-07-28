@@ -9,10 +9,10 @@
 	// if not close window
 
 	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
-	Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 	
 	IntegratorConsentComplexExitInterviewDao integratorConsentComplexExitInterviewDao=(IntegratorConsentComplexExitInterviewDao)SpringUtils.getBean("integratorConsentComplexExitInterviewDao");
-	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(loggedInInfo.currentFacility.getId(),demographicId);
 	IntegratorConsentComplexExitInterview integratorConsentComplexExitInterview=integratorConsentComplexExitInterviewDao.find(pk);
 	if (integratorConsentComplexExitInterview==null)
 	{
@@ -21,10 +21,10 @@
 	else
 	{
 		%>
-<script>
+			<script>
 				window.opener.location=window.opener.location;
 				window.close();
 			</script>
-<%
+		<%
 	}
 %>

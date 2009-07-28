@@ -26,6 +26,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.service.StreetHealthReportManager;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SessionConstants;
 
 /**
@@ -405,12 +406,12 @@ public class StreetHealthIntakeReportAction extends BaseAction {
         request.setAttribute("dates",dates);
     
         //get current facility Id
-        int facilityId = ((Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID)).intValue();
+        LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
               
         //for each cohort, extract the values from the intakes
         for(int x=0;x<dates.size();x++) {
         	DateRange dr = dates.get(x);       
-        	List cohort = mgr.getCohort(dr.getStartDate(), dr.getEndDate(), facilityId);
+        	List cohort = mgr.getCohort(dr.getStartDate(), dr.getEndDate(), loggedInInfo.currentFacility.getId());
         	if (cohort != null) {          
         		getCohortCount(results,cohort,x);
             }

@@ -1,20 +1,19 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html"%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page
-	import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
+<%@page import="org.oscarehr.common.dao.IntegratorConsentComplexExitInterviewDao"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page
-	import="org.oscarehr.common.model.IntegratorConsentComplexExitInterview"%>
+<%@page import="org.oscarehr.common.model.IntegratorConsentComplexExitInterview"%>
 <%@page import="org.oscarehr.common.model.FacilityDemographicPrimaryKey"%>
-<%@page import="org.apache.commons.lang.StringUtils"%><br />
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%><br />
 <%
 	int demographicId=Integer.parseInt(request.getParameter("demographicId"));
-	Integer facilityId= (Integer)request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY_ID);
+	LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
 
 	IntegratorConsentComplexExitInterviewDao integratorConsentComplexExitInterviewDao=(IntegratorConsentComplexExitInterviewDao)SpringUtils.getBean("integratorConsentComplexExitInterviewDao");
 	IntegratorConsentComplexExitInterview integratorConsentComplexExitInterview=new IntegratorConsentComplexExitInterview();
 	
-	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(facilityId,demographicId);
+	FacilityDemographicPrimaryKey pk=new FacilityDemographicPrimaryKey(loggedInInfo.currentFacility.getId(),demographicId);
 	integratorConsentComplexExitInterview.setId(pk);
 	
 	String temp=null;
