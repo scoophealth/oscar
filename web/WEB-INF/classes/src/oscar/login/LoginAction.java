@@ -48,6 +48,13 @@ import oscar.oscarSecurity.CRHelper;
 import oscar.util.AlertTimer;
 
 public final class LoginAction extends DispatchAction {
+	
+	/**
+	 * This variable is only inteneded to be used by this class and the jsp which sets the selected facility.
+	 * This variable represents the queryString key used to pass the facility ID to this class.
+	 */
+    public static final String SELECTED_FACILITY_ID="selectedFacilityId";
+
     private static final Logger _logger = Logger.getLogger(LoginAction.class);
     private static final String LOG_PRE = "Login!@#$: ";
 
@@ -62,9 +69,8 @@ public final class LoginAction extends DispatchAction {
         _logger.debug("nextPage: "+nextPage);
         if (nextPage!=null) {
             // set current facility
-            String facilityIdString=request.getParameter(SessionConstants.CURRENT_FACILITY_ID);
+            String facilityIdString=request.getParameter(SELECTED_FACILITY_ID);
             Facility facility=facilityDao.find(Integer.parseInt(facilityIdString));
-            request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, Integer.parseInt(facilityIdString));
             request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY, facility);
             String username=(String)request.getSession().getAttribute("user");
             LogAction.addLog(username, LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIdString, ip);
@@ -222,7 +228,6 @@ public final class LoginAction extends DispatchAction {
                 // set current facility
                 Facility facility=facilityDao.find(facilityIds.get(0));
                 request.getSession().setAttribute("currentFacility", facility);
-                request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, facility.getId());
                 LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+facilityIds.get(0), ip);
             }
             else {
@@ -233,7 +238,6 @@ public final class LoginAction extends DispatchAction {
         			ProviderDao.addProviderToFacility(providerNo, first_id);
         			Facility facility=facilityDao.find(first_id);
         			request.getSession().setAttribute("currentFacility", facility);
-        			request.getSession().setAttribute(SessionConstants.CURRENT_FACILITY_ID, first_id);
         			LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "facilityId="+first_id, ip);
             	}
             }
