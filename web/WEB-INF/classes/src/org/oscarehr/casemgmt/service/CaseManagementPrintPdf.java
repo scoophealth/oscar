@@ -258,7 +258,7 @@ public class CaseManagementPrintPdf {
       
         for( int idx = 0; idx < headings.length; ++idx ) {
             p = new Paragraph();
-            p.setAlignment(Paragraph.ALIGN_CENTER);
+            p.setAlignment(Paragraph.ALIGN_LEFT);
             phrase = new Phrase(LEADING, headings[idx], obsfont);                                         
             p.add(phrase);
             document.add(p);
