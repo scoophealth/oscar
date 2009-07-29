@@ -192,10 +192,6 @@ public class CaseManagementPrintPdf {
         p.add(phrase);
         document.add(p);
         
-        Font archived = new Font(bf, FONTSIZE, Font.STRIKETHRU, new Color(255,0,0));
-        Font currentLessMth = new Font(bf, FONTSIZE, Font.BOLD, new Color(255, 165, 0));
-        Font current = new Font(bf, FONTSIZE, Font.NORMAL, new Color(255,0,0));
-        Font notCurrent = new Font(bf, FONTSIZE, Font.STRIKETHRU);
         Font normal = new Font(bf, FONTSIZE, Font.NORMAL);
         
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
@@ -208,23 +204,14 @@ public class CaseManagementPrintPdf {
             oscar.oscarRx.data.RxPrescriptionData.Prescription drug = arr[idx];
             p = new Paragraph();
             p.setAlignment(Paragraph.ALIGN_LEFT);
-            if(drug.isCurrent() == true && drug.isArchived() ){
-                curFont = archived;
-            }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
-                curFont = currentLessMth;
-            }else if (drug.isCurrent() && !drug.isArchived())  {                                        
-                curFont = current;
-            }else if (!drug.isCurrent() && drug.isArchived()){
-                curFont = notCurrent;
-            }
-            else
+            if(drug.isCurrent() && !drug.isArchived() ){
                 curFont = normal;
-            
-            phrase = new Phrase(LEADING, "", curFont);
-            phrase.add(formatter.format(drug.getRxDate()) + " - ");
-            phrase.add(drug.getFullOutLine().replaceAll(";", " "));
-            p.add(phrase);
-            document.add(p);
+                phrase = new Phrase(LEADING, "", curFont);
+                phrase.add(formatter.format(drug.getRxDate()) + " - ");
+                phrase.add(drug.getFullOutLine().replaceAll(";", " "));
+                p.add(phrase);
+                document.add(p);
+            }
         }
         
     }
