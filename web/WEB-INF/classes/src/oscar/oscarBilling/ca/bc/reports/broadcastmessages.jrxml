@@ -25,7 +25,7 @@
 	<queryString><![CDATA[select t_practitionerno,t_linecode,t_message
 FROM teleplanS25
 where s21_id=$P{s21id}
-order by t_linecode]]></queryString>
+order by s25_id]]></queryString>
 	<field name="t_linecode" class="java.lang.String"/>
 	<field name="t_message" class="java.lang.String"/>
 	<field name="t_practitionerno" class="java.lang.String"/>
