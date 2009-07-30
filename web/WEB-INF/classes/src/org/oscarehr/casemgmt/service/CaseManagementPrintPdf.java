@@ -216,7 +216,7 @@ public class CaseManagementPrintPdf {
                 document.add(p);
             }
         }
-      
+
         if (cpp != null ){
             List<CaseManagementNote>notes = cpp;
             if (notes != null && notes.size() > 0){
@@ -367,11 +367,11 @@ public class CaseManagementPrintPdf {
         for( int idx = 0; idx < notes.size(); ++idx ) {
             note = notes.get(idx);        
             p = new Paragraph();
-            p.setSpacingBefore(font.leading(LINESPACING)*2f);
+            //p.setSpacingBefore(font.leading(LINESPACING)*2f);
             phrase = new Phrase(LEADING, "", font);              
             chunk = new Chunk("Documentation Date: " + formatter.format(note.getObservation_date()) + "\n", obsfont);
             phrase.add(chunk);            
-            phrase.add(note.getNote() + "\n");            
+            phrase.add(note.getNote() + "\n\n");
             p.add(phrase);
             document.add(p);
         }                
