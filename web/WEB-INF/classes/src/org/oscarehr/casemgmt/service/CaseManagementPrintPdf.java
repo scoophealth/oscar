@@ -174,8 +174,11 @@ public class CaseManagementPrintPdf {
         cb.stroke();    
         
     }
-        
-    public void printRx(String demoNo) throws DocumentException {
+
+    public void printRx(String demoNo) throws IOException, DocumentException {
+        printRx(demoNo,null);
+    }
+    public void printRx(String demoNo,List<CaseManagementNote> cpp) throws IOException, DocumentException {
         if( demoNo == null )
             return;
         
@@ -213,9 +216,22 @@ public class CaseManagementPrintPdf {
                 document.add(p);
             }
         }
+      
+        if (cpp != null ){
+            List<CaseManagementNote>notes = cpp;
+            if (notes != null && notes.size() > 0){
+                p = new Paragraph();
+                p.setAlignment(Paragraph.ALIGN_LEFT);
+                phrase = new Phrase(LEADING, "\nOther Meds\n", obsfont); //TODO:Needs to be i18n
+                p.add(phrase);
+                document.add(p);
+                newPage = false;
+                this.printNotes(notes);
+            }
         
+        }        
     }
-    
+
     public void printCPP(HashMap<String,List<CaseManagementNote> >cpp) throws IOException, DocumentException {
         if( cpp == null )
             return;
