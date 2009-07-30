@@ -2116,6 +2116,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
          return null;
      }
 
+    public String[] getIssueIds(List<Issue> issues) {
+        String[] issueIds = new String[issues.size()];
+        int idx = 0;
+        for (Issue i : issues) {
+            issueIds[idx] = String.valueOf(i.getId());
+            ++idx;
+        }
+        return issueIds;
+    }
+
+
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String ids = request.getParameter("notes2print");
 
@@ -2147,19 +2158,22 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders","FamHistory","RiskFactors"};
             for( int j = 0; j < issueCodes.length; ++j ) {
                 List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, issueCodes[j]);
-                String[] issueIds = new String[issues.size()];            
-                int idx = 0;
-                for( Issue i: issues) {
-                    issueIds[idx] = String.valueOf(i.getId());
-                    ++idx;
-                }
+                String[] issueIds =  getIssueIds(issues);//= new String[issues.size()];
                 issueNotes = caseManagementMgr.getNotes(demono, issueIds);
                 cpp.put(issueCodes[j],issueNotes);
             }
         }
         String demoNo = null;
+        List<CaseManagementNote> othermeds = null;
         if (request.getParameter("printRx").equalsIgnoreCase("true")) {
             demoNo = demono;
+            if(cpp == null){
+                List<Issue> issues = caseManagementMgr.getIssueInfoByCode(providerNo, "OMeds");
+                String[] issueIds = getIssueIds(issues);// new String[issues.size()];    
+                othermeds = caseManagementMgr.getNotes(demono, issueIds);
+            }else{
+                othermeds =cpp.get("OMeds");
+            }
         }
 
         response.setContentType("application/pdf"); // octet-stream
@@ -2168,7 +2182,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, response);
         printer.printDocHeaderFooter();
         printer.printCPP(cpp);
-        printer.printRx(demoNo);
+        printer.printRx(demoNo,othermeds);
         printer.printNotes(notes);
         printer.finish();
 
