@@ -84,7 +84,8 @@ public class ImageRenderingServlet extends HttpServlet {
 	 */
 	private static final void renderImage(HttpServletResponse response, byte[] image, String imageType) throws IOException {
 		response.setContentType("image/" + imageType);
-		response.setContentLength(image.length);
+		if(image !=null)
+			response.setContentLength(image.length);
 		BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
 		bos.write(image);
 		bos.flush();

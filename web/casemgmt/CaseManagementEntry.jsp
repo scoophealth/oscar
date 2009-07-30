@@ -359,7 +359,7 @@ if (pId==null) pId="";
 					<nested:text indexed="true" name="issueCheckList" property="issueDisplay.role" disabled="<%=disabled%>"/>
 				</td>
 				<td>
-<% if (cbb.getIssueDisplay().location.equals("local")){ %>
+<% if (cbb.getIssueDisplay().location!=null && cbb.getIssueDisplay().location.equals("local")){ %>
 			<security:oscarSec roleName="<%=roleName$%>" objectName="_casemgmt.issues" rights="u">
 				<nested:equal name="issueCheckList" property="used"
 					value="false">

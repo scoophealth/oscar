@@ -1007,7 +1007,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setRevision(String.valueOf(revision));
 
         String observationDate = cform.getObservation_date();
-        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources_en");
         if (observationDate != null && !observationDate.equals("")) {                      
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
             Date dateObserve = formatter.parse(observationDate);
@@ -1064,7 +1064,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
     		CheckBoxBean checkBoxBean = checkedlist[i];
     		IssueDisplay issueDisplay=checkBoxBean.getIssueDisplay();
     		
-        	if (issueDisplay.resolved.equals("unresolved")) 
+        	if (issueDisplay.resolved!=null && issueDisplay.resolved.equals("unresolved")) 
     		{
         		ongoing = ongoing + issueDisplay.getDescription() + "\n";
     		}
