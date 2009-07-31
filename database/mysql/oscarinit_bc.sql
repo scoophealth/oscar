@@ -92,7 +92,9 @@ CREATE TABLE billingmaster (
   oin_address4 varchar(25) default '',
   oin_postalcode varchar(6) default '',
   paymentMethod int(11) default '6',
-  PRIMARY KEY  (billingmaster_no)
+  wcb_id int(10) default NULL,
+  PRIMARY KEY  (billingmaster_no),
+  KEY billingmaster_wcb_id (wcb_id)
 ) TYPE=MyISAM;
 
 
