@@ -39,9 +39,12 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.oscarehr.common.dao.DemographicDao;
 import oscar.Misc;
 import oscar.entities.Billingmaster;
+import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
+import oscar.oscarBilling.ca.bc.Teleplan.WCBTeleplanSubmission;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarProvider.data.ProviderData;
@@ -65,6 +68,8 @@ public class TeleplanFileWriter {
     ArrayList logList = null;
     int totalClaims = 0;
     
+    private BillingmasterDAO billingmasterDAO = null;
+    private DemographicDao demographicDAO = null;
     
     public CheckBillingData checkData = new CheckBillingData();
     Misc misc = new Misc();
@@ -151,7 +156,6 @@ public class TeleplanFileWriter {
             }
         }
         
-        //for (int p = 0; p < providers.length; p++){
         for(String providerBillingNumber: providerBillingNumbers){    
            appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providerBillingNumber,new Date()));  
            log.debug("For Provider  :"+providerBillingNumber);
@@ -174,9 +178,13 @@ public class TeleplanFileWriter {
                 }else if(billType.equals("WCB")){
                     //TODO:Should pass dataCenterId to WCB but it looks it up in the properties currently, fix in the future
                     log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " WCB BILL");
-                    c = createWCB(billing_no);            
+                    c = createWCB2(billing_no);            
                 }
                 
+                if(c == null){
+                    log.error("Billing # "+billing_no+ " has no associated WCB record" );
+                    continue;  // Not sure if this is great but at least it contines
+                }
                 
                 providerClaimsCount += c.getNumClaims();
                 providerTotals = providerTotals.add(c.getClaimTotal());
@@ -206,6 +214,88 @@ public class TeleplanFileWriter {
                                                                 logList,
                                                                 totalClaims);
         return submission;
+    }
+    
+    private Claims createWCB2(String billing_no){
+        
+        
+            //setMasDAO(new BillingmasterDAO());
+           //log.debug
+            System.out.println("creating WCB teleplan record for claim "+billing_no);
+           List billMasterList = billingmasterDAO.getBillingMasterByBillingNo(billing_no);
+           Billingmaster bm = (Billingmaster) billMasterList.get(0);
+           
+           
+           //Billingmaster bm = billingmasterDAO.getBillingMasterByBillingMasterNo(billing_no);
+           
+            
+           WCB wcbForm = billingmasterDAO.getWCBForm(""+bm.getWcbId());
+               
+           System.out.println("BM "+bm+" WCB "+wcbForm + " for "+billing_no);
+           
+           WCBTeleplanSubmission wcbSub = new WCBTeleplanSubmission();
+           wcbSub.setDemographicDao(demographicDAO);
+           //WcbSb sb = new WcbSb(billing_no);
+           appendToHTML(wcbSub.getHtmlLine(wcbForm,bm)); //sb.getHtmlLine());
+           appendToHTML(wcbSub.validate(wcbForm,bm)); //sb.validate());
+           //TODO: DOES THIS DO ANYTHING appendToHTML(checkData.printWarningMsg(""))
+           
+           Claims claims = new Claims();
+           claims.increaseClaims();
+           
+           claims.addToTotal(bm.getBillingAmountBigDecimal());        
+           
+           
+           System.out.println("FORM NEEDED ?"+wcbSub.isFormNeeded(bm ));
+           if(wcbSub.isFormNeeded(bm)){
+               
+                String logNo = getNextSequenceNumber();
+                String lines = wcbSub.Line1(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line2(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line3(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line4(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line5(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line6(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line7(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = wcbSub.Line8(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+           }else{
+                String logNo = getNextSequenceNumber();
+                String lines = wcbSub.Line9(String.valueOf(logNo),bm,wcbForm);
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+           }
+           addToMarkBillingmasterList(""+bm.getBillingmasterNo());
+           return claims;
     }
     
     
@@ -366,62 +456,71 @@ public class TeleplanFileWriter {
     
     public String getClaimDetailRecord(Billingmaster bm ,String logNo) {
         StringBuffer dLine = new StringBuffer(); 
-            dLine.append(misc.forwardSpace(bm.getClaimcode(),3));                       //p00   3
-            dLine.append(misc.forwardSpace(bm.getDatacenter(),5));                      //p02   5
-            dLine.append(misc.forwardZero(logNo,7));                                    //p04   7
-            dLine.append(misc.forwardSpace(bm.getPayeeNo(),5));                         //p06   5
-            dLine.append(misc.forwardSpace(bm.getPractitionerNo(),5));                  //p08   5
-            dLine.append(misc.forwardZero(bm.getPhn(),10));                             //p14  10
-            dLine.append(misc.forwardSpace(bm.getNameVerify(),4));                      //p16   4
-            dLine.append(misc.forwardSpace(bm.getDependentNum(),2));                    //p18   2
-            dLine.append(misc.forwardZero(roundUp(bm.getBillingUnit()),3));             //p20   3
-            dLine.append(misc.forwardZero(bm.getClarificationCode() ,2));               //p22   2
-            dLine.append(misc.forwardSpace(bm.getAnatomicalArea(), 2));                 //p23   2
-            dLine.append(misc.forwardSpace(bm.getAfterHour(),1));                       //p24   1
-            dLine.append(misc.forwardZero(bm.getNewProgram(),2));                       //p25   2
-            dLine.append(misc.forwardZero(bm.getBillingCode(),5));                      //p26   5
-            dLine.append(misc.moneyFormatPaddedZeroNoDecimal(bm.getBillAmount(),7));    //p27   7
-            dLine.append(misc.forwardZero(bm.getPaymentMode(), 1));                     //p28   1
-            dLine.append(misc.forwardSpace(bm.getServiceDate(), 8));                    //p30   8
-            dLine.append(misc.forwardZero(bm.getServiceToDay(),2));                     //p32   2
-            dLine.append(misc.forwardSpace(bm.getSubmissionCode(), 1));                 //p34   1
-            dLine.append(misc.space(1));                                                //p35   1
-            dLine.append(misc.backwardSpace(bm.getDxCode1(), 5));                       //p36   5
-            dLine.append(misc.backwardSpace(bm.getDxCode2(), 5));                       //p37   5
-            dLine.append(misc.backwardSpace(bm.getDxCode3(), 5));                       //p38   5
-            dLine.append(misc.space(15));                                               //p39  15
-            dLine.append(misc.forwardSpace(bm.getServiceLocation(), 1));                //p40   1
-            dLine.append(misc.forwardZero(bm.getReferralFlag1(), 1));                   //p41   1
-            dLine.append(misc.forwardZero(bm.getReferralNo1(),5));                      //p42   5
-            dLine.append(misc.forwardZero(bm.getReferralFlag2(),1));                    //p44   1
-            dLine.append(misc.forwardZero(bm.getReferralNo2(),5));                      //p46   5
-            dLine.append(misc.forwardZero(bm.getTimeCall(),4));                         //p47   4
-            dLine.append(misc.forwardZero(bm.getServiceStartTime(),4));                 //p48   4
-            dLine.append(misc.forwardZero(bm.getServiceEndTime(),4));                   //p50   4
-            dLine.append(misc.forwardZero(bm.getBirthDate(),8));                        //p52   8
-            dLine.append(misc.forwardZero(""+bm.getBillingmasterNo(), 7));              //p54   7
-            dLine.append(misc.forwardSpace(bm.getCorrespondenceCode(), 1));             //p56   1
-            //dLine.append(misc.space(20));                                             //p58  20
-            dLine.append(misc.backwardSpace(bm.getClaimComment(),20));        //p58  20
-            dLine.append(misc.forwardSpace(bm.getMvaClaimCode(),1));                    //p60   1
-            dLine.append(misc.forwardZero(bm.getIcbcClaimNo(), 8));                     //p62   8
-            dLine.append(misc.forwardZero(bm.getOriginalClaim(), 20 ));                 //p64  20
-            dLine.append(misc.forwardZero(bm.getFacilityNo(), 5));                      //p70   5
-            dLine.append(misc.forwardZero(bm.getFacilitySubNo(), 5));                   //p72   5
-            dLine.append(misc.space(58));                                               //p80  58
-            dLine.append(misc.backwardSpace(bm.getOinInsurerCode(),2));                 //p100  2
-            dLine.append(misc.forwardZero(bm.getOinRegistrationNo(),12));               //p102 12
-            dLine.append(misc.backwardSpace(bm.getOinBirthdate(),8));                   //p104  8
-            dLine.append(misc.backwardSpace(bm.getOinFirstName(),12));                  //p106 12
-            dLine.append(misc.backwardSpace(bm.getOinSecondName(),1));                  //p108  1
-            dLine.append(misc.backwardSpace(bm.getOinSurname(),18));                    //p110 18
-            dLine.append(misc.backwardSpace(bm.getOinSexCode(),1));                     //p112  1
-            dLine.append(misc.backwardSpace(bm.getOinAddress(),25));                    //p114 25
-            dLine.append(misc.backwardSpace(bm.getOinAddress2(),25));                   //p116 25
-            dLine.append(misc.backwardSpace(bm.getOinAddress3(),25));                   //p118 25
-            dLine.append(misc.backwardSpace(bm.getOinAddress4(),25));                   //p120 25
-            dLine.append(misc.backwardSpace(bm.getOinPostalcode(),6));                  //p122  6
+            dLine.append(Misc.forwardSpace(bm.getClaimcode(),3));                       //p00   3
+            dLine.append(Misc.forwardSpace(bm.getDatacenter(),5));                      //p02   5
+            dLine.append(Misc.forwardZero(logNo,7));                                    //p04   7
+            dLine.append(Misc.forwardSpace(bm.getPayeeNo(),5));                         //p06   5
+            dLine.append(Misc.forwardSpace(bm.getPractitionerNo(),5));                  //p08   5
+            dLine.append(Misc.forwardZero(bm.getPhn(),10));                             //p14  10
+            dLine.append(Misc.forwardSpace(bm.getNameVerify(),4));                      //p16   4
+            dLine.append(Misc.forwardSpace(bm.getDependentNum(),2));                    //p18   2
+            dLine.append(Misc.forwardZero(roundUp(bm.getBillingUnit()),3));             //p20   3
+            dLine.append(Misc.forwardZero(bm.getClarificationCode() ,2));               //p22   2
+            dLine.append(Misc.forwardSpace(bm.getAnatomicalArea(), 2));                 //p23   2
+            dLine.append(Misc.forwardSpace(bm.getAfterHour(),1));                       //p24   1
+            dLine.append(Misc.forwardZero(bm.getNewProgram(),2));                       //p25   2
+            dLine.append(Misc.forwardZero(bm.getBillingCode(),5));                      //p26   5
+            dLine.append(Misc.moneyFormatPaddedZeroNoDecimal(bm.getBillAmount(),7));    //p27   7
+            dLine.append(Misc.forwardZero(bm.getPaymentMode(), 1));                     //p28   1
+            dLine.append(Misc.forwardSpace(bm.getServiceDate(), 8));                    //p30   8
+            dLine.append(Misc.forwardZero(bm.getServiceToDay(),2));                     //p32   2
+            dLine.append(Misc.forwardSpace(bm.getSubmissionCode(), 1));                 //p34   1
+            dLine.append(Misc.space(1));                                                //p35   1
+            dLine.append(Misc.backwardSpace(bm.getDxCode1(), 5));                       //p36   5
+            dLine.append(Misc.backwardSpace(bm.getDxCode2(), 5));                       //p37   5
+            dLine.append(Misc.backwardSpace(bm.getDxCode3(), 5));                       //p38   5
+            dLine.append(Misc.space(15));                                               //p39  15
+            dLine.append(Misc.forwardSpace(bm.getServiceLocation(), 1));                //p40   1
+            dLine.append(Misc.forwardZero(bm.getReferralFlag1(), 1));                   //p41   1
+            dLine.append(Misc.forwardZero(bm.getReferralNo1(),5));                      //p42   5
+            dLine.append(Misc.forwardZero(bm.getReferralFlag2(),1));                    //p44   1
+            dLine.append(Misc.forwardZero(bm.getReferralNo2(),5));                      //p46   5
+            dLine.append(Misc.forwardZero(bm.getTimeCall(),4));                         //p47   4
+            dLine.append(Misc.forwardZero(bm.getServiceStartTime(),4));                 //p48   4
+            dLine.append(Misc.forwardZero(bm.getServiceEndTime(),4));                   //p50   4
+            dLine.append(Misc.forwardZero(bm.getBirthDate(),8));                        //p52   8
+            dLine.append(Misc.forwardZero(""+bm.getBillingmasterNo(), 7));              //p54   7
+            dLine.append(Misc.forwardSpace(bm.getCorrespondenceCode(), 1));             //p56   1
+            //dLine.append(Misc.space(20));                                             //p58  20
+            dLine.append(Misc.backwardSpace(bm.getClaimComment(),20));        //p58  20
+            dLine.append(Misc.forwardSpace(bm.getMvaClaimCode(),1));                    //p60   1
+            dLine.append(Misc.forwardZero(bm.getIcbcClaimNo(), 8));                     //p62   8
+            dLine.append(Misc.forwardZero(bm.getOriginalClaim(), 20 ));                 //p64  20
+            dLine.append(Misc.forwardZero(bm.getFacilityNo(), 5));                      //p70   5
+            dLine.append(Misc.forwardZero(bm.getFacilitySubNo(), 5));                   //p72   5
+            dLine.append(Misc.space(58));                                               //p80  58
+            dLine.append(Misc.backwardSpace(bm.getOinInsurerCode(),2));                 //p100  2
+            dLine.append(Misc.forwardZero(bm.getOinRegistrationNo(),12));               //p102 12
+            dLine.append(Misc.backwardSpace(bm.getOinBirthdate(),8));                   //p104  8
+            dLine.append(Misc.backwardSpace(bm.getOinFirstName(),12));                  //p106 12
+            dLine.append(Misc.backwardSpace(bm.getOinSecondName(),1));                  //p108  1
+            dLine.append(Misc.backwardSpace(bm.getOinSurname(),18));                    //p110 18
+            dLine.append(Misc.backwardSpace(bm.getOinSexCode(),1));                     //p112  1
+            dLine.append(Misc.backwardSpace(bm.getOinAddress(),25));                    //p114 25
+            dLine.append(Misc.backwardSpace(bm.getOinAddress2(),25));                   //p116 25
+            dLine.append(Misc.backwardSpace(bm.getOinAddress3(),25));                   //p118 25
+            dLine.append(Misc.backwardSpace(bm.getOinAddress4(),25));                   //p120 25
+            dLine.append(Misc.backwardSpace(bm.getOinPostalcode(),6));                  //p122  6
         return dLine.toString();
+    }
+
+    public void setBillingmasterDAO(BillingmasterDAO masDAO) {
+        this.billingmasterDAO = masDAO;
+    }
+   
+   
+    public void setDemographicDao(DemographicDao demoDAO) {
+        this.demographicDAO = demoDAO;
     }
    
     

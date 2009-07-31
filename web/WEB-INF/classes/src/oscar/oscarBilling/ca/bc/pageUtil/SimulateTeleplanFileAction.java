@@ -26,7 +26,6 @@
  * Created on January 21, 2007, 6:05 PM
  *
  */
-
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.util.List;
@@ -39,11 +38,14 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanFileWriter;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanSubmission;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarProvider.data.ProviderData;
-
 
 /**
  * Action Simulates a MSP teleplan file but doesn't commit any of the data. 
@@ -51,30 +53,30 @@ import oscar.oscarProvider.data.ProviderData;
  * @author jay
  */
 public class SimulateTeleplanFileAction extends Action{
-    
+
     /**
      * Creates a new instance of GenerateTeleplanFileAction
      */
     public SimulateTeleplanFileAction() {
     }
-    
+
     public ActionForward execute(ActionMapping mapping,
-                               ActionForm form,
-                               HttpServletRequest request,
-                               HttpServletResponse response) throws Exception{
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception{
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
-        
+
         String providerNo = request.getParameter("user");
         String provider = request.getParameter("provider");
         String providerBillingNo = request.getParameter("provider");
         if(provider != null && provider.equals("all")){
-          providerBillingNo = "%";    
+            providerBillingNo = "%";
         }
         ProviderData pd = new ProviderData();
         List list = pd.getProviderListWithInsuranceNo(providerBillingNo);
-        
+
         ProviderData[] pdArr = new ProviderData[list.size()];
-        
+
         for (int i=0;i < list.size(); i++){
             String provNo = (String) list.get(i);
             pdArr[i] = new ProviderData(provNo);
@@ -82,11 +84,17 @@ public class SimulateTeleplanFileAction extends Action{
         //This needs to be replaced for sim
         boolean testRun = true;
         //To prevent multiple submissions being generated at the same time
-        synchronized (this)  { 
-            try{
-               TeleplanFileWriter teleplanWr = new TeleplanFileWriter();  
-               TeleplanSubmission submission = teleplanWr.getSubmission(testRun,pdArr,dataCenterId);
-               response.getWriter().print(submission.getHtmlFile());
+        synchronized (this) {
+            try {
+                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+                BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+                DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");
+             
+                TeleplanFileWriter teleplanWr = new TeleplanFileWriter();
+                teleplanWr.setBillingmasterDAO(billingmasterDAO);
+                teleplanWr.setDemographicDao(demographicDao);
+                TeleplanSubmission submission = teleplanWr.getSubmission(testRun, pdArr, dataCenterId);
+                response.getWriter().print(submission.getHtmlFile());
             }catch(Exception e){
                 e.printStackTrace();
             }

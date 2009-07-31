@@ -43,25 +43,26 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.OscarProperties;
 import oscar.entities.PaymentType;
+import oscar.entities.WCB;
 import oscar.oscarBilling.ca.bc.MSP.AgeValidator;
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarBilling.ca.bc.MSP.SexValidator;
+import oscar.oscarBilling.ca.bc.Teleplan.WCBCodes;
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.SqlUtils;
 
-public class BillingCreateBillingAction
-    extends Action {
+public class BillingCreateBillingAction extends Action {
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient
-  public ActionForward execute(ActionMapping mapping,
-                               ActionForm form,
-                               HttpServletRequest request,
-                               HttpServletResponse response) throws IOException,
-      ServletException {
+  
+  public ActionForward execute(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) throws IOException,ServletException {
     ActionMessages errors = new ActionMessages();
     BillingBillingManager bmanager = new BillingBillingManager();
 
@@ -79,10 +80,8 @@ public class BillingCreateBillingAction
     String other_service2_unit = frm.getXml_other2_unit();
     String other_service3_unit = frm.getXml_other3_unit();
 
-    BillingSessionBean bean = (BillingSessionBean) request.getSession().
-        getAttribute("billingSessionBean");
-    DemographicData.Demographic demo = new DemographicData().getDemographic(
-        bean.getPatientNo());
+    BillingSessionBean bean = (BillingSessionBean) request.getSession().getAttribute("billingSessionBean");
+    DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
     this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo());
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
@@ -111,7 +110,8 @@ public class BillingCreateBillingAction
     else {
       bean.setEncounter("O");
     }
-
+    
+    bean.setWcbId(request.getParameter("WCBid"));
     bean.setVisitType(frm.getXml_visittype());
     bean.setVisitLocation(frm.getXml_location());
     bean.setServiceDate(frm.getXml_appointment_date());
@@ -180,6 +180,35 @@ public class BillingCreateBillingAction
       return mapping.getInputForward();
     }
 
+
+    if (request.getParameter("WCBid") != null){
+            List<String> errs = null;
+            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+            BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+            WCB wcbForm = billingmasterDAO.getWCBForm(request.getParameter("WCBid"));
+
+        for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
+            BillingItem item = (BillingItem) iter.next();
+            String sc = item.getServiceCode();
+            boolean formNeeded = WCBCodes.getInstance().isFormNeeded(sc);
+            System.out.println("code:"+sc+" form needed "+formNeeded);
+            if (formNeeded){
+                System.out.println("Setting form needed 1");
+                errs = wcbForm.verifyEverythingOnForm();
+                request.setAttribute("WCBcode",sc);
+                request.setAttribute("WCBFormNeeds",errs);
+                return mapping.getInputForward();
+            }else{
+                errs = wcbForm.verifyFormNotNeeded();
+            }
+        }
+        if(errs != null && errs.size() > 0){
+            System.out.println("Setting form needed 2");
+            request.setAttribute("WCBFormNeeds",errs);
+            return mapping.getInputForward();
+        }
+    }
+    
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
     validateCodeLastBilled(request, errors, demo.getDemographicNo());
@@ -187,18 +216,18 @@ public class BillingCreateBillingAction
     String fromBilling = request.getParameter("fromBilling");
 
     //if fromBilling is true set forward to WCB Form
-    if ("true".equals(fromBilling)) {
-      if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
-        WCBForm wcbForm = new WCBForm();
-        wcbForm.Set(bean);
-        request.setAttribute("WCBForm", wcbForm);
-        wcbForm.setFormNeeded("1");
-        wcbForm.setProviderNo(bean.getApptProviderNo());
-        wcbForm.setDoValidate(true);
-
-        return (mapping.findForward("WCB"));
-      }
-    }
+////    if ("true".equals(fromBilling)) {
+////      if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
+////        WCBForm wcbForm = new WCBForm();
+////        wcbForm.Set(bean);
+////        request.setAttribute("WCBForm", wcbForm);
+////        wcbForm.setFormNeeded("1");
+////        wcbForm.setProviderNo(bean.getApptProviderNo());
+////        wcbForm.setDoValidate(true);
+////
+////        return (mapping.findForward("WCB"));
+////      }
+////    }
     return mapping.findForward("success");
   }
 
@@ -489,5 +518,7 @@ public class BillingCreateBillingAction
                      new String[] {code}));
     }
   }
+
+  
 
 }

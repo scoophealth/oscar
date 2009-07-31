@@ -39,11 +39,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.oscarehr.common.dao.DemographicDao;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.Misc;
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanFileWriter;
 import oscar.oscarBilling.ca.bc.MSP.TeleplanSubmission;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.util.UtilDateUtilities;
 
@@ -96,7 +100,14 @@ public class GenerateTeleplanFileAction extends Action{
         //To prevent multiple submissions being generated at the same time
         synchronized (this)  { 
             try{
+             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");    
+             DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");   
+             
             TeleplanFileWriter teleplanWr = new TeleplanFileWriter();  
+            teleplanWr.setBillingmasterDAO(billingmasterDAO);
+            System.out.println("\ndemographic DAO -->"+demographicDao);
+            teleplanWr.setDemographicDao(demographicDao);
             TeleplanSubmission submission = teleplanWr.getSubmission(testRun,pdArr,dataCenterId);
 
             BillActivityDAO bActDao  = new BillActivityDAO();

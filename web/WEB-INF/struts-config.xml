@@ -43,7 +43,7 @@
         <form-bean name="clinicForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="clinic" type="org.oscarehr.common.model.Clinic" />
         </form-bean>
-         <form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
+        <form-bean name="annotationForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="oAnnotation" type="org.oscarehr.common.model.OscarAnnotation" />
         </form-bean>
 
@@ -564,6 +564,9 @@
         </action>
         <action name="RxChoosePatientForm" path="/oscarRx/choosePatient" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+        </action>
+        <action name="RxChoosePatientForm" path="/oscarRx/choosePatient2" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
+            <forward name="success" path="/oscarRx/SearchDrug2.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="RxSearchDrugForm" path="/oscarRx/searchDrug" scope="request" type="oscar.oscarRx.pageUtil.RxSearchDrugAction">
             <forward name="success" path="/oscarRx/ChooseDrug.jsp" />
@@ -1181,10 +1184,12 @@
             <forward name="ON" path="/billing/CA/ON/billingOB2.jsp" />
             <forward name="private" path="/billing/CA/BC/billReceipt.jsp" />
         </action>
-        <action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/formwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction">
+        <action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/formwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction2" parameter="method">
             <forward name="success" path="/billing/CA/BC/billingCreated.jsp" />
             <forward name="newbill" path="/billing.do?newWCBClaim=1" />
             <forward name="viewformwcb" path="/billing/CA/BC/viewformwcb.do" />
+            
+            <forward name="saveAndClose" path="/billing/CA/BC/wcbClose.jsp"/>
         </action>
         <action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/viewformwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewWCBAction" validate="false">
             <forward name="success" path="/billing/CA/BC/formwcb.jsp" />

@@ -609,16 +609,16 @@ public class MSPReconcile {
         if (seqNumsArray.length > 0) {
           b.seqNum = seqNumsArray[seqNumsArray.length - 1].toString();
         }
-        if (b.isWCB()) {
-          ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
-                                    b.billing_no + "'");
-          if (rs2.next()) {
-            b.amount = rs2.getString("bill_amount");
-            b.code = rs2.getString("w_feeitem");
-            b.dx1 = rs2.getString("w_icd9");
-          }
-          rs2.close();
-        }
+//        if (b.isWCB()) {
+//          ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
+//                                    b.billing_no + "'");
+//          if (rs2.next()) {
+//            b.amount = rs2.getString("bill_amount");
+//            b.code = rs2.getString("w_feeitem");
+//            b.dx1 = rs2.getString("w_icd9");
+//          }
+//          rs2.close();
+//        }
 
         billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);

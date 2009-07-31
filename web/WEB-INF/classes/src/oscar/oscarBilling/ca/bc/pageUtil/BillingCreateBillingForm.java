@@ -718,6 +718,12 @@ public final class BillingCreateBillingForm
 
    this.refertype1 = this.xml_refer1.equals("")?"":this.refertype1;
    this.refertype2 = this.xml_refer2.equals("")?"":this.refertype2;
+   
+   
+   if("WCB".equals(this.getXml_billtype()) && request.getParameter("WCBid") == null ){
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.formRequired"));
+        request.setAttribute("FormMissing","YES");
+    }
 
     if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {

@@ -661,11 +661,7 @@ billTypes = "%";
 
     <td>
       <% if (adminAccess){ %>  
-          <%if (!b.isWCB()){%>
-          <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>&invoiceNo=<%=b.billing_no%>')" >Edit </a>
-          <%}else{%>
-          <a href="javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
-          <%}%>
+          <a href="javascript: popupPage(700,1000,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>&invoiceNo=<%=b.billing_no%>')" >Edit </a>
       <% } %>
       
       
@@ -729,11 +725,7 @@ String getReasonEx(String reason){
 String isRejected(String billingNo,Properties p,boolean wcb){
     String s = "&nbsp;";
     if (p.containsKey(billingNo)){
-        if (!wcb){
-        s = "<a href=\"javascript: popupPage(700,700,'adjustBill.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
-        }else{
-        s = "<a href=\"javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
-        }
+        s = "<a href=\"javascript: popupPage(700,1000,'adjustBill.jsp?billing_no="+billingNo+"')\" > "+p.getProperty(billingNo)+"</a>";
     }
     return s;
 }

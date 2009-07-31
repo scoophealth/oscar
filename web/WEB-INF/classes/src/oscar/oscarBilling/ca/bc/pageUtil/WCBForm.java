@@ -1,72 +1,54 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
 import oscar.Misc;
+import oscar.entities.WCB;
 import oscar.util.StringUtils;
 
 /*
- * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
-
+ * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. 
  * This software is published under the GPL GNU General Public License.
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public License
-
  * as published by the Free Software Foundation; either version 2
-
  * of the License, or (at your option) any later version. *
-
  * This program is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
-
  * along with this program; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
-
  *
-
  * <OSCAR TEAM>
-
  *
-
  * This software was written for
-
  * Andromedia, to be provided as
-
  * part of the OSCAR McMaster
-
  * EMR System
-
  *
-
  * @author Jef King
-
  * For The Oscar McMaster Project
-
  * Developed By Andromedia
-
  * www.andromedia.ca
-
  */
+import oscar.util.UtilDateUtilities;
 
 public final class WCBForm
     extends ActionForm {
+    
+    
+    public String toString( ) {
+     return ReflectionToStringBuilder.toString( this );
+    }
 
     /**
      * @todo This seems to be a duplicate field but I am loathe to remove it until further testing - Joel
@@ -120,9 +102,9 @@ public final class WCBForm
   private String w_pracno;
   private String w_pracname;
   private String w_wcbadvisor="N";
-  private String w_feeitem;
-  private String w_extrafeeitem;
-  private String w_servicelocation;
+  private String w_feeitem; //--
+  private String w_extrafeeitem; //--
+  private String w_servicelocation; //--
   private String formNeeded;
   private List injuryLocations;
 
@@ -141,11 +123,86 @@ public final class WCBForm
   public WCBForm() {
 
   }
+  
+  
+  
+  public WCB getWCB(){
+      WCB wcb = new WCB();
 
+              
+                 wcb.setDemographic_no(Integer.parseInt(demographic_no));
+
+  wcb.setProvider_no( providerNo);
+
+  //wcb.set formCreated);
+  //wcb.set formEdited);
+  wcb.setW_reporttype(w_reportype);
+  wcb.setW_fname(w_fname);
+  wcb.setW_lname(w_lname);
+  wcb.setW_mname(w_mname);
+  wcb.setW_gender(w_gender);
+  wcb.setW_dob(UtilDateUtilities.StringToDate(ddate(w_dob)));
+  wcb.setW_doi(UtilDateUtilities.StringToDate(ddate(w_doi)));
+  wcb.setW_address( w_address);
+  wcb.setW_city(w_city);
+  wcb.setW_postal(w_postal);
+  wcb.setW_area(w_area);
+  wcb.setW_phone(w_phone);
+  wcb.setW_phn( w_phn);
+  wcb.setW_empname( w_empname);
+  wcb.setW_emparea(w_emparea);
+  wcb.setW_empphone(w_empphone);
+  wcb.setW_wcbno(w_wcbno);
+  wcb.setW_opaddress( w_opaddress);
+  wcb.setW_opcity(w_opcity);
+  wcb.setW_rphysician(w_rphysician);  // <!___what happens here
+  wcb.setW_duration(Integer.parseInt(w_duration)); // <!___what happens here
+  wcb.setW_ftreatment( w_ftreatment);
+  wcb.setW_problem(w_problem);
+  wcb.setW_servicedate(UtilDateUtilities.StringToDate(ddate(w_servicedate)));
+  wcb.setW_diagnosis(w_diagnosis);
+  wcb.setW_icd9(w_icd9);
+  wcb.setW_bp( w_bp);
+  wcb.setW_side( w_side);
+  wcb.setW_noi( w_noi);
+  wcb.setW_work( w_work);//="Y"
+  wcb.setW_workdate( UtilDateUtilities.StringToDate(ddate(w_workdate)));
+  wcb.setW_clinicinfo( w_clinicinfo);
+  wcb.setW_capability( w_capability);//="Y"
+  wcb.setW_capreason( w_capreason);
+  wcb.setW_estimate( w_estimate);//="0"
+  wcb.setW_rehab( w_rehab);//="N"
+  wcb.setW_rehabtype( w_rehabtype);
+  
+  System.out.println("ESTMATE DATE ="+w_estimatedate+"--"+UtilDateUtilities.StringToDate(ddate(w_estimatedate)));
+  wcb.setW_estimatedate( UtilDateUtilities.StringToDate(ddate(w_estimatedate)));
+  wcb.setW_tofollow(w_tofollow);//="N"
+  wcb.setW_payeeno( w_payeeno);
+  wcb.setW_pracno( w_pracno);
+  ////wcb.setW_pracname( w_pracname);
+  wcb.setW_wcbadvisor(w_wcbadvisor); //="N"
+  wcb.setW_feeitem( w_feeitem); //--
+  wcb.setW_extrafeeitem( w_extrafeeitem); //--
+  wcb.setW_servicelocation( w_servicelocation); //--
+  //wcb.setW_formNeeded(formNeeded);
+  //private List injuryLocations;
+
+      
+      return wcb;
+  }
+  
+  String ddate(String s){
+      if ( s == null){
+          return "0001-01-01";
+      }
+      return s;
+  }
+  
+/*
   public String SQL(String billingno, String amount) {
-    if(this.w_servicelocation == null || this.w_servicelocation.equals("")){
-       throw new RuntimeException("Service Location Must Not Be Empty for demographic_no:" + String.valueOf(this.demographic_no));
-    }
+//    if(this.w_servicelocation == null || this.w_servicelocation.equals("")){
+//       throw new RuntimeException("Service Location Must Not Be Empty for demographic_no:" + String.valueOf(this.demographic_no));
+//    }
     return sql
 
         + "'"
@@ -559,7 +616,9 @@ public final class WCBForm
         + "')";
 
   }
-
+*/
+  
+  /*
   public void Set(oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean) {
 
     oscar.oscarBilling.ca.bc.data.BillingFormData billform =
@@ -602,7 +661,8 @@ public final class WCBForm
             bean.getPatientNo()));
   }
 
-
+*/
+  /*
   private void setDemographicData(oscar.oscarDemographic.data.DemographicData.
                                   Demographic demo) {
 
@@ -637,12 +697,16 @@ public final class WCBForm
     this.w_city = demo.getCity();
 
   }
+   
+*/ 
 
   /**
    * Set the data from an existing WCB form entry in this ActionForm instance
    *
    * @param result ResultSet
    */
+ 
+  /*
   public void setWCBForms(ResultSet result) {
 
     try {
@@ -769,7 +833,73 @@ public final class WCBForm
       }
     }
   }
+*/
+  
+  
+  
+  
+  /////////////////
+  public void setWCBForms(WCB wcb) {
 
+        demographic_no = ""+wcb.getDemographic_no();
+        providerNo = wcb.getProvider_no();
+        formCreated = UtilDateUtilities.DateToString( wcb.getFormCreated());
+        formEdited = UtilDateUtilities.DateToString(wcb.getFormEdited());
+        w_reportype = wcb.getW_reporttype();
+        w_fname = wcb.getW_fname();
+        w_lname = wcb.getW_lname();
+        w_mname = wcb.getW_mname();
+        w_gender = wcb.getW_gender();
+        w_dob = UtilDateUtilities.DateToString(wcb.getW_dob());
+        w_doi = UtilDateUtilities.DateToString( wcb.getW_doi());
+        w_address = wcb.getW_address();
+        w_city = wcb.getW_city();
+        w_postal = wcb.getW_postal();
+        w_area = wcb.getW_area();
+        w_phone = wcb.getW_phone();
+        w_phn = wcb.getW_phn();
+        w_empname = wcb.getW_empname();
+        w_emparea = wcb.getW_emparea();
+        w_empphone =wcb.getW_empphone();
+        w_wcbno = wcb.getW_wcbno();
+        w_opaddress = wcb.getW_opaddress();
+        w_opcity = wcb.getW_opcity();
+        w_rphysician =wcb.getW_rphysician();
+        w_duration = ""+wcb.getW_duration();
+        w_ftreatment = wcb.getW_ftreatment();
+        w_problem = wcb.getW_problem();
+        w_servicedate = UtilDateUtilities.DateToString(wcb.getW_servicedate());
+        w_diagnosis = wcb.getW_diagnosis();
+        w_icd9 = wcb.getW_icd9();
+        w_bp = wcb.getW_bp();
+        w_side = wcb.getW_side();
+        w_noi = wcb.getW_noi();
+        w_work = wcb.getW_work();
+        w_workdate = UtilDateUtilities.DateToString(wcb.getW_workdate());
+        w_clinicinfo = wcb.getW_clinicinfo();
+        w_capreason = wcb.getW_capreason();
+        w_capability = wcb.getW_capability();
+        w_estimate = wcb.getW_estimate();
+        w_rehab = wcb.getW_rehab();
+        w_rehabtype = wcb.getW_rehabtype();
+        w_estimatedate = UtilDateUtilities.DateToString(wcb.getW_estimatedate());
+        w_tofollow = wcb.getW_tofollow();
+        w_payeeno = wcb.getW_payeeno();
+        w_pracno = wcb.getW_pracno();
+        //w_pracname= result.getString("w_pracname");
+        w_wcbadvisor = wcb.getW_wcbadvisor();
+        w_feeitem = wcb.getW_feeitem();
+        w_extrafeeitem = wcb.getW_extrafeeitem();
+        w_servicelocation = wcb.getW_servicelocation();
+        int intFormNeeded = wcb.getFormNeeded();
+        this.formNeeded = intFormNeeded==1?"true":"false";
+
+  }
+  /////////////////
+  
+  
+  
+  
   public void setW_feeitem(String fi) {
 
     this.w_feeitem = fi;
@@ -1476,7 +1606,8 @@ public final class WCBForm
    * @return ActionErrors
    * @todo Implement this org.apache.struts.action.ActionForm method
    */
-  public ActionErrors validate(ActionMapping mapping,
+ 
+  public ActionErrors validate2(ActionMapping mapping,
                                HttpServletRequest request) {
     ActionErrors errors = new ActionErrors();
     BillingAssociationPersistence per = new BillingAssociationPersistence();
@@ -1489,59 +1620,38 @@ public final class WCBForm
       return errors;
     }
     if (w_lname == null || "".equals(w_lname)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_lname"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_lname"));
     }
     if (w_fname == null || "".equals(w_fname)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_fname"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_fname"));
     }
     if (w_dob == null || "".equals(w_dob)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_dob"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_dob"));
     }
     if (w_gender == null || "".equals(w_gender)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_gender"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_gender"));
     }
 
     if (!StringUtils.isNumeric(w_phn)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_phn"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_phn"));
     }
     if (w_doi == null || "".equals(w_doi)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_doi"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_doi"));
     }
 
     if ((w_feeitem == null || "".equals(w_feeitem)&&(w_extrafeeitem == null || "".equals(w_extrafeeitem)))) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.enterfee"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.enterfee"));
     }
     if (w_icd9 == null || "".equals(w_icd9)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_icd9"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_icd9"));
 
     }
     else if (!per.dxcodeExists(w_icd9)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.invaliddxcode",
-                     w_icd9));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.error.invaliddxcode",w_icd9));
     }
 
     if (w_noi == null || "".equals(w_noi)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_noi"));
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_noi"));
     }
     
     if ( (w_noi != null && w_noi.length() > 0 ) && !StringUtils.isNumeric(w_noi)) {
@@ -1569,109 +1679,64 @@ public final class WCBForm
 
     if ("1".equals(formNeeded)) {
       if (w_empname == null || "".equals(w_empname)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_empname"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_empname"));
       }
       if (this.w_opaddress == null || "".equals(w_opaddress)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_opaddress"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_opaddress"));
       }
       if (this.w_opcity == null || "".equals(w_opcity)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_opcity"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_opcity"));
       }
       if (this.w_emparea == null || !StringUtils.isNumeric(w_emparea)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_emparea"));
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_emparea"));
       }
 
       if (w_empphone == null || !StringUtils.isNumeric(w_empphone)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_empphone"));
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_empphone"));
       }
 
       if (w_diagnosis == null || "".equals(w_diagnosis)) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_diagnosis"));
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_diagnosis"));
       }
 
       //From injury or since last report, has the worker been disabled from work?
       if ("Y".equals(w_work)) {
         if (!StringUtils.isValidDate(w_workdate, "yyyy-MM-dd")) {
-          errors.add("",
-                     new ActionMessage(
-                         "oscar.billing.CA.BC.billingBC.wcb.error.w_workdate"));
+          errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_workdate"));
         }
-      }
-      else if (w_work == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_rphysician"));
-
+      }else if (w_work == null) {
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_rphysician"));
       }
 
       //Is the worker now medically capable of working full duties, full time?
       if ("N".equals(w_capability)) {
         if (w_capreason == null || "".equals(w_capreason)) {
-          errors.add("",
-                     new ActionMessage(
-                         "oscar.billing.CA.BC.billingBC.wcb.error.w_capreason"));
+          errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_capreason"));
         }
-      }
-      else if (w_capability == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_capability"));
-
+      }else if (w_capability == null) {
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_capability"));
       }
 
       //If appropriate, is the worker now ready for a rehabilitation program?
       if ("Y".equals(w_rehab)) {
         if (w_rehabtype == null || "".equals(w_rehabtype)) {
-          errors.add("",
-                     new ActionMessage(
-                         "oscar.billing.CA.BC.billingBC.wcb.error.w_rehabtype"));
+          errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_rehabtype"));
         }
-      }
-      else if (w_rehab == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_rehab"));
-
+      }else if (w_rehab == null) {
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_rehab"));
       }
 
       if (w_rphysician == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_rphysician"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_rphysician"));
       }
       if (w_reportype == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_reportype"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_reportype"));
       }
       if (w_estimate == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_estimate"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_estimate"));
       }
       if (w_tofollow == null) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.wcb.error.w_tofollow"));
-
+        errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_tofollow"));
       }
     }
     return errors;

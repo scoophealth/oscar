@@ -29,8 +29,9 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.math.BigDecimal;
+import java.io.FileReader;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,6 +110,68 @@ public class ManageTeleplanAction extends DispatchAction {
            List list = tcm.parse(file);
            request.setAttribute("codes",list);
            return mapping.findForward("codelist");
+    }
+    
+    /*
+     *  2 = MSP ICD9 Codes (3 char)
+	*      1 = MSP Explanatory Codes List
+     */
+    
+    public ActionForward updateExplanatoryCodesList(ActionMapping mapping, ActionForm  form,
+           HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+        
+           System.out.println("UPDATE EXplanation  CODE WITH PARSING");
+           /*TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           String[] userpass = dao.getUsernamePassword();
+           TeleplanService tService = new TeleplanService();
+           TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
+           
+           TeleplanResponse tr = tAPI.getAsciiFile("1");
+           
+           log.debug("real filename "+tr.getRealFilename());
+            */
+           //File file = tr.getFile();
+           String directory = OscarProperties.getInstance().getProperty("DOCUMENT_DIR","./");
+           File file = new File (directory+"teleplanTPBULET-1.txt0.6378638718721944"); 
+           
+           BufferedReader buff = new BufferedReader(new FileReader(file));
+
+           String line = null;
+           System.out.println("start while" );
+           boolean start= false;
+           StringBuffer sb = new StringBuffer();
+           while ((line = buff.readLine()) != null) {
+               line = line.trim();
+               //System.out.println("LINE >"+line+"<");
+               if (line != null && line.startsWith("--")){
+                   System.out.println("TRIGGERING START");
+                   start = true;
+               }
+               if (start){
+                   
+                   if (line.trim().equals("")){
+                       //System.out.println(sb.toString());
+                       String togo = sb.toString();
+                       String newS = togo.substring(0,2)+"="+togo.substring(4);
+                           System.out.println(newS);    
+                       sb = new StringBuffer();
+                   }else{
+                       sb.append(line);
+                   }
+                   
+                 
+                   
+               }
+               
+               
+           }    
+           //File file = tr.getFile();
+           //TeleplanCodesManager tcm = new TeleplanCodesManager();
+           //List list = tcm.parse(file);
+           //request.setAttribute("codes",list);
+          // System.out.println(tr.getMsgs());
+           return mapping.findForward("success");
     }
     
     

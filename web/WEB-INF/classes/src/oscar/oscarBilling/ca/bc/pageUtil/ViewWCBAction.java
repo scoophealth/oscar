@@ -36,9 +36,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.Misc;
 import oscar.entities.Demographic;
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.util.SqlUtils;
 
 /**
@@ -82,7 +85,7 @@ public class ViewWCBAction
         String[] pc = demo.getPostal().split(" ");
 
         String postal = "";
-        for (int i = 0; i < pc.length; i++) {
+        for (int i = 0; i < pc.length; i++) {  // DOES THIS JUST REMOVE SPACES???
           postal += pc[i];
         }
         frm.setW_postal(postal);
@@ -117,7 +120,10 @@ public class ViewWCBAction
     //for readonly viewing on the WCB Form Screen
     else {
       request.setAttribute("readonly", "true");
-      frm.setWCBForms(data.getWCBFromID(formId));
+       WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+       BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+            
+       frm.setWCBForms(billingmasterDAO.getWCBForm(formId));
     }
     return (mapping.findForward("success"));
   }
