@@ -1007,7 +1007,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         note.setRevision(String.valueOf(revision));
 
         String observationDate = cform.getObservation_date();
-        ResourceBundle props = ResourceBundle.getBundle("oscarResources_en");
+        ResourceBundle props = ResourceBundle.getBundle("oscarResources", request.getLocale());
         if (observationDate != null && !observationDate.equals("")) {                      
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm", request.getLocale());
             Date dateObserve = formatter.parse(observationDate);
