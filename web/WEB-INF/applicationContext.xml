@@ -94,6 +94,7 @@
 	<bean id="facilityMessageDAO" class="org.caisi.dao.FacilityMessageDAO" autowire="byName" />
 	<bean id="ticklerLinkDAO" class="org.oscarehr.common.dao.TicklerLinkDAO" autowire="byName" />
 	<bean id="UserViewDAO" class="org.oscarehr.common.dao.ViewDAO" autowire="byName" />
+	<bean id="BillingmasterDAO" class="oscar.oscarBilling.ca.bc.data.BillingmasterDAO" autowire="byName" />
         
 	<!--  configure the scratch pad -->
 	<bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
@@ -133,7 +134,7 @@
 
 	<!-- OscarSuperManager manager provides business logic facade for jsp layer -->
 	<bean id="oscarSuperManager" class="oscar.service.OscarSuperManager" autowire="byName" init-method="init"/>
-
+        
 	<bean id="scratchPadManager" class="com.quatro.service.ScratchPadManager">
 		<property name="scratchPadDao" ref="scratchPadDao" />
 	</bean>
@@ -154,7 +155,7 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet.xml</value>
                                 <!--value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/inrFlowsheet2.xml</value-->
                                  
-                                 
+                      
                     <!-- value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/physicalFunctionFlowsheet.xml</value >
                     <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdAsthmaFlowsheet.xml</value >
 		    <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/omdCOPDFlowsheet.xml</value>
