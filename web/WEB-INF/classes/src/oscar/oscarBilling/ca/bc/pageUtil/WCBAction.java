@@ -1,18 +1,23 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import oscar.entities.WCB;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
@@ -66,16 +71,19 @@ import oscar.util.SqlUtils;
  * www.andromedia.ca
 
  */
+//alter table wcb change provider_no provider_no char(10);
 
-public final class WCBAction
-    extends Action {
+public final class WCBAction extends Action {
   String target = "success";
 
-  public ActionForward execute(ActionMapping mapping, ActionForm form,
-                               HttpServletRequest request,
-                               HttpServletResponse response)
-
-      throws IOException, ServletException {
+  BillingmasterDAO billingmasterDAO = null;
+  
+  public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,HttpServletResponse response)throws Exception, ServletException {
+      System.out.println("In WCBAction Jackson");
+      
+       WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+     billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
+      
 
     WCBForm frm = (WCBForm) form;
     request.setAttribute("WCBForm", frm);
@@ -97,6 +105,16 @@ public final class WCBAction
       }
       else if(dosave!=null){
         //save new wcb form
+          WCB wcb = frm.getWCB();
+          wcb.setProvider_no((String) request.getSession().getAttribute("user"));
+          if(wcb.getFormCreated() == null){
+              wcb.setFormCreated(new Date());
+          }
+          if(wcb.getFormEdited() == null){
+              wcb.setFormEdited(new Date());
+          }
+          wcb.setStatus("W");
+        billingmasterDAO.save(wcb);
         if(!"true".equals(fromBilling)){
            createWCBEntry(frm);
           target = "viewformwcb";
@@ -117,30 +135,45 @@ public final class WCBAction
    * and bill amount
    * @param frm WCBForm
    */
-  private void createWCBEntry(WCBForm frm) {
-    DBHandler db = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      db.RunSQL(frm.SQL("0", "0"));
-      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
-      if(idList!=null){
-        String[] id = (String[])idList.get(0);
-        frm.setWcbFormId(id[0]);
-      }
+  private void createWCBEntry(WCBForm frm) throws Exception{
+    // WCB wcb = new WCB(); 
+      
+   // BeanUtils.copyProperties(wcb,frm);  
+    
+  // System.out.println("FRM "+frm);
+   //System.out.println("WCB "+wcb);
+   
+    
+   // billingmasterDAO.save(wcb);
 
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally{
-      if(db!=null){
-        try {
-          db.CloseConn();
-        }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
-        }
-      }
-    }
+    
+    
+    System.out.println("WOULD BE A GOOD TIME TO SAVE---  i still get called WCB ACTION");  
+      
+//    DBHandler db = null;
+//    try {
+//      db = new DBHandler(DBHandler.OSCAR_DATA);
+//      db.RunSQL(frm.SQL("0", "0"));
+//      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
+//      if(idList!=null){
+//        String[] id = (String[])idList.get(0);
+//        frm.setWcbFormId(id[0]);
+//      }
+//
+//    }
+//    catch (SQLException ex) {
+//      ex.printStackTrace();
+//    }
+//    finally{
+//      if(db!=null){
+//        try {
+//          db.CloseConn();
+//        }
+//        catch (SQLException ex1) {
+//          ex1.printStackTrace();
+//        }
+//      }
+//    }
+//  }
   }
 }
