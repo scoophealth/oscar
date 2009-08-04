@@ -83,11 +83,19 @@ public class Log4JGmailErrorAppender extends AppenderSkeleton implements ThreadF
 				sb.append("\n\n");
 				sb.append(event.getRenderedMessage());
 				sb.append("\n\n");
-				for (String s : event.getThrowableStrRep())
+				try
 				{
-					sb.append(s);
-					sb.append("\n");
+					for (String s : event.getThrowableStrRep())
+					{
+						sb.append(s);
+						sb.append("\n");
+					}
 				}
+				catch (NullPointerException e)
+				{
+					// this is okay, no throableStrRep available
+				}
+
 				
 				Log4JGmailExecutorTask task=new Log4JGmailExecutorTask(smtpServer, smtpUser, smtpPassword, smtpSslPort, recipientEmailAddress, subject, sb.toString());
 				executorService.execute(task);
