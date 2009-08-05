@@ -27,6 +27,7 @@
 <%@ page errorPage="/casemgmt/error.jsp" %>
 <%@ page language="java"%>
 
+
 <% if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp"); %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -80,10 +81,13 @@
   
   <!-- js window size utility funcs since prototype's funcs are buggy in ie6 -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/screen.js"/>"></script>
-  
+
   <!-- scriptaculous based select box -->
   <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/select.js"/>"></script>
-  
+
+  <!-- phr popups -->
+  <script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
+
   <!--js code for newCaseManagementView.jsp -->
   <script type="text/javascript" src="<c:out value="${ctx}/js/newCaseManagementView.js"/>"></script>
   
@@ -287,7 +291,7 @@
             z-index:1;
             width:200px;
             right:100px;
-            bottom:200px;                                                
+            bottom:200px;
         }
         
         .showEdContainer {        
@@ -509,11 +513,16 @@ function init() {
               <form id="frmPrintOps" action="" onsubmit="return false;">
                    <input type="radio" id="printopSelected" name="printop" value="selected"><bean:message key="oscarEncounter.Index.PrintSelect"/><br>
                    <input type="radio" id="printopAll" name="printop" value="all"><bean:message key="oscarEncounter.Index.PrintAll"/><br>
-                   <input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a><br>                   
+                   <input type="radio" id="printopDates" name="printop" value="dates"><bean:message key="oscarEncounter.Index.PrintDates"/>&nbsp;<a style="font-variant:small-caps;" href="#" onclick="return printToday(event);"><bean:message key="oscarEncounter.Index.PrintToday"/></a><br>
                    <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintFrom"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printStartDate_cal" alt="calendar">&nbsp;<input type="text" id="printStartDate" name="printStartDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>
                    <div style="float:left; margin-left:5px; width:30px;"><bean:message key="oscarEncounter.Index.PrintTo"/>:</div> <img src="<c:out value="${ctx}/images/cal.gif" />" id="printEndDate_cal" alt="calendar">&nbsp;<input type="text" id="printEndDate" name="printEndDate" ondblclick="this.value='';" style="font-style:italic; border: 1px solid #7682b1; width:125px; background-color:#FFFFFF;" readonly value=""><br>                   
                    <div style="margin-top:5px; text-align:center">
                        <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
+                       <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                              <indivo:indivoRegistered demographic="<%=(String) request.getAttribute("demographicNo")%>" provider="<%=(String) request.getSession().getAttribute("user")%>">
+                       <input type="submit" id="sendToPhr" style="border: 1px solid #7682b1;" value="Send To Phr" onclick="return sendToPhrr();">
+                              </indivo:indivoRegistered>
+                       </oscarProperties:oscarPropertiesCheck>
                        <input type="submit" id="cancelprintOp" style="border: 1px solid #7682b1;" value="Cancel" onclick="$('printOps').style.display='none';">
                        <input type="submit" id="clearprintOp" style="border: 1px solid #7682b1;" value="Clear" onclick="$('printOps').style.display='none'; return clearAll(event);">
                    </div>

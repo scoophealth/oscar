@@ -9,10 +9,13 @@
    "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="java.util.Enumeration"%>
+
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr"%>
 
 <%
-String labId = request.getParameter("labId");
 String demographicNo = request.getParameter("demographic_no");
+if (demographicNo == null) demographicNo = request.getParameter("demographicNo");
 DemographicData demographicData = new DemographicData();
 String demographicName = demographicData.getDemographicFirstLastName(demographicNo);
 %>
@@ -48,19 +51,36 @@ String demographicName = demographicData.getDemographicFirstLastName(demographic
         <script type="text/javascript" language="JavaScript" src="phr.js"></script>
         <script type="text/javascript" language="JavaScript">
             function send(obj) {
+                if (obj.form.demographic_no.value == "") {
+                    alert("Cannot find demographic number");
+                    return false;
+                }
+                if (obj.form.subject.value == "") {
+                    alert("Subject cannot be empty");
+                    obj.form.subject.focus();
+                    return false;
+                }
                 obj.disabled = true;
                 obj.value = "Sending....";
                 //phrActionPopup("google.ca");
+                obj.form.method.value = 'send';
                 obj.form.submit();
+            }
+            function onloadd() {
+        <%--String labId = request.getParameter("labId");%>
+        <phr:ifDocumentPreviouslySent documentOscarId="<%=labId%>" recipientDemographicNo="<%=demographicNo%>">
+            alert("test");
+        </phr:ifDocumentPreviouslySent>---%>
             }
         </script>
 
     </head>
-    <body>
+    <body onload="onloadd()">
         <div class="title">Send to PHR - Preview</div>
         <form action="<%=request.getContextPath()%>/SendToPhr.do" method="POST">
-            <input type="hidden" name="labId" value="<%=labId%>">
             <input type="hidden" name="demographic_no" value="<%=demographicNo%>">
+            <input type="hidden" name="method" value="send">
+            <input type="Hidden" name="SendToPhrPreview" value="yes">
             <table>
                 <tr><th>Send to:</th><td><%=demographicName%></td></tr>
                 <tr><th>Subject:</th><td><input type="text" name="subject"> <span style="font-size: 10px;">(Subject of the message and document name)</span></td></tr>
@@ -72,7 +92,19 @@ String demographicName = demographicData.getDemographicFirstLastName(demographic
                 </tr>
                 <tr><th>Attached</th>
                     <td><img style="width: 20px; height: 20px;" src="<%=request.getContextPath()%>/images/pdf-logo-small.jpg" alt="">
-                        <span style="padding-bottom: 10px; vertical-align: middle;"><input type="button" onclick="document.getElementById('iframe').src='<%=request.getContextPath()%>/lab/CA/ALL/PrintPDF.do?segmentID=<%=labId%>'" value="Preview Document"></span>
+                        <%
+                        String labId = request.getParameter("labId");
+                        if (labId != null) {%>
+                        <%}%>
+                        <span style="padding-bottom: 10px; vertical-align: middle;"><input type="submit" onclick="this.form.method.value='documentPreview'" value="Document Preview"></span>
+<%--document.getElementById('iframe').src='<%=request.getContextPath()%>/lab/CA/ALL/PrintPDF.do?segmentID=<%=labId%>'--%>
+                        <%Enumeration<String> parameterNames = request.getParameterNames();
+                        while (parameterNames.hasMoreElements()) {
+                            String parameterName = parameterNames.nextElement();
+                            if (parameterName.equals("method")) continue;
+                            for (String parameterValue: request.getParameterValues(parameterName)) {%>
+                            <input type="hidden" name="<%=parameterName%>" value="<%=parameterValue%>">
+                        <%}}%>
                     </td>
                 </tr>
                 <tr>
