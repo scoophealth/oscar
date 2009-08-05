@@ -172,6 +172,7 @@ function EnablePrint(button) {
         display(checkboxes);
         var spaces = document.getElementsByName("printSp");
         display(spaces);
+        button.form.sendToPhrButton.style.display = 'block';
     }
     else { 
         if( onPrint() )
@@ -196,6 +197,13 @@ function onPrint() {
     }
     
     return true;
+}
+
+function sendToPhr(button) {
+    var oldAction = button.form.action;
+    button.form.action = "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp"
+    button.form.submit();
+    button.form.action = oldAction;
 }
 </script>
 
@@ -438,6 +446,7 @@ div.recommendations li {
 		<form name="printFrm" method="post" onsubmit="return onPrint();"
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+                <input type="hidden" name="module" value="prevention">
 		<%                 
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
                    ArrayList hiddenlist = new ArrayList();
@@ -590,9 +599,12 @@ div.recommendations li {
 		</td>
 	</tr>
 	<tr>
-		<td class="MainTableBottomRowLeftColumn"><input type="button"
+		<td class="MainTableBottomRowLeftColumn">
+                    <input type="button"
 			class="noPrint" name="printButton" onclick="EnablePrint(this)"
-			value="Enable Print"> &nbsp;</td>
+			value="Enable Print"> &nbsp;<br>
+                        <input type="button" name="sendToPhrButton" value="Send To PHR" style="display: none;" onclick="sendToPhr(this)">
+                </td>
 		<td class="MainTableBottomRowRightColumn" valign="top">&nbsp;</td>
 	</tr>
 </table>
