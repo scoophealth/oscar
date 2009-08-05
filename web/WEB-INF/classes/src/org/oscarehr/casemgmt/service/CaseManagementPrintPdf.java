@@ -29,17 +29,14 @@ import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 
 import oscar.oscarClinic.ClinicData;
@@ -59,6 +56,7 @@ import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.PdfPageEventHelper;
+import java.io.OutputStream;
 
 /**
  *
@@ -69,7 +67,7 @@ public class CaseManagementPrintPdf {
     private static Log log = LogFactory.getLog(CaseManagementPrintPdf.class);
     
     private HttpServletRequest request;
-    private HttpServletResponse response;
+    private OutputStream os;
         
     private float upperYcoord;   
     private Document document;
@@ -86,16 +84,16 @@ public class CaseManagementPrintPdf {
     private final int NUMCOLS = 2;
     
     /** Creates a new instance of CaseManagementPrintPdf */
-    public CaseManagementPrintPdf(HttpServletRequest request,HttpServletResponse response) {
+    public CaseManagementPrintPdf(HttpServletRequest request, OutputStream os) {
         this.request = request;
-        this.response = response;
+        this.os = os;
         formatter = new SimpleDateFormat("dd-MMM-yyyy");           
     }
     
     public void printDocHeaderFooter() throws IOException, DocumentException {
         //Create the document we are going to write to
         document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
+        PdfWriter writer = PdfWriter.getInstance(document,os);
         writer.setPageEvent(new EndPage());
         document.setPageSize(PageSize.LETTER);                
         document.open();

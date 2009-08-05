@@ -54,8 +54,8 @@ public class PreventionPrintAction extends Action {
        
        
        try {           
-           PreventionPrintPdf pdf = new PreventionPrintPdf(request, response);
-           pdf.printPdf();           
+           PreventionPrintPdf pdf = new PreventionPrintPdf();
+           pdf.printPdf(request, response);
            
        }catch(DocumentException de) {            
             System.err.println(de.getMessage());

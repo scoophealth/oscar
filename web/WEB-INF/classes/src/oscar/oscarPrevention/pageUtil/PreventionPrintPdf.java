@@ -28,13 +28,13 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+import java.io.OutputStream;
+import java.util.Map;
 /**
  *
  * @author rjonasz
  */
 public class PreventionPrintPdf {
-    private HttpServletRequest request;
-    private HttpServletResponse response;
     
     private int numLines;
     private int maxLines;
@@ -55,23 +55,27 @@ public class PreventionPrintPdf {
     private final int NUMCOLS = 2;
     
     /** Creates a new instance of PreventionPrintPdf */
-    public PreventionPrintPdf(HttpServletRequest request,HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
+    public PreventionPrintPdf() {
     }
     
-    public void printPdf() throws IOException, DocumentException{
-        //make sure we have data to print
+    public void printPdf(HttpServletRequest request, HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf");  //octet-stream
+        response.setHeader("Content-Disposition", "attachment; filename=\"Prevention.pdf\"");
         String[] headerIds = request.getParameterValues("printHP");
+        printPdf(headerIds, request, response.getOutputStream());
+    }
+    
+    public void printPdf(String[] headerIds, HttpServletRequest request, OutputStream outputStream) throws IOException, DocumentException{
+        //make sure we have data to print
+        //String[] headerIds = request.getParameterValues("printHP");
         if( headerIds == null )
             throw new DocumentException();
         
-        response.setContentType("application/pdf");  //octet-stream
-        response.setHeader("Content-Disposition", "attachment; filename=\"Prevention.pdf\"");
+        
         
         //Create the document we are going to write to
         document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document,response.getOutputStream());
+        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
         document.setPageSize(PageSize.LETTER);
         document.open();
         
@@ -164,7 +168,7 @@ public class PreventionPrintPdf {
             
             linesToBeWritten = 4;  //minimum lines for header and one prevention item
             pageBreak = checkColumnFill(ct, "", font, pageBreak); //if necessary break before we print prevention header
-            
+
             preventionHeader = request.getParameter("preventionHeader" + headerIds[idx]);
             Phrase procHeader = new Phrase(LEADING, "Prevention " + preventionHeader + "\n", font);
             ct.addText(procHeader);

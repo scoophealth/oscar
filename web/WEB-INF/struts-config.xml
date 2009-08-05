@@ -1830,7 +1830,8 @@
         </action>
         <!-- Population Report -->
         <!-- PHR -->
-        <action path="/SendToPhr" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+        <action path="/SendToPhr" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="inputJsp" path="/phr/SendToPhrPreview.jsp"/>
             <forward name="loginPage" path="/phr/response.jsp"/>
         </action>
         <action path="/demographic/viewPhrRecord" name="FrmForm" type="org.oscarehr.phr.web.PHRViewPatientRecord" parameter="method" scope="request">

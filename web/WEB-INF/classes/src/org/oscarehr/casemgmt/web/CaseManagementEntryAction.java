@@ -22,8 +22,10 @@
 
 package org.oscarehr.casemgmt.web;
 
+import com.lowagie.text.DocumentException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2128,6 +2130,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        response.setContentType("application/pdf"); // octet-stream
+        response.setHeader("Content-Disposition", "attachment; filename=\"Encounter-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
+        doPrint(request, response.getOutputStream());
+        return null;
+    }
+
+    public void doPrint(HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
         String ids = request.getParameter("notes2print");
 
         String demono = getDemographicNo(request);
@@ -2150,9 +2159,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
         // we're not guaranteed any ordering of notes given to us, so sort by observation date
         Collections.sort(notes, CaseManagementNote.noteObservationDateComparator);
-        
+
         List<CaseManagementNote> issueNotes;
-        HashMap<String,List<CaseManagementNote> >cpp = null; 
+        HashMap<String,List<CaseManagementNote> >cpp = null;
         if (request.getParameter("printCPP").equalsIgnoreCase("true")) {
             cpp = new HashMap<String,List<CaseManagementNote> >();
             String[] issueCodes = {"OMeds","SocHistory","MedHistory","Concerns","Reminders","FamHistory","RiskFactors"};
@@ -2176,17 +2185,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
         }
 
-        response.setContentType("application/pdf"); // octet-stream
-        response.setHeader("Content-Disposition", "attachment; filename=\"Encounter-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
 
-        CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, response);
+        CaseManagementPrintPdf printer = new CaseManagementPrintPdf(request, os);
         printer.printDocHeaderFooter();
         printer.printCPP(cpp);
         printer.printRx(demoNo,othermeds);
         printer.printNotes(notes);
         printer.finish();
-
-        return null;
     }
 
     public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
