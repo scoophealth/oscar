@@ -94,6 +94,7 @@ public class Log4JGmailErrorAppender extends AppenderSkeleton implements ThreadF
 				catch (NullPointerException e)
 				{
 					// this is okay, no throableStrRep available
+					LogLog.debug("no throableStrRep available", e);
 				}
 
 				
