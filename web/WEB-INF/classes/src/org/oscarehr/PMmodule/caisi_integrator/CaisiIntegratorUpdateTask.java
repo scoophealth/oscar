@@ -356,6 +356,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
 		demographicTransfer.setBirthDate(demographic.getBirthDay().getTime());
 
+		demographicTransfer.setHinType(demographic.getHcType());
 		demographicTransfer.setHinVersion(demographic.getVer());
 		
 		try
