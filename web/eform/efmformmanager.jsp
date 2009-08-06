@@ -174,12 +174,16 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 		<td width="25%" style="padding-left: 4px"><%=curForm.get("formFileName")%></td>
 		<td nowrap align='center' width="10%"><%=curForm.get("formDate")%></td>
 		<td nowrap align='center' width="10%"><%=curForm.get("formTime")%></td>
-		<td nowrap align='center'><a href="#"
-			onclick="confirmNDelete('../eform/delEForm.do?fid=<%=curForm.get("fid")%>')"><bean:message
-			key="eform.uploadhtml.btnDelete" /></a></td>
+		<td nowrap align='center'>
+                    <a href="#" onclick="document.getElementById('exp<%=i%>').submit();"><bean:message key="eform.uploadhtml.btnExport" /></a>
+                    <a href="#" onclick="confirmNDelete('../eform/delEForm.do?fid=<%=curForm.get("fid")%>')"><bean:message key="eform.uploadhtml.btnDelete" /></a>
+                    <form id="exp<%=i%>" action="../eform/manageEForm.do" target="_blank">
+                        <input type="hidden" name="method" value="exportEForm">
+                        <input type="hidden" name="fid" value="<%=curForm.get("fid")%>">
+                    </form>
+                </td>
 		<td nowrap align="center"><a
-			href="efmformmanageredit.jsp?fid=<%= curForm.get("fid")%>"><bean:message
-			key="eform.uploadhtml.editform" /></a></td>
+			href="efmformmanageredit.jsp?fid=<%= curForm.get("fid")%>"><bean:message key="eform.uploadhtml.editform" /></a></td>
 	</tr>
 	<% } %>
 </table>
