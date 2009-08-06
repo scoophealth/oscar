@@ -1709,19 +1709,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             }
         }
         
-        CheckBoxBean[] caseIssueList = new CheckBoxBean[oldList.length + k];
+		CheckBoxBean[] caseIssueList = new CheckBoxBean[oldList.length + k];
         for (int i = 0; i < oldList.length; i++) {
             caseIssueList[i] = new CheckBoxBean();
             caseIssueList[i].setChecked(oldList[i].getChecked());
             caseIssueList[i].setUsed(oldList[i].isUsed());
             caseIssueList[i].setIssue(oldList[i].getIssue());
-// SPOT            
-//            caseIssueList[i].setCommunityIssue(oldList[i].getCommunityIssue());
+            caseIssueList[i].setIssueDisplay(oldList[i].getIssueDisplay());
         }
         k = 0;
 
-                
-   String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+                        
+        String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
         Integer programId=null;
         if (programIdStr!=null) programId=Integer.valueOf(programIdStr);
 
@@ -1732,11 +1731,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         }catch(IOException e) {log.warn("Unable to load Dx properties file");}
         
         if( issueList != null ) {
-            for (int i = 0; i < issueList.length; i++) {
+        	CaseManagementViewAction caseManagementViewAction=new CaseManagementViewAction();
+
+        	for (int i = 0; i < issueList.length; i++) {
                 if (issueList[i].isChecked()) {
                     caseIssueList[oldList.length + k] = new CheckBoxBean();
-                    caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId));
+                    CaseManagementIssue cmi=newIssueToCIssue(sessionFrm, issueList[i].getIssue(), programId);
+                    caseIssueList[oldList.length + k].setIssue(cmi);
                     caseIssueList[oldList.length + k].setChecked("on");
+                    IssueDisplay issueDisplay=caseManagementViewAction.getIssueDisplay(programId, cmi);
+                    caseIssueList[oldList.length + k].setIssueDisplay(issueDisplay);
 
 
                     //should issue be automagically added to Dx? check config file

@@ -1018,28 +1018,32 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 		for (CaseManagementIssue cmi : localIssues)
 		{
-			IssueDisplay issueDisplay=new IssueDisplay();
-			
-			if (programId!=null) issueDisplay.writeAccess=cmi.isWriteAccess(programId);
-			
-			issueDisplay.acute=cmi.isAcute()?"acute":"chronic";
-			issueDisplay.certain=cmi.isCertain()?"certain":"uncertain";
-			
-			long issueId=cmi.getIssue_id();
-			Issue issue=issueDao.getIssue(issueId);
-			
-			issueDisplay.code=issue.getCode();
-			issueDisplay.codeType=OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE").toUpperCase();
-			issueDisplay.description=issue.getDescription();
-			issueDisplay.location="local";
-			issueDisplay.major=cmi.isMajor()?"major":"not major";
-			issueDisplay.priority=issue.getPriority();
-			issueDisplay.resolved=cmi.isResolved()?"resolved":"unresolved";
-			issueDisplay.role=issue.getRole();
-			
+			IssueDisplay issueDisplay = getIssueDisplay(programId, cmi);
 			issuesToDisplay.add(issueDisplay);
 		}
 	}
+
+	protected IssueDisplay getIssueDisplay(Integer programId, CaseManagementIssue cmi) {
+	    IssueDisplay issueDisplay=new IssueDisplay();
+	    
+	    if (programId!=null) issueDisplay.writeAccess=cmi.isWriteAccess(programId);
+	    
+	    issueDisplay.acute=cmi.isAcute()?"acute":"chronic";
+	    issueDisplay.certain=cmi.isCertain()?"certain":"uncertain";
+	    
+	    long issueId=cmi.getIssue_id();
+	    Issue issue=issueDao.getIssue(issueId);
+	    
+	    issueDisplay.code=issue.getCode();
+	    issueDisplay.codeType=OscarProperties.getInstance().getProperty("COMMUNITY_ISSUE_CODETYPE").toUpperCase();
+	    issueDisplay.description=issue.getDescription();
+	    issueDisplay.location="local";
+	    issueDisplay.major=cmi.isMajor()?"major":"not major";
+	    issueDisplay.priority=issue.getPriority();
+	    issueDisplay.resolved=cmi.isResolved()?"resolved":"unresolved";
+	    issueDisplay.role=issue.getRole();
+	    return issueDisplay;
+    }
 
 	public ActionForward viewNote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String nId = request.getParameter("noteId");
