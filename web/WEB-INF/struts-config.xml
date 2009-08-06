@@ -1325,6 +1325,9 @@
         <action input="/eform/efmformmanager.jsp" name="deleteEform" path="/eform/delEForm" scope="request" type="oscar.eform.actions.DelEFormAction">
             <forward name="success" path="/eform/efmformmanager.jsp" />
         </action>
+        <action input="/eform/efmformmanager.jsp" name="deleteEform" path="/eform/manageEForm" scope="request" type="oscar.eform.actions.ManageEFormAction" parameter="method">
+            <forward name="success" path="/eform/efmformmanager.jsp" />
+        </action>
         <action input="/eform/efmformadd_data.jsp" name="saveEForm" path="/eform/addEForm" scope="request" type="oscar.eform.actions.AddEFormAction">
             <forward name="close" path="/eform/efmclosewindow.jsp" />
         </action>
