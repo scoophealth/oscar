@@ -100,7 +100,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 				<tr>
 					<td align='right' nowrap><b><bean:message
 						key="eform.uploadhtml.formFileName" /> </b></td>
-					<td><input type="file" name="formHtml" size="80"></td>
+					<td><input type="file" name="formHtml" size="40"></td>
 				</tr>
 				<tr>
 					<td></td>

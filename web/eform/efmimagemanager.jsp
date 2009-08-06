@@ -82,7 +82,7 @@
 				<tr>
 					<td align='right' nowrap><b><bean:message
 						key="eform.uploadimages.msgFileName" /> </b></td>
-					<td><input type="file" name="image" size="70"></td>
+					<td><input type="file" name="image" size="40"></td>
 				</tr>
 				<tr>
 					<td></td>
