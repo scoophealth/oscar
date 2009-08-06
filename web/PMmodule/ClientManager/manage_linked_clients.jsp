@@ -57,7 +57,7 @@
 				{
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
-							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> /></td>
+							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> <%=ManageLinkedClients.isLinkedByHC(demographic, temp)?"disabled=\"disabled\"":""%> /></td>
 							<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+temp.imageUrl%>" alt="client_image_<%=temp.linkDestination+'_'+temp.remoteLinkId%>" /></td>
 							<td class="genericTableData"><%=temp.matchingScore%></td>
 							<td class="genericTableData"><%=temp.lastName%></td>
