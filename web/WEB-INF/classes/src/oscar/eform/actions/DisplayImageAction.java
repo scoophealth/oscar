@@ -31,6 +31,7 @@ package oscar.eform.actions;
 
 import java.io.File;
 
+import java.io.InputStream;
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,5 +84,28 @@ public class DisplayImageAction extends DownloadAction{
         String contentType = new MimetypesFileTypeMap().getContentType(file);
         //System.out.println("content type:" + contentType);
         return new FileStreamInfo(contentType, file);   
-    }   
+    }
+
+    public File getImageFile(String imageFileName) throws Exception {
+        String home_dir = OscarProperties.getInstance().getProperty("eform_image");
+
+        File file = null;
+        try{
+           File directory = new File(home_dir);
+           if(!directory.exists()){
+              throw new Exception("Directory:  "+home_dir+ " does not exist");
+           }
+           file = new File(directory,imageFileName);
+           //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
+           //System.out.println("absolutepath: " + canonicalPath);
+           if (!directory.equals(file.getParentFile())) {
+               System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
+               throw new Exception("Could not open file " + imageFileName + ".  Check the file path");
+           }
+           return file;
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception("Could not open file "+home_dir+imageFileName +" does "+home_dir+ " exist ?",e);
+        }
+    }
 }
