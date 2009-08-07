@@ -1,14 +1,8 @@
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients.LinkedDemographicHolder"%>
-<%@page import="org.oscarehr.util.SessionConstants"%>
-<%@page import="org.oscarehr.common.dao.*"%>
-<%@page import="org.oscarehr.common.model.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.DemographicWs"%>
 <%@page import="org.oscarehr.PMmodule.web.ManageLinkedClients"%>
-<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
@@ -20,7 +14,6 @@
 	Demographic demographic=demographicDao.getDemographicById(currentDemographicId);
 	ArrayList<ManageLinkedClients.LinkedDemographicHolder> demographicsToDisplay=ManageLinkedClients.getDemographicsToDisplay(currentDemographicId);
 %>
-
 
 <h3>Manage Linked Clients</h3>
 
@@ -57,7 +50,22 @@
 				{
 					%>
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
-							<td class="genericTableData"><input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> <%=ManageLinkedClients.isLinkedByHC(demographic, temp)?"disabled=\"disabled\"":""%> /></td>
+							<td class="genericTableData">
+								<%
+									if (temp.changeable)
+									{
+										%>
+											<input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> />
+										<%
+									}
+									else
+									{
+										%>
+											Implicilty<br />Linked
+										<%
+									}
+								%>
+							</td>
 							<td class="genericTableData"><img style="height:96px; width:96px" src="<%=request.getContextPath()+temp.imageUrl%>" alt="client_image_<%=temp.linkDestination+'_'+temp.remoteLinkId%>" /></td>
 							<td class="genericTableData"><%=temp.matchingScore%></td>
 							<td class="genericTableData"><%=temp.lastName%></td>

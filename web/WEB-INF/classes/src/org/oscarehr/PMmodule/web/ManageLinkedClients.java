@@ -48,6 +48,7 @@ public class ManageLinkedClients {
 		public String hin = "";
 		public String hinType = "";
 		public String imageUrl=ClientImage.imageMissingPlaceholderUrl;
+		public boolean changeable=true;
 	}
 
 	public static ArrayList<LinkedDemographicHolder> getDemographicsToDisplay(Integer demographicId) {
@@ -177,9 +178,10 @@ public class ManageLinkedClients {
 	private static void addCurrentLinks(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException {
 		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
 		List<DemographicTransfer> directLinksTemp = demographicWs.getDirectlyLinkedDemographicsByDemographicId(demographic.getDemographicNo());
+		List<DemographicTransfer> linksTemp = demographicWs.getLinkedDemographicsByDemographicId(demographic.getDemographicNo());
 
-		for (DemographicTransfer cachedDemographic : directLinksTemp) {
-			String tempKey = ClientLink.Type.OSCAR_CAISI.name() + '.' + cachedDemographic.getIntegratorFacilityId() + '.' + cachedDemographic.getCaisiDemographicId();
+		for (DemographicTransfer demographicTransfer : linksTemp) {
+			String tempKey = ClientLink.Type.OSCAR_CAISI.name() + '.' + demographicTransfer.getIntegratorFacilityId() + '.' + demographicTransfer.getCaisiDemographicId();
 
 			LinkedDemographicHolder integratorLinkedDemographicHolder = results.get(tempKey);
 
@@ -189,10 +191,38 @@ public class ManageLinkedClients {
 			}
 
 			integratorLinkedDemographicHolder.linked = true;
-			copyDemographicTransferDataToScorePlaceholder(cachedDemographic, integratorLinkedDemographicHolder);
+			
+			DemographicTransfer directLink=exists(directLinksTemp, demographicTransfer);
+			if (directLink!=null) // i.e. directly linked
+			{
+				// if the Health number is the same then no it's not changeable
+				if (demographicTransfer.getHin()!=null && demographicTransfer.getHinType()!=null && demographicTransfer.getHin().equals(directLink.getHin()) && demographicTransfer.getHinType().equals(directLink.getHinType())) 
+				{
+					integratorLinkedDemographicHolder.changeable=false;
+				}
+			}
+			else // directLink==null i.e. transitively linked
+			{
+				integratorLinkedDemographicHolder.changeable=false;
+			}
+						
+			copyDemographicTransferDataToScorePlaceholder(demographicTransfer, integratorLinkedDemographicHolder);
 		}
 	}
 
+	private static DemographicTransfer exists(List<DemographicTransfer> directLinksTemp, DemographicTransfer demographicTransfer)
+	{
+		for (DemographicTransfer directLink : directLinksTemp)
+		{
+			if (demographicTransfer.getIntegratorFacilityId().equals(directLink.getIntegratorFacilityId()) && demographicTransfer.getCaisiDemographicId()==directLink.getCaisiDemographicId())
+			{
+				return(directLink);
+			}
+		}
+		
+		return(null);
+	}
+	
 	private static void addPotentialMatches(HashMap<String, LinkedDemographicHolder> results, Demographic demographic) throws MalformedURLException {
 		MatchingDemographicParameters parameters = getMatchingDemographicParameters(demographic);
 		DemographicWs demographicWs = CaisiIntegratorManager.getDemographicWs();
@@ -265,17 +295,5 @@ public class ManageLinkedClients {
 			String imageUrl="/imageRenderingServlet?source="+ImageRenderingServlet.Source.local_client.name()+"&clientId="+currentDemographicId;
 			return(imageUrl);
 		}	
-	}
-	
-	public static boolean isLinkedByHC(Demographic demographic, LinkedDemographicHolder demographicHolder)
-	{
-		String hin=StringUtils.trimToNull(demographic.getHin());
-		String hinType=StringUtils.trimToNull(demographic.getHcType());
-		if (hin!=null && hinType!=null)
-		{
-			return(hin.equals(demographicHolder.hin) && hinType.equals(demographicHolder.hinType));
-		}
-		
-		return(false);
-	}
+	}	
 }
