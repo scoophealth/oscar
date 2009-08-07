@@ -32,8 +32,10 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.List;
+import java.util.Enumeration;
 
+import java.util.List;
+import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,14 +46,18 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
+import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
-import oscar.entities.Billactivity;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanCodesManager;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanResponse;
-import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanService;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanUserPassDAO;
+import oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO;
+import oscar.entities.*;
+import oscar.entities.BillingDxCode;
+import oscar.oscarBilling.ca.bc.MSP.MspErrorCodes;
+import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 
@@ -111,7 +117,81 @@ public class ManageTeleplanAction extends DispatchAction {
            request.setAttribute("codes",list);
            return mapping.findForward("codelist");
     }
-    
+
+
+    public ActionForward updateteleplanICDCodesList(ActionMapping mapping, ActionForm  form,
+           HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+
+           BillingDxCodeDAO bDx = (BillingDxCodeDAO) SpringUtils.getBean("BillingDxCodeDAO");
+
+           log.debug("UPDATE ICD  CODE WITH PARSING");
+           TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           String[] userpass = dao.getUsernamePassword();
+           TeleplanService tService = new TeleplanService();
+           TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
+           TeleplanResponse tr = tAPI.getAsciiFile("2");
+
+           log.debug("real filename "+tr.getRealFilename());
+
+           File file = tr.getFile();
+           BufferedReader buff = new BufferedReader(new FileReader(file));
+
+           String line = null;
+           Properties dxProp = new Properties();
+           while ((line = buff.readLine()) != null) {
+               System.out.println(line);
+               if (!line.startsWith("REM")){
+                   System.out.println(line.substring(0,5).trim()+"="+line.substring(4).trim());
+                   String code = line.substring(0,5).trim();
+                   String desc = line.substring(4).trim();
+
+                   if(dxProp.containsKey(code)){//Some of the lines in file double up for a longer desc.
+                       String dxDesc = dxProp.getProperty(code);
+                       dxDesc += " " +desc;
+                       dxProp.setProperty(code, dxDesc);
+                   }else{
+                       dxProp.put(code, desc);
+                   }
+
+               }
+           }
+
+           Enumeration dxKeys = dxProp.keys();
+           while(dxKeys.hasMoreElements()){
+               String code = (String) dxKeys.nextElement();
+               String desc = dxProp.getProperty(code);
+               
+                   List<BillingDxCode> dxList = bDx.getByDxCode(code);
+                   if (dxList == null || dxList.size() == 0){ //New Code
+                        BillingDxCode dxCode = new BillingDxCode();
+                        log.debug("Adding new code "+code+" desc : "+desc);
+                        dxCode.setRegion("BC");
+                        dxCode.setStatus("A");
+                   }
+/*
+ We could change this to update descriptions of older codes.  But it would wipe out any customizations that had been made.                    
+ */
+//                   else{
+//                       if (dxList.size() > 1){
+//                           System.out.println(" THIS SHOULDN'T HAPPEN!!!!!!!!");
+//                           for(BillingDxCode dx :dxList){
+//                               System.out.println(dx.getDiagnosticCode()+"DESC>"+desc+":"+dx.getDescription()+">"+dxProp.getProperty(code));
+//                           }
+//                           linesThatShouldnthappen ++;
+//                       }else{
+//                          BillingDxCode dx = dxList.get(0);
+//                          //System.out.println("DESC>"+desc+":"+dx.getDescription());
+//                          existingCodes++;
+//                       }
+//
+//                   }
+
+                   
+           }
+           return mapping.findForward("success");
+    }
+
     /*
      *  2 = MSP ICD9 Codes (3 char)
 	*      1 = MSP Explanatory Codes List
@@ -122,7 +202,7 @@ public class ManageTeleplanAction extends DispatchAction {
            throws Exception {
         
            System.out.println("UPDATE EXplanation  CODE WITH PARSING");
-           /*TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
            TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
@@ -130,47 +210,52 @@ public class ManageTeleplanAction extends DispatchAction {
            TeleplanResponse tr = tAPI.getAsciiFile("1");
            
            log.debug("real filename "+tr.getRealFilename());
-            */
-           //File file = tr.getFile();
-           String directory = OscarProperties.getInstance().getProperty("DOCUMENT_DIR","./");
-           File file = new File (directory+"teleplanTPBULET-1.txt0.6378638718721944"); 
            
+           File file = tr.getFile();
            BufferedReader buff = new BufferedReader(new FileReader(file));
 
            String line = null;
            System.out.println("start while" );
            boolean start= false;
            StringBuffer sb = new StringBuffer();
+           MspErrorCodes errorCodes = new MspErrorCodes();
+           System.out.println("Msp error codes "+errorCodes.size());
            while ((line = buff.readLine()) != null) {
                line = line.trim();
                //System.out.println("LINE >"+line+"<");
                if (line != null && line.startsWith("--")){
-                   System.out.println("TRIGGERING START");
                    start = true;
+                   continue;
                }
                if (start){
-                   
                    if (line.trim().equals("")){
-                       //System.out.println(sb.toString());
                        String togo = sb.toString();
-                       String newS = togo.substring(0,2)+"="+togo.substring(4);
-                           System.out.println(newS);    
                        sb = new StringBuffer();
+                       if (!togo.equals("")){
+                          errorCodes.put(togo.substring(0,2), togo.substring(4));
+                       }
                    }else{
                        sb.append(line);
                    }
-                   
-                 
-                   
                }
-               
-               
-           }    
-           //File file = tr.getFile();
-           //TeleplanCodesManager tcm = new TeleplanCodesManager();
-           //List list = tcm.parse(file);
-           //request.setAttribute("codes",list);
-          // System.out.println(tr.getMsgs());
+           }
+
+           if (sb.length() > 0){ //still left in the buffer
+               String togo = sb.toString();
+               int i = togo.lastIndexOf("#TID");
+               if (i != -1){
+                  togo = togo.substring(0,i);
+               }
+
+               if (!togo.equals("")){
+                  errorCodes.put(togo.substring(0,2), togo.substring(4));
+               }
+           }
+
+           errorCodes.save();
+
+           System.out.println("Msp error codes "+errorCodes.size());
+           System.out.println(sb.toString());
            return mapping.findForward("success");
     }
     

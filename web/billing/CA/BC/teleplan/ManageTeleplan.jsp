@@ -356,10 +356,28 @@ div.recommendations li{
                     </html:form>
                   </div>
                </div> 
-              
+
+              <div class="leftBox">
+                  <h3>&nbsp;Update Explanatory Codes</h3>
+                  <div style="background-color: #EEEEFF;" >
+                     <html:form action="/billing/CA/BC/ManageTeleplan">
+                         <input type="hidden" name="method" value="updateExplanatoryCodesList"/>
+                         <input type="submit"/>
+                    </html:form>
+                  </div>
+               </div>
+
+                <div class="leftBox">
+                  <h3>&nbsp;Update MSP ICD9 Codes</h3>
+                  <div style="background-color: #EEEEFF;" >
+                     <html:form action="/billing/CA/BC/ManageTeleplan">
+                         <input type="hidden" name="method" value="updateteleplanICDCodesList"/>
+                         <input type="submit"/>
+                    </html:form>
+                  </div>
+               </div> 
            
                 
-               
                <div class="leftBox">
                   <h3>&nbsp;Change Teleplan Password</h3>
                   <div style="background-color: #EEEEFF;" >
