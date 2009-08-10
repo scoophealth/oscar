@@ -252,11 +252,12 @@ public class ManageTeleplanAction extends DispatchAction {
                }
            }
 
-           errorCodes.save();
+           //errorCodes.save();
 
            System.out.println("Msp error codes "+errorCodes.size());
            System.out.println(sb.toString());
-           return mapping.findForward("success");
+           //return mapping.findForward("success");
+           throw new Exception("Need to fix this, uncomment errorCodes.save() in ManageTeleplanAction.java:255");
     }
     
     
