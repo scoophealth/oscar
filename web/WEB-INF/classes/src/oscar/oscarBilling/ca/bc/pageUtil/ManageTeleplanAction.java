@@ -35,6 +35,7 @@ import java.io.FileReader;
 import java.util.Enumeration;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -254,10 +255,20 @@ public class ManageTeleplanAction extends DispatchAction {
 
            //errorCodes.save();
 
+           //...I guess pass the errors back to jsp
+           StringBuffer errorStr = new StringBuffer("");
+           for (Entry error: errorCodes.entrySet()) {
+               errorStr.append("Error codes: \n");
+               errorStr.append(error.getKey());
+               errorStr.append(error.getValue());
+               errorStr.append("\n");
+           }
+           request.setAttribute("error", errorStr);
+           //---------------------------------------------------------------------------
+
            System.out.println("Msp error codes "+errorCodes.size());
            System.out.println(sb.toString());
-           //return mapping.findForward("success");
-           throw new Exception("Need to fix this, uncomment errorCodes.save() in ManageTeleplanAction.java:255");
+           return mapping.findForward("success");
     }
     
     
