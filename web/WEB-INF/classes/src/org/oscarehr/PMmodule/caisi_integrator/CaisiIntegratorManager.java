@@ -73,6 +73,7 @@ import org.oscarehr.util.TimeClearedHashMap;
  */
 public class CaisiIntegratorManager {
 
+	/** only non-audited data should be cached in here */
 	private static TimeClearedHashMap<String, Object> basicDataCache=new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 	
 	public static boolean isEnableIntegratedReferrals() {
