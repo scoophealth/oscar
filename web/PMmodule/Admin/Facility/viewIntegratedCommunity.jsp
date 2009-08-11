@@ -1,14 +1,13 @@
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
-<%@page import="org.oscarehr.PMmodule.web.admin.IntegratorJspBean"%>
+<%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.CachedFacility"%>
 <%@page import="java.util.List"%>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 <%
-	List<CachedFacility> facilities=IntegratorJspBean.getIntegratorFacilityCommunity();
+	List<CachedFacility> facilities=CaisiIntegratorManager.getRemoteFacilities();
 %>
-
 
 <h3>Community of integrated facilities</h3>
 

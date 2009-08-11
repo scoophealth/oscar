@@ -284,7 +284,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedPrograms.add(cachedProgram);
 		}
 
-		ProgramWs service = CaisiIntegratorManager.getProgramWs(facility.getId());
+		ProgramWs service = CaisiIntegratorManager.getProgramWs(facility);
 		service.setCachedPrograms(cachedPrograms);
 	}
 
@@ -309,7 +309,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedProviders.add(cachedProvider);
 		}
 
-		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility.getId());
+		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
 		service.setCachedProviders(cachedProviders);
 	}
 

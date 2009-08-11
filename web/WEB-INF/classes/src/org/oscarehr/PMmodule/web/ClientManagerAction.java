@@ -101,7 +101,6 @@ import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.SessionConstants;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -1046,10 +1045,9 @@ public class ClientManagerAction extends BaseAction {
 
 		request.setAttribute("programs", programManager.search(criteria));
 
-		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
 		if (CaisiIntegratorManager.isEnableIntegratedReferrals()) {
 			try {
-				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals(facility.getId());
+				List<CachedProgram> results = CaisiIntegratorManager.getRemoteProgramsAcceptingReferrals();
 				filterResultsByCriteria(results, criteria);
 				request.setAttribute("remotePrograms", results);
 			} catch (MalformedURLException e) {
