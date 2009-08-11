@@ -32,8 +32,11 @@
 
 package oscar.oscarBilling.ca.bc.MSP;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Properties;
 
 import oscar.OscarProperties;
@@ -48,11 +51,35 @@ public class MspErrorCodes extends Properties{
          if (OscarProperties.getInstance().getProperty("msp_error_codes") != null){
             String filename = OscarProperties.getInstance().getProperty("msp_error_codes");
             is = new FileInputStream(filename) ;
-         }         
+         }else{
+             File file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR"),"msp_error_codes.properties");
+             if (file != null && file.exists()){
+                 is = new FileInputStream(file);
+             }
+         }
          load(is);
       } catch (Exception e) {
          e.printStackTrace();
          System.out.println("Error loading MSP Error codes file :"+oscar.OscarProperties.getInstance().getProperty("msp_error_codes"));
       }
-   }   
+   }
+
+
+   public void save(){
+       try {
+       File file = null;
+       if (OscarProperties.getInstance().getProperty("msp_error_codes") != null){
+           String filename = OscarProperties.getInstance().getProperty("msp_error_codes");
+           file = new File(filename);
+       }else{
+           file = new File(OscarProperties.getInstance().getProperty("DOCUMENT_DIR"),"msp_error_codes.properties");
+       }
+
+       store(new FileOutputStream(file),"Written on "+new Date());
+        } catch (Exception e) {
+         e.printStackTrace();
+      }
+
+   }
+
 }
