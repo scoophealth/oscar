@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.caisi_integrator.ws.CachedProgram;
@@ -56,6 +57,7 @@ import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.TimeClearedHashMap;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -71,6 +73,8 @@ import org.oscarehr.util.LoggedInInfo;
  */
 public class CaisiIntegratorManager {
 
+	private static TimeClearedHashMap<String, Object> basicDataCache=new TimeClearedHashMap<String, Object>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	
 	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
@@ -101,9 +105,18 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
-		FacilityWs facilityWs = getFacilityWs();
-		List<CachedFacility> results = facilityWs.getAllFacility();
+    public static List<CachedFacility> getRemoteFacilities() throws MalformedURLException {
+		
+    	@SuppressWarnings("unchecked")
+		List<CachedFacility> results=(List<CachedFacility>) basicDataCache.get("ALL FACILITIES");
+    	
+    	if (results==null)
+    	{
+			FacilityWs facilityWs = getFacilityWs();
+			results = facilityWs.getAllFacility();
+			basicDataCache.put("ALL_FACILITIES", results);
+    	}
+    	
 		return (results);
 	}
 
@@ -141,12 +154,6 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	public static List<CachedProgram> getRemotePrograms() throws MalformedURLException {
-		ProgramWs programWs = getProgramWs();
-		List<CachedProgram> results = programWs.getAllPrograms();
-		return(results);
-	}
-
 	/**
 	 * @param type should not be null
 	 * @return a list of cached programs matching the program type
@@ -154,7 +161,7 @@ public class CaisiIntegratorManager {
 	public static ArrayList<CachedProgram> getRemotePrograms(String type) throws MalformedURLException {
 		ArrayList<CachedProgram> results = new ArrayList<CachedProgram>();
 
-		for (CachedProgram cachedProgram : getRemotePrograms()) {
+		for (CachedProgram cachedProgram : getProgramWs().getAllPrograms()) {
 			if (type.equals(cachedProgram.getType())) results.add(cachedProgram);
 		}
 
@@ -162,7 +169,7 @@ public class CaisiIntegratorManager {
 	}
 
 	public static CachedProgram getRemoteProgram(FacilityIdIntegerCompositePk remoteProgramPk) throws MalformedURLException {
-		List<CachedProgram> programs = getRemotePrograms();
+		List<CachedProgram> programs = getProgramWs().getAllPrograms();
 
 		for (CachedProgram cachedProgram : programs) {
 			if (facilityIdIntegerPkEquals(cachedProgram.getFacilityIdIntegerCompositePk(), remoteProgramPk)) {
@@ -209,9 +216,18 @@ public class CaisiIntegratorManager {
 		return (port);
 	}
 
-	private static List<CachedProvider> getAllProviders() throws MalformedURLException {
-		ProviderWs providerWs = getProviderWs();
-		List<CachedProvider> results = providerWs.getAllProviders();
+    private static List<CachedProvider> getAllProviders() throws MalformedURLException {
+		
+    	@SuppressWarnings("unchecked")
+		List<CachedProvider> results=(List<CachedProvider>) basicDataCache.get("ALL_PROVIDERS");
+
+    	if (results==null)
+    	{
+			ProviderWs providerWs = getProviderWs();
+			results = providerWs.getAllProviders();
+			basicDataCache.put("ALL_PROVIDERS", results);
+    	}
+    	
 		return (results);
 	}
 
