@@ -50,14 +50,12 @@ import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
-import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.hnr.ws.MatchingClientParameters;
 import org.oscarehr.hnr.ws.MatchingClientScore;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.SpringUtils;
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -73,8 +71,6 @@ import org.oscarehr.util.SpringUtils;
  */
 public class CaisiIntegratorManager {
 
-	private static FacilityDao facilityDao=(FacilityDao)SpringUtils.getBean("facilityDao");
-
 	public static boolean isEnableIntegratedReferrals() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 		return(facility.isIntegratorEnabled() && facility.isEnableIntegratedReferrals());
@@ -83,10 +79,6 @@ public class CaisiIntegratorManager {
 	public static boolean isEnableHealthNumberRegistry() {
 		Facility facility = LoggedInInfo.loggedInInfo.get().currentFacility;
 		return(facility.isIntegratorEnabled() && facility.isEnableHealthNumberRegistry());
-	}
-
-	private static Facility getLocalFacility(int facilityId) {
-		return (facilityDao.find(facilityId));
 	}
 
 	private static void addAuthenticationInterceptor(Facility facility, Object wsPort) {
@@ -136,8 +128,7 @@ public class CaisiIntegratorManager {
 	}
 
 	public static ProgramWs getProgramWs() throws MalformedURLException {
-		Facility facility = getLocalFacility(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
-		return(getProgramWs(facility));
+		return(getProgramWs(LoggedInInfo.loggedInInfo.get().currentFacility));
 	}
 
 	public static ProgramWs getProgramWs(Facility facility) throws MalformedURLException {
@@ -205,8 +196,7 @@ public class CaisiIntegratorManager {
 	}
 
 	public static ProviderWs getProviderWs() throws MalformedURLException {
-		Facility facility = getLocalFacility(LoggedInInfo.loggedInInfo.get().currentFacility.getId());
-		return (getProviderWs(facility));
+		return (getProviderWs(LoggedInInfo.loggedInInfo.get().currentFacility));
 	}
 
 	public static ProviderWs getProviderWs(Facility facility) throws MalformedURLException {
