@@ -25,6 +25,8 @@ import org.w3c.dom.Element;
 public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor implements CallbackHandler {
 	private static final String AUDIT_TRAIL_KEY = "auditTrail";
 	private static QName AUDIT_TRAIL_QNAME = new QName("http://oscarehr.org/caisi", AUDIT_TRAIL_KEY, "caisi");
+	private static final String REQUESTING_USER_ROLES_KEY = "requestingUserRoles";
+	private static QName REQUESTING_USER_ROLES_QNAME = new QName("http://oscarehr.org/caisi", REQUESTING_USER_ROLES_KEY, "caisi");
 
 	private String password = null;
 
@@ -53,8 +55,17 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 
 	public void handleMessage(SoapMessage message) throws Fault {
 		addAuditTrail(message);
+		addRequestionUserRoles(message);
 		super.handleMessage(message);
 	}
+
+	private static void addRequestionUserRoles(SoapMessage message) {
+		List<Header> headers = message.getHeaders();
+	    
+		// here is where we should get the roles and set the header, probably csv of roles should be fine.
+		String roles="";
+		headers.add(createHeader(REQUESTING_USER_ROLES_QNAME, REQUESTING_USER_ROLES_KEY, roles));
+    }
 
 	private static void addAuditTrail(SoapMessage message) {
 		List<Header> headers = message.getHeaders();
@@ -74,16 +85,16 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 			auditTrail.append("oscar_caisi.providerNo=").append(loggedInInfo.loggedInProvider.getProviderNo());
 		}
 
-		headers.add(createHeader(auditTrail.toString()));
+		headers.add(createHeader(AUDIT_TRAIL_QNAME, AUDIT_TRAIL_KEY, auditTrail.toString()));
 	}
 
-	private static Header createHeader(String value) {
+	private static Header createHeader(QName qName, String key, String value) {
 		Document document = DOMUtils.createDocument();
 
-		Element element = document.createElementNS("http://oscarehr.org/caisi", "caisi:" + AUDIT_TRAIL_KEY);
+		Element element = document.createElementNS("http://oscarehr.org/caisi", "caisi:" + key);
 		element.setTextContent(value);
 
-		SoapHeader header = new SoapHeader(AUDIT_TRAIL_QNAME, element);
+		SoapHeader header = new SoapHeader(qName, element);
 		return (header);
 	}
 }
