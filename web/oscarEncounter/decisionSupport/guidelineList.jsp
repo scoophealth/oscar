@@ -63,7 +63,7 @@ pageContext.setAttribute("provider_no", request.getParameter("provider_no"));
                 <td>
                     <logic:equal name="passed" value="true"><span class="good">Passed</span></logic:equal>
                     <logic:equal name="passed" value="false"><span class="bad">Failed</span></logic:equal>
-                    - <a href="<%=pageContext.getServletContext().getContextPath()%>/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=<bean:write name="guideline" property="id"/>&provider_no=<bean:write name="provider_no"/>&demographic_no=<bean:write name="demographic_no"/>">more info</a>
+                    - <a href="<%=request.getContextPath()%>/oscarEncounter/decisionSupport/guidelineAction.do?method=detail&guidelineId=<bean:write name="guideline" property="id"/>&provider_no=<bean:write name="provider_no"/>&demographic_no=<bean:write name="demographic_no"/>">more info</a>
                 </td>
                 <%}%>
             </tr>
