@@ -18,7 +18,10 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSPasswordCallback;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -61,12 +64,18 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 
 	private static void addRequestionUserRoles(SoapMessage message) {
 		List<Header> headers = message.getHeaders();
-	    
+
 		// here is where we should get the roles and set the header, probably csv of roles should be fine.
 		// SecUserRole should be the one we want, it should be the oscar role.
-		String roles="";
-		headers.add(createHeader(REQUESTING_USER_ROLES_QNAME, REQUESTING_USER_ROLES_KEY, roles));
-    }
+		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
+		if (loggedInInfo.loggedInProvider != null) {
+			SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+			List<SecUserRole> roles = secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
+			String rolesString = SecUserRole.getRoleNameAsCsv(roles);
+
+			headers.add(createHeader(REQUESTING_USER_ROLES_QNAME, REQUESTING_USER_ROLES_KEY, rolesString));
+		}
+	}
 
 	private static void addAuditTrail(SoapMessage message) {
 		List<Header> headers = message.getHeaders();

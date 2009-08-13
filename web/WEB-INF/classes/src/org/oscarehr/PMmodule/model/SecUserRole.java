@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * This is the object class that relates to the secUserRole table.
@@ -139,5 +140,23 @@ public class SecUserRole implements Serializable {
 
     public String toString () {
         return super.toString();
+    }
+    
+    /**
+     * @return a csv of the roleNames, null if the list passed in is null., blank if the list passed in is 0 items.
+     */
+    public static String getRoleNameAsCsv(List<SecUserRole> secUserRoles)
+    {
+		if (secUserRoles==null) return(null);
+		
+		StringBuilder sb = new StringBuilder();
+
+		for (SecUserRole secUserRole : secUserRoles)
+		{
+			if (sb.length() > 1) sb.append(',');
+			sb.append(secUserRole.getRoleName());
+		}
+
+		return(sb.toString());
     }
 }
