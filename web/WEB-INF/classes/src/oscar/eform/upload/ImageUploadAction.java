@@ -28,8 +28,11 @@
 package oscar.eform.upload;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,18 +46,27 @@ import oscar.OscarProperties;
 
 public class ImageUploadAction extends Action {
     
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
          ImageUploadForm fm = (ImageUploadForm) form;
          FormFile image = fm.getImage();
          try {
              byte[] imagebytes = image.getFileData();
-             String filepath = OscarProperties.getInstance().getProperty("eform_image") + 
-                               "/" + image.getFileName();
-             FileOutputStream fos = new FileOutputStream(new File(filepath));
+             OutputStream fos = this.getEFormImageOutputStream(image.getFileName());
              fos.write(imagebytes);
          } catch (Exception e) { e.printStackTrace(); }
          return mapping.findForward("success");
+    }
+
+    public static OutputStream getEFormImageOutputStream(String imageFileName) throws FileNotFoundException {
+        String filepath = OscarProperties.getInstance().getProperty("eform_image") + "/" + imageFileName;
+        FileOutputStream fos = new FileOutputStream(new File(filepath));
+        return fos;
+    }
+
+    public static File getImageFolder() throws IOException {
+        File imageFolder = new File(OscarProperties.getInstance().getProperty("eform_image") + "/");
+        if (!imageFolder.exists() && !imageFolder.mkdirs()) throw new IOException("Could not create directory " + imageFolder.getAbsolutePath() + " check permissions and ensure the correct eform_image property is set in the properties file");
+        return imageFolder;
     }
     
 }

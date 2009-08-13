@@ -52,7 +52,14 @@ public class EFormUtil {
    
    
    private EFormUtil() {}
+
+   public static String saveEForm(EForm eForm) {
+       return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator());
+   }
    public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
+       return saveEForm(formName, formSubject, fileName, htmlStr, null);
+   }
+   public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator) {
        //called by the upload action, puts the uploaded form into DB
        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
        String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
@@ -60,8 +67,10 @@ public class EFormUtil {
        formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(formName);
        formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(formSubject);
        fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
-       String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, status, form_html) VALUES " +
-             "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', 1, '" + htmlStr + "')";
+       if (creator == null) creator = "NULL";
+       else creator = "'" + creator + "'";
+       String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, form_creator, status, form_html) VALUES " +
+             "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', " + creator + ", 1, '" + htmlStr + "')";
        return (runSQLinsert(sql));
    }
    
@@ -154,6 +163,7 @@ public class EFormUtil {
            curht.put("formFileName", rsGetString(rs, "file_name"));
            curht.put("formDate", rsGetString(rs, "form_date"));
            curht.put("formTime", rsGetString(rs, "form_time"));
+           curht.put("formCreator", rsGetString(rs, "form_creator"));
            curht.put("formHtml", rsGetString(rs, "form_html"));
            rs.close();
        } catch (SQLException sqe) {

@@ -68,7 +68,7 @@ public class EForm extends EFormBase {
         formName = (String) ht.get("formName");
         formSubject = (String) ht.get("formSubject");
         //formTime = curht.get("formTime");
-        //formDate = curht.get("formDate");
+        formDate = (String) ht.get("formDate");
         formHtml = (String) ht.get("formHtml");
     }
     
@@ -77,6 +77,10 @@ public class EForm extends EFormBase {
         this.fid = fid;
         formName = (String) loaded.get("formName");
         formHtml = (String) loaded.get("formHtml");
+        this.formSubject = (String) loaded.get("formSubject");
+        this.formDate = (String) loaded.get("formDate");
+        this.formFileName = (String) loaded.get("formFileName");
+        this.formCreator = (String) loaded.get("formCreator");
         this.demographicNo = demographicNo;
     }
     

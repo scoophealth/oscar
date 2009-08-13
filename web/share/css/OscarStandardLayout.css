@@ -260,3 +260,24 @@ TH {
 	background-color: #F7F7F7;
 	font-size: 80%;
 }
+
+ .coolBoxoverHeader {
+    background: #edf3ff;
+    font-family:arial;
+    font-size:12px;
+    font-weight:bold;
+    border:1px solid #99bae7;
+    padding:2px;
+    width:150px;
+ }
+
+ .coolBoxoverBody {
+    background:#FFFFFF;
+    font-family:arial;
+    font-size:12px;
+    border-left:1px solid #99bae7;
+    border-right:1px solid #99bae7;
+    border-bottom:1px solid #99bae7;
+    padding:2px;
+    width:150px;
+ }

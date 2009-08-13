@@ -40,6 +40,7 @@ public class EFormBase {
     protected String formSubject;
     protected String formHtml;
     protected String formFileName;
+    protected String formCreator;
     protected String demographicNo;
     protected String providerNo;
     protected String formDate;
@@ -138,6 +139,14 @@ public class EFormBase {
     private void dateTimeStamp() {
        formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
        formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
+    }
+
+    public void setFormCreator(String formCreator) {
+        this.formCreator = formCreator;
+    }
+
+    public String getFormCreator() {
+        return this.formCreator;
     }
     
 }

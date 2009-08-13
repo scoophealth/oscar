@@ -25,11 +25,15 @@
  * ManageEFormAction.java
  *
  * Created on July 28, 2005, 1:54 PM
+ *
+ * @author apavel & not Jay - Jay is too lazy to make this, so he makes Paul do the work for him
  */
 
 package oscar.eform.actions;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,17 +42,33 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import org.apache.struts.actions.DispatchAction;
+import org.apache.struts.upload.FormFile;
+import oscar.eform.EFormExportZip;
+import oscar.eform.data.EForm;
 
 public class ManageEFormAction extends DispatchAction {
     
     public ActionForward exportEForm(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) {
-         
+                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String fid = request.getParameter("fid");
+        System.out.println("fid: " + fid);
+        response.setContentType("application/zip");  //octet-stream
+        EForm eForm = new EForm(fid, "1");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + eForm.getFormName().replaceAll("\\s", fid) + ".zip\"");
+        EFormExportZip eFormExportZip = new EFormExportZip();
+        List eForms = new ArrayList();
+        eForms.add(eForm);
+        eFormExportZip.exportForms(eForms, response.getOutputStream());
          return null;
     }
 
     public ActionForward importEForm(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) {
-        return null;
+                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+         FormFile zippedForm = (FormFile) form.getMultipartRequestHandler().getFileElements().get("zippedForm");
+         request.setAttribute("input", "import");
+         EFormExportZip eFormExportZip = new EFormExportZip();
+         List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
+         request.setAttribute("importErrors", errors);
+         return mapping.findForward("success");
     }
 }

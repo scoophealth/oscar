@@ -21,6 +21,7 @@
  * Hamilton 
  * Ontario, Canada 
  */
+
 tr.highlight {
 	background: #f1f1fd;
 }
@@ -52,4 +53,47 @@ ul.grouplist li {
 
 li.selected {
 	background-color: #ffedf4;
+}
+
+.elements {
+    font-size: 10px;
+}
+
+td.fieldLabel {
+    padding: 0px;
+    text-align: left;
+    font-size: 10px;
+    padding-top: 0px;
+    vertical-align: top;
+    color: gray;
+}
+
+div.inputDiv {
+    background-color: #EEEEFF;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.eformInputHeadingTable {
+    text-align: center;
+    border-collapse: collapse;
+    border: 0px;
+    font-size: 10px;
+}
+
+
+.eformInputHeading {
+
+    white-space: nowrap;
+    background-color: #EEEEFF;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+.eformInputHeadingActive {
+    background-color: #e3f1e1;
+    border-bottom: 2px solid #e3f1e1;
 }

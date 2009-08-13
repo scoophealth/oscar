@@ -42,10 +42,11 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath()%>/share/javascript/boxover.js"></script>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="eform.uploadhtml.title" /></title>
-<link rel="stylesheet" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" href="../share/css/eforms.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/eformStyle.css">
 </head>
 <script language="javascript">
   function checkFormAndDisable(){
@@ -68,8 +69,41 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
         document.location = url;
     }
   }
+
+  var normalStyle = "eformInputHeading"
+  var activeStyle = "eformInputHeading eformInputHeadingActive"
+  function closeInputs() {
+      document.getElementById("uploadDiv").style.display = 'none';
+      document.getElementById("importDiv").style.display = 'none';
+      document.getElementById("uploadHeading").className = normalStyle;
+      document.getElementById("importHeading").className = normalStyle;
+  }
+
+  function openUpload() {
+      closeInputs();
+      document.getElementById("uploadHeading").className = activeStyle;
+      document.getElementById("uploadDiv").style.display = 'block';
+  }
+
+  function openImport() {
+      closeInputs();
+      document.getElementById("importHeading").className = activeStyle;
+      document.getElementById("importDiv").style.display = 'block';
+  }
+
+  function openCreate(obj) {
+      window.location='efmformmanageredit.jsp'
+  }
+
+  function doOnLoad() {
+    <%String input = request.getParameter("input");
+    if (input == null) input = (String) request.getAttribute("input");
+    if (input != null && input.equals("import")) {%>
+    openImport();
+    <%}%>
+  }
 </script>
-<body topmargin="0" leftmargin="0" rightmargin="0">
+<body topmargin="0" leftmargin="0" rightmargin="0" onload="doOnLoad()">
 <center>
 <table border="0" cellspacing="0" cellpadding="0" width="98%">
 	<tr bgcolor="#CCCCFF">
@@ -80,63 +114,75 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 <table border="0" cellpadding="0" cellspacing="5" width="98%">
 	<tr>
 		<td>
-		<center>
-		<table cellspacing="2" cellpadding="2" width="90%" border="0"
-			style="margin-top: 10px" BGCOLOR="#EEEEFF">
-			<html:form action="/eform/uploadHtml" method="POST"
-				onsubmit="return checkFormAndDisable()"
-				enctype="multipart/form-data">
-				<font color="red" size="1"> <html:errors /> </font>
-				<tr>
-					<td align='right' nowrap><b><bean:message
-						key="eform.uploadhtml.formName" /> </b></td>
-					<td><input type="text" name="formName" size="50"></td>
-				</tr>
-				<tr>
-					<td align='right' nowrap><b><bean:message
-						key="eform.uploadhtml.formSubject" /> </b></td>
-					<td><input type="text" name="formSubject" size="50"></td>
-				</tr>
-				<tr>
-					<td align='right' nowrap><b><bean:message
-						key="eform.uploadhtml.formFileName" /> </b></td>
-					<td><input type="file" name="formHtml" size="40"></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" name="subm"
-						value="<bean:message key="eform.uploadhtml.btnUpload"/>"><input
-						type="button" name="newfrm"
-						value="<bean:message key="eform.edithtml.createnew"/>"
-						onclick="javascript: window.location='efmformmanageredit.jsp'"></td>
-				</tr>
-			</html:form>
-		</table>
-		</center>
+                        <table class="eformInputHeadingTable">
+                            <tr>
+                                <td class="eformInputHeading" style="width: 20px; background-color: white;">&nbsp;</td>
+                                <td class="eformInputHeading eformInputHeadingActive" onclick="openUpload(this)" id="uploadHeading">Upload New EForm</td>
+                                <td class="eformInputHeading" onclick="openImport()" id="importHeading">Import EForm</td>
+                                <td class="eformInputHeading" onclick="openCreate()" id="createHeading">Create In Editor</td>
+                            </tr>
+                        </table>
+                    <div id="uploadDiv" class="inputDiv">
+                        <center>
+                        <table style="text-align: center; border-collapse: collapse; border: 0px;">
+                                <html:form action="/eform/uploadHtml" method="POST"
+                                        onsubmit="return checkFormAndDisable()"
+                                        enctype="multipart/form-data">
+                                        <span style="color: red; font-size: 10px;"> <html:errors /> </span>
+                                        <tr><td class="fieldLabel"><bean:message key="eform.uploadhtml.formName" /></td><td class="fieldLabel"><bean:message key="eform.uploadhtml.formSubject" /></td></tr>
+                                        <tr><td><input type="text" name="formName" size="30"></td><td><input type="text" name="formSubject" size="30"></td></tr>
+                                        <tr><td colspan="2" style="text-align: left;"><input type="file" name="formHtml" size="50"></td></tr>
+                                        <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="<bean:message key="eform.uploadhtml.btnUpload"/>"></td>
+                                        </tr>
+                                </html:form>
+                        </table>
+                        </center>
+                    </div>
+                    
+                    <div id="importDiv" class="inputDiv" style="display: none;">
+                        <center>
+                        <table style="text-align: center; border-collapse: collapse; border: 0px;">
+                                <form action="../eform/manageEForm.do" method="POST" enctype="multipart/form-data">
+                                    <input type="hidden" name="method" value="importEForm">
+                                        <font color="red" size="1"> <html:errors /> </font>
+                                        <%List<String> importErrors = (List<String>) request.getAttribute("importErrors");
+                                        if (importErrors != null && importErrors.size() > 0) {%>
+                                        <tr><td style="text-align: left; color: #d97373;">
+                                                <%for (String importError: importErrors) {%>
+                                                - <%=importError%><br>
+                                                <%}%>
+                                            </td></tr>
+                                        <%}%>
+                                        <tr><td class="fieldLabel">Zip File: </td></tr>
+                                        <tr><td colspan="2" style="text-align: left;"><input type="file" name="zippedForm" size="50"></td></tr>
+                                        <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Import" onclick="this.value = 'Importing...'; this.disabled = true;"></td></tr>
+                                        <tr><td>&nbsp;</td></tr>
+                                        </tr>
+                                </form>
+                        </table>
+                        </center>
+                    </div>
+
+
 		</td>
 		<td style="border-left: 2px solid #A6A6A6">
 		<table border="0" cellspacing="2" cellpadding="2"
 			style="margin-left: 10px" width="100%">
 			<tr>
-				<td align='left'><a href=# onclick="javascript:BackHtml()"><bean:message
-					key="eform.uploadhtml.btnBack" /></a></td>
+				<td align='left'><a href=# onclick="javascript:BackHtml()"><bean:message key="eform.uploadhtml.btnBack" /></a></td>
 			</tr>
 			<tr>
-				<td align='left'><a href="../eform/efmformmanager.jsp"
-					class="current"><bean:message key="admin.admin.btnUploadForm" />
+				<td align='left'><a href="../eform/efmformmanager.jsp" class="current"><bean:message key="admin.admin.btnUploadForm" />
 				</a></td>
 			</tr>
 			<tr>
-				<td align='left'><a href="../eform/efmformmanagerdeleted.jsp"><bean:message
-					key="eform.uploadhtml.btnDeleted" /> </a></td>
+				<td align='left'><a href="../eform/efmformmanagerdeleted.jsp"><bean:message key="eform.uploadhtml.btnDeleted" /> </a></td>
 			</tr>
 			<tr>
-				<td align='left'><a href="../eform/efmimagemanager.jsp"><bean:message
-					key="admin.admin.btnUploadImage" /> </a></td>
+				<td align='left'><a href="../eform/efmimagemanager.jsp"><bean:message key="admin.admin.btnUploadImage" /> </a></td>
 			</tr>
 			<tr>
-				<td align='left'><a href="../eform/efmmanageformgroups.jsp"><bean:message
-					key="eform.groups.name" /> </a></td>
+				<td align='left'><a href="../eform/efmmanageformgroups.jsp"><bean:message key="eform.groups.name" /> </a></td>
 			</tr>
 		</table>
 		</td>
@@ -175,12 +221,8 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 		<td nowrap align='center' width="10%"><%=curForm.get("formDate")%></td>
 		<td nowrap align='center' width="10%"><%=curForm.get("formTime")%></td>
 		<td nowrap align='center'>
-                    <a href="#" onclick="document.getElementById('exp<%=i%>').submit();"><bean:message key="eform.uploadhtml.btnExport" /></a>
+                    <a href="#" onclick="document.location.href='../eform/manageEForm.do?method=exportEForm&fid=<%=curForm.get("fid")%>'"><bean:message key="eform.uploadhtml.btnExport" /></a>
                     <a href="#" onclick="confirmNDelete('../eform/delEForm.do?fid=<%=curForm.get("fid")%>')"><bean:message key="eform.uploadhtml.btnDelete" /></a>
-                    <form id="exp<%=i%>" action="../eform/manageEForm.do" target="_blank">
-                        <input type="hidden" name="method" value="exportEForm">
-                        <input type="hidden" name="fid" value="<%=curForm.get("fid")%>">
-                    </form>
                 </td>
 		<td nowrap align="center"><a
 			href="efmformmanageredit.jsp?fid=<%= curForm.get("fid")%>"><bean:message key="eform.uploadhtml.editform" /></a></td>

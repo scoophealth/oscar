@@ -86,7 +86,7 @@ public class DisplayImageAction extends DownloadAction{
         return new FileStreamInfo(contentType, file);   
     }
 
-    public File getImageFile(String imageFileName) throws Exception {
+    public static File getImageFile(String imageFileName) throws Exception {
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");
 
         File file = null;
