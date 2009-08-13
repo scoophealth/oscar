@@ -29,9 +29,9 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public class OscarSecurityDAO extends HibernateDaoSupport {
+public class SecUserRoleDao extends HibernateDaoSupport {
 
-    private static Log log = LogFactory.getLog(OscarSecurityDAO.class);
+    private static Log log = LogFactory.getLog(SecUserRoleDao.class);
 
     public List<SecUserRole> getUserRoles(String providerNo) {
         if (providerNo == null) {
@@ -54,7 +54,8 @@ public class OscarSecurityDAO extends HibernateDaoSupport {
         }
 
         boolean result = false;
-        List results = this.getHibernateTemplate().find("from SecUserRole s where s.ProviderNo = ? and s.RoleName = 'admin'", providerNo);
+        @SuppressWarnings("unchecked")
+        List<SecUserRole> results = this.getHibernateTemplate().find("from SecUserRole s where s.ProviderNo = ? and s.RoleName = 'admin'", providerNo);
         if (!results.isEmpty()) {
             result = true;
         }

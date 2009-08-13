@@ -24,20 +24,21 @@ package org.oscarehr.PMmodule.service.impl;
 
 import java.util.List;
 
-import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.OscarSecurityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public class OscarSecurityManagerImpl implements OscarSecurityManager {
 
-	private OscarSecurityDAO dao;
+	private SecUserRoleDao dao;
 	
-	public void setOscarSecurityDAO(OscarSecurityDAO dao) {
+	public void setSecUserRoleDao(SecUserRoleDao dao) {
 		this.dao = dao;
 	}
 	
-	public List getUserRoles(String providerNo) {
+	public List<SecUserRole> getUserRoles(String providerNo) {
 		return dao.getUserRoles(providerNo);
 	}
 

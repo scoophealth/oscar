@@ -54,9 +54,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
-import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -86,7 +86,6 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.dx.model.DxResearch;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -101,7 +100,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	private CaseManagementManager caseManagementManager=(CaseManagementManager)SpringUtils.getBean("caseManagementManager");
 	private IssueDAO issueDao = (IssueDAO)SpringUtils.getBean("IssueDAO");
 	private CaseManagementNoteDAO caseManagementNoteDao = (CaseManagementNoteDAO)SpringUtils.getBean("caseManagementNoteDAO");
-	private OscarSecurityDAO oscarSecurityDao=(OscarSecurityDAO)SpringUtils.getBean("oscarSecurityDAO");
+	private SecUserRoleDao secUserRoleDao=(SecUserRoleDao)SpringUtils.getBean("secUserRoleDao");
 	private ProgramDao programDao = (ProgramDao)SpringUtils.getBean("programDao");
 	private ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 
@@ -844,7 +843,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
     
 	private void addRemoteNotes(ArrayList<NoteDisplay> notesToDisplay, int demographicNo, ArrayList<String> issueCodesToDisplay) {
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
-		List<SecUserRole> roles=oscarSecurityDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
+		List<SecUserRole> roles=secUserRoleDao.getUserRoles(loggedInInfo.loggedInProvider.getProviderNo());
 
 		if (!loggedInInfo.currentFacility.isIntegratorEnabled()) return;
 

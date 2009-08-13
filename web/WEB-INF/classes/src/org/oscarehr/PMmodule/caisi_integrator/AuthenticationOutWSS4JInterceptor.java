@@ -63,6 +63,7 @@ public class AuthenticationOutWSS4JInterceptor extends WSS4JOutInterceptor imple
 		List<Header> headers = message.getHeaders();
 	    
 		// here is where we should get the roles and set the header, probably csv of roles should be fine.
+		// SecUserRole should be the one we want, it should be the oscar role.
 		String roles="";
 		headers.add(createHeader(REQUESTING_USER_ROLES_QNAME, REQUESTING_USER_ROLES_KEY, roles));
     }

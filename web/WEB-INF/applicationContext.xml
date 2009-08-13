@@ -77,7 +77,7 @@
 	<bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName" />
 	<bean id="demographicDaoT" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
 	<bean id="demographicDao" class="org.oscarehr.common.dao.DemographicDao" autowire="byName" />
-	<bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.OscarSecurityDAO" autowire="byName" />
+	<bean id="secUserRoleDao" class="org.oscarehr.PMmodule.dao.SecUserRoleDao" autowire="byName" />
 	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName" />
 	<bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
 	<bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
@@ -260,12 +260,7 @@
 	<bean id="chartManagerT" class="org.caisi.service.EChartManager">
 		<property name="chartDAO" ref="chartDAOT" />
 	</bean>
-	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager">
-		<property name="providerDao" ref="providerDao" />
-		<property name="agencyDAO" ref="agencyDao" />
-		<property name="programProviderDAO" ref="programProviderDAO" />
-		<property name="oscarSecurityDAO" ref="oscarSecurityDAO" />
-	</bean>
+	<bean id="providerManager" class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName" />
 	<bean id="clientRestrictionManager" class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName" />
 	<bean id="AppointmentStatusMgr" class="oscar.appt.status.service.impl.AppointmentStatusMgrImpl">
 		<property name="appointStatusDao">

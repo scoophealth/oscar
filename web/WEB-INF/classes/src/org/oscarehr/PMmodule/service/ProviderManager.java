@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AgencyDao;
-import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Agency;
@@ -39,58 +39,58 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProviderManager
 {
-	private ProviderDao dao;
-	private AgencyDao agencyDAO;
+	private ProviderDao providerDao;
+	private AgencyDao agencyDao;
 	private ProgramProviderDAO programProviderDAO;
-	private OscarSecurityDAO oscarSecurityDAO; 
+	private SecUserRoleDao secUserRoleDao; 
 	
 	
-	public void setProviderDao(ProviderDao dao)	{
-		this.dao = dao;
+	public void setProviderDao(ProviderDao providerDao)	{
+		this.providerDao = providerDao;
 	}
 	
-	public void setAgencyDAO(AgencyDao dao) {
-		this.agencyDAO = dao;
+	public void setAgencyDAO(AgencyDao agencyDao) {
+		this.agencyDao = agencyDao;
 	}
 	
 	public void setProgramProviderDAO(ProgramProviderDAO dao) {
 		this.programProviderDAO = dao;
 	}
 	
-	public void setOscarSecurityDAO(OscarSecurityDAO oscarSecurityDAO) {
-		this.oscarSecurityDAO = oscarSecurityDAO;
+	public void setSecUserRoleDao(SecUserRoleDao secUserRoleDao) {
+		this.secUserRoleDao = secUserRoleDao;
 	}
 	
 	public Provider getProvider(String providerNo)
 	{
-		return dao.getProvider(providerNo);
+		return providerDao.getProvider(providerNo);
 	}
 	
 	public String getProviderName(String providerNo)
 	{
-		return dao.getProviderName(providerNo);
+		return providerDao.getProviderName(providerNo);
 	}
 	
 	public List<Provider> getProviders()
 	{
-		return dao.getProviders();
+		return providerDao.getProviders();
 	}
 	
 	public List<Provider> getActiveProviders()
 	{
-		return dao.getActiveProviders();
+		return providerDao.getActiveProviders();
 	}
 
     public List<Provider> getActiveProviders(String facilityId, String programId) {
-		return dao.getActiveProviders(facilityId, programId);
+		return providerDao.getActiveProviders(facilityId, programId);
     }
     /* get my collegues */
     public List<Provider> getActiveProviders(String providerNo, Integer shelterId) {
-		return dao.getActiveProviders(providerNo, shelterId);
+		return providerDao.getActiveProviders(providerNo, shelterId);
     }
 	
 	public List<Provider> search(String name) {
-		return dao.search(name);
+		return providerDao.search(name);
 	}
 
     public List<ProgramProvider> getProgramDomain(String providerNo) {
@@ -107,22 +107,22 @@ public class ProviderManager
     
 	public List getShelterIds(String provider_no)
 	{
-		return dao.getShelterIds(provider_no);
+		return providerDao.getShelterIds(provider_no);
 	}
 
     public List<Agency> getAgencyDomain(String providerNo) {
-		Agency localAgency =  agencyDAO.getLocalAgency();
+		Agency localAgency =  agencyDao.getLocalAgency();
 		List<Agency> agencies = new ArrayList<Agency>();
 		agencies.add(localAgency);
 		return agencies;
 	}
 	
 	public List<Provider> getProvidersByType(String type) {
-		return dao.getProvidersByType(type);
+		return providerDao.getProvidersByType(type);
 	}
 	
 	public List<SecUserRole> getSecUserRoles(String providerNo) {
-		return oscarSecurityDAO.getUserRoles(providerNo);
+		return secUserRoleDao.getUserRoles(providerNo);
 	}
 
 	
