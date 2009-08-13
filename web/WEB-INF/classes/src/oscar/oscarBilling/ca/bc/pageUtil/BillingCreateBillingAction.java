@@ -182,6 +182,7 @@ public class BillingCreateBillingAction extends Action {
 
 
     if (request.getParameter("WCBid") != null){
+            System.out.println("WCB id is not null "+request.getParameter("WCBid"));
             List<String> errs = null;
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");
@@ -195,9 +196,11 @@ public class BillingCreateBillingAction extends Action {
             if (formNeeded){
                 System.out.println("Setting form needed 1");
                 errs = wcbForm.verifyEverythingOnForm();
-                request.setAttribute("WCBcode",sc);
-                request.setAttribute("WCBFormNeeds",errs);
-                return mapping.getInputForward();
+                if(errs != null && errs.size() > 0){
+                    request.setAttribute("WCBcode",sc);
+                    request.setAttribute("WCBFormNeeds",errs);
+                    return mapping.getInputForward();
+                }
             }else{
                 errs = wcbForm.verifyFormNotNeeded();
             }
