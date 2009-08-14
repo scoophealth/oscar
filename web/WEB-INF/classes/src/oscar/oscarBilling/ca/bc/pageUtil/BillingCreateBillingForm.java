@@ -727,13 +727,11 @@ public final class BillingCreateBillingForm
 
     if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {
-        if (!"WCB".equals(xml_billtype)) {
           if (this.service == null || service.length == 0) {
             errors.add("",
                        new ActionMessage(
                            "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
           }
-        }
       }
       if (!"pri".equalsIgnoreCase(this.getXml_billtype())) {
         if ( (this.xml_diagnostic_detail1 == null ||
@@ -772,6 +770,8 @@ public final class BillingCreateBillingForm
     if("WCB".equals(xml_billtype)){
       request.setAttribute("newWCBClaim","1");
     }
+
+    System.out.println("About to return errors "+errors.size());
     return errors;
   }
   /**
