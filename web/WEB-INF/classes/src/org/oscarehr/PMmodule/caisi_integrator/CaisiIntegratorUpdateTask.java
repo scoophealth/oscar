@@ -41,7 +41,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
@@ -61,6 +63,7 @@ import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
 import org.oscarehr.caisi_integrator.ws.PreventionExtTransfer;
 import org.oscarehr.caisi_integrator.ws.ProgramWs;
+import org.oscarehr.caisi_integrator.ws.ProviderTransfer;
 import org.oscarehr.caisi_integrator.ws.ProviderWs;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -113,6 +116,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 	private PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
 
 	static {
 		// ensure cxf uses log4j
@@ -219,8 +223,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
 		// data model. The last update date is available though as per above...
 		pushFacility(lastDataUpdated);
-		pushPrograms(facility);
 		pushProviders(facility);
+		pushPrograms(facility);
 		pushAllDemographics();
 		
 		// all things updated successfully
@@ -291,11 +295,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushProviders(Facility facility) throws MalformedURLException, IllegalAccessException, InvocationTargetException, ShutdownException {
 		List<String> providerIds = ProviderDao.getProviderIds(facility.getId());
 
-		ArrayList<CachedProvider> cachedProviders = new ArrayList<CachedProvider>();
+		ArrayList<ProviderTransfer> providerTransfers = new ArrayList<ProviderTransfer>();
 
 		for (String providerId : providerIds) {
 			MiscUtils.checkShutdownSignaled();
 			logger.debug("Adding provider " + providerId + " for " + facility.getName());
+
+			ProviderTransfer providerTransfer=new ProviderTransfer();
+			
+			// copy provider basic data over
 			Provider provider = providerDao.getProvider(providerId);
 
 			CachedProvider cachedProvider = new CachedProvider();
@@ -306,11 +314,21 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pk.setCaisiItemId(provider.getProviderNo());
 			cachedProvider.setFacilityIdStringCompositePk(pk);
 
-			cachedProviders.add(cachedProvider);
+			providerTransfer.setCachedProvider(cachedProvider);
+			
+			// copy roles over
+			List<SecUserRole> roles=secUserRoleDao.getUserRoles(providerId);
+			for (SecUserRole role : roles)
+			{
+				providerTransfer.getRoles().add(role.getRoleName());
+			}
+			
+			// add to list
+			providerTransfers.add(providerTransfer);
 		}
 
 		ProviderWs service = CaisiIntegratorManager.getProviderWs(facility);
-		service.setCachedProviders(cachedProviders);
+		service.setCachedProviders(providerTransfers);
 	}
 
 	private void pushAllDemographics() throws MalformedURLException, ShutdownException {
