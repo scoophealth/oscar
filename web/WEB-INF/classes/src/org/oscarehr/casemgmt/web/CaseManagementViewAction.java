@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -470,6 +471,44 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		public boolean isWriteAccess() {
         	return writeAccess;
         }
+		
+		public void setWriteAccess(boolean writeAccess) {
+        	this.writeAccess = writeAccess;
+        }
+		public void setCodeType(String codeType) {
+        	this.codeType = codeType;
+        }
+		public void setCode(String code) {
+        	this.code = code;
+        }
+		public void setDescription(String description) {
+        	this.description = description;
+        }
+		public void setLocation(String location) {
+        	this.location = location;
+        }
+		public void setAcute(String acute) {
+        	this.acute = acute;
+        }
+		public void setCertain(String certain) {
+        	this.certain = certain;
+        }
+		public void setMajor(String major) {
+        	this.major = major;
+        }
+		public void setResolved(String resolved) {
+        	this.resolved = resolved;
+        }
+		public void setRole(String role) {
+        	this.role = role;
+        }
+		public void setPriority(String priority) {
+        	this.priority = priority;
+        }
+		public String toString()
+		{
+			return(ReflectionToStringBuilder.toString(this));
+		}
 	}
 	
 	public static class NoteDisplay
