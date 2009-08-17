@@ -331,26 +331,26 @@ if (pId==null) pId="";
 						<nested:write name="issueCheckList"	property="issueDisplay.description" />
 					</td>
 				<td>
-					<nested:select indexed="acute" name="issueCheckList"	property="issueDisplay.acute" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.acute" disabled="<%=disabled%>">
 						<html:option value="acute">acute</html:option>
 						<html:option value="chronic">chronic</html:option>
 					</nested:select>	
 				</td>
 				<td>
-					<nested:select indexed="certain" name="issueCheckList" property="issueDisplay.certain"  disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList" property="issueDisplay.certain"  disabled="<%=disabled%>">
 						<html:option value="certain">certain</html:option>
 						<html:option value="uncertain">uncertain</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:select indexed="major" name="issueCheckList"	property="issueDisplay.major" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="issueDisplay.major" disabled="<%=disabled%>">
 						<html:option value="major">major</html:option>
 						<html:option value="not major">not major</html:option>
 					</nested:select>
 				</td>				
 				<td>
 					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
-					 <nested:select indexed="resolved" name="issueCheckList" property="issueDisplay.resolved"  disabled="<%=disabled%>">										 	
+					 <nested:select indexed="true" name="issueCheckList" property="issueDisplay.resolved"  disabled="<%=disabled%>">										 	
 						<html:option value="resolved">resolved</html:option>
 						<html:option value="unresolved">unresolved</html:option>
 					</nested:select>
