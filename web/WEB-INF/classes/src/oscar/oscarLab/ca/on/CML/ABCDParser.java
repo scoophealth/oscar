@@ -263,7 +263,7 @@ public class ABCDParser {
    }
    
    ////
-   class Atype {// line: ‘Report information’
+   class Atype {// line: Report information
       Btype labreport = null;
       public ArrayList btypes = new ArrayList();
       public void read(String lineType, ArrayList list){
@@ -318,12 +318,12 @@ public class ABCDParser {
       String locationId = null; //  2. (e.g. 70 = CML Mississauga)
       String printDate  = null; //  3. YYYYMMDD
       String printTime  = null; //  4. HH:MM
-      String totalBType = null; //  5. number of ‘B-type’ lines (= # of reports)
-      String totalCType = null; //  6. number of ‘C-type’ lines
-      String totalDType = null; //  7. number of ‘D-type’ lines
+      String totalBType = null; //  5. number of B-type lines (= # of reports)
+      String totalCType = null; //  6. number of C-type lines
+      String totalDType = null; //  7. number of D-type lines
    }
    
-   class Btype { //line: ‘Patient and Physician information’
+   class Btype { //line: Patient and Physician information
       void populate(ArrayList lst){
          if (lst.size() == 22){ // must equal 22
             this.accessionNum = (String) lst.get(1);
@@ -417,10 +417,10 @@ public class ABCDParser {
       String serviceDate = null;         //  4. YYYYMMDD
       String pFirstName = null;          //  5. Patient: First name
       String pLastName = null;           //  6. Patient: Last name
-      String pSex = null;                //  7. Sex ‘F’ or ‘M’
+      String pSex = null;                //  7. Sex F or M
       String pHealthNum = null;          //  8. Patient: Health number
       String pDOB = null;                //  9. Patient: Birth date
-      String status = null;              // 10. Final or Partial ‘F’ or ‘P’
+      String status = null;              // 10. Final or Partial F or P
       String docNum = null;              // 11. Physician: Number
       String docName = null;             // 12. Physician: Name
       String docAddr1 = null;            // 13. Physician: Address line 1
@@ -435,7 +435,7 @@ public class ABCDParser {
       String collectionDate = null;      // 22. Collection date "DD MMM YY"
    }
    
-   class Ctype { //line: ‘Test results’
+   class Ctype { //line: Test results
       
       void populate(ArrayList lst){
          if (lst.size() == 12){ // must equal 12
@@ -490,16 +490,16 @@ public class ABCDParser {
       String notUsed1 = null;    //  3. Not used ?
       String notUsed2 = null;    //  4. Not used ?
       String testName = null;    //  5. Test name
-      String abn  = null;     //  6. Normal/Abnormal ‘N’ or ‘A’
+      String abn  = null;     //  6. Normal/Abnormal N or A
       String minimum = null;     //  7. Minimum
       String maximum = null;     //  8. Maximum
       String units = null;       //  9. Units
       String result = null;      // 10. Result
       String locationId = null;  // 11. Location Id (Test performed at …)
-      String last = null;        // 12. Last ‘Y’ or ‘N’
+      String last = null;        // 12. Last Y or N
    }
 
-   class Dtype { //line: ‘Comments/Titles’
+   class Dtype { //line: Comments/Titles
       
       void populate(ArrayList lst){
          if (lst.size() == 6){ // must equal 6
@@ -547,7 +547,7 @@ public class ABCDParser {
       String notUsed1 = null;    // 3. not used ?
       String description = null; // 4. Description/Comment
       String locationId = null;  // 5. Location Id
-      String last = null;        // 6. Last ‘Y’ or ‘N’
+      String last = null;        // 6. Last Y or N
    }
    ////
    
