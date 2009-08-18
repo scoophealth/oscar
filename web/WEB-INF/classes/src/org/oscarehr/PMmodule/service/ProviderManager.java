@@ -49,7 +49,7 @@ public class ProviderManager
 		this.providerDao = providerDao;
 	}
 	
-	public void setAgencyDAO(AgencyDao agencyDao) {
+	public void setAgencyDao(AgencyDao agencyDao) {
 		this.agencyDao = agencyDao;
 	}
 	
