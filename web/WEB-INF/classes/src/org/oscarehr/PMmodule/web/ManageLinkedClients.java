@@ -197,7 +197,7 @@ public class ManageLinkedClients {
 			if (directLink!=null) // i.e. directly linked
 			{
 				// if the Health number is the same then no it's not changeable
-				if (demographicTransfer.getHin()!=null && demographicTransfer.getHinType()!=null && demographicTransfer.getHin().equals(directLink.getHin()) && demographicTransfer.getHinType().equals(directLink.getHinType())) 
+				if (demographic.getHin()!=null && demographic.getHcType()!=null && demographic.getHin().equals(directLink.getHin()) && demographic.getHcType().equals(directLink.getHinType())) 
 				{
 					integratorLinkedDemographicHolder.nonChangeableLinkStatus="Implicitly Linked";
 				}
