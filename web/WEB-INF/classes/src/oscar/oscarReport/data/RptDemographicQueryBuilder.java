@@ -245,7 +245,7 @@ public class RptDemographicQueryBuilder {
                 if (i == (patientStatus.length - 1)){
                     stringBuffer.append(" patient_status = '"+patientStatus[i]+"' )");
                 }else{
-                    stringBuffer.append(" patient_status '"+patientStatus[i]+"' or  ");
+                    stringBuffer.append(" patient_status = '"+patientStatus[i]+"' or  ");
                 }
             }
         }
