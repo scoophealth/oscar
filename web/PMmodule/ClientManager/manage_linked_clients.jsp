@@ -52,7 +52,7 @@
 						<tr class="genericTableRow" style="background-color:#f3f3f3">
 							<td class="genericTableData">
 								<%
-									if (temp.changeable)
+									if (temp.nonChangeableLinkStatus==null)
 									{
 										%>
 											<input type="checkbox" name="linked.<%=temp.linkDestination+'.'+temp.remoteLinkId%>" <%=temp.linked?"checked=\"on\"":""%> />
@@ -61,7 +61,7 @@
 									else
 									{
 										%>
-											Implicitly<br />Linked
+											<%=temp.nonChangeableLinkStatus%>
 										<%
 									}
 								%>

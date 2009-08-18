@@ -48,7 +48,8 @@ public class ManageLinkedClients {
 		public String hin = "";
 		public String hinType = "";
 		public String imageUrl=ClientImage.imageMissingPlaceholderUrl;
-		public boolean changeable=true;
+		/** null means it's changeable */
+		public String nonChangeableLinkStatus=null;
 	}
 
 	public static ArrayList<LinkedDemographicHolder> getDemographicsToDisplay(Integer demographicId) {
@@ -198,12 +199,12 @@ public class ManageLinkedClients {
 				// if the Health number is the same then no it's not changeable
 				if (demographicTransfer.getHin()!=null && demographicTransfer.getHinType()!=null && demographicTransfer.getHin().equals(directLink.getHin()) && demographicTransfer.getHinType().equals(directLink.getHinType())) 
 				{
-					integratorLinkedDemographicHolder.changeable=false;
+					integratorLinkedDemographicHolder.nonChangeableLinkStatus="Implicitly Linked";
 				}
 			}
 			else // directLink==null i.e. transitively linked
 			{
-				integratorLinkedDemographicHolder.changeable=false;
+				integratorLinkedDemographicHolder.nonChangeableLinkStatus="Tansitively Linked";
 			}
 						
 			copyDemographicTransferDataToScorePlaceholder(demographicTransfer, integratorLinkedDemographicHolder);
