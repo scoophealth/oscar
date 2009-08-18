@@ -61,7 +61,7 @@
 									else
 									{
 										%>
-											Implicilty<br />Linked
+											Implicitly<br />Linked
 										<%
 									}
 								%>
