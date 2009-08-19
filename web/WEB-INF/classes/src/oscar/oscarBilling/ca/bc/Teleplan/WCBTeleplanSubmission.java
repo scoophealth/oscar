@@ -57,7 +57,7 @@ public class WCBTeleplanSubmission {
         String htmlContent =
                 "<tr>" +
                 "<td class='bodytext'>" +
-                "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no=" +
+                "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no=" +
                 Misc.forwardZero(billingMasterNo, 7) +
                 "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">" +
                 invNo +
@@ -125,7 +125,7 @@ public class WCBTeleplanSubmission {
 
        
         String ret = "<tr bgcolor='red'><td colspan='11'>"
-                + "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no="
+                + "<a href='#' onClick=\"openBrWindow('adjustBill.jsp?billing_no="
                 + Misc.forwardZero(""+bm.getBillingNo(), 7) 
                 + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"
                 + m.toString() + "</a>" + "</td></tr>";
