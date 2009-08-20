@@ -31,4 +31,16 @@ public class DxDao extends AbstractDao {
     	Query query = entityManager.createQuery("DELETE from DxAssociation");
     	query.executeUpdate();
     }
+    
+    public DxAssociation findAssociation(String codeType, String code) {    	
+    	Query query = entityManager.createQuery("SELECT x from DxAssociation x where x.codeType = ?1 and x.code = ?2");
+    	query.setParameter(1, codeType);
+    	query.setParameter(2, code);
+    	    	
+    	List<DxAssociation> results = query.getResultList();
+    	if(!results.isEmpty()) {
+    		return results.get(0);
+    	}
+    	return null;
+    }
 }

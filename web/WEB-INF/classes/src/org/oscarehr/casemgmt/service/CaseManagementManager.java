@@ -1410,7 +1410,9 @@ public class CaseManagementManager {
 		dx.setUpdateDate(new Date());
 		dx.setStatus("A");
 
-		this.dxResearchDAO.save(dx);
+		if(!dxResearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code) ) {
+			this.dxResearchDAO.save(dx);
+		}
 	}
 
 	public void saveToDx(String demographicNo, String code) {

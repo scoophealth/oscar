@@ -42,7 +42,9 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -53,11 +55,12 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	
 	protected CaseManagementManager caseManagementMgr;
 	protected ClientImageManager clientImageMgr;
-        protected ProviderManager providerMgr;
-	
-        public void setProviderManager(ProviderManager pmgr ) {
-            this.providerMgr = pmgr;
-        }
+    protected ProviderManager providerMgr;
+    protected DxDao dxDao = (DxDao) SpringUtils.getBean("dxDao");	
+    
+    public void setProviderManager(ProviderManager pmgr ) {
+        this.providerMgr = pmgr;
+    }
         
 	public void setClientImageManager(ClientImageManager mgr) {
 		this.clientImageMgr = mgr;

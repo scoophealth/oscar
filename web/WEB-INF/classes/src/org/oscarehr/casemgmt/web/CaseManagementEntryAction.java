@@ -22,7 +22,6 @@
 
 package org.oscarehr.casemgmt.web;
 
-import com.lowagie.text.DocumentException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -68,6 +67,7 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementPrintPdf;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
@@ -80,6 +80,8 @@ import oscar.log.LogConst;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.util.UtilDateUtilities;
+
+import com.lowagie.text.DocumentException;
 
 /*
  * Updated by Eugene Petruhin on 12 and 13 jan 2009 while fixing #2482832 & #2494061
@@ -976,7 +978,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
             // only update appt if there is one
             if (sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("")) caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
         }
-
+        
+        //PLACEHOLDER FOR DX CHECK
+        /*
+         * If an issue is checked, new , and certain - we want to check dx associations.
+         * if found in dx associations. we want to make an entry into dx.
+         */
+        if(note.isSigned()) {
+        	for(CaseManagementIssue cmIssue:issueset) {
+        		if(cmIssue.isCertain()) {
+        			DxAssociation assoc = dxDao.findAssociation(cmIssue.getIssue().getType(), cmIssue.getIssue().getCode());
+        			if(assoc != null) {
+        				//we found a match. Let's add them to registry
+        				this.caseManagementMgr.saveToDx(getDemographicNo(request),assoc.getDxCode(),assoc.getDxCodeType());
+        				
+        			}
+        		}
+        	}
+        }
         
         /*
          * if provider is a doctor or nurse,get all major and resolved medical issue for demograhhic and append them to CPP medical history
