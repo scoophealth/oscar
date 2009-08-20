@@ -77,7 +77,12 @@ $(document).ready(function() {
 						
 		}
 	});
-	
+
+	//export
+	$("#export").click(function(){
+		window.open("<%= request.getContextPath() %>/oscarResearch/oscarDxResearch/dxResearchLoadAssociations.do?method=export");
+		
+	});
 	//populate the current list of associations
 	populateListOfAssociations();
 
@@ -105,6 +110,8 @@ $(document).ready(function() {
 	<table id="associations"  width="100%" border="1" cellpadding="0" cellspacing="0">
 	</table>
 	<br/>
+	<div id="upload_form">
+	<h4>Upload CSV file:</h4>
 	<html:form action="/oscarResearch/oscarDxResearch/dxResearchLoadAssociations.do?method=uploadFile" method="post" enctype="multipart/form-data">
 		<html:file property="file"></html:file>
 		<br/>
@@ -113,11 +120,20 @@ $(document).ready(function() {
 		<br/>
 		<html:submit/>
 	</html:form>
+	</div>
 	<br/>
 	<input id="clear_list" type="button" class="mbttn"
 			style="width: 180px" value="Clear Associations" />
+	&nbsp;&nbsp;		
+	<input id="export" type="button" class="mbttn"
+			style="width: 180px" value="Export" />
+	&nbsp;&nbsp;	
+	<input id="close" type="button" class="mbttn"
+			style="width: 180px" value="Close" onclick="javascript:window.close();"/>
+	<br/>
 </div>
 </tr>
 </table>
+
 </body>
 </html:html>

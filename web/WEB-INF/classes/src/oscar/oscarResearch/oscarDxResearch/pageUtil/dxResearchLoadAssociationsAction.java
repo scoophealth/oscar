@@ -2,6 +2,7 @@ package oscar.oscarResearch.oscarDxResearch.pageUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,7 @@ import oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxCodeHandler;
 
 import com.Ostermiller.util.ExcelCSVParser;
+import com.Ostermiller.util.ExcelCSVPrinter;
 
 public class dxResearchLoadAssociationsAction extends DispatchAction {
 
@@ -56,6 +58,49 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	dxDao.removeAssociations();
     	return null;
     }
+
+    
+    public ActionForward addAssociation(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+    	DxAssociation dxa = new DxAssociation();
+    	dxa.setCodeType(request.getParameter("codeType"));
+    	dxa.setCode(request.getParameter("code"));
+    	dxa.setDxCodeType(request.getParameter("dxCodeType"));
+    	dxa.setDxCode(request.getParameter("dxCode"));
+    	
+    	dxDao.persist(dxa);
+    	return null;
+    }
+    
+    public ActionForward export(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+    	List<DxAssociation> associations = dxDao.findAllAssociations();
+    	
+    	response.setContentType("application/octet-stream" );
+        //response.setContentLength( (int)f.length() );
+        response.setHeader( "Content-Disposition", "attachment; filename=\"dx_associations.csv\"" );
+
+        
+    	StringWriter sw = new StringWriter();
+    	ExcelCSVPrinter printer = new ExcelCSVPrinter(/*sw*/response.getWriter());
+    	
+    	printer.writeln(new String[] {"Issue List Code Type","Issue List Code","Disease Registry Code Type","Disease Registry Code"});
+    	for(DxAssociation dxa:associations) {
+    		printer.writeln(new String[] {dxa.getCodeType(),dxa.getCode(),dxa.getDxCodeType(),dxa.getDxCode()});
+    	}
+    	
+    	//String data = sw.toString();
+    	
+    	printer.flush();
+    	printer.close();
+
+    	//System.out.println(data);
+    	
+    	return null;
+    }
+    
     
     public ActionForward uploadFile(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
