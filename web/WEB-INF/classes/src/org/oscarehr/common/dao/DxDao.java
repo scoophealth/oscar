@@ -1,0 +1,34 @@
+package org.oscarehr.common.dao;
+
+import java.util.List;
+
+import javax.persistence.Query;
+
+import org.oscarehr.common.model.DxAssociation;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
+public class DxDao extends AbstractDao {
+
+	public DxAssociation findAssociation(Integer id) {
+		return (entityManager.find(DxAssociation.class, id));
+	}
+	
+    public List<DxAssociation> findAllAssociations()
+	{			
+		Query query = entityManager.createQuery("select x from DxAssociation x order by x.dxCodeType,x.dxCode");
+		
+		@SuppressWarnings("unchecked")
+		List<DxAssociation> results = query.getResultList();
+
+		return(results);
+	}
+    
+    public void removeAssociations() {
+    	Query query = entityManager.createQuery("DELETE from DxAssociation");
+    	query.executeUpdate();
+    }
+}

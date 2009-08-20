@@ -26,6 +26,8 @@
 <%@ page language="java"%>
 <%@ page
 	import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem"%>
+<%@ page
+	import="oscar.OscarProperties"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -33,6 +35,9 @@
 <%   
     if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 
+	String disableVal = OscarProperties.getInstance().getProperty("dxResearch_disable_entry", "false");
+	boolean disable = Boolean.valueOf(disableVal).booleanValue();
+	
     String user_no = (String) session.getAttribute("user");
     String color ="";
     int Count=0;    
@@ -151,30 +156,41 @@ function openNewPage(vheight,vwidth,varpage) {
 							</html:select></td>
 						</tr>
 						<tr>
-							<td><html:text property="xml_research1" size="30" /> <input type="hidden" name="demographicNo"
+							<td><html:text property="xml_research1" size="30" disabled="<%=disable%>" /> <input type="hidden" name="demographicNo"
 								value="<bean:write name="demographicNo"/>"> <input type="hidden" name="providerNo"
 								value="<bean:write name="providerNo"/>"></td>
 						</tr>
 						<tr>
-							<td><html:text property="xml_research2" size="30" /></td>
+							<td><html:text property="xml_research2" size="30" disabled="<%=disable%>"/></td>
 						</tr>
 						<tr>
-							<td><html:text property="xml_research3" size="30" /></td>
+							<td><html:text property="xml_research3" size="30" disabled="<%=disable%>"/></td>
 						</tr>
 						<tr>
-							<td><html:text property="xml_research4" size="30" /></td>
+							<td><html:text property="xml_research4" size="30" disabled="<%=disable%>"/></td>
 						</tr>
 						<tr>
-							<td><html:text property="xml_research5" size="30" /></td>
+							<td><html:text property="xml_research5" size="30" disabled="<%=disable%>"/></td>
 						</tr>
 						<tr>
-							<td><input type="hidden" name="forward" value="none" /> 
-                                                            <input type="button" name="button" class=mbttn
+							<td>
+							<input type="hidden" name="forward" value="none" /> 
+                               <%if(!disable) { %>                             
+                               <input type="button" name="button" class=mbttn
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
-								onClick="javascript: ResearchScriptAttach();")> 
+								onClick="javascript: ResearchScriptAttach();") > 
                                                             <input type="button" name="button" class=mbttn
 								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
-								onClick="javascript: submitform('','');"></td>
+								onClick="javascript: submitform('','');">
+								<% } else { %>
+								 <input type="button" name="button" class=mbttn
+								value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>"
+								onClick="javascript: ResearchScriptAttach();")  disabled="<%=disable%>"> 
+                                                            <input type="button" name="button" class=mbttn
+								value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>"
+								onClick="javascript: submitform('','');" disabled="<%=disable%>">
+								<% } %>
+								</td>
 						</tr>
 						<tr>
 							<td class="heading"><bean:message key="oscarResearch.oscarDxResearch.quickList" /></td>
@@ -187,8 +203,15 @@ function openNewPage(vheight,vwidth,varpage) {
 										<bean:write name="quickLists" property="lastUsed" />><bean:write
 										name="quickLists" property="quickListName" /></option>
 								</logic:iterate>
-							</html:select> <input type="button" value="<bean:message key="oscarResearch.oscarDxResearch.btnGO"/>"
-								onclick="javascript:changeList();"></td>
+							</html:select> 
+							<%if(disable) { %>
+							<input type="button" value="<bean:message key="oscarResearch.oscarDxResearch.btnGO"/>"
+								onclick="javascript:changeList();" disabled="<%=disable%>">
+							<% } else { %>
+								<input type="button" value="<bean:message key="oscarResearch.oscarDxResearch.btnGO"/>"
+								onclick="javascript:changeList();">
+							<% } %>	
+							</td>
 						</tr>
 						<logic:iterate id="item" name="allQuickListItems"
 							property="dxQuickListItemsVector">

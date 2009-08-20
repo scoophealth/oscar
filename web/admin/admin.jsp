@@ -635,7 +635,7 @@ div.logoutBox {
 				onclick='popupPage(500,1000,&quot;<html:rewrite page="/form/formXmlUpload.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnImportFormData" /></a></li>
 			<li><a href="#"
-				onclick='popupPage(250,450,&quot;<html:rewrite page="/oscarResearch/oscarDxResearch/dxResearchCustomization.jsp"/>&quot;);return false;'><bean:message
+				onclick='popupPage(400,450,&quot;<html:rewrite page="/oscarResearch/oscarDxResearch/dxResearchCustomization.jsp"/>&quot;);return false;'><bean:message
 				key="oscarEncounter.Index.btnCustomize" /> <bean:message
 				key="oscar.admin.diseaseRegistryQuickList" /></a></li>
 			<li><a href="#"

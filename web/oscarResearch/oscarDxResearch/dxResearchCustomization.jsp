@@ -42,7 +42,7 @@
 
 function setfocus(){
     window.focus();
-    window.resizeTo(450,220);
+    window.resizeTo(600,280);
 }
 </script>
 </head>
@@ -72,6 +72,11 @@ function setfocus(){
 			style="width: 180px"
 			onClick="popupPage(230,600,'dxResearchLoadQuickList.do')"
 			value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.editQuickList"/>" />
+		</td>
+		<td valign="center"><input type="button" class="mbttn"
+			style="width: 180px"
+			onClick="popupPage(230,600,'dxResearchSelectAssociations.jsp')"
+			value="<bean:message key="oscarResearch.oscarDxResearch.dxCustomization.editAssociations"/>" />
 		</td>
 	</tr>
 	<tr>
