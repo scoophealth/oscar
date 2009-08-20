@@ -30,5 +30,6 @@
 		<property name="status" column="status" />
 		<property name="code" column="dxresearch_code" />
 		<property name="codingSystem" column="coding_system" />
+		<property name="association" column="association" />
 	</class>
 </hibernate-mapping>

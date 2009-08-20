@@ -1397,7 +1397,7 @@ public class CaseManagementManager {
 		this.dxResearchDAO = dao;
 	}
 
-	public void saveToDx(String demographicNo, String code, String codingSystem) {
+	public void saveToDx(String demographicNo, String code, String codingSystem, boolean association) {
 		if (codingSystem == null) {
 			codingSystem = "icd10";
 		}
@@ -1409,6 +1409,7 @@ public class CaseManagementManager {
 		dx.setStartDate(new Date());
 		dx.setUpdateDate(new Date());
 		dx.setStatus("A");
+		dx.setAssociation(association);
 
 		if(!dxResearchDAO.entryExists(dx.getDemographicNo(), codingSystem, code) ) {
 			this.dxResearchDAO.save(dx);
@@ -1416,7 +1417,7 @@ public class CaseManagementManager {
 	}
 
 	public void saveToDx(String demographicNo, String code) {
-		saveToDx(demographicNo, code, null);
+		saveToDx(demographicNo, code, null,false);
 	}
 
 	public List<DxResearch> getDxByDemographicNo(String demographicNo) {

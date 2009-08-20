@@ -629,8 +629,18 @@ CREATE TABLE dxresearch (
   status char(1) default 'A',
   dxresearch_code varchar(10) default '',
   coding_system varchar(20),
+  association tinyint(1) not null default 0,
   PRIMARY KEY  (dxresearch_no)
 ) ;
+
+CREATE TABLE `dx_associations` (
+        `id` int primary key auto_increment,
+        `dx_codetype` varchar(50) not null,
+        `dx_code` varchar(50) not null,
+        `codetype` varchar(50) not null,
+        `code` varchar(50) not null,
+        `update_date` timestamp not null
+);
 
 --
 -- Table structure for table `eChart`

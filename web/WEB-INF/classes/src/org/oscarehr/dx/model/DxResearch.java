@@ -15,8 +15,15 @@ public class DxResearch extends BaseObject {
 	private String status;
 	private String code;
 	private String codingSystem;
+	private boolean association;
 	
 	
+	public boolean isAssociation() {
+		return association;
+	}
+	public void setAssociation(boolean association) {
+		this.association = association;
+	}
 	public Long getId() {
 		return id;
 	}

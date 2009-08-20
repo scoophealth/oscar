@@ -990,7 +990,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
         			DxAssociation assoc = dxDao.findAssociation(cmIssue.getIssue().getType(), cmIssue.getIssue().getCode());
         			if(assoc != null) {
         				//we found a match. Let's add them to registry
-        				this.caseManagementMgr.saveToDx(getDemographicNo(request),assoc.getDxCode(),assoc.getDxCodeType());
+        				this.caseManagementMgr.saveToDx(getDemographicNo(request),assoc.getDxCode(),assoc.getDxCodeType(),true);
         				
         			}
         		}
@@ -1766,7 +1766,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
                     if(dxProps != null && dxProps.get(issueList[i].getIssue().getCode()) != null) {
                             String codingSystem = dxProps.getProperty("coding_system");
                             log.info("adding to Dx");
-                            this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem);
+                            this.caseManagementMgr.saveToDx(getDemographicNo(request),issueList[i].getIssue().getCode(),codingSystem,false);
                             caseIssueList[oldList.length + k].getIssue().setMajor(true);
                     }
 

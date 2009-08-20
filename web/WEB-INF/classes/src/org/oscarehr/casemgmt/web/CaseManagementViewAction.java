@@ -1428,7 +1428,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         	codingSystem = dxProps.getProperty("coding_system");
         }catch(IOException e) {log.warn("Unable to load Dx properties file");}
         
-		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"),codingSystem);
+		this.caseManagementMgr.saveToDx(getDemographicNo(request), request.getParameter("issue_code"),codingSystem,false);
 		
 		return view(mapping,form,request,response);
 	}		
