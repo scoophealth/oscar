@@ -519,7 +519,7 @@ function init() {
                    <div style="margin-top:5px; text-align:center">
                        <input type="submit" id="printOp" style="border: 1px solid #7682b1;" value="Print" onclick="return printNotes();">
                        <oscarProperties:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                              <indivo:indivoRegistered demographic="<%=(String) request.getAttribute("demographicNo")%>" provider="<%=(String) request.getSession().getAttribute("user")%>">
+                              <indivo:indivoRegistered demographic="<%=(String) request.getAttribute(\"demographicNo\")%>" provider="<%=(String) request.getSession().getAttribute(\"user\")%>">
                        <input type="submit" id="sendToPhr" style="border: 1px solid #7682b1;" value="Send To Phr" onclick="return sendToPhrr();">
                               </indivo:indivoRegistered>
                        </oscarProperties:oscarPropertiesCheck>
