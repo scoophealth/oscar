@@ -1202,6 +1202,7 @@ public class ClientManagerAction extends BaseAction {
 				try {
 					admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
 				} catch (Exception e) {
+					e.printStackTrace();
 					ActionMessages messages = new ActionMessages();
 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 					saveMessages(request, messages);
@@ -1215,7 +1216,7 @@ public class ClientManagerAction extends BaseAction {
 		if (success) {
 			return mapping.findForward("er-redirect");
 		} else {
-			return mapping.findForward("search");
+			return mapping.findForward("intake-search");
 		}
 	}
 
