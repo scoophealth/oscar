@@ -67,6 +67,8 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	private Integer nodeId;
 	
+	private String jsLocation;
+	
     public GenericIntakeEditFormBean() {
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
@@ -391,5 +393,14 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.nodeId = nodeId;
 	}
 
+	public String getJsLocation() {
+		return jsLocation;
+	}
+
+	public void setJsLocation(String jsLocation) {
+		this.jsLocation = jsLocation;
+	}
+
+	
 	
 }

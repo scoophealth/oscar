@@ -31,10 +31,10 @@ import java.util.TreeSet;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.ObjectNotFoundException;
-import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.util.DbConnectionFilter;
@@ -249,5 +249,13 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
 
 	public void deleteIntakeNode(IntakeNode intakeNode) {
 		getHibernateTemplate().delete(intakeNode);
+	}
+	
+	public String getIntakeNodeJavascriptLocation(Integer intakeNodeId) {
+		List<IntakeNodeJavascript> js = getHibernateTemplate().find("FROM IntakeNodeJavascript j where j.intakeNodeId=?",intakeNodeId);
+		if(!js.isEmpty()) {
+			return js.get(0).getLocation();
+		} 
+		return null;
 	}
 }

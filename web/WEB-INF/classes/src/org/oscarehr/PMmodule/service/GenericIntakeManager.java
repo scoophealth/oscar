@@ -915,4 +915,9 @@ public class GenericIntakeManager {
 	 * beginDate, Date endDate) { return genericIntakeDAO.getCohort(beginDate,
 	 * endDate, clientDao.getClients()); }
 	 */
+	
+
+	public String getIntakeNodeJavascriptLocation(Integer intakeNodeId) {
+		return this.genericIntakeNodeDAO.getIntakeNodeJavascriptLocation(intakeNodeId);
+	}
 }

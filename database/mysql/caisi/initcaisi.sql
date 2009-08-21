@@ -1449,6 +1449,13 @@ CREATE TABLE `functional_user_type` (
   PRIMARY KEY  (`id`)
 );
 
+CREATE TABLE `intake_node_js` (
+        `id` integer not null auto_increment,
+        `intake_node_id` integer,
+        `location` varchar(255),
+        primary key(id)
+);
+
 --
 -- Table structure for table `intake_node_label`
 --
