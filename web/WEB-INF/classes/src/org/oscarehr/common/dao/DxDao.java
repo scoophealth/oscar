@@ -27,9 +27,9 @@ public class DxDao extends AbstractDao {
 		return(results);
 	}
     
-    public void removeAssociations() {
+    public int removeAssociations() {
     	Query query = entityManager.createQuery("DELETE from DxAssociation");
-    	query.executeUpdate();
+    	return query.executeUpdate();
     }
     
     public DxAssociation findAssociation(String codeType, String code) {    	

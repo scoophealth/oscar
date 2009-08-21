@@ -3,13 +3,16 @@ package oscar.oscarResearch.oscarDxResearch.pageUtil;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,8 +21,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.model.DxAssociation;
+import org.oscarehr.dx.dao.DxResearchDAO;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarResearch.oscarDxResearch.bean.dxAssociationBean;
@@ -55,7 +62,11 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     public ActionForward clearAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException
     {
-    	dxDao.removeAssociations();
+    	int recordsUpdated = dxDao.removeAssociations();
+    	
+    	Map<String,Integer> map = new HashMap<String,Integer>();
+    	map.put("recordsUpdated",recordsUpdated);
+    	response.getWriter().print(JSONObject.fromObject( map ));
     	return null;
     }
 
@@ -70,6 +81,10 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	dxa.setDxCode(request.getParameter("dxCode"));
     	
     	dxDao.persist(dxa);
+    	
+    	Map<String,String> map = new HashMap<String,String>();
+    	map.put("result","success");
+    	response.getWriter().print(JSONObject.fromObject( map ));
     	return null;
     }
     
@@ -79,24 +94,17 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     	List<DxAssociation> associations = dxDao.findAllAssociations();
     	
     	response.setContentType("application/octet-stream" );
-        //response.setContentLength( (int)f.length() );
         response.setHeader( "Content-Disposition", "attachment; filename=\"dx_associations.csv\"" );
-
         
-    	StringWriter sw = new StringWriter();
-    	ExcelCSVPrinter printer = new ExcelCSVPrinter(/*sw*/response.getWriter());
+    	ExcelCSVPrinter printer = new ExcelCSVPrinter(response.getWriter());
     	
     	printer.writeln(new String[] {"Issue List Code Type","Issue List Code","Disease Registry Code Type","Disease Registry Code"});
     	for(DxAssociation dxa:associations) {
     		printer.writeln(new String[] {dxa.getCodeType(),dxa.getCode(),dxa.getDxCodeType(),dxa.getDxCode()});
     	}
-    	
-    	//String data = sw.toString();
-    	
+    	   	
     	printer.flush();
     	printer.close();
-
-    	//System.out.println(data);
     	
     	return null;
     }
@@ -133,9 +141,39 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     		rowsInserted++;    		
     	}
     
-    	System.out.println("Rows Inserted = " + rowsInserted);
+    	Map<String,Integer> map = new HashMap<String,Integer>();
+    	map.put("recordsAdded",rowsInserted);
+    	response.getWriter().print(JSONObject.fromObject( map ));
     	
     	return mapping.findForward("success");
     }
     
+    public ActionForward autoPopulateAssociations(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException
+    {
+    	int recordsAdded=0;
+    	CaseManagementIssueDAO cmiDao =(CaseManagementIssueDAO)SpringUtils.getBean("CaseManagementIssueDAO");
+    	CaseManagementManager cmMgr = (CaseManagementManager)SpringUtils.getBean("caseManagementManager");
+    	DxResearchDAO dxrDao = (DxResearchDAO)SpringUtils.getBean("dxResearchDao");
+    	
+    	//clear existing entries
+    	dxrDao.removeAllAssociationEntries();
+    	
+    	//get all certain issues
+    	List<CaseManagementIssue> certainIssues = cmiDao.getAllCertainIssues();
+    	for(CaseManagementIssue issue:certainIssues) {
+    		DxAssociation assoc = dxDao.findAssociation(issue.getIssue().getType(), issue.getIssue().getCode());
+    		if(assoc != null) {
+    			//we now have a certain issue which matches an association.
+    			cmMgr.saveToDx(issue.getDemographic_no(), issue.getIssue().getCode(), issue.getIssue().getType(), true);
+    			recordsAdded++;
+    		}
+    	}
+    	
+    	Map<String,Integer> map = new HashMap<String,Integer>();
+    	map.put("recordsAdded",recordsAdded);
+    	response.getWriter().print(JSONObject.fromObject( map ));
+    	
+    	return null;    
+    }
 }

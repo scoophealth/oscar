@@ -79,5 +79,10 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     public void saveIssue(CaseManagementIssue issue) {
         getHibernateTemplate().saveOrUpdate(issue);
     }
+    
+    @SuppressWarnings("unchecked")
+    public List<CaseManagementIssue> getAllCertainIssues() {
+        return getHibernateTemplate().find("from CaseManagementIssue cmi where cmi.certain = true");
+    }
 
 }

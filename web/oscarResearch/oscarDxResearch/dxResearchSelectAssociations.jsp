@@ -83,6 +83,17 @@ $(document).ready(function() {
 		window.open("<%= request.getContextPath() %>/oscarResearch/oscarDxResearch/dxResearchLoadAssociations.do?method=export");
 		
 	});
+
+	//automatch
+	$("#automatch").click(function(){
+		if(confirm('This function will remove and re-generate all entries in the disease registry where the entry was created by an association.\nWould you like to continue?')) {
+			$.getJSON("<%= request.getContextPath() %>/oscarResearch/oscarDxResearch/dxResearchLoadAssociations.do?method=autoPopulateAssociations",
+			        function(data,textStatus){
+			          alert("Automatch generated " + data.recordsAdded + " records.");
+			        });
+		}		
+	});
+	
 	//populate the current list of associations
 	populateListOfAssociations();
 
@@ -122,6 +133,9 @@ $(document).ready(function() {
 	</html:form>
 	</div>
 	<br/>
+	<input id="automatch" type="button" class="mbttn"
+			style="width: 180px" value="Automatch" />
+	&nbsp;&nbsp;	
 	<input id="clear_list" type="button" class="mbttn"
 			style="width: 180px" value="Clear Associations" />
 	&nbsp;&nbsp;		
