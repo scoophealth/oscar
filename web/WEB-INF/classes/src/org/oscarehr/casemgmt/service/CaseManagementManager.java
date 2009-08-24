@@ -1000,10 +1000,6 @@ public class CaseManagementManager {
 			boolean add = false;
 
 			// write
-			/*
-			 * pa = (ProgramAccess)programAccessMap.get("write " + noteRoleName + " notes"); if(pa != null) { if(pa.isAllRoles() || isRoleIncludedInAccess(pa,role)) { cmIssue.setWriteAccess(true); add = true; } } else { if(issueRole.equals(role.getName()))
-			 * { //default cmIssue.setWriteAccess(true); add=true; } }
-			 */
 			pa = null;
 			// read
 			pa = (ProgramAccess) programAccessMap.get("read " + noteRoleName + " notes");
@@ -1013,7 +1009,7 @@ public class CaseManagementManager {
 					add = true;
 				}
 			} else {
-				if (new Long(noteRole).intValue() == role.getId().intValue()) {
+				if (Long.parseLong(noteRole) == role.getId().longValue()) {
 					// default
 					add = true;
 				}
@@ -1021,8 +1017,7 @@ public class CaseManagementManager {
 
 			// apply defaults
 			if (!add) {
-				if (new Long(noteRole).intValue() == role.getId().intValue()) {
-					// cmNote.setWriteAccess(true);
+				if (Long.parseLong(noteRole) == role.getId().longValue()) {
 					add = true;
 				}
 			}
@@ -1148,13 +1143,11 @@ public class CaseManagementManager {
 			pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
 			if (pa != null) {
 				if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
-					cmIssue.setWriteAccess(true);
 					add = true;
 				}
 			} else {
 				if (issueRole.equalsIgnoreCase(role.getName())) {
 					// default
-					cmIssue.setWriteAccess(true);
 					add = true;
 				}
 			}
@@ -1176,7 +1169,6 @@ public class CaseManagementManager {
 			// apply defaults
 			if (!add) {
 				if (issueRole.equalsIgnoreCase(role.getName())) {
-					cmIssue.setWriteAccess(true);
 					add = true;
 				}
 			}

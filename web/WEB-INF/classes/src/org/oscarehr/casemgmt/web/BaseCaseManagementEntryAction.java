@@ -246,7 +246,6 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		String issueType = iss.getRole();
 		cIssue.setType(issueType);
 		cIssue.setUpdate_date(new Date());
-		cIssue.setWriteAccess(true);
 		cIssue.setProgram_id(programId);
 		// add it to database
 		List uList = new ArrayList();
