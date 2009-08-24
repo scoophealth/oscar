@@ -57,9 +57,6 @@ public class CaseManagementIssue extends BaseObject {
 	protected Issue issue;
 	protected Integer program_id = null;
 
-	/** @deprecated not a data field */
-	protected boolean writeAccess;
-
 	protected int hashCode = Integer.MIN_VALUE;
 
 	public String toString() {
@@ -107,7 +104,6 @@ public class CaseManagementIssue extends BaseObject {
 		this.setUpdate_date(cMgmtIssue.getUpdate_date());
 		this.setNotes(cMgmtIssue.getNotes());
 		this.setIssue(cMgmtIssue.getIssue());
-		this.setWriteAccess(cMgmtIssue.isWriteAccess());
 	}
 
 	public boolean isAcute() {
@@ -213,16 +209,6 @@ public class CaseManagementIssue extends BaseObject {
 		this.update_date = update_date;
 	}
 
-	/** @deprecated not a data field */
-	public boolean isWriteAccess() {
-		return writeAccess;
-	}
-
-	/** @deprecated not a data field */
-	public void setWriteAccess(boolean writeAccess) {
-		this.writeAccess = writeAccess;
-	}
-
 	public Integer getProgram_id() {
 		return program_id;
 	}
@@ -242,13 +228,13 @@ public class CaseManagementIssue extends BaseObject {
 		Role role = pp.getRole();
 
 		List<ProgramAccess> programAccessList = roleProgramAccessDao.getAccessListByProgramID(new Long(programId));
-		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
+		Map<String, ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
 		
 		String issueRole = getIssue().getRole().toLowerCase();
 		ProgramAccess pa = null;
 
 		// write
-		pa = (ProgramAccess) programAccessMap.get("write " + issueRole + " issues");
+		pa = programAccessMap.get("write " + issueRole + " issues");
 		if (pa != null) {
 			if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
 				return(true);
@@ -265,9 +251,8 @@ public class CaseManagementIssue extends BaseObject {
 	private static boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
 		boolean result = false;
 
-		for (Iterator iter = pa.getRoles().iterator(); iter.hasNext();) {
-			Role accessRole = (Role) iter.next();
-			if (role.getId() == accessRole.getId()) {
+		for (Role accessRole : pa.getRoles()) {
+			if (role.getId().longValue() == accessRole.getId().longValue()) {
 				return true;
 			}
 		}
@@ -283,6 +268,4 @@ public class CaseManagementIssue extends BaseObject {
 		}
 		return map;
 	}
-
-
 }
