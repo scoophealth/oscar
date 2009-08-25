@@ -251,11 +251,8 @@ public class GenericIntakeNodeDAO extends HibernateDaoSupport {
 		getHibernateTemplate().delete(intakeNode);
 	}
 	
-	public String getIntakeNodeJavascriptLocation(Integer intakeNodeId) {
-		List<IntakeNodeJavascript> js = getHibernateTemplate().find("FROM IntakeNodeJavascript j where j.intakeNodeId=?",intakeNodeId);
-		if(!js.isEmpty()) {
-			return js.get(0).getLocation();
-		} 
-		return null;
+	public List<IntakeNodeJavascript> getIntakeNodeJavascriptLocation(String questionId) {
+		List<IntakeNodeJavascript> js = getHibernateTemplate().find("FROM IntakeNodeJavascript j where j.questionId=?",questionId);
+		return js;
 	}
 }

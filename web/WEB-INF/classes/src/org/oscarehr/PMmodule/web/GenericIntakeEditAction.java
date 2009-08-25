@@ -51,6 +51,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
 import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.SurveyManager;
@@ -112,7 +113,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
 		}
 
-		String jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getId());
+		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 		System.out.println("Javascript Location=" + jsLocation);
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
@@ -188,7 +189,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			}
 		}
 		
-		String jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getId());
+		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 		System.out.println("Javascript Location=" + jsLocation);
 		
 
@@ -244,7 +245,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			intake = genericIntakeManager.getMostRecentProgramIntake(clientId, getProgramId(request), facilityId);
 		}
 
-		String jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getId());
+		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 		System.out.println("Javascript Location=" + jsLocation);
 		
 		
@@ -378,7 +379,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			saveErrors(request, messages);
 		}
 
-		String jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getId());
+		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
 		System.out.println("Javascript Location=" + jsLocation);
 		
 		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(
@@ -820,7 +821,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedCommunityProgramsVisible,
 			boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds,
-			Integer currentExternalProgramId, Integer facilityId, Integer nodeId, String javascriptLocation) {
+			Integer currentExternalProgramId, Integer facilityId, Integer nodeId, List<IntakeNodeJavascript> javascriptLocation) {
 		formBean.setIntake(intake);
 		formBean.setClient(client);
 		formBean.setNodeId(nodeId);

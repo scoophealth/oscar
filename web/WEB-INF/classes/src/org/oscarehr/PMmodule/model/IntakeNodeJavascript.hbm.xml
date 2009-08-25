@@ -24,7 +24,7 @@
 			<generator class="native" />
 		</id>
 
-		<property name="intakeNodeId" column="intake_node_id" type="integer"/>
+		<property name="questionId" column="question_id" type="string" not-null="true"/>
 		
 		<property name="location" column="location" type="string" not-null="true"/>
 

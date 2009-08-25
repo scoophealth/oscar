@@ -23,6 +23,7 @@
 
 <%@ include file="/taglibs.jsp" %>
 <%@ page import="org.oscarehr.PMmodule.model.Intake" %>
+<%@ page import="org.oscarehr.PMmodule.model.IntakeNodeJavascript" %>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" %>
 <%@ page import="org.oscarehr.PMmodule.web.ProgramUtils" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -50,10 +51,11 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
 	
-	<%
-		if(intakeEditForm.getJsLocation() != null) {
-			%><script type="text/javascript" src="<%= request.getContextPath() %><%=intakeEditForm.getJsLocation()%>"></script>
-	<%}%>
+	<%if(intakeEditForm.getJsLocation() != null) {
+		for(IntakeNodeJavascript js:intakeEditForm.getJsLocation()) {
+	%>
+			<script type="text/javascript" src="<%= request.getContextPath() %><%=js.getLocation()%>"></script>
+	<%}}%>
 			
     <title>Generic Intake Edit</title>
     <style type="text/css">

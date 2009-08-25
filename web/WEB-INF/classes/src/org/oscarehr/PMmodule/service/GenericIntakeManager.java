@@ -45,6 +45,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.IntakeNodeJavascript;
 import org.oscarehr.PMmodule.model.IntakeNodeLabel;
 import org.oscarehr.PMmodule.model.IntakeNodeTemplate;
 import org.oscarehr.PMmodule.model.Program;
@@ -917,7 +918,10 @@ public class GenericIntakeManager {
 	 */
 	
 
-	public String getIntakeNodeJavascriptLocation(Integer intakeNodeId) {
-		return this.genericIntakeNodeDAO.getIntakeNodeJavascriptLocation(intakeNodeId);
+	public List<IntakeNodeJavascript> getIntakeNodeJavascriptLocation(String questionId) {
+		if(questionId != null && questionId.length()>0) {
+			return this.genericIntakeNodeDAO.getIntakeNodeJavascriptLocation(questionId);
+		}
+		return null;
 	}
 }
