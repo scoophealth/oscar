@@ -1,3 +1,5 @@
+2009-08-25 : Generic Intakes: added support for internal labels, and the loading of form specific javascript
+2009-08-25 : Support for disease registry associations, automatch, and auto-insert for certain issues.
 2009-05-13 : Support for digital signature pads. (Starting with caisi integrator consent) (Ted)
 2009-04-28 : Expand form edited date to include time. (Dan Brow)
 2009-04-28 : Fixed "Abnormal" reporting for GDML labs (DavidD)
