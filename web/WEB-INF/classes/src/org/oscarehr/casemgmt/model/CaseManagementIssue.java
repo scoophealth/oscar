@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.BaseObject;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
@@ -38,12 +39,14 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.TimeClearedHashMap;
 
 public class CaseManagementIssue extends BaseObject {
 
-	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
-	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
-
+	private static ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
+	private static ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
+	private static TimeClearedHashMap<String, Boolean> writeAccessCache=new TimeClearedHashMap<String, Boolean>(DateUtils.MILLIS_PER_MINUTE, DateUtils.MILLIS_PER_MINUTE);
+	
 	protected Long id;
 	protected String demographic_no;
 	protected long issue_id;
@@ -221,34 +224,47 @@ public class CaseManagementIssue extends BaseObject {
 
 	public boolean isWriteAccess(int programId)
 	{
-		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
-		if (ppList == null || ppList.isEmpty()) {
-			return(false);
-		}
-
-		ProgramProvider pp = ppList.get(0);
-		Role role = pp.getRole();
-
-		List<ProgramAccess> programAccessList = programAccessDao.getAccessListByProgramId(new Long(programId));
-		Map<String, ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
+		String cacheKey=LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo()+':'+programId;
 		
-		String issueRole = getIssue().getRole().toLowerCase();
-		ProgramAccess pa = null;
-
-		// write
-		pa = programAccessMap.get("write " + issueRole + " issues");
-		if (pa != null) {
-			if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
-				return(true);
-			}
-		} else {
-			if (issueRole.equalsIgnoreCase(role.getName())) {
-				return(true);
-			}
+		Boolean result=writeAccessCache.get(cacheKey);
+		if (result==null)
+		{
+			result=calculateWriteAccess(programId);
+			writeAccessCache.put(cacheKey, result);
 		}
 		
-		return(false);
+		return(result);
 	}
+
+	private boolean calculateWriteAccess(int programId) {
+	    List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
+	    if (ppList == null || ppList.isEmpty()) {
+	    	return(false);
+	    }
+
+	    ProgramProvider pp = ppList.get(0);
+	    Role role = pp.getRole();
+
+	    List<ProgramAccess> programAccessList = programAccessDao.getAccessListByProgramId(new Long(programId));
+	    Map<String, ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
+	    
+	    String issueRole = getIssue().getRole().toLowerCase();
+	    ProgramAccess pa = null;
+
+	    // write
+	    pa = programAccessMap.get("write " + issueRole + " issues");
+	    if (pa != null) {
+	    	if (pa.isAllRoles() || isRoleIncludedInAccess(pa, role)) {
+	    		return(true);
+	    	}
+	    } else {
+	    	if (issueRole.equalsIgnoreCase(role.getName())) {
+	    		return(true);
+	    	}
+	    }
+	    
+	    return(false);
+    }
 	
 	private static boolean isRoleIncludedInAccess(ProgramAccess pa, Role role) {
 		boolean result = false;
