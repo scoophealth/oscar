@@ -22,7 +22,7 @@
 <flowsheet name="diab" 
            display_name="Diabetes Flowsheet" 
            ds_rules="diab.drl" 
-           dxcode_triggers="icd9:250" 
+           dxcode_triggers="icd9:250,icd10:E149" 
            warning_colour="#E00000"
            recommendation_colour="yellow">
     

@@ -165,7 +165,7 @@ public class dxResearchLoadAssociationsAction extends DispatchAction {
     		DxAssociation assoc = dxDao.findAssociation(issue.getIssue().getType(), issue.getIssue().getCode());
     		if(assoc != null) {
     			//we now have a certain issue which matches an association.
-    			cmMgr.saveToDx(issue.getDemographic_no(), issue.getIssue().getCode(), issue.getIssue().getType(), true);
+    			cmMgr.saveToDx(issue.getDemographic_no(), assoc.getDxCode(), assoc.getDxCodeType(), true);
     			recordsAdded++;
     		}
     	}
