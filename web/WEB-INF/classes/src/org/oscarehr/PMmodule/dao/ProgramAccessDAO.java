@@ -24,15 +24,20 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramAccessDAO extends HibernateDaoSupport {
 
     private static Log log = LogFactory.getLog(ProgramAccessDAO.class);
+
+	private static TimeClearedHashMap<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 
     public List getProgramAccesses(Long programId) {
 
@@ -48,6 +53,20 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
 
         return results;
     }
+
+    @SuppressWarnings("unchecked")
+    public List<ProgramAccess> getAccessListByProgramId(Long programId) {
+    	List<ProgramAccess> results=programAccessListByProgramIdCache.get(programId);
+    	if (results==null)
+    	{
+            String q = "select pp from ProgramAccess pp where pp.ProgramId=?";
+    		results=getHibernateTemplate().find(q, new Object[] {programId});
+    		if (results!=null) programAccessListByProgramIdCache.put(programId, results);
+    	}
+    		
+        return results;
+    }
+
 
     public ProgramAccess getProgramAccess(Long id) {
 
@@ -89,8 +108,9 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        this.getHibernateTemplate().saveOrUpdate(pa);
-
+        getHibernateTemplate().saveOrUpdate(pa);
+        programAccessListByProgramIdCache.remove(pa.getProgramId());
+        
         if (log.isDebugEnabled()) {
             log.debug("saveProgramAccess:" + pa.getId());
         }
@@ -101,7 +121,9 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        this.getHibernateTemplate().delete(getProgramAccess(id));
+        ProgramAccess pa=getProgramAccess(id);
+        programAccessListByProgramIdCache.remove(pa.getProgramId());
+        this.getHibernateTemplate().delete(pa);
 
         if (log.isDebugEnabled()) {
             log.debug("deleteProgramAccess:" + id);

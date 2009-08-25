@@ -38,7 +38,7 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(ProgramProviderDAO.class);
 
-	private static TimeClearedHashMap<String, List<ProgramProvider>> programProviderByProviderProgramIDCache=new TimeClearedHashMap<String, List<ProgramProvider>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	private static TimeClearedHashMap<String, List<ProgramProvider>> programProviderByProviderProgramIdCache=new TimeClearedHashMap<String, List<ProgramProvider>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 	
 	private static String makeCacheKey(String providerNo, Long programId)
 	{
@@ -49,12 +49,12 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     public List<ProgramProvider> getProgramProviderByProviderProgramId(String providerNo, Long programId) {
     	String cacheKey=makeCacheKey(providerNo, programId);
     	
-    	List<ProgramProvider> results=programProviderByProviderProgramIDCache.get(cacheKey);
+    	List<ProgramProvider> results=programProviderByProviderProgramIdCache.get(cacheKey);
     	if (results==null)
     	{
     		String q = "select pp from ProgramProvider pp where pp.ProgramId=? and pp.ProviderNo=?";
     		results=getHibernateTemplate().find(q, new Object[] {programId, providerNo});
-    		if (results!=null) programProviderByProviderProgramIDCache.put(cacheKey, results);
+    		if (results!=null) programProviderByProviderProgramIdCache.put(cacheKey, results);
     	}
     		
         return results;
@@ -161,9 +161,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
         
-        programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
-
-        this.getHibernateTemplate().saveOrUpdate(pp);
+        programProviderByProviderProgramIdCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
+        getHibernateTemplate().saveOrUpdate(pp);
 
         if (log.isDebugEnabled()) {
             log.debug("saveProgramProvider: id=" + pp.getId());
@@ -178,8 +177,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
         ProgramProvider pp = getProgramProvider(id);
         if (pp != null) {
-            programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
-            this.getHibernateTemplate().delete(pp);
+            programProviderByProviderProgramIdCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
+            getHibernateTemplate().delete(pp);
         }
 
         if (log.isDebugEnabled()) {
@@ -197,8 +196,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
             Iterator it = o.iterator();
             while (it.hasNext()) {
             	ProgramProvider pp = (ProgramProvider) it.next();
+                programProviderByProviderProgramIdCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
                 getHibernateTemplate().delete(pp);
-                programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
             }
         }
 

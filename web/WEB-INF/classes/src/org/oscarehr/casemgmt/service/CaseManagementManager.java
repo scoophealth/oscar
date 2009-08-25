@@ -43,6 +43,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
@@ -134,6 +135,7 @@ public class CaseManagementManager {
 	private UserPropertyDAO userPropertyDAO;
 	private DxResearchDAO dxResearchDAO;
 	private ProgramProviderDAO programProviderDao;
+	private ProgramAccessDAO programAccessDAO;
 	
 	private boolean enabled;
 
@@ -789,7 +791,7 @@ public class CaseManagementManager {
 			Integer pId = itr.next();
 
 			List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pId.longValue());
-			List paList = roleProgramAccessDAO.getAccessListByProgramID(pId.longValue());
+			List paList = programAccessDAO.getAccessListByProgramId(pId.longValue());
 
 			for (int i = 0; i < ppList.size(); i++) {
 				ProgramProvider pp = (ProgramProvider) ppList.get(i);
@@ -990,7 +992,7 @@ public class CaseManagementManager {
 
 		// Load up access list from program
 		@SuppressWarnings("unchecked")
-		List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
 		@SuppressWarnings("unchecked")
 		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
 
@@ -1076,7 +1078,7 @@ public class CaseManagementManager {
 		Role role = pp.getRole();
 
 		// get program accesses... program allows either all roles or not all roles (does this mean no roles?)
-		List paList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+		List paList = programAccessDAO.getAccessListByProgramId(new Long(programId));
 		Map paMap = convertProgramAccessListToMap(paList);
 
 		// get all roles
@@ -1131,7 +1133,7 @@ public class CaseManagementManager {
 		Role role = pp.getRole();
 
 		// Load up access list from program
-		List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+		List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
 		Map programAccessMap = convertProgramAccessListToMap(programAccessList);
 
 		// iterate through the issue list
@@ -1318,6 +1320,10 @@ public class CaseManagementManager {
 	public void setCaseManagementIssueDAO(CaseManagementIssueDAO dao) {
 		this.caseManagementIssueDAO = dao;
 	}
+
+	public void setProgramAccessDAO(ProgramAccessDAO programAccessDAO) {
+    	this.programAccessDAO = programAccessDAO;
+    }
 
 	public void setIssueDAO(IssueDAO dao) {
 		this.issueDAO = dao;

@@ -32,11 +32,11 @@ import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Role;
 import org.caisi.model.Tickler;
+import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +51,7 @@ public class TicklerManager {
 
     private TicklerDAO ticklerDAO = null;
     private CustomFilterDAO customFilterDAO = null;
-    private RoleProgramAccessDAO roleProgramAccessDAO;
+    private ProgramAccessDAO programAccessDAO;
     private ProgramProviderDAO programProviderDAO;
     
     private ProgramManager programManager = null;
@@ -65,7 +65,11 @@ public class TicklerManager {
         this.caseManagementManager = caseManagementManager;
     }
     
-    public void setProgramProviderDAO(ProgramProviderDAO programProviderDAO) {
+    public void setProgramAccessDAO(ProgramAccessDAO programAccessDAO) {
+    	this.programAccessDAO = programAccessDAO;
+    }
+
+	public void setProgramProviderDAO(ProgramProviderDAO programProviderDAO) {
     	this.programProviderDAO = programProviderDAO;
     }
 
@@ -75,10 +79,6 @@ public class TicklerManager {
 
     public void setCustomFilterDAO(CustomFilterDAO customFilterDAO) {
         this.customFilterDAO = customFilterDAO;
-    }
-    
-    public void setRoleProgramAccessDAO(RoleProgramAccessDAO roleProgramAccessDAO) {
-        this.roleProgramAccessDAO = roleProgramAccessDAO;
     }
     
     public void addTickler(Tickler tickler) {
@@ -148,7 +148,7 @@ public class TicklerManager {
 		    Role role = pp.getRole();		   
 		    
 		    //Load up access list from program
-		    List programAccessList = roleProgramAccessDAO.getAccessListByProgramID(new Long(programId));
+		    List programAccessList = programAccessDAO.getAccessListByProgramId(new Long(programId));
 		    Map programAccessMap = caseManagementManager.convertProgramAccessListToMap(programAccessList);
 			        
 	        

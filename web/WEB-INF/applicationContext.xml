@@ -216,6 +216,7 @@
 		<property name="programManager" ref="programManager" />
 		<property name="dxResearchDAO" ref="dxResearchDao" />
 		<property name="programProviderDao" ref="programProviderDAO" />
+		<property name="programAccessDAO" ref="programAccessDAO" />
 	</bean>
 	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
 		<property name="roleDAO" ref="roleDAO" />
@@ -250,7 +251,7 @@
 		<property name="customFilterDAO" ref="customFilterDAOT" />
 		<property name="programManager" ref="programManager" />
 		<property name="caseManagementManager" ref="caseManagementManager" />
-		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
+		<property name="programAccessDAO" ref="programAccessDAO" />
 		<property name="programProviderDAO" ref="programProviderDAO" />
 	</bean>
  	<bean id="demographicManagerT" class="org.caisi.service.DemographicManagerTickler">

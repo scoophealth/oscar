@@ -32,17 +32,17 @@ import java.util.Set;
 
 import org.caisi.model.BaseObject;
 import org.caisi.model.Role;
+import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class CaseManagementIssue extends BaseObject {
 
 	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
-	private RoleProgramAccessDAO roleProgramAccessDao=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
+	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("ProgramAccessDAO");
 
 	protected Long id;
 	protected String demographic_no;
@@ -229,7 +229,7 @@ public class CaseManagementIssue extends BaseObject {
 		ProgramProvider pp = ppList.get(0);
 		Role role = pp.getRole();
 
-		List<ProgramAccess> programAccessList = roleProgramAccessDao.getAccessListByProgramID(new Long(programId));
+		List<ProgramAccess> programAccessList = programAccessDao.getAccessListByProgramId(new Long(programId));
 		Map<String, ProgramAccess> programAccessMap = convertProgramAccessListToMap(programAccessList);
 		
 		String issueRole = getIssue().getRole().toLowerCase();
