@@ -95,6 +95,11 @@ abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getIdStr();
 	}
 	
+	protected String getQuestionId() {
+		String qid = node.getQuestionId();
+		return (qid!=null)?qid:"";
+	}
+	
 	protected String getLabel() {
 		return node.getLabelStr();
 	}

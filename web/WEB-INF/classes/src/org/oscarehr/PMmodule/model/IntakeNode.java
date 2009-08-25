@@ -50,6 +50,7 @@ public class IntakeNode implements Serializable {
     private Set<Intake> intakes;
     private Set<IntakeAnswer> answers;
     private Integer formType;
+    private String questionId;	//user supplied label.
     
 
     // constructors
@@ -461,4 +462,14 @@ public class IntakeNode implements Serializable {
 	public Integer getFormType() {
 		return this.formType;
 	}
+
+	public String getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(String questionId) {
+		this.questionId = questionId;
+	}
+	
+	
 }

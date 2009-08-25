@@ -53,9 +53,9 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 
 	private String getTextInput(String id, String value, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
+			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
 		} else {
-			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input></td>", new Object[] { id, value });
+			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\"></input></td>", new Object[] { id, value });
 		}
 		
 	}

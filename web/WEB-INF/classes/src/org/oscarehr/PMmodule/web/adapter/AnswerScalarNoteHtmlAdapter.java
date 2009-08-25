@@ -53,7 +53,7 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	}
 
 	private String getTextInput(String id, Integer cols, Integer rows, String value) {
-		return String.format("<td><textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\">%s</textarea></td>", new Object[] { id, cols, rows, value });
+		return String.format("<td><textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\" question_id=\"" +  getQuestionId()  + "\">%s</textarea></td>", new Object[] { id, cols, rows, value });
 	}
 
 }

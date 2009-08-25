@@ -36,7 +36,7 @@ public class SectionHtmlAdapter extends AbstractHtmlAdapter {
 			indent(preBuilder);
 		}
 
-		preBuilder.append("<div dojoType=\"TitlePane\" label=\"").append(getLabel()).append("\" labelNodeClass=\"intakeSectionLabel\" containerNodeClass=\"intakeSectionContainer\" >").append(EOL);
+		preBuilder.append("<div dojoType=\"TitlePane\" label=\"").append(getLabel()).append("\" labelNodeClass=\"intakeSectionLabel\" containerNodeClass=\"intakeSectionContainer\" question_id=\"" +  getQuestionId()  + "\">").append(EOL);
 		beginTag();
 
 		indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);

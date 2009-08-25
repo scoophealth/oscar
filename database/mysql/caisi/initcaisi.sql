@@ -1529,6 +1529,7 @@ CREATE TABLE `intake_node` (
   `publish_date` date default NULL,
   `publish_by` varchar(60) default NULL,
   `form_type` integer default 0,
+  `question_id` varchar(255) default NULL,
   PRIMARY KEY  (`intake_node_id`),
   KEY `IDX_intake_node_intake_node_template` (`intake_node_template_id`),
   KEY `IDX_intake_node_intake_node_label` (`intake_node_label_id`),

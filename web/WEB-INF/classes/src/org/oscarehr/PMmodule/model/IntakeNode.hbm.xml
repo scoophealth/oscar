@@ -63,6 +63,8 @@
 		</set>
 				
 		<property name="formType" column="form_type" type="integer" />
+		
+		<property name="questionId" column="question_id" type="string" />
 
 	</class>
 </hibernate-mapping>

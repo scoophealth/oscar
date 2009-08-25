@@ -39,7 +39,7 @@ public class QuestionHtmlAdapter extends AbstractHtmlAdapter {
 			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
         //}
 		
-		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"4\"").append("\">").append(EOL);
+		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"4\" question_id=\"" +  getQuestionId()  + "\"").append("\">").append(EOL);
 		beginTag();
 		
 		indent(preBuilder).append(getLabel()).append(getMandatory()?"<font color=red>*</font>":"").append(EOL);

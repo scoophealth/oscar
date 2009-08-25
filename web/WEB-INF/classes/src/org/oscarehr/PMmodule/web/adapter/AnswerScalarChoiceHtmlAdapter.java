@@ -45,7 +45,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 				.append(startLabel(true))
 				.append(endLabel(false))
 				.append("<td>")
-				.append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() }))
+				.append(String.format("<select name=\"intake.answerMapped(%s).value\" question_id=\"" +  getQuestionId()  + "\">", new Object[] { getId() }))
 				.append(EOL);
 			beginTag();
 
@@ -80,7 +80,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 	private StringBuilder createCheckBox(String on) {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append(String.format("<input type=\"checkbox\" name=\"intake.answerMapped(%s).value\" value=\"%s\"", new Object[] { getId(), on }));
+		builder.append(String.format("<input type=\"checkbox\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\"", new Object[] { getId(), on }));
 		
 		if (getAnswerValue().equalsIgnoreCase(on)) {
 			builder.append(" checked=\"checked\"");

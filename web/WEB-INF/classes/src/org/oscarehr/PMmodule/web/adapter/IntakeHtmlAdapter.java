@@ -31,20 +31,22 @@ public class IntakeHtmlAdapter extends AbstractHtmlAdapter {
 		StringBuilder preBuilder = super.getPreBuilder();
 		
 		if (hasPages()) {
-			preBuilder.append("<div dojoType=\"TabContainer\" class=\"intakePageContainer\" >").append(EOL);
+			preBuilder.append("<div dojoType=\"TabContainer\" class=\"intakePageContainer\" question_id=\"" +  getQuestionId()  + "\">").append(EOL);
 			beginTag();
+		} else {
+			preBuilder.append("<div question_id=\"" +  getQuestionId()  + "\">").append(EOL);
+			beginTag();	
 		}
-		
 		return preBuilder;
 	}
 
 	public StringBuilder getPostBuilder() {
 		StringBuilder postBuilder = super.getPostBuilder();
 		
-		if (hasPages()) {
+		//if (hasPages()) {
 			endTag();
 			indent(postBuilder).append("</div> <!-- End Page Container -->").append(EOL);
-		}
+		//}
 
 		return postBuilder;
 	}

@@ -18,7 +18,8 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String parent_intake_node_id = request.getParameter("parent_intake_node_id") ;
     String eleType               = request.getParameter("elementType") ;
     String intNodeLabel          = request.getParameter("intake_node_label") ;
-    String mandatory		 = request.getParameter("mandatory") ;
+    String mandatory			 = request.getParameter("mandatory") ;
+    String questionId			 = request.getParameter("question_id"); 
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
     int lblId = -1;
@@ -52,6 +53,9 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     intakeNode.setPos(Integer.parseInt(npos));
     if (mandatory!=null) {
 	intakeNode.setMandatory(true);
+    }
+    if (questionId !=null) {
+    	intakeNode.setQuestionId(questionId);
     }
     
     IntakeNode parentNode = findNode(Integer.parseInt(parent_intake_node_id), nodes);
@@ -155,8 +159,12 @@ scalar note</input><br />
 Label Text (Leave blank for no text): <input type="text"
 	name="intake_node_label" /> <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
 <input type="checkbox" name="mandatory" onclick="doMandatory();">Mandatory</input>
-<input type="hidden" name="mandatorySet" /> <%}%> <input type="submit"
-	value="Add" /></form>
+<input type="hidden" name="mandatorySet" /> <%}%>
+
+<br/><br/>
+<input type="text" name="question_id"/>Internal Id (optional) <br/>
+
+<input type="submit" value="Add" /></form>
 </body>
 </html>
 

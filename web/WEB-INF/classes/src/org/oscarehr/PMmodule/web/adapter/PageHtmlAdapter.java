@@ -32,7 +32,7 @@ public class PageHtmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" class=\"intakePage\" >").append(EOL);
+		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" class=\"intakePage\" question_id=\"" +  getQuestionId()  + "\">").append(EOL);
 		beginTag();
 		
 		if (!hasSections()) {

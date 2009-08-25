@@ -12,6 +12,7 @@
     buildNodes(itn, nodes);
     
     String lblEdit = request.getParameter("lbledit");
+    String questionIdEdit = request.getParameter("questionidedit");
     Integer id = Integer.parseInt(request.getParameter("id"));
     Integer nid = Integer.parseInt(request.getParameter("nid"));
     String mandatory = request.getParameter("mandatory");
@@ -37,6 +38,9 @@
 	if (hasCutPast) {
 	    writeCutPast(cutPast, theNode);
 	}
+	if(questionIdEdit != null) {
+		writeQuestionId(questionIdEdit,theNode);
+	}
 	
         response.sendRedirect("close.jsp");
         return;
@@ -44,6 +48,7 @@
     
     IntakeNodeLabel eLabel = theNode.getLabel();
     String val = (eLabel!=null) ? eLabel.getLabel() : "";
+    String questionidval=(theNode.getQuestionId()!=null)?theNode.getQuestionId():"";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -65,8 +70,12 @@
 <body>
 
 <h2>Edit Label</h2>
-<form action="EditLabel.jsp" method="post"><input type="text"
-	name="lbledit" value="<%=val%>" /> <input type="hidden" name="id"
+<form action="EditLabel.jsp" method="post">
+<input type="text" name="lbledit" value="<%=val%>" />Label 
+<br/>
+<input type="text" name="questionidedit" value="<%=questionidval%>" />Internal Id (optional) 
+<br/>
+<input type="hidden" name="id"
 	value="<%=id%>" /> <input type="hidden" name="nid" value="<%=nid%>" />
 
 <input type="submit" value="update" /> <%	if (hasMandatory) { %> <br>
@@ -123,5 +132,9 @@ void writeCutPast(String cp, IntakeNode iNode) {
 	eqId = cp.equals("true") ? eqId : -eqId;
     }
     iNode.setEq_to_id(eqId);
+}
+
+void writeQuestionId(String questionId,IntakeNode iNode) {
+	iNode.setQuestionId(questionId);
 }
 %>
