@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.caisi.model.BaseObject;
 import org.caisi.model.Role;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
@@ -40,6 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CaseManagementIssue extends BaseObject {
 
+	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDao");
 	private RoleProgramAccessDAO roleProgramAccessDao=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
 
 	protected Long id;
@@ -219,7 +221,7 @@ public class CaseManagementIssue extends BaseObject {
 
 	public boolean isWriteAccess(int programId)
 	{
-		List<ProgramProvider> ppList = roleProgramAccessDao.getProgramProviderByProviderProgramID(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(LoggedInInfo.loggedInInfo.get().loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return(false);
 		}

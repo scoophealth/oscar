@@ -25,16 +25,36 @@ package org.oscarehr.PMmodule.dao;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.model.FacilityMessage;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramProviderDAO extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(ProgramProviderDAO.class);
+
+	private static TimeClearedHashMap<String, List<ProgramProvider>> programProviderByProviderProgramIDCache=new TimeClearedHashMap<String, List<ProgramProvider>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
+	
+	@SuppressWarnings("unchecked")
+    public List<ProgramProvider> getProgramProviderByProviderProgramId(String providerNo, Long programId) {
+    	String cacheKey=providerNo+':'+programId;
+    	
+    	List<ProgramProvider> results=programProviderByProviderProgramIDCache.get(cacheKey);
+    	if (results==null)
+    	{
+    		String q = "select pp from ProgramProvider pp where pp.ProgramId=? and pp.ProviderNo=?";
+    		results=getHibernateTemplate().find(q, new Object[] {programId, providerNo});
+    		if (results!=null) programProviderByProviderProgramIDCache.put(cacheKey, results);
+    	}
+    		
+        return results;
+    }
+
 
     public List getProgramProviders(Long programId) {
         if (programId == null || programId.intValue() < 0) {

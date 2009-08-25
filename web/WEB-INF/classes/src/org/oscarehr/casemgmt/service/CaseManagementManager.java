@@ -43,6 +43,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Admission;
@@ -107,31 +108,32 @@ public class CaseManagementManager {
 	public final int SIGNATURE_SIGNED = 1;
 	public final int SIGNATURE_VERIFY = 2;
 
-	protected String issueAccessType = "access";
-	protected CaseManagementNoteDAO caseManagementNoteDAO;
-	protected CaseManagementNoteExtDAO caseManagementNoteExtDAO;
-	protected CaseManagementNoteLinkDAO caseManagementNoteLinkDAO;
-	protected CaseManagementIssueDAO caseManagementIssueDAO;
-	protected IssueDAO issueDAO;
-	protected CaseManagementCPPDAO caseManagementCPPDAO;
-	protected AllergyDAO allergyDAO;
-	protected PrescriptionDAO prescriptionDAO;
-	protected EncounterFormDAO encounterFormDAO;
-	protected MessagetblDAO messagetblDAO;
-	protected EchartDAO echartDAO;
-	protected ApptDAO apptDAO;
-	protected ProviderDao providerDAO;
-	protected ClientDao demographicDao;
-	protected ProviderSignitureDao providerSignitureDao;
-	protected RoleProgramAccessDAO roleProgramAccessDAO;
-	protected ClientImageDAO clientImageDAO;
-	protected RoleManager roleManager;
-	protected CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
-	protected AdmissionManager admissionManager;
-	protected HashAuditDAO hashAuditDAO;
-	protected EncounterWindowDAO ectWindowDAO;
-	protected UserPropertyDAO userPropertyDAO;
-	protected DxResearchDAO dxResearchDAO;
+	private String issueAccessType = "access";
+	private CaseManagementNoteDAO caseManagementNoteDAO;
+	private CaseManagementNoteExtDAO caseManagementNoteExtDAO;
+	private CaseManagementNoteLinkDAO caseManagementNoteLinkDAO;
+	private CaseManagementIssueDAO caseManagementIssueDAO;
+	private IssueDAO issueDAO;
+	private CaseManagementCPPDAO caseManagementCPPDAO;
+	private AllergyDAO allergyDAO;
+	private PrescriptionDAO prescriptionDAO;
+	private EncounterFormDAO encounterFormDAO;
+	private MessagetblDAO messagetblDAO;
+	private EchartDAO echartDAO;
+	private ApptDAO apptDAO;
+	private ProviderDao providerDAO;
+	private ClientDao demographicDao;
+	private ProviderSignitureDao providerSignitureDao;
+	private RoleProgramAccessDAO roleProgramAccessDAO;
+	private ClientImageDAO clientImageDAO;
+	private RoleManager roleManager;
+	private CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
+	private AdmissionManager admissionManager;
+	private HashAuditDAO hashAuditDAO;
+	private EncounterWindowDAO ectWindowDAO;
+	private UserPropertyDAO userPropertyDAO;
+	private DxResearchDAO dxResearchDAO;
+	private ProgramProviderDAO programProviderDao;
 	
 	private boolean enabled;
 
@@ -786,7 +788,7 @@ public class CaseManagementManager {
 		while (itr.hasNext()) {
 			Integer pId = itr.next();
 
-			List ppList = roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, pId.longValue());
+			List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pId.longValue());
 			List paList = roleProgramAccessDAO.getAccessListByProgramID(pId.longValue());
 
 			for (int i = 0; i < ppList.size(); i++) {
@@ -850,7 +852,7 @@ public class CaseManagementManager {
 		if (program_id == null || "".equalsIgnoreCase(program_id) || "null".equalsIgnoreCase(program_id)) ppList = roleProgramAccessDAO.getProgramProviderByProviderNo(providerNo);
 		else {
 			Long pid = new Long(program_id);
-			ppList = roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, pid);
+			ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pid);
 		}
 		if (ppList != null && ppList.size() > 0) rt = ((ProgramProvider) ppList.get(0)).getRole().getName();
 		return rt;
@@ -978,7 +980,7 @@ public class CaseManagementManager {
 
 		// Get Role - if no ProgramProvider record found, show no issues.
 		@SuppressWarnings("unchecked")
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList<CaseManagementNote>();
 		}
@@ -1066,7 +1068,7 @@ public class CaseManagementManager {
 	 */
 	public List searchIssues(String providerNo, String programId, String search) {
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList();
 		}
@@ -1120,7 +1122,7 @@ public class CaseManagementManager {
 		}
 
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List ppList = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
+		List ppList = programProviderDao.getProgramProviderByProviderProgramId(loggedInInfo.loggedInProvider.getProviderNo(), new Long(programId));
 		if (ppList == null || ppList.isEmpty()) {
 			return new ArrayList();
 		}
@@ -1332,6 +1334,10 @@ public class CaseManagementManager {
 	public void setPrescriptionDAO(PrescriptionDAO dao) {
 		this.prescriptionDAO = dao;
 	}
+
+	public void setProgramProviderDao(ProgramProviderDAO programProviderDao) {
+    	this.programProviderDao = programProviderDao;
+    }
 
 	public void setClientImageDAO(ClientImageDAO dao) {
 		this.clientImageDAO = dao;

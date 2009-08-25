@@ -215,6 +215,7 @@
 		<property name="enabled" value="${casemgmt.note.password.enabled}" />
 		<property name="programManager" ref="programManager" />
 		<property name="dxResearchDAO" ref="dxResearchDao" />
+		<property name="programProviderDao" ref="programProviderDAO" />
 	</bean>
 	<bean id="roleManager" class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
 		<property name="roleDAO" ref="roleDAO" />
@@ -250,6 +251,7 @@
 		<property name="programManager" ref="programManager" />
 		<property name="caseManagementManager" ref="caseManagementManager" />
 		<property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO" />
+		<property name="programProviderDAO" ref="programProviderDAO" />
 	</bean>
  	<bean id="demographicManagerT" class="org.caisi.service.DemographicManagerTickler">
 		<property name="demographicDao" ref="demographicDaoT" />

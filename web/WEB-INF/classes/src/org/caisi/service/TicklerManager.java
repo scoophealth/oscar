@@ -32,6 +32,7 @@ import org.caisi.dao.TicklerDAO;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Role;
 import org.caisi.model.Tickler;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -51,6 +52,7 @@ public class TicklerManager {
     private TicklerDAO ticklerDAO = null;
     private CustomFilterDAO customFilterDAO = null;
     private RoleProgramAccessDAO roleProgramAccessDAO;
+    private ProgramProviderDAO programProviderDAO;
     
     private ProgramManager programManager = null;
     private CaseManagementManager caseManagementManager = null;
@@ -63,7 +65,11 @@ public class TicklerManager {
         this.caseManagementManager = caseManagementManager;
     }
     
-    public void setTicklerDAO(TicklerDAO ticklerDAO) {
+    public void setProgramProviderDAO(ProgramProviderDAO programProviderDAO) {
+    	this.programProviderDAO = programProviderDAO;
+    }
+
+	public void setTicklerDAO(TicklerDAO ticklerDAO) {
         this.ticklerDAO = ticklerDAO;
     }
 
@@ -78,15 +84,6 @@ public class TicklerManager {
     public void addTickler(Tickler tickler) {
         ticklerDAO.saveTickler(tickler);
     }
-
-/*
- * Eugene Petruhin, 12/16/2008: getTicklers() entry without any arguments is no longer available due to security and performance concerns.
-
-    public List<Tickler> getTicklers() {
-        return ticklerDAO.getTicklers();
-    }
-
-*/
    
     public List<Tickler> getTicklers(CustomFilter filter,String providerNo,String programId) {
         List<Tickler> results = ticklerDAO.getTicklers(filter);     
@@ -143,7 +140,7 @@ public class TicklerManager {
 	        	continue;
 	        }
 	        
-	        ppList = roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, new Long(programId));
+	        ppList = programProviderDAO.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
 	        if (ppList == null || ppList.isEmpty()) {
 	        	continue;
 	        }
@@ -160,7 +157,7 @@ public class TicklerManager {
 	        Integer ticklerProgramId = t.getProgram_id();
 	        List ppList2 = new ArrayList();
 	        if(ticklerProgramId!=null) {
-	        	ppList2 = this.roleProgramAccessDAO.getProgramProviderByProviderProgramID(assignedProviderId, new Long(ticklerProgramId));
+	        	ppList2 = this.programProviderDAO.getProgramProviderByProviderProgramId(assignedProviderId, new Long(ticklerProgramId));
 	        	if (ppList2 == null || ppList2.isEmpty()) {
 	        		//add = true; //????ture or false????
 	        		//filteredTicklers.add(t);
