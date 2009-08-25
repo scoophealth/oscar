@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.ProgramAccess;
-import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -38,21 +37,6 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
     private static Log log = LogFactory.getLog(ProgramAccessDAO.class);
 
 	private static TimeClearedHashMap<Long, List<ProgramAccess>> programAccessListByProgramIdCache=new TimeClearedHashMap<Long, List<ProgramAccess>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
-
-    public List getProgramAccesses(Long programId) {
-
-        if (programId == null || programId.intValue() <= 0) {
-            throw new IllegalArgumentException();
-        }
-
-        List results = this.getHibernateTemplate().find("from ProgramAccess pa where pa.ProgramId = ?", programId);
-
-        if (log.isDebugEnabled()) {
-            log.debug("getProgramAccesses: programId=" + programId + ",# of results=" + results.size());
-        }
-
-        return results;
-    }
 
     @SuppressWarnings("unchecked")
     public List<ProgramAccess> getAccessListByProgramId(Long programId) {

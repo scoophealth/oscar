@@ -300,7 +300,7 @@ public class ProgramManager {
     }
 
     public List getProgramAccesses(String programId) {
-        return programAccessDAO.getProgramAccesses(Long.valueOf(programId));
+        return programAccessDAO.getAccessListByProgramId(Long.valueOf(programId));
     }
 
     public ProgramAccess getProgramAccess(String id) {

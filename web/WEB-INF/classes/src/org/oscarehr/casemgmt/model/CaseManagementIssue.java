@@ -42,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 public class CaseManagementIssue extends BaseObject {
 
 	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
-	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("ProgramAccessDAO");
+	private ProgramAccessDAO programAccessDao=(ProgramAccessDAO)SpringUtils.getBean("programAccessDAO");
 
 	protected Long id;
 	protected String demographic_no;
