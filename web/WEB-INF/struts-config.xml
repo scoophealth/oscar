@@ -1509,6 +1509,8 @@
             <forward name="codelist" path="/billing/CA/BC/teleplan/ManageBillingCodes.jsp"/>
             <forward name="submission" path="/billing/CA/BC/TeleplanSubmission.jsp" />
             <forward name="remit" path="/billing/CA/BC/ProcessRemittance.do" />
+            <forward name="checkElig" path="/billing/CA/BC/checkEligibility.jsp" />
+
         </action>
         <action path="/billing/CA/BC/DownloadBilling"   type="oscar.oscarBilling.ca.bc.pageUtil.DownloadFileAction" />
 
