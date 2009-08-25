@@ -72,6 +72,21 @@ public class UtilDateUtilities {
             return "";
         }
     }
+    //"yyyy-MM-dd";
+    public static String justYear(Date date){
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy");
+        return simpledateformat.format(date);
+    }
+
+    public static String justMonth(Date date){
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("MM");
+        return simpledateformat.format(date);
+    }
+
+    public static String justDay(Date date){
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("dd");
+        return simpledateformat.format(date);
+    }
 
     public static Date now()    {    //Today()    
         return GregorianCalendar.getInstance().getTime();
