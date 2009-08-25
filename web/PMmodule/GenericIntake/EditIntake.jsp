@@ -170,8 +170,7 @@
 			<option value="0" default></option>
 			<option value="1">Registration Intake</option>
 			<option value="2">Follow Up Intake</option>
-			<option value="3">General Form</option>
-			<option value="4">OCAN Staff Assessment Form</option>
+			<option value="3">General Form</option>			
 		</select>
 	<%
 			out.write(" <input type=\"button\" value=\"Save Form\" onclick=\"saveform(form_type.options[form_type.selectedIndex].value);\" /><br/><br/>");
