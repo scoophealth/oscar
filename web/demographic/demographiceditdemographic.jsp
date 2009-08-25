@@ -138,7 +138,7 @@
 	type="text/javascript"></script>
 <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js"
 	type="text/javascript"></script>
-
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript" type="text/javascript">
 
 function rs(n,u,w,h,x) {
@@ -638,6 +638,20 @@ div.demographicWrapper {
 				<a href="#"
 					onclick="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp?lastName=<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>&firstName=<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>&filterPatient=true&demographicNo=<%=apptMainBean.getString(rs,"demographic_no")%>');return false;">
 				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/></a>
+
+                             
+                                <br/>
+                                <a  href="javascript: void();" onclick="return !showMenu('2', event);" onmouseover="callEligibilityWebService('../billing/CA/BC/ManageTeleplan.do','returnTeleplanMsg');"><bean:message key="demographic.demographiceditdemographic.btnCheckElig"/></a>
+					<div id='menu2' class='menu' onclick='event.cancelBubble = true;' style="width:350px;">
+                                        <span id="search_spinner" ><bean:message key="demographic.demographiceditdemographic.msgLoading"/></span>
+                                        <span id="returnTeleplanMsg"></span>
+					</div>
+
+
+
+
+
+
 				<%}%>
 				</td>
 			</tr>
@@ -2160,6 +2174,14 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
+
+function callEligibilityWebService(url,id){
+        
+       var ran_number=Math.round(Math.random()*1000000);
+       var params = "demographic=<%=demographic_no%>&method=checkElig&rand="+ran_number;  //hack to get around ie caching the page
+       new Ajax.Updater(id,url, {method:'get',parameters:params,asynchronous:true,onComplete:function(request){Element.hide('search_spinner')},onLoading:function(request){Element.show('search_spinner')}});
+ }
+
 </script>
 </body>
 </html:html>
