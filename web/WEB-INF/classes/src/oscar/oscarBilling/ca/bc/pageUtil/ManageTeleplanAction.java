@@ -32,6 +32,7 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.Enumeration;
 
 import java.util.List;
@@ -47,20 +48,25 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
+
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
+import oscar.entities.Billactivity;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanCodesManager;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanResponse;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanService;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanUserPassDAO;
 import oscar.oscarBilling.ca.bc.data.BillingDxCodeDAO;
-import oscar.entities.*;
+
 import oscar.entities.BillingDxCode;
 import oscar.oscarBilling.ca.bc.MSP.MspErrorCodes;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -480,8 +486,13 @@ public class ManageTeleplanAction extends DispatchAction {
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
            log.debug("checkElig");
+           String demographicNo = request.getParameter("demographic");
            OscarProperties prop = OscarProperties.getInstance();
-           
+           DemographicDao dDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+           dDao.getDemographic(demographicNo);
+           Demographic demo = dDao.getDemographic(demographicNo);
+
+           Date billingDate = new Date();
            
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
@@ -496,20 +507,27 @@ public class ManageTeleplanAction extends DispatchAction {
                return mapping.findForward("success");
            }
            
-           String phn = "";
-           String dateofbirthyyyy= "";
-           String dateofbirthmm= "";
-           String dateofbirthdd= "";
-           String dateofserviceyyyy= ""; 
-           String dateofservicemm= "";
-           String dateofservicedd= "";
+           String phn = demo.getHin();
+           String dateofbirthyyyy= demo.getYearOfBirth();
+           String dateofbirthmm= demo.getMonthOfBirth();
+           String dateofbirthdd= demo.getDateOfBirth();
+           String dateofserviceyyyy= UtilDateUtilities.justYear(billingDate);
+           String dateofservicemm= UtilDateUtilities.justMonth(billingDate);
+           String dateofservicedd= UtilDateUtilities.justDay(billingDate);
            boolean patientvisitcharge= true; 
            boolean lasteyeexam=true;
            boolean patientrestriction=true;
            
-           //TeleplanResponse tr = tAPI.checkElig(phn,dateofbirthyyyy,dateofbirthmm,dateofbirthdd,dateofserviceyyyy,dateofservicemm,dateofservicedd,patientvisitcharge,lasteyeexam, patientrestriction);
+           TeleplanResponse tr = tAPI.checkElig(phn,dateofbirthyyyy,dateofbirthmm,dateofbirthdd,dateofserviceyyyy,dateofservicemm,dateofservicedd,patientvisitcharge,lasteyeexam, patientrestriction);
+           System.out.println(tr.getResult());
+           System.out.println(tr.isSuccess());
+           System.out.println(tr.toString());
+           request.setAttribute("Result",tr.getResult());
+           request.setAttribute("Msgs",tr.getMsgs());
+
+           
            //request.setAttribute("message",tr.toString());
-           return mapping.findForward("success");
+           return mapping.findForward("checkElig");
     }
     
    
