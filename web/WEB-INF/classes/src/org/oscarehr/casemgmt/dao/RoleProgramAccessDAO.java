@@ -24,11 +24,8 @@ package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.ProgramAccess;
-import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class RoleProgramAccessDAO extends HibernateDaoSupport {
@@ -37,12 +34,6 @@ public class RoleProgramAccessDAO extends HibernateDaoSupport {
     public List<String> getAllRoleName() {
         String q = "select rl.name from Role rl";
         return getHibernateTemplate().find(q);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<ProgramProvider> getProgramProviderByProviderNo(String providerNo) {
-        String q = "select pp from ProgramProvider pp where pp.ProviderNo=?";
-        return getHibernateTemplate().find(q, providerNo);
     }
 
     @SuppressWarnings("unchecked")

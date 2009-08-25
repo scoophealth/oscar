@@ -849,7 +849,7 @@ public class CaseManagementManager {
 	public String getRoleName(String providerNo, String program_id) {
 		String rt = "";
 		List ppList = null;
-		if (program_id == null || "".equalsIgnoreCase(program_id) || "null".equalsIgnoreCase(program_id)) ppList = roleProgramAccessDAO.getProgramProviderByProviderNo(providerNo);
+		if (program_id == null || "".equalsIgnoreCase(program_id) || "null".equalsIgnoreCase(program_id)) ppList = programProviderDao.getProgramProviderByProviderNo(providerNo);
 		else {
 			Long pid = new Long(program_id);
 			ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, pid);
@@ -1227,7 +1227,7 @@ public class CaseManagementManager {
 
 	public boolean isClientInProgramDomain(String providerNo, String demographicNo) {
 
-		List providerPrograms = roleProgramAccessDAO.getProgramProviderByProviderNo(providerNo);
+		List providerPrograms = programProviderDao.getProgramProviderByProviderNo(providerNo);
 
 		List allAdmissions = this.admissionManager.getAdmissions(Integer.valueOf(demographicNo));
 

@@ -41,7 +41,7 @@ import org.oscarehr.util.SpringUtils;
 
 public class CaseManagementIssue extends BaseObject {
 
-	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDao");
+	private ProgramProviderDAO programProviderDao=(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	private RoleProgramAccessDAO roleProgramAccessDao=(RoleProgramAccessDAO)SpringUtils.getBean("RoleProgramAccessDAO");
 
 	protected Long id;
