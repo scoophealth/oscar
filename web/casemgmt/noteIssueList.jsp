@@ -170,7 +170,8 @@
                                 + ind.intValue() + "'; return ajaxUpdateIssues('issueChange', $('noteIssues').up().id);";
                                 String id = "noteIssue" + ind;
                                 org.oscarehr.casemgmt.web.CheckBoxBean cbb = (org.oscarehr.casemgmt.web.CheckBoxBean)pageContext.getAttribute("issueCheckList");
-                                boolean writeAccess = cbb.getIssue().isWriteAccess();
+                                String programId = (String) request.getSession().getAttribute("case_program_id");
+                                boolean writeAccess = cbb.getIssue().isWriteAccess(Integer.parseInt(programId));                                
                                 boolean disabled = !writeAccess;
                                 %> <nested:checkbox styleId="<%=id%>"
 				indexed="true" name="issueCheckList" property="checked"
