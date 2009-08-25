@@ -40,9 +40,14 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
 	private static TimeClearedHashMap<String, List<ProgramProvider>> programProviderByProviderProgramIDCache=new TimeClearedHashMap<String, List<ProgramProvider>>(DateUtils.MILLIS_PER_HOUR, DateUtils.MILLIS_PER_HOUR);
 	
+	private static String makeCacheKey(String providerNo, Long programId)
+	{
+		return(providerNo+':'+programId);
+	}
+	
 	@SuppressWarnings("unchecked")
     public List<ProgramProvider> getProgramProviderByProviderProgramId(String providerNo, Long programId) {
-    	String cacheKey=providerNo+':'+programId;
+    	String cacheKey=makeCacheKey(providerNo, programId);
     	
     	List<ProgramProvider> results=programProviderByProviderProgramIDCache.get(cacheKey);
     	if (results==null)
@@ -155,6 +160,8 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         if (pp == null) {
             throw new IllegalArgumentException();
         }
+        
+        programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
 
         this.getHibernateTemplate().saveOrUpdate(pp);
 
@@ -169,9 +176,10 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        Object o = getProgramProvider(id);
-        if (o != null) {
-            this.getHibernateTemplate().delete(o);
+        ProgramProvider pp = getProgramProvider(id);
+        if (pp != null) {
+            programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
+            this.getHibernateTemplate().delete(pp);
         }
 
         if (log.isDebugEnabled()) {
@@ -188,8 +196,9 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         if (o != null) {
             Iterator it = o.iterator();
             while (it.hasNext()) {
-                Object o1 = it.next();
-                this.getHibernateTemplate().delete(o1);
+            	ProgramProvider pp = (ProgramProvider) it.next();
+                getHibernateTemplate().delete(pp);
+                programProviderByProviderProgramIDCache.remove(makeCacheKey(pp.getProviderNo(), pp.getProgramId()));
             }
         }
 
