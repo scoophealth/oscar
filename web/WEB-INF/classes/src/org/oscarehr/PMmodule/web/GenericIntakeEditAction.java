@@ -828,13 +828,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		formBean.setJsLocation(javascriptLocation);
 		
 		if (bedCommunityProgramsVisible || serviceProgramsVisible || externalProgramsVisible) {
-			Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
-			if (OscarProperties.getInstance().isTorontoRFQ()) {
-				providerPrograms = getActiveProviderProgramsInFacility(providerNo, facilityId);
-			}
-			else {
-				providerPrograms = getActiveProviderPrograms(providerNo);
-			}
+			Set<Program> providerPrograms = getActiveProviderProgramsInFacility(providerNo, facilityId);
 
 			if (bedCommunityProgramsVisible) {
 				formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms, providerNo), getCommunityPrograms());
