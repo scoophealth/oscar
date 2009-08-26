@@ -52,26 +52,41 @@ public class ThirdApptTimeReporter implements Reporter{
         String templateId = request.getParameter("templateId");
         ReportObject curReport = (new ReportManager()).getReportTemplateNoParam(templateId);
         String date_from = request.getParameter("date_from");
-        String provider_no = request.getParameter("provider_no");
+        
         String tmp = request.getParameter("scheduleSymbols:list");
         String[] schedSymbols = null;
         if( tmp != null ) {
             schedSymbols = tmp.split(",");
         }
-        
+
+        tmp = request.getParameter("provider_no:list");
+        String[] providers = null;
+        if( tmp != null ) {
+            providers = tmp.split(",");
+        }
+
         int apptLength = Integer.parseInt(request.getParameter("apptLength"));
         int numDays = -1;
         String rsHtml = "";
         String csv = "";
-        if( date_from == null ||  provider_no == null || schedSymbols == null ) {
-            rsHtml = "date_from and provider_no must be set and at least one schedule symbol must be set";
+        if( date_from == null ||  providers == null || schedSymbols == null ) {
+            rsHtml = "date_from and provider must be set and at least one schedule symbol must be set";
             request.setAttribute("errormsg", rsHtml);
             request.setAttribute("templateid", templateId);
             return false;
         }
+
+        StringBuffer providerList = new StringBuffer();
+        for( int idx = 0; idx < providers.length; ++idx ) {
+            providerList.append("'" + providers[idx] + "'");
+            if( idx < providers.length - 1) {
+                providerList.append(",");
+            }
+        }
+
         
-        String scheduleSQL = "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate >= '" + date_from + "' and  scheduledate.provider_no='" + provider_no + "' and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate";
-        String apptSQL = "select start_time, end_time from appointment where provider_no = '" + provider_no + "' and status not like '%C%' and appointment_date = '";
+        String scheduleSQL = "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate >= '" + date_from + "' and  scheduledate.provider_no in (" + providerList.toString() + ") and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate";
+        String apptSQL = "";//select start_time, end_time from appointment where provider_no = '" + provider_no + "' and status not like '%C%' and appointment_date = '";
         String schedDate = "";
         ResultSet rs = null;
         ResultSet rs2 = null;
@@ -84,6 +99,7 @@ public class ThirdApptTimeReporter implements Reporter{
             String timecodes, code;
             String tmpApptSQL;           
             String apptTime;
+
             int dayMins = 24*60;
             int iHours,iMins,apptHour_s,apptMin_s,apptHour_e,apptMin_e;
             int codePos;            
@@ -97,7 +113,7 @@ public class ThirdApptTimeReporter implements Reporter{
                 duration = dayMins/timecodes.length();
                 //System.out.println("DURATION " + duration);
                 schedDate = rs.getString("sdate");
-                tmpApptSQL = apptSQL + schedDate + "' order by start_time asc";
+                tmpApptSQL = "select start_time, end_time from appointment where provider_no = '" + rs.getString("provider_no") + "' and status not like '%C%' and appointment_date = '" + schedDate + "' order by start_time asc";
                 // System.out.println("APPT SQL " + tmpApptSQL);                        
                 rs2 = db.GetSQL(tmpApptSQL);
                 codePos = 0;
