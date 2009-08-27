@@ -1524,6 +1524,7 @@ CREATE TABLE `intake_node` (
   `pos` int(10) unsigned default '0',  
   `parent_intake_node_id` int(10) unsigned default NULL,
   `mandatory` boolean NOT NULL default false,
+  `repeating` boolean NOT NULL default false,
   `eq_to_id` int(10) default NULL,
   `form_version` int(10) unsigned default NULL,
   `publish_date` date default NULL,
@@ -1566,6 +1567,7 @@ CREATE TABLE `intake` (
 CREATE TABLE `intake_answer` (
   `intake_answer_id` int(10) unsigned NOT NULL auto_increment,
   `intake_id` int(10) unsigned NOT NULL,
+  `idx` int(10) not null default 0,
   `intake_node_id` int(10) unsigned NOT NULL,
   `val` text NOT NULL,
   PRIMARY KEY  (`intake_answer_id`),

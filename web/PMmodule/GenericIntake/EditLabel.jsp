@@ -16,10 +16,12 @@
     Integer id = Integer.parseInt(request.getParameter("id"));
     Integer nid = Integer.parseInt(request.getParameter("nid"));
     String mandatory = request.getParameter("mandatory");
+    String repeating = request.getParameter("repeating");
     String cutPast = request.getParameter("cutpast");
     
     IntakeNode theNode = findNode(nid, nodes);
     boolean hasMandatory = (theNode.isQuestion() || theNode.isAnswerCompound());
+    boolean hasRepeating = (theNode.isQuestion()|| theNode.isAnswerCompound()||theNode.isAnswerScalar());
     boolean hasCutPast = (!theNode.isIntake() && !theNode.isPage() && !theNode.isSection() && !theNode.isAnswerCompound() && theNode.getEq_to_id()!=null);
     boolean isDropbox = (theNode.isAnswerChoice() && !theNode.isAnswerBoolean());
     if (isDropbox) {
@@ -35,6 +37,9 @@
 	if (hasMandatory) {
 	    writeMandatory(mandatory, theNode);
 	}
+	
+	writeRepeating(repeating,theNode);
+	
 	if (hasCutPast) {
 	    writeCutPast(cutPast, theNode);
 	}
@@ -78,15 +83,25 @@
 <input type="hidden" name="id"
 	value="<%=id%>" /> <input type="hidden" name="nid" value="<%=nid%>" />
 
-<input type="submit" value="update" /> <%	if (hasMandatory) { %> <br>
-<input type="checkbox" name="mandatory" value="true"
-	<%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input> <%	} %> <%	if (hasCutPast) { %>
+<%	if (hasMandatory) { %> 
+	<br>
+	<input type="checkbox" name="mandatory" value="true" <%=theNode.getMandatory() ? "checked" : ""%>>Mandatory</input> 
+<%	} %> 
+
+
+<% if(hasRepeating) {%>
+	<br/>
+	<input type="checkbox" name="repeating" value="true" <%=theNode.getRepeating() ? "checked" : ""%>>Repeating</input>	
+<% } %>
+<%	if (hasCutPast) { %>
 <br>
 <input type="checkbox" name="cutpast" value="true"
 	<%=(theNode.getEq_to_id()==null || theNode.getEq_to_id()<0) ? "checked" : ""%>>Not
 related to past forms</input> <%	} %> <%	if (isDropbox) { %> <br>
-<input type="button" value="Edit Dropbox Items..."
-	onclick="editDropbox();" /> <%	} %>
+<input type="button" value="Edit Dropbox Items..." onclick="editDropbox();" /> 
+<%	} %>
+<br/>
+<input type="submit" value="update" /> 
 </form>
 
 </body>
@@ -124,6 +139,14 @@ void writeMandatory(String mand, IntakeNode iNode) {
 	mandatoryFlag = mand.equals("true") ? true : false;
     }
     iNode.setMandatory(mandatoryFlag);
+}
+
+void writeRepeating(String repeat, IntakeNode iNode) {
+    boolean repeatingFlag = false;
+    if (repeat!=null) {
+    	repeatingFlag = repeat.equals("true") ? true : false;
+    }
+    iNode.setRepeating(repeatingFlag);
 }
 
 void writeCutPast(String cp, IntakeNode iNode) {

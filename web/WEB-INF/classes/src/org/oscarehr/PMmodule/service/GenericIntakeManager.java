@@ -565,8 +565,11 @@ public class GenericIntakeManager {
 					source.getId(), source.getIntakeLocation());
 
 			for (IntakeAnswer answer : source.getAnswers()) {
-				dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(
-						answer.getValue());
+				if(answer.getNode().getRepeating()) {
+					dest.getRepeatingAnswerMapped(answer.getNode().getIdStr(), answer.getIndex()).setValue(answer.getValue());
+				} else { 
+					dest.getAnswerMapped(answer.getNode().getIdStr()).setValue(	answer.getValue());
+				}
 			}
 		}
 

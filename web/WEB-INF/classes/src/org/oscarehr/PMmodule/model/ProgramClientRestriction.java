@@ -26,6 +26,7 @@ public class ProgramClientRestriction implements Serializable {
     private Provider provider;
 
     public ProgramClientRestriction() {
+    	id = 0;
     }
 
     public ProgramClientRestriction(Integer id, int programId, int demographicNo, String providerNo, String comments, Date startDate, Date endDate, boolean enabled, Program program, Demographic client) {
@@ -144,7 +145,7 @@ public class ProgramClientRestriction implements Serializable {
         return true;
     }
 
-    public int hashCode() {
+    public int hashCode() {   
         return (int) (id ^ (id >>> 32));
     }
 

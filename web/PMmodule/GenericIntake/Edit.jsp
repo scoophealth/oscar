@@ -208,11 +208,53 @@
     </script>
     <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
     <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js" />"></script>
+
+    
+    <script type="text/javascript">
+    $("document").ready(function() {
+    	$("a.repeat_remove").live('click',function(e) {
+    		e.preventDefault();
+    		$(this).parent().parent().remove();
+    	});
+    	
+    	$("form").submit(function(e){    		
+
+    		$("table").each(function(){			
+    			var repeats = $(this).find("input[repeat='true']");
+    			if(repeats.length > 0) {				
+    				repeats.attr("name",function(idx){
+    					var nodeId = $(this).attr("nodeId");
+    					return 'intake.answerMapped('+nodeId + '-' + idx+').value'; 
+    				});			
+    				var nodeId = repeats.eq(0).attr("nodeId");					
+    				var mydom = "<input type='hidden' name='repeat_size' value='"+nodeId +"-"+repeats.length+"'/>";						
+    				$(this).append(mydom);
+    			}
+    		});
+
+    		//var a = $(this).serialize();
+    		//alert(a);
+       	});
+
+    });		
+    </script>
+    <style>
+    .repeat_remove 
+	{
+		font-weight:bold;
+		text-decoration:none;
+	}
+	.repeat_add
+	{
+		font-weight:bold;
+		text-decoration:none;
+	}
+    </style>
     <html:base/>
 </head>
 <body class="edit">
 
-<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
+<html:form  action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()" >
 <html:hidden property="method"/>
 <input type="hidden" name="currentBedCommunityProgramId_old" value="<%=session.getAttribute("intakeCurrentBedCommunityId")%>" />
 <input type="hidden" name="intakeType" value="<%=intakeType %>" />

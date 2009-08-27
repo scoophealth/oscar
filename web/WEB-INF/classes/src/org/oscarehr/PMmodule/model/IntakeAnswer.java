@@ -30,11 +30,20 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
     private String value;// many to one
     private Intake intake;
     private IntakeNode node;
+    
+    private int index = 0; //if repeating, preserve order
 
     public static IntakeAnswer create(IntakeNode node) {
 		IntakeAnswer answer = new IntakeAnswer();
 		answer.setNode(node);
 		
+		return answer;
+	}
+    
+    public static IntakeAnswer create(IntakeNode node, int idx) {
+		IntakeAnswer answer = new IntakeAnswer();
+		answer.setNode(node);
+		answer.setIndex(idx);
 		return answer;
 	}
 
@@ -111,6 +120,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 		CompareToBuilder compareToBuilder = new CompareToBuilder();
 		compareToBuilder.append(getId(), answer.getId());
 		compareToBuilder.append(getNode().getId(), answer.getNode().getId());
+		compareToBuilder.append(getIndex(),answer.getIndex());
 		
 		return compareToBuilder.toComparison();
 	}
@@ -177,7 +187,15 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
         return node;
     }
 
-    /**
+    public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	/**
 	 * Set the value related to the column: intake_node_id
      *
      * @param node
@@ -186,6 +204,8 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
     public void setNode(IntakeNode node) {
         this.node = node;
     }
+    
+    
 
     public boolean equals(Object obj) {
         if (null == obj)

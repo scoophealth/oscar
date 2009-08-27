@@ -36,6 +36,8 @@
 			not-null="false" insert="true" update="false" />
 
 		<property name="mandatory" column="mandatory" type="boolean" />
+		
+		<property name="repeating" column="repeating" type="boolean" />
 
 		<property name="eq_to_id" column="eq_to_id" type="integer" />
 

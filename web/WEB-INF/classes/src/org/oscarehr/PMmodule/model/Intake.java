@@ -24,9 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
@@ -156,6 +158,9 @@ public class Intake implements Serializable {
 	 * Added the eq_to_id check for getting mapped answers from older versions.
 	 */
 	public IntakeAnswer getAnswerMapped(String key) {
+		if(key.indexOf("-")!= -1) {
+			return getRepeatingAnswerMapped(key.substring(0,key.indexOf("-")),Integer.parseInt(key.substring(key.indexOf("-")+1)));
+		}
 		for (IntakeAnswer answer : getAnswers()) {
 			if (answer.getNode().getIdStr().equals(key) || String.valueOf(answer.getNode().getEq_to_id()).equals(key) ) {
 				return answer;
@@ -175,7 +180,41 @@ public class Intake implements Serializable {
 		
 		throw new IllegalStateException("No answer found with key: " + key);
 	}
+
+	public IntakeAnswer getRepeatingAnswerMapped(String key, int index) {
+		return getRepeatingAnswerMapped(key,index,true);
+	}
 	
+	public IntakeAnswer getRepeatingAnswerMapped(String key, int index, boolean create) {
+		IntakeAnswer temp=null;
+		for (IntakeAnswer answer : getAnswers()) {
+			if (answer.getIndex()==0 && (answer.getNode().getIdStr().equals(key) || String.valueOf(answer.getNode().getEq_to_id()).equals(key)) ) {
+				temp=answer;
+			}
+			if (answer.getIndex()==index && (answer.getNode().getIdStr().equals(key) || String.valueOf(answer.getNode().getEq_to_id()).equals(key)) ) {
+				return answer;
+			}
+		}
+		//we should add it
+		if(create && temp!=null) {
+			IntakeAnswer ia = IntakeAnswer.create(temp.getNode(),index);		
+			addToanswers(ia);
+			return ia;
+		}
+		return null;
+	}
+
+	public void setRepeatingAnswerMapped(String key, String value, int index) {
+		for (IntakeAnswer answer : getAnswers()) {
+			if (answer.getNode().getIdStr().equals(key) && answer.getIndex()==index) {
+				answer.setValue(value);
+				return;
+			}
+		}
+		
+		throw new IllegalStateException("No answer found with key: " + key);
+	}
+
 	public String getClientName() {
 		return client != null ? client.getFormattedName() : null;
 	}
@@ -356,6 +395,16 @@ public class Intake implements Serializable {
         this.answers = answers;
     }
 
+    public void cleanRepeatingAnswers(int nodeId, int size) {
+    	Iterator<IntakeAnswer> i = this.getAnswers().iterator();
+    	while(i.hasNext()) {
+    		IntakeAnswer answer = i.next();
+    		if(answer.getNode().getId() == nodeId && answer.getIndex()>=size) {
+    			getAnswers().remove(answer);
+    		}
+    	}
+    }
+    
     public boolean equals(Object obj) {
         if (null == obj)
             return false;

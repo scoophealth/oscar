@@ -264,6 +264,17 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String providerNo = getProviderNo(request);
 		Integer nodeId = formBean.getNodeId();
 		Integer oldId = null;
+		
+		/* for repeating elements */
+		String[] repeatSizes= request.getParameterValues("repeat_size");
+		if(repeatSizes != null) {
+			for(String rs:repeatSizes) {
+				String[] vals = rs.split("-");
+				String rNodeId = vals[0];
+				String rSize = vals[1];
+				intake.cleanRepeatingAnswers(Integer.parseInt(rNodeId),Integer.parseInt(rSize));
+			}
+		}
 		try {
 			try {
 				GregorianCalendar cal = new GregorianCalendar(Integer.parseInt(request.getParameter("eff_year")), Integer.parseInt(request.getParameter("eff_month")), Integer.parseInt(request.getParameter("eff_day")));

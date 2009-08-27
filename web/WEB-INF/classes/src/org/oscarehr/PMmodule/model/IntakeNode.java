@@ -41,6 +41,7 @@ public class IntakeNode implements Serializable {
     private IntakeNodeLabel label;
     private Integer pos;
     private boolean mandatory;
+    private boolean repeating;
     private Integer eq_to_id;
     private Integer form_version;
     private Calendar publish_date;
@@ -373,6 +374,15 @@ public class IntakeNode implements Serializable {
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
     }
+    
+    public boolean getRepeating() {
+        return repeating;
+    }
+
+   
+    public void setRepeating(boolean repeating) {
+        this.repeating = repeating;
+    }    
     
     
     public Integer getEq_to_id() {

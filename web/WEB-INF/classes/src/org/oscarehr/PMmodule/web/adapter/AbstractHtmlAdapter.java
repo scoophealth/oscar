@@ -21,6 +21,7 @@ package org.oscarehr.PMmodule.web.adapter;
 import java.util.Set;
 
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.IntakeAnswer;
 import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
@@ -182,6 +183,10 @@ abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getMandatory();
 	}
 	
+	protected boolean getRepeating() {
+		return node.getRepeating();
+	}
+	
 	protected Integer getPos() {
 		return node.getPos();
 	}
@@ -214,6 +219,14 @@ abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 	
 	protected String getAnswerValue() {
 		return intake.getAnswerMapped(getId()).getValue();
+	}
+	
+	protected String getRepeatingAnswerValue(int index) {
+		IntakeAnswer answer = intake.getRepeatingAnswerMapped(getId(),index,false);
+		if(answer != null) {
+			return answer.getValue();
+		}
+		return null;
 	}
 	
 	// Indent
