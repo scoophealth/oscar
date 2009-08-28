@@ -318,7 +318,7 @@
                         
             position: absolute;
             display:none;
-            /*z-index:100;*/
+            z-index:200;
             right:100px;
             bottom:200px;                                    
             text-align: center;
