@@ -28,6 +28,9 @@
 <link rel="stylesheet" type="text/css"
 	href='<html:rewrite page="/share/calendar/skins/aqua/theme.css" />' />
 
+<link rel="stylesheet" type="text/css"
+	href='<html:rewrite page="/css/topnav.css" />' />
+	
 <!--   style type="text/css">
 			@import "<html:rewrite page="/css/tigris.css" />";
 			@import "<html:rewrite page="/css/displaytag.css" />";
@@ -61,15 +64,19 @@
 <script type="text/javascript"
 	src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
 
+<script type="text/javascript" src="<html:rewrite page="/js/jquery.js" />"></script>
+<script type="text/javascript" src="<html:rewrite page="/js/topnav.js" />"></script>
+
 <html:base />
 </head>
-<body>
+<body style="margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;">
+
+<tiles:insert name="topnav.jsp"></tiles:insert>
+
+<div style="height:20px"></div>
+
 <div class="composite">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-		<td colspan="2" width="100%"><tiles:insert name="Header.jsp">
-		</tiles:insert></td>
-	</tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%">	
 	<tr valign="top">
 		<td id="leftcol" width="20%"><tiles:insert attribute="navigation" />
 		</td>
