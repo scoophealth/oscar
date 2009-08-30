@@ -335,6 +335,15 @@ void  goRunner(IntakeNode in,JspWriter out) throws Exception{
 	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
 	    out.write(" <font color=red>(new)</font>");
 	}
+    } else if (node.isAnswerDate()) {
+        out.write("<blockquote>");
+        out.write("<label>"+in.getLabelStr()+ "<input type=\"text\"  /> (DATE)</label>");
+	out.write(" <a href=\"javascript: void(0);\" onclick=\"del('"+in.getId()+"','"+pId+"');\">-</a>");
+        out.write(" <a href=\"javascript: void(0);\" onclick=\"editlabel('"+labelId+"','"+in.getId()+"');\">[edit]</a>");
+	if (in.getEq_to_id()==null || in.getEq_to_id()<0) {
+	    out.write(" <font color=red>(new)</font>");
+	}
+            	
     } else {
         throw new IllegalStateException("No html adapter for type: " + node.getType());
     }

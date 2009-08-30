@@ -30,6 +30,7 @@ public class IntakeNodeType implements Serializable {
 	public static final Integer ANSWER_SCALAR_CHOICE_ID = 6;
 	public static final Integer ANSWER_SCALAR_TEXT_ID = 7;
 	public static final Integer ANSWER_SCALAR_NOTE_ID = 8;
+	public static final Integer ANSWER_SCALAR_DATE_ID = 9;
     public static String REF = "IntakeNodeType";
 
     private int hashCode = Integer.MIN_VALUE;// primary key
@@ -83,7 +84,7 @@ public class IntakeNodeType implements Serializable {
 	}
 
 	public boolean isScalarAnswerType() {
-		return isChoiceAnswerType() || isTextAnswerType() || isNoteAnswerType();
+		return isChoiceAnswerType() || isTextAnswerType() || isNoteAnswerType() || isDateAnswerType();
 	}
 
 	public boolean isChoiceAnswerType() {
@@ -96,6 +97,10 @@ public class IntakeNodeType implements Serializable {
 
 	public boolean isNoteAnswerType() {
 		return isType(ANSWER_SCALAR_NOTE_ID);
+	}
+	
+	public boolean isDateAnswerType() {
+		return isType(ANSWER_SCALAR_DATE_ID);
 	}
 
 	private boolean isType(Integer id) {

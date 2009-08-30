@@ -104,6 +104,10 @@ public class IntakeNodeTemplate implements Serializable {
 		return getType().isNoteAnswerType();
 	}
 
+	public boolean isAnswerDate() {
+		return getType().isDateAnswerType();
+	}
+
 	public boolean isAnswerBoolean() {
 		Set<String> elements = new HashSet<String>();
 		

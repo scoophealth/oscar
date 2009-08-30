@@ -24,6 +24,8 @@ public class HtmlAdapterFactory {
 			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
 		} else if (node.isAnswerNote()) {
 			htmlAdapter = new AnswerScalarNoteHtmlAdapter(indent, node, intake);
+		} else if (node.isAnswerDate()) {
+			htmlAdapter = new AnswerScalarDateHtmlAdapter(indent, node, intake);
 		} else {
 			throw new IllegalStateException("No html adapter for type: " + node.getType());
 		}

@@ -61,6 +61,11 @@
     <style type="text/css">
         @import "<html:rewrite page="/css/genericIntake.css" />";
     </style>
+	<link rel="stylesheet" type="text/css"	href='<html:rewrite page="/share/calendar/skins/aqua/theme.css" />' />
+	<script type="text/javascript" src="<html:rewrite page="/share/calendar/calendar.js" />" /></script>
+	<script type="text/javascript" src="<html:rewrite page="/share/calendar/lang/calendar-en.js" />"></script>
+	<script type="text/javascript" src="<html:rewrite page="/share/calendar/calendar-setup.js" />"></script>
+	
     <script type="text/javascript">
         <!--
         var djConfig = {
@@ -232,8 +237,7 @@
     			}
     		});
 
-    		//var a = $(this).serialize();
-    		//alert(a);
+    		alert($(this).serialize());    	
        	});
 
     });		

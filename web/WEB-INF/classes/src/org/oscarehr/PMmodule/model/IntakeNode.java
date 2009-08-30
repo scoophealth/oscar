@@ -127,6 +127,10 @@ public class IntakeNode implements Serializable {
         return getNodeTemplate().isAnswerNote();
     }
 
+    public boolean isAnswerDate() {
+        return getNodeTemplate().isAnswerDate();
+    }
+    
     public boolean isAnswerBoolean() {
         return getNodeTemplate().isAnswerBoolean();
     }

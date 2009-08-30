@@ -127,39 +127,50 @@ String pSize        = request.getParameter("pSize");
 		popup('200','300',eURL,'mkdrpbx');
 	    }
 	</script>
-<script language="javascript" type="text/javascript"
-	src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
+<script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
 </head>
 <body>
-<form name="addToIntakeFrm" method="post" action="AddToIntake.jsp"
-	onsubmit="return type_selected(<%=nodeTemplate%>, elementType);">
 
-<input type="hidden" name="newpos" value="<%=pSize%>" /> <input
-	type="hidden" name="parent_intake_node_id" value="<%=id%>" /> <%if (nodeTemplate == null) {%>
-NO ELEMENT! <%}else if(nodeTemplate.equals("1") ){%> Add Section <input
-	type="hidden" name="elementType" value="4" /> <%}else if(nodeTemplate.equals("3") ){%>
-NADA <%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%> +<input
-	type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br />
-+<input type="radio" name="elementType" value="6" onclick="mandSet(1);">
-answer compound</input> <br />
-+<input type="radio" name="elementType" value="7" onclick="mandSet(0);">
-answer scalar choice</input> <br />
-+<input type="radio" name="elementType" value="15"
-	onclick="mandSet(0); makeDropbox();"> answer scalar choice
-(dropbox)</input> <br />
-+<input type="radio" name="elementType" value="8" onclick="mandSet(0);">
-answer scalar text</input> <br />
-+<input type="radio" name="elementType" value="13" onclick="mandSet(0);">
-answer scalar note</input><br />
-<%}else if(nodeTemplate.equals("6") ){%> +<input type="radio"
-	name="elementType" value="7"> answer scalar choice</input> <br />
-+<input type="radio" name="elementType" value="15"
-	onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br />
-+<input type="radio" name="elementType" value="8"> answer scalar
-text</input> <br />
-+<input type="radio" name="elementType" value="13"> answer
-scalar note</input><br />
-<%}else{%> <%}%> <br>
+<form name="addToIntakeFrm" method="post" action="AddToIntake.jsp"	onsubmit="return type_selected(<%=nodeTemplate%>, elementType);">
+
+<input type="hidden" name="newpos" value="<%=pSize%>" /> 
+<input type="hidden" name="parent_intake_node_id" value="<%=id%>" /> 
+
+
+<!-- 
+ Node templates
+ 1 = the intake itself
+ 3 = page
+ 4 = section
+ 5 = question
+ 6 = compound answer
+ 
+ -->
+ 
+<%if (nodeTemplate == null) {%>
+	NO ELEMENT! 
+<%}else if(nodeTemplate.equals("1") ){%> 
+	Add Section <input type="hidden" name="elementType" value="4" /> 
+<%}else if(nodeTemplate.equals("3") ){%>
+	NADA 
+<%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%> 
+	+<input	type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br />
+	+<input type="radio" name="elementType" value="6" onclick="mandSet(1);">answer compound</input> <br />
+	+<input type="radio" name="elementType" value="7" onclick="mandSet(0);">answer scalar choice</input> <br />
+	+<input type="radio" name="elementType" value="15"onclick="mandSet(0); makeDropbox();"> answer scalar choice (dropbox)</input> <br />
+	+<input type="radio" name="elementType" value="8" onclick="mandSet(0);">answer scalar text</input> <br />
+	+<input type="radio" name="elementType" value="13" onclick="mandSet(0);">answer scalar note</input><br />
+	+<input type="radio" name="elementType" value="16" onclick="mandSet(0);">answer date</input><br />
+<%}else if(nodeTemplate.equals("6") ){%> 
+	+<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br />
+	+<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br />
+	+<input type="radio" name="elementType" value="8"> answer scalar text</input> <br />
+	+<input type="radio" name="elementType" value="13"> answer scalar note</input><br />
+	+<input type="radio" name="elementType" value="16"> answer date</input><br />
+<%}else{%> 
+<%}%> 
+
+<br>
 Label Text (Leave blank for no text): <input type="text" name="intake_node_label" /> 
 <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
 	<br/>
