@@ -152,7 +152,8 @@ INSERT INTO `intake_node_type` VALUES
 	(5, 'answer compound'),
 	(6, 'answer scalar choice'),
 	(7, 'answer scalar text'),
-	(8, 'answer scalar note');
+	(8, 'answer scalar note'),
+	(9,'answer date');
 
 --
 -- Populate intake node templates
@@ -172,7 +173,8 @@ INSERT INTO `intake_node_template` VALUES
 	(12, 12, 7, 13),
 	(13, 13, 8, 14),
 	(14, 14, 1, 15),
-	(15, 15, 6, 8);
+	(15, 15, 6, 8),
+	(16,16,9,10);
 
 --
 -- Populate intake answer validation
