@@ -78,6 +78,7 @@ public class SQLReporter implements Reporter {
         } catch (Exception sqe) {
             sqe.printStackTrace();
         }
+        request.getSession().setAttribute("csv", csv);
         request.setAttribute("csv", csv);
         request.setAttribute("sql", sql);
         request.setAttribute("reportobject", curReport);
