@@ -46,7 +46,11 @@ import com.Ostermiller.util.CSVParser;
 public class GenerateOutFilesAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
-        String csv = request.getParameter("csv");
+
+        String csv = (String) request.getSession().getAttribute("csv");
+        if (csv ==null){
+            csv = request.getParameter("csv");
+        }
         String action = request.getParameter("getCSV");
         if (action != null) {
             response.setContentType("application/octet-stream");
