@@ -46,7 +46,10 @@
 <script type="text/javascript" language="JavaScript"
 	src="../../share/javascript/Oscar.js"></script>
 <script type="text/javascript" language="javascript">
+function clearSession(){
+    new Ajax.Request('clearSession.jsp','{asynchronous:true}');
 
+}
 </script>
 <style type="text/css" media="print">
 .MainTableTopRow,.MainTableLeftColumn,.noprint,.showhidequery,.sqlBorderDiv,.MainTableBottomRow
@@ -60,7 +63,7 @@
 </style>
 </head>
 
-<body vlink="#0000FF" class="BodyStyle">
+<body vlink="#0000FF" class="BodyStyle" onunload="clearSession();">
 
 <table class="MainTable" id="scrollNumber1" name="encounterTable">
 	<tr class="MainTableTopRow">
