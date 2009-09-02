@@ -67,6 +67,8 @@
 		<property name="formType" column="form_type" type="integer" />
 		
 		<property name="questionId" column="question_id" type="string" />
+		
+		<property name="validations" column="validations" type="string" />
 
 	</class>
 </hibernate-mapping>

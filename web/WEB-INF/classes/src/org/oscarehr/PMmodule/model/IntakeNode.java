@@ -52,9 +52,18 @@ public class IntakeNode implements Serializable {
     private Set<IntakeAnswer> answers;
     private Integer formType;
     private String questionId;	//user supplied label.
+    private String validations;
     
 
-    // constructors
+    public String getValidations() {
+		return validations;
+	}
+
+	public void setValidations(String validations) {
+		this.validations = validations;
+	}
+
+	// constructors
     public IntakeNode() {
         initialize();
     }
