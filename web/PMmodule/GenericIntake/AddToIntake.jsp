@@ -21,7 +21,7 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String mandatory			 = request.getParameter("mandatory") ;
     String questionId			 = request.getParameter("question_id");
     String repeating			 = request.getParameter("repeating") ;
-    String validations			 = request.getParameter("validations");
+    String[] validations		 = request.getParameterValues("validations");    
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
     int lblId = -1;
@@ -63,7 +63,15 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     	intakeNode.setQuestionId(questionId);
     }
     if(validations != null) {
-    	intakeNode.setValidations(validations);
+    	String validationString="";
+    	for(int x=0;x<validations.length;x++) {
+    		if(x>0) {
+    			validationString += ",";
+    		}
+    		validationString += validations[x];
+    		validationString += ":true";    		
+    	}
+    	intakeNode.setValidations(validationString);
     }
     IntakeNode parentNode = findNode(Integer.parseInt(parent_intake_node_id), nodes);
     intakeNode.setParent(parentNode);
@@ -217,10 +225,12 @@ Label Text (Leave blank for no text): <input type="text" name="intake_node_label
 <br/>
 <input type="text" name="question_id"/>Internal Id (optional) <br/>
 
-<select id="validations" name="validations">
-	<option value="">None</option>
-</select>
-Validation
+<%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
+Validations:
+<br/>
+<input type="checkbox" name="validations" value="required"/>Required<br/>
+<input type="checkbox" name="validations" value="digits"/>Digits<br/>
+<%}%>
 <br/>
 <br/>
 <input type="submit" value="Add" /></form>

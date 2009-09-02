@@ -50,6 +50,9 @@
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/check_hin.js"></script>
 	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.form.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.metadata.js"></script>
+	<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery.validate.min.js"></script>
 	
 	<%if(intakeEditForm.getJsLocation() != null) {
 		for(IntakeNodeJavascript js:intakeEditForm.getJsLocation()) {
@@ -221,7 +224,9 @@
     		e.preventDefault();
     		$(this).parent().parent().remove();
     	});
-    	
+    });
+
+	$("document").ready(function() {
     	$("form").submit(function(e){    		
 
     		$("table").each(function(){			
@@ -236,11 +241,28 @@
     				$(this).append(mydom);
     			}
     		});
-
-    		alert($(this).serialize());    	
+    		//alert($(this).serialize());    	
        	});
+	});
+ /*
+    		$("*[validations]").each(function(){
+				var val = $(this).attr("validations");
+				if(val == 'integer') {
+					if(!validateInteger(this)) {
+						e.preventDefault();
+					}
+				}
+        	});
+*/
 
-    });		
+	$("document").ready(function() {
+		$("form").validate({meta: "validate"});
+	});
+
+	function validateInteger(obj) {	
+		alert(obj.value);
+		return false;
+	}		
     </script>
     <style>
     .repeat_remove 

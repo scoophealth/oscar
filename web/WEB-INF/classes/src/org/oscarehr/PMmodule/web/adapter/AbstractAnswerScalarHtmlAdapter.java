@@ -75,4 +75,9 @@ abstract public class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtml
 		return builder;
 	}
 	
+	protected String getValidationsHtml() {
+		String validations = this.getValidations();
+		if(validations==null) { return "";}
+		return "class=\"{validate: {" + validations + "}}\"";	
+	}
 }

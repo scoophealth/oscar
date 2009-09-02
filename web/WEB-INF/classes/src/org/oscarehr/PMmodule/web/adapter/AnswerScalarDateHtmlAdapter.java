@@ -96,9 +96,9 @@ public class AnswerScalarDateHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	
 	private String getTextInput(String id, String value, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return new String("<td><input type=\"text\" class=\""+CLASS_INTAKE_INPUT+"\" id=\"intake.answerMapped("+id+").value\" name=\"intake.answerMapped("+id+").value\" value=\""+value+"\" question_id=\"" +  getQuestionId()  + "\" onfocus=\"this.blur()\" readonly=\"readonly\"></input><img title=\"Calendar\" id=\"cal_"+id+"\" src=\"../../images/cal.gif\" alt=\"Calendar\" border=\"0\" />"+this.getCalendarScript("intake.answerMapped("+id+").value","cal_"+id)+"</td>");
+			return new String("<td><input type=\"text\" class=\""+CLASS_INTAKE_INPUT+"\" id=\"intake.answerMapped("+id+").value\" name=\"intake.answerMapped("+id+").value\" value=\""+value+"\" question_id=\"" +  getQuestionId()  + "\" onfocus=\"this.blur()\" readonly=\"readonly\" "+this.getValidationsHtml()+"></input><img title=\"Calendar\" id=\"cal_"+id+"\" src=\"../../images/cal.gif\" alt=\"Calendar\" border=\"0\" />"+this.getCalendarScript("intake.answerMapped("+id+").value","cal_"+id)+"</td>");
 		} else {
-			return new String("<td><input type=\"text\" id=\"intake.answerMapped("+id+").value\" name=\"intake.answerMapped("+id+").value\" value=\""+value+"\" question_id=\"" +  getQuestionId()  + "\" onfocus=\"this.blur()\" readonly=\"readonly\"></input><img title=\"Calendar\" id=\"cal_"+id+"\" src=\"../../images/cal.gif\" alt=\"Calendar\" border=\"0\" />"+this.getCalendarScript("intake.answerMapped("+id+").value","cal_"+id)+"</td>");
+			return new String("<td><input type=\"text\" id=\"intake.answerMapped("+id+").value\" name=\"intake.answerMapped("+id+").value\" value=\""+value+"\" question_id=\"" +  getQuestionId()  + "\" onfocus=\"this.blur()\" readonly=\"readonly\" "+this.getValidationsHtml()+"></input><img title=\"Calendar\" id=\"cal_"+id+"\" src=\"../../images/cal.gif\" alt=\"Calendar\" border=\"0\" />"+this.getCalendarScript("intake.answerMapped("+id+").value","cal_"+id)+"</td>");
 		}
 		
 	}

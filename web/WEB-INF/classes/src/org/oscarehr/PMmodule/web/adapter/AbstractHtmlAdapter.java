@@ -187,6 +187,10 @@ abstract public class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getRepeating();
 	}
 	
+	protected String getValidations() {
+		return node.getValidations();
+	}
+	
 	protected Integer getPos() {
 		return node.getPos();
 	}

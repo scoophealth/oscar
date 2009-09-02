@@ -97,27 +97,27 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 
 	private String getTextInput(String id, String value, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
+			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" "+this.getValidationsHtml()+"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
 		} else {
-			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\"></input></td>", new Object[] { id, value });
+			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" "+this.getValidationsHtml()+"></input></td>", new Object[] { id, value });
 		}
 		
 	}
 	
 	private String getRepeatTextInput(String id, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s-0).value\" value=\"\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id });
+			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s-0).value\" value=\"\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\" "+this.getValidationsHtml()+"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id });
 		} else {
-			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s-0).value\" value=\"\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\"></input></td>", new Object[] { id });
+			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s-0).value\" value=\"\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\" "+this.getValidationsHtml()+"></input></td>", new Object[] { id });
 		}
 		
 	}
 	
 	private String getRepeatTextInput(String id, String value, boolean grabHorizontal) {
 		if (grabHorizontal) {
-			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s-0).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
+			return String.format("<td><input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s-0).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\" "+this.getValidationsHtml()+"></input></td>", new Object[] { CLASS_INTAKE_INPUT, id, value });
 		} else {
-			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s-0).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\"></input></td>", new Object[] { id,value });
+			return String.format("<td><input type=\"text\" name=\"intake.answerMapped(%s-0).value\" value=\"%s\" question_id=\"" +  getQuestionId()  + "\" repeat=\"true\" nodeId=\""+id+"\" "+this.getValidationsHtml()+"></input></td>", new Object[] { id,value });
 		}
 		
 	}

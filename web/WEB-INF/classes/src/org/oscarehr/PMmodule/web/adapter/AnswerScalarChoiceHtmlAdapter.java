@@ -28,7 +28,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 		super(indent, node, intake);
 	}
 
-	public StringBuilder getPreBuilder() {
+	public StringBuilder getPreBuilder() {			
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 		
 		if (isAnswerBoolean()) {
@@ -45,7 +45,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 				.append(startLabel(true))
 				.append(endLabel(false))
 				.append("<td>")
-				.append(String.format("<select name=\"intake.answerMapped(%s).value\" question_id=\"" +  getQuestionId()  + "\">", new Object[] { getId() }))
+				.append(String.format("<select name=\"intake.answerMapped(%s).value\" question_id=\"" +  getQuestionId()  + "\" "+this.getValidationsHtml()+">", new Object[] { getId() }))
 				.append(EOL);
 			beginTag();
 
@@ -86,7 +86,9 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 			builder.append(" checked=\"checked\"");
 		}
 		
-		builder.append(" />");
+		
+		
+		builder.append(" "+this.getValidationsHtml()+"/>");
 		
 		return builder;
 	}
