@@ -21,6 +21,7 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     String mandatory			 = request.getParameter("mandatory") ;
     String questionId			 = request.getParameter("question_id");
     String repeating			 = request.getParameter("repeating") ;
+    String validations			 = request.getParameter("validations");
     
     IntakeNodeLabel intakeNodeLabel = new IntakeNodeLabel();
     int lblId = -1;
@@ -61,7 +62,9 @@ if (request.getParameter("newpos") != null && request.getParameter("parent_intak
     if (questionId !=null) {
     	intakeNode.setQuestionId(questionId);
     }
-    
+    if(validations != null) {
+    	intakeNode.setValidations(validations);
+    }
     IntakeNode parentNode = findNode(Integer.parseInt(parent_intake_node_id), nodes);
     intakeNode.setParent(parentNode);
     
@@ -97,6 +100,33 @@ String pSize        = request.getParameter("pSize");
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Add To Intake</title>
+<script type="text/javascript" src="<html:rewrite page="/js/jquery.js"/>"></script>
+<script type="text/javascript">
+	$("document").ready(function(){		
+		$("input[name='elementType']").change(function(){
+			if($(this).val() == 8) {			
+				//repeating on
+				//$("input[name='repeating']").attr("checked","checked");
+				$("#repeating").show();
+			}else {
+				//repeating off
+				$("input[name='repeating']").attr("checked","");
+				$("#repeating").hide();			
+			}			
+		});
+
+		$("input[name='elementType']").change(function(){
+			var val = $(this).val();
+			if(val == 8) {
+				$("#validations").html('<option value="">Choose</option><option value="integer">Integer</option>');
+			} else {
+				$("#validations").html('<option value="">None</option>');
+			}
+		});
+		
+	});
+</script>
+
 <script type="text/javascript">
 	    function type_selected(nTemplate, eType) {
 		if (nTemplate=='4' || nTemplate=='5' || nTemplate=='6') {
@@ -126,7 +156,7 @@ String pSize        = request.getParameter("pSize");
 		var eURL = "MakeDropbox.jsp";
 		popup('200','300',eURL,'mkdrpbx');
 	    }
-	</script>
+</script>	
 <script language="javascript" type="text/javascript" src="<html:rewrite page="/share/javascript/Oscar.js"/>"></script>
 </head>
 <body>
@@ -154,19 +184,19 @@ String pSize        = request.getParameter("pSize");
 <%}else if(nodeTemplate.equals("3") ){%>
 	NADA 
 <%}else if(nodeTemplate.equals("4") || nodeTemplate.equals("5")){%> 
-	+<input	type="radio" name="elementType" value="5" onclick="mandSet(1);">question</input><br />
-	+<input type="radio" name="elementType" value="6" onclick="mandSet(1);">answer compound</input> <br />
-	+<input type="radio" name="elementType" value="7" onclick="mandSet(0);">answer scalar choice</input> <br />
-	+<input type="radio" name="elementType" value="15"onclick="mandSet(0); makeDropbox();"> answer scalar choice (dropbox)</input> <br />
-	+<input type="radio" name="elementType" value="8" onclick="mandSet(0);">answer scalar text</input> <br />
-	+<input type="radio" name="elementType" value="13" onclick="mandSet(0);">answer scalar note</input><br />
-	+<input type="radio" name="elementType" value="16" onclick="mandSet(0);">answer date</input><br />
+	+<input	type="radio" id="elementType" name="elementType" value="5" onclick="mandSet(1);">question</input><br />
+	+<input type="radio" id="elementType" name="elementType" value="6" onclick="mandSet(1);">answer compound</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="7" onclick="mandSet(0);">answer scalar choice</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="15"onclick="mandSet(0); makeDropbox();"> answer scalar choice (dropbox)</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="8" onclick="mandSet(0);">answer scalar text</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="13" onclick="mandSet(0);">answer scalar note</input><br />
+	+<input type="radio" id="elementType" name="elementType" value="16" onclick="mandSet(0);">answer date</input><br />
 <%}else if(nodeTemplate.equals("6") ){%> 
-	+<input type="radio" name="elementType" value="7"> answer scalar choice</input> <br />
-	+<input type="radio" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br />
-	+<input type="radio" name="elementType" value="8"> answer scalar text</input> <br />
-	+<input type="radio" name="elementType" value="13"> answer scalar note</input><br />
-	+<input type="radio" name="elementType" value="16"> answer date</input><br />
+	+<input type="radio" id="elementType" name="elementType" value="7"> answer scalar choice</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="15" onclick="makeDropbox();"> answer scalar choice (dropbox)</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="8"> answer scalar text</input> <br />
+	+<input type="radio" id="elementType" name="elementType" value="13"> answer scalar note</input><br />
+	+<input type="radio" id="elementType" name="elementType" value="16"> answer date</input><br />
 <%}else{%> 
 <%}%> 
 
@@ -178,13 +208,21 @@ Label Text (Leave blank for no text): <input type="text" name="intake_node_label
 	<input type="hidden" name="mandatorySet" /> 
 <%}%>
 <%if (nodeTemplate.equals("4") || nodeTemplate.equals("5")) {%>
+<div id="repeating" style="margin:0px">
 	<br/>
-	<input type="checkbox" name="repeating" onclick=""/>Repeating	
+	<input type="checkbox" name="repeating" onclick=""/>Repeating
+</div>		
 <%}%>
 
-<br/><br/>
+<br/>
 <input type="text" name="question_id"/>Internal Id (optional) <br/>
 
+<select id="validations" name="validations">
+	<option value="">None</option>
+</select>
+Validation
+<br/>
+<br/>
 <input type="submit" value="Add" /></form>
 </body>
 </html>
