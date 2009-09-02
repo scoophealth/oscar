@@ -14,7 +14,7 @@
         <script type="text/javascript">
             function add(id,nodeTemplateId,parentId,pos,psize){
                var eURL = "AddToIntake.jsp?id="+id+"&node="+nodeTemplateId+"&parentId="+parentId+"&pos="+pos+"&pSize="+psize;
-               popup('230','330',eURL,'intakeAdd');
+               popup('525','375',eURL,'intakeAdd');
             }
             
             function del(id, pid){
