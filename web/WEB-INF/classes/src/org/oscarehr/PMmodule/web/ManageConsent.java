@@ -75,7 +75,7 @@ public class ManageConsent {
 		return (results);
 	}
 
-	public boolean displayAsCheckedExcludeFacility(int remoteFacilityId) throws MalformedURLException {
+	public boolean displayAsCheckedExcludeFacility(int remoteFacilityId) {
 		if (previousConsentToView == null) {
 			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
 			if (result != null) {
@@ -90,7 +90,7 @@ public class ManageConsent {
 		}
 	}
 
-	public boolean displayAsCheckedExcludeMentalHealthData() throws MalformedURLException {
+	public boolean displayAsCheckedExcludeMentalHealthData() {
 		if (previousConsentToView == null) {
 			IntegratorConsent result = integratorConsentDao.findLatestByFacilityDemographic(loggedInInfo.currentFacility.getId(), clientId);
 			if (result != null) {
