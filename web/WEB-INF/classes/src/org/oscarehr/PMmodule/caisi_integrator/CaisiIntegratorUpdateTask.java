@@ -195,7 +195,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private void pushAllFacilityData(Facility facility) throws IOException, IllegalAccessException, InvocationTargetException, ShutdownException {
-		logger.debug("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
+		logger.info("Pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// set working facility
 		LoggedInInfo.loggedInInfo.get().currentFacility=facility;
@@ -233,7 +233,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private void pushFacility(Date lastDataUpdated) throws MalformedURLException, IllegalAccessException, InvocationTargetException {
 		Facility facility=LoggedInInfo.loggedInInfo.get().currentFacility;
-		
+		if(facility == null) {
+			logger.error("Facility is null..cannot continue");
+			return;
+		}
 		if (facility.getLastUpdated().after(lastDataUpdated))
 		{
 			logger.debug("pushing facility record");
