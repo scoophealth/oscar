@@ -95,6 +95,10 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
       window.location='efmformmanageredit.jsp'
   }
 
+  function openDownload(obj) {
+      window.location='efmformmanagerdownload.jsp'
+  }
+
   function doOnLoad() {
     <%String input = request.getParameter("input");
     if (input == null) input = (String) request.getAttribute("input");
@@ -120,6 +124,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                                 <td class="eformInputHeading eformInputHeadingActive" onclick="openUpload(this)" id="uploadHeading">Upload New EForm</td>
                                 <td class="eformInputHeading" onclick="openImport()" id="importHeading">Import EForm</td>
                                 <td class="eformInputHeading" onclick="openCreate()" id="createHeading">Create In Editor</td>
+                                <td class="eformInputHeading" onclick="openDownload()" id="createHeading">Download Eforms</td>
                             </tr>
                         </table>
                     <div id="uploadDiv" class="inputDiv">
