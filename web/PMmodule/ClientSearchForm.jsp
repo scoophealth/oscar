@@ -150,12 +150,14 @@
 		<display:setProperty name="paging.banner.placement" value="bottom" />
 		<display:setProperty name="basic.msg.empty_list"
 			value="No clients found." />
-		<display:column sortable="true" title="Client No">
+		<display:setProperty name="sort.amount" value="list"/>
+		
+		<display:column sortable="true" title="Client No" sortProperty="demographicNo" defaultorder="ascending">			
 			<a
 				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out
 				value="${client.demographicNo}" /></a>
 		</display:column>
-		<display:column sortable="true" title="Name">
+		<display:column sortable="true" title="Name" sortProperty="formattedName">
 			<a
 				href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out
 				value="${client.formattedName}" /></a>
@@ -165,7 +167,7 @@
 				value="${client.monthOfBirth}" />/<c:out
 				value="${client.dateOfBirth}" />
 		</display:column>
-		<display:column sortable="true" title="Gender">
+		<display:column sortable="true" title="Gender" sortProperty="sexDesc">
 			<c:out value="${client.sexDesc}" />
 		</display:column>
 		<display:column sortable="true" title="Active">
@@ -180,7 +182,7 @@
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_merge"
 			rights="r">
 
-			<display:column sortable="true" title="Head Record">
+			<display:column title="Head Record">
 				<c:choose>
 
 					<c:when test="${client.headRecord == null}">
@@ -193,7 +195,7 @@
 				</c:choose>
 			</display:column>
 
-			<display:column sortable="true" title="Include">
+			<display:column title="Include">
 				<c:choose>
 					<c:when test="${client.headRecord == null}">
 						<input type="checkbox" name="records"
