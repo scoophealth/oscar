@@ -226,6 +226,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 		<td nowrap align='center' width="10%"><%=curForm.get("formDate")%></td>
 		<td nowrap align='center' width="10%"><%=curForm.get("formTime")%></td>
 		<td nowrap align='center'>
+                    <a href="javascript:void();" onclick="document.location.href='efmSendform.jsp?fid=<%=curForm.get("fid")%>'">Upload</a>
                     <a href="#" onclick="document.location.href='../eform/manageEForm.do?method=exportEForm&fid=<%=curForm.get("fid")%>'"><bean:message key="eform.uploadhtml.btnExport" /></a>
                     <a href="#" onclick="confirmNDelete('../eform/delEForm.do?fid=<%=curForm.get("fid")%>')"><bean:message key="eform.uploadhtml.btnDelete" /></a>
                 </td>
