@@ -1,0 +1,89 @@
+<%-- 
+    Document   : efmSendform
+    Created on : Sep 3, 2009, 12:53:57 PM
+    Author     : jaygallagher
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,org.oscarehr.util.OntarioMD,java.util.Hashtable"%><%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*"%><%
+
+    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+    UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+
+    UserProperty prop = userPropertyDAO.getProp((String) session.getAttribute("user"),  UserProperty.MYDRUGREF_ID);
+    String mydrugrefid = prop.getValue();
+    if (mydrugrefid == null){mydrugrefid = "";}
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>myDrugref login details</title>
+        <link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/OscarStandardLayout.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/share/css/eformStyle.css">
+    </head>
+    <body>
+
+         <div id="importDiv" class="inputDiv" >
+            <center>
+            <form action="../eform/manageEForm.do" method="POST" >
+            <table style="text-align: center; border-collapse: collapse; border: 0px;">        
+                <tr>
+                    <td class="fieldLabel">Username:</td>
+                    <td>
+                        <input name="username" type="text" value="<%=mydrugrefid%>"/>
+                        <input type="hidden" name="method" value="exportEFormSend"/>
+                        <input type="hidden" name="fid"    value="<%=request.getParameter("fid")%>"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fieldLabel">Password:</td>
+                    <td><input name="password" type="password"/></td>
+                </tr>
+                 <tr>
+                    <td class="fieldLabel">Category:</td>
+                    <td><input type="text" name="category"/></td>
+                </tr>
+
+                <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Send to Eform Emporium" onclick="this.value = 'Importing...'; this.disabled = true;"></td></tr>
+                <tr><td>&nbsp;</td></tr>
+            </table>
+            </form>
+            </center>
+        </div>
+
+        <form action="../eform/manageEForm.do" method="POST" >
+            <input type="hidden" name="method" value="exportEFormSend"/>
+            
+            
+     
+        </form>
+
+    </body>
+</html>
