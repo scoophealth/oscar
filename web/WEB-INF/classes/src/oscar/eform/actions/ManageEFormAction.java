@@ -28,9 +28,10 @@
  *
  * @author apavel & not Jay - Jay is too lazy to make this, so he makes Paul do the work for him
  */
-
 package oscar.eform.actions;
 
+import java.io.File;
+import java.io.FileOutputStream;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,19 +39,24 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
+import org.apache.commons.httpclient.methods.MultipartPostMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import oscar.OscarProperties;
 import oscar.eform.EFormExportZip;
 import oscar.eform.data.EForm;
 
 public class ManageEFormAction extends DispatchAction {
-    
+
     public ActionForward exportEForm(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         String fid = request.getParameter("fid");
         System.out.println("fid: " + fid);
         response.setContentType("application/zip");  //octet-stream
@@ -60,31 +66,96 @@ public class ManageEFormAction extends DispatchAction {
         List eForms = new ArrayList();
         eForms.add(eForm);
         eFormExportZip.exportForms(eForms, response.getOutputStream());
-         return null;
+        return null;
     }
 
     public ActionForward importEForm(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception {
-         FormFile zippedForm = (FormFile) form.getMultipartRequestHandler().getFileElements().get("zippedForm");
-         request.setAttribute("input", "import");
-         EFormExportZip eFormExportZip = new EFormExportZip();
-         List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
-         request.setAttribute("importErrors", errors);
-         return mapping.findForward("success");
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        FormFile zippedForm = (FormFile) form.getMultipartRequestHandler().getFileElements().get("zippedForm");
+        request.setAttribute("input", "import");
+        EFormExportZip eFormExportZip = new EFormExportZip();
+        List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
+        request.setAttribute("importErrors", errors);
+        return mapping.findForward("success");
     }
 
     /*
      *Import's from mydrugref right now. This should be redone to have the eform repository dynamic.  There could be mulitple.
      */
     public ActionForward importEFormFromRemote(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception {
-         String sURL = request.getParameter("url");
-         URL url = new URL("http://mydrugref.org/data/"+sURL);
-         url.openStream();
-         request.setAttribute("input", "import");
-         EFormExportZip eFormExportZip = new EFormExportZip();
-         List<String> errors = eFormExportZip.importForm(url.openStream());
-         request.setAttribute("importErrors", errors);
-         return mapping.findForward("success");
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String sURL = request.getParameter("url");
+        URL url = new URL("http://mydrugref.org/data/" + sURL);
+        url.openStream();
+        request.setAttribute("input", "import");
+        EFormExportZip eFormExportZip = new EFormExportZip();
+        List<String> errors = eFormExportZip.importForm(url.openStream());
+        request.setAttribute("importErrors", errors);
+        return mapping.findForward("success");
+    }
+
+    public ActionForward exportEFormSend(ActionMapping mapping, ActionForm form,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        String fid = request.getParameter("fid");
+        System.out.println("fid: " + fid);
+        EForm eForm = new EForm(fid, "1");
+        //===================
+        HttpClient client = new HttpClient();
+        client.getParams().setCookiePolicy(CookiePolicy.RFC_2109);
+
+        PostMethod method = new PostMethod("http://mydrugref.org/sessions");
+
+
+
+        method.addParameter("session[email]", username);
+        method.addParameter("session[password]", password);
+
+        int statusCode = client.executeMethod(method);
+
+        //need to check if login worked
+
+        byte[] responseBody = method.getResponseBody();
+
+        System.out.println(new String(responseBody));
+
+
+
+        System.out.println("--------------------------------------------------------------------------------------");
+         MultipartPostMethod eformPost = new MultipartPostMethod("http://mydrugref.org/e_forms/");
+
+        String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        File docDir = new File(documentDir);
+        String exportFilename = "eformExport"+System.currentTimeMillis()+""+(Math.random()*100);
+        System.out.println("Exported file name "+exportFilename);
+        File exportFile = new File(documentDir,exportFilename);
+
+        FileOutputStream fos = new FileOutputStream(exportFile);
+        
+        EFormExportZip eFormExportZip = new EFormExportZip();
+        List eForms = new ArrayList();
+        eForms.add(eForm);
+        eFormExportZip.exportForms(eForms, fos);
+        fos.close();
+
+        eformPost.addParameter("e_form[name]", eForm.getFormName());
+        eformPost.addParameter("e_form[category]", request.getParameter("category"));
+        eformPost.addParameter("e_form[uploaded_data]", exportFile.getName(), exportFile);
+
+
+        int statusCode2 = client.executeMethod(eformPost);
+
+        byte[] responseBody2 = eformPost.getResponseBody();
+
+        System.out.println("ST " + statusCode2);
+        System.out.println(new String(responseBody2));
+        //TODO:Need to handle errors
+
+        
+        
+        return mapping.findForward("success");
     }
 }
