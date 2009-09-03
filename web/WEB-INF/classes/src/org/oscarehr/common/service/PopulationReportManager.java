@@ -65,7 +65,12 @@ public class PopulationReportManager {
     public Mortalities getMortalities() {
         int count = populationReportDao.getMortalities(ONE_YEAR);
         int size = populationReportDao.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
-
+        
+        if(size==0) {
+        	//denominator=0 fix
+        	return null;
+        }
+        
         return new Mortalities(count, size);
     }
 

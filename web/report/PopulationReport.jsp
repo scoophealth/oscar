@@ -169,6 +169,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     </table>
     <br />
     <!-- Mortality -->
+    <c:if test="${not empty mortalities}">
     <table>
         <caption>Mortality In Shelters</caption>
         <tbody>
@@ -182,6 +183,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </tr>
         </tbody>
     </table>
+    </c:if>
     <br />
     <!-- Major Medical Condition -->
     <table>
