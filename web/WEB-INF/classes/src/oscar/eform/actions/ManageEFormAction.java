@@ -32,6 +32,7 @@
 package oscar.eform.actions;
 
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +69,21 @@ public class ManageEFormAction extends DispatchAction {
          request.setAttribute("input", "import");
          EFormExportZip eFormExportZip = new EFormExportZip();
          List<String> errors = eFormExportZip.importForm(zippedForm.getInputStream());
+         request.setAttribute("importErrors", errors);
+         return mapping.findForward("success");
+    }
+
+    /*
+     *Import's from mydrugref right now. This should be redone to have the eform repository dynamic.  There could be mulitple.
+     */
+    public ActionForward importEFormFromRemote(ActionMapping mapping, ActionForm form,
+                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+         String sURL = request.getParameter("url");
+         URL url = new URL("http://mydrugref.org/data/"+sURL);
+         url.openStream();
+         request.setAttribute("input", "import");
+         EFormExportZip eFormExportZip = new EFormExportZip();
+         List<String> errors = eFormExportZip.importForm(url.openStream());
          request.setAttribute("importErrors", errors);
          return mapping.findForward("success");
     }
