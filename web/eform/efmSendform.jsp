@@ -68,7 +68,23 @@
                 </tr>
                  <tr>
                     <td class="fieldLabel">Category:</td>
-                    <td><input type="text" name="category"/></td>
+                    <td>
+                        <select name="category">
+                            <option value="BC Specific">BC Specific</option>
+                            <option value="Calculators">Calculators</option>
+                            <option value="Cardiovascular">Cardiovascular</option>
+                            <option value="Communication With Others">Communication With Others</option>
+                            <option value="Geriatrics">Geriatrics</option>
+                            <option value="History Taking">History Taking</option>
+                            <option value="Imaging">Imaging</option>
+                            <option value="Lab">Lab</option>
+                            <option value="Musculoskeletal">Musculoskeletal</option>
+                            <option value="Ob/Gyn">Ob/Gyn</option>
+                            <option value="Graphical eForms">Graphical eForms</option>
+                            <option value="Ontario Specific">Ontario Specific</option>
+                            <option value="Chronic Disease Action Plans">Chronic Disease Action Plans</option>
+                        </select>
+                    </td>
                 </tr>
 
                 <tr><td colspan="2" style="text-align: left;"><input type="submit" name="subm" value="Send to Eform Emporium" onclick="this.value = 'Importing...'; this.disabled = true;"></td></tr>
