@@ -24,18 +24,21 @@
 <%@page import="java.util.*"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
+<%@page import="org.oscarehr.common.dao.SecRoleDao"%>
+<%@page import="org.oscarehr.common.model.SecRole"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 
 <%
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
 	
 	List<Program> allPrograms=programDao.getAllActivePrograms();
+	List<SecRole> allRoles=secRoleDao.findAll(null);
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
-
 
 <h1>Activity Report Form</h1>
 
@@ -47,27 +50,21 @@
 		<td>End Date</td>
 	</tr>
 
-	<tr>
+	<tr style="vertical-align:top">
 		<td><select name="programId">
 			<%
-						for (Program program : allPrograms)
-						{
-							%>
-			<option value="<%=program.getId() %>"><%=program.getName()%></option>
-			<%
-						}
+				for (Program program : allPrograms)
+				{
 					%>
+						<option value="<%=program.getId() %>"><%=program.getName()%></option>
+					<%
+				}
+			%>
 		</select></td>
 
-		<td><input type="text" name="startDate" /></td>
+		<td><input type="text" name="startDate" /><br />(YYYY-MM)</td>
 
-		<td><input type="text" name="endDate" /></td>
-	</tr>
-
-	<tr>
-		<td></td>
-		<td>(YYYY-MM-DD)</td>
-		<td>(YYYY-MM-DD)</td>
+		<td><input type="text" name="endDate" /><br />(YYYY-MM)</td>
 	</tr>
 
 	<tr>
@@ -80,7 +77,7 @@
 
 <hr />
 
-<h2>Export to csv</h2>
+<h2>Export to csv, report on all programs and all providers</h2>
 (This will export all bed/service programs to a csv broken down by
 month.)
 
@@ -90,20 +87,69 @@ month.)
 		<td>Start Date</td>
 		<td>EndDate (inclusive)</td>
 	</tr>
-	<tr>
-		<td><input type="text" name="startDate" /></td>
+	<tr style="vertical-align:top">
+		<td><input type="text" name="startDate" /><br />(YYYY-MM)</td>
 
-		<td><input type="text" name="endDate" /></td>
-	</tr>
-
-	<tr>
-		<td>(YYYY-MM)</td>
-		<td>(YYYY-MM)</td>
+		<td><input type="text" name="endDate" /><br />(YYYY-MM)</td>
 	</tr>
 
 	<tr>
 		<td></td>
 		<td><input type="submit" value="export"  onclick="window.open('<%=request.getContextPath()%>/common/progress_dialog.jsp', '', 'height=300,width=500,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=200,left=400')" /></td>
+	</tr>
+</table>
+</form>
+
+<hr />
+
+<h2>Export to csv, report by role and program</h2>
+(This will export to csv based on the selected bed/service program for the specified providers, broken down by
+month.)
+
+<form method="post" action="activity_report_export_program_provider.jsp">
+<table>
+	<tr>
+		<td>Programs</td>
+		<td>Roles</td>
+		<td>Start Date</td>
+		<td>EndDate (inclusive)</td>
+	</tr>
+	<tr style="vertical-align:top">
+		<td>
+			<select name="programIds" multiple="multiple" style="width:16em;height:6em">
+				<%
+					for (Program program : allPrograms)
+					{
+						%>
+							<option value="<%=program.getId() %>"><%=program.getName()%></option>
+						<%
+					}
+				%>
+			</select>
+		</td>
+		<td>
+			<select name="role">
+				<%
+					for (SecRole secRole : allRoles)
+					{
+						%>
+							<option value="<%=secRole.getId() %>"><%=secRole.getName()%></option>
+						<%
+					}
+				%>
+			</select>
+		</td>
+
+		<td><input type="text" name="startDate" /><br />(YYYY-MM)</td>
+
+		<td>
+			<input type="text" name="endDate" />
+			<br />
+			(YYYY-MM)
+			<br />
+			<br />
+			<input type="submit" value="export" />
+		</td>
 	</tr>
 </table>
 </form>
