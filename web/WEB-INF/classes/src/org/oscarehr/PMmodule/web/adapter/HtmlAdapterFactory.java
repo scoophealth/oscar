@@ -18,8 +18,10 @@ public class HtmlAdapterFactory {
 			htmlAdapter = new QuestionHtmlAdapter(indent, node);
 		} else if (node.isAnswerCompound()) {
 			htmlAdapter = new AnswerCompoundHtmlAdapter(indent, node);
-		} else if (node.isAnswerChoice()) {
-			htmlAdapter = new AnswerScalarChoiceHtmlAdapter(indent, node, intake);
+		} else if (node.isAnswerChoice() && node.isAnswerBoolean()) {
+			htmlAdapter = new AnswerScalarChoiceBooleanHtmlAdapter(indent, node, intake);
+		} else if(node.isAnswerChoice() && !node.isAnswerBoolean()) {
+			htmlAdapter = new AnswerScalarChoiceDropDownHtmlAdapter(indent, node, intake);
 		} else if (node.isAnswerText()) {
 			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
 		} else if (node.isAnswerNote()) {

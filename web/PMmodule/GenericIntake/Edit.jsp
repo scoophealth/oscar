@@ -228,7 +228,7 @@
 
 	$("document").ready(function() {
     	$("form").submit(function(e){    		
-
+    		    		
     		$("table").each(function(){			
     			var repeats = $(this).find("input[repeat='true']");
     			if(repeats.length > 0) {				
@@ -240,29 +240,27 @@
     				var mydom = "<input type='hidden' name='repeat_size' value='"+nodeId +"-"+repeats.length+"'/>";						
     				$(this).append(mydom);
     			}
+
+    			var srepeats = $(this).find("select[repeat='true']");
+    			if(srepeats.length > 0) {				
+    				srepeats.attr("name",function(idx){
+    					var nodeId = $(this).attr("nodeId");
+    					return 'intake.answerMapped('+nodeId + '-' + idx+').value'; 
+    				});			
+    				var nodeId = srepeats.eq(0).attr("nodeId");					
+    				var mydom = "<input type='hidden' name='repeat_size' value='"+nodeId +"-"+srepeats.length+"'/>";						
+    				$(this).append(mydom);
+    			}
+    			
     		});
     		//alert($(this).serialize());    	
        	});
 	});
- /*
-    		$("*[validations]").each(function(){
-				var val = $(this).attr("validations");
-				if(val == 'integer') {
-					if(!validateInteger(this)) {
-						e.preventDefault();
-					}
-				}
-        	});
-*/
 
 	$("document").ready(function() {
 		$("form").validate({meta: "validate"});
 	});
 
-	function validateInteger(obj) {	
-		alert(obj.value);
-		return false;
-	}		
     </script>
     <style>
     .repeat_remove 
