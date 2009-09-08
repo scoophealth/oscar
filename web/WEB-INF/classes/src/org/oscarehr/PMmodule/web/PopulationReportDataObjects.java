@@ -4,6 +4,7 @@ import java.util.TreeMap;
 
 import org.caisi.model.Role;
 import org.oscarehr.common.model.IssueGroup;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.EncounterUtil;
 
@@ -34,6 +35,14 @@ public class PopulationReportDataObjects {
 	 * This object should hold a EncounterTypeDataGrid for every role in the system.
 	 */
 	public static class RoleDataGrid extends TreeMap<Role, EncounterTypeDataGrid>
+	{
+		public EncounterTypeDataRow total=null;		
+	}
+	
+	/**
+	 * This object should hold a EncounterTypeDataGrid for every provider.
+	 */
+	public static class ProviderDataGrid extends TreeMap<Provider, EncounterTypeDataGrid>
 	{
 		public EncounterTypeDataRow total=null;		
 	}

@@ -32,7 +32,8 @@
 <%@page import="java.text.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%
-	String agencyName = SqlUtils.getCurrentDatabaseName();
+	String[] programIdsString=request.getParameterValues("programIds");
+	Integer secRoleId = Integer.valueOf(request.getParameter("secRoleId"));
 	String startDateString = request.getParameter("startDate");
 	String endDateString = request.getParameter("endDate");
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM");
@@ -71,25 +72,19 @@
 	//    for each month...
 	//       print monthly data
 
-	session.removeAttribute("progressStatus");
-	ProgressStatus progressStatus=new ProgressStatus();
-	session.setAttribute("progressStatus", progressStatus);
-	
 	PopulationReportUIBean populationReportUIBean = new PopulationReportUIBean();
 	populationReportUIBean.skipTotalRow=true;
 	
 	// print header
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("Agency Name");
-		sb.append(',');
 		sb.append("Program Name");
 		sb.append(',');
 		sb.append("Program Type");
 		sb.append(',');
-		sb.append("Date");
+		sb.append("Provider");
 		sb.append(',');
-		sb.append("Provider Role");
+		sb.append("Date");
 		sb.append(',');
 		sb.append("Encounter Type");
 
@@ -108,22 +103,16 @@
 		// System.err.println(sb.toString());
 		
 		response.setContentType("application/x-download");
-		response.setHeader("Content-Disposition", "attachment; filename=activity_report_" + agencyName+"_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");
+		response.setHeader("Content-Disposition", "attachment; filename=activity_report_program_role_"+dateFormatter.format(startCalendar.getTime())+"_"+dateFormatter.format(endCalendar.getTime())+".csv");
 
 		out.write(sb.toString());
 		out.write('\n');
 	}
 
-	long months=(endCalendar.getTimeInMillis()-startCalendar.getTimeInMillis())/(DateUtils.MILLIS_PER_DAY*30);
-	long total=populationReportUIBean.getAllPrograms().size()*populationReportUIBean.getRoles().size()*3*months;
-	progressStatus.total="Estimated total "+total+" rows ("+populationReportUIBean.getAllPrograms().size()+" programs * "+populationReportUIBean.getRoles().size()+" roles * 3 encounter Types * "+months+" months)";
-	int rowsProcessed=0;
-	
-	for (Program program : populationReportUIBean.getAllPrograms())
+	for (String programIdTemp : programIdsString)
 	{
-		populationReportUIBean.setProgramId(program.getId());
-
-		if (!program.isBed() && !program.isService()) continue;
+		populationReportUIBean.setProgramId(Integer.parseInt(programIdTemp));
+		Program program=populationReportUIBean.getProgram();
 
 		// this line is here to ensure the calendar is materialised before cloning, it's a known "issue" in java and not considered a bug....
 		startCalendar.getTimeInMillis();
@@ -138,22 +127,20 @@
 			
 			populationReportUIBean.setStartDate(tempStartCalendar.getTime());
 			populationReportUIBean.setEndDate(tempEndCalendar.getTime());
-			PopulationReportDataObjects.RoleDataGrid roleDataGrid = populationReportUIBean.getRoleDataGrid();
+			PopulationReportDataObjects.ProviderDataGrid providerDataGrid = populationReportUIBean.getProviderDataGrid(secRoleId);
 
-			for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
+			for (Map.Entry<Provider, PopulationReportDataObjects.EncounterTypeDataGrid> providerEntry : providerDataGrid.entrySet())
 			{
-				for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
+				for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : providerEntry.getValue().entrySet())
 				{
 					StringBuilder sb = new StringBuilder();
-					sb.append(StringEscapeUtils.escapeCsv(agencyName));
-					sb.append(',');
 					sb.append(StringEscapeUtils.escapeCsv(program.getName()));
 					sb.append(',');
 					sb.append(StringEscapeUtils.escapeCsv(program.getType()));
 					sb.append(',');
-					sb.append(dateFormatter.format(tempStartCalendar.getTime()));
+					sb.append(StringEscapeUtils.escapeCsv(providerEntry.getKey().getFormattedName()));
 					sb.append(',');
-					sb.append(StringEscapeUtils.escapeCsv(roleEntry.getKey().getName()));
+					sb.append(dateFormatter.format(tempStartCalendar.getTime()));
 					sb.append(',');
 					sb.append(StringEscapeUtils.escapeCsv(encounterEntry.getKey().name()));
 
@@ -170,11 +157,6 @@
 					
 					out.write(sb.toString());
 					out.write('\n');
-					
-					rowsProcessed++;
-					progressStatus.processed=""+rowsProcessed+" rows processed";
-					progressStatus.percentComplete=(int)(rowsProcessed*100/total);
-					progressStatus.currentItem=""+program.getName()+" "+dateFormatter.format(tempStartCalendar.getTime())+" "+roleEntry.getKey().getName();
 				}
 			}
 			
@@ -182,6 +164,4 @@
 			tempStartCalendar.getTime();
 		}
 	}
-	
-	progressStatus.completed=true;
 %>

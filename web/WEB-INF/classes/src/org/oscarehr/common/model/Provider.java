@@ -28,7 +28,7 @@ import java.util.Date;
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.
  */
-public class Provider implements Serializable {
+public class Provider implements Serializable, Comparable<Provider>{
 
 	public static final String SYSTEM_PROVIDER_NO = "-1";
 
@@ -264,4 +264,9 @@ public class Provider implements Serializable {
 			return lhs.compareTo(rhs);
 		}
 	}
+
+	public int compareTo(Provider o) {
+		if (providerNo==null) return(0);
+	    return(providerNo.compareTo(o.providerNo));
+    }
 }

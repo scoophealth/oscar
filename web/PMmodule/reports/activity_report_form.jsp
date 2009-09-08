@@ -55,9 +55,12 @@
 			<%
 				for (Program program : allPrograms)
 				{
-					%>
-						<option value="<%=program.getId() %>"><%=program.getName()%></option>
-					<%
+					if (program.isBed() || program.isService())
+					{
+						%>
+							<option value="<%=program.getId() %>"><%=program.getName()%></option>
+						<%
+					}
 				}
 			%>
 		</select></td>
@@ -106,7 +109,7 @@ month.)
 (This will export to csv based on the selected bed/service program for the specified providers, broken down by
 month.)
 
-<form method="post" action="activity_report_export_program_provider.jsp">
+<form method="post" action="activity_report_export_program_role.jsp">
 <table>
 	<tr>
 		<td>Programs</td>
@@ -120,15 +123,18 @@ month.)
 				<%
 					for (Program program : allPrograms)
 					{
-						%>
-							<option value="<%=program.getId() %>"><%=program.getName()%></option>
-						<%
+						if (program.isBed() || program.isService())
+						{
+							%>
+								<option value="<%=program.getId() %>"><%=program.getName()%></option>
+							<%
+						}
 					}
 				%>
 			</select>
 		</td>
 		<td>
-			<select name="role">
+			<select name="secRoleId">
 				<%
 					for (SecRole secRole : allRoles)
 					{
@@ -148,7 +154,7 @@ month.)
 			(YYYY-MM)
 			<br />
 			<br />
-			<input type="submit" value="export" />
+			<input type="submit" value="export" onclick="alert('This report can take a while, please be patient.')" />
 		</td>
 	</tr>
 </table>

@@ -21,6 +21,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,14 +31,21 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoleDAO;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataGrid;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataRow;
+import org.oscarehr.PMmodule.web.PopulationReportDataObjects.ProviderDataGrid;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.RoleDataGrid;
 import org.oscarehr.common.dao.IssueGroupDao;
 import org.oscarehr.common.dao.PopulationReportDao;
+import org.oscarehr.common.dao.SecRoleDao;
 import org.oscarehr.common.model.IssueGroup;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.SecRole;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,7 +56,10 @@ public class PopulationReportUIBean {
 	private RoleDAO roleDAO = (RoleDAO) SpringUtils.getBean("roleDAO");
 	private IssueGroupDao issueGroupDao = (IssueGroupDao) SpringUtils.getBean("issueGroupDao");
 	private PopulationReportDao populationReportDao = (PopulationReportDao) SpringUtils.getBean("populationReportDao");
-
+	private SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+	private SecRoleDao secRoleDao=(SecRoleDao)SpringUtils.getBean("secRoleDao");
+	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
+	
 	private int programId = -1;
 	private Date startDate = null;
 	private Date endDate = null;
@@ -114,12 +125,38 @@ public class PopulationReportUIBean {
 			roleDataGrid.put(role, getEncounterTypeDataGrid(role));
 		}
 
-		if (!skipTotalRow) roleDataGrid.total=getEncounterTypeDataRow(null, null);
+		if (!skipTotalRow) roleDataGrid.total=getEncounterTypeDataRow((Integer)null, null);
 		
 		long totalTime=System.currentTimeMillis()-startTime;
 		logger.debug("report generation in seconds : "+(totalTime/1000));
 		
 		return (roleDataGrid);
+	}
+
+	/**
+	 * The Role is used to determine which providers to report on.
+	 */
+	public ProviderDataGrid getProviderDataGrid(Integer secRoleId) {
+
+		long startTime=System.currentTimeMillis();
+		
+		ProviderDataGrid providerDataGrid = new ProviderDataGrid();
+
+		SecRole secRole=secRoleDao.find(secRoleId);
+		List<SecUserRole> secUserRoles=secUserRoleDao.getSecUserRolesByRoleName(secRole.getName());
+		HashSet<String> providerNos=new HashSet<String>();
+		for (SecUserRole secUserRole : secUserRoles) providerNos.add(secUserRole.getProviderNo());
+		
+		for (String providerNo : providerNos) {
+			Provider provider=providerDao.getProvider(providerNo);
+			if (provider!=null)	providerDataGrid.put(provider, getEncounterTypeDataGrid(provider));
+			else logger.warn("Provider doesn't exist but a secUserRole record does. providerNo="+providerNo);
+		}
+
+		long totalTime=System.currentTimeMillis()-startTime;
+		logger.debug("report generation in seconds : "+(totalTime/1000));
+		
+		return (providerDataGrid);
 	}
 
 	private EncounterTypeDataGrid getEncounterTypeDataGrid(Role role) {
@@ -138,6 +175,17 @@ public class PopulationReportUIBean {
 		return (result);
 	}
 
+	private EncounterTypeDataGrid getEncounterTypeDataGrid(Provider provider) {
+
+		EncounterTypeDataGrid result = new EncounterTypeDataGrid();
+
+		for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values()) {
+			result.put(encounterType, getEncounterTypeDataRow(provider, encounterType));
+		}
+
+		return (result);
+	}
+
 	private EncounterTypeDataRow getEncounterTypeDataRow(Integer roleId, EncounterUtil.EncounterType encounterType) {
 
 		EncounterTypeDataRow result = new EncounterTypeDataRow();
@@ -151,6 +199,23 @@ public class PopulationReportUIBean {
 
 		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
 		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
+		
+		return (result);
+	}
+
+	private EncounterTypeDataRow getEncounterTypeDataRow(Provider provider, EncounterUtil.EncounterType encounterType) {
+
+		EncounterTypeDataRow result = new EncounterTypeDataRow();
+
+		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, provider, encounterType, startDate, endDate);
+
+		for (IssueGroup issueGroup : getIssueGroups()) {
+			Integer count = counts.get(issueGroup.getId());
+			result.put(issueGroup, (count != null ? count : 0));
+		}
+
+		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(programId, provider, encounterType, startDate, endDate);
+		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(programId, provider, encounterType, startDate, endDate);
 		
 		return (result);
 	}

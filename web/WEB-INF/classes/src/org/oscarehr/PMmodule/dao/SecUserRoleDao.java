@@ -48,6 +48,13 @@ public class SecUserRoleDao extends HibernateDaoSupport {
         return results;
     }
 
+    public List<SecUserRole> getSecUserRolesByRoleName(String roleName) {
+        @SuppressWarnings("unchecked")
+        List<SecUserRole> results = getHibernateTemplate().find("from SecUserRole s where s.RoleName = ?", roleName);
+
+        return results;
+    }
+
     public boolean hasAdminRole(String providerNo) {
         if (providerNo == null) {
             throw new IllegalArgumentException();
