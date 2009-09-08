@@ -19,6 +19,8 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -717,6 +719,18 @@ public class Demographic implements Serializable {
 		Calendar cal=getBirthDay();
 		if (cal!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(cal));
 		else return("");
+	}
+	
+	public void setFormattedDob(String formattedDate) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = sdf.parse(formattedDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(d);			
+			this.setBirthDay(cal);
+		}catch(ParseException e) {e.printStackTrace();}
+		
+		
 	}
 
 	public String getFormattedLinks() {

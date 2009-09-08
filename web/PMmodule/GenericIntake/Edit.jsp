@@ -309,25 +309,10 @@
     <td>
         <table>
             <tr>
-                <td>
-                    <label>Birth Date<br>
-                        <html:select property="client.monthOfBirth">
-                            <html:optionsCollection property="months" value="value" label="label"/>
-                        </html:select>
-                    </label>
-                </td>
-                <td>
-                    <label>&nbsp;<br>
-                        <html:select property="client.dateOfBirth">
-                            <html:optionsCollection property="days" value="value" label="label"/>
-                        </html:select>
-                    </label>
-                </td>
-                <td>
-                    <label>&nbsp;<br>
-                        <html:text property="client.yearOfBirth" size="4" maxlength="4"/>&nbsp;(YYYY)
-                    </label>
-                </td>
+                <td colspan="3">
+                	<label>Date of Birth</label><br/>
+                	<input id="client.formattedDob" name="client.formattedDob" value="<%=intakeEditForm.getClient().getFormattedDob() %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_dob" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedDob',ifFormat :'%Y-%m-%d',button :'cal_dob',align :'cr',singleClick :true,firstDay :1});</script>                                     
+                </td>                
             </tr>
         </table>
 
