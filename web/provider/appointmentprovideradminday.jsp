@@ -298,6 +298,19 @@ popup.focus();
 }
 }
 
+function popUpEncounter(vheight,vwidth,varpage) {
+   var page = "" + varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+    var popup=window.open(page, "Encounter", windowprops);
+
+    if (popup != null) {
+    if (popup.opener == null) {
+        popup.opener = self;
+    }
+        popup.focus();
+    }
+}
+
 function popupPageOfChangePassword(){
 <% 	
 	Integer ed;
@@ -1180,7 +1193,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- doctor code block -->
 <% if(bShowEncounterLink && !isWeekView) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+appointment.get("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&encType="+URLEncoder.encode("face to face encounter with client","UTF-8")+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status + "&apptProvider_no=" + curProvider_no[nProvider] + "&providerview=" + curProvider_no[nProvider];%>
-<a href=# onClick="popupPage(710, 1024,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
+<a href=# onClick="popUpEncounter(710, 1024,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
 <!-- billing code block -->

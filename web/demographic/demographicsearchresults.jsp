@@ -115,7 +115,7 @@ function popup(vheight,vwidth,varpage) {
 function popupEChart(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
-  var popup=window.open(page, "apptProvider", windowprops);
+  var popup=window.open(page, "Encounter", windowprops);
   if (popup != null) {
     if (popup.opener == null) {
       popup.opener = self;
@@ -161,7 +161,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 		<%}%>
 
 		<TH width="20%"><b><a
-			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>">Name<sup>1</sup></a>
+			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDemoName"/><sup>1</sup></a>
 		</b></font></TH>
 
 		<TH width="10%"><b><a
@@ -197,7 +197,7 @@ function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 	<%
     java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
     	
-	int age=0;
+	int age=0; 
 	ResultSet rs=null ;
     
 	String dboperation = request.getParameter("dboperation");
