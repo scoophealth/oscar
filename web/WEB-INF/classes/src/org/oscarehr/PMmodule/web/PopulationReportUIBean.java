@@ -60,9 +60,9 @@ public class PopulationReportUIBean {
 	private SecRoleDao secRoleDao=(SecRoleDao)SpringUtils.getBean("secRoleDao");
 	private ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
 	
-	private int programId = -1;
 	private Date startDate = null;
 	private Date endDate = null;
+	private Program program = null;
 	public boolean skipTotalRow=false;
 
 	public PopulationReportUIBean() {
@@ -70,13 +70,13 @@ public class PopulationReportUIBean {
 	}
 
 	public PopulationReportUIBean(int programId, Date startDate, Date endDate) {
-		this.programId = programId;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		setProgramId(programId);
 	}
 
 	public void setProgramId(int programId) {
-		this.programId = programId;
+		program = programDao.getProgram(programId);
 	}
 
 	public void setStartDate(Date startDate) {
@@ -95,11 +95,7 @@ public class PopulationReportUIBean {
 		return (allIssueGroups);
 	}
 
-	private Program program = null;
-
 	public Program getProgram() {
-
-		if (program == null) program = programDao.getProgram(programId);
 		return (program);
 	}
 
@@ -190,15 +186,15 @@ public class PopulationReportUIBean {
 
 		EncounterTypeDataRow result = new EncounterTypeDataRow();
 
-		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, roleId, encounterType, startDate, endDate);
+		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(program.getId(), roleId, encounterType, startDate, endDate);
 
 		for (IssueGroup issueGroup : getIssueGroups()) {
 			Integer count = counts.get(issueGroup.getId());
 			result.put(issueGroup, (count != null ? count : 0));
 		}
 
-		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
-		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(programId, roleId, encounterType, startDate, endDate);
+		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
+		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), roleId, encounterType, startDate, endDate);
 		
 		return (result);
 	}
@@ -207,15 +203,15 @@ public class PopulationReportUIBean {
 
 		EncounterTypeDataRow result = new EncounterTypeDataRow();
 
-		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(programId, provider, encounterType, startDate, endDate);
+		Map<Integer, Integer> counts = populationReportDao.getCaseManagementNoteCountGroupedByIssueGroup(program.getId(), provider, encounterType, startDate, endDate);
 
 		for (IssueGroup issueGroup : getIssueGroups()) {
 			Integer count = counts.get(issueGroup.getId());
 			result.put(issueGroup, (count != null ? count : 0));
 		}
 
-		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(programId, provider, encounterType, startDate, endDate);
-		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(programId, provider, encounterType, startDate, endDate);
+		result.rowTotalUniqueEncounters=populationReportDao.getCaseManagementNoteTotalUniqueEncounterCountInIssueGroups(program.getId(), provider, encounterType, startDate, endDate);
+		result.rowTotalUniqueClients=populationReportDao.getCaseManagementNoteTotalUniqueClientCountInIssueGroups(program.getId(), provider, encounterType, startDate, endDate);
 		
 		return (result);
 	}
