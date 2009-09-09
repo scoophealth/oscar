@@ -340,62 +340,14 @@
         		
        		<br>
 			<%
-	   			int selectedYear=-1;
-	   			int selectedMonth=-1;
-	   			int selectedDay=-1;
+				String effDateVal = "";	   			
 	   	 		if (intakeEditForm.getClient()!=null && intakeEditForm.getClient().getEffDate()!=null)
 	   	 		{
-	   	 			GregorianCalendar selectedCal=new GregorianCalendar();
-	   	 			selectedCal.setTime(intakeEditForm.getClient().getEffDate());
-	   	 			// force recomputing of time
-	   	 			selectedCal.getTimeInMillis();
-	   	 			selectedYear=selectedCal.get(Calendar.YEAR);
-	   	 			selectedMonth=selectedCal.get(Calendar.MONTH);
-	   	 			selectedDay=selectedCal.get(Calendar.DAY_OF_MONTH);
+	   	 			effDateVal = intakeEditForm.getClient().getFormattedEffDate();
 	   	 		}	   		
 			%>
-           	<select name="eff_year">
-           		<option></option>
-           		<%
-           			GregorianCalendar cal=new GregorianCalendar();
-           			int year=cal.get(Calendar.YEAR);
-           			
-           			for (int i=0; i<100; i++)
-           			{
-           				int displayYear=year-i;
-           				%>
-           					<option value="<%=displayYear%>" <%=displayYear==selectedYear?"selected=\"selected\"":""%>><%=displayYear%></option>
-           				<%
-           			}
-           		%>
-           	</select>
-           	-
-           	<select name="eff_month">
-           		<option></option>
-           		<%
-           			DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
-           			String[] months=dateFormatSymbols.getShortMonths();
-           			
-           			for (int i=0; i<12; i++)
-           			{
-           				%>
-           					<option value="<%=i%>" title="<%=months[i]%>" <%=i==selectedMonth?"selected=\"selected\"":""%>><%=i+1%></option>
-           				<%
-           			}
-           		%>
-           	</select>
-           	-
-           	<select name="eff_day">
-           		<option></option>
-           		<%
-           			for (int i=1; i<=31; i++)
-           			{
-           				%>
-           					<option value="<%=i%>" <%=i==selectedDay?"selected=\"selected\"":""%>><%=i%></option>
-           				<%
-           			}
-           		%>
-           	</select>
+			<input id="client.formattedEffDate" name="client.formattedEffDate" value="<%=effDateVal %>" onfocus="this.blur()" readonly="readonly" type="text"><img title="Calendar" id="cal_effdate" src="../../images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'client.formattedEffDate',ifFormat :'%Y-%m-%d',button :'cal_effdate',align :'cr',singleClick :true,firstDay :1});</script>                                    
+ 
         </td>    
 	</caisi:isModuleLoad>
 </tr>
@@ -405,7 +357,7 @@
         <td>
             <label>Email<br>
                 <input type="text" size="20" maxlength="100" dojoType="EmailTextBox" name="client.email"
-                       value="<bean:write name="genericIntakeEditForm"  property="client.email"/>"/>
+                       value="<bean:write name="genericIntakeEditForm"  property="client.email"/>" />
             </label></td>
         <td>
             <label>Phone #<br>

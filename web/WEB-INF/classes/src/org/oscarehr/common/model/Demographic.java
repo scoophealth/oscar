@@ -594,7 +594,22 @@ public class Demographic implements Serializable {
 	public Date getEffDate() {
 		return effDate;
 	}
+	
+	public String getFormattedEffDate() {
+		Date d=getEffDate();
+		if (d!=null) return(DateFormatUtils.ISO_DATE_FORMAT.format(d));
+		else return("");
+	}
 
+	public void setFormattedEffDate(String formattedDate) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = sdf.parse(formattedDate);		
+			this.setEffDate(d);
+		}catch(ParseException e) {e.printStackTrace();}
+		
+	}
+	
 	/**
 	 * Set the value related to the column: eff_date
 	 * 
