@@ -126,7 +126,7 @@ month.)
 						if (program.isBed() || program.isService())
 						{
 							%>
-								<option value="<%=program.getId() %>"><%=program.getName()%></option>
+								<option value="<%=program.getId() %>" title="<%=program.getName()%>"><%=program.getName()%></option>
 							<%
 						}
 					}
