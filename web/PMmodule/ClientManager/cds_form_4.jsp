@@ -11,8 +11,13 @@
 
 	<table style="border: solid black 1px; width:90%; margin-left:auto;margin-right:auto; background-color:#f0f0f0">
 		<tr>
+			<td class="genericTableHeader">Select corresponding admission</td>
 			<td>
-				blah blah
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Type of form (baseline, or current status)</td>
+			<td>
 			</td>
 		</tr>
 	</table>
