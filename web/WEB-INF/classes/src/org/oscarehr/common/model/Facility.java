@@ -32,6 +32,7 @@ public class Facility implements Serializable {
 	private boolean enableHealthNumberRegistry = true;
 	private boolean allowSims = true;
 	private boolean enableDigitalSignatures = false;
+	private boolean enableCdsForms = false;
 	private Date lastUpdated=new Date();
 	
 	
@@ -194,6 +195,14 @@ public class Facility implements Serializable {
 	public Date getLastUpdated() {
 		return lastUpdated;
 	}
+
+	public boolean isEnableCdsForms() {
+    	return enableCdsForms;
+    }
+
+	public void setEnableCdsForms(boolean enableCdsForms) {
+    	this.enableCdsForms = enableCdsForms;
+    }
 
 	@PreUpdate
 	protected void jpaUpdateLastUpdateTime() {

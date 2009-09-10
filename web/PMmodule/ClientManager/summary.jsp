@@ -273,6 +273,11 @@ function openSurvey() {
 			<%
 		}
 	%>
+	
+	<tr>
+		<th>CDS Data</th>
+		<td><input type="button" value="New CDS Form" /><input type="button" value="Update Most Recent Form" /></td>
+	</tr>
 </table>
 
 <br />

@@ -198,6 +198,7 @@ public class FacilityManagerAction extends BaseAction {
 			facility.setEnableIntegratedReferrals(WebUtils.isChecked(request, "facility.enableIntegratedReferrals"));
 			facility.setEnableHealthNumberRegistry(WebUtils.isChecked(request, "facility.enableHealthNumberRegistry"));
 			facility.setEnableDigitalSignatures(WebUtils.isChecked(request, "facility.enableDigitalSignatures"));
+			facility.setEnableCdsForms(WebUtils.isChecked(request, "facility.enableCdsForms"));
 
 			if (facility.getId() == null || facility.getId() == 0) facilityDao.persist(facility);
 			else facilityDao.merge(facility);
