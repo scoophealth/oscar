@@ -106,9 +106,19 @@
                     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
             window.open(page, "", windowprops);
         }
-        
-	
+    
 	function saveForm() {
+		var fail=false;
+		$("[name='client.sex']").each(function(){
+			var v = $(this).val();			
+			if(v.length == 0) {	
+				$("#genderreq").css("display","inline");
+				fail=true;
+			}
+		});
+
+		if(fail) return false;
+		
 	    if (check_mandatory()) {
 		return save();
 	    }
@@ -257,7 +267,7 @@
        	});
 	});
 
-	$("document").ready(function() {
+	$("document").ready(function() {	
 		$("form").validate({meta: "validate"});
 	});
 
@@ -302,9 +312,11 @@
     <td>
         <label>Gender<br>
             <html:select property="client.sex">
+            	<option value=""></option>
                 <html:optionsCollection property="genders" value="code" label="description"/>
             </html:select>
         </label>
+        <span id="genderreq" style="display:none;color:red">* Value is required.</span>
     </td>
     <td>
         <table>
@@ -376,7 +388,7 @@
         <td><label>City<br><html:text size="20" maxlength="20" property="client.city"/></label></td>
         <td><label>Province<br>
             <html:select property="client.province">
-                <html:optionsCollection property="provinces" value="value" label="label"/>
+            	<html:optionsCollection property="provinces" value="value" label="label"/>
             </html:select>
         </label>
         </td>

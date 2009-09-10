@@ -130,6 +130,87 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return mapping.findForward(EDIT);
 	}
 
+	public ActionForward blank(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+		Integer facilityId = loggedInInfo.currentFacility.getId();
+
+		// [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
+		List genders = GenericIntakeSearchAction.getGenders();
+		formBean.setGenders(genders);
+		// end of change
+
+		String intakeType = getType(request);
+		//Integer clientId = getClientIdAsInteger(request);
+		String providerNo = getProviderNo(request);
+
+		Integer nodeId = null;
+		try {
+			String strNodeId = getParameter(request,"nodeId");
+			if(strNodeId != null)
+				nodeId = Integer.valueOf(strNodeId);
+		} catch(NumberFormatException e) {}
+		
+		
+		Intake intake = null;
+
+		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+			if (intake == null) {
+				intake = genericIntakeManager.createQuickIntake(providerNo);
+				//intake.setClientId(clientId);
+				intake.setFacilityId(facilityId);
+			}
+		}
+		else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+			if (intake == null) {
+				intake = genericIntakeManager.createIndepthIntake(providerNo);
+				//intake.setClientId(clientId);
+				intake.setFacilityId(facilityId);
+			}
+		}
+		else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
+			if (intake == null) {
+				intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
+				//intake.setClientId(clientId);
+				intake.setFacilityId(facilityId);
+			}
+		}
+		else {
+			IntakeNode in = genericIntakeManager.getIntakeNode(nodeId);
+			if(intake == null) {
+				intake= genericIntakeManager.createIntake(in,providerNo);
+				//intake.setClientId(clientId);
+				intake.setFacilityId(facilityId);						
+			}
+		}
+		
+		List<IntakeNodeJavascript> jsLocation = genericIntakeManager.getIntakeNodeJavascriptLocation(intake.getNode().getQuestionId());
+		System.out.println("Javascript Location=" + jsLocation);
+
+		Demographic client = new Demographic();
+		
+
+		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
+				.areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null,
+				null,null, facilityId, nodeId, jsLocation);
+
+		// UCF -- intake accessment : please don't remove the following lines
+		List allForms = surveyManager.getAllFormsForCurrentProviderAndCurrentFacility();
+		request.getSession().setAttribute("survey_list", allForms);
+
+		String oldBedProgramId = null;
+		request.getSession().setAttribute("intakeCurrentBedCommunityId", oldBedProgramId);
+
+		request.getSession().setAttribute(SessionConstants.INTAKE_CLIENT_IS_DEPENDENT_OF_FAMILY, false);
+				
+
+		ProgramUtils.addProgramRestrictions(request);
+
+		return mapping.findForward(EDIT);
+
+	}
+	
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
