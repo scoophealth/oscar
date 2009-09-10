@@ -20,6 +20,71 @@
 			<td>
 			</td>
 		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's home district</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Is client of aboriginal origins</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's prefered language</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's legal status</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's main mental disorder</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's presenting problems</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's source of referral</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's discharge reason</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's living arrangements</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's residence type & support</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's employment status</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's education status</td>
+			<td>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">Client's primary income</td>
+			<td>
+			</td>
+		</tr>
 	</table>
 
 	<br />
