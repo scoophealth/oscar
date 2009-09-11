@@ -40,7 +40,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     private Log log = LogFactory.getLog(AdmissionDao.class);
     
-    public List getAdmissions_archiveView(Integer programId, Integer demographicNo) {
+    public List<Admission> getAdmissions_archiveView(Integer programId, Integer demographicNo) {
         Admission admission = null;
 
         if (programId == null || programId <= 0) {
@@ -52,7 +52,8 @@ public class AdmissionDao extends HibernateDaoSupport {
         }
 
         String queryStr = "FROM Admission a WHERE admission_status='discharged' and a.ProgramId=? AND a.ClientId=? order by am_id DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
         /*
         if (!rs.isEmpty()) {
             admission = ((Admission) rs.get(0));
@@ -76,10 +77,11 @@ public class AdmissionDao extends HibernateDaoSupport {
         }
 
         String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=?";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
 
         if (!rs.isEmpty()) {
-            admission = ((Admission) rs.get(0));
+            admission = rs.get(0);
         }
 
         if (log.isDebugEnabled()) {
@@ -101,10 +103,11 @@ public class AdmissionDao extends HibernateDaoSupport {
         }
 
         String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
 
         if (!rs.isEmpty()) {
-            admission = ((Admission) rs.get(0));
+            admission =  rs.get(0);
         }
 
         if (log.isDebugEnabled()) {
@@ -114,9 +117,10 @@ public class AdmissionDao extends HibernateDaoSupport {
         return admission;
     }
 
-    public List getAdmissions() {
+    public List<Admission> getAdmissions() {
         String queryStr = "FROM Admission a ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr);
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr);
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions # of admissions: " + rs.size());
@@ -125,13 +129,14 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
 
-    public List getAdmissions(Integer demographicNo) {
+    public List<Admission> getAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -141,14 +146,15 @@ public class AdmissionDao extends HibernateDaoSupport {
     }
 
    
-   public List getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
+   public List<Admission> getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? and a.ProgramId in " +
            "(select s.id from Program s where s.facilityId=? or s.facilityId is null) ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo, facilityId });
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsByFacility for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -184,13 +190,14 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
     
-    public List getCurrentAdmissions(Integer demographicNo) {
+    public List<Admission> getCurrentAdmissions(Integer demographicNo) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();
         }
 
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
-        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissions for clientId " + demographicNo + ", # of admissions: " + rs.size());
@@ -223,6 +230,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     }
     
+    @SuppressWarnings("unchecked")
     public Admission getCurrentExternalProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {
             throw new IllegalArgumentException();
@@ -235,7 +243,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = new ArrayList();
+        List<Admission> rs = new ArrayList<Admission>();
         try{
           rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
@@ -263,6 +271,7 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     
     // TODO: rewrite
+    @SuppressWarnings("unchecked")
     public Admission getCurrentBedProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {
             throw new IllegalArgumentException();
@@ -275,7 +284,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = new ArrayList();
+        List<Admission> rs = new ArrayList<Admission>();
         try{
           rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex){
@@ -339,6 +348,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         return admissions;
     }
 
+    @SuppressWarnings("unchecked")
     public Admission getCurrentCommunityProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {
             throw new IllegalArgumentException();
@@ -351,7 +361,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
 
         Admission admission = null;
-        List rs = new ArrayList();
+        List<Admission> rs = new ArrayList<Admission>();
         try{
            rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
         }catch(org.springframework.orm.hibernate3.HibernateObjectRetrievalFailureException ex)
@@ -377,12 +387,13 @@ public class AdmissionDao extends HibernateDaoSupport {
         return null;
     }
 
-    public List getCurrentAdmissionsByProgramId(Integer programId) {
+    public List<Admission> getCurrentAdmissionsByProgramId(Integer programId) {
         if (programId == null || programId <= 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.AdmissionStatus='current'", programId);
+        @SuppressWarnings("unchecked")
+        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.AdmissionStatus='current'", programId);
 
         if (log.isDebugEnabled()) {
             log.debug("getCurrentAdmissionsByProgramId for programId " + programId + ", # of admissions: " + results.size());
@@ -418,7 +429,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         }
     }
 
-    public List getAdmissionsInTeam(Integer programId, Integer teamId) {
+    public List<Admission> getAdmissionsInTeam(Integer programId, Integer teamId) {
         if (programId == null || programId <= 0) {
             throw new IllegalArgumentException();
         }
@@ -427,7 +438,8 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.TeamId = ? and a.AdmissionStatus='current'", new Object[] { programId, teamId });
+        @SuppressWarnings("unchecked")
+        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.TeamId = ? and a.AdmissionStatus='current'", new Object[] { programId, teamId });
 
         if (log.isDebugEnabled()) {
             log.debug("getAdmissionsInTeam: programId= " + programId + ",teamId=" + teamId + ",# results=" + results.size());
@@ -442,10 +454,11 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from Admission a where a.TemporaryAdmission = true and a.AdmissionStatus='current' and a.ClientId = ?", demographicNo);
+        @SuppressWarnings("unchecked")
+        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.TemporaryAdmission = true and a.AdmissionStatus='current' and a.ClientId = ?", demographicNo);
 
         if (!results.isEmpty()) {
-            result = (Admission) results.get(0);
+            result = results.get(0);
         }
 
         if (log.isDebugEnabled()) {
@@ -455,6 +468,7 @@ public class AdmissionDao extends HibernateDaoSupport {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public List search(AdmissionSearchBean searchBean) {
         if (searchBean == null) {
             throw new IllegalArgumentException();
@@ -490,9 +504,10 @@ public class AdmissionDao extends HibernateDaoSupport {
         return results;
     }
 
-    public List getClientIdByProgramDate(int programId, Date dt) {
+    public List<Admission> getClientIdByProgramDate(int programId, Date dt) {
         String q = "FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or (a.dischargeDate is null))";
-        List rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt });
+        @SuppressWarnings("unchecked")
+        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), dt, dt });
         return rs;
     }
     
@@ -505,15 +520,16 @@ public class AdmissionDao extends HibernateDaoSupport {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.ClientId = ? and a.AdmissionStatus='discharged' order by a.Id DESC", new Object[] { programId, demographicId });
+        @SuppressWarnings("unchecked")
+        List<Admission> results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.ClientId = ? and a.AdmissionStatus='discharged' order by a.Id DESC", new Object[] { programId, demographicId });
         if(results.isEmpty())
             return 0;
         
         Admission admission = null;
-        ListIterator listIterator = results.listIterator();
+        ListIterator<Admission> listIterator = results.listIterator();
         while (listIterator.hasNext()) {
             try {
-                admission = (Admission) listIterator.next();
+                admission = listIterator.next();
                 Integer clientStatusId = admission.getClientStatusId();
                 if(clientStatusId == null )
                     return 0;
