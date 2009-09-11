@@ -145,7 +145,9 @@ public class AdmissionDao extends HibernateDaoSupport {
         return rs;
     }
 
-   
+   /**
+    * results are ordered by admission date descending
+    */
    public List<Admission> getAdmissionsByFacility(Integer demographicNo, Integer facilityId) {
         if (demographicNo == null || demographicNo <= 0) {
             throw new IllegalArgumentException();

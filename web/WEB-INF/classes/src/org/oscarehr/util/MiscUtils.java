@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -155,5 +156,25 @@ public class MiscUtils {
 		StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 		String caller = ste[2].getClassName();
 		return(Logger.getLogger(caller));
+	}
+
+	public static int calculateAge(GregorianCalendar birthDate)
+	{
+		// example
+		// today = 2009-05-06
+		// birthdate = 2008-06-08
+		// is considered 1 year old
+				
+		GregorianCalendar today=new GregorianCalendar();
+		
+		int age=today.get(GregorianCalendar.YEAR)-birthDate.get(GregorianCalendar.YEAR);
+
+		if (today.get(GregorianCalendar.MONTH)<birthDate.get(GregorianCalendar.MONTH)) age--;
+		else if (today.get(GregorianCalendar.MONTH)==birthDate.get(GregorianCalendar.MONTH))
+		{
+			if (today.get(GregorianCalendar.DAY_OF_MONTH)<birthDate.get(GregorianCalendar.DAY_OF_MONTH)) age--;
+		}
+		
+		return(age);
 	}
 }
