@@ -26,7 +26,9 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.ResourceBundle;
 
 import oscar.oscarDB.DBHandler;
 
@@ -108,29 +110,40 @@ public class EctMeasurementTypesBeanHandler {
                     String providerNo = rsData.getString("providerNo");
                     String sqlProvider = "SELECT * FROM provider WHERE provider_no='" + providerNo + "'";
                     ResultSet rsProvider = db.GetSQL(sqlProvider);
+                    String pFname = "";
+                    String pLname = "";
                     if(rsProvider.next()){
-                        EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
+                        pFname = rsProvider.getString("first_name");
+                        pLname = rsProvider.getString("last_name");
+
+                    }
+                    else if( providerNo.equals("0") ) {
+                        ResourceBundle props = ResourceBundle.getBundle("oscarResources");
+                        pFname = props.getString("oscarLab.System");
+                        pLname = props.getString("oscarLab.System");
+                    }
+                    rsProvider.close();
+                    EctMeasurementTypesBean measurementTypes = new EctMeasurementTypesBean( rsMT.getInt("id"), 
                                                                                         rsMT.getString("type"), 
                                                                                         rsMT.getString("typeDisplayName"), 
                                                                                         rsMT.getString("typeDescription"), 
                                                                                         rsMT.getString("measuringInstruction"), 
                                                                                         rsMT.getString("validation"),
-                                                                                        rsProvider.getString("first_name"), 
-                                                                                        rsProvider.getString("last_name"),
+                                                                                        pFname,
+                                                                                        pLname,
                                                                                         rsData.getString("dataField"), 
                                                                                         rsData.getString("measuringInstruction"), 
                                                                                         rsData.getString("comments"), 
                                                                                         rsData.getString("dateObserved"), 
                                                                                         rsData.getString("dateEntered"));                        
                         
-                        measurementTypeVector.add(measurementTypes);
-                        EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
-                        measuringInstrcHdVector.add(hd);
-                        measuringInstrcVectorVector.add(measuringInstrcVector);
-                        measuringInstrcVector = new Vector();
-                        hasPreviousData = true;
-                    }
-                    rsProvider.close();
+                    measurementTypeVector.add(measurementTypes);
+                    EctMeasuringInstructionBeanHandler hd = new EctMeasuringInstructionBeanHandler(measuringInstrcVector);
+                    measuringInstrcHdVector.add(hd);
+                    measuringInstrcVectorVector.add(measuringInstrcVector);
+                    measuringInstrcVector = new Vector();
+                    hasPreviousData = true;
+                    
                 }
                 rsData.close();
                 if(!hasPreviousData){
