@@ -2,7 +2,7 @@
 insert into agency (id) values (0);
 
 -- default facility
-INSERT INTO Facility (name, description) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description');
+INSERT INTO Facility (name, description, lastUpdated) VALUES ('Default Facility', 'Default facility, please modify with a more appropriate name and description', now());
 
 insert into provider_facility values (999998, (select id from Facility where name='Default Facility' ));
 
