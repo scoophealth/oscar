@@ -82,9 +82,9 @@
 				<td style="text-align: center"><%=survey.getSurveyQuestion()%><br />
 				<html:form action="/oscarSurveillance/SurveillanceAnswer">
 					<html:hidden property="proceed"
-						value="<%=(String) request.getAttribute("proceedURL")%>" />
+						value="<%=(String) request.getAttribute(\"proceedURL\")%>" />
 					<html:hidden property="demographicNo"
-						value="<%=(String) request.getAttribute("demographic_no")%>" />
+						value="<%=(String) request.getAttribute(\"demographic_no\")%>" />
 					<html:hidden property="surveyId"
 						value="<%=(String) survey.getSurveyId()%>" />
 					<html:hidden property="currentSurveyNum" value="<%=currSurveyNum%>" />
