@@ -1,4 +1,4 @@
-package org.oscarehr.util;
+package org.oscarehr.cds;
 
 public enum CdsMunicipality {
 	
@@ -49,7 +49,7 @@ public enum CdsMunicipality {
 	TimiskamingDistrict("45"),
 	Toronto("46"),
 	Unknown("47"),
-	VictoriaKawarthaLakes("48"),
+	KawarthaLakes("48"),
 	Waterloo("49"),
 	Wellington("50"),
 	York("51"),

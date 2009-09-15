@@ -1,3 +1,7 @@
+<%@page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
+<%@page import="org.oscarehr.cds.CdsMunicipality"%>
+
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
 <%
@@ -8,9 +12,7 @@
 		
 %>
 
-
-<%@page import="org.oscarehr.PMmodule.model.Admission"%>
-<%@page import="org.oscarehr.PMmodule.web.CdsForm4"%><form action="cds_form_4_action.jsp">
+<form action="cds_form_4_action.jsp">
 	<h3>CDS form (CDS-MH v4.05)</h3>
 
 	<br />
@@ -50,6 +52,16 @@
 		<tr>
 			<td class="genericTableHeader">Client's home district</td>
 			<td class="genericTableData">
+				<select name="clientHomeDistrict">
+					<%
+						for (CdsMunicipality cdsMunicipality : CdsMunicipality.values())
+						{
+							%>
+								<option value="<%=cdsMunicipality.name()%>"><%=cdsMunicipality.name()%></option>
+							<%
+						}
+					%>
+				</select>
 			</td>
 		</tr>
 		<tr>

@@ -1,4 +1,4 @@
-package org.oscarehr.util;
+package org.oscarehr.cds;
 
 public enum CdsLhin {
 	
