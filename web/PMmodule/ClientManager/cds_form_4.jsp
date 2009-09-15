@@ -104,9 +104,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">13. Client's legal status</td>
+			<td class="genericTableHeader">13/14. Client's legal status</td>
 			<td class="genericTableData">
-				<select name="clientLegalStatus">
+				<select multiple="multiple" name="clientLegalStatus" style="height:6em">
 					<%
 						for (CdsLegalStatus cdsLegalStatus : CdsLegalStatus.valuesSorted())
 						{
@@ -119,8 +119,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's main mental disorder</td>
+			<td class="genericTableHeader">15. Client's main mental disorder</td>
 			<td class="genericTableData">
+				<input type="radio" name="hasCto" value="TRUE" /> Issued CTO
+				<br />
+				<input type="radio" name="hasCto" value="FALSE" /> No CTO
+				<br />
+				<input type="radio" name="hasCto" value="UNKNOWN" /> Unknown or declined to answer
 			</td>
 		</tr>
 		<tr>

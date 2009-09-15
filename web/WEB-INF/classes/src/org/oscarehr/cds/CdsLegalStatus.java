@@ -39,7 +39,7 @@ public enum CdsLegalStatus {
 	/**
 	 * The DataElementSubCateoryNumber is not the entire category number,
 	 * as an example the DataElementCateoryNumber for "Court Diversion Program" should be
-	 * "013-02" the DataElementSubCateoryNumber is just the "02" portion.
+	 * "013-02" or "014-02" the DataElementSubCateoryNumber is just the "02" portion.
 	 * The DataElementSubCateoryNumber is prepadded with 0's to match
 	 * the CDS specs, i.e. 02 instead of just 2.
 	 */
