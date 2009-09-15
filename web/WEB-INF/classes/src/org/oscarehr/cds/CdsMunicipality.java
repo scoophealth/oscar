@@ -1,5 +1,9 @@
 package org.oscarehr.cds;
 
+import java.util.Arrays;
+
+import org.oscarehr.util.EnumNameComparator;
+
 public enum CdsMunicipality {
 	
 	AlgomaDistrict("01"),
@@ -63,7 +67,7 @@ public enum CdsMunicipality {
 	}
 	
 	/**
-	 * The DataElementSubCateoryNumber is not the entire cateogry number,
+	 * The DataElementSubCateoryNumber is not the entire category number,
 	 * as an example the DataElementCateoryNumber for "Durham" should be
 	 * "010-06" the DataElementSubCateoryNumber is just the "06" portion.
 	 * The DataElementSubCateoryNumber is prepadded with 0's to match
@@ -72,5 +76,12 @@ public enum CdsMunicipality {
 	public String getDataElementSubCateoryNumber()
 	{
 		return(dataElementSubCateoryNumber);
+	}
+	
+	public static CdsMunicipality[] valuesSorted()
+	{
+		CdsMunicipality[] results=values();
+		Arrays.sort(results, new EnumNameComparator());
+		return(results);
 	}
 }

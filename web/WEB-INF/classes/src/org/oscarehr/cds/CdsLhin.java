@@ -1,5 +1,9 @@
 package org.oscarehr.cds;
 
+import java.util.Arrays;
+
+import org.oscarehr.util.EnumNameComparator;
+
 public enum CdsLhin {
 	
 	Central("01"),
@@ -27,7 +31,7 @@ public enum CdsLhin {
 	}
 	
 	/**
-	 * The DataElementSubCateoryNumber is not the entire cateogry number,
+	 * The DataElementSubCateoryNumber is not the entire category number,
 	 * as an example the DataElementCateoryNumber for "Champlain" should be
 	 * "10a-04" or "10b-04" the DataElementSubCateoryNumber is just the "04" portion.
 	 * The DataElementSubCateoryNumber is prepadded with 0's to match
@@ -38,4 +42,12 @@ public enum CdsLhin {
 	{
 		return(dataElementSubCateoryNumber);
 	}
+	
+	public static CdsLhin[] valuesSorted()
+	{
+		CdsLhin[] results=values();
+		Arrays.sort(results, new EnumNameComparator());
+		return(results);
+	}
+
 }
