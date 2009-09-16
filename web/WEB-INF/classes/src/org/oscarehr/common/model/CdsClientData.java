@@ -26,7 +26,7 @@ import org.oscarehr.common.Gender;
  * make a new entity instead of updating an existing one.
  */
 @Entity
-public class CdsData implements Serializable {
+public class CdsClientData implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,6 +34,8 @@ public class CdsData implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created = new Date();
+	
+	private String cdsFormVersion=null;
 	
 	private String providerNo = null;
 
@@ -53,6 +55,14 @@ public class CdsData implements Serializable {
 	public Date getCreated() {
 		return created;
 	}
+
+	public String getCdsFormVersion() {
+    	return cdsFormVersion;
+    }
+
+	public void setCdsFormVersion(String cdsFormVersion) {
+    	this.cdsFormVersion = cdsFormVersion;
+    }
 
 	public String getProviderNo() {
 		return providerNo;
@@ -94,7 +104,7 @@ public class CdsData implements Serializable {
     	this.admissionId = admissionId;
     }
 
-	public boolean equals(CdsData o) {
+	public boolean equals(CdsClientData o) {
 		try {
 			return (id != null && id.intValue() == o.id.intValue());
 		} catch (Exception e) {

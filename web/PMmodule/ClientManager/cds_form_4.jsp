@@ -1,8 +1,5 @@
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
-<%@page import="org.oscarehr.cds.CdsLhin"%>
-<%@page import="org.oscarehr.cds.CdsLegalStatus"%>
-<%@page import="org.oscarehr.cds.CdsMunicipality"%>
 
 <%@include file="/layouts/caisi_html_top2.jspf"%>
 
@@ -11,7 +8,6 @@
 
 	CdsForm4 cdsForm4=null;
 	if ("NEW".equals(request.getParameter("action"))) cdsForm4=CdsForm4.makeNewCds(currentDemographicId);
-		
 %>
 
 <form action="cds_form_4_action.jsp">
@@ -40,132 +36,157 @@
 			<td class="genericTableData">
 				<input type="radio" name="formType" value="BASELINE" /> Baseline
 				<br />
-				<input type="radio" name="formType" value="STATUS" /> Current Status
+				<input type="radio" name="formType" value="UPDATE" /> Update Status
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">8. Client's gender</td>
+			<td class="genericTableHeader">8. Gender</td>
 			<td class="genericTableData"><%=cdsForm4.getCdsData().getClientGender().name()%></td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">9. Client's age</td>
+			<td class="genericTableHeader">9. Age</td>
 			<td class="genericTableData"><%=cdsForm4.getCdsData().getClientAge()%></td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">10. Client's home district</td>
+			<td class="genericTableHeader">10. Service Recipient Location</td>
 			<td class="genericTableData">
-				<select name="clientHomeDistrict">
-					<%
-						for (CdsMunicipality cdsMunicipality : CdsMunicipality.valuesSorted())
-						{
-							%>
-								<option value="<%=cdsMunicipality.name()%>"><%=cdsMunicipality.name()%></option>
-							<%
-						}
-					%>
+				<select name="serviceRecipientLocation">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("010"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">10a. Client's home LHIN</td>
+			<td class="genericTableHeader">10a. Service Recipient LHIN</td>
 			<td class="genericTableData">
-				<select name="clientHomeLhin">
-					<%
-						for (CdsLhin cdsLhin : CdsLhin.valuesSorted())
-						{
-							%>
-								<option value="<%=cdsLhin.name()%>"><%=cdsLhin.name()%></option>
-							<%
-						}
-					%>
+				<select name="serviceRecipientLhin">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("10a"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">11. Is client of aboriginal origins</td>
+			<td class="genericTableHeader">11. Aboriginal Origin</td>
 			<td class="genericTableData">
-				<input type="radio" name="isAboriginal" value="TRUE" /> Yes
-				<br />
-				<input type="radio" name="isAboriginal" value="FALSE" /> No
-				<br />
-				<input type="radio" name="isAboriginal" value="UNKNOWN" /> Unknown or declined to answer
+				<%=CdsForm4.renderAsRadioOptions("isAboriginal", CdsForm4.getCdsFormOptions("011"))%>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">12. Client's preferred language</td>
+			<td class="genericTableHeader">12. Service Recipient Preferred Language</td>
 			<td class="genericTableData">
-				<input type="radio" name="clientLanguage" value="EN" /> English
-				<br />
-				<input type="radio" name="clientLanguage" value="FR" /> French
-				<br />
-				<input type="radio" name="clientLanguage" value="OTHER" /> Other
-				<br />
-				<input type="radio" name="clientLanguage" value="UNKNOWN" /> Unknown or declined to answer
+				<%=CdsForm4.renderAsRadioOptions("preferredLanguage", CdsForm4.getCdsFormOptions("012"))%>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">13/14. Client's legal status</td>
+			<td class="genericTableHeader">13/14. Legal status</td>
 			<td class="genericTableData">
-				<select multiple="multiple" name="clientLegalStatus" style="height:6em">
-					<%
-						for (CdsLegalStatus cdsLegalStatus : CdsLegalStatus.valuesSorted())
-						{
-							%>
-								<option value="<%=cdsLegalStatus.name()%>"><%=cdsLegalStatus.name()%></option>
-							<%
-						}
-					%>
+				<select multiple="multiple" name="legalStatus" style="height:8em">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("013"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">15. Client's main mental disorder</td>
+			<td class="genericTableHeader">15. Community Treatment Orders (CTOs)</td>
 			<td class="genericTableData">
-				<input type="radio" name="hasCto" value="TRUE" /> Issued CTO
-				<br />
-				<input type="radio" name="hasCto" value="FALSE" /> No CTO
-				<br />
-				<input type="radio" name="hasCto" value="UNKNOWN" /> Unknown or declined to answer
+				<%=CdsForm4.renderAsRadioOptions("hasCto", CdsForm4.getCdsFormOptions("015"))%>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's presenting problems</td>
+			<td class="genericTableHeader">16. Diagnostic Categories</td>
 			<td class="genericTableData">
+				<select name="diagnosticCategories">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("016"))%>
+				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's source of referral</td>
+			<td class="genericTableHeader">16a. Other Illness Information</td>
 			<td class="genericTableData">
+				<%=CdsForm4.renderAsCheckBoxOptions("otherIllness", CdsForm4.getCdsFormOptions("16a"))%>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's discharge reason</td>
+			<td class="genericTableHeader">17. Presenting Issues (to be) Addressed</td>
 			<td class="genericTableData">
+				<select multiple="multiple" name="presentingIssues" style="height:8em">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("017"))%>
+				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's living arrangements</td>
+			<td class="genericTableHeader">18. Source of Referral</td>
 			<td class="genericTableData">
+				<select name="sourceOfReferral">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("018"))%>
+				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's residence type & support</td>
+			<td class="genericTableHeader">19. Exit Disposition</td>
 			<td class="genericTableData">
+				<select name="exitDisposition">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("019"))%>
+				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's employment status</td>
+			<td class="genericTableHeader">20/21. Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
+				UMMMM I'll look at this later
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's education status</td>
+			<td class="genericTableHeader">22/23. Living Arrangement</td>
 			<td class="genericTableData">
+				<select name="livingArrangement">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("022"))%>
+				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Client's primary income</td>
+			<td class="genericTableHeader">24/25. Residence Type</td>
 			<td class="genericTableData">
+				<select name="residenceType">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("024"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">24a/25a. Level of Residential Support</td>
+			<td class="genericTableData">
+				<select name="residentialSupport">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("24a"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">26/27. Employment Status</td>
+			<td class="genericTableData">
+				<select name="employmentStatus">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("026"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">28/29. Educational Status</td>
+			<td class="genericTableData">
+				<select name="educationStatus">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("028"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">29a. Highest Level of Education</td>
+			<td class="genericTableData">
+				<select name="highestLevelEducation">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("29a"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">30/31. Primary Income Source</td>
+			<td class="genericTableData">
+				<select name="primaryIncome">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("030"))%>
+				</select>
 			</td>
 		</tr>
 	</table>
