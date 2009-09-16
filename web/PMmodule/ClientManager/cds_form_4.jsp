@@ -32,20 +32,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">Type of form (baseline, or current status)</td>
+			<td class="genericTableHeader">8. Gender</td>
 			<td class="genericTableData">
-				<input type="radio" name="formType" value="BASELINE" /> Baseline
-				<br />
-				<input type="radio" name="formType" value="UPDATE" /> Update Status
+				<%=CdsForm4.renderAsRadioOptions("gender", CdsForm4.getCdsFormOptions("008"))%>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">8. Gender</td>
-			<td class="genericTableData"><%=cdsForm4.getCdsData().getClientGender().name()%></td>
-		</tr>
-		<tr>
 			<td class="genericTableHeader">9. Age</td>
-			<td class="genericTableData"><%=cdsForm4.getCdsData().getClientAge()%></td>
+			<td class="genericTableData">
+				<input type="text" readonly="readonly" name="age" value="<%=cdsForm4.getCdsData().getClientAge()%>" />
+			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">10. Service Recipient Location</td>
@@ -128,48 +124,94 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">20/21. Psychiatric Hospitalizations</td>
+			<td class="genericTableHeader">20. Baseline Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
 				UMMMM I'll look at this later
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">22/23. Living Arrangement</td>
+			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
-				<select name="livingArrangement">
+				UMMMM I'll look at this later
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">22. Baseline Living Arrangement</td>
+			<td class="genericTableData">
+				<select name="baselineLivingArrangement">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("022"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">24/25. Residence Type</td>
+			<td class="genericTableHeader">23. Current Living Arrangement</td>
 			<td class="genericTableData">
-				<select name="residenceType">
+				<select name="currentLivingArrangement">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("023"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">24. Baseline Residence Type</td>
+			<td class="genericTableData">
+				<select name="baselineResidenceType">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("024"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">24a/25a. Level of Residential Support</td>
+			<td class="genericTableHeader">24a. Baseline Level of Residential Support</td>
 			<td class="genericTableData">
-				<select name="residentialSupport">
+				<select name="baselineResidentialSupport">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("24a"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">26/27. Employment Status</td>
+			<td class="genericTableHeader">25. Current Residence Type</td>
 			<td class="genericTableData">
-				<select name="employmentStatus">
+				<select name="currentResidenceType">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("025"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">25a. Current Level of Residential Support</td>
+			<td class="genericTableData">
+				<select name="currentResidentialSupport">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("25a"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">26. Baseline Employment Status</td>
+			<td class="genericTableData">
+				<select name="baselineEmploymentStatus">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("026"))%>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">28/29. Educational Status</td>
+			<td class="genericTableHeader">27.Current Employment Status</td>
 			<td class="genericTableData">
-				<select name="educationStatus">
+				<select name="currentEmploymentStatus">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("027"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">28. Baseline Educational Status</td>
+			<td class="genericTableData">
+				<select name="baselineEducationStatus">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("028"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">29. Current Educational Status</td>
+			<td class="genericTableData">
+				<select name="currentEducationStatus">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("029"))%>
 				</select>
 			</td>
 		</tr>
@@ -182,10 +224,18 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="genericTableHeader">30/31. Primary Income Source</td>
+			<td class="genericTableHeader">30. Baseline Primary Income Source</td>
 			<td class="genericTableData">
-				<select name="primaryIncome">
+				<select name="baselinePrimaryIncome">
 					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("030"))%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="genericTableHeader">31. Current Primary Income Source</td>
+			<td class="genericTableData">
+				<select name="currentPrimaryIncome">
+					<%=CdsForm4.renderAsSelectOptions(CdsForm4.getCdsFormOptions("031"))%>
 				</select>
 			</td>
 		</tr>
