@@ -344,4 +344,23 @@ public abstract class BaseAction extends DispatchAction {
 		return clientId;
 	}
 
+	protected Integer getParameterAsInteger(HttpServletRequest request, String name, Integer defaultVal) {
+		String param = request.getParameter(name);
+		if(param != null) {
+			return Integer.valueOf(param);
+		}
+		return defaultVal;
+	}
+	
+	protected Boolean getParameterAsBoolean(HttpServletRequest request, String name, Boolean defaultVal) {
+		String param = request.getParameter(name);
+		if(param != null) {
+			return Boolean.valueOf(param);
+		}
+		return defaultVal;
+	}
+	
+	protected Boolean getParameterAsBoolean(HttpServletRequest request, String name) {
+		return getParameterAsBoolean(request,name,false);
+	}
 }

@@ -722,23 +722,23 @@ public class ProgramManagerAction extends BaseAction {
 		oldProgram.setEmergencyNumber(request.getParameter("old_emergencyNumber"));
 		oldProgram.setLocation(request.getParameter("old_location"));
 		oldProgram.setProgramStatus(request.getParameter("old_programStatus"));
-		oldProgram.setBedProgramLinkId(Integer.valueOf(request.getParameter("old_bedProgramLinkId")));
+		oldProgram.setBedProgramLinkId(getParameterAsInteger(request,"old_bedProgramLinkId",null));
 		oldProgram.setManOrWoman(request.getParameter("old_manOrWoman"));
 		oldProgram.setAbstinenceSupport(request.getParameter("old_abstinenceSupport"));
 		oldProgram.setExclusiveView(request.getParameter("old_exclusiveView"));
 
-		oldProgram.setHoldingTank(Boolean.valueOf(request.getParameter("old_holdingTank")));
-		oldProgram.setAllowBatchAdmission(Boolean.valueOf(request.getParameter("old_allowBatchAdmission")));
-		oldProgram.setAllowBatchDischarge(Boolean.valueOf(request.getParameter("old_allowBatchDischarge")));
-		oldProgram.setHic(Boolean.valueOf(request.getParameter("old_hic")));
-		oldProgram.setTransgender(Boolean.valueOf(request.getParameter("old_transgender")));
-		oldProgram.setFirstNation(Boolean.valueOf(request.getParameter("old_firstNation")));
-		oldProgram.setBedProgramAffiliated(Boolean.valueOf(request.getParameter("old_bedProgramAffiliated")));
-		oldProgram.setAlcohol(Boolean.valueOf(request.getParameter("old_alcohol")));
-		oldProgram.setPhysicalHealth(Boolean.valueOf(request.getParameter("old_physicalHealth")));
-		oldProgram.setMentalHealth(Boolean.valueOf(request.getParameter("old_mentalHealth")));
-		oldProgram.setHousing(Boolean.valueOf(request.getParameter("old_housing")));
-		oldProgram.setHousing(Boolean.valueOf(request.getParameter("old_facility_id")));
+		oldProgram.setHoldingTank(getParameterAsBoolean(request,"old_holdingTank"));
+		oldProgram.setAllowBatchAdmission(getParameterAsBoolean(request,"old_allowBatchAdmission"));
+		oldProgram.setAllowBatchDischarge(getParameterAsBoolean(request,"old_allowBatchDischarge"));
+		oldProgram.setHic(getParameterAsBoolean(request,"old_hic"));
+		oldProgram.setTransgender(getParameterAsBoolean(request,"old_transgender"));
+		oldProgram.setFirstNation(getParameterAsBoolean(request,"old_firstNation"));
+		oldProgram.setBedProgramAffiliated(getParameterAsBoolean(request,"old_bedProgramAffiliated"));
+		oldProgram.setAlcohol(getParameterAsBoolean(request,"old_alcohol"));
+		oldProgram.setPhysicalHealth(getParameterAsBoolean(request,"old_physicalHealth"));
+		oldProgram.setMentalHealth(getParameterAsBoolean(request,"old_mentalHealth"));
+		oldProgram.setHousing(getParameterAsBoolean(request,"old_housing"));
+		oldProgram.setHousing(getParameterAsBoolean(request,"old_facility_id"));
 
 		if (isChanged(program, oldProgram)) {
 			ProgramSignature programSignature = new ProgramSignature();
