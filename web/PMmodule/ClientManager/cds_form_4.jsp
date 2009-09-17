@@ -254,8 +254,8 @@
 	</table>
 
 	<br />
-	Sign <input type"checkbox" name="sign" />
-	<br />
+	Sign <input type="checkbox" name="sign" />
+	<br /><br />
 
 	<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
 	<input type="submit" value="Save" />
