@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +11,6 @@ import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.oscarehr.common.Gender;
 
 /**
  * This entity represents every time a provider fills out or updates a CDS form.
@@ -26,27 +22,23 @@ import org.oscarehr.common.Gender;
  * make a new entity instead of updating an existing one.
  */
 @Entity
-public class CdsClientData implements Serializable {
+public class CdsClientForm implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
+	private String cdsFormVersion=null;
+	private String providerNo = null;
+	private boolean signed=false;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created = new Date();
 	
-	private String cdsFormVersion=null;
-	
-	private String providerNo = null;
-
-	private boolean signed=false;
-	
-	private int admissionId=-1;
-	
-	private int clientAge=-1;
-	
-	@Enumerated(EnumType.STRING)
-	private Gender clientGender=null;
+	private Integer facilityId=null;
+	private Integer clientId=null;
+	private Integer admissionId=null;
+	private Integer clientAge=null;
 	
 	public Integer getId() {
 		return id;
@@ -65,27 +57,11 @@ public class CdsClientData implements Serializable {
     }
 
 	public String getProviderNo() {
-		return providerNo;
-	}
+    	return providerNo;
+    }
 
 	public void setProviderNo(String providerNo) {
-		this.providerNo = providerNo;
-	}
-
-	public int getClientAge() {
-    	return clientAge;
-    }
-
-	public void setClientAge(int clientAge) {
-    	this.clientAge = clientAge;
-    }
-
-	public Gender getClientGender() {
-    	return clientGender;
-    }
-
-	public void setClientGender(Gender clientGender) {
-    	this.clientGender = clientGender;
+    	this.providerNo = providerNo;
     }
 
 	public boolean isSigned() {
@@ -96,15 +72,39 @@ public class CdsClientData implements Serializable {
     	this.signed = signed;
     }
 
-	public int getAdmissionId() {
+	public Integer getFacilityId() {
+    	return facilityId;
+    }
+
+	public void setFacilityId(Integer facilityId) {
+    	this.facilityId = facilityId;
+    }
+
+	public Integer getClientId() {
+    	return clientId;
+    }
+
+	public void setClientId(Integer clientId) {
+    	this.clientId = clientId;
+    }
+
+	public Integer getAdmissionId() {
     	return admissionId;
     }
 
-	public void setAdmissionId(int admissionId) {
+	public void setAdmissionId(Integer admissionId) {
     	this.admissionId = admissionId;
     }
 
-	public boolean equals(CdsClientData o) {
+	public Integer getClientAge() {
+    	return clientAge;
+    }
+
+	public void setClientAge(Integer clientAge) {
+    	this.clientAge = clientAge;
+    }
+
+	public boolean equals(CdsClientForm o) {
 		try {
 			return (id != null && id.intValue() == o.id.intValue());
 		} catch (Exception e) {
