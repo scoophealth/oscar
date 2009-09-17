@@ -490,7 +490,9 @@ function calByLMP() {
         var mm = eval(str_date.substring(eval(str_date.indexOf("/")+1), str_date.lastIndexOf("/")) - 1);
         var yyyy  = str_date.substring(eval(str_date.lastIndexOf("/")+1));
 		var calDate=new Date();
-		calDate.setFullYear(yyyy, mm, dd);
+		calDate.setFullYear(yyyy);
+		calDate.setMonth(mm);
+		calDate.setDate(dd);
 		calDate.setHours("8");
 		var odate = new Date(calDate.getTime() + (280 * 86400000));
 		document.forms[0].pg1_eddByDate.value = odate.getDate() + '/' + (odate.getMonth()+1) + '/' + odate.getFullYear();
