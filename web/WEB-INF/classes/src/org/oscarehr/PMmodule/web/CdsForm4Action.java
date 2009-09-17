@@ -1,5 +1,6 @@
 package org.oscarehr.PMmodule.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.model.CdsClientForm;
@@ -31,6 +32,9 @@ public class CdsForm4Action {
 	
 	public static void addCdsClientFormData(Integer cdsClientFormId, String question, String answer)
 	{
+		answer=StringUtils.trimToNull(answer);
+		if (answer==null) return;
+		
 		CdsClientFormData cdsClientFormData=new CdsClientFormData();
 		
 		cdsClientFormData.setCdsClientFormId(cdsClientFormId);

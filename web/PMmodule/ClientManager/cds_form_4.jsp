@@ -138,13 +138,63 @@
 		<tr>
 			<td class="genericTableHeader">20. Baseline Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
-				UMMMM I'll look at this later
+				<table>
+					<tr>
+						<td>Age of first psychiatric hospitalization</td>
+						<td>
+							<select name="ageOfFirstPsychiatricHospitalization">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "ageOfFirstPsychiatricHospitalization", 120)%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Age at the onset of mental illness</td>
+						<td>
+							<select name="ageOfFirstPsychiatricHospitalization">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "ageOfFirstPsychiatricHospitalization", 120)%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Total number of episodes</td>
+						<td>
+							<select name="baselineTotalNumberOfEpisodes">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "baselineTotalNumberOfEpisodes", 999)%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Total number of hospitalised days</td>
+						<td>
+							<select name="baselineTotalNumberOfHospitalisedDays">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "baselineTotalNumberOfHospitalisedDays", 999)%>
+							</select>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
-				UMMMM I'll look at this later
+				<table>
+					<tr>
+						<td>Total number of episodes</td>
+						<td>
+							<select name="currentTotalNumberOfEpisodes">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfEpisodes", 999)%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Total number of hospitalised days</td>
+						<td>
+							<select name="currentTotalNumberOfHospitalisedDays">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfHospitalisedDays", 999)%>
+							</select>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 		<tr>
@@ -207,7 +257,7 @@
 			<td class="genericTableHeader">27.Current Employment Status</td>
 			<td class="genericTableData">
 				<select name="currentEmploymentStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"))%>
+					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("026")/* 026 is on purpose as 027 includes things I need to report on */)%>
 				</select>
 			</td>
 		</tr>

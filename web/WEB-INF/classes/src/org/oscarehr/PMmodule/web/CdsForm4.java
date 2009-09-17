@@ -45,15 +45,7 @@ public class CdsForm4 {
 	        	cdsClientForm.setClientAge(MiscUtils.calculateAge(demographic.getBirthDay()));
 	        } catch (Exception e) {
 		        // it's okay leave it as null, no known age.
-	        }
-	        
-	        
-//			try {
-//			cdsClientForm.setClientGender(Gender.valueOf(demographic.getSex()));
-//        } catch (Exception e) {
-//	        // it's okay leave it as null, no known gender.
-//        }
-//
+	        }	        
 		}
 		
 		return(cdsClientForm);
@@ -102,6 +94,39 @@ public class CdsForm4 {
 			String selected=(CdsClientFormData.containsAnswer(existingAnswers, option.getCdsDataCategory())?"selected=\"selected\"":"");
 
 			sb.append("<option "+selected+" value=\""+StringEscapeUtils.escapeHtml(option.getCdsDataCategory())+"\" title=\""+htmlEscapedName+"\">"+lengthLimitedEscapedName+"</option>");
+		}
+		
+		return(sb.toString());
+	}
+
+	/**
+	 * This method is meant to return a bunch of html <option> tags for each list element.
+	 */
+	public static String renderNumbersAsSelectOptions(Integer cdsClientFormId, String question, int maxNumber)
+	{
+		List<CdsClientFormData> existingAnswers=getAnswers(cdsClientFormId, question);
+
+		StringBuilder sb=new StringBuilder();
+
+		for (int i=-1; i<maxNumber; i++)
+		{
+			String value=String.valueOf(i);
+			String label=value;
+			
+			if (i==-1) 
+			{
+				value="";
+				label="Unknown / refused to answer";
+			}
+			
+			if (i==0) 
+			{
+				label="none";
+			}
+			
+			String selected=(CdsClientFormData.containsAnswer(existingAnswers, value)?"selected=\"selected\"":"");
+			
+			sb.append("<option "+selected+" value=\""+value+"\" title=\""+label+"\">"+label+"</option>");
 		}
 		
 		return(sb.toString());
