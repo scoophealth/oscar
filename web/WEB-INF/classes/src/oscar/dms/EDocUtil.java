@@ -407,6 +407,8 @@ public class EDocUtil extends SqlUtilBaseS {
 
                list.add(currentdoc);
             }
+            rs.close();
+            db.CloseConn();
        }catch(Exception e){
            e.printStackTrace();
        }
