@@ -266,11 +266,7 @@ function showHideBillPref() {
 </TABLE>
 
 <table width="100%" BGCOLOR="eeeeee">
-     <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="no">
-	<tr> 
-    <TD align="center"><a href=# onClick ="popupPage(230,600,'../casemgmt/newCaseManagementEnable.jsp');return false;">Enable OSCAR CME UI</a> &nbsp;&nbsp;&nbsp; 
-  </tr>
-   </oscar:oscarPropertiesCheck>
+     
   <tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
   </tr>
