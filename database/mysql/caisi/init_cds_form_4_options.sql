@@ -3,7 +3,7 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','006-03','Other');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-01','Unique individuals - admitted');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-02','Unique individuals - pre-admission');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-03','Individuals– not uniquely identified');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-03','Individuals- not uniquely identified');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','007-04','Multiple Admission for Uniquely Identified Individuals');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','07a-01','Individuals Waiting for Initial Assessment');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','07a-02','Days Waited for Initial Assessment');
@@ -280,11 +280,11 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-09','Long-Term Care Facility/Nursing Home');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-10','Municipal Non-Profit Housing');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-11','Private Non-Profit Housing');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-12','Private House/ Apt. – SR Owned /Market Rent');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-13','Private House/ Apt. – Other / Subsidized');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-12','Private House/ Apt. - SR Owned /Market Rent');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-13','Private House/ Apt. - Other / Subsidized');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-14','Retirement Home/Senior\'s Residence');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-15','Rooming/ Boarding House');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-16','Supportive Housing – Congregate Living');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-16','Supportive Housing - Congregate Living');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-17','Supportive Housing - Assisted Living');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-18','Other');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','024-19','Unknown or Service Recipient Declined');
@@ -304,11 +304,11 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-09','Long-Term Care Facility/Nursing Home');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-10','Municipal Non-Profit Housing');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-11','Private Non-Profit Housing');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-12','Private House/ Apt. – SR Owned /Market Rent');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-13','Private House/ Apt. – Other / Subsidized');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-12','Private House/ Apt. - SR Owned /Market Rent');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-13','Private House/ Apt. - Other / Subsidized');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-14','Retirement Home/Senior\'s Residence');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-15','Rooming/ Boarding House');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-16','Supportive Housing – Congregate Living');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-16','Supportive Housing - Congregate Living');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-17','Supportive Housing - Assisted Living');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-18','Other');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','025-19','Unknown or Service Recipient Declined');
@@ -322,7 +322,7 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-03','Alternative Businesses');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-04','Sheltered Workshop');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-05','Non-Paid Work Experience');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-06','No employment – Other Activity');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-06','No employment - Other Activity');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-07','Casual / Sporadic');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-08','No employment of any kind');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','026-09','Unknown or Service Recipient Declined');
@@ -331,7 +331,7 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-03','Alternative businesses');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-04','Sheltered Workshop');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-05','Non-Paid Work Experience');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-06','No employment – Other Activity');
+insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-06','No employment - Other Activity');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-07','Casual / Sporadic');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-08','No employment of any kind');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','027-09','Unknown or Service Recipient Declined');
