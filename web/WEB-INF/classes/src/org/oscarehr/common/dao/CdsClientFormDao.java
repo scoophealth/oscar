@@ -29,12 +29,13 @@ public class CdsClientFormDao extends AbstractDao {
 
 	public CdsClientForm findLatestByFacilityClient(Integer facilityId, Integer clientId) {
 
-		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.clientId=?2 order by x.created desc limit 1";
+		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.clientId=?2 order by x.created desc";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, clientId);
-
+		query.setMaxResults(1);
+		
 		return ((CdsClientForm)getSingleResultOrNull(query));
 	}
 
