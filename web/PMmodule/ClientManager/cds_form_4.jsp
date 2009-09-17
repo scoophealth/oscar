@@ -15,7 +15,7 @@
 
 	<br />
 
-	<table style="border:solid black 1px;margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
+	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
 		<tr>
 			<td class="genericTableHeader">Select corresponding admission</td>
 			<td class="genericTableData">
@@ -301,16 +301,19 @@
 				</select>
 			</td>
 		</tr>
+		<tr style="background-color:white">
+			<td colspan="2">
+				<br />
+				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
+				Sign <input type="checkbox" name="signed" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="submit" value="Save" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" value="Cancel" onclick="history.go(-1)" />
+			</td>
+		</tr>
 	</table>
 
-	<br />
-	Sign <input type="checkbox" name="signed" />
-	<br /><br />
-
-	<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
-	<input type="submit" value="Save" />
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<input type="button" value="Cancel" onclick="history.go(-1)" />
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
