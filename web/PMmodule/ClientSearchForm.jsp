@@ -170,7 +170,7 @@
 		<display:column sortable="true" title="Gender" sortProperty="sexDesc">
 			<c:out value="${client.sexDesc}" />
 		</display:column>
-		<display:column sortable="true" title="Active">
+		<display:column sortable="true" title="Admitted to Bed Program">
 			<logic:equal value="0" property="activeCount" name="client">No</logic:equal>
 			<logic:notEqual value="0" property="activeCount" name="client">Yes</logic:notEqual>
 		</display:column>
