@@ -41,8 +41,26 @@
 
 <%@page import="java.text.DateFormatSymbols"%><h1>CDS Reports</h1>
 
-<form method="post" action="cds_report_export.jsp">
+<script type="text/javascript">
+<!--
+	function setAction(form)
+	{
+		var cdsVersion=form.elements.cdsVersion.value;
+		form.action='cds_'+cdsVersion+'_report_export.jsp'
+	}
+//-->
+</script>
+
+<form method="post" action="" onsubmit="setAction(this)">
 	<table>
+		<tr>
+			<td>CDS version</td>
+			<td>
+				<select name="cdsVersion">
+					<option value="4">CDS-MH 4.x</option>
+				</select>
+			</td>
+		</tr>
 		<tr>
 			<td>Program to report on</td>
 			<td>

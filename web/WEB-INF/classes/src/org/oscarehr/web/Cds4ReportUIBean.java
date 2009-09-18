@@ -23,19 +23,20 @@ package org.oscarehr.web;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.common.dao.CdsFormOptionDao;
+import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.util.SpringUtils;
 
-public class CdsReportUIBean {
+public class Cds4ReportUIBean {
 
-	private static Logger logger = LogManager.getLogger(CdsReportUIBean.class);
-
+	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
-
+	
+	private static final char ROW_TERMINATOR='>';
+	
 	/**
-	 * End dates should be teated as inclusive.
+	 * End dates should be treated as inclusive.
 	 */
 	public static ArrayList<String> getAsciiExportData(int programId, int startYear, int startMonth, int endYear, int endMonth)
 	{
@@ -45,9 +46,47 @@ public class CdsReportUIBean {
 		
 		ArrayList<String> results=new ArrayList<String>();
 		
-		String temp="blah : "+programId+" : "+startDate+" : "+endDate;
-		results.add(temp);
+		results.add(getHeader(programId)+ROW_TERMINATOR);
+		
+		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4"))
+		{
+			results.add(dataLine(programId, startDate, endDate, cdsFormOption)+ROW_TERMINATOR);
+		}
 		
 		return(results);
+	}
+	
+	private static String dataLine(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
+
+		StringBuilder sb=new StringBuilder();
+		
+		sb.append("incomplete_");
+		
+		sb.append(cdsFormOption.getCdsDataCategory());
+		
+		return(sb.toString());
+    }
+
+	public static String getFilename(int programId)
+	{
+		// stubbed for now
+	    // ooooopppppfff.Txt
+		// Where:
+		//      ooooo is the MOHLTC assigned Service Organization number
+		//      ppppp is the MOHLTC assigned Program number
+		//      fff is the CDS-MH Function Code
+
+		return(getHeader(programId)+".Txt");
+	}
+
+	private static String getHeader(int programId)
+	{
+	    // ooooopppppfff
+		// Where:
+		//      ooooo is the MOHLTC assigned Service Organization number
+		//      ppppp is the MOHLTC assigned Program number
+		//      fff is the CDS-MH Function Code
+		
+		return("incomplete_ooooopppppfff");
 	}
 }

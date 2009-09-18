@@ -1,7 +1,7 @@
 
 <%@page import="java.io.PrintWriter"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="org.oscarehr.web.CdsReportUIBean"%><%-- 
+<%@page import="org.oscarehr.web.Cds4ReportUIBean"%><%-- 
 /*
 * Copyright (c) 2007-2009. CAISI, Toronto. All Rights Reserved.
 * This software is published under the GPL GNU General Public License. 
@@ -31,10 +31,10 @@
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
 	int programId = Integer.parseInt(request.getParameter("programId"));
 	
-	ArrayList<String> results=CdsReportUIBean.getAsciiExportData(programId, startYear, startMonth, endYear, endMonth);
+	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(programId, startYear, startMonth, endYear, endMonth);
 	
 	response.setContentType("application/x-download");
-	response.setHeader("Content-Disposition", "attachment; filename=provider_service_.csv");
+	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(programId)+"");
 	PrintWriter responseWriter=response.getWriter();
 	
 	for (String s : results)
