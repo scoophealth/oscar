@@ -146,6 +146,9 @@ public class RxDrugRef {
 	 Vector params = new Vector();
 	 params.addElement(pKey);
 	 Vector vec = (Vector) callWebserviceLite("get_form",params);
+         //if (vec == null || vec.isEmpty()){
+         //    return null;
+         //}
 	 Hashtable returnVal = (Hashtable) vec.get(0);
 	 return returnVal;
      }
@@ -166,8 +169,15 @@ public class RxDrugRef {
      
      public Hashtable getGenericName(String pKey)throws Exception{
          Vector params = new Vector();
-         params.addElement(pKey);        
-         Vector vec = (Vector) callWebserviceLite("get_generic_name",params);             
+         params.addElement(pKey);
+
+        // System.out.println("pkey for RxDrugRef.getGenericName :"+pKey);
+         Vector vec = (Vector) callWebserviceLite("get_generic_name",params);
+       //  if (vec == null || vec.isEmpty()){
+
+       //      System.out.println("going to throw an error from RxDrugRef.getGenericName "+pKey);
+        //     return null;
+       //  }
          Hashtable returnVal = (Hashtable) vec.get(0);         
          return returnVal;		         
      }	
@@ -207,9 +217,16 @@ public class RxDrugRef {
      public Vector list_drug_element(String searchStr) throws Exception{
          Vector params = new Vector();
          params.addElement(searchStr);
-         Vector vec = (Vector) callWebserviceLite("list_search_element",params);             
+         Vector vec = (Vector) callWebserviceLite("list_search_element",params);
          return vec;		         
-     }	
+     }
+
+     public Vector list_drug_element2(String searchStr) throws Exception{
+         Vector params = new Vector();
+         params.addElement(searchStr);
+         Vector vec = (Vector) callWebserviceLite("list_search_element2",params);
+         return vec;
+     }
      
      /**
      returns all matching search element names, ids and categoeis for the given searchString
