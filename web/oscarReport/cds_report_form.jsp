@@ -1,0 +1,129 @@
+<%-- 
+/*
+* Copyright (c) 2007-2009. CAISI, Toronto. All Rights Reserved.
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. 
+* 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. 
+* 
+* You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+* 
+* This software was written for 
+* CAISI, 
+* Toronto, Ontario, Canada 
+*/
+--%>
+<%@page import="java.util.*"%>
+<%@page import="org.caisi.dao.*"%>
+<%@page import="org.caisi.model.*"%>
+<%@page import="org.oscarehr.common.dao.SecRoleDao"%>
+<%@page import="org.oscarehr.common.model.SecRole"%>
+<%@page import="org.oscarehr.PMmodule.model.*"%>
+<%@page import="org.oscarehr.PMmodule.dao.*"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+
+<%
+	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	
+	List<Program> allPrograms=programDao.getAllActivePrograms();
+%>
+
+<%@include file="/layouts/caisi_html_top.jspf"%>
+
+
+<%@page import="java.text.DateFormatSymbols"%><h1>CDS Reports</h1>
+
+<form method="post" action="cds_report_export.jsp">
+	<table>
+		<tr>
+			<td>Program to report on</td>
+			<td>
+				<select name="programId">
+					<%
+						for (Program program : allPrograms)
+						{
+							if (program.isBed() || program.isService())
+							{
+								%>
+									<option value="<%=program.getId() %>"><%=program.getName()%></option>
+								<%
+							}
+						}
+					%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Date Range Start</td>
+			<td>
+				<select name="startYear">
+				<%
+					GregorianCalendar cal=new GregorianCalendar();
+					int year=cal.get(GregorianCalendar.YEAR);
+					for (int i=0; i<10; i++)
+					{
+						%>
+							<option value="<%=year-i%>"><%=year-i%></option>
+						<%
+					}
+				%>
+				</select>
+				-
+				<select name="startMonth">
+				<%
+					DateFormatSymbols dateFormatSymbols=DateFormatSymbols.getInstance();
+					String[] months=dateFormatSymbols.getShortMonths();
+					
+					for (int i=1; i<13; i++)
+					{
+						%>
+							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+						<%
+					}
+				%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Date Range End (inclusive)</td>
+			<td>
+				<select name="endYear">
+				<%
+					for (int i=0; i<10; i++)
+					{
+						%>
+							<option value="<%=year-i%>"><%=year-i%></option>
+						<%
+					}
+				%>
+				</select>
+				-
+				<select name="endMonth">
+				<%
+					for (int i=1; i<13; i++)
+					{
+						%>
+							<option value="<%=i%>" title="<%=months[i-1]%>"><%=i%></option>
+						<%
+					}
+				%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Generate Report" /></td>
+		</tr>
+	</table>	
+</form>
+
+
+<%@include file="/layouts/caisi_html_bottom.jspf"%>
