@@ -10,6 +10,7 @@ import org.oscarehr.decisionSupport.model.impl.drools.DSGuidelineDrools;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Attribute;
@@ -61,6 +62,16 @@ public class DSGuidelineFactory {
                 throw new DecisionSupportParseException(guidelineTitle, "Cannot recognize condition type: '" + conditionTypeStr + "'.  Known types: " + knownTypes, iae);
             }
 
+            Hashtable paramHashtable = new Hashtable();
+            List<Element> paramList = conditionTag.getChildren("param");
+            if (paramList != null){
+                for (Element param :paramList){
+                    String key   = param.getAttributeValue("key");
+                    String value = param.getAttributeValue("value");
+                    paramHashtable.put(key, value);
+                }
+            }
+
             List<Attribute> attributes = conditionTag.getAttributes();
             for (Attribute attribute: attributes) {
                 if (attribute.getName().equalsIgnoreCase("type")) continue;
@@ -73,6 +84,11 @@ public class DSGuidelineFactory {
                 DSCondition dsCondition = new DSCondition();
                 dsCondition.setConditionType(conditionType);
                 dsCondition.setListOperator(operator); //i.e. any, all, not
+                if (paramHashtable != null && !paramHashtable.isEmpty()){
+                    System.out.println("THIS IS THE HASH STRING "+paramHashtable.toString());
+                    dsCondition.setParam(paramHashtable);
+                }
+
                 dsCondition.setValues(DSValue.createDSValues(attribute.getValue())); //i.e. icd9:3020,icd9:3021,icd10:5022
                 conditions.add(dsCondition);
             }
