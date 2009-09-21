@@ -5,6 +5,7 @@
 
 package org.oscarehr.decisionSupport.model;
 
+import java.util.Hashtable;
 import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -14,12 +15,45 @@ import org.apache.commons.lang.StringUtils;
  * @author apavel
  */
 public class DSCondition {
+
+    /**
+     * @return the param
+     */
+    public Hashtable getParam() {
+        return param;
+    }
+
+    /**
+     * @param param the param to set
+     */
+    public void setParam(Hashtable param) {
+        this.param = param;
+    }
+
+    /**
+     * @return the label
+     */
+    public String getLabel() {
+        System.out.println("getting label in "+this.hashCode());
+        return label;
+    }
+
+    /**
+     * Label is used to match the asserted value in the drools engine
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        System.out.println("Setting label in "+this.hashCode());
+        this.label = label;
+    }
     
     public enum ListOperator {any, all, not, notany, notall}
 
     protected DSDemographicAccess.Module module;
     protected ListOperator listOperator;
     protected List<DSValue> values;
+    private Hashtable param = null;
+    private String label = null;
 
     
     /**
