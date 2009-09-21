@@ -20,17 +20,24 @@
 
 package org.oscarehr.web;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
 import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.AbstractPlatformTransactionManager;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 public class Cds4ReportUIBean {
 
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
+	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	
 	private static final char ROW_TERMINATOR='>';
@@ -48,21 +55,58 @@ public class Cds4ReportUIBean {
 		
 		results.add(getHeader(programId)+ROW_TERMINATOR);
 		
-		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4"))
+		// generate list of latest signed cdsClientFormIds for this form version and put into temp table.		
+		// we need our own connection/transaction so the temp table stays populated and valid.
+		AbstractPlatformTransactionManager txManager = (AbstractPlatformTransactionManager)SpringUtils.getBean("txManager");
+		TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED));
+		try
 		{
-			results.add(dataLine(programId, startDate, endDate, cdsFormOption)+ROW_TERMINATOR);
+			cdsClientFormDao.populateTempTableWithLatestSignedCdsForm(programId, startDate, endDate);
+			
+			for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4"))
+			{
+				results.add(getDataLine(programId, startDate, endDate, cdsFormOption)+ROW_TERMINATOR);
+			}
+
+			txManager.commit(status);
+		}
+		finally
+		{
+			if (!status.isCompleted()) txManager.rollback(status);
 		}
 		
 		return(results);
 	}
 	
-	private static String dataLine(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
+	private static String getDataLine(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
 
+		if (cdsFormOption.getCdsDataCategory().startsWith("008-"))
+		{
+			String result=getDataLine007(programId, startDate, endDate, cdsFormOption);
+			return(result);
+		}
+		else
+		{
+			StringBuilder sb=new StringBuilder();
+			
+			sb.append("incomplete_");
+			sb.append(cdsFormOption.getCdsDataCategory());
+
+			return(sb.toString());
+		}
+    }
+
+	
+	private static String getDataLine007(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
 		StringBuilder sb=new StringBuilder();
 		
 		sb.append("incomplete_");
-		
 		sb.append(cdsFormOption.getCdsDataCategory());
+
+		if ("007-01".equals(cdsFormOption.getCdsDataCategoryName()))
+		{
+			// unique individuals
+		}
 		
 		return(sb.toString());
     }

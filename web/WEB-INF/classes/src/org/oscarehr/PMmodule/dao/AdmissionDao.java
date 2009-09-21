@@ -548,4 +548,29 @@ public class AdmissionDao extends HibernateDaoSupport {
 
         return 0;
     }
+
+    /**
+     * Get anyone who was in the program during this time period.
+     */
+    public List<Admission> getAdmissionsByProgramAndDate(int programId, Date startDate, Date endDate) {
+    	// the following is a chart where A/D is admission discharge date.
+    	// S/E is start or end date for the time period.
+    	// the y/n is yes or no for valid with in the time period.
+    	// as you can see we only need to exclude where endDate>admissionDate || startDate<dischargeDate
+    	//======================
+    	//          A-------D
+		//	n-   SE
+		//	y-   S      E
+		//	y-         SE
+		//	y-         S       E
+		//	n-                SE
+		//	y-   S             E
+
+		String q = "FROM Admission a WHERE a.programId=? and a.admissionDate<=? and a.dischargeDate>=?";
+
+		@SuppressWarnings("unchecked")
+        List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), endDate, startDate });
+        
+		return rs;
+    }
 }
