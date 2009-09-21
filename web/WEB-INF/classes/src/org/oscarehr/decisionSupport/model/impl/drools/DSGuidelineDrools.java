@@ -56,6 +56,14 @@ public class DSGuidelineDrools extends DSGuideline {
             //System.out.println("isSexAny(\"F\")" + dsDemographicAccess.isSexAny("F"));
             //System.out.println("Note contains: " + dsDemographicAccess.noteContainsAny("test"));
             workingMemory.assertObject(dsDemographicAccess);
+
+            for(DSCondition dsc :this.getConditions()){
+                if (dsc.getParam() != null && !dsc.getParam().isEmpty()){
+                    System.out.println("PARAM:"+dsc.getParam().toString());
+                    workingMemory.assertObject(dsc.getParam());
+                }
+            }
+
             workingMemory.fireAllRules();
             if (dsDemographicAccess.isPassedGuideline()) {
                 List<DSConsequence> returnDsConsequences = new ArrayList();
@@ -78,7 +86,14 @@ public class DSGuidelineDrools extends DSGuideline {
     public void generateRuleBase() throws DecisionSupportException {
         ArrayList<Element> rules = new ArrayList();
         ArrayList<Element> conditionElements = new ArrayList();
+        
+        int paramCount=0;
+       
         for (DSCondition condition: this.getConditions()) {
+            if (condition.getParam() != null && !condition.getParam().isEmpty()){
+                condition.setLabel("param"+paramCount);
+                paramCount++;
+            }
             Element conditionElement = getDroolsCondition(condition);
             conditionElements.add(conditionElement);
         }
@@ -108,6 +123,18 @@ public class DSGuidelineDrools extends DSGuideline {
         accessClassParameter.addContent(accessClass);
         ruleElement.addContent(accessClassParameter);
 
+        
+        for (DSCondition condition: this.getConditions()) {
+            if (condition.getParam() != null && !condition.getParam().isEmpty()){
+                Element paramsHashEle = new Element("parameter", namespace);
+                paramsHashEle.setAttribute("identifier", condition.getLabel());
+                Element paramClass = new Element("class", namespace);
+                paramClass.addContent("java.util.Hashtable");
+                paramsHashEle.addContent(paramClass);
+                ruleElement.addContent(paramsHashEle);   
+            }
+        }
+
         ruleElement.addContent(conditionElements);
         ruleElement.addContent(consequenceElement);
         return ruleElement;
@@ -125,7 +152,13 @@ public class DSGuidelineDrools extends DSGuideline {
         Element javaCondition = new Element("condition", javaNamespace);
         String parameters = "\"" + StringUtils.join(condition.getValues(), ",") + "\"";
         accessMethod = accessMethod + StringUtils.capitalize(condition.getListOperator().name());
-        String functionStr = "a." + accessMethod + "(" + parameters + ")";
+        String functionStr = "a." + accessMethod + "(" + parameters; // + ")";
+        if( condition.getParam() != null && !condition.getParam().isEmpty()){
+            //functionStr += ",\"" +condition.getParam().toString()+"\"";
+            functionStr += ","+condition.getLabel();
+        }
+        functionStr += ")";
+
         javaCondition.addContent(functionStr);
         return javaCondition;
     }
