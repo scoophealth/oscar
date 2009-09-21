@@ -558,15 +558,16 @@ public class AdmissionDao extends HibernateDaoSupport {
     	// the y/n is yes or no for valid with in the time period.
     	// as you can see we only need to exclude where endDate>admissionDate || startDate<dischargeDate
     	//======================
-    	//          A-------D
+    	// time T(0)---------->T(n)
+    	//          A------>D
 		//	n-   SE
-		//	y-   S      E
+		//	y-   S----->E
 		//	y-         SE
-		//	y-         S       E
+		//	y-         S------>E
 		//	n-                SE
-		//	y-   S             E
+		//	y-   S------------>E
 
-		String q = "FROM Admission a WHERE a.programId=? and a.admissionDate<=? and a.dischargeDate>=?";
+		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate<=? and a.DischargeDate>=?";
 
 		@SuppressWarnings("unchecked")
         List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), endDate, startDate });

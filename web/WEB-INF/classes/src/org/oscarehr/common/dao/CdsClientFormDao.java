@@ -19,25 +19,18 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.model.CdsClientForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class CdsClientFormDao extends AbstractDao {
 
-	@Autowired
-	private AdmissionDao admissionDao=null;
-	
 	public CdsClientForm findLatestByFacilityClient(Integer facilityId, Integer clientId) {
 
 		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.clientId=?2 order by x.created desc";
@@ -50,58 +43,30 @@ public class CdsClientFormDao extends AbstractDao {
 		return ((CdsClientForm)getSingleResultOrNull(query));
 	}
 
-	/**
-	 * transaction is mandatory as it populates a temp table for other calls to use.
-	 */
-	@Transactional(propagation=Propagation.MANDATORY)
-	public void populateTempTableWithLatestSignedCdsForm(int programId, GregorianCalendar startDate, GregorianCalendar endDate) {
+	public List<CdsClientForm> findLatestSignedCdsForms(List<Admission> admissions, String formVersion) {
 		
-		List<Admission> admissions=admissionDao.getAdmissionsByProgramAndDate(programId, startDate.getTime(), endDate.getTime());
-
-		createTempTable();
-
+		ArrayList<CdsClientForm> cdsForms=new ArrayList<CdsClientForm>();
+		
 		for (Admission admission : admissions)
 		{
-			CdsClientForm latestForm=findLatestBySignedAndAdmission(admission.getId().intValue());
-			insertIntoTempTable(latestForm.getAdmissionId());
+			CdsClientForm latestForm=findLatestBySignedAndAdmission(admission.getId().intValue(), formVersion);
+			if (latestForm!=null) cdsForms.add(latestForm);
 		}		
 
+		return(cdsForms);
     }
 
-	@Transactional(propagation=Propagation.MANDATORY)
-	private void insertIntoTempTable(Integer cdsClientFormId)
+	public CdsClientForm findLatestBySignedAndAdmission(Integer admissionId, String formVersion)
 	{
-		String sqlCommand="insert into validCdsClientForms values (?)";
-		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, cdsClientFormId);
-		query.executeUpdate();
-	}
-	
-	@Transactional(propagation=Propagation.MANDATORY)
-	private void createTempTable()
-	{
-		String sqlCommand="create temporary table validCdsClientForms (cdsClientFormId int primary key)";
-		Query query = entityManager.createQuery(sqlCommand);
-		query.executeUpdate();
-	}
-	
-	public CdsClientForm findLatestBySignedAndAdmission(Integer admissionId)
-	{
-		String sqlCommand="select x from CdsClientForm x where admissionId=? and signed=? order by created desc";
+		String sqlCommand="select x from CdsClientForm x where admissionId=?1 and signed=?2 and cdsFormVersion=?3 order by created desc";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, admissionId);
 		query.setParameter(2, true);
+		query.setParameter(3, formVersion);
 		query.setMaxResults(1);
 		
 		return((CdsClientForm)query.getSingleResult());
 	}
 	
-	@Transactional(propagation=Propagation.MANDATORY)
-	public int countUniqueIndividualsMultipleAdmission()
-	{
-		String sqlCommand="";
-		
-		return -1;
-	}
 }

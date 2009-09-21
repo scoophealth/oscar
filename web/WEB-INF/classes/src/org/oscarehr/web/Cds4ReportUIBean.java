@@ -20,25 +20,27 @@
 
 package org.oscarehr.web;
 
-import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
-import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
+import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.CdsFormOption;
+import org.oscarehr.util.AccumulatorMap;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 public class Cds4ReportUIBean {
 
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
-	private static ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
+	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	
 	private static final char ROW_TERMINATOR='>';
 	
@@ -51,61 +53,81 @@ public class Cds4ReportUIBean {
 		GregorianCalendar endDate=new GregorianCalendar(endYear, endMonth, 1);
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
 		
-		ArrayList<String> results=new ArrayList<String>();
-		
-		results.add(getHeader(programId)+ROW_TERMINATOR);
-		
-		// generate list of latest signed cdsClientFormIds for this form version and put into temp table.		
-		// we need our own connection/transaction so the temp table stays populated and valid.
-		AbstractPlatformTransactionManager txManager = (AbstractPlatformTransactionManager)SpringUtils.getBean("txManager");
-		TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED));
-		try
-		{
-			cdsClientFormDao.populateTempTableWithLatestSignedCdsForm(programId, startDate, endDate);
-			
-			for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4"))
-			{
-				results.add(getDataLine(programId, startDate, endDate, cdsFormOption)+ROW_TERMINATOR);
-			}
+		ArrayList<String> asciiTextFileRows=new ArrayList<String>();
+		asciiTextFileRows.add(getHeader(programId)+ROW_TERMINATOR);
 
-			txManager.commit(status);
-		}
-		finally
+		List<Admission> admissions=admissionDao.getAdmissionsByProgramAndDate(programId, startDate.getTime(), endDate.getTime());
+		List<CdsClientForm> cdsForms=cdsClientFormDao.findLatestSignedCdsForms(admissions, "4");
+		
+		// put admissions into map so it's easier to retrieve by id.
+		HashMap<Integer,Admission> admissionMap=new HashMap<Integer,Admission>();
+		for (Admission admission : admissions) admissionMap.put(admission.getId().intValue(), admission);
+		
+		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4"))
 		{
-			if (!status.isCompleted()) txManager.rollback(status);
+			asciiTextFileRows.add(cdsFormOption.getCdsDataCategory()+getDataLine(cdsFormOption, cdsForms, admissionMap)+ROW_TERMINATOR);
 		}
 		
-		return(results);
+		return(asciiTextFileRows);
 	}
 	
-	private static String getDataLine(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
+	private static String getDataLine(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
 
-		if (cdsFormOption.getCdsDataCategory().startsWith("008-"))
+		if (cdsFormOption.getCdsDataCategory().startsWith("007-"))
 		{
-			String result=getDataLine007(programId, startDate, endDate, cdsFormOption);
+			String result=getDataLine007(cdsFormOption, cdsForms, admissionMap);
 			return(result);
 		}
 		else
 		{
 			StringBuilder sb=new StringBuilder();
 			
-			sb.append("incomplete_");
-			sb.append(cdsFormOption.getCdsDataCategory());
+			sb.append("*****INCOMPLETED*****");
 
 			return(sb.toString());
 		}
     }
 
 	
-	private static String getDataLine007(int programId, GregorianCalendar startDate, GregorianCalendar endDate, CdsFormOption cdsFormOption) {
+	private static String getDataLine007(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
 		StringBuilder sb=new StringBuilder();
 		
-		sb.append("incomplete_");
-		sb.append(cdsFormOption.getCdsDataCategory());
-
-		if ("007-01".equals(cdsFormOption.getCdsDataCategoryName()))
+		if ("007-01".equals(cdsFormOption.getCdsDataCategory()))
 		{
-			// unique individuals
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(cdsForms,admissionMap));
+		}
+		
+		return(sb.toString());
+    }
+
+	private static String getCohortCounts(List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+		// okay stupid but we can't just look at the admissions, there might be
+		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
+		
+		// we will use Integer as the cohort year number from 0 to 10
+		AccumulatorMap<Integer> cohortBuckets=new AccumulatorMap<Integer>();
+		
+		for (CdsClientForm form : cdsForms)
+		{
+			Admission admission=admissionMap.get(form.getAdmissionId());
+			Date dischargeDate=new Date(); // default duration calculation to today if not discharged.
+			if (admission.getDischargeDate()!=null) dischargeDate=admission.getDischargeDate();
+			
+			int years=MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
+			if (years>10) years=10; // limit everything above 10 years to the 10 year bucket.
+			
+			cohortBuckets.increment(years);
+		}
+		
+		StringBuilder sb=new StringBuilder();
+		
+		for (int i=0; i<=10; i++)
+		{
+			Integer count=cohortBuckets.get(i);
+			if (count==null) count=0;
+			
+			sb.append(padTo6(count));
 		}
 		
 		return(sb.toString());
@@ -131,6 +153,40 @@ public class Cds4ReportUIBean {
 		//      ppppp is the MOHLTC assigned Program number
 		//      fff is the CDS-MH Function Code
 		
-		return("incomplete_ooooopppppfff");
+		return("incomplete_"+programId+"_ooooopppppfff");
+	}
+	
+	private static String getMultipleAdmissionCount(List<CdsClientForm> cdsForms)
+	{
+		AccumulatorMap<Integer> accumulatorMap=new AccumulatorMap<Integer>();
+		
+		for (CdsClientForm form : cdsForms)
+		{
+			accumulatorMap.increment(form.getClientId());
+		}
+		
+		int multipleAdmissions=0;
+		
+		for (Integer value : accumulatorMap.values())
+		{
+			if (value>1) multipleAdmissions++;
+		}
+		
+		return(padTo6(multipleAdmissions));
+	}
+	
+	private static String padTo6(int i)
+	{
+		StringBuilder sb=new StringBuilder();
+		
+		if (i<9) sb.append("0");
+		if (i<99) sb.append("0");
+		if (i<999) sb.append("0");
+		if (i<9999) sb.append("0");
+		if (i<99999) sb.append("0");
+		
+		sb.append(i);
+		
+		return(sb.toString());
 	}
 }

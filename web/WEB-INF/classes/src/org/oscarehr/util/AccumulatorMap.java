@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * This class is meant to be a map of accumulators. Essentially
- * all this is is a TreeMap<K,Integer> where Long is a counter.
+ * all this is is a TreeMap<K,Integer> where Integer is a counter.
  * non-existant entries have a null value adverse to 0. 
  * This class is unsynchronised.
  */

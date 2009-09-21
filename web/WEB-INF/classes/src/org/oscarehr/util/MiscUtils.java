@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
@@ -83,10 +84,10 @@ public class MiscUtils {
 	}
 	
 	/**
-	 * This mentod should only ever be called by a context startup listener. Other than that, the shutdown signal should be set by the shutdown hook.
+	 * This menthod should only ever be called by a context startup listener. Other than that, the shutdown signal should be set by the shutdown hook.
 	 */
 	protected static void setShutdownSignaled(boolean shutdownSignaled) {
-
+		MiscUtils.shutdownSignaled=shutdownSignaled;
 	}
 
 	public static byte[] propertiesToXmlByteArray(Properties p) throws IOException {
@@ -167,14 +168,44 @@ public class MiscUtils {
 				
 		GregorianCalendar today=new GregorianCalendar();
 		
-		int age=today.get(GregorianCalendar.YEAR)-birthDate.get(GregorianCalendar.YEAR);
+		return(calculateYearDifference(birthDate,today));
+	}
 
-		if (today.get(GregorianCalendar.MONTH)<birthDate.get(GregorianCalendar.MONTH)) age--;
-		else if (today.get(GregorianCalendar.MONTH)==birthDate.get(GregorianCalendar.MONTH))
+	/**
+	 * This method does yearTwo-yearOne to calculate the year difference.
+	 */
+	public static int calculateYearDifference(Date date1, Date date2)
+	{
+		GregorianCalendar cal1=new GregorianCalendar();
+		cal1.setTime(date1);
+		cal1.getTimeInMillis();
+		
+		GregorianCalendar cal2=new GregorianCalendar();
+		cal2.setTime(date2);
+		cal2.getTimeInMillis();
+		
+		return(calculateYearDifference(cal1, cal2));
+	}
+	
+	/**
+	 * This method does yearTwo-yearOne to calculate the year difference.
+	 */
+	public static int calculateYearDifference(GregorianCalendar date1, GregorianCalendar date2)
+	{
+		// example
+		// today = 2009-05-06
+		// birthdate = 2008-06-08
+		// is considered 1 year old
+
+		int diff=date2.get(GregorianCalendar.YEAR)-date1.get(GregorianCalendar.YEAR);
+
+		if (date2.get(GregorianCalendar.MONTH)<date1.get(GregorianCalendar.MONTH)) diff--;
+		else if (date2.get(GregorianCalendar.MONTH)==date1.get(GregorianCalendar.MONTH))
 		{
-			if (today.get(GregorianCalendar.DAY_OF_MONTH)<birthDate.get(GregorianCalendar.DAY_OF_MONTH)) age--;
+			if (date2.get(GregorianCalendar.DAY_OF_MONTH)<date1.get(GregorianCalendar.DAY_OF_MONTH)) diff--;
 		}
 		
-		return(age);
+		return(diff);
+		
 	}
 }

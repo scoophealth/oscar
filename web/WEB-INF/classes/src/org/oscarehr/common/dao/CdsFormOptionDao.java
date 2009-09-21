@@ -32,11 +32,11 @@ public class CdsFormOptionDao extends AbstractDao {
 	/**
 	 * @param formVersion should be the major cds version, i.e. '4' (we're assuming minor versions are compatable, if it's not we can use the full version number instead)
 	 * @param mainCatgeory should be the cds main category, i.e. for '016-06' the main category should be '016'
-	 * @return results are sorted by their name alphabetically   
+	 * @return results are sorted by their name as per in the CDS spec aka insertion order, not alphabetically.   
 	 */
 	public List<CdsFormOption> findByVersionAndCategory(String formVersion, String mainCatgeory) {
 		// build sql string
-		String sqlCommand = "select x from CdsFormOption x where x.cdsFormVersion=?1 and x.cdsDataCategory like ?2 order by x.cdsDataCategoryName";
+		String sqlCommand = "select x from CdsFormOption x where x.cdsFormVersion=?1 and x.cdsDataCategory like ?2 order by x.id";
 
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand);
@@ -55,7 +55,7 @@ public class CdsFormOptionDao extends AbstractDao {
 	 */
 	public List<CdsFormOption> findByVersion(String formVersion) {
 		// build sql string
-		String sqlCommand = "select x from CdsFormOption x where x.cdsFormVersion=?1 order by x.cdsDataCategoryName";
+		String sqlCommand = "select x from CdsFormOption x where x.cdsFormVersion=?1 order by x.id";
 
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand);
