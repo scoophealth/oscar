@@ -118,8 +118,6 @@ if (hasSig){
 
 
 
-doctorName = doctorName.replaceAll("\\d{6}","");
-doctorName = doctorName.replaceAll("\\-","");
 OscarProperties props = OscarProperties.getInstance();
 
 String pracNo = provider.getPractitionerNo();
@@ -171,7 +169,7 @@ ProviderData user = new ProviderData(strUser);
 			<input type="hidden" name="sigDoctorName"
 				value="<%= StringEscapeUtils.escapeHtml(doctorName) %>" /> <!--img src="img/rx.gif" border="0"-->
 			</td>
-			<td valign=top height="100px" id="clinicAddress"><b><%=doctorName %></b><br>
+                        <td valign=top height="100px" id="clinicAddress"><b><%=doctorName%></b><br>
 			<c:choose>
 				<c:when test="${empty infirmaryView_programAddress}">
 					<%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
@@ -255,8 +253,8 @@ ProviderData user = new ProviderData(strUser);
 				</tr>
 				<tr valign=bottom>
 					<td height=25px></td>
-					<td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo == null || pracNo.equals("") ) { %>
-					<% } else { %> Pract. No. <%= pracNo%> <% } %>
+                                        <td height=25px>&nbsp; <%= doctorName%> <% if ( pracNo != null && ! pracNo.equals("") && !pracNo.equalsIgnoreCase("null")) { %>
+                                            Pract. No. <%= pracNo%> <% } %>
 					</td>
 
 

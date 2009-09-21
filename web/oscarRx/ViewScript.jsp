@@ -81,8 +81,7 @@ if(props.getProperty("clinicSatelliteName") != null) {
     }else{
        doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
     }
-    doctorName = doctorName.replaceAll("\\d{6}","");
-    doctorName = doctorName.replaceAll("\\-","");
+
     ClinicData clinic = new ClinicData();
     vecAddressName = new Vector();
     vecAddress = new Vector();
