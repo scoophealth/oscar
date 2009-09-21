@@ -208,7 +208,7 @@ public class ServiceCodeValidationLogic {
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '" + code + "'" +
-          " and billingstatus not in ('D','R','F')";
+          " and billingstatus not in ('D','R','F')";    //TODO:  should be more status here.  Need to investigate
       rs = db.GetSQL(qry);
       int index = 0;
       while (rs.next()) {
