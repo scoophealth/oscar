@@ -251,7 +251,7 @@ function upCaseCtrl(ctrl) {
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formCPSID" />:
 			</td>
-			<td><input type="text" name="CPSID"></td>
+			<td><input type="text" name="practitionerNo"></td>
 		</tr>
 
 		<tr>
