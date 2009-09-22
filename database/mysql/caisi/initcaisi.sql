@@ -2592,7 +2592,7 @@ create table CdsClientForm
 	facilityId int not null,
 	clientId int not null,
 	index(facilityId, clientId),
-	admissionId int not null,
+	admissionId int,
 	index(admissionId),
 	clientAge int,
 	index(clientAge)
