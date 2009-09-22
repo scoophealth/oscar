@@ -369,17 +369,18 @@ public class ManageDocumentAction extends DispatchAction {
             contentType = "application/pdf";
         }
         System.out.println("Content type was set tooo "+contentType);
+        File file = new File(documentDir,d.getDocfilename());
         response.setContentType(contentType);
+        response.setContentLength((int)file.length());
         //response.setHeader("Content-Disposition", "attachment;filename=\"" + filename+ "\"");
         //read the file name.
-        File file = new File(documentDir,d.getDocfilename());
-        //InputFileStream is = 
-        
+        //InputFileStream is =
+        //response.setHeader("Content-disposition","inline; filename=" + d.getDocfilename());
+        response.setHeader("Content-Disposition", "inline; filename=" + d.getDocfilename());
         log.debug("about to Print to stream");
         ServletOutputStream outs = response.getOutputStream();
  
       
-        response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
         BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(file));
 
         byte[] buffer = new byte[1024];
