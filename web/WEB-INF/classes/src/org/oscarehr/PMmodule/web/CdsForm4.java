@@ -184,6 +184,6 @@ public class CdsForm4 {
 	{
 		if (cdsClientFormId==null) return(new ArrayList<CdsClientFormData>()); 
 			
-		return(cdsClientFormDataDao.findAnswers(cdsClientFormId, question));
+		return(cdsClientFormDataDao.findByQuestion(cdsClientFormId, question));
 	}
 }

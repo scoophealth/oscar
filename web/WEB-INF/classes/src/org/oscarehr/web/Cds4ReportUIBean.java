@@ -24,13 +24,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.dao.CdsClientFormDao;
+import org.oscarehr.common.dao.CdsClientFormDataDao;
 import org.oscarehr.common.dao.CdsFormOptionDao;
 import org.oscarehr.common.model.CdsClientForm;
+import org.oscarehr.common.model.CdsClientFormData;
 import org.oscarehr.common.model.CdsFormOption;
 import org.oscarehr.util.AccumulatorMap;
 import org.oscarehr.util.MiscUtils;
@@ -40,6 +43,7 @@ public class Cds4ReportUIBean {
 
 	private static CdsFormOptionDao cdsFormOptionDao = (CdsFormOptionDao) SpringUtils.getBean("cdsFormOptionDao");
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
+	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 	private static AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
 	
 	private static final char ROW_TERMINATOR='>';
@@ -73,51 +77,153 @@ public class Cds4ReportUIBean {
 	
 	private static String getDataLine(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
 
-		if (cdsFormOption.getCdsDataCategory().startsWith("007-"))
-		{
-			String result=getDataLine007(cdsFormOption, cdsForms, admissionMap);
-			return(result);
-		}
-		else
-		{
-			StringBuilder sb=new StringBuilder();
-			
-			sb.append("*****INCOMPLETED*****");
-
-			return(sb.toString());
-		}
+		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return(getDataLine007(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return(getDataLine008(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return(getDataLine009(cdsFormOption, cdsForms, admissionMap));
+		else return("Error, missing case : "+cdsFormOption.getCdsDataCategory());
     }
 
-	
+	private static String getDataLine009(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
+		StringBuilder sb=new StringBuilder();
+		
+		if ("009-01".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 0, 15);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-02".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 16, 17);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-03".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 18, 24);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-04".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 25, 34);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-05".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 35, 44);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-06".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 45, 54);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-07".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 55, 64);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-08".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 65, 74);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-09".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 75, 84);
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-10".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByAge(cdsForms, 85, 200); // 200 effectively being "and over" 
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("009-10".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			cdsForms=filterFormsByNoAge(cdsForms); 
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else return("Error, missing case : "+cdsFormOption.getCdsDataCategory());
+		
+		return(sb.toString());
+    }
+
+	private static String getDataLine008(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
+		StringBuilder sb=new StringBuilder();
+		
+		// this logic should work for 008-01, 008-02, 008-03, 008-04
+		cdsForms=filterFormsByAnswer(cdsForms, cdsFormOption.getCdsDataCategory());
+		sb.append(getMultipleAdmissionCount(cdsForms));
+		sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		
+		return(sb.toString());
+    }
+
 	private static String getDataLine007(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer,Admission> admissionMap) {
 		StringBuilder sb=new StringBuilder();
 		
 		if ("007-01".equals(cdsFormOption.getCdsDataCategory()))
 		{
 			sb.append(getMultipleAdmissionCount(cdsForms));
-			sb.append(getCohortCounts(cdsForms,admissionMap));
+			sb.append(getCohortCounts(true, cdsForms,admissionMap));
+		}
+		else if ("007-02".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			sb.append("INCOMPLETE_NO_PRE_ADMISSION_DATA");
+		} 
+		else if ("007-03".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			sb.append(getZeroDataLine());
+		} 
+		else if ("007-04".equals(cdsFormOption.getCdsDataCategory()))
+		{
+			sb.append(getMultipleAdmissionCount(cdsForms));
+			sb.append(getCohortCounts(false, cdsForms,admissionMap));
+		}
+		else 
+		{
+			sb.append("Error, missing case : "+cdsFormOption.getCdsDataCategory());
 		}
 		
 		return(sb.toString());
     }
 
-	private static String getCohortCounts(List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getCohortCounts(boolean unique, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		// okay stupid but we can't just look at the admissions, there might be
 		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
 		
 		// we will use Integer as the cohort year number from 0 to 10
 		AccumulatorMap<Integer> cohortBuckets=new AccumulatorMap<Integer>();
+		HashSet<Integer> alreadyCountedClientIds=new HashSet<Integer>();
 		
 		for (CdsClientForm form : cdsForms)
 		{
+			if (unique)
+			{
+				if (alreadyCountedClientIds.contains(form.getClientId())) continue;
+				else alreadyCountedClientIds.add(form.getClientId());
+			}
+			
 			Admission admission=admissionMap.get(form.getAdmissionId());
-			Date dischargeDate=new Date(); // default duration calculation to today if not discharged.
-			if (admission.getDischargeDate()!=null) dischargeDate=admission.getDischargeDate();
-			
-			int years=MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
-			if (years>10) years=10; // limit everything above 10 years to the 10 year bucket.
-			
-			cohortBuckets.increment(years);
+			if (admission!=null) // only count people with admissions for now
+			{
+				Date dischargeDate=new Date(); // default duration calculation to today if not discharged.
+				if (admission.getDischargeDate()!=null) dischargeDate=admission.getDischargeDate();
+				
+				int years=MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
+				if (years>10) years=10; // limit everything above 10 years to the 10 year bucket.
+				
+				cohortBuckets.increment(years);
+			}
 		}
 		
 		StringBuilder sb=new StringBuilder();
@@ -189,4 +295,50 @@ public class Cds4ReportUIBean {
 		
 		return(sb.toString());
 	}
+	
+	private static String getZeroDataLine()
+	{
+		return("000000000000000000000000000000000000000000000000000000000000000000000000");
+	}
+	
+    private static List<CdsClientForm> filterFormsByAnswer(List<CdsClientForm> cdsClientForms, String answer) {
+
+    	ArrayList<CdsClientForm> results=new ArrayList<CdsClientForm>();
+    	
+    	for (CdsClientForm form : cdsClientForms)
+    	{
+    		CdsClientFormData result=cdsClientFormDataDao.findByAnswer(form.getId(), answer);
+    		if (result!=null) results.add(form); // yes that's right, we're not returning the formData, we're returning the mathcing forms.
+    	}
+		
+		return (results);
+	}
+
+	/**
+	 * The min and max age numbers are inclusive.
+	 */
+    private static List<CdsClientForm> filterFormsByAge(List<CdsClientForm> cdsForms, int minAge, int maxAge) {
+
+    	ArrayList<CdsClientForm> results=new ArrayList<CdsClientForm>();
+    	
+    	for (CdsClientForm form : cdsForms)
+    	{
+    		if (form.getClientAge()!=null && form.getClientAge()>=minAge && form.getClientAge()<=maxAge) results.add(form);
+    	}
+		
+		return (results);
+    }
+
+    private static List<CdsClientForm> filterFormsByNoAge(List<CdsClientForm> cdsForms) {
+
+    	ArrayList<CdsClientForm> results=new ArrayList<CdsClientForm>();
+    	
+    	for (CdsClientForm form : cdsForms)
+    	{
+    		if (form.getClientAge()==null) results.add(form);
+    	}
+		
+		return (results);
+    }
+
 }

@@ -257,7 +257,7 @@
 			<td class="genericTableHeader">27.Current Employment Status</td>
 			<td class="genericTableData">
 				<select name="currentEmploymentStatus">
-					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("026")/* 026 is on purpose as 027 includes things I need to report on */)%>
+					<%=CdsForm4.renderAsSelectOptions(cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"))%>
 				</select>
 			</td>
 		</tr>

@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CdsClientFormDataDao extends AbstractDao {
 
-    public List<CdsClientFormData> findAnswers(Integer cdsClientFormId, String question) {
+    public List<CdsClientFormData> findByQuestion(Integer cdsClientFormId, String question) {
 
 		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.question=?2";
 
@@ -43,4 +43,14 @@ public class CdsClientFormDataDao extends AbstractDao {
 		return (results);
 	}
 
+    public CdsClientFormData findByAnswer(Integer cdsClientFormId, String answer) {
+
+		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.answer=?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, cdsClientFormId);
+		query.setParameter(2, answer);
+
+		return (CdsClientFormData) (getSingleResultOrNull(query));
+	}
 }
