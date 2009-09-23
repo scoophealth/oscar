@@ -21,4 +21,7 @@ public class DecisionSupportParseException extends DecisionSupportException {
     public DecisionSupportParseException(String message) {
         super("Error parsing decision support guideline. " + message);
     }
+    public DecisionSupportParseException(String message, Throwable e) {
+        super(message, e);
+    }
 }
