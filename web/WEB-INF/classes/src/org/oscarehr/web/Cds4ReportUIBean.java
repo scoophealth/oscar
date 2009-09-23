@@ -81,21 +81,13 @@ public class Cds4ReportUIBean {
 	private static String getDataLine(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 
 		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (getDataLine007(cdsFormOption, cdsForms, admissionMap));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getDataLine008(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getGenericAnswerDataLine(cdsFormOption, cdsForms, admissionMap));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (getDataLine009(cdsFormOption, cdsForms, admissionMap));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getDataLine010(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getGenericAnswerDataLine(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("10a-")) return (getGenericAnswerDataLine(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("011-")) return (getGenericAnswerDataLine(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("012-")) return (getGenericAnswerDataLine(cdsFormOption, cdsForms, admissionMap));
 		else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
-	}
-
-	private static String getDataLine010(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
-		StringBuilder sb = new StringBuilder();
-
-		// this logic should work for 010-01 through 010-52
-		cdsForms = filterFormsByAnswer(cdsForms, cdsFormOption.getCdsDataCategory());
-		sb.append(getMultipleAdmissionCount(cdsForms));
-		sb.append(getCohortCounts(true, cdsForms, admissionMap));
-
-		return (sb.toString());
 	}
 
 	private static String getDataLine009(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
@@ -159,10 +151,9 @@ public class Cds4ReportUIBean {
 		return (sb.toString());
 	}
 
-	private static String getDataLine008(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getGenericAnswerDataLine(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		StringBuilder sb = new StringBuilder();
 
-		// this logic should work for 008-01, 008-02, 008-03, 008-04
 		cdsForms = filterFormsByAnswer(cdsForms, cdsFormOption.getCdsDataCategory());
 		sb.append(getMultipleAdmissionCount(cdsForms));
 		sb.append(getCohortCounts(true, cdsForms, admissionMap));
@@ -197,6 +188,8 @@ public class Cds4ReportUIBean {
 		// we will use Integer as the cohort year number from 0 to 10
 		AccumulatorMap<Integer> cohortBuckets = new AccumulatorMap<Integer>();
 		
+		// this will help ensure people don't show up twice if 
+		// their stats change between 2 admissions like age, or location
 		if (unique) cdsForms=uniqueByClient(cdsForms);
 
 		for (CdsClientForm form : cdsForms) {
