@@ -24,7 +24,6 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -38,7 +37,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import org.oscarehr.decisionSupport.model.DSConsequence;
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
+import oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines;
 import oscar.util.SqlUtils;
 
 public final class BillingAction
@@ -94,8 +95,18 @@ public final class BillingAction
         request.getSession().setAttribute("billingSessionBean", bean);
         this.validateCodeLastBilled(request, errors,
                                     request.getParameter("demographic_no"));
-      }
-      else if ("true".equals(encounter)) {
+//        try{
+//            System.out.println("Start of billing rules");
+//            List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
+        
+//            for (DSConsequence dscon : list){
+//                System.out.println("DSTEXT "+dscon.getText());
+//                errors.add("",new ActionMessage("message.custom",dscon.getText()));
+//           }
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+      }else if ("true".equals(encounter)) {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
             getSession().getAttribute("billingSessionBean");
         frm.setXml_provider(request.getParameter("user_no"));
@@ -140,10 +151,9 @@ public final class BillingAction
   private void validateCodeLastBilled(HttpServletRequest request,
                                       ActionMessages errors, String demoNo) {
     List patientDX = vldt.getPatientDxCodes(demoNo);
-    List cdmSvcCodes = vldt.getCDMCodes();
-    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
-      String[] item = (String[]) iter.next();
-      if (patientDX.contains(item[0])) {
+    List<String[]> cdmSvcCodes = vldt.getCDMCodes();
+    for (String[] item:cdmSvcCodes){
+         if (patientDX.contains(item[0])) {
         validateCodeLastBilledHlp(errors, demoNo, item[1]);
       }
     }
@@ -151,31 +161,31 @@ public final class BillingAction
     this.saveErrors(request, errors);
   }
 
+
+  /*
+   * Looks through the list of billing codes and if any billing code in the list has been billed within the last year then nothing happens.But if the last code in the list has either
+   * never been billed OR billed over 365 days ago, a warning is added advising to do so.
+  */
   private void validateCodeLastBilledHlp(ActionMessages errors,
                                          String demoNo, String code) {
     int codeLastBilled = -1;
     String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
         code + "'";
-    List conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
-
-    for (Iterator iter = conditions.iterator(); iter.hasNext(); ) {
-      String[] row = (String[]) iter.next();
+    List<String[]> conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
+ 
+    for(String[] row : conditions){
       codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, row[0]);
       if (codeLastBilled < 365 && codeLastBilled > -1) {
         break;
       }
     }
     if (codeLastBilled > 365) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.codeLastBilled",
-                     new String[] {String.valueOf(codeLastBilled), code}));
+        System.out.println("adding code last billed "+code);
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.error.codeLastBilled",new String[] {String.valueOf(codeLastBilled), code}));
     }
     else if (codeLastBilled == -1) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.codeNeverBilled",
-                     new String[] {code}));
+        System.out.println("adding code never billed "+code);
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.error.codeNeverBilled",new String[] {code}));
     }
   }
 
