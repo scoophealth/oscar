@@ -93,19 +93,19 @@ public final class BillingAction
         fillBean(request, bean);
 
         request.getSession().setAttribute("billingSessionBean", bean);
-        this.validateCodeLastBilled(request, errors,
-                                    request.getParameter("demographic_no"));
-//        try{
-//            System.out.println("Start of billing rules");
-//            List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
+ //       this.validateCodeLastBilled(request, errors,
+ //                                   request.getParameter("demographic_no"));
+        try{
+            System.out.println("Start of billing rules");
+            List<DSConsequence> list = BillingGuidelines.getInstance().evaluateAndGetConsequences(request.getParameter("demographic_no"), (String) request.getSession().getAttribute("user"));
         
-//            for (DSConsequence dscon : list){
-//                System.out.println("DSTEXT "+dscon.getText());
-//                errors.add("",new ActionMessage("message.custom",dscon.getText()));
-//           }
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
+            for (DSConsequence dscon : list){
+                System.out.println("DSTEXT "+dscon.getText());
+                errors.add("",new ActionMessage("message.custom",dscon.getText()));
+           }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
       }else if ("true".equals(encounter)) {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
             getSession().getAttribute("billingSessionBean");
