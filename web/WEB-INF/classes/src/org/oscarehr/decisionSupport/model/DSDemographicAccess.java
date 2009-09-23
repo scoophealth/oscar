@@ -8,6 +8,7 @@ package org.oscarehr.decisionSupport.model;
 import java.util.ArrayList;
 import org.oscarehr.decisionSupport.model.conditionValue.DSValue;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +16,7 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.decisionSupport.web.DSGuidelineAction;
 import org.oscarehr.util.SpringUtils;
+import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
@@ -36,7 +38,8 @@ public class DSDemographicAccess {
         drugs("hasRxCodes"),
         age("isAge"),
         sex("isSex"),
-        notes("noteContains");
+        notes("noteContains"),
+        billedFor("billedFor");
         //define more here....
 
         private final String accessMethod;
@@ -292,6 +295,95 @@ public class DSDemographicAccess {
 
     public boolean noteContainsNotany(String searchStrings) throws DecisionSupportException { return !noteContainsAny(searchStrings); }
 
+
+    /////New Billing Functionality
+    //Days since last billed
+//    public boolean billedFor(String searchString,Hashtable options) throws DecisionSupportException {
+//        System.out.println("billedFor");
+//        return true;
+//    }
+
+    //Look for any of the billing codes that have been billed for this patient
+    //Options:  notInDays=999              limit to the number of days to check for this code
+    //          notInCalendarYear=true
+    //          unitsBilledToday=<4
+    //          requiresStartTime=true     not implemented yet.
+    public boolean billedForAny(String searchStrings,Hashtable options) throws DecisionSupportException {
+        boolean retval = false;
+        if(options.containsKey("payer") && options.get("payer").equals("MSP")){
+            ServiceCodeValidationLogic bcCodeValidation = new ServiceCodeValidationLogic();
+            String[] codes = searchStrings.replaceAll("\'","" ).split(",");
+
+            if(options.containsKey("notInDays")){
+                int notInDays = getAsInt(options,"notInDays");
+                for (String code: codes){
+                    int numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
+                    if (numDays > notInDays || numDays == -1){
+                        retval = true;
+                    }
+                }
+
+            }
+        }
+
+        System.out.println("In Billed For Any  look for "+searchStrings);
+        return retval;
+    }
+
+     public boolean billedForAny2(String searchStrings,Hashtable options) throws DecisionSupportException {
+        boolean retval = false;
+        String[] codes = searchStrings.replaceAll("\'","" ).split(",");
+        for (String code: codes){
+
+            if(options.containsKey("payer") && options.get("payer").equals("MSP")){
+                ServiceCodeValidationLogic bcCodeValidation = new ServiceCodeValidationLogic();
+                if(options.containsKey("notInDays")){
+                    int notInDays = getAsInt(options,"notInDays");
+                    int numDays = bcCodeValidation.daysSinceCodeLastBilled(demographicNo,code) ;
+                    if (numDays > notInDays || numDays == -1){
+                        retval = true;
+                    }
+                }
+//                if (options.containsKey("notInCalendarYear")){
+//
+//                }
+            }
+
+
+        }
+
+        System.out.println("In Billed For Any  look for "+searchStrings);
+        return retval;
+    }
+
+    public int getAsInt(Hashtable options,String key){
+        String str = (String) options.get(key);
+        int intval = Integer.parseInt(str);
+        return intval;
+    }
+
+    public boolean billedForAll(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean billedForNot(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean billedForNotall(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean billedForNotany(String searchStrings,Hashtable options) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+
+
+    public boolean billedForAny(String searchStrings) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean billedForAll(String searchStrings) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean billedForNot(String searchStrings) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED"); }
+    public boolean billedForNotall(String searchStrings) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+    public boolean billedForNotany(String searchStrings) throws DecisionSupportException { throw new DecisionSupportException("NOT IMPLEMENTED");  }
+
+    //number of units billed this year
+    //number of units billed this calendar year
+    //number of units billed today
+
+
+
+
+
+
+
     //for testing purposes mostly (used to list patient values in echart
     public String getDemogrpahicValues(Module module) {
         try {
@@ -344,7 +436,7 @@ public class DSDemographicAccess {
     }
 
     /**
-     * @return the prescriptionData
+ * @return the prescriptionData
      */
     public List<Prescription> getPrescriptionData() throws Exception{
         if (this.prescriptionData == null)
