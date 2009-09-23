@@ -448,9 +448,8 @@ public class BillingCreateBillingAction extends Action {
     String cdmRulesQry =
         "SELECT serviceCode,conditionCode FROM billing_service_code_conditions";
     List cdmRules = SqlUtils.getQueryResultsList(cdmRulesQry);
-    List cdmSvcCodes = vldt.getCDMCodes();
-    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
-      String[] item = (String[]) iter.next();
+    List<String[] > cdmSvcCodes = vldt.getCDMCodes();
+    for (String[] item:cdmSvcCodes){
       if (patientDX.contains(item[0])) {
         if (serviceCode.equals(item[1])) {
           validateCDMCodeConditionsHlp(errors, demoNo, cdmRules, item[1]);
@@ -460,9 +459,8 @@ public class BillingCreateBillingAction extends Action {
   }
 
   private void validateCDMCodeConditionsHlp(ActionMessages errors, String demoNo,
-                                            List cdmRules, String code) {
-    for (Iterator iter = cdmRules.iterator(); iter.hasNext(); ) {
-      String[] item = (String[]) iter.next();
+                                            List<String[]> cdmRules, String code) {
+    for (String[] item:cdmRules){
       if (code.equals(item[0])) {
         int days = vldt.daysSinceCodeLastBilled(demoNo, item[1]);
         if (days >= 0 && days < 365) {
