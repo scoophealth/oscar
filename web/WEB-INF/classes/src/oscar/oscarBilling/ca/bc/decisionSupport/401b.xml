@@ -10,6 +10,6 @@
 	</condition>
 </conditions>
 <consequence>
-<warning strength="warning">Service code 14050 can be billed. (Either 14050 or 14052 can be bill but 14050 is worth more, and only one can be billed)</warning>
+<warning strength="warning">Service code 14050 can be billed. (Either 14050 or 14052 can be billed but 14050 is worth more, and only one can be billed)</warning>
 </consequence>
 </guideline>
