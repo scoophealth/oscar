@@ -21,10 +21,10 @@
 package org.oscarehr.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AdmissionDao;
@@ -83,10 +83,22 @@ public class Cds4ReportUIBean {
 		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (getDataLine007(cdsFormOption, cdsForms, admissionMap));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getDataLine008(cdsFormOption, cdsForms, admissionMap));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (getDataLine009(cdsFormOption, cdsForms, admissionMap));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getDataLine010(cdsFormOption, cdsForms, admissionMap));
 		else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 	}
 
-	private static String getDataLine009(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getDataLine010(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+		StringBuilder sb = new StringBuilder();
+
+		// this logic should work for 010-01 through 010-52
+		cdsForms = filterFormsByAnswer(cdsForms, cdsFormOption.getCdsDataCategory());
+		sb.append(getMultipleAdmissionCount(cdsForms));
+		sb.append(getCohortCounts(true, cdsForms, admissionMap));
+
+		return (sb.toString());
+	}
+
+	private static String getDataLine009(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		StringBuilder sb = new StringBuilder();
 
 		if ("009-01".equals(cdsFormOption.getCdsDataCategory())) {
@@ -147,7 +159,7 @@ public class Cds4ReportUIBean {
 		return (sb.toString());
 	}
 
-	private static String getDataLine008(CdsFormOption cdsFormOption, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getDataLine008(CdsFormOption cdsFormOption, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		StringBuilder sb = new StringBuilder();
 
 		// this logic should work for 008-01, 008-02, 008-03, 008-04
@@ -178,20 +190,16 @@ public class Cds4ReportUIBean {
 		return (sb.toString());
 	}
 
-	private static String getCohortCounts(boolean unique, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getCohortCounts(boolean unique, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		// okay stupid but we can't just look at the admissions, there might be
 		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
 
 		// we will use Integer as the cohort year number from 0 to 10
 		AccumulatorMap<Integer> cohortBuckets = new AccumulatorMap<Integer>();
-		HashSet<Integer> alreadyCountedClientIds = new HashSet<Integer>();
+		
+		if (unique) cdsForms=uniqueByClient(cdsForms);
 
 		for (CdsClientForm form : cdsForms) {
-			if (unique) {
-				if (alreadyCountedClientIds.contains(form.getClientId())) continue;
-				else alreadyCountedClientIds.add(form.getClientId());
-			}
-
 			Admission admission = admissionMap.get(form.getAdmissionId());
 			if (admission != null) // only count people with admissions for now
 			{
@@ -238,7 +246,7 @@ public class Cds4ReportUIBean {
 		return ("incomplete_" + programId + "_ooooopppppfff");
 	}
 
-	private static String getMultipleAdmissionCount(List<CdsClientForm> cdsForms) {
+	private static String getMultipleAdmissionCount(Collection<CdsClientForm> cdsForms) {
 		AccumulatorMap<Integer> accumulatorMap = new AccumulatorMap<Integer>();
 
 		for (CdsClientForm form : cdsForms) {
@@ -290,7 +298,7 @@ public class Cds4ReportUIBean {
 		return (getZeroMultipleAdmissionsData() + getAllZeroCohortData());
 	}
 
-	private static List<CdsClientForm> filterFormsByAnswer(List<CdsClientForm> cdsClientForms, String answer) {
+	private static List<CdsClientForm> filterFormsByAnswer(Collection<CdsClientForm> cdsClientForms, String answer) {
 
 		ArrayList<CdsClientForm> results = new ArrayList<CdsClientForm>();
 
@@ -305,7 +313,7 @@ public class Cds4ReportUIBean {
 	/**
 	 * The min and max age numbers are inclusive.
 	 */
-	private static List<CdsClientForm> filterFormsByAge(List<CdsClientForm> cdsForms, int minAge, int maxAge) {
+	private static List<CdsClientForm> filterFormsByAge(Collection<CdsClientForm> cdsForms, int minAge, int maxAge) {
 
 		ArrayList<CdsClientForm> results = new ArrayList<CdsClientForm>();
 
@@ -316,7 +324,7 @@ public class Cds4ReportUIBean {
 		return (results);
 	}
 
-	private static List<CdsClientForm> filterFormsByNoAge(List<CdsClientForm> cdsForms) {
+	private static List<CdsClientForm> filterFormsByNoAge(Collection<CdsClientForm> cdsForms) {
 
 		ArrayList<CdsClientForm> results = new ArrayList<CdsClientForm>();
 
@@ -327,7 +335,7 @@ public class Cds4ReportUIBean {
 		return (results);
 	}
 
-	private static String getAgeMultipleAdmission(MinMax minMax, List<CdsClientForm> cdsForms) {
+	private static String getAgeMultipleAdmission(MinMax minMax, Collection<CdsClientForm> cdsForms) {
 
 		// this is a map because if it's mulitple admission we have to check the age on both forms in case they changed age in the time period.
 		HashMap<Integer, CdsClientForm> multipleAdmission = new HashMap<Integer, CdsClientForm>();
@@ -351,7 +359,7 @@ public class Cds4ReportUIBean {
 		return (padTo6(minMaxAge));
 	}
 
-	private static String getAgeCohortCounts(MinMax minMax, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getAgeCohortCounts(MinMax minMax, Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		// okay stupid but we can't just look at the admissions, there might be
 		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
 
@@ -387,7 +395,7 @@ public class Cds4ReportUIBean {
 		return (sb.toString());
 	}
 
-	private static String getAvgAgeMultipleAdmission(List<CdsClientForm> cdsForms) {
+	private static String getAvgAgeMultipleAdmission(Collection<CdsClientForm> cdsForms) {
 
 		// according to the CDS manual we take the age of unique individuals, this is awkward if some one
 		// is admitted twice and their age changed between the two dates, but we'll ignore it since it's
@@ -422,7 +430,7 @@ public class Cds4ReportUIBean {
 		return (padTo6(avgAge));
 	}
 
-	private static String getAvgAgeCohortCounts(List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getAvgAgeCohortCounts(Collection<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		// okay stupid but we can't just look at the admissions, there might be
 		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
 
@@ -431,18 +439,12 @@ public class Cds4ReportUIBean {
 		// we will use key as the cohort year number from 0 to 10, value as totalPeople
 		AccumulatorMap<Integer> cohortTotalPeopleBuckets = new AccumulatorMap<Integer>();
 
-		// CDS Manual says avg is for unique individuals so we need to keep track of who's counted already.
-		// hashset is of <clientId>
-		HashSet<Integer> countedClients = new HashSet<Integer>();
+		cdsForms=uniqueByClient(cdsForms);
 
 		for (CdsClientForm form : cdsForms) {
-			if (countedClients.contains(form.getClientId())) continue;
-
 			Admission admission = admissionMap.get(form.getAdmissionId());
 			if (admission != null && form.getClientAge() != null) // only count people with admissions for now
 			{
-				countedClients.add(form.getClientId());
-
 				// figure out which bucket he's in
 				Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
 				if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
@@ -480,5 +482,16 @@ public class Cds4ReportUIBean {
 		if (minMax == MinMax.MIN) return (Math.min(firstValue.intValue(), secondValue.intValue()));
 		else if (minMax == MinMax.MAX) return (Math.max(firstValue.intValue(), secondValue.intValue()));
 		else throw (new IllegalStateException("ummm if it's not min nor max what is it? minMax=" + minMax));
+	}
+
+	private static Collection<CdsClientForm> uniqueByClient(Collection<CdsClientForm> cdsClientForms) {
+
+		HashMap<Integer, CdsClientForm> uniqueList=new HashMap<Integer, CdsClientForm>();
+
+		for (CdsClientForm form : cdsClientForms) {
+			uniqueList.put(form.getClientId(), form);
+		}
+
+		return (uniqueList.values());
 	}
 }
