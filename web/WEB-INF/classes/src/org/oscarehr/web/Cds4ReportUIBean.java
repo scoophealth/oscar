@@ -48,6 +48,10 @@ public class Cds4ReportUIBean {
 
 	private static final char ROW_TERMINATOR = '>';
 
+	enum MinMax {
+		MIN, MAX
+	}
+
 	/**
 	 * End dates should be treated as inclusive.
 	 */
@@ -130,8 +134,14 @@ public class Cds4ReportUIBean {
 			sb.append(getMultipleAdmissionCount(cdsForms));
 			sb.append(getCohortCounts(true, cdsForms, admissionMap));
 		} else if ("009-12".equals(cdsFormOption.getCdsDataCategory())) {
-			sb.append(getMinAgeMultipleAdmission(cdsForms));
-			sb.append(getMinAgeCohortCounts(cdsForms, admissionMap));
+			sb.append(getAgeMultipleAdmission(MinMax.MIN, cdsForms));
+			sb.append(getAgeCohortCounts(MinMax.MIN, cdsForms, admissionMap));
+		} else if ("009-13".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getAgeMultipleAdmission(MinMax.MAX, cdsForms));
+			sb.append(getAgeCohortCounts(MinMax.MAX, cdsForms, admissionMap));
+		} else if ("009-14".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getAvgAgeMultipleAdmission(cdsForms));
+			sb.append(getAvgAgeCohortCounts(cdsForms, admissionMap));
 		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 
 		return (sb.toString());
@@ -317,36 +327,36 @@ public class Cds4ReportUIBean {
 		return (results);
 	}
 
-	private static String getMinAgeMultipleAdmission(List<CdsClientForm> cdsForms) {
+	private static String getAgeMultipleAdmission(MinMax minMax, List<CdsClientForm> cdsForms) {
 
 		// this is a map because if it's mulitple admission we have to check the age on both forms in case they changed age in the time period.
 		HashMap<Integer, CdsClientForm> multipleAdmission = new HashMap<Integer, CdsClientForm>();
-		int minAge = Integer.MAX_VALUE;
+		Integer minMaxAge = null;
 
 		for (CdsClientForm form : cdsForms) {
 
 			if (multipleAdmission.containsKey(form.getClientId())) {
 				// check the current form
-				minAge = nullSafeMin(form.getClientAge(), minAge);
+				minMaxAge = nullSafeMinMax(minMax, form.getClientAge(), minMaxAge);
 
 				// check the previous form too
-				minAge = nullSafeMin(multipleAdmission.get(form.getClientId()).getClientAge(), minAge);
+				minMaxAge = nullSafeMinMax(minMax, multipleAdmission.get(form.getClientId()).getClientAge(), minMaxAge);
 			} else {
 				multipleAdmission.put(form.getClientId(), form);
 			}
 		}
 
-		if (minAge==Integer.MAX_VALUE) minAge=0;
-		
-		return(padTo6(minAge));
+		if (minMaxAge == null) minMaxAge = 0;
+
+		return (padTo6(minMaxAge));
 	}
 
-	private static String getMinAgeCohortCounts(List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+	private static String getAgeCohortCounts(MinMax minMax, List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
 		// okay stupid but we can't just look at the admissions, there might be
 		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
 
-		// we will use key as the cohort year number from 0 to 10, value as minAge 
-		HashMap<Integer,Integer> cohortBuckets = new HashMap<Integer,Integer>();
+		// we will use key as the cohort year number from 0 to 10, value as minAge
+		HashMap<Integer, Integer> cohortBuckets = new HashMap<Integer, Integer>();
 
 		for (CdsClientForm form : cdsForms) {
 
@@ -359,9 +369,9 @@ public class Cds4ReportUIBean {
 
 				int years = MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
 				if (years > 10) years = 10; // limit everything above 10 years to the 10 year bucket.
-				
+
 				// check the bucket
-				cohortBuckets.put(years, nullSafeMin(form.getClientAge(), cohortBuckets.get(years)));
+				cohortBuckets.put(years, nullSafeMinMax(minMax, form.getClientAge(), cohortBuckets.get(years)));
 			}
 		}
 
@@ -377,11 +387,98 @@ public class Cds4ReportUIBean {
 		return (sb.toString());
 	}
 
-	private static Integer nullSafeMin(Integer firstValue, Integer secondValue)
-	{
-		if (firstValue==null) return(secondValue);
-		if (secondValue==null) return(firstValue);
-		
-		return(Math.min(firstValue.intValue(), secondValue.intValue()));
+	private static String getAvgAgeMultipleAdmission(List<CdsClientForm> cdsForms) {
+
+		// according to the CDS manual we take the age of unique individuals, this is awkward if some one
+		// is admitted twice and their age changed between the two dates, but we'll ignore it since it's
+		// just statistic, we'll just pick one randomly.
+		// AccumulatorMap is of <clientId>
+		// theory is, first time just add entry into Map, second time, increment age/people counter, third time etc, ignore.
+		AccumulatorMap<Integer> admissionCounts = new AccumulatorMap<Integer>();
+		int totalAge = 0;
+		int totalPeople = 0;
+
+		for (CdsClientForm form : cdsForms) {
+
+			Integer admissionCount = admissionCounts.get(form.getClientId());
+
+			if (admissionCount == null || admissionCount == 0) {
+				admissionCounts.increment(form.getClientId());
+			} else if (admissionCount == 1) {
+				if (form.getClientAge() != null) {
+					totalAge = totalAge + form.getClientAge();
+					totalPeople++;
+					admissionCounts.increment(form.getClientId());
+				}
+			} else {
+				// ignore, we've already counted them once.
+			}
+
+		}
+
+		int avgAge = 0;
+		if (totalPeople != 0) avgAge = totalAge / totalPeople;
+
+		return (padTo6(avgAge));
+	}
+
+	private static String getAvgAgeCohortCounts(List<CdsClientForm> cdsForms, HashMap<Integer, Admission> admissionMap) {
+		// okay stupid but we can't just look at the admissions, there might be
+		// an admission which is missing a cds form at which point we ignore it so we have to iterate through the cdsForms
+
+		// we will use key as the cohort year number from 0 to 10, value as totalAge
+		AccumulatorMap<Integer> cohortTotalAgeBuckets = new AccumulatorMap<Integer>();
+		// we will use key as the cohort year number from 0 to 10, value as totalPeople
+		AccumulatorMap<Integer> cohortTotalPeopleBuckets = new AccumulatorMap<Integer>();
+
+		// CDS Manual says avg is for unique individuals so we need to keep track of who's counted already.
+		// hashset is of <clientId>
+		HashSet<Integer> countedClients = new HashSet<Integer>();
+
+		for (CdsClientForm form : cdsForms) {
+			if (countedClients.contains(form.getClientId())) continue;
+
+			Admission admission = admissionMap.get(form.getAdmissionId());
+			if (admission != null && form.getClientAge() != null) // only count people with admissions for now
+			{
+				countedClients.add(form.getClientId());
+
+				// figure out which bucket he's in
+				Date dischargeDate = new Date(); // default duration calculation to today if not discharged.
+				if (admission.getDischargeDate() != null) dischargeDate = admission.getDischargeDate();
+
+				int years = MiscUtils.calculateYearDifference(dischargeDate, admission.getAdmissionDate());
+				if (years > 10) years = 10; // limit everything above 10 years to the 10 year bucket.
+
+				// increment the buckets
+				cohortTotalAgeBuckets.increment(years, form.getClientAge());
+				cohortTotalPeopleBuckets.increment(years);
+			}
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i <= 10; i++) {
+			int avgAge = 0;
+
+			Integer totalPeople = cohortTotalPeopleBuckets.get(i);
+			if (totalPeople != null) {
+				Integer totalAge = cohortTotalAgeBuckets.get(i);
+				avgAge = totalAge / totalPeople;
+			}
+
+			sb.append(padTo6(avgAge));
+		}
+
+		return (sb.toString());
+	}
+
+	private static Integer nullSafeMinMax(MinMax minMax, Integer firstValue, Integer secondValue) {
+		if (firstValue == null) return (secondValue);
+		if (secondValue == null) return (firstValue);
+
+		if (minMax == MinMax.MIN) return (Math.min(firstValue.intValue(), secondValue.intValue()));
+		else if (minMax == MinMax.MAX) return (Math.max(firstValue.intValue(), secondValue.intValue()));
+		else throw (new IllegalStateException("ummm if it's not min nor max what is it? minMax=" + minMax));
 	}
 }
