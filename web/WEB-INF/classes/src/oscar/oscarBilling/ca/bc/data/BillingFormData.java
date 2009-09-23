@@ -314,7 +314,7 @@ public class BillingFormData {
       // SELECT p.last_name, p.first_name, p.provider_no FROM provider p WHERE p.ohip_no <>''
 
       sql = "SELECT p.last_name, p.first_name, p.provider_no FROM provider p "
-          + " WHERE p.ohip_no <>''";
+          + " WHERE p.ohip_no <>'' order by p.last_name, p.first_name";
       System.out.println("getProviderList " + sql);
 
       rs = db.GetSQL(sql);
