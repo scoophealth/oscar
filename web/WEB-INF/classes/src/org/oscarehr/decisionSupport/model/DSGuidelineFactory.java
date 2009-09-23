@@ -31,9 +31,9 @@ public class DSGuidelineFactory {
         try {
             doc = parser.build(new StringReader(xml));
         } catch (JDOMException jdome) {
-            throw new DecisionSupportParseException("Failed to read the xml string for parsing");
+                   throw new DecisionSupportParseException("Failed to read the xml string for parsing",jdome);
         } catch (IOException ioe) {
-            throw new DecisionSupportParseException("Failed to read the xml string for parsing");
+            throw new DecisionSupportParseException("Failed to read the xml string for parsing",ioe);
         }
         //<guideline evidence="" significance="" title="Plavix Drug DS">
         Element guidelineRoot = doc.getRootElement();
