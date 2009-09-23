@@ -19,12 +19,11 @@
 
 package org.oscarehr.common.dao;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.common.model.CdsClientForm;
 import org.springframework.stereotype.Repository;
 
@@ -43,30 +42,20 @@ public class CdsClientFormDao extends AbstractDao {
 		return ((CdsClientForm)getSingleResultOrNull(query));
 	}
 
-	public List<CdsClientForm> findLatestSignedCdsForms(List<Admission> admissions, String formVersion) {
+    public List<CdsClientForm> findLatestSignedCdsForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
-		ArrayList<CdsClientForm> cdsForms=new ArrayList<CdsClientForm>();
-		
-		for (Admission admission : admissions)
-		{
-			CdsClientForm latestForm=findLatestBySignedAndAdmission(admission.getId().intValue(), formVersion);
-			if (latestForm!=null) cdsForms.add(latestForm);
-		}		
-
-		return(cdsForms);
-    }
-
-	public CdsClientForm findLatestBySignedAndAdmission(Integer admissionId, String formVersion)
-	{
-		String sqlCommand="select x from CdsClientForm x where admissionId=?1 and signed=?2 and cdsFormVersion=?3 order by created desc";
+		String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 and x.created>=?4 and x.created<?5";
 
 		Query query = entityManager.createQuery(sqlCommand);
-		query.setParameter(1, admissionId);
+		query.setParameter(1, facilityId);
 		query.setParameter(2, true);
 		query.setParameter(3, formVersion);
-		query.setMaxResults(1);
+		query.setParameter(4, startDate);
+		query.setParameter(5, endDate);
 		
-		return((CdsClientForm)query.getSingleResult());
-	}
-	
+		@SuppressWarnings("unchecked")
+		List<CdsClientForm> results=query.getResultList();
+		
+		return(results);
+    }
 }
