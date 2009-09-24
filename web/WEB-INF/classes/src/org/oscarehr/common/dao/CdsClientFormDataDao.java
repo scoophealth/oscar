@@ -43,6 +43,12 @@ public class CdsClientFormDataDao extends AbstractDao {
 		return (results);
 	}
 
+    /**
+     * Generally speaking this method is good for getting a form if
+     * the answer is a CDS category, i.e. "019-04", this method is not
+     * useful for answers which are random strings like "days hosipitalised"
+     * where the answer may conflict with other numeric answers.
+     */
     public CdsClientFormData findByAnswer(Integer cdsClientFormId, String answer) {
 
 		String sqlCommand = "select x from CdsClientFormData x where x.cdsClientFormId=?1 and x.answer=?2";
@@ -53,4 +59,5 @@ public class CdsClientFormDataDao extends AbstractDao {
 
 		return (CdsClientFormData) (getSingleResultOrNull(query));
 	}
+
 }

@@ -12,6 +12,10 @@ import javax.persistence.PreUpdate;
 
 /**
  * This entity represents key value pairs associated with the CdsClientForm object.
+ * Generally speaking the key is the question asked and is specified by us, the answer
+ * is generally the CDS category like "010-4" or something like that. There
+ * are a few exceptions where the value maybe a number like "number of days hospitalised"
+ * we are not able to use the cds category.
  */
 @Entity
 public class CdsClientFormData implements Serializable {
