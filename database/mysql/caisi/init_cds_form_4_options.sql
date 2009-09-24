@@ -139,8 +139,6 @@ insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) v
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-19','On parole');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-20','On probation');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-21','No Legal Problems (includes absolute discharge and end of sentence)');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-22','Incarcerated (Data no longer accepted)');
-insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-23','Other Criminal Problems (Data no longer accepted)');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','013-24','Unknown or Service Recipient Declined');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','014-01','Pre-charge Diversion');
 insert into CdsFormOption (cdsFormVersion,cdsDataCategory,cdsDataCategoryName) values ('4','014-02','Court Diversion Program');
