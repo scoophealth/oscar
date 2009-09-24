@@ -150,8 +150,8 @@
 					<tr>
 						<td>Age at the onset of mental illness</td>
 						<td>
-							<select name="ageOfFirstPsychiatricHospitalization">
-								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "ageOfFirstPsychiatricHospitalization", 120)%>
+							<select name="ageOfOnsetOfMentalIllness">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "ageOfOnsetOfMentalIllness", 120)%>
 							</select>
 						</td>
 					</tr>
@@ -178,6 +178,14 @@
 			<td class="genericTableHeader">21. Current Psychiatric Hospitalizations</td>
 			<td class="genericTableData">
 				<table>
+					<tr>
+						<td>Total number of episodes</td>
+						<td>
+							<select name="currentTotalNumberOfEpisodes">
+								<%=CdsForm4.renderNumbersAsSelectOptions(cdsClientForm.getId(), "currentTotalNumberOfEpisodes", 999)%>
+							</select>
+						</td>
+					</tr>
 					<tr>
 						<td>Total number of episodes</td>
 						<td>

@@ -178,9 +178,72 @@ public class Cds4ReportUIBean {
 		else if (cdsFormOption.getCdsDataCategory().startsWith("018-")) return (getGenericAllAnswersDataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("019-")) return (getGenericAllAnswersDataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("020-")) return (getDataLine020(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("021-")) return (getDataLine021(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("022-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("023-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("024-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("24a-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("025-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("25a-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("026-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("027-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("028-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("029-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("29a-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("030-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("031-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
 		else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 	}
 
+	private static String getDataLine021(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
+		StringBuilder sb = new StringBuilder();
+
+		if ("021-01".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionAnswerCounts("currentTotalNumberOfEpisodes", "0", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionAnswerCounts("currentTotalNumberOfEpisodes", "0", bucket));
+				else sb.append(padTo6(0));
+			}
+			
+		} else if ("021-02".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionSumScalarAnswers("currentTotalNumberOfEpisodes", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionSumScalarAnswers("currentTotalNumberOfEpisodes", bucket));
+				else sb.append(padTo6(0));
+			}
+		} else if ("020-03".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionSumScalarAnswers("currentTotalNumberOfHospitalisedDays", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionSumScalarAnswers("currentTotalNumberOfHospitalisedDays", bucket));
+				else sb.append(padTo6(0));
+			}
+		} else if ("020-04".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionAnswerCounts("currentTotalNumberOfHospitalisedDays", "-1", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionAnswerCounts("currentTotalNumberOfHospitalisedDays", "-1", bucket));
+				else sb.append(padTo6(0));
+			}
+		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
+
+		return (sb.toString());
+	}
+	
 	private static String getDataLine020(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
 		StringBuilder sb = new StringBuilder();
 
@@ -215,7 +278,7 @@ public class Cds4ReportUIBean {
 				if (bucket != null) sb.append(getQuestionSumScalarAnswers("baselineTotalNumberOfHospitalisedDays", bucket));
 				else sb.append(padTo6(0));
 			}
-		} else if ("020-03".equals(cdsFormOption.getCdsDataCategory())) {
+		} else if ("020-04".equals(cdsFormOption.getCdsDataCategory())) {
 			sb.append(getQuestionAnswerCounts("baselineTotalNumberOfHospitalisedDays", "-1", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
 
 			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
@@ -223,6 +286,26 @@ public class Cds4ReportUIBean {
 				@SuppressWarnings("unchecked")
 				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
 				if (bucket != null) sb.append(getQuestionAnswerCounts("baselineTotalNumberOfHospitalisedDays", "-1", bucket));
+				else sb.append(padTo6(0));
+			}
+		} else if ("020-05".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionAvgScalarAnswers("ageOfFirstPsychiatricHospitalization", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionAvgScalarAnswers("ageOfFirstPsychiatricHospitalization", bucket));
+				else sb.append(padTo6(0));
+			}
+		} else if ("020-06".equals(cdsFormOption.getCdsDataCategory())) {
+			sb.append(getQuestionAvgScalarAnswers("ageOfOnsetOfMentalIllness", singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
+			for (int i=0; i<NUMBER_OF_COHORT_BUCKETS; i++)
+			{
+				@SuppressWarnings("unchecked")
+				Collection<CdsClientForm> bucket = singleMultiAdmissions.singleAdmissionCohortBuckets.getCollection(i);
+				if (bucket != null) sb.append(getQuestionAvgScalarAnswers("ageOfOnsetOfMentalIllness", bucket));
 				else sb.append(padTo6(0));
 			}
 		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
@@ -380,9 +463,36 @@ public class Cds4ReportUIBean {
 				List<CdsClientFormData> results = cdsClientFormDataDao.findByQuestion(form.getId(), cdsQuestion);
 				for (CdsClientFormData formData : results) {
 					try {
+						int temp = Integer.parseInt(formData.getAnswer());
+						// -1 means they didn't answer
+						if (temp != -1) totals = totals + temp;
+					} catch (NumberFormatException e) {
+						logger.error("Expected a number here. answer=" + formData.getAnswer(), e);
+					}
+				}
+			}
+		}
+
+		return (padTo6(totals));
+	}
+
+	private static String getQuestionAvgScalarAnswers(String cdsQuestion, Collection<CdsClientForm> cdsForms) {
+
+		int totalSum=0;
+		int totalPeople=0;
+
+		if (cdsForms != null) {
+			for (CdsClientForm form : cdsForms) {
+				List<CdsClientFormData> results = cdsClientFormDataDao.findByQuestion(form.getId(), cdsQuestion);
+				for (CdsClientFormData formData : results) {
+					try {
 	                    int temp=Integer.parseInt(formData.getAnswer());
 	                    // -1 means they didn't answer
-	                    if (temp!=-1) totals=totals+temp;
+	                    if (temp!=-1)
+	                    {
+	                    	totalSum=totalSum+temp;
+	                    	totalPeople++;
+	                    }
                     } catch (NumberFormatException e) {
                     	logger.error("Expected a number here. answer="+formData.getAnswer(), e);
                     }
@@ -390,8 +500,12 @@ public class Cds4ReportUIBean {
 			}
 		}
 
-		return (padTo6(totals));
+		int avg=0;
+		if (totalPeople!=0) avg=totalSum/totalPeople;
+		
+		return (padTo6(avg));
 	}
+
 	public static String getFilename(int programId) {
 		// stubbed for now
 		// ooooopppppfff.Txt
