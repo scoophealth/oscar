@@ -70,16 +70,16 @@ public class Cds4ReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int programId, int startYear, int startMonth, int endYear, int endMonth) {
+	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode) {
 
 		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
 		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
 		endDate.add(GregorianCalendar.MONTH, 1); // this is to set it inclusive
 
 		ArrayList<String> asciiTextFileRows = new ArrayList<String>();
-		asciiTextFileRows.add(getHeader(programId) + ROW_TERMINATOR);
+		asciiTextFileRows.add(getHeader(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode) + ROW_TERMINATOR);
 
-		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(programId, startDate, endDate);
+		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(caisiProgramIds, startDate, endDate);
 
 		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
 			asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + getDataLine(cdsFormOption, singleMultiAdmissions) + ROW_TERMINATOR);
@@ -88,13 +88,13 @@ public class Cds4ReportUIBean {
 		return (asciiTextFileRows);
 	}
 
-	private static SingleMultiAdmissions sortSingleMultiAdmission(int programId, GregorianCalendar startDate, GregorianCalendar endDate) {
+	private static SingleMultiAdmissions sortSingleMultiAdmission(int[] caisiProgramIds, GregorianCalendar startDate, GregorianCalendar endDate) {
 		SingleMultiAdmissions singleMultiAdmissions = new SingleMultiAdmissions();
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
 
-		HashMap<Integer, Admission> admissionMap = getAdmissionMap(programId, startDate, endDate);
+		HashMap<Integer, Admission> admissionMap = getAdmissionMap(caisiProgramIds, startDate, endDate);
 
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
@@ -150,13 +150,19 @@ public class Cds4ReportUIBean {
 		else return (form2);
 	}
 
-	private static HashMap<Integer, Admission> getAdmissionMap(int programId, GregorianCalendar startDate, GregorianCalendar endDate) {
-		List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(programId, startDate.getTime(), endDate.getTime());
+	private static HashMap<Integer, Admission> getAdmissionMap(int[] caisiProgramIds, GregorianCalendar startDate, GregorianCalendar endDate) {
 
 		// put admissions into map so it's easier to retrieve by id.
 		HashMap<Integer, Admission> admissionMap = new HashMap<Integer, Admission>();
-		for (Admission admission : admissions)
-			admissionMap.put(admission.getId().intValue(), admission);
+
+		for (int caisiProgramId : caisiProgramIds) {
+			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(caisiProgramId, startDate.getTime(), endDate.getTime());
+
+			for (Admission admission : admissions) {
+				admissionMap.put(admission.getId().intValue(), admission);
+			}
+		}
+
 		return admissionMap;
 	}
 
@@ -230,14 +236,13 @@ public class Cds4ReportUIBean {
 
 		return (sb.toString());
 	}
-	
-	private static String get02xQuestionSumScalarAnswersDataLine(SingleMultiAdmissions singleMultiAdmissions, String question)
-	{
-		StringBuilder sb=new StringBuilder();
-		
+
+	private static String get02xQuestionSumScalarAnswersDataLine(SingleMultiAdmissions singleMultiAdmissions, String question) {
+		StringBuilder sb = new StringBuilder();
+
 		// get multi admissions
 		sb.append(get02xQuestionSumScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
-		
+
 		// get cohort buckets
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
@@ -246,16 +251,15 @@ public class Cds4ReportUIBean {
 			else sb.append(padTo6(0));
 		}
 
-		return(sb.toString());
+		return (sb.toString());
 	}
 
-	private static String get02xQuestionAnswerCountsDataLine(SingleMultiAdmissions singleMultiAdmissions, String question, String answerToCount)
-	{
-		StringBuilder sb=new StringBuilder();
-		
+	private static String get02xQuestionAnswerCountsDataLine(SingleMultiAdmissions singleMultiAdmissions, String question, String answerToCount) {
+		StringBuilder sb = new StringBuilder();
+
 		// get multi admissions
 		sb.append(get02xQuestionAnswerCounts(question, answerToCount, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
-		
+
 		// get cohort buckets
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
@@ -264,16 +268,15 @@ public class Cds4ReportUIBean {
 			else sb.append(padTo6(0));
 		}
 
-		return(sb.toString());
+		return (sb.toString());
 	}
 
-	private static String get020QuestionAvgScalarDataLine(SingleMultiAdmissions singleMultiAdmissions, String question)
-	{
-		StringBuilder sb=new StringBuilder();
-		
+	private static String get020QuestionAvgScalarDataLine(SingleMultiAdmissions singleMultiAdmissions, String question) {
+		StringBuilder sb = new StringBuilder();
+
 		// get multi admissions
-		sb.append(get020QuestionAvgScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));		
-		
+		sb.append(get020QuestionAvgScalarAnswers(question, singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
+
 		// get cohort buckets
 		for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 			@SuppressWarnings("unchecked")
@@ -282,7 +285,7 @@ public class Cds4ReportUIBean {
 			else sb.append(padTo6(0));
 		}
 
-		return(sb.toString());
+		return (sb.toString());
 	}
 
 	private static String get009DataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
@@ -311,7 +314,7 @@ public class Cds4ReportUIBean {
 		} else if ("009-11".equals(cdsFormOption.getCdsDataCategory())) {
 			// get multiple admissions
 			sb.append(get009MultipleAdmissionCountByNoAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
-			
+
 			// get cohorts
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
@@ -327,7 +330,7 @@ public class Cds4ReportUIBean {
 		} else if ("009-14".equals(cdsFormOption.getCdsDataCategory())) {
 			// get multiple admissions
 			sb.append(getMultipleAdmissionCountByAvgAge(singleMultiAdmissions.multipleAdmissionsLatestForms.values()));
-			
+
 			// get cohorts
 			for (int i = 0; i < NUMBER_OF_COHORT_BUCKETS; i++) {
 				@SuppressWarnings("unchecked")
@@ -510,7 +513,7 @@ public class Cds4ReportUIBean {
 		return (padTo6(avg));
 	}
 
-	public static String getFilename(int programId) {
+	public static String getFilename(String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode) {
 		// stubbed for now
 		// ooooopppppfff.Txt
 		// Where:
@@ -518,17 +521,17 @@ public class Cds4ReportUIBean {
 		// ppppp is the MOHLTC assigned Program number
 		// fff is the CDS-MH Function Code
 
-		return (getHeader(programId) + ".Txt");
+		return (getHeader(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode) + ".Txt");
 	}
 
-	private static String getHeader(int programId) {
+	private static String getHeader(String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode) {
 		// ooooopppppfff
 		// Where:
 		// ooooo is the MOHLTC assigned Service Organization number
 		// ppppp is the MOHLTC assigned Program number
 		// fff is the CDS-MH Function Code
 
-		return ("incomplete_" + programId + "_ooooopppppfff");
+		return (pad(ministryOrganisationNumber,5)+pad(ministryProgramNumber,5)+pad(ministryFunctionCode,3));
 	}
 
 	private static String padTo6(int i) {
@@ -543,6 +546,23 @@ public class Cds4ReportUIBean {
 		sb.append(i);
 
 		return (sb.toString());
+	}
+
+	private static String pad(String originalString, int requiredLength)
+	{
+		if (originalString.length()>requiredLength) throw(new IllegalArgumentException("original string longer than required length. string="+originalString+", requiredLenth="+requiredLength));
+		if (originalString.length()==requiredLength) return(originalString);
+		else
+		{
+			int pad=requiredLength-originalString.length();
+			StringBuilder sb=new StringBuilder();
+		
+			for (int i=0; i<pad; i++) sb.append('0');
+			
+			sb.append(originalString);
+		
+			return(sb.toString());
+		}
 	}
 
 	private static String getZeroMultipleAdmissionsData() {

@@ -62,9 +62,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Program to report on</td>
+			<td>Caisi programs to include</td>
 			<td>
-				<select name="programId">
+				<select name="caisiProgramIds" multiple="multiple" style="width:20em;height:8em">
 					<%
 						for (Program program : allPrograms)
 						{
@@ -135,6 +135,18 @@
 				%>
 				</select>
 			</td>
+		</tr>
+		<tr>
+			<td>Ministries Organisation Number</td>
+			<td><input type="text" name="ministryOrganisationNumber" /></td>
+		</tr>
+		<tr>
+			<td>Ministries Program Number</td>
+			<td><input type="text" name="ministryProgramNumber" /></td>
+		</tr>
+		<tr>
+			<td>Ministries Function Code</td>
+			<td><input type="text" name="ministryFunctionCode" /></td>
 		</tr>
 		<tr>
 			<td></td>

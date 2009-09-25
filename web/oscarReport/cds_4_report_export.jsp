@@ -29,12 +29,22 @@
 	int startMonth = Integer.parseInt(request.getParameter("startMonth"));
 	int endYear = Integer.parseInt(request.getParameter("endYear"));
 	int endMonth = Integer.parseInt(request.getParameter("endMonth"));
-	int programId = Integer.parseInt(request.getParameter("programId"));
 	
-	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(programId, startYear, startMonth, endYear, endMonth);
+	String[] caisiProgramIdsString=request.getParameterValues("caisiProgramIds");
+	int[] caisiProgramIds=new int[caisiProgramIdsString.length];
+	for (int i=0; i<caisiProgramIdsString.length; i++)
+	{
+		caisiProgramIds[i]=Integer.parseInt(caisiProgramIdsString[i]);
+	}
+	
+	String ministryOrganisationNumber=request.getParameter("ministryOrganisationNumber");
+	String ministryProgramNumber=request.getParameter("ministryProgramNumber");
+	String ministryFunctionCode=request.getParameter("ministryFunctionCode");
+	
+	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode);
 	
 	response.setContentType("application/x-download");
-	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(programId)+"");
+	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));
 	PrintWriter responseWriter=response.getWriter();
 	
 	for (String s : results)
