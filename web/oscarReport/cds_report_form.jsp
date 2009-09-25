@@ -39,7 +39,9 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 
-<%@page import="java.text.DateFormatSymbols"%><h1>CDS Reports</h1>
+<%@page import="java.text.DateFormatSymbols"%>
+<%@page import="org.oscarehr.web.Cds4FunctionCode"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%><h1>CDS Reports</h1>
 
 <script type="text/javascript">
 <!--
@@ -145,8 +147,20 @@
 			<td><input type="text" name="ministryProgramNumber" /></td>
 		</tr>
 		<tr>
-			<td>Ministries Function Code</td>
-			<td><input type="text" name="ministryFunctionCode" /></td>
+			<td>Ministries Function</td>
+			<td>
+				<select name="ministryFunctionCode">
+					<%
+						// oops I guess this breaks the theory of making the form multi version, oh well we'll sort it when V5 of the form comes out.
+						for (Cds4FunctionCode code : Cds4FunctionCode.values())
+						{
+							%>
+								<option value="<%=code.getFunctionCode()%>"><%=StringEscapeUtils.escapeHtml(code.getFunctionName())%></option>
+							<%
+						}
+					%>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td></td>
