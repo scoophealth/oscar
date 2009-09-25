@@ -163,6 +163,14 @@
 			</td>
 		</tr>
 		<tr>
+			<td>Service languages for the above programs</td>
+			<td>
+				<input type="checkbox" name="serviceLanguages" value="en" /> English<br />
+				<input type="checkbox" name="serviceLanguages" value="fr" /> French<br />
+				<input type="checkbox" name="serviceLanguages" value="other" /> Other
+			</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td><input type="submit" value="Generate Report" /></td>
 		</tr>

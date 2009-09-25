@@ -70,7 +70,7 @@ public class Cds4ReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode) {
+	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages) {
 
 		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
 		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
@@ -78,11 +78,11 @@ public class Cds4ReportUIBean {
 
 		ArrayList<String> asciiTextFileRows = new ArrayList<String>();
 		asciiTextFileRows.add(getHeader(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode) + ROW_TERMINATOR);
-
+		
 		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(caisiProgramIds, startDate, endDate);
 
 		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
-			asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + getDataLine(cdsFormOption, singleMultiAdmissions) + ROW_TERMINATOR);
+			asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + getDataLine(cdsFormOption, singleMultiAdmissions, serviceLanguages) + ROW_TERMINATOR);
 		}
 
 		return (asciiTextFileRows);
@@ -166,9 +166,10 @@ public class Cds4ReportUIBean {
 		return admissionMap;
 	}
 
-	private static String getDataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
+	private static String getDataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions, String[] serviceLanguages) {
 
-		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption, singleMultiAdmissions));
+		if (cdsFormOption.getCdsDataCategory().startsWith("006-")) return (get006DataLine(cdsFormOption, serviceLanguages));
+		else if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (get009DataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
@@ -199,6 +200,33 @@ public class Cds4ReportUIBean {
 		else if (cdsFormOption.getCdsDataCategory().startsWith("030-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("031-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
 		else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
+	}
+
+	private static String get006DataLine(CdsFormOption cdsFormOption, String[] serviceLanguages) {
+		StringBuilder sb = new StringBuilder();
+
+		boolean hasLanguage=false;
+		if ("006-01".equals(cdsFormOption.getCdsDataCategory())) {
+			hasLanguage=contains(serviceLanguages, "en");
+		} else if ("006-02".equals(cdsFormOption.getCdsDataCategory())) {
+			hasLanguage=contains(serviceLanguages, "fr");
+		} else if ("006-03".equals(cdsFormOption.getCdsDataCategory())) {
+			hasLanguage=contains(serviceLanguages, "other");
+		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
+
+		if (hasLanguage) sb.append(cdsFormOption.getCdsDataCategory()+getZeroDataLine());
+		
+		return (sb.toString());
+    }
+	
+	private static boolean contains(String[] list, String value)
+	{
+		for (String s : list)
+		{
+			if (value.equals(s)) return(true);
+		}
+		
+		return(false);
 	}
 
 	private static String get021DataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
