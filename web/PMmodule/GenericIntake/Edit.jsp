@@ -341,10 +341,17 @@
             <input type="text" size="10" maxlength="10" dojoType="IntegerTextBox" name="client.hin"
                    value="<bean:write name="genericIntakeEditForm"  property="client.hin"/>"/>
         </label></td>
-        <td><label>Version<br>
+        <td><label>HC Version<br>
             <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver"
                    value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
         </label></td>    
+        <td>
+        	<label>HC Type</label>
+        	<br />
+        	<html:select property="client.hcType">
+            	<html:optionsCollection property="provinces" value="value" label="label"/>
+            </html:select>
+        </td>    
         <td>
         	<label>
         		EFF Date
