@@ -5,7 +5,11 @@
 USER=$1
 PASSWORD=$2
 DATABASE_NAME=$3
+
+# should be "on" or "bc" corresponding to the oscarinit_XX.sql XX qualifier
 LOCATION=$4
+
+# should be "9" or "10" corresponding to the icdXX.sql qualifier
 ICD=$5
 
 mysqladmin -u${USER} -p$PASSWORD create $DATABASE_NAME
