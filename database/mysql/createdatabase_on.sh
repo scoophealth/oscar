@@ -1,3 +1,3 @@
 #!/bin/sh
 
-./createdatabase_generic.sh $@ on
+./createdatabase_generic.sh $@ on 9
