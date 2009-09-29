@@ -94,11 +94,14 @@ public class Cds4ReportUIBean {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.loggedInInfo.get();
 		List<CdsClientForm> cdsForms = cdsClientFormDao.findLatestSignedCdsForms(loggedInInfo.currentFacility.getId(), "4", startDate.getTime(), endDate.getTime());
-
+		logger.debug("valid cds form count : "+cdsForms.size());
+		
 		HashMap<Integer, Admission> admissionMap = getAdmissionMap(caisiProgramIds, startDate, endDate);
 
 		// sort into single and multiple admissions
 		for (CdsClientForm form : cdsForms) {
+			logger.debug("valid cds form, id="+form.getId());
+			
 			Admission admission = admissionMap.get(form.getAdmissionId());
 			if (admission != null) {
 				Integer clientId = form.getClientId();
@@ -106,6 +109,7 @@ public class Cds4ReportUIBean {
 				CdsClientForm existingForm = singleMultiAdmissions.multipleAdmissionsLatestForms.get(clientId);
 				// if this person already has multiple admissions
 				if (existingForm != null) {
+					logger.debug("multiple admissions 3+ forms. formId="+form.getId()+", otherFormId="+existingForm.getId());
 					singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
 					singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
 				} else // this person either has one previous or no previous admissions
@@ -113,6 +117,8 @@ public class Cds4ReportUIBean {
 					existingForm = singleMultiAdmissions.singleAdmissions.get(clientId);
 					// this means we have 1 previous admission
 					if (existingForm != null) {
+						logger.debug("multiple admissions, 2 forms : formId="+form.getId()+", otherFormId="+existingForm.getId());
+
 						singleMultiAdmissions.multipleAdmissionsLatestForms.put(clientId, getNewerForm(existingForm, form));
 						singleMultiAdmissions.singleAdmissions.remove(clientId);
 
@@ -120,9 +126,14 @@ public class Cds4ReportUIBean {
 						singleMultiAdmissions.multipleAdmissionsAllForms.add(form);
 					} else // we have no previous admission
 					{
+						logger.debug("single admissions : formId="+form.getId());
 						singleMultiAdmissions.singleAdmissions.put(clientId, form);
 					}
 				}
+			}
+			else
+			{
+				logger.debug("cds form missing admission. formId="+form.getId()+", admissionId="+form.getAdmissionId());
 			}
 		}
 
@@ -131,6 +142,8 @@ public class Cds4ReportUIBean {
 			Admission admission = admissionMap.get(form.getAdmissionId());
 			int bucket = getCohortBucket(admission);
 			singleMultiAdmissions.singleAdmissionCohortBuckets.put(bucket, form);
+			
+			logger.debug("cds form id="+form.getId()+", admission="+admission.getId()+", cohort bucket="+bucket);
 		}
 
 		return (singleMultiAdmissions);
@@ -159,8 +172,11 @@ public class Cds4ReportUIBean {
 		for (int caisiProgramId : caisiProgramIds) {
 			List<Admission> admissions = admissionDao.getAdmissionsByProgramAndDate(caisiProgramId, startDate.getTime(), endDate.getTime());
 
+			logger.debug("corresponding cds admissions count:"+admissions.size());
+			
 			for (Admission admission : admissions) {
 				admissionMap.put(admission.getId().intValue(), admission);
+				logger.debug("valid cds admission, id="+admission.getId());
 			}
 		}
 
@@ -204,7 +220,7 @@ public class Cds4ReportUIBean {
 	}
 
 	private static String get006DataLine(CdsFormOption cdsFormOption, String[] serviceLanguages) {
-		boolean hasLanguage=false;
+
 		if ("006-01".equals(cdsFormOption.getCdsDataCategory())) {
 			if (contains(serviceLanguages, "en")) return(getZeroDataLine());
 		} else if ("006-02".equals(cdsFormOption.getCdsDataCategory())) {
