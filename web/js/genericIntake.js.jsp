@@ -107,7 +107,7 @@ function validateEdit() {
 	}
 
 	// only allow numbers to be entered
-	var province = getElement('client.province').value;
+	var hinProvince = getElement('client.hcType').value;
 	var healthCardNo = getElement('client.hin').value;
 	var healthCardVersion = getElement('client.ver').value;
 	if (isNaN(healthCardNo))
@@ -117,7 +117,7 @@ function validateEdit() {
 		return false;
     }
 
-	if (!isValidHin(healthCardNo, province))
+	if (!isValidHin(healthCardNo, hinProvince))
 	{
 		alert ("You must type in the right HIN.");
 		return(false);
