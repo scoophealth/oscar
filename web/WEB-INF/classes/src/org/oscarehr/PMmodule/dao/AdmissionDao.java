@@ -561,13 +561,13 @@ public class AdmissionDao extends HibernateDaoSupport {
     	// time T(0)---------->T(n)
     	//          A------>D
 		//	n-   SE
+		//	n-                SE
 		//	y-   S----->E
 		//	y-         SE
 		//	y-         S------>E
-		//	n-                SE
 		//	y-   S------------>E
 
-		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate<=? and a.DischargeDate>=?";
+		String q = "FROM Admission a WHERE a.ProgramId=? and a.AdmissionDate<=? and (a.DischargeDate>=? or a.DischargeDate is null)";
 
 		@SuppressWarnings("unchecked")
         List<Admission> rs = this.getHibernateTemplate().find(q, new Object[] { new Integer(programId), endDate, startDate });
