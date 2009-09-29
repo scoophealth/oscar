@@ -70,7 +70,7 @@ public class Cds4ReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages) {
+	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins) {
 
 		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
 		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
@@ -82,7 +82,12 @@ public class Cds4ReportUIBean {
 		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(caisiProgramIds, startDate, endDate);
 
 		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
-			String dataLine=getDataLine(cdsFormOption, singleMultiAdmissions, serviceLanguages);
+			String dataLine=null;
+			
+			if (cdsFormOption.getCdsDataCategory().startsWith("006-")) dataLine=get006DataLine(cdsFormOption, serviceLanguages);
+			else if (cdsFormOption.getCdsDataCategory().startsWith("10b-")) dataLine=get10bDataLine(cdsFormOption, serviceDeliveryLhins);
+			else dataLine=getAdmissionDataLine(cdsFormOption, singleMultiAdmissions);
+			
 			if (dataLine!=null) asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + dataLine + ROW_TERMINATOR);
 		}
 
@@ -183,10 +188,9 @@ public class Cds4ReportUIBean {
 		return admissionMap;
 	}
 
-	private static String getDataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions, String[] serviceLanguages) {
+	private static String getAdmissionDataLine(CdsFormOption cdsFormOption, SingleMultiAdmissions singleMultiAdmissions) {
 
-		if (cdsFormOption.getCdsDataCategory().startsWith("006-")) return (get006DataLine(cdsFormOption, serviceLanguages));
-		else if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption, singleMultiAdmissions));
+		if (cdsFormOption.getCdsDataCategory().startsWith("007-")) return (get007DataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("008-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("009-")) return (get009DataLine(cdsFormOption, singleMultiAdmissions));
 		else if (cdsFormOption.getCdsDataCategory().startsWith("010-")) return (getGenericLatestAnswerDataLine(cdsFormOption, singleMultiAdmissions));
@@ -230,6 +234,13 @@ public class Cds4ReportUIBean {
 		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 
 		// language is not supported therefore don't write the line
+		return(null);
+    }
+	
+	private static String get10bDataLine(CdsFormOption cdsFormOption, String[] serviceDeliveryLhins) {
+
+		if (contains(serviceDeliveryLhins, cdsFormOption.getCdsDataCategory())) return(getZeroDataLine());
+
 		return(null);
     }
 	

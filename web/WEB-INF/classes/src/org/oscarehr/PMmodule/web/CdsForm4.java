@@ -174,7 +174,7 @@ public class CdsForm4 {
 		return(sb.toString());
 	}
 	
-	private static String limitLengthAndEscape(String s)
+	public static String limitLengthAndEscape(String s)
 	{
 		if (s.length()>MAX_DISPLAY_NAME_LENGTH) s=s.substring(0, MAX_DISPLAY_NAME_LENGTH-3)+"...";
 		return(StringEscapeUtils.escapeHtml(s));

@@ -41,8 +41,9 @@
 	String ministryProgramNumber=request.getParameter("ministryProgramNumber");
 	String ministryFunctionCode=request.getParameter("ministryFunctionCode");
 	String[] serviceLanguages=request.getParameterValues("serviceLanguages");
+	String[] serviceDeliveryLhins=request.getParameterValues("serviceDeliveryLhin");
 	
-	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages);
+	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins);
 	
 	response.setContentType("application/x-download");
 	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));

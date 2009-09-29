@@ -29,6 +29,11 @@
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="java.text.DateFormatSymbols"%>
+<%@page import="org.oscarehr.web.Cds4FunctionCode"%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
+<%@page import="org.oscarehr.common.model.CdsFormOption"%>
 
 <%
 	ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
@@ -39,29 +44,13 @@
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
 
-<%@page import="java.text.DateFormatSymbols"%>
-<%@page import="org.oscarehr.web.Cds4FunctionCode"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%><h1>CDS Reports</h1>
+<h1>CDS Reports</h1>
 
-<script type="text/javascript">
-<!--
-	function setAction(form)
-	{
-		var cdsVersion=form.elements.cdsVersion.value;
-		form.action='cds_'+cdsVersion+'_report_export.jsp'
-	}
-//-->
-</script>
-
-<form method="post" action="" onsubmit="setAction(this)">
+<form method="post" action="cds_4_report_export.jsp">
 	<table>
 		<tr>
 			<td>CDS version</td>
-			<td>
-				<select name="cdsVersion">
-					<option value="4">CDS-MH 4.x</option>
-				</select>
-			</td>
+			<td>CDS-MH 4.x</td>
 		</tr>
 		<tr>
 			<td>Caisi programs to include</td>
@@ -143,11 +132,11 @@
 			<td><input type="text" name="ministryOrganisationNumber" /></td>
 		</tr>
 		<tr>
-			<td>Ministries Program Number</td>
+			<td>4. Ministries Program Number</td>
 			<td><input type="text" name="ministryProgramNumber" /></td>
 		</tr>
 		<tr>
-			<td>Ministries Function</td>
+			<td>5. Ministries Function</td>
 			<td>
 				<select name="ministryFunctionCode">
 					<%
@@ -163,11 +152,29 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Service languages for the above programs</td>
+			<td>6. Service languages for the above programs</td>
 			<td>
 				<input type="checkbox" name="serviceLanguages" value="en" /> English<br />
 				<input type="checkbox" name="serviceLanguages" value="fr" /> French<br />
 				<input type="checkbox" name="serviceLanguages" value="other" /> Other
+			</td>
+		</tr>
+		<tr>
+			<td>10b. Service Delivery LHIN</td>
+			<td>
+				<select multiple="multiple" name="serviceDeliveryLhin" style="height:8em">
+				<%
+					for (CdsFormOption option : CdsForm4.getCdsFormOptions("10b"))
+					{
+						String htmlEscapedName=StringEscapeUtils.escapeHtml(option.getCdsDataCategoryName());
+						String lengthLimitedEscapedName=CdsForm4.limitLengthAndEscape(option.getCdsDataCategoryName());
+	
+						%>
+							<option value="<%=StringEscapeUtils.escapeHtml(option.getCdsDataCategory())%>" title="<%=htmlEscapedName%>"><%=lengthLimitedEscapedName%></option>
+						<%
+					}
+				%>
+				</select>
 			</td>
 		</tr>
 		<tr>
