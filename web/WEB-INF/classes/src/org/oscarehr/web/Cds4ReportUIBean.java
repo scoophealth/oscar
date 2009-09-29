@@ -70,7 +70,7 @@ public class Cds4ReportUIBean {
 	/**
 	 * End dates should be treated as inclusive.
 	 */
-	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins) {
+	public static ArrayList<String> getAsciiExportData(int[] caisiProgramIds, int startYear, int startMonth, int endYear, int endMonth, String ministryOrganisationNumber, String ministryProgramNumber, String ministryFunctionCode, String[] serviceLanguages, String[] serviceDeliveryLhins, boolean measureServiceRecipientSatisfaction, boolean measureServiceRecipientFamiltySatisfaction, boolean qualityImprovementStrategies, boolean participateInAccreditation) {
 
 		GregorianCalendar startDate = new GregorianCalendar(startYear, startMonth, 1);
 		GregorianCalendar endDate = new GregorianCalendar(endYear, endMonth, 1);
@@ -86,6 +86,7 @@ public class Cds4ReportUIBean {
 			
 			if (cdsFormOption.getCdsDataCategory().startsWith("006-")) dataLine=get006DataLine(cdsFormOption, serviceLanguages);
 			else if (cdsFormOption.getCdsDataCategory().startsWith("10b-")) dataLine=get10bDataLine(cdsFormOption, serviceDeliveryLhins);
+			else if (cdsFormOption.getCdsDataCategory().startsWith("032-")) dataLine=get032DataLine(cdsFormOption, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 			else dataLine=getAdmissionDataLine(cdsFormOption, singleMultiAdmissions);
 			
 			if (dataLine!=null) asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + dataLine + ROW_TERMINATOR);
@@ -231,6 +232,22 @@ public class Cds4ReportUIBean {
 			if (contains(serviceLanguages, "fr")) return(getZeroDataLine());
 		} else if ("006-03".equals(cdsFormOption.getCdsDataCategory())) {
 			if (contains(serviceLanguages, "other")) return(getZeroDataLine());
+		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
+
+		// language is not supported therefore don't write the line
+		return(null);
+    }
+	
+	private static String get032DataLine(CdsFormOption cdsFormOption, boolean measureServiceRecipientSatisfaction, boolean measureServiceRecipientFamiltySatisfaction, boolean qualityImprovementStrategies, boolean participateInAccreditation) {
+
+		if ("032-01".equals(cdsFormOption.getCdsDataCategory())) {
+			if (measureServiceRecipientSatisfaction) return(getZeroDataLine());
+		} else if ("032-02".equals(cdsFormOption.getCdsDataCategory())) {
+			if (measureServiceRecipientFamiltySatisfaction) return(getZeroDataLine());
+		} else if ("032-03".equals(cdsFormOption.getCdsDataCategory())) {
+			if (qualityImprovementStrategies) return(getZeroDataLine());
+		} else if ("032-04".equals(cdsFormOption.getCdsDataCategory())) {
+			if (participateInAccreditation) return(getZeroDataLine());
 		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 
 		// language is not supported therefore don't write the line

@@ -1,4 +1,5 @@
 
+<%@page import="org.oscarehr.util.WebUtils"%>
 <%@page import="java.io.PrintWriter"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.oscarehr.web.Cds4ReportUIBean"%><%-- 
@@ -42,8 +43,12 @@
 	String ministryFunctionCode=request.getParameter("ministryFunctionCode");
 	String[] serviceLanguages=request.getParameterValues("serviceLanguages");
 	String[] serviceDeliveryLhins=request.getParameterValues("serviceDeliveryLhin");
+	boolean measureServiceRecipientSatisfaction=WebUtils.isChecked(request, "measureServiceRecipientSatisfaction");
+	boolean measureServiceRecipientFamiltySatisfaction=WebUtils.isChecked(request, "measureServiceRecipientFamiltySatisfaction");
+	boolean qualityImprovementStrategies=WebUtils.isChecked(request, "qualityImprovementStrategies");
+	boolean participateInAccreditation=WebUtils.isChecked(request, "participateInAccreditation");
 	
-	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins);
+	ArrayList<String> results=Cds4ReportUIBean.getAsciiExportData(caisiProgramIds, startYear, startMonth, endYear, endMonth, ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode, serviceLanguages, serviceDeliveryLhins, measureServiceRecipientSatisfaction, measureServiceRecipientFamiltySatisfaction, qualityImprovementStrategies, participateInAccreditation);
 	
 	response.setContentType("application/x-download");
 	response.setHeader("Content-Disposition", "attachment; filename="+Cds4ReportUIBean.getFilename(ministryOrganisationNumber, ministryProgramNumber, ministryFunctionCode));

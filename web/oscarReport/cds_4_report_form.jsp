@@ -178,6 +178,15 @@
 			</td>
 		</tr>
 		<tr>
+			<td>32. Formal Service Evaluation Process (check for 'yes')</td>
+			<td>
+				Does the function formally measure service recipient satisfaction? <input type="checkbox" name="measureServiceRecipientSatisfaction" /><br />
+				Does the function formally measure service recipient family satisfaction? <input type="checkbox" name="measureServiceRecipientFamiltySatisfaction" /><br />
+				Is the function involved in formal quality improvement strategies? <input type="checkbox" name="qualityImprovementStrategies" /><br />
+				Does the function participate in accreditation? <input type="checkbox" name="participateInAccreditation" /><br />
+			</td>
+		</tr>
+		<tr>
 			<td></td>
 			<td><input type="submit" value="Download Report" /></td>
 		</tr>
