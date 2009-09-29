@@ -82,7 +82,8 @@ public class Cds4ReportUIBean {
 		SingleMultiAdmissions singleMultiAdmissions = sortSingleMultiAdmission(caisiProgramIds, startDate, endDate);
 
 		for (CdsFormOption cdsFormOption : cdsFormOptionDao.findByVersion("4")) {
-			asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + getDataLine(cdsFormOption, singleMultiAdmissions, serviceLanguages) + ROW_TERMINATOR);
+			String dataLine=getDataLine(cdsFormOption, singleMultiAdmissions, serviceLanguages);
+			if (dataLine!=null) asciiTextFileRows.add(cdsFormOption.getCdsDataCategory() + dataLine + ROW_TERMINATOR);
 		}
 
 		return (asciiTextFileRows);
@@ -203,20 +204,17 @@ public class Cds4ReportUIBean {
 	}
 
 	private static String get006DataLine(CdsFormOption cdsFormOption, String[] serviceLanguages) {
-		StringBuilder sb = new StringBuilder();
-
 		boolean hasLanguage=false;
 		if ("006-01".equals(cdsFormOption.getCdsDataCategory())) {
-			hasLanguage=contains(serviceLanguages, "en");
+			if (contains(serviceLanguages, "en")) return(getZeroDataLine());
 		} else if ("006-02".equals(cdsFormOption.getCdsDataCategory())) {
-			hasLanguage=contains(serviceLanguages, "fr");
+			if (contains(serviceLanguages, "fr")) return(getZeroDataLine());
 		} else if ("006-03".equals(cdsFormOption.getCdsDataCategory())) {
-			hasLanguage=contains(serviceLanguages, "other");
+			if (contains(serviceLanguages, "other")) return(getZeroDataLine());
 		} else return ("Error, missing case : " + cdsFormOption.getCdsDataCategory());
 
-		if (hasLanguage) sb.append(cdsFormOption.getCdsDataCategory()+getZeroDataLine());
-		
-		return (sb.toString());
+		// language is not supported therefore don't write the line
+		return(null);
     }
 	
 	private static boolean contains(String[] list, String value)

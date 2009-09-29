@@ -172,7 +172,7 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td><input type="submit" value="Generate Report" /></td>
+			<td><input type="submit" value="Download Report" /></td>
 		</tr>
 	</table>	
 </form>
