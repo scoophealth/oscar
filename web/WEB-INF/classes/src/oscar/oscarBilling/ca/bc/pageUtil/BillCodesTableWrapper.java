@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.displaytag.decorator.TableDecorator;
 
-import oscar.oscarBilling.ca.bc.data.BillingCodeData;
+import org.oscarehr.common.model.BillingService;
 
 /**
 A helper class for the displayTag Tag Library used to List of java beans for augmented tabular display
@@ -38,7 +38,7 @@ public class BillCodesTableWrapper
   }
 
   public String getBillingserviceNo() {
-    BillingCodeData bcd = (BillingCodeData) this.getCurrentRowObject();
+    BillingService bcd = (BillingService) this.getCurrentRowObject();
     String links = "<a href=\"billingEditCode.jsp?codeId=" + bcd.getBillingserviceNo() +
     "&code=" + bcd.getServiceCode()+"&desc=" + bcd.getDescription() + "&value=" + bcd.getValue() + "&whereTo=private\">Edit</a> <br>" +
     "<a href=\"deletePrivateCode.jsp?code=" + bcd.getBillingserviceNo() + "\">Delete</a>";
