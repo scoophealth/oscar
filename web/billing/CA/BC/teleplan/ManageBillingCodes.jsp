@@ -25,15 +25,13 @@
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.*,oscar.oscarDemographic.data.*,java.util.*,oscar.oscarBilling.ca.bc.Teleplan.*,java.math.BigDecimal,oscar.oscarBilling.ca.bc.data.*"%>
+<%@page  import="oscar.*,oscar.oscarDemographic.data.*,java.util.*,oscar.oscarBilling.ca.bc.Teleplan.*,java.math.BigDecimal,oscar.oscarBilling.ca.bc.data.*,org.oscarehr.common.model.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-
-<%BillingCodeData  bcd = new BillingCodeData();%>
-      
-
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.*" %>
+<%BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao"); %>
 <html:html locale="true">
 
 <head>
@@ -137,7 +135,6 @@ function newWindow(file,window) {
 <style type="text/css">
 body {font-size:100%}
 
-//div.news{width: 100px; background: #FFF;margin-bottom: 20px;margin-left: 20px;}
 div.leftBox{
    width:90%;
    margin-top: 2px;
@@ -193,7 +190,7 @@ div.headPrevention p {
     
     padding: 4px 5px;
     line-height: 1.3;
-    text-align: justify
+    text-align: justify;
     height:2em;
     font-family: sans-serif;
     border-left: 0px;
@@ -325,7 +322,7 @@ tr.up{
                     <%
                     List<HashMap> list = (List) request.getAttribute("codes");
                     for (HashMap h : list){
-                        BillingCodeData thisCode = bcd.getBillingCodeByCode( (String)  h.get("code"));
+                        BillingService thisCode = billingServiceDao.searchBillingCode((String)  h.get("code"),"BC"); 
                         String oldFee = "---";
                         String classStyle = "newCode";
                         String selected = "checked";
@@ -368,7 +365,7 @@ tr.up{
         </tr>
         <tr>
             <td class="MainTableBottomRowLeftColumn">
-                <input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print">
+                <input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print"/>
                 &nbsp;
             </td>
             <td class="MainTableBottomRowRightColumn" valign="top">
