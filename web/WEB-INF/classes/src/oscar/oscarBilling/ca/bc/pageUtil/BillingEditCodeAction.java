@@ -24,22 +24,68 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
+import net.sf.json.JSONObject;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.SpringUtils;
 import oscar.oscarBilling.ca.bc.data.BillingCodeData;
+import oscar.util.UtilDateUtilities;
 
-public final class BillingEditCodeAction extends Action {
+public final class BillingEditCodeAction extends DispatchAction {
+     private static BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
 
-    public ActionForward execute(ActionMapping mapping,
+    public ActionForward ajaxCodeUpdate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws IOException, ServletException {
+        String id  =  request.getParameter("id");
+        String val =       request.getParameter("val");
+        String billingServiceDate =       request.getParameter("billService");
+        String termDate =        request.getParameter("termDate");
+        String codeId = request.getParameter("codeId");
+
+        BillingService itemCode = billingServiceDao.find(Integer.parseInt(codeId));
+
+        itemCode.setValue(val);
+        itemCode.setBillingserviceDate(UtilDateUtilities.StringToDate(billingServiceDate));
+        itemCode.setTerminationDate(UtilDateUtilities.StringToDate(termDate));
+        billingServiceDao.merge(itemCode);
+
+        Map map = new HashMap();
+        map.put("id",id);
+        map.put("val",val);
+        map.put("billService",billingServiceDate);
+        map.put("termDate",termDate);
+        JSONObject jsonObject =   JSONObject.fromObject( itemCode );  //(JSONObject) JSONSerializer.toJSON(itemCode);//
+        jsonObject = jsonObject.accumulate("id", id);
+        System.out.println(jsonObject.toString());
+        response.getOutputStream().write(jsonObject.toString().getBytes());
+        return null;
+    }
+
+    public ActionForward returnToSearch(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)    throws IOException, ServletException {
+        String whereTo = request.getParameter("whereTo");
+        ActionForward retval;
+        if(whereTo == null || whereTo.equals("") || whereTo.equals("null")){
+           retval = mapping.findForward("success");
+        }else{
+           retval = mapping.findForward("private");
+        }
+        return retval;
+    }
+
+
+    public ActionForward unspecified(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
