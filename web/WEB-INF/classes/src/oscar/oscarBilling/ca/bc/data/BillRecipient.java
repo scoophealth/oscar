@@ -21,7 +21,6 @@
  * Ontario, Canada   Creates a new instance of BillingCode
  *
  *
- * BillingCodeData.java
  *
  * Created on August 4, 2004, 10:37 AM
  */
