@@ -24,7 +24,7 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -69,13 +69,12 @@ public final class BillingAddCodeAction
     }
 
     BillingCodeData bcd = new BillingCodeData();
-    ArrayList list = bcd.findBillingCodesByCode(code,1);
+    List list = bcd.findBillingCodesByCode(code,1);
 
     if (list.size() == 0) {
       bcd.addBillingCode(code, desc, value);
       returnMessage = "Code Added Successfully";
-    }
-    else {
+    }else{
       added = false;
       returnMessage = "Code Already in use";
       request.setAttribute("code", pCode);
