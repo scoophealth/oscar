@@ -26,7 +26,10 @@
 package oscar.oscarReport.reportByTemplate;
 
 import java.sql.ResultSet;
-
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import oscar.oscarDB.DBHandler;
@@ -36,8 +39,10 @@ import oscar.oscarDB.DBHandler;
  * @author rjonasz
  */
 public class DepressionContinuityReporter implements Reporter{
-    private String rsHtml = "";
-    private String csv = "";
+    private StringBuffer rsHtml = new StringBuffer();
+    private StringBuffer csv = new StringBuffer();
+    private HashMap<String,StringBuffer>demographics = new HashMap<String,StringBuffer>();
+    private HashMap<String,StringBuffer>csvMap = new HashMap<String,StringBuffer>();
     /**
      * Creates a new instance of DepressionContinuityReporter
      */
@@ -59,8 +64,8 @@ public class DepressionContinuityReporter implements Reporter{
         
         
         if( diag_date_from == null ||  diag_date_to == null || visit_date_from == null || visit_date_to == null || dxCodes == null ) {
-            rsHtml = "All dates must be set and at least one Dx Code must be set";
-            request.setAttribute("errormsg", rsHtml);
+            rsHtml.append("All dates must be set and at least one Dx Code must be set");
+            request.setAttribute("errormsg", rsHtml.toString());
             request.setAttribute("templateid", templateId);
             return false;
         }
@@ -68,10 +73,10 @@ public class DepressionContinuityReporter implements Reporter{
         String cohortSQL = "select d.demographic_no, bi.service_date, bi.dx from demographic d, billing_on_cheader1 bc, billing_on_item bi where bc.demographic_no = d.demographic_no and bc.id = bi.ch1_id and bi.dx in (" + strDxCodes + ")" +
                 " and bi.service_date >= '" + diag_date_from + "' and bi.service_date <= '" + diag_date_to + "' group by d.demographic_no,bi.dx order by d.demographic_no, bi.service_date";
     
-        String apptSQL = "select a.appointment_date, concat(pAppt.first_name, ' ', pAppt.last_name), concat(pFam.first_name, ' ', pFam.last_name), bi.service_code, drugs.BN, concat(pDrug.first_name,' ',pDrug.last_name) from demographic d," +
-                "appointment a left outer join drugs on drugs.demographic_no = a.demographic_no and drugs.rx_date = a.appointment_date and a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to + 
-                "' and a.demographic_no = ? left join provider pDrug on pDrug.provider_no = drugs.provider_no, billing_on_cheader1 bc, billing_on_item bi, provider pAppt, provider pFam where a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to + "' and a.demographic_no = d.demographic_no" + 
-                " and a.provider_no = pAppt.provider_no and d.provider_no = pFam.provider_no and bc.appointment_no = a.appointment_no and bi.ch1_id = bc.id and a.demographic_no = ?";
+        String apptSQL = "select a.appointment_date, concat(pAppt.first_name, ' ', pAppt.last_name), concat(pFam.first_name, ' ', pFam.last_name), bi.service_code, drugs.BN, concat(pDrug.first_name,' ',pDrug.last_name), a.demographic_no, drugs.GN, drugs.customName from demographic d," +
+                    "appointment a left outer join drugs on drugs.demographic_no = a.demographic_no and drugs.rx_date = a.appointment_date and a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to +
+                    "' and a.demographic_no in (?) left join provider pDrug on pDrug.provider_no = drugs.provider_no, billing_on_cheader1 bc, billing_on_item bi, provider pAppt, provider pFam where a.appointment_date >= '" + visit_date_from + "' and a.appointment_date <= '" + visit_date_to + "' and a.demographic_no = d.demographic_no" +
+                    " and a.provider_no = pAppt.provider_no and d.provider_no = pFam.provider_no and bc.appointment_no = a.appointment_no and bi.ch1_id = bc.id and a.demographic_no in (?) order by a.demographic_no, a.appointment_date";
 
         ResultSet rs = null;        
         Boolean odd = new Boolean(true);
@@ -81,6 +86,8 @@ public class DepressionContinuityReporter implements Reporter{
 
             rsHtml = this.makeHTMLHeader();
             csv = this.makeCSVHeader();
+            StringBuffer html = new StringBuffer();
+            StringBuffer csvTmp = new StringBuffer();
             String curDemo = null;
             while(rs.next() ) {
                 if( curDemo == null ) {
@@ -88,90 +95,137 @@ public class DepressionContinuityReporter implements Reporter{
                 }
 
                 if( curDemo.equalsIgnoreCase(rs.getString(1))) {
-                    this.addCodeEntry(rs, odd);
+                    html.append(this.addCodeEntry(rs, odd));
+                    csvTmp.append(this.csvCodeEntry(rs));
                 }
 
                 if( !curDemo.equalsIgnoreCase(rs.getString(1))) {
-                    this.addAppt(db, apptSQL, curDemo, odd);
-                    this.addCodeEntry(rs, odd);
+                    demographics.put(curDemo, html);
+                    csvMap.put(curDemo, csvTmp);
+                    html = this.addCodeEntry(rs, odd);
+                    csvTmp = new StringBuffer(this.csvCodeEntry(rs));
                 }
                 curDemo = rs.getString(1);
             }
             if( curDemo != null ) {
-                this.addAppt(db, apptSQL, curDemo, odd);
+                demographics.put(curDemo, html);
+                csvMap.put(curDemo, csvTmp);
             }
-            rsHtml += "</table>";
+
+            this.addAppt(db, apptSQL, curDemo, odd);
+
+            rsHtml.append("</table>");
         }catch(Exception e) {
             e.printStackTrace();
             
         }
         
-        String sql = cohortSQL + ";\n " + apptSQL;
+        String sql = cohortSQL +  ";\n " + apptSQL;
         request.setAttribute("reportobject", curReport);
-        request.setAttribute("resultsethtml", rsHtml);
-        request.setAttribute("csv", csv);
+        request.setAttribute("resultsethtml", rsHtml.toString());
+        request.setAttribute("csv", csv.toString());
         request.setAttribute("sql", sql);
         return true;
     }
 
-    private void addCodeEntry(ResultSet rs, Boolean odd) throws Exception {
-        rsHtml += "<tr class=\"";
+    private StringBuffer addCodeEntry(ResultSet rs, Boolean odd) throws Exception {
+         StringBuffer html = new StringBuffer("<tr class=\"");
         if( odd ) {
-            rsHtml += "reportRow1\">";
+            html.append("reportRow1\">");
         }
         else {
-            rsHtml += "reportRow2\">";
+            html.append("reportRow2\">");
         }
         odd = !odd;
-        rsHtml += "<td>" + rs.getString(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3) + "</td>";
-        rsHtml += "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
-        rsHtml += "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
-        rsHtml += "</tr>";
-        csv += rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3);
-        csv += ", , , , , , \n";
+        html.append("<td>" + rs.getString(1) + "</td><td>" + rs.getString(2) + "</td><td>" + rs.getString(3) + "</td>");
+        html.append("<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
+        html.append("<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>");
+        html.append("</tr>");
+
+        return html;
+    }
+
+    private String csvCodeEntry(ResultSet rs) throws Exception {
+        String csvCode =  rs.getString(1) + "," + rs.getString(2) + "," + rs.getString(3) + ", , , , , , \n";
+        return csvCode;
     }
 
     private void addAppt(DBHandler db, String apptSQL, String curDemo, Boolean odd) throws Exception {
         ResultSet rs2 = null;
+
+        Set<String>setDemo = demographics.keySet();
+        Iterator<String>iter = setDemo.iterator();
+        StringBuffer demos = new StringBuffer();
+        while(iter.hasNext()) {
+            demos.append(iter.next());
+            if( iter.hasNext() ) {
+                demos.append(",");
+            }
+        }
+
         String apptSQLwDemo;
-        apptSQLwDemo = apptSQL.replaceAll("\\?", curDemo);
-        rs2 = db.GetSQL(apptSQLwDemo);
+        apptSQLwDemo = apptSQL.replaceAll("\\?", demos.toString());
         System.out.println(apptSQLwDemo);
-        String rxName, rxPrescriber;
+        rs2 = db.GetSQL(apptSQLwDemo);        
+        String rxName, rxPrescriber, tmpDemo = "";
         while(rs2.next()) {
-            rsHtml += "<tr class=\"";
+            if( !tmpDemo.equals(rs2.getString(7))) {
+                System.out.println(rs2.getString(7));
+                rsHtml.append(demographics.get(rs2.getString(7)));
+                csv.append(csvMap.get(rs2.getString(7)));
+                tmpDemo = rs2.getString(7);
+            }
+            rsHtml.append("<tr class=\"");
             if( odd ) {
-                rsHtml += "reportRow1\">";
+                rsHtml.append("reportRow1\">");
             }
             else {
-                rsHtml += "reportRow2\">";
+                rsHtml.append("reportRow2\">");
             }
             odd = !odd;
-            rsHtml += "<td>" + curDemo + "</td><td>&nbsp;</td><td>&nbsp;</td>";
-            rsHtml += "<td>" + rs2.getString(1) + "</td><td>" + rs2.getString(2) + "</td><td>" + rs2.getString(3) + "</td>";
+            rsHtml.append("<td>" + rs2.getString(7) + "</td><td>&nbsp;</td><td>&nbsp;</td>");
+            rsHtml.append("<td>" + rs2.getString(1) + "</td><td>" + rs2.getString(2) + "</td><td>" + rs2.getString(3) + "</td>");
 
-            rsHtml += "<td>" + rs2.getString(4) + "</td><td>" + rs2.getString(5)  + "</td><td>" + rs2.getString(6) + "</td>";
-            rsHtml += "</tr>";
+            rxName = rs2.getString(5);
+            if( rxName == null || rxName.equalsIgnoreCase("null") ) {
+                rxName = rs2.getString(8);
+                if( rxName == null || rxName.equalsIgnoreCase("null") ) {
+                    rxName = rs2.getString(9);
+                }
+            }
+            if( rxName == null ) {
+                rxName = "";
+            }
 
-            csv += curDemo + ", , ";
-            csv += "," + rs2.getString(1) + "," + rs2.getString(2) + "," + rs2.getString(3);
-            rxName = rs2.getString(5) == null ? " ":rs2.getString(5);
             rxPrescriber = rs2.getString(6) == null ? " " : rs2.getString(6);
-            csv += "," + rs2.getString(4) + "," + rxName + "," + rxPrescriber + "\n";
+
+            rsHtml.append("<td>" + rs2.getString(4) + "</td><td>" + rxName  + "</td><td>" + rxPrescriber + "</td>");
+            rsHtml.append("</tr>");
+
+            csv.append(curDemo + ", , ");
+            csv.append("," + rs2.getString(1) + "," + rs2.getString(2) + "," + rs2.getString(3));                        
+            csv.append("," + rs2.getString(4) + "," + rxName + "," + rxPrescriber + "\n");
+
+        }
+
+        if( curDemo != null && tmpDemo.equals("") ) {
+            System.out.println(curDemo);
+            rsHtml.append(demographics.get(curDemo));
+            csv.append(csvMap.get(curDemo));
         }
     }
 
-    private String makeHTMLHeader() {
+    private StringBuffer makeHTMLHeader() {
         StringBuffer html = new StringBuffer("<table class=\"reportTable\">\n");
         html.append("<th class=\"reportHeader\">ID</th><th class=\"reportHeader\">Date of Code</th><th class=\"reportHeader\">Dx Code</th>"
                 + "<th class=\"reportHeader\">Date of Visit</th><th class=\"reportHeader\">Provider Seen</th><th class=\"reportHeader\">MRP</th>"
                 + "<th class=\"reportHeader\">Billing Code</th><th class=\"reportHeader\">Rx Name</th><th class=\"reportHeader\">Prescriber</th>");
 
-        return html.toString();
+        return html;
     }
 
-    private String makeCSVHeader() {
-        String cvs = "ID,Date of Code,Dx Code,Date of Visit,Provider Seen,MRP,Billing Code,Rx Name,Prescriber\n";
+    private StringBuffer makeCSVHeader() {
+        StringBuffer cvs = new StringBuffer("ID,Date of Code,Dx Code,Date of Visit,Provider Seen,MRP,Billing Code,Rx Name,Prescriber\n");
         return cvs;
     }
 
