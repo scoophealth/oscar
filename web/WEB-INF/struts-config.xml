@@ -1206,7 +1206,7 @@
             <forward name="success" path="/billing/CA/BC/adjustBill.jsp" />
             <forward name="save" path="/billing/CA/BC/billStatus.jsp" />
         </action>
-        <action input="/billing/CA/BC/billingCodeAdjust.jsp" name="BillingEditCodeForm" path="/billing/CA/BC/billingEditCode" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.BillingEditCodeAction">
+        <action input="/billing/CA/BC/billingCodeAdjust.jsp" name="BillingEditCodeForm" parameter="method" path="/billing/CA/BC/billingEditCode" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.BillingEditCodeAction">
             <forward name="success" path="/billing/CA/BC/billingCodeAdjust.jsp" />
             <forward name="private" path="/billing/CA/BC/billingPrivateCodeAdjust.jsp" />
         </action>
