@@ -421,11 +421,11 @@ div.logoutBox {
 			<li><a href="#"
 				onclick='popupPage(700,1000,&quot;<html:rewrite page="/billing/manageBillingform.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillFrm"/></a></li>
 			<li><a href="#"
-				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManagePrivFrm"/></a></li>
+				onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManagePrivFrm"/></a></li>
 			<oscar:oscarPropertiesCheck property="BC_BILLING_CODE_MANAGEMENT"
 				value="yes">
 				<li><a href="#"
-					onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/billingCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillCodes"/></a></li>
+					onclick='popupPage(600,900,&quot;<html:rewrite page="/billing/CA/BC/billingCodeAdjust.jsp"/>&quot;);return false;'><bean:message key="admin.admin.ManageBillCodes"/></a></li>
 			</oscar:oscarPropertiesCheck>
 			<li><a href="#"
 				onclick='popupPage(600,600,&quot;<html:rewrite page="/billing/CA/BC/showServiceCodeAssocs.do"/>&quot;);return false;'><bean:message key="admin.admin.ManageServiceDiagnosticCodeAssoc"/></a></li>
