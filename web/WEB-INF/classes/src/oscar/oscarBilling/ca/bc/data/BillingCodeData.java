@@ -28,13 +28,13 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.model.BillingService;
+import org.oscarehr.util.SpringUtils;
 import oscar.Misc;
-import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
 
 /**
@@ -42,6 +42,8 @@ import oscar.util.SqlUtils;
  * @author  root
  */
 public final class BillingCodeData implements Comparable      {
+    private static BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+  
 
   /*
    +-----------------------+-------------+------+-----+---------+----------------+
@@ -79,45 +81,14 @@ public final class BillingCodeData implements Comparable      {
   //    fillCodeData(rs);
   //}
 
-  public BillingCodeData fillCodeData(ResultSet rs) throws SQLException {
-    billingserviceNo = rs.getString("billingservice_no");
-    serviceCompositecode = rs.getString("service_compositecode");
-    serviceCode = rs.getString("service_code");
-    description = rs.getString("description");
-    value = rs.getString("value");
-    percentage = rs.getString("percentage");
-    billingserviceDate = rs.getString("billingservice_date");
-    specialty = rs.getString("specialty");
-    region = rs.getString("region");
-    anaesthesia = rs.getString("anaesthesia");
-    return this;
-  }
 
   public boolean editBillingCode(String servicecode,String desc, String val, String codeId) {
-    boolean retval = true;
-    DBHandler db = null;
-    String str = null;
-
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      str = "update billingservice set " +
-          "service_code = '" + Misc.mysqlEscape(servicecode) + "', " +
-          "description = '" + Misc.mysqlEscape(desc) + "', " +
-          "value       = '" + Misc.mysqlEscape(val) + "' " +
-          "where billingservice_no = '" + Misc.mysqlEscape(codeId) + "'";
-      db.RunSQL(str);
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
+    boolean retval = true;   
+    BillingService  billingService = billingServiceDao.find(Integer.parseInt(codeId));
+    billingService.setServiceCode(servicecode);
+    billingService.setDescription(desc);
+    billingService.setValue(val);
+    billingServiceDao.merge(billingService);
     return retval;
   }
 
@@ -127,122 +98,48 @@ public final class BillingCodeData implements Comparable      {
    * @return boolean
    */
   public boolean deleteBillingCode(String codeId) {
+
      boolean retval = true;
-     DBHandler db = null;
-     String str = null;
-     try {
-       db = new DBHandler(DBHandler.OSCAR_DATA);
-       str = "delete from billingservice where billingservice_no = '" + Misc.mysqlEscape(codeId) + "'";
-       db.RunSQL(str);
-     }
-     catch (Exception e1) {
-       e1.printStackTrace();
-     }
-     finally {
-       try {
-         db.CloseConn();
-       }
-       catch (SQLException ex) {
-         ex.printStackTrace();
-       }
-     }
+     BillingService  billingService = billingServiceDao.find(Integer.parseInt(codeId));
+     billingServiceDao.remove(billingService);
      return retval;
    }
 
   public boolean addBillingCode(String code, String desc, String val) {
     boolean retval = true;
-    DBHandler db = null;
-    String str = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      str = "insert into billingservice " +
-          " (service_compositecode,service_code,description,value,percentage,billingservice_date,specialty,region,anaesthesia) " +
-          "values " +
-          "(''," + //service_composite
-          "'" + Misc.mysqlEscape(code) + "'," + //service_code
-          "'" + Misc.mysqlEscape(desc) + "'," + //description
-          "'" + Misc.mysqlEscape(val) + "'," + //value
-          "''," + //percentage
-          "now()," + //billingservice_date
-          "''," + //specialty
-          "'BC'," + //region
-          "'00')"; //anaesthesia
-      System.out.println(str);
-      db.RunSQL(str);
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
+    BillingService billingService = new BillingService();
+
+    billingService.setServiceCompositecode("");
+    billingService.setServiceCode(code);
+    billingService.setDescription(desc);
+    billingService.setValue(val);
+    billingService.setPercentage("");
+    billingService.setBillingserviceDate(new Date());
+    billingService.setRegion("BC");
+    billingService.setAnaesthesia("00");
+
+    billingServiceDao.persist(billingService);
     return retval;
   }
 
   public boolean updateBillingCodePrice(String code, String val) {
     boolean retval = true;
-    DBHandler db = null;
-    String str = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      str = "update billingservice set value = '"+val+"' where service_code = '"+code+"'";
-      System.out.println(str);
-      db.RunSQL(str);
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
+    BillingService billingservice = billingServiceDao.searchBillingCode(code,"BC");
+    billingservice.setBillingserviceNo(0);
+    billingservice.setBillingserviceDate(new Date());
+    billingservice.setValue(val);
+    billingServiceDao.persist(billingservice);
     return retval;
   }
   
   
-  
-  private ArrayList codeSearch(String queryString) {
-    ArrayList list = new ArrayList();
-    DBHandler db = null;
-    ResultSet rs = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(queryString);
-      while (rs.next()) {
-        list.add(new BillingCodeData().fillCodeData(rs));
-      }
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
-    finally {
-      try {
-        rs.close();
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
-    return list;
-  }
-
-  
-  public BillingCodeData getBillingCodeByCode(String code){
-    List list = codeSearch("select * from billingservice where service_code like '" +code + "'" );
+  public BillingService getBillingCodeByCode(String code){
+    List list = billingServiceDao.findBillingCodesByCode( code,"BC");
+    //List list = codeSearch("select * from billingservice where service_code like '" +code + "'" );
     if(list == null || list.size() ==0 ){
         return null;
     }
-    return (BillingCodeData) list.get(0);
+    return (BillingService) list.get(0);
   }
   
   /**
@@ -251,25 +148,16 @@ public final class BillingCodeData implements Comparable      {
    * @param order int - the sort order: 1 = descending otherwise the order is ascending
    * @return ArrayList - list of codes
    */
-  public ArrayList findBillingCodesByCode(String code,int order) {
-    String orderByClause = order == 1?"order by service_code desc":"order by service_code";
-    return codeSearch("select * from billingservice where service_code like '" +
-                      Misc.mysqlEscape(code) + "%' " + orderByClause);
+  public List findBillingCodesByCode(String code,int order) {
+    return billingServiceDao.findBillingCodesByCode(code,billingServiceDao.BC,order);
   }
 
-  public ArrayList findBillingCodesByDesc(String desc) {
-    return codeSearch("select * from billingservice where description like '" +
-                      Misc.mysqlEscape(desc) + "%' ");
-  }
+  
 
   public List getBillingCodesLookup(String searchTerm){
     return  SqlUtils.getQueryResultsList("select service_code,description from billingservice where description like '" + Misc.mysqlEscape(searchTerm) + "%'");
   }
 
-  
-  
-  
-  
   /**
    * Getter for property billingserviceNo.
    * @return Value of property billingserviceNo.
