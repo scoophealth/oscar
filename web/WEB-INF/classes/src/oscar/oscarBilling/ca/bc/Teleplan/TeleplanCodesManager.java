@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 
 /**
  *
@@ -67,7 +66,6 @@ REM076 **                                                             **
        String line = null;
        System.out.println("start while" );
 
-       BillingCodeData bcd = new BillingCodeData();
        LinkedList list = new LinkedList();
        while ((line = buff.readLine()) != null) {
          //01 - 05 Fee Item Code  X(5)  Fee for Service Fee Item      **                      
