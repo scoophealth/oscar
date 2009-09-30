@@ -25,8 +25,10 @@
 -->
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@page
-	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@page	import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@ page import="org.oscarehr.common.dao.BillingServiceDao,org.oscarehr.util.SpringUtils,org.oscarehr.common.model.*" %>
+<%BillingServiceDao billingServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao"); %>
+
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -87,11 +89,11 @@
 
       String sortOrder = request.getParameter("sortOrder")!=null?request.getParameter("sortOrder"):"";
       System.out.println("sortOrder=" + sortOrder);
-        BillingCodeData bcds = new BillingCodeData();
+
         String bCode = request.getParameter("bCode");
-        ArrayList list = null;
+        List list = null;
         if (bCode != null){
-           list = (ArrayList) bcds.findBillingCodesByCode(bCode,sortOrder.equals("desc")?1:0);
+           list = (List) billingServiceDao.findBillingCodesByCode(bCode,billingServiceDao.BC,sortOrder.equals("desc")?1:0);
         }
         if (list != null) {
           String arrow = "";
@@ -105,7 +107,7 @@
              arrow = "&darr;";
           }
       %>
-		<table border=1 width="50%">
+		<table border=1 width="80%">
 			<tr>
 				<th>Service Code<a
 					href="billingCodeAdjust.jsp?sortOrder=<%=newOrder%>"><%=arrow%></a></th>
@@ -115,7 +117,7 @@
 			</tr>
 			<%
           for (int i = 0; i < list.size(); i++) {
-            BillingCodeData bcd = (BillingCodeData) list.get(i);
+            org.oscarehr.common.model.BillingService bcd = (org.oscarehr.common.model.BillingService) list.get(i);
         %>
 			<tr align="center">
 				<td><strong><%=bcd.getServiceCode()%> </strong></td>
