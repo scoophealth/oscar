@@ -26,6 +26,7 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -34,6 +35,7 @@ import oscar.entities.BillingStatusType;
 import oscar.entities.PaymentType;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
+import oscar.util.UtilDateUtilities;
 
 
 public class BillingFormData {
@@ -156,7 +158,53 @@ public class BillingFormData {
           + serviceGroup + "' and c.servicetype='" + serviceType +
           "' order by c.service_order";
 
-      // System.out.println("getServiceList "+sql);
+       System.out.println("getServiceList "+sql);
+      rs = db.GetSQL(sql);
+
+      while (rs.next()) {
+        billingservice = new BillingService(rs.getString("service_code"),
+                                            rs.getString("description"),
+                                            rs.getString("value"),
+                                            rs.getString("percentage"));
+        lst.add(billingservice);
+      }
+
+      rs.close();
+      db.CloseConn();
+
+      arr = (BillingService[]) lst.toArray(arr);
+
+    }
+    catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return arr;
+  }
+
+
+
+  public BillingService[] getServiceList(String serviceGroup,
+                                         String serviceType, String billRegion,Date billingDate) {
+    BillingService[] arr = {};
+          System.out.println("In getServiceList 2 the one with the billing date");
+    try {
+      String billReferenceDate = UtilDateUtilities.DateToString(billingDate);
+      ArrayList lst = new ArrayList();
+      BillingService billingservice;
+
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs;
+      String sql;
+
+      sql =
+          "SELECT DISTINCT b.service_code, b.description , b.value, b.percentage "
+          +
+          "FROM ctl_billingservice c left outer join billingservice b on b.service_code="
+          + "c.service_code where b.region='" + billRegion +"' and c.service_group='"+ serviceGroup + "' and c.servicetype='" + serviceType +"' " +
+          " and b.billingservice_date in (select max(b2.billingservice_date) from billingservice b2 where b2.billingservice_date <= '" + billReferenceDate + "' and b2.service_code = b.service_code) order by c.service_order";
+
+       System.out.println("getServiceList2 "+sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
