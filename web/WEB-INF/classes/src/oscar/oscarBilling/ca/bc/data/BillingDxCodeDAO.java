@@ -30,22 +30,31 @@
 package oscar.oscarBilling.ca.bc.data;
 
 import java.util.List;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import javax.persistence.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import oscar.entities.*;
-
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author jaygallagher
  */
-public class BillingDxCodeDAO extends HibernateDaoSupport {
-
+@Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
+public class BillingDxCodeDAO{
+    @PersistenceContext
+    protected EntityManager entityManager = null;
 
     public void save(BillingDxCode dxCode){
-           getHibernateTemplate().saveOrUpdate(dxCode);
+            entityManager.persist(dxCode);
     }
 
     public List<BillingDxCode> getByDxCode(String dxCode){
-          return getHibernateTemplate().find("from BillingDxCode where diagnosticCode = ? ",dxCode);
+          Query query = entityManager.createQuery("select bdx from BillingDxCode bdx where diagnosticCode = (:dxCode)");
+          query.setParameter("dxCode",dxCode);
+          return query.getResultList();
     }
 
     

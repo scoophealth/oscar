@@ -1,4 +1,11 @@
 package oscar.entities;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /*
  *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  *  This software is published under the GPL GNU General Public License.
@@ -40,13 +47,19 @@ package oscar.entities;
 
  * @author jaygallagher
  */
+@Entity
 public class BillingDxCode {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "diagnosticcode_no")
     private int diagnosticcodeNo;
+    @Column(name = "diagnostic_code")
     private String diagnosticCode = null;
     private String description = null;
     private String status = null;
     private String region = null;
 
+      
     /**
      * @return the diagnosticcodeNo
      */
