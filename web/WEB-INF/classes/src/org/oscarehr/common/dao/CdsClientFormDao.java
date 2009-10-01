@@ -42,6 +42,20 @@ public class CdsClientFormDao extends AbstractDao {
 		return ((CdsClientForm)getSingleResultOrNull(query));
 	}
 
+    public List<CdsClientForm> findByFacilityClient(Integer facilityId, Integer clientId) {
+
+		String sqlCommand = "select x from CdsClientForm x where x.facilityId=?1 and x.clientId=?2 order by x.created desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, facilityId);
+		query.setParameter(2, clientId);
+		
+		@SuppressWarnings("unchecked")
+		List<CdsClientForm> results=query.getResultList();
+		
+		return (results);
+	}
+
     public List<CdsClientForm> findLatestSignedCdsForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
 		String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 and x.created>=?4 and x.created<?5";

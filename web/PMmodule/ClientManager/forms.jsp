@@ -1,6 +1,9 @@
 <%@ include file="/taglibs.jsp"%>
 
-<input type="hidden" name="clientId" value="" />
+
+<%@page import="org.oscarehr.PMmodule.web.ClientManagerAction"%>
+<%@page import="org.oscarehr.common.model.CdsClientForm"%>
+<%@page import="java.util.Enumeration"%><input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
 <input type="hidden" id="formInstanceId" value="0" />
 
@@ -303,6 +306,48 @@ New User Created Form:&nbsp;
 			<td><c:out value="${form.createdDate}" /></td>
 			<td><c:out value="${form.provider}" /></td>
 			<td><a href="ClientManager/manage_consent.jsp?viewConsentId=<c:out value="${form.consentId}" />&demographicId=<%=request.getAttribute("id")%>">details</a></td>
+		</tr>
+	</c:forEach>
+</table>
+<br />
+<br />
+
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">CDS History</th>
+	</tr>
+</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Admission</th>
+			<th>Date</th>
+			<th>Provider</th>
+			<th>Signed</th>
+			<th></th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${cdsForms}">
+		<tr>
+			<c:set var="form" value="${form}" scope="request" />
+			<%
+				System.err.println("----- req ");
+				Enumeration e=request.getAttributeNames();
+				while (e.hasMoreElements())
+				{
+					System.err.println(e.nextElement());
+				}
+
+				CdsClientForm cdsForm=(CdsClientForm)request.getAttribute("form");
+				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cdsForm.getAdmissionId());
+			%>
+			<td><%=admissionString%></td>
+			<td><%=ClientManagerAction.getEscapedDateDisplay(cdsForm.getCreated())%></td>
+			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsForm.getProviderNo())%></td>
+			<td><%=cdsForm.isSigned()%></td>
+			<td><a>details</a></td>
 		</tr>
 	</c:forEach>
 </table>

@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
@@ -50,6 +51,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
+import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
@@ -94,13 +96,16 @@ import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.Referral;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.CdsClientFormDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
+import org.oscarehr.common.model.CdsClientForm;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
 
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -113,7 +118,6 @@ public class ClientManagerAction extends BaseAction {
 
 	private HealthSafetyManager healthSafetyManager;
 	private ClientRestrictionManager clientRestrictionManager;
-	private ProviderDao providerDao;
 	private SurveyManager surveyManager;
 	private LookupManager lookupManager;
 	private CaseManagementManager caseManagementManager;
@@ -129,7 +133,11 @@ public class ClientManagerAction extends BaseAction {
 	private ProgramQueueManager programQueueManager;
 	private RoomManager roomManager;
 	private IntegratorConsentDao integratorConsentDao;
+	private CdsClientFormDao cdsClientFormDao;
+	private static AdmissionDao admissionDao=(AdmissionDao)SpringUtils.getBean("admissionDao");
+	private static ProviderDao providerDao=(ProviderDao)SpringUtils.getBean("providerDao");
 
+	
 	public void setIntegratorConsentDao(IntegratorConsentDao integratorConsentDao) {
 		this.integratorConsentDao = integratorConsentDao;
 	}
@@ -138,9 +146,9 @@ public class ClientManagerAction extends BaseAction {
 		this.surveyManager = mgr;
 	}
 
-	public void setProviderDao(ProviderDao providerDao) {
-		this.providerDao = providerDao;
-	}
+	public void setCdsClientFormDao(CdsClientFormDao cdsClientFormDao) {
+    	this.cdsClientFormDao = cdsClientFormDao;
+    }
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
@@ -1487,7 +1495,8 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("surveys", surveyManager.getFormsForCurrentProviderAndCurrentFacility(demographicNo));
 			
 			/* consent forms */
-			List<IntegratorConsent> consentTemp = integratorConsentDao.findByFacilityAndDemographic(facilityId, Integer.parseInt(demographicNo));
+			int clientId=Integer.parseInt(demographicNo);
+			List<IntegratorConsent> consentTemp = integratorConsentDao.findByFacilityAndDemographic(facilityId, clientId);
 			TreeMap<Date, HashMap<String, Object>> consents = new TreeMap<Date,HashMap<String, Object>>(Collections.reverseOrder());
 			for (IntegratorConsent x : consentTemp) {
 				HashMap<String, Object> map = new HashMap<String, Object>();
@@ -1500,6 +1509,10 @@ public class ClientManagerAction extends BaseAction {
 			}
 
 			request.setAttribute("consents", consents.values());
+			
+			// CDS forms
+			List<CdsClientForm> cdsForms=cdsClientFormDao.findByFacilityClient(facilityId, clientId);
+			request.setAttribute("cdsForms", cdsForms);
 		}
 
 		/* refer */
@@ -1622,6 +1635,37 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("relationSize", familySize);
 
 		}
+	}
+
+	public static String getEscapedAdmissionSelectionDisplay(int admissionId)
+	{
+		Admission admission=admissionDao.getAdmission((long)admissionId);
+		
+		StringBuilder sb=new StringBuilder();
+		
+		sb.append(admission.getProgramName());
+		sb.append(" ( ");
+		sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate()));
+		sb.append(" - ");
+		if (admission.getDischargeDate()==null) sb.append("current");
+		else sb.append(DateFormatUtils.ISO_DATE_FORMAT.format(admission.getDischargeDate()));
+		sb.append(" )");
+		
+		return(StringEscapeUtils.escapeHtml(sb.toString()));
+	}
+
+	public static String getEscapedProviderDisplay(String providerNo)
+	{
+		Provider provider=providerDao.getProvider(providerNo);
+		
+		return(StringEscapeUtils.escapeHtml(provider.getFormattedName()));
+	}
+
+	public static String getEscapedDateDisplay(Date d)
+	{
+		String display=DateFormatUtils.ISO_DATE_FORMAT.format(d);
+		
+		return(StringEscapeUtils.escapeHtml(display));
 	}
 
 	@Required
