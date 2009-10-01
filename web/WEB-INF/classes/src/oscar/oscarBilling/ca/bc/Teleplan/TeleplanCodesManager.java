@@ -88,7 +88,7 @@ REM076 **                                                             **
               String fee = line.substring(5,12);
               double newDoub = (Double.parseDouble(fee))/100;                                             
               BigDecimal newPriceDec = new BigDecimal(newDoub).setScale(2, BigDecimal.ROUND_HALF_UP);
-              String desc = line.substring(26,72);
+              String desc = line.substring(26,76);
               HashMap h = new HashMap();
               
               h.put("code",code);
