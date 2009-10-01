@@ -32,8 +32,12 @@ package oscar.oscarBilling.ca.bc.data;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
 import oscar.entities.WCB;
@@ -45,8 +49,11 @@ import oscar.util.StringUtils;
  *
  * @author jay
  */
-public class BillingmasterDAO extends HibernateDaoSupport {
-    
+@Repository
+@Transactional(propagation=Propagation.REQUIRES_NEW)
+public class BillingmasterDAO {
+    @PersistenceContext
+    protected EntityManager entityManager = null;
     /** Creates a new instance of BillingmasterDAO */
     public BillingmasterDAO() {
     }
@@ -62,40 +69,44 @@ public class BillingmasterDAO extends HibernateDaoSupport {
     }
     
     public void save(Billingmaster bm){
-        getHibernateTemplate().save((bm));
+        entityManager.persist(bm);
+        //getHibernateTemplate().save((bm));
     }
     
     public void save(WCB wcb){
-        getHibernateTemplate().save(wcb);
+        entityManager.persist(wcb);
     }
     
     public void save(Billing billing){
-        getHibernateTemplate().save(billing);
+        entityManager.persist(billing);
     }
     
 
     
     public void update(Billingmaster bm){
-        getHibernateTemplate().update(bm);
+        entityManager.merge(bm);
     }
     
     public void update(Billing billing){
-        getHibernateTemplate().update(billing);
+        entityManager.merge(billing);
     }
     
-    
+
  
     public Billing getBilling(int billingNo){
-        return (Billing) getHibernateTemplate().get(Billing.class, billingNo);
+        return (Billing) entityManager.find(Billing.class, billingNo);
     }
     
     
     public List<WCB> getWCBForms(int demographic){
-        return getHibernateTemplate().find("from WCB where demographic_no = ? order by id desc",demographic);
+        Query query = entityManager.createQuery("select wcb from WCB wcb where wcb.demographic_no = (:demographicNo) order by wcb.id desc");
+        query.setParameter("demographicNo", demographic);
+        List<WCB> list  = query.getResultList();
+        return list;
     }
     
     public List<WCB> getWCBForms(String demographic){
-        return getHibernateTemplate().find("from WCB where demographic_no = ? order by id desc",Integer.parseInt(demographic));
+        return getWCBForms(Integer.parseInt(demographic));
     }
     
     public WCB getWCBForm(String formID){
@@ -103,12 +114,7 @@ public class BillingmasterDAO extends HibernateDaoSupport {
             return null;
         }
         System.out.println("\nFORM ID "+formID);
-        HibernateTemplate hb = getHibernateTemplate();
-        
-        //return (WCB) getHibernateTemplate().get(WCB.class,Integer.parseInt(formID));
-        System.out.println(hb);
-        return (WCB) hb.get(WCB.class,Integer.parseInt(formID));
-        
+        return entityManager.find(WCB.class,Integer.parseInt(formID));
     }
     
     

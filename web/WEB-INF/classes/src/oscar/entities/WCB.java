@@ -28,6 +28,12 @@ package oscar.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import oscar.util.StringUtils;
 
@@ -35,8 +41,12 @@ import oscar.util.StringUtils;
  *
  * @author jaygallagher
  */
+@Entity
+@Table(name = "wcb")
 public class WCB {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;//  | int(1)           ||
     private //      | int(10)          ||
             int billing_no;
@@ -44,8 +54,10 @@ public class WCB {
             int demographic_no;
     private //    | int(10) unsigned ||
             String provider_no;
+    @Temporal(value = javax.persistence.TemporalType.DATE)
     private //    | int(10) unsigned ||
             Date formCreated;
+    @Temporal(value = javax.persistence.TemporalType.DATE)
     private //   | datetime         ||
             Date formEdited;
     private //  | datetime         ||
@@ -60,6 +72,7 @@ public class WCB {
             String w_mname;
     private //         | char(1)          ||
             String w_gender;
+    @Temporal(value = javax.persistence.TemporalType.DATE)
     private //         | char(1)          ||
             Date w_dob;
     private //       | date             ||
@@ -92,6 +105,7 @@ public class WCB {
             int w_duration;
     private //  | int(1)           || 
             String w_problem;
+    @Temporal(value = javax.persistence.TemporalType.TIMESTAMP)
     private //   | varchar(160)     ||
             Date w_servicedate;
     private //    | date             ||
@@ -106,6 +120,7 @@ public class WCB {
             String w_noi;
     private //     | varchar(5)       ||
             String w_work;
+    @Temporal(value = javax.persistence.TemporalType.DATE)
     private //     | char(1)          ||
             Date w_workdate;
     private //   | date             ||
@@ -124,6 +139,7 @@ public class WCB {
             String w_wcbadvisor;
     private //  | char(1)          ||
             String w_ftreatment;
+    @Temporal(value = javax.persistence.TemporalType.TIMESTAMP)
     private //  | varchar(25)      ||
             Date w_estimatedate;
     private // | date             ||
@@ -132,6 +148,7 @@ public class WCB {
             String w_payeeno;
     private //   | varchar(10)      ||
             String w_pracno;
+    @Temporal(value = javax.persistence.TemporalType.DATE)
     private //   | varchar(10)      ||
             Date w_doi;
     private // | date             ||

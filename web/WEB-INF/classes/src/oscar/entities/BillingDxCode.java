@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /*
  *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -48,6 +49,7 @@ import javax.persistence.Id;
  * @author jaygallagher
  */
 @Entity
+@Table(name = "diagnosticcode")
 public class BillingDxCode {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
