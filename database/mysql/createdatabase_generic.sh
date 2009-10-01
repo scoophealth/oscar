@@ -21,10 +21,10 @@ mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < oscardata.sql
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < oscardata_${LOCATION}.sql
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < icd${ICD}.sql
 
-pushd caisi
+cd caisi
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < initcaisi.sql
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < initcaisidata.sql
-popd
+cd ..
 
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < icd${ICD}_issue_groups.sql
 mysql -u${USER} -p$PASSWORD  $DATABASE_NAME  < measurementMapData.sql
