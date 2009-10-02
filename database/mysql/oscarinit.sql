@@ -6664,7 +6664,7 @@ CREATE TABLE `rschedule` (
   `available` char(1) NOT NULL default '',
   `day_of_week` varchar(30) default NULL,
   `avail_hourB` varchar(255) default NULL,
-  `avail_hour` text default NULL,
+  `avail_hour` text,
   `creator` varchar(50) default NULL,
   `status` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`)
