@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import oscar.Misc;
@@ -71,7 +72,7 @@ public class GenerateTeleplanFileAction extends Action{
                                ActionForm form,
                                HttpServletRequest request,
                                HttpServletResponse response) throws Exception{
-    System.out.println("SimulateTeleplanAction2 action jackson");
+        System.out.println("SimulateTeleplanAction2 action jackson");
     
         String home_dir = OscarProperties.getInstance().getProperty("HOME_DIR");
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
@@ -100,10 +101,9 @@ public class GenerateTeleplanFileAction extends Action{
         //To prevent multiple submissions being generated at the same time
         synchronized (this)  { 
             try{
-             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-             BillingmasterDAO billingmasterDAO = (BillingmasterDAO) ctx.getBean("BillingmasterDAO");    
-             DemographicDao demographicDao = (DemographicDao) ctx.getBean("demographicDao");   
              
+            BillingmasterDAO billingmasterDAO = (BillingmasterDAO) SpringUtils.getBean("BillingmasterDAO");
+            DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");    //ctx.getBean("demographicDao");
             TeleplanFileWriter teleplanWr = new TeleplanFileWriter();  
             teleplanWr.setBillingmasterDAO(billingmasterDAO);
             System.out.println("\ndemographic DAO -->"+demographicDao);
