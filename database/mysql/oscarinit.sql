@@ -6664,7 +6664,7 @@ CREATE TABLE `rschedule` (
   `available` char(1) NOT NULL default '',
   `day_of_week` varchar(30) default NULL,
   `avail_hourB` varchar(255) default NULL,
-  `avail_hour` varchar(230) default NULL,
+  `avail_hour` text default NULL,
   `creator` varchar(50) default NULL,
   `status` char(1) NOT NULL default '',
   PRIMARY KEY  (`id`)
@@ -7993,3 +7993,27 @@ create table flowsheet_dx (
       archived char(1) default '0',
       archived_date datetime
     ) ;
+
+CREATE TABLE `site` (
+  `site_id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `short_name` varchar(10) NOT NULL default '',
+  `phone` varchar(50) default '',
+  `fax` varchar(50) default '',
+  `bg_color` varchar(20) NOT NULL default '',
+  `address` varchar(255) default '',
+  `city` varchar(25) default '',
+  `province` varchar(25) default '',
+  `postal` varchar(10) default '',
+  `status` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (`site_id`),
+  UNIQUE KEY `unique_name` (`name`),
+  UNIQUE KEY `unique_shortname` (`short_name`)
+) TYPE=MyISAM;
+
+
+CREATE TABLE `providersite` (
+  `provider_no` varchar(6) NOT NULL,
+  `site_id` int(11) NOT NULL,
+  PRIMARY KEY  (`provider_no`,`site_id`)
+) TYPE=MyISAM;

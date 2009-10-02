@@ -1314,6 +1314,9 @@ insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values(
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.issues','Access to Case Management Issues',0);
 insert into `secObjectName` (`objectName`,`description`,`orgapplicable`) values('_casemgmt.notes','Permissions for Case Management Notes',0);
 
+INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_schedule_only', 'Restrict schedule to only login provider and his team', '0');
+INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUES ('_team_billing_only', 'Restrict billing access to only login provider and his team', '0');
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
